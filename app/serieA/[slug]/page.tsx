@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
+import ArticleContent from "@/app/components/ArticleContent";
 
 // Disable caching for this page
 export const dynamic = "force-dynamic";
@@ -137,10 +138,10 @@ export default async function SerieAArticlePage({
           />
         </div>
 
-        {/* Article Content */}
-        <div
-          className="prose prose-lg max-w-none mb-12 text-black"
-          dangerouslySetInnerHTML={{ __html: article.content }}
+        {/* Article content */}
+        <ArticleContent
+          content={article.content}
+          className="prose prose-lg max-w-none mb-8 text-black"
         />
 
         {/* Article Footer */}

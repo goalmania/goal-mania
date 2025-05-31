@@ -24,7 +24,7 @@ const nextConfig = {
               font-src 'self' https://fonts.gstatic.com;
               img-src 'self' data: https://res.cloudinary.com https://images.unsplash.com https://goalmania.shop https://media.api-sports.io;
               frame-src 'self' https://*.stripe.com https://js.stripe.com;
-              connect-src 'self' https://*.stripe.com https://*.api-sports.io https://v3.football.api-sports.io;
+              connect-src 'self' https://*.stripe.com https://*.api-sports.io https://v3.football.api-sports.io https://*.cloudinary.com https://api.cloudinary.com;
             `
               .replace(/\s+/g, " ")
               .trim(),

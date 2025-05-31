@@ -503,139 +503,146 @@ export default function ArticlesPage() {
           </button>
         </div>
       ) : (
-        <div className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-300">
-            <thead className="bg-gray-50">
-              <tr>
-                <th
-                  scope="col"
-                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-black sm:pl-6"
-                >
-                  Article
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-black"
-                >
-                  Category
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-black"
-                >
-                  Author
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-black"
-                >
-                  Status
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-black"
-                >
-                  Date
-                </th>
-                <th
-                  scope="col"
-                  className="relative py-3.5 pl-3 pr-4 sm:pr-6 text-right text-sm font-semibold text-black"
-                >
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {filteredArticles.map((article: IArticle) => (
-                <tr key={article._id?.toString() || `article-${article.slug}`}>
-                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                    <div className="flex items-center">
-                      <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                        <Image
-                          src={article.image}
-                          alt={article.title}
-                          width={64}
-                          height={64}
-                          className="h-full w-full object-cover object-center"
-                        />
-                      </div>
-                      <div className="ml-4 max-w-md">
-                        <div className="font-medium text-black">
-                          {article.title}
-                        </div>
-                        <div className="mt-1 text-black line-clamp-1">
-                          {article.summary}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-black">
-                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800">
-                      {article.category === "news" && "Main News"}
-                      {article.category === "transferMarket" &&
-                        "Transfer Market"}
-                      {article.category === "serieA" && "Serie A"}
-                      {article.category === "internationalTeams" && (
-                        <>International - {article.league || "Unknown"}</>
-                      )}
-                    </span>
-                    {article.featured && (
-                      <span className="ml-2 inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800">
-                        Featured
-                      </span>
-                    )}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-black">
-                    {article.author}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm">
-                    <span
-                      className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
-                        article.status === "published"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {article.status.charAt(0).toUpperCase() +
-                        article.status.slice(1)}
-                    </span>
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-black">
-                    {article.publishedAt
-                      ? new Date(article.publishedAt).toLocaleDateString()
-                      : "Not published"}
-                  </td>
-                  <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        onClick={() => handlePreview(article)}
-                        className="text-gray-600 hover:text-gray-900"
-                        title="Preview"
-                      >
-                        <EyeIcon className="h-5 w-5" />
-                      </button>
-                      <button
-                        onClick={() => handleEdit(article)}
-                        className="text-indigo-600 hover:text-indigo-900"
-                        title="Edit"
-                      >
-                        <PencilIcon className="h-5 w-5" />
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleDelete(article._id?.toString() || "")
-                        }
-                        className="text-red-600 hover:text-red-900"
-                        title="Delete"
-                      >
-                        <TrashIcon className="h-5 w-5" />
-                      </button>
-                    </div>
-                  </td>
+        <div className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-x-auto">
+          <div className="inline-block min-w-full align-middle">
+            <table className="min-w-full divide-y divide-gray-300 table-fixed">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-black sm:pl-6 w-[40%]"
+                  >
+                    Article
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-black w-[20%]"
+                  >
+                    Category
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-black w-[12%]"
+                  >
+                    Author
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-black w-[10%]"
+                  >
+                    Status
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-black w-[10%]"
+                  >
+                    Date
+                  </th>
+                  <th
+                    scope="col"
+                    className="relative py-3.5 pl-3 pr-4 sm:pr-6 text-right text-sm font-semibold text-black w-[8%]"
+                  >
+                    <span className="sr-only">Actions</span>
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {filteredArticles.map((article: IArticle) => (
+                  <tr
+                    key={article._id?.toString() || `article-${article.slug}`}
+                    className="hover:bg-gray-50"
+                  >
+                    <td className="py-4 pl-4 pr-3 text-sm sm:pl-6">
+                      <div className="flex items-center gap-4 max-w-full">
+                        <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                          <Image
+                            src={article.image}
+                            alt={article.title}
+                            width={64}
+                            height={64}
+                            className="h-full w-full object-cover object-center"
+                          />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="font-medium text-black truncate max-w-[400px]">
+                            {article.title}
+                          </div>
+                          <div className="mt-1 text-gray-600 text-xs line-clamp-2 max-w-[400px]">
+                            {article.summary}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-3 py-4 text-sm text-black">
+                      <div className="flex flex-col gap-1.5">
+                        <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 whitespace-nowrap">
+                          {article.category === "news" && "Main News"}
+                          {article.category === "transferMarket" &&
+                            "Transfer Market"}
+                          {article.category === "serieA" && "Serie A"}
+                          {article.category === "internationalTeams" && (
+                            <>International - {article.league || "Unknown"}</>
+                          )}
+                        </span>
+                        {article.featured && (
+                          <span className="inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800 whitespace-nowrap">
+                            Featured
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-3 py-4 text-sm text-black truncate">
+                      {article.author}
+                    </td>
+                    <td className="px-3 py-4 text-sm">
+                      <span
+                        className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                          article.status === "published"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        {article.status.charAt(0).toUpperCase() +
+                          article.status.slice(1)}
+                      </span>
+                    </td>
+                    <td className="px-3 py-4 text-sm text-black whitespace-nowrap">
+                      {article.publishedAt
+                        ? new Date(article.publishedAt).toLocaleDateString()
+                        : "Not published"}
+                    </td>
+                    <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => handlePreview(article)}
+                          className="text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 p-2 rounded-lg transition-colors"
+                          title="Preview"
+                        >
+                          <EyeIcon className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleEdit(article)}
+                          className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-lg transition-colors"
+                          title="Edit"
+                        >
+                          <PencilIcon className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleDelete(article._id?.toString() || "")
+                          }
+                          className="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition-colors"
+                          title="Delete"
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import { JerseyAdBlock } from "@/app/components/JerseyAdBlock";
+import ArticleContent from "@/app/components/ArticleContent";
 
 // Disable caching for this page
 export const dynamic = "force-dynamic";
@@ -92,8 +93,8 @@ async function getRelatedArticles(articleId: string) {
 
 // Helper to split content for jersey ad insertion
 function splitContentForAd(content: string): string[] {
-  // Simple approach: split the content at a paragraph boundary near the middle
-  const paragraphs = content.split("</p>");
+  // Split content at paragraph boundaries
+  const paragraphs = content.split("\n\n");
 
   if (paragraphs.length <= 2) {
     return [content, ""]; // Don't split if there are not enough paragraphs
@@ -101,8 +102,8 @@ function splitContentForAd(content: string): string[] {
 
   const middleIndex = Math.floor(paragraphs.length / 2);
 
-  const firstPart = paragraphs.slice(0, middleIndex).join("</p>") + "</p>";
-  const secondPart = paragraphs.slice(middleIndex).join("</p>");
+  const firstPart = paragraphs.slice(0, middleIndex).join("\n\n");
+  const secondPart = paragraphs.slice(middleIndex).join("\n\n");
 
   return [firstPart, secondPart];
 }
@@ -161,9 +162,9 @@ export default async function ArticlePage({
         </div>
 
         {/* First part of article content */}
-        <div
+        <ArticleContent
+          content={contentFirstPart}
           className="prose prose-lg max-w-none mb-8 text-black"
-          dangerouslySetInnerHTML={{ __html: contentFirstPart }}
         />
 
         {/* Jersey Ad Block */}
@@ -171,9 +172,9 @@ export default async function ArticlePage({
 
         {/* Second part of article content */}
         {contentSecondPart && (
-          <div
+          <ArticleContent
+            content={contentSecondPart}
             className="prose prose-lg max-w-none mb-12 text-black"
-            dangerouslySetInnerHTML={{ __html: contentSecondPart }}
           />
         )}
 
