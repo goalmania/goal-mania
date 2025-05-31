@@ -1,0 +1,1154 @@
+[
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "st.samuel",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(3 settimane fa): Perfekte Qualität und Lieferung lief einwandfrei ab!",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "lorenzo99999",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(1 mese fa): Tutto perfetto✌🏽",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "okky_89",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(1 mese fa): bellissima maglietta, ottimo venditore!",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "claudio_roma",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(1 mese fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "elena.ferri",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(1 mese fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "mario.baldi",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(2 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "blizzard19",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(2 mesi fa): Eccellente!",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "alessio_capo",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(2 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "myluc1fer",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(2 mesi fa): arrived quickly, very nice seller and a good price!!",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "mirkocort",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(2 mesi fa): bellissima e tempi di consegna ottimi",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "tritolo1980",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(2 mesi fa): Ottimo venditore: piccolo intoppo ma risolto.",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "smasha",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(2 mesi fa): Tutto ok",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "edlitam25",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(2 mesi fa): Maglia perfetta, spedizione velocissima e utente molto attivo e preciso.",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "davide_edivad",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(2 mesi fa): Maglietta coerente alla descrizione, affidabile molto consigliato",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "michela_sun",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(2 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "messazurra",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(2 mesi fa): top👌",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "biancalaniduccio",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(3 mesi fa): great",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "giacomo_z88",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(3 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "martina.leoni",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(3 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "gabriele_rox",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(3 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "laura.castelli",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(3 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "vincenzolud",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(3 mesi fa): bellissima.... Ottimo venditore... merce conforme alla descrizione",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "giuls_ravelli",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(3 mesi fa): Super veloce, ottima qualità del prodotto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "federico.spiga",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(3 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "pietro.ventura",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(3 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "artyom1394",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(3 mesi fa): Nickel, un très bon maillot 👌",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "joao.coimbra",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(3 mesi fa): Parfait",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "lemagicalseller",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(3 mesi fa): Molto rapido!",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "davideb29",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(3 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "francy_serra",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(4 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "naske7",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(4 mesi fa): Happy 👌 thanks 🙏",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "bettybhu87",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(5 mesi fa): primo acquisto, persona affidabile e corretta. consiglio vivamente",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "daniele_bozz",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(5 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "roberta92",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(5 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "cloclo120730",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(5 mesi fa): Super je recommande !",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "gianni.bruno",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(5 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "lisa_mazzini",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(5 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "gazo64",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(5 mesi fa): Parfait",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "salvo1988pd",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(6 mesi fa): maglietta ricevuta!!! 100%",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733827"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "ilbiondo1972",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(6 mesi fa): Ottimo venditore trovato l'accordo e l'articolo come da descrizione.",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "franchino808",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(6 mesi fa): Tutto perfetto, prodotto in condizioni perfette.",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "leocoq91",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(6 mesi fa): Spedizione un po’ lente ma tutto ok",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "vittorio1986",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(6 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "udi.91",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(6 mesi fa): Come da descrizione!",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "camilla.rossi",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(6 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "giovanni.milano",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(6 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "albetoma93",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(6 mesi fa): Tutto ok",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "mickdog2000",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(7 mesi fa): Top",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "caitlynappelmans",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(7 mesi fa): Heel goed, snel verzonden en snel toegedragen 😊",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "ciurmira",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(7 mesi fa): Articolo perfetto! ottimo venditore",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "chiara.valle",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(7 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "davide_longo",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(7 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "cristianotara",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(8 mesi fa): Tutto ok!",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "lorenzo_barbetti",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(8 mesi fa): maglia realistica e fatta bene",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "luisa_terenzi",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(8 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "paolocast",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(8 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "sandro987654",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(8 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "riccardomainini4",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(8 mesi fa): Ottimo",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "andrea.morganti",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(8 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "giulia_fanti",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(8 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "silvia_vega",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(8 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "alessandro_v93",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(8 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "fabio_riva",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(8 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "franxisxesc.84",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(9 mesi fa): Maglia splendida, giunta a destinazione ottimamente imballata e nelle condizioni descritte. Venditore onesto, professionale e altamente consigliato",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "sfinx10",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(9 mesi fa): Bellissima e perfetta",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "guido.1990",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(9 mesi fa): Tutto perfetto!",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "ousmanejr17",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(9 mesi fa): ottimo",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "merykluigi92",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(9 mesi fa): Perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "manuel.botta",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(9 mesi fa): Tutto perfetto",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "alexnico57",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(10 mesi fa): Rapide, très bien emballé, je recommande",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "alexx.kk",
+    "rating": {
+      "$numberInt": "4"
+    },
+    "comment": "(10 mesi fa): Prodotto impeccabile , l ‘utente mi è venuto incontro abbassando il prezzo senza problemi 🫱🏽‍🫲🏾",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "productId": "681b30b9ef14c196ca7f9923",
+    "name": "jmnzc",
+    "rating": {
+      "$numberInt": "5"
+    },
+    "comment": "(10 mesi fa): Perfecto!!!",
+    "createdAt": {
+      "$date": {
+        "$numberLong": "1746719733828"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  }
+]

@@ -1,0 +1,10 @@
+[lcl-host]
+realm-apid = 'localhost'
+
+[org]
+apid = 'umerzzz'
+
+[service]
+apid = 'goal-mania'
+category = 'javascript'
+cert-style = 'acme'

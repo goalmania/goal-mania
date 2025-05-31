@@ -1,0 +1,107 @@
+{
+  "navigation": {
+    "home": "Home",
+    "news": "News",
+    "transfer": "Transfer",
+    "serieA": "Serie A",
+    "results": "Results",
+    "fantasyFootball": "Fantasy Football",
+    "about": "About Us",
+    "shop": "Shop"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "myProfile": "My Profile",
+    "myOrders": "My Orders"
+  },
+  "shop": {
+    "hero": {
+      "title": "Wear the passion, live football!",
+      "description": "Discover our exclusive collection of football jerseys with premium quality, unique designs, and unbeatable prices. Perfect for every football fan.",
+      "subtitle": "Discover our exclusive collection of football jerseys. Premium quality, unique designs, and unbeatable prices.",
+      "cta": "Discover jerseys"
+    },
+    "featuredProducts": "Featured Products",
+    "trust": {
+      "title": "Over 1200 Happy Customers ⭐️",
+      "subtitle": "Our community of enthusiasts grows every day. Join those who have already chosen quality and authenticity."
+    },
+    "highlights": {
+      "quality": {
+        "title": "Super Quality",
+        "description": "Our jerseys are crafted with attention to detail using premium materials. Perfect for true fans who want to collect emotions, not just fabric."
+      },
+      "unique": {
+        "title": "Unique Models",
+        "description": "Exclusive collection of rare and limited edition jerseys. Find unique pieces you won't find anywhere else."
+      },
+      "fit": {
+        "title": "Perfect Fit",
+        "description": "Each jersey is designed to ensure maximum comfort and impeccable fit. Accurate sizes and materials that adapt perfectly to the body."
+      }
+    },
+    "features": {
+      "title": "Guaranteed Reliability ✅",
+      "subtitle": "Your satisfaction is our priority. That's why we offer services that guarantee a safe and worry-free shopping experience.",
+      "secure": {
+        "title": "Secure Payments",
+        "description": "We guarantee risk-free transactions, putting your security first. You can shop with confidence, knowing that every transaction is handled with reliable and maximum security systems."
+      },
+      "guarantee": {
+        "title": "7-Day Guarantee",
+        "description": "With our 7-day guarantee, we offer peace of mind to try your purchase without worries. If for any reason you're not completely satisfied, you have 7 days to return the product and get a full refund."
+      },
+      "returns": {
+        "title": "Free Returns",
+        "description": "We offer free returns to ensure every purchase meets your expectations. If for any reason you want to return your product, return it within 7 days and enjoy a return without additional costs."
+      },
+      "tracking": {
+        "title": "Order Tracking",
+        "description": "Every purchase offers the peace of mind of a fully trackable order. To do this, simply enter the package number we will provide on the 'Track Your Order' page!"
+      }
+    },
+    "reviews": {
+      "title": "What our customers say",
+      "rating": "4.8 out of 5 stars",
+      "addToCart": "Add to Cart",
+      "addToWishlist": "Add to Wishlist",
+      "removeFromWishlist": "Remove from Wishlist"
+    }
+  },
+  "wishlist": {
+    "empty": {
+      "title": "Your wishlist is empty",
+      "description": "Add your favorite products to the wishlist to keep an eye on them.",
+      "cta": "Continue shopping"
+    },
+    "title": "Your Wishlist",
+    "remove": "Remove",
+    "addToCart": "Add to Cart"
+  },
+  "cart": {
+    "empty": {
+      "title": "Your cart is empty",
+      "description": "Looks like you haven't added anything to your cart yet.",
+      "cta": "Continue Shopping"
+    },
+    "title": "Shopping Cart",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping and taxes calculated at checkout",
+    "checkout": "Checkout",
+    "processing": "Processing...",
+    "or": "or",
+    "continueShopping": "Continue Shopping",
+    "proceedToCheckout": "Proceed to Checkout"
+  },
+  "product": {
+    "addToCart": "Add to Cart",
+    "addToWishlist": "Add to Wishlist",
+    "removeFromWishlist": "Remove from Wishlist",
+    "quantity": "Quantity",
+    "features": "Features",
+    "shipping": "Shipping Information",
+    "shippingInfo": "Free shipping on all orders. Usually ships within 1-2 business days."
+  }
+}

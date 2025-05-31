@@ -1,0 +1,107 @@
+{
+  "navigation": {
+    "home": "Home",
+    "news": "News",
+    "transfer": "Calciomercato",
+    "serieA": "Serie A",
+    "results": "Risultati",
+    "fantasyFootball": "Fantacalcio",
+    "about": "Chi Siamo",
+    "shop": "Shop"
+  },
+  "auth": {
+    "signIn": "Accedi",
+    "signUp": "Registrati",
+    "signOut": "Esci",
+    "myProfile": "Il mio profilo",
+    "myOrders": "I miei ordini"
+  },
+  "shop": {
+    "hero": {
+      "title": "Indossa la passione, vivi il calcio!",
+      "description": "Scopri la nostra collezione esclusiva di maglie da calcio con qualità premium, design unici e prezzi imbattibili. Perfetto per ogni tifoso.",
+      "subtitle": "Scopri la nostra collezione esclusiva di maglie da calcio. Qualità premium, design unici e prezzi imbattibili.",
+      "cta": "Scopri le maglie"
+    },
+    "featuredProducts": "Prodotti in Evidenza",
+    "trust": {
+      "title": "Oltre 1200 Clienti Felici ⭐️",
+      "subtitle": "La nostra community di appassionati cresce ogni giorno. Unisciti a chi ha già scelto la qualità e l'autenticità."
+    },
+    "highlights": {
+      "quality": {
+        "title": "Qualità Super",
+        "description": "Le nostre maglie sono capi curati nei minimi dettagli con materiali premium. Perfette per i veri appassionati che vogliono collezionare emozioni, non solo tessuto."
+      },
+      "unique": {
+        "title": "Modelli introvabili",
+        "description": "Collezione esclusiva di maglie rare e limited edition. Trova pezzi unici che non troverai da nessun'altra parte."
+      },
+      "fit": {
+        "title": "Vestibilità perfetta",
+        "description": "Ogni maglia è realizzata per garantire il massimo comfort e una vestibilità impeccabile. Taglie accurate e materiali che si adattano perfettamente al corpo."
+      }
+    },
+    "features": {
+      "title": "Affidabilità Garantita ✅",
+      "subtitle": "La tua soddisfazione è la nostra priorità. Ecco perché offriamo servizi che garantiscono un'esperienza d'acquisto sicura e senza pensieri.",
+      "secure": {
+        "title": "Pagamenti Protetti",
+        "description": "Garantiamo transazioni senza rischi, mettendo la tua sicurezza al primo posto. Puoi fare acquisti con fiducia, sapendo che ogni transazione è gestita con sistemi affidabili e di sicurezza massima."
+      },
+      "guarantee": {
+        "title": "Garanzia di 7 Giorni",
+        "description": "Con la nostra garanzia di 7 giorni, offriamo la tranquillità di poter provare il tuo acquisto senza preoccupazioni. Se per qualsiasi motivo non fossi completamente soddisfatto, hai 7 giorni per restituire il prodotto e ottenere un rimborso completo."
+      },
+      "returns": {
+        "title": "Reso Gratuito",
+        "description": "Offriamo resi gratuiti per garantire che ogni acquisto soddisfi le tue aspettative. Se per qualsiasi motivo desideri restituire il tuo prodotto, rendilo entro 7 giorni e goditi un reso senza costi aggiuntivi."
+      },
+      "tracking": {
+        "title": "Ordine Tracciabile",
+        "description": "Ogni acquisto offre la tranquillità di un ordine completamente tracciabile. Per fare ciò, semplicemente inserisci il numero del pacco che forniremo nell'apposita pagina \"Traccia il Tuo Ordine\"!"
+      }
+    },
+    "reviews": {
+      "title": "Cosa dicono i nostri clienti",
+      "rating": "4.8 su 5 stelle",
+      "addToCart": "Aggiungi al carrello",
+      "addToWishlist": "Aggiungi ai preferiti",
+      "removeFromWishlist": "Rimuovi dai preferiti"
+    }
+  },
+  "wishlist": {
+    "empty": {
+      "title": "La tua lista dei desideri è vuota",
+      "description": "Aggiungi i tuoi prodotti preferiti alla lista dei desideri per tenerli d'occhio.",
+      "cta": "Continua lo shopping"
+    },
+    "title": "La tua lista dei desideri",
+    "remove": "Rimuovi",
+    "addToCart": "Aggiungi al carrello"
+  },
+  "cart": {
+    "empty": {
+      "title": "Il tuo carrello è vuoto",
+      "description": "Sembra che non hai ancora aggiunto nulla al carrello.",
+      "cta": "Continua lo shopping"
+    },
+    "title": "Carrello",
+    "subtotal": "Subtotale",
+    "shipping": "Spedizione e tasse calcolate al checkout",
+    "checkout": "Procedi all'acquisto",
+    "processing": "Elaborazione...",
+    "or": "o",
+    "continueShopping": "Continua lo shopping",
+    "proceedToCheckout": "Procedi al checkout"
+  },
+  "product": {
+    "addToCart": "Aggiungi al carrello",
+    "addToWishlist": "Aggiungi alla lista dei desideri",
+    "removeFromWishlist": "Rimuovi dalla lista dei desideri",
+    "quantity": "Quantità",
+    "features": "Caratteristiche",
+    "shipping": "Informazioni sulla spedizione",
+    "shippingInfo": "Spedizione gratuita su tutti gli ordini. La spedizione avviene solitamente entro 1-2 giorni lavorativi."
+  }
+}
