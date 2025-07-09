@@ -46,6 +46,8 @@ export default async function ShopPage() {
     team: product.title ? product.title.split(" ")[0] : "Unknown", // Ensure team is never undefined
   }));
 
+  // test
+
   return (
     <div className="pt-[90px] sm:pt-[110px]">
       <ShopClient products={products} />
