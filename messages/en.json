@@ -103,5 +103,8 @@
     "features": "Features",
     "shipping": "Shipping Information",
     "shippingInfo": "Free shipping on all orders. Usually ships within 1-2 business days."
-  }
+  },
+  "sale": "Free shipping for the next 24 hours",
+  "search": "Search",
+  "news": "See all news"
 }

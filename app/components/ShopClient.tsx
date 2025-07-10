@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useState, useEffect } from "react";
 import { useWishlistStore } from "@/lib/store/wishlist";
@@ -342,8 +344,8 @@ export default function ShopClient({ products }: { products: Product[] }) {
             <p className="mx-auto mt-4 max-w-2xl text-sm sm:text-base md:text-lg text-white">
               Oltre 1200 persone hanno scelto di fare parte della nostra
               famiglia di clienti soddisfatti. La qualità dei nostri prodotti e
-              l'attenzione che dedichiamo a ogni dettaglio hanno reso ogni
-              acquisto un'esperienza positiva.
+              l&apos;attenzione che dedichiamo a ogni dettaglio hanno reso ogni
+              acquisto un&apos;esperienza positiva.
             </p>
           </div>
         </div>
@@ -489,8 +491,8 @@ export default function ShopClient({ products }: { products: Product[] }) {
                   Modelli introvabili 🔥
                 </h2>
                 <p className="text-sm sm:text-base md:text-lg mb-6 sm:mb-8">
-                  Associa un testo a un'immagine per dare importanza al
-                  prodotto, alla collezione o all'articolo del blog di tua
+                  Associa un testo a un&apos;immagine per dare importanza al
+                  prodotto, alla collezione o all&apos;articolo del blog di tua
                   scelta. Aggiungi dettagli sulla disponibilità, sullo stile o
                   fornisci una recensione.
                 </p>
@@ -531,8 +533,8 @@ export default function ShopClient({ products }: { products: Product[] }) {
                   Vestibilità perfetta 🎯
                 </h2>
                 <p className="text-sm sm:text-base md:text-lg mb-6 sm:mb-8">
-                  Associa un testo a un'immagine per dare importanza al
-                  prodotto, alla collezione o all'articolo del blog di tua
+                  Associa un testo a un&apos;immagine per dare importanza al
+                  prodotto, alla collezione o all&apos;articolo del blog di tua
                   scelta. Aggiungi dettagli sulla disponibilità, sullo stile o
                   fornisci una recensione.
                 </p>

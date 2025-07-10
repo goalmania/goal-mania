@@ -7,6 +7,7 @@ const nextConfig = {
       "images.unsplash.com",
       "goalmania.shop",
       "media.api-sports.io",
+      "crests.football-data.org",
     ],
   },
   async headers() {

@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Image from "next/image";
 import Link from "next/link";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
+import NewsButton from "@/components/home/news-button";
 
 // Disable caching for this page
 export const dynamic = "force-dynamic";
@@ -84,15 +86,7 @@ export default async function Home() {
           )}
 
           <div className="mt-6 sm:mt-8 md:mt-10 text-center">
-            <Link
-              href="/news"
-              className="inline-flex items-center rounded-md bg-white px-3 py-2 sm:px-3.5 sm:py-2.5 text-sm font-semibold text-indigo-600 shadow-sm ring-1 ring-inset ring-indigo-600 hover:bg-indigo-50"
-            >
-              Vedi tutte le notizie
-              <span aria-hidden="true" className="ml-1 sm:ml-2">
-                →
-              </span>
-            </Link>
+            <NewsButton />
           </div>
         </div>
       </div>
@@ -105,17 +99,7 @@ export default async function Home() {
           <p className="text-center text-gray-600">
             Non è stato possibile caricare le notizie. Riprova più tardi.
           </p>
-          <div className="mt-6 sm:mt-8 text-center">
-            <Link
-              href="/news"
-              className="inline-flex items-center rounded-md bg-white px-3 py-2 sm:px-3.5 sm:py-2.5 text-sm font-semibold text-indigo-600 shadow-sm ring-1 ring-inset ring-indigo-600 hover:bg-indigo-50"
-            >
-              Vedi tutte le notizie
-              <span aria-hidden="true" className="ml-1 sm:ml-2">
-                →
-              </span>
-            </Link>
-          </div>
+          <NewsButton />
         </div>
       </div>
     );

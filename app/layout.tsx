@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { ToastProvider } from "@/components/ToastProvider";
 import "./globals.css";
+import Container from "./_sections/container";
 
 const inter = Inter({ subsets: ["latin"] });
 const italianno = Italianno({
@@ -62,7 +63,7 @@ export default function RootLayout({
         <Providers>
           <div className="min-h-screen flex flex-col">
             <Header />
-            <main className="flex-grow">{children}</main>
+            <Container>{children}</Container>
             <Footer />
             <ToastProvider />
           </div>
