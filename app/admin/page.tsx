@@ -82,7 +82,7 @@ export default function AdminDashboard() {
       <div>
         <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
         <p className="mt-2 text-sm text-gray-700">
-          Welcome back! Here's an overview of your store.
+          Welcome back! Here&apos;s an overview of your store.
         </p>
       </div>
 

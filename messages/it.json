@@ -78,7 +78,8 @@
     },
     "title": "La tua lista dei desideri",
     "remove": "Rimuovi",
-    "addToCart": "Aggiungi al carrello"
+    "addToCart": "Aggiungi al carrello",
+    "view": "Visualizza prodotto"
   },
   "cart": {
     "empty": {

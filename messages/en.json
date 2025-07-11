@@ -78,7 +78,8 @@
     },
     "title": "Your Wishlist",
     "remove": "Remove",
-    "addToCart": "Add to Cart"
+    "addToCart": "Add to Cart",
+    "view": "View Product"
   },
   "cart": {
     "empty": {

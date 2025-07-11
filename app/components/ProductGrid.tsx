@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -91,13 +92,13 @@ export default function ProductGrid({
           </Link>
 
           <div className="p-2 sm:p-4 flex flex-col flex-grow">
-            <div className="mb-2 sm:mb-4 flex-grow">
+            <div className="mb-2 flex-grow">
               <Link href={product.id ? `/products/${product.id}` : "#"}>
-                <h3 className="text-xs sm:text-sm font-medium text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
+                <h3 className="text-xs flex justify-center text-center items-center sm:text-sm font-medium text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
                   {product.name}
                 </h3>
               </Link>
-              <div className="mt-1 flex items-center gap-1 sm:gap-2 flex-wrap">
+              <div className="mt-1 flex items-center justify-center gap-1 sm:gap-2 flex-wrap">
                 <p className="text-[10px] sm:text-xs text-gray-500">
                   {product.category}
                 </p>
@@ -107,16 +108,10 @@ export default function ProductGrid({
                 </p>
               </div>
             </div>
-            <div className="flex items-center justify-between mt-auto">
-              <p className="text-xs sm:text-base font-semibold text-black">
+            <div className="flex items-center justify-center mt-auto">
+              <p className="text-xs sm:text-base md:text-lg font-semibold text-[#F1803A]">
                 €{Number(product.price).toFixed(2)}
               </p>
-              <Link
-                href={product.id ? `/products/${product.id}` : "#"}
-                className="flex items-center rounded-md bg-indigo-600 px-1.5 py-1 sm:px-2.5 sm:py-1.5 text-[10px] sm:text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors duration-200"
-              >
-                <span className="hidden sm:inline">View</span> Product
-              </Link>
             </div>
           </div>
         </div>
