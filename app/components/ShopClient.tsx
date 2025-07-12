@@ -364,7 +364,8 @@ export default function ShopClient({ products }: { products: Product[] }) {
             Vedi tutti
           </Link>
         </div>
-        <div className="mt-6">
+        {/* Temporary hide the products */}
+        {/* <div className="mt-6">
           {isLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[...Array(4)].map((_, i) => (
@@ -414,7 +415,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
               />
             </Suspense>
           )}
-        </div>
+        </div> */}
       </div>
 
       {/* Guarantees Section */}
