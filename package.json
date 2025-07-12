@@ -18,6 +18,7 @@
     "@auth/mongodb-adapter": "^3.9.0",
     "@headlessui/react": "^2.2.2",
     "@heroicons/react": "^2.2.0",
+    "@mollie/api-client": "^4.3.3",
     "@radix-ui/react-slot": "^1.2.2",
     "@stripe/react-stripe-js": "^3.7.0",
     "@stripe/stripe-js": "^7.3.0",
