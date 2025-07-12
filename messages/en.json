@@ -107,5 +107,9 @@
   },
   "sale": "Free shipping for the next 24 hours",
   "search": "Search",
-  "news": "See all news"
+  "news": "See all news",
+  "profile": "Profile",
+  "orders": "Orders",
+  "adminPanel": "Admin Panel",
+  "signOut": "Sign Out"
 }

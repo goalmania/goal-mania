@@ -107,5 +107,9 @@
   },
   "sale": "Spedizione gratuita per le prossime 24 ore",
   "search": "Cerca",
-  "news": "Vedi tutte le notizie"
+  "news": "Vedi tutte le notizie",
+  "profile": "Profilo",
+  "orders": "Ordini",
+  "adminPanel": "Pannello di Amministrazione",
+  "signOut": "Disconnetti"
 }

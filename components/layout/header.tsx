@@ -43,7 +43,6 @@ const navigation = [
   { name: "navigation.serieA", href: "/serieA" },
   { name: "navigation.results", href: "/risultati" },
   { name: "navigation.fantasyFootball", href: "/fantasyFootball" },
-  { name: "navigation.shop", href: "/shop" },
 ];
 
 const navigation1 = [
@@ -475,27 +474,27 @@ export function Header() {
                 <div className="mt-3 space-y-1">
                   <Link
                     href="/profile"
-                    className="block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
+                    className="block rounded-md px-3 py-2 md:py-1 text-sm font-medium text-white hover:bg-gray-700"
                   >
                     {t("profile")}
                   </Link>
                   <Link
                     href="/account/orders"
-                    className="block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
+                    className="block rounded-md px-3 py-2 md:py-1 text-sm font-medium text-white hover:bg-gray-700"
                   >
                     {t("orders")}
                   </Link>
                   {session.user.role === "admin" && (
                     <Link
                       href="/admin"
-                      className="block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
+                      className="block rounded-md px-3 py-2 md:py-1 text-sm font-medium text-white hover:bg-gray-700"
                     >
                       {t("adminPanel")}
                     </Link>
                   )}
                   <button
                     onClick={() => signOut()}
-                    className="block w-full text-left rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
+                    className="block w-full text-left rounded-md px-3 py-2 md:py-1 text-sm font-medium text-white hover:bg-gray-700"
                   >
                     {t("signOut")}
                   </button>
