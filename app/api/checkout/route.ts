@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
       },
       description: "Your Order Checkout",
       redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success`,
-      webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhook/mollie`,
+      webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie`,
       metadata: {
         userId: session.user.id,
         addressId,
