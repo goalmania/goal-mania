@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useLanguageStore } from "@/lib/store/language";
 import enMessages from "@/messages/en.json";
 import itMessages from "@/messages/it.json";

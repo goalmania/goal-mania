@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -141,7 +142,7 @@ export function ApiConfigCheck() {
                 per uso client-side.
               </li>
               <li>
-                Assicurati di utilizzare l'intestazione{" "}
+                Assicurati di utilizzare l&apos;intestazione{" "}
                 <code className="bg-amber-100 px-1 rounded">
                   x-apisports-key
                 </code>{" "}

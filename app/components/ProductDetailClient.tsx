@@ -8,9 +8,8 @@ import { StarIcon } from "@heroicons/react/20/solid";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { useWishlistStore } from "@/lib/store/wishlist";
 import { useCartStore } from "@/lib/store/cart";
-import { useTranslation } from "@/lib/hooks/useTranslation";
 import { IProduct, Review, Patch } from "@/lib/types/product";
-import { useSession, signIn, getSession } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
@@ -68,7 +67,6 @@ export default function ProductDetailClient({
     isInWishlist,
   } = useWishlistStore();
   const { addItem: addToCart } = useCartStore();
-  const { t } = useTranslation();
 
   // Helper function to check if status is loading
   const isStatusLoading = () => status === "loading";

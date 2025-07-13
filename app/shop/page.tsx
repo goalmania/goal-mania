@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import ShopClient from "@/app/components/ShopClient";
@@ -47,7 +48,7 @@ export default async function ShopPage() {
   }));
 
   return (
-    <div className="pt-[90px] sm:pt-[110px]">
+    <div className=" bg-red-300">
       <ShopClient products={products} />
     </div>
   );

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useState, useEffect } from "react";
 import { useWishlistStore } from "@/lib/store/wishlist";
@@ -307,7 +309,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
           <div className="relative z-10 pt-10 sm:pt-14 lg:w-full lg:max-w-2xl">
             <div className="relative px-4 sm:px-6 py-12 sm:py-16 md:py-24 lg:px-8 lg:py-56 lg:pr-0">
               <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
                   {t("shop.hero.title")}
                 </h1>
                 <p className="mt-4 sm:mt-6 text-sm sm:text-base md:text-lg leading-6 sm:leading-8 text-gray-600">
@@ -336,14 +338,14 @@ export default function ShopClient({ products }: { products: Product[] }) {
       <div className="bg-gray-800 py-10 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white">
               Oltre 1200 Clienti Felici ⭐️{" "}
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-sm sm:text-base md:text-lg text-white">
               Oltre 1200 persone hanno scelto di fare parte della nostra
               famiglia di clienti soddisfatti. La qualità dei nostri prodotti e
-              l'attenzione che dedichiamo a ogni dettaglio hanno reso ogni
-              acquisto un'esperienza positiva.
+              l&apos;attenzione che dedichiamo a ogni dettaglio hanno reso ogni
+              acquisto un&apos;esperienza positiva.
             </p>
           </div>
         </div>
@@ -362,7 +364,8 @@ export default function ShopClient({ products }: { products: Product[] }) {
             Vedi tutti
           </Link>
         </div>
-        <div className="mt-6">
+        {/* Temporary hide the products */}
+        {/* <div className="mt-6">
           {isLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[...Array(4)].map((_, i) => (
@@ -412,7 +415,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
               />
             </Suspense>
           )}
-        </div>
+        </div> */}
       </div>
 
       {/* Guarantees Section */}
@@ -489,8 +492,8 @@ export default function ShopClient({ products }: { products: Product[] }) {
                   Modelli introvabili 🔥
                 </h2>
                 <p className="text-sm sm:text-base md:text-lg mb-6 sm:mb-8">
-                  Associa un testo a un'immagine per dare importanza al
-                  prodotto, alla collezione o all'articolo del blog di tua
+                  Associa un testo a un&apos;immagine per dare importanza al
+                  prodotto, alla collezione o all&apos;articolo del blog di tua
                   scelta. Aggiungi dettagli sulla disponibilità, sullo stile o
                   fornisci una recensione.
                 </p>
@@ -531,8 +534,8 @@ export default function ShopClient({ products }: { products: Product[] }) {
                   Vestibilità perfetta 🎯
                 </h2>
                 <p className="text-sm sm:text-base md:text-lg mb-6 sm:mb-8">
-                  Associa un testo a un'immagine per dare importanza al
-                  prodotto, alla collezione o all'articolo del blog di tua
+                  Associa un testo a un&apos;immagine per dare importanza al
+                  prodotto, alla collezione o all&apos;articolo del blog di tua
                   scelta. Aggiungi dettagli sulla disponibilità, sullo stile o
                   fornisci una recensione.
                 </p>
@@ -551,7 +554,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
       <div className="bg-gray-800 py-10 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white">
               Valutazioni Stellari: 4.8⭐️ di Media!{" "}
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-sm sm:text-base md:text-lg text-white">

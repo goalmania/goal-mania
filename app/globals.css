@@ -318,4 +318,27 @@
   .product-btn {
     @apply px-2 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm rounded-md font-medium;
   }
+
+  .thin-scrollbar {
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #bbb transparent; /* Firefox */
+  }
+
+  .thin-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 4px;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #999;
+  }
 }

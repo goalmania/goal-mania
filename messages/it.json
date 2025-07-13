@@ -78,7 +78,8 @@
     },
     "title": "La tua lista dei desideri",
     "remove": "Rimuovi",
-    "addToCart": "Aggiungi al carrello"
+    "addToCart": "Aggiungi al carrello",
+    "view": "Visualizza prodotto"
   },
   "cart": {
     "empty": {
@@ -103,5 +104,12 @@
     "features": "Caratteristiche",
     "shipping": "Informazioni sulla spedizione",
     "shippingInfo": "Spedizione gratuita su tutti gli ordini. La spedizione avviene solitamente entro 1-2 giorni lavorativi."
-  }
+  },
+  "sale": "Spedizione gratuita per le prossime 24 ore",
+  "search": "Cerca",
+  "news": "Vedi tutte le notizie",
+  "profile": "Profilo",
+  "orders": "Ordini",
+  "adminPanel": "Pannello di Amministrazione",
+  "signOut": "Disconnetti"
 }

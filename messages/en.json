@@ -78,7 +78,8 @@
     },
     "title": "Your Wishlist",
     "remove": "Remove",
-    "addToCart": "Add to Cart"
+    "addToCart": "Add to Cart",
+    "view": "View Product"
   },
   "cart": {
     "empty": {
@@ -103,5 +104,12 @@
     "features": "Features",
     "shipping": "Shipping Information",
     "shippingInfo": "Free shipping on all orders. Usually ships within 1-2 business days."
-  }
+  },
+  "sale": "Free shipping for the next 24 hours",
+  "search": "Search",
+  "news": "See all news",
+  "profile": "Profile",
+  "orders": "Orders",
+  "adminPanel": "Admin Panel",
+  "signOut": "Sign Out"
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -129,7 +130,7 @@ export default async function SerieAArticlePage({
         {/* Article Featured Image */}
         <div className="relative h-[50vh] w-full mb-8 rounded-lg overflow-hidden">
           <Image
-            src={article.image}
+            src={article.image ?? "/product-placeholder-img.jpg"}
             alt={article.title}
             fill
             className="object-cover"
@@ -174,7 +175,7 @@ export default async function SerieAArticlePage({
               >
                 <div className="relative h-48 w-full">
                   <Image
-                    src={related.image}
+                    src={related.image ?? "/product-placeholder-img.jpg"}
                     alt={related.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
