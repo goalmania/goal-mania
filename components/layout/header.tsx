@@ -43,18 +43,6 @@ const navigation = [
   { name: "navigation.serieA", href: "/serieA" },
   { name: "navigation.results", href: "/risultati" },
   { name: "navigation.fantasyFootball", href: "/fantasyFootball" },
-];
-
-const navigation1 = [
-  { name: "navigation.home", href: "/" },
-  { name: "navigation.news", href: "/news" },
-  { name: "navigation.transfer", href: "/transfer" },
-  { name: "navigation.serieA", href: "/serieA" },
-  { name: "navigation.results", href: "/risultati" },
-];
-
-const navigation2 = [
-  { name: "navigation.fantasyFootball", href: "/fantasyFootball" },
   { name: "navigation.shop", href: "/shop" },
 ];
 
@@ -127,51 +115,39 @@ export function Header() {
   }
 
   return (
-    <Disclosure
-      as="nav"
-      className={`fixed w-full top-0 h-fit primary-bg text-white shadow z-50 transition-all duration-300 ${
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled ? "bg-white shadow-md" : "bg-white"
       } ${showBorder ? "border-b-5 border-orange-500" : ""}`}
     >
-      {({ open }) => (
-        <div className="">
-          {isShopPage && (
-            <div className="accent-bg h-[32px] md:h-[40px] flex justify-center items-center text-white text-center py-2 text-xs sm:text-sm font-medium">
-              {t("sale")}
-            </div>
-          )}
-          <div className="h-[40px] px-2 sm:h-[56px] md:h-[64px] lg:h-[80px] sm:px-6 lg:px-8">
-            <div className="flex lg:h-full sm:h-14 justify-between items-center">
-              <div className="flex items-center w-full">
-                <div className="flex flex-shrink-0 items-center px-1">
-                  <Link href="/" className="flex items-center">
-                    <Image
-                      src="/images/image.png"
-                      alt="Goal Mania Logo"
-                      width={28}
-                      height={28}
-                      className="mr-2 rounded sm:w-8 sm:h-8"
-                      style={{ objectFit: "contain" }}
-                    />
-                    <span className="goalmania-title text-base sm:text-xl font-bold text-white tracking-tight">
-                      GOALMANIA
-                    </span>
-                  </Link>
-                </div>
-                <div className="hidden lg:flex 2xl:flex-row w-full 2xl:gap-4 flex-col gap-1 py-3">
-                  <div className="w-full flex gap-4 2xl:justify-end items-center justify-center">
-                    {navigation1.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-xs md:text-sm font-medium text-white hover:border-accent transition-colors duration-150"
-                      >
-                        {t(item.name)}
-                      </Link>
-                    ))}
+      {isShopPage && (
+        <div className="accent-bg text-white text-center py-2 text-xs sm:text-sm font-medium">
+          Spedizione gratuita per le prossime 24 ore
+        </div>
+      )}
+      <Disclosure as="nav" className="primary-bg text-white shadow">
+        {({ open }) => (
+          <>
+            <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+              <div className="flex h-14 sm:h-16 justify-between items-center">
+                <div className="flex items-center">
+                  <div className="flex flex-shrink-0 items-center px-1">
+                    <Link href="/" className="flex items-center">
+                      <Image
+                        src="/images/image.png"
+                        alt="Goal Mania Logo"
+                        width={28}
+                        height={28}
+                        className="mr-2 rounded sm:w-8 sm:h-8"
+                        style={{ objectFit: "contain" }}
+                      />
+                      <span className="goalmania-title text-base sm:text-xl font-bold text-white tracking-tight">
+                        GOALMANIA
+                      </span>
+                    </Link>
                   </div>
-                  <div className="w-full flex gap-4 2xl:justify-start items-center justify-center">
-                    {navigation2.map((item) => (
+                  <div className="hidden sm:ml-6 sm:flex sm:space-x-2 md:space-x-4">
+                    {navigation.map((item) => (
                       <Link
                         key={item.name}
                         href={item.href}
@@ -213,304 +189,302 @@ export function Header() {
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex items-center">
-                <div className="flex items-center space-x-1 sm:space-x-3">
-                  <button
-                    onClick={toggleLanguage}
-                    className="relative p-1.5 cursor-pointer sm:p-1 text-white hover:text-gray-200 flex items-center transition-colors duration-150"
-                    aria-label="Toggle language"
-                  >
-                    <LanguageIcon
-                      className="h-5 w-5 sm:h-4 sm:w-4 mr-0.5 sm:mr-1"
-                      aria-hidden="true"
-                    />
-                    <span className="text-xs font-medium">
-                      {language.toUpperCase()}
-                    </span>
-                  </button>
-
-                  {/* Search Button with Dropdown - Only visible on desktop */}
-                  <div className="hidden sm:block relative">
-                    <SearchDropdown />
-                  </div>
-
-                  <Link
-                    href="/wishlist"
-                    className="relative p-1.5 sm:p-1 text-white hover:text-gray-200 transition-colors duration-150"
-                    aria-label="Wishlist"
-                  >
-                    <HeartIcon
-                      className="h-5 w-5 sm:h-6 sm:w-6"
-                      aria-hidden="true"
-                    />
-                    {wishlistItemCount > 0 && (
-                      <span className="absolute -top-1 -right-1 inline-flex items-center justify-center w-4 h-4 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
-                        {wishlistItemCount}
+                <div className="flex items-center">
+                  <div className="flex items-center space-x-1 sm:space-x-3">
+                    <button
+                      onClick={toggleLanguage}
+                      className="relative p-1.5 sm:p-1 text-white hover:text-gray-200 flex items-center transition-colors duration-150"
+                      aria-label="Toggle language"
+                    >
+                      <LanguageIcon
+                        className="h-5 w-5 sm:h-4 sm:w-4 mr-0.5 sm:mr-1"
+                        aria-hidden="true"
+                      />
+                      <span className="text-xs font-medium">
+                        {language.toUpperCase()}
                       </span>
-                    )}
-                  </Link>
+                    </button>
 
-                  <Link
-                    href="/cart"
-                    className="relative p-1.5 sm:p-1 text-white hover:text-gray-200 transition-colors duration-150"
-                    aria-label="Cart"
-                  >
-                    <ShoppingCartIcon
-                      className="h-5 w-5 sm:h-6 sm:w-6"
-                      aria-hidden="true"
-                    />
-                    {cartItemCount > 0 && (
-                      <span className="absolute -top-1 -right-1 inline-flex items-center justify-center w-4 h-4 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
-                        {cartItemCount}
-                      </span>
-                    )}
-                  </Link>
+                    {/* Search Button with Dropdown - Only visible on desktop */}
+                    <div className="hidden sm:block relative">
+                      <SearchDropdown />
+                    </div>
 
-                  {/* Profile dropdown - Desktop */}
-                  <div className="hidden sm:block ml-1">
-                    {session ? (
-                      <Menu as="div" className="relative">
-                        <Menu.Button className="relative flex rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white">
-                          <span className="sr-only">Open user menu</span>
-                          <Image
-                            width={32}
-                            height={32}
-                            className="h-8 w-8 rounded-full object-cover"
-                            src={getUserImage(session.user)}
-                            alt="Profile"
-                          />
-                        </Menu.Button>
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
-                        >
-                          <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <Menu.Item>
-                              {({ active }) => (
-                                <Link
-                                  href="/profile"
-                                  className={`${
-                                    active ? "bg-gray-100" : ""
-                                  } block px-4 py-2 text-sm text-gray-700`}
-                                >
-                                  {t("profile")}
-                                </Link>
-                              )}
-                            </Menu.Item>
-                            <Menu.Item>
-                              {({ active }) => (
-                                <Link
-                                  href="/account/orders"
-                                  className={`${
-                                    active ? "bg-gray-100" : ""
-                                  } block px-4 py-2 text-sm text-gray-700`}
-                                >
-                                  {t("orders")}
-                                </Link>
-                              )}
-                            </Menu.Item>
-                            {session.user.role === "admin" && (
+                    <Link
+                      href="/wishlist"
+                      className="relative p-1.5 sm:p-1 text-white hover:text-gray-200 transition-colors duration-150"
+                      aria-label="Wishlist"
+                    >
+                      <HeartIcon
+                        className="h-5 w-5 sm:h-6 sm:w-6"
+                        aria-hidden="true"
+                      />
+                      {wishlistItemCount > 0 && (
+                        <span className="absolute -top-1 -right-1 inline-flex items-center justify-center w-4 h-4 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                          {wishlistItemCount}
+                        </span>
+                      )}
+                    </Link>
+
+                    <Link
+                      href="/cart"
+                      className="relative p-1.5 sm:p-1 text-white hover:text-gray-200 transition-colors duration-150"
+                      aria-label="Cart"
+                    >
+                      <ShoppingCartIcon
+                        className="h-5 w-5 sm:h-6 sm:w-6"
+                        aria-hidden="true"
+                      />
+                      {cartItemCount > 0 && (
+                        <span className="absolute -top-1 -right-1 inline-flex items-center justify-center w-4 h-4 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                          {cartItemCount}
+                        </span>
+                      )}
+                    </Link>
+
+                    {/* Profile dropdown - Desktop */}
+                    <div className="hidden sm:block ml-1">
+                      {session ? (
+                        <Menu as="div" className="relative">
+                          <Menu.Button className="relative flex rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white">
+                            <span className="sr-only">Open user menu</span>
+                            <Image
+                              width={32}
+                              height={32}
+                              className="h-8 w-8 rounded-full object-cover"
+                              src={getUserImage(session.user)}
+                              alt="Profile"
+                            />
+                          </Menu.Button>
+                          <Transition
+                            as={Fragment}
+                            enter="transition ease-out duration-100"
+                            enterFrom="transform opacity-0 scale-95"
+                            enterTo="transform opacity-100 scale-100"
+                            leave="transition ease-in duration-75"
+                            leaveFrom="transform opacity-100 scale-100"
+                            leaveTo="transform opacity-0 scale-95"
+                          >
+                            <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                               <Menu.Item>
                                 {({ active }) => (
                                   <Link
-                                    href="/admin"
+                                    href="/profile"
                                     className={`${
                                       active ? "bg-gray-100" : ""
                                     } block px-4 py-2 text-sm text-gray-700`}
                                   >
-                                    {t("adminPanel")}
+                                    {t("profile")}
                                   </Link>
                                 )}
                               </Menu.Item>
-                            )}
-                            <Menu.Item>
-                              {({ active }) => (
-                                <button
-                                  onClick={() => signOut()}
-                                  className={`${
-                                    active ? "bg-gray-100" : ""
-                                  } block w-full text-left px-4 py-2 text-sm text-gray-700`}
-                                >
-                                  {t("signOut")}
-                                </button>
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <Link
+                                    href="/account/orders"
+                                    className={`${
+                                      active ? "bg-gray-100" : ""
+                                    } block px-4 py-2 text-sm text-gray-700`}
+                                  >
+                                    {t("orders")}
+                                  </Link>
+                                )}
+                              </Menu.Item>
+                              {session.user.role === "admin" && (
+                                <Menu.Item>
+                                  {({ active }) => (
+                                    <Link
+                                      href="/admin"
+                                      className={`${
+                                        active ? "bg-gray-100" : ""
+                                      } block px-4 py-2 text-sm text-gray-700`}
+                                    >
+                                      {t("adminPanel")}
+                                    </Link>
+                                  )}
+                                </Menu.Item>
                               )}
-                            </Menu.Item>
-                          </Menu.Items>
-                        </Transition>
-                      </Menu>
-                    ) : (
-                      <Link
-                        href="/auth/signin"
-                        className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-[#f1803a] hover:bg-[#e06d29] rounded-md transition-colors duration-150"
-                      >
-                        {t("signIn")}
-                      </Link>
-                    )}
-                  </div>
-
-                  {/* Mobile sign in link */}
-                  <div className="sm:hidden">
-                    {!session && (
-                      <Link
-                        href="/auth/signin"
-                        className="text-white bg-[#f1803a] hover:bg-[#e06d29] px-3 py-1 rounded-md text-xs font-medium transition-colors duration-150"
-                      >
-                        {t("signIn")}
-                      </Link>
-                    )}
-                  </div>
-
-                  {/* Mobile menu button */}
-                  <div className="lg:hidden -mr-1">
-                    <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-1.5 text-white hover:text-gray-200 focus:outline-none">
-                      <span className="sr-only">Open main menu</span>
-                      {open ? (
-                        <XMarkIcon
-                          className="block h-6 w-6"
-                          aria-hidden="true"
-                        />
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <button
+                                    onClick={() => signOut()}
+                                    className={`${
+                                      active ? "bg-gray-100" : ""
+                                    } block w-full text-left px-4 py-2 text-sm text-gray-700`}
+                                  >
+                                    {t("signOut")}
+                                  </button>
+                                )}
+                              </Menu.Item>
+                            </Menu.Items>
+                          </Transition>
+                        </Menu>
                       ) : (
-                        <Bars3Icon
-                          className="block h-6 w-6"
-                          aria-hidden="true"
-                        />
+                        <Link
+                          href="/auth/signin"
+                          className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-[#f1803a] hover:bg-[#e06d29] rounded-md transition-colors duration-150"
+                        >
+                          {t("signIn")}
+                        </Link>
                       )}
-                    </Disclosure.Button>
+                    </div>
+
+                    {/* Mobile sign in link */}
+                    <div className="sm:hidden">
+                      {!session && (
+                        <Link
+                          href="/auth/signin"
+                          className="text-white bg-[#f1803a] hover:bg-[#e06d29] px-3 py-1 rounded-md text-xs font-medium transition-colors duration-150"
+                        >
+                          {t("signIn")}
+                        </Link>
+                      )}
+                    </div>
+
+                    {/* Mobile menu button */}
+                    <div className="sm:hidden -mr-1">
+                      <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-1.5 text-white hover:text-gray-200 focus:outline-none">
+                        <span className="sr-only">Open main menu</span>
+                        {open ? (
+                          <XMarkIcon
+                            className="block h-6 w-6"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          <Bars3Icon
+                            className="block h-6 w-6"
+                            aria-hidden="true"
+                          />
+                        )}
+                      </Disclosure.Button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <Disclosure.Panel className="lg:hidden">
-            {/* Mobile search field */}
-            <div className="px-2 pt-2 pb-1">
-              <form onSubmit={handleMobileSearch} className="relative">
-                <input
-                  type="text"
-                  value={mobileSearchQuery}
-                  onChange={(e) => setMobileSearchQuery(e.target.value)}
-                  placeholder={t("search")}
-                  className="w-full py-2 pl-8 pr-3 text-sm text-gray-900 bg-gray-100 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-                <MagnifyingGlassIcon
-                  className="absolute left-2 cursor-pointer top-2.5 h-4 w-4 text-gray-500"
-                  aria-hidden="true"
-                />
-              </form>
-            </div>
+            <Disclosure.Panel className="sm:hidden">
+              {/* Mobile search field */}
+              <div className="px-2 pt-2 pb-1">
+                <form onSubmit={handleMobileSearch} className="relative">
+                  <input
+                    type="text"
+                    value={mobileSearchQuery}
+                    onChange={(e) => setMobileSearchQuery(e.target.value)}
+                    placeholder={t("search")}
+                    className="w-full py-2 pl-8 pr-3 text-sm text-gray-900 bg-gray-100 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                  <MagnifyingGlassIcon
+                    className="absolute left-2 top-2.5 h-4 w-4 text-gray-500"
+                    aria-hidden="true"
+                  />
+                </form>
+              </div>
 
-            {/* Mobile nav links */}
-            <div className="space-y-1 px-2 pb-3 pt-2">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
-                >
-                  {t(item.name)}
-                </Link>
-              ))}
-
-              {/* International submenu for mobile */}
-              <Disclosure>
-                {({ open }) => (
-                  <div>
-                    <Disclosure.Button className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700">
-                      <span>Camp. Esteri</span>
-                      <ChevronDownIcon
-                        className={`${
-                          open ? "rotate-180" : ""
-                        } h-4 w-4 transition-transform`}
-                      />
-                    </Disclosure.Button>
-                    <Disclosure.Panel className="px-4 py-1 text-sm">
-                      <div className="space-y-1">
-                        {internationalNavItems.map((item) => (
-                          <Link
-                            key={item.name}
-                            href={item.href}
-                            className="block py-1.5 text-gray-300 hover:text-white"
-                          >
-                            {item.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </Disclosure.Panel>
-                  </div>
-                )}
-              </Disclosure>
-            </div>
-
-            {/* Mobile profile section */}
-            {session && (
-              <div className="border-t border-gray-700 px-3 py-3">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <Image
-                      width={40}
-                      height={40}
-                      className="h-10 w-10 rounded-full object-cover"
-                      src={getUserImage(session.user)}
-                      alt="Profile"
-                    />
-                  </div>
-                  <div className="ml-3">
-                    <div className="text-sm font-medium text-white">
-                      {session.user.name}
-                    </div>
-                    <div className="text-xs text-gray-300">
-                      {session.user.email}
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-3 space-y-1">
+              {/* Mobile nav links */}
+              <div className="space-y-1 px-2 pb-3 pt-2">
+                {navigation.map((item) => (
                   <Link
-                    href="/profile"
-                    className="block rounded-md px-3 py-2 md:py-1 text-sm font-medium text-white hover:bg-gray-700"
+                    key={item.name}
+                    href={item.href}
+                    className="block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
                   >
-                    {t("profile")}
+                    {t(item.name)}
                   </Link>
-                  <Link
-                    href="/account/orders"
-                    className="block rounded-md px-3 py-2 md:py-1 text-sm font-medium text-white hover:bg-gray-700"
-                  >
-                    {t("orders")}
-                  </Link>
-                  {session.user.role === "admin" && (
-                    <Link
-                      href="/admin"
-                      className="block rounded-md px-3 py-2 md:py-1 text-sm font-medium text-white hover:bg-gray-700"
-                    >
-                      {t("adminPanel")}
-                    </Link>
+                ))}
+
+                {/* International submenu for mobile */}
+                <Disclosure>
+                  {({ open }) => (
+                    <>
+                      <Disclosure.Button className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700">
+                        <span>Camp. Esteri</span>
+                        <ChevronDownIcon
+                          className={`${
+                            open ? "rotate-180" : ""
+                          } h-4 w-4 transition-transform`}
+                        />
+                      </Disclosure.Button>
+                      <Disclosure.Panel className="px-4 py-1 text-sm">
+                        <div className="space-y-1">
+                          {internationalNavItems.map((item) => (
+                            <Link
+                              key={item.name}
+                              href={item.href}
+                              className="block py-1.5 text-gray-300 hover:text-white"
+                            >
+                              {item.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </Disclosure.Panel>
+                    </>
                   )}
-                  <button
-                    onClick={() => signOut()}
-                    className="block w-full text-left rounded-md px-3 py-2 md:py-1 text-sm font-medium text-white hover:bg-gray-700"
-                  >
-                    {t("signOut")}
-                  </button>
-                </div>
+                </Disclosure>
               </div>
-            )}
-          </Disclosure.Panel>
-        </div>
-      )}
-    </Disclosure>
+
+              {/* Mobile profile section */}
+              {session && (
+                <div className="border-t border-gray-700 px-3 py-3">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <Image
+                        width={40}
+                        height={40}
+                        className="h-10 w-10 rounded-full object-cover"
+                        src={getUserImage(session.user)}
+                        alt="Profile"
+                      />
+                    </div>
+                    <div className="ml-3">
+                      <div className="text-sm font-medium text-white">
+                        {session.user.name}
+                      </div>
+                      <div className="text-xs text-gray-300">
+                        {session.user.email}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-3 space-y-1">
+                    <Link
+                      href="/profile"
+                      className="block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
+                    >
+                      {t("profile")}
+                    </Link>
+                    <Link
+                      href="/account/orders"
+                      className="block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
+                    >
+                      {t("orders")}
+                    </Link>
+                    {session.user.role === "admin" && (
+                      <Link
+                        href="/admin"
+                        className="block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
+                      >
+                        {t("adminPanel")}
+                      </Link>
+                    )}
+                    <button
+                      onClick={() => signOut()}
+                      className="block w-full text-left rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
+                    >
+                      {t("signOut")}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </Disclosure.Panel>
+          </>
+        )}
+      </Disclosure>
+    </header>
   );
 }
 
-//This is for seaching products
 function SearchDropdown() {
-  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
@@ -545,7 +519,7 @@ function SearchDropdown() {
     <div ref={searchRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-1.5 sm:p-1 cursor-pointer text-white hover:text-gray-200 transition-colors duration-150"
+        className="relative p-1.5 sm:p-1 text-white hover:text-gray-200 transition-colors duration-150"
         aria-label="Search"
       >
         <MagnifyingGlassIcon
@@ -562,7 +536,7 @@ function SearchDropdown() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t("search")}
+                placeholder="Cerca..."
                 className="block w-full rounded-md border-0 py-2 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm leading-6"
                 autoFocus
               />
@@ -577,7 +551,7 @@ function SearchDropdown() {
                 className="absolute inset-y-0 right-0 flex items-center pr-2"
               >
                 <span className="text-xs text-indigo-600 font-medium">
-                  {t("search")}
+                  Cerca
                 </span>
               </button>
             </div>

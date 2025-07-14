@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Inter, Italianno } from "next/font/google";
 import { Metadata, Viewport } from "next";
 import { Providers } from "@/components/providers";
@@ -111,7 +112,8 @@ export default function RootLayout({
         <Providers>
           <div className="min-h-screen flex flex-col">
             <Header />
-            <Container>{children}</Container>
+            <main className="flex-grow">{children}</main>
+            {/* <Container>{children}</Container> */}
             <Footer />
             <ToastProvider />
           </div>
