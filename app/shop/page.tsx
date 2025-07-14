@@ -48,7 +48,7 @@ export default async function ShopPage() {
   }));
 
   return (
-    <div className=" bg-red-300">
+    <div className="pt-[90px] sm:pt-[110px]">
       <ShopClient products={products} />
     </div>
   );

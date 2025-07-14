@@ -28,7 +28,7 @@ export default function ShopNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow sticky top-[72px] sm:top-[88px] md:top-[104px] z-40 lg:top-[120px]">
+    <nav className="bg-white shadow sticky top-[46px] sm:top-[64px] z-40">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Desktop Navigation */}
         <div className="hidden md:flex h-14 lg:h-16 justify-between">
