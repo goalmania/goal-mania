@@ -12,6 +12,7 @@ import { IProduct, Review, Patch } from "@/lib/types/product";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { Button } from "@/components/ui/button";
 
 const PATCH_PRICES = {
   "europa-league": 3,
@@ -46,6 +47,7 @@ export default function ProductDetailClient({
     size: "",
     isPlayerEdition: false,
     isKidSize: false,
+    excludedShirts: [] as string[],
   });
   const [reviewInput, setReviewInput] = useState({
     rating: 5,
@@ -169,6 +171,7 @@ export default function ProductDetailClient({
         size: customization.size,
         isKidSize: customization.isKidSize,
         hasCustomization: hasCustomization,
+        excludedShirts: customization.excludedShirts,
       },
       quantity,
     });
@@ -510,7 +513,54 @@ export default function ProductDetailClient({
                   )}
                 </div>
 
-                {/* Jersey Type (Player or Fan Edition) */}
+                {/* Mystery Box Exclusion List - Only for Mystery Box products */}
+                {product.isMysteryBox && (
+                  <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+                    <div className="flex items-center mb-3">
+                      <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center mr-3">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <h4 className="text-sm font-semibold text-purple-800">
+                        🎁 Mystery Box Preferences
+                      </h4>
+                    </div>
+                    <label className="block text-sm font-medium text-purple-700 mb-2">
+                      Shirts you'd prefer NOT to receive (Optional - up to 5):
+                    </label>
+                    <p className="text-xs text-purple-600 mb-3">
+                      Help us personalize your mystery box! List any teams or specific shirts you'd prefer to avoid.
+                    </p>
+                    <textarea
+                      value={(customization as any).excludedShirts?.join('\n') || ''}
+                      onChange={(e) => {
+                        const lines = e.target.value.split('\n').slice(0, 5).filter(line => line.trim() !== '');
+                        setCustomization((prev) => ({
+                          ...prev,
+                          excludedShirts: lines
+                        }));
+                      }}
+                      placeholder="Example:&#10;AC Milan Home&#10;Juventus Away&#10;Inter Milan&#10;Roma&#10;Napoli"
+                      rows={5}
+                      className="w-full rounded-md border-purple-300 text-gray-800 placeholder-gray-500 focus:border-purple-500 focus:ring-purple-500 sm:text-sm bg-white/80"
+                    />
+                    <div className="flex justify-between items-center mt-2">
+                      <p className="text-xs text-purple-600">
+                        {((customization as any).excludedShirts?.length || 0)}/5 exclusions
+                      </p>
+                      <div className="flex items-center text-xs text-purple-600">
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        We'll do our best to avoid these items
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Jersey Type (Player or Fan Edition) - Hide for Mystery Box */}
+                {!product.isMysteryBox && (
                 <div className="mt-4">
                   <label className="block text-sm font-medium text-black">
                     Jersey Type
@@ -569,8 +619,10 @@ export default function ProductDetailClient({
                     </div>
                   </div>
                 </div>
+                )}
 
-                {/* Name and Number */}
+                {/* Name and Number - Hide for Mystery Box */}
+                {!product.isMysteryBox && (
                 <div className="mt-4 grid grid-cols-2 gap-4">
                   {product.allowsNameOnShirt && (
                     <div>
@@ -634,9 +686,10 @@ export default function ProductDetailClient({
                     </div>
                   )}
                 </div>
+                )}
 
-                {/* Patches */}
-                {product.availablePatches &&
+                {/* Patches - Hide for Mystery Box */}
+                {!product.isMysteryBox && product.availablePatches &&
                   product.availablePatches.length > 0 && (
                     <div className="mt-6">
                       <label className="text-sm font-medium text-black">
@@ -691,7 +744,8 @@ export default function ProductDetailClient({
                     </div>
                   )}
 
-                {/* Extras */}
+                {/* Extras - Hide for Mystery Box */}
+                {!product.isMysteryBox && (
                 <div className="mt-6">
                   <label className="text-sm font-medium text-black">
                     Add Matching Items
@@ -744,24 +798,29 @@ export default function ProductDetailClient({
                     )}
                   </div>
                 </div>
+                )}
               </div>
 
               {/* Add to Cart buttons */}
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                <button
+                <Button
                   type="button"
                   onClick={handleAddToCart}
-                  className="flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  variant="default"
+                  size="lg"
+                  className="flex-1"
                 >
                   Add to Cart
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
                   onClick={handleBuyNow}
-                  className="flex-1 bg-gray-800 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                  variant="orange"
+                  size="lg"
+                  className="flex-1"
                 >
                   Buy Now
-                </button>
+                </Button>
               </div>
 
               {/* Trust Badges */}
@@ -937,23 +996,27 @@ export default function ProductDetailClient({
                 </div>
 
                 {session ? (
-                  <button
+                  <Button
                     onClick={() =>
                       document
                         .getElementById("review-form")
                         ?.scrollIntoView({ behavior: "smooth" })
                     }
-                    className="mt-6 w-full bg-indigo-600 border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    variant="default"
+                    size="sm"
+                    className="mt-6 w-full"
                   >
                     Write a Review
-                  </button>
+                  </Button>
                 ) : (
-                  <button
+                  <Button
                     onClick={() => signIn()}
-                    className="mt-6 w-full bg-indigo-600 border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    variant="default"
+                    size="sm"
+                    className="mt-6 w-full"
                   >
                     Sign in to Review
-                  </button>
+                  </Button>
                 )}
               </div>
             </div>

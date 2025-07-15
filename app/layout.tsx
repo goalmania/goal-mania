@@ -112,7 +112,7 @@ export default function RootLayout({
         <Providers>
           <div className="min-h-screen flex flex-col">
             <Header />
-            <main className="flex-grow">{children}</main>
+            <main className="flex-grow pt-14 sm:pt-16">{children}</main>
             {/* <Container>{children}</Container> */}
             <Footer />
             <ToastProvider />

@@ -14,6 +14,7 @@ export const PRODUCT_CATEGORIES = [
   "SerieA",
   "International",
   "Retro",
+  "Mystery Box",
 ] as const;
 
 export type AdultSize = (typeof VALID_ADULT_SIZES)[number];
@@ -52,6 +53,7 @@ export interface IProduct {
   isActive: boolean;
   feature: boolean;
   isRetro: boolean;
+  isMysteryBox: boolean;
   reviews: Review[];
   averageRating: number;
   createdAt: Date;
@@ -75,6 +77,7 @@ export interface CartItem {
     size: string;
     isKidSize: boolean;
     hasCustomization: boolean;
+    excludedShirts?: string[];
   };
 }
 

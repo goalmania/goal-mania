@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Image from "next/image";
-import Link from "next/link";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
+import Image from "next/image";
+import Link from "next/link";
 import NewsButton from "@/components/home/news-button";
+import { Card, CardContent } from "@/components/ui/card";
 
 // Disable caching for this page
 export const dynamic = "force-dynamic";
@@ -32,31 +33,23 @@ export default async function Home() {
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {featuredArticles.map((article: any) => (
-                  <Link
-                    key={article._id}
-                    href={`/${
-                      article.category === "news"
-                        ? "news"
-                        : article.category === "transferMarket"
-                        ? "transfer"
-                        : article.category === "serieA"
-                        ? "serieA"
-                        : "international"
-                    }/${article.slug}`}
-                    className="group flex flex-col bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
-                  >
-                    <div className="relative h-48 sm:h-52 md:h-56 w-full">
-                      <Image
-                        src={article.image}
-                        alt={article.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                        priority={true}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                      <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-                        <span className="inline-block px-2 sm:px-3 py-1 mb-1 sm:mb-2 text-xs font-semibold text-white bg-indigo-600 rounded-full">
+                  <Card key={article._id} className="group overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <Link
+                      href={`/news/${article.slug}`}
+                      className="block h-full"
+                    >
+                      <div className="relative h-48 sm:h-56 w-full">
+                        <Image
+                          src={article.image}
+                          alt={article.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                      </div>
+                      <CardContent className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+                        <span className="inline-block px-2 sm:px-3 py-1 mb-1 sm:mb-2 text-xs font-semibold text-white bg-primary rounded-full">
                           {article.category === "news"
                             ? "News"
                             : article.category === "transferMarket"
@@ -71,9 +64,9 @@ export default async function Home() {
                         <p className="text-xs sm:text-sm text-gray-200 line-clamp-2">
                           {article.summary}
                         </p>
-                      </div>
-                    </div>
-                  </Link>
+                      </CardContent>
+                    </Link>
+                  </Card>
                 ))}
               </div>
             </section>

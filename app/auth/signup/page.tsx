@@ -5,6 +5,10 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const signUpSchema = z
   .object({
@@ -114,20 +118,19 @@ export default function SignUp() {
         <div className="bg-white py-8 px-4 shadow-xl rounded-lg sm:px-10 border border-gray-100">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label
+              <Label
                 htmlFor="name"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Full name
-              </label>
+              </Label>
               <div className="mt-2">
-                <input
+                <Input
                   id="name"
                   name="name"
                   type="text"
                   autoComplete="name"
                   required
-                  className="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 transition-colors"
                   placeholder="Enter your full name"
                 />
               </div>
@@ -139,20 +142,19 @@ export default function SignUp() {
             </div>
 
             <div>
-              <label
+              <Label
                 htmlFor="email"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Email address
-              </label>
+              </Label>
               <div className="mt-2">
-                <input
+                <Input
                   id="email"
                   name="email"
                   type="email"
                   autoComplete="email"
                   required
-                  className="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 transition-colors"
                   placeholder="Enter your email"
                 />
               </div>
@@ -164,20 +166,19 @@ export default function SignUp() {
             </div>
 
             <div>
-              <label
+              <Label
                 htmlFor="password"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Password
-              </label>
+              </Label>
               <div className="mt-2">
-                <input
+                <Input
                   id="password"
                   name="password"
                   type="password"
                   autoComplete="new-password"
                   required
-                  className="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 transition-colors"
                   placeholder="Create a password"
                 />
               </div>
@@ -189,20 +190,19 @@ export default function SignUp() {
             </div>
 
             <div>
-              <label
+              <Label
                 htmlFor="confirmPassword"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Confirm password
-              </label>
+              </Label>
               <div className="mt-2">
-                <input
+                <Input
                   id="confirmPassword"
                   name="confirmPassword"
                   type="password"
                   autoComplete="new-password"
                   required
-                  className="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 transition-colors"
                   placeholder="Confirm your password"
                 />
               </div>
@@ -239,39 +239,14 @@ export default function SignUp() {
             )}
 
             <div>
-              <button
+              <Button
                 type="submit"
                 disabled={isLoading}
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex w-full justify-center"
+                variant="default"
               >
-                {isLoading ? (
-                  <div className="flex items-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Creating account...
-                  </div>
-                ) : (
-                  "Create account"
-                )}
-              </button>
+                {isLoading ? "Creating account..." : "Sign up"}
+              </Button>
             </div>
           </form>
         </div>

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
+import { Card, CardContent } from "@/components/ui/card";
 
 // Disable caching for this page
 export const dynamic = "force-dynamic";
@@ -59,34 +60,35 @@ export default async function NewsPage() {
           <section className="mb-12">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {featured.map((article: any) => (
-                <Link
-                  key={article._id}
-                  href={`/news/${article.slug}`}
-                  className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-                >
-                  <div className="relative h-60 sm:h-64 w-full overflow-hidden">
-                    <Image
-                      src={article.image}
-                      alt={article.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                      priority={true}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <span className="inline-block px-3 py-1 mb-2 text-xs font-semibold text-white bg-indigo-600 rounded-full">
-                        Featured
-                      </span>
-                      <h2 className="text-lg sm:text-xl font-bold text-white mb-2">
+                <Card key={article._id} className="group overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                  <Link href={`/news/${article.slug}`} className="block h-full">
+                    <div className="relative h-48 sm:h-56 w-full">
+                      <Image
+                        src={article.image}
+                        alt={article.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    </div>
+                    <CardContent className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+                      <div className="flex items-center text-xs text-white mb-2">
+                        <span>
+                          {new Date(article.publishedAt).toLocaleDateString()}
+                        </span>
+                        <span className="mx-2">•</span>
+                        <span>{article.author}</span>
+                      </div>
+                      <h2 className="text-base sm:text-lg font-bold text-white mb-2">
                         {article.title}
                       </h2>
-                      <p className="text-sm text-gray-200 line-clamp-2">
+                      <p className="text-xs sm:text-sm text-gray-200 line-clamp-2">
                         {article.summary}
                       </p>
-                    </div>
-                  </div>
-                </Link>
+                    </CardContent>
+                  </Link>
+                </Card>
               ))}
             </div>
           </section>
@@ -96,39 +98,37 @@ export default async function NewsPage() {
         <section>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {regular.map((article: any) => (
-              <Link
-                key={article._id}
-                href={`/news/${article.slug}`}
-                className="group flex flex-col bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
-              >
-                <div className="relative h-40 sm:h-48 w-full">
-                  <Image
-                    src={article.image}
-                    alt={article.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                  />
-                </div>
-                <div className="p-4 flex-1 flex flex-col">
-                  <div className="flex items-center text-xs text-gray-600 mb-2">
-                    <span>
-                      {new Date(article.publishedAt).toLocaleDateString()}
-                    </span>
-                    <span className="mx-2">•</span>
-                    <span>{article.author}</span>
+              <Card key={article._id} className="group overflow-hidden hover:shadow-md transition-shadow duration-300">
+                <Link href={`/news/${article.slug}`} className="flex flex-col h-full">
+                  <div className="relative h-40 sm:h-48 w-full">
+                    <Image
+                      src={article.image}
+                      alt={article.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                    />
                   </div>
-                  <h2 className="text-base sm:text-lg font-semibold text-black mb-2 group-hover:text-indigo-600 transition-colors duration-200">
-                    {article.title}
-                  </h2>
-                  <p className="text-sm text-gray-700 mb-4 line-clamp-2">
-                    {article.summary}
-                  </p>
-                  <span className="mt-auto text-indigo-600 text-sm font-medium">
-                    Read more
-                  </span>
-                </div>
-              </Link>
+                  <CardContent className="p-4 flex-1 flex flex-col">
+                    <div className="flex items-center text-xs text-gray-600 mb-2">
+                      <span>
+                        {new Date(article.publishedAt).toLocaleDateString()}
+                      </span>
+                      <span className="mx-2">•</span>
+                      <span>{article.author}</span>
+                    </div>
+                    <h2 className="text-base sm:text-lg font-semibold text-black mb-2 group-hover:text-primary transition-colors duration-200">
+                      {article.title}
+                    </h2>
+                    <p className="text-sm text-gray-700 mb-4 line-clamp-2">
+                      {article.summary}
+                    </p>
+                    <span className="mt-auto text-primary text-sm font-medium">
+                      Read more
+                    </span>
+                  </CardContent>
+                </Link>
+              </Card>
             ))}
           </div>
         </section>

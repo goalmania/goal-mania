@@ -37,6 +37,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
   // Always declare all hooks at the top level, regardless of whether they're used immediately
   const [mounted, setMounted] = useState(false);
   const [season2025Products, setSeason2025Products] = useState<Product[]>([]);
+  const [mysteryBoxProducts, setMysteryBoxProducts] = useState<Product[]>([]);
   const [featuredProduct, setFeaturedProduct] = useState<Product | null>(null);
   const [featuredProduct2, setFeaturedProduct2] = useState<Product | null>(
     null
@@ -46,6 +47,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [mysteryBoxLoading, setMysteryBoxLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Declare store hooks
   const wishlistStore = useWishlistStore();
@@ -174,10 +176,53 @@ export default function ShopClient({ products }: { products: Product[] }) {
       }
     };
 
-    // Execute both fetch operations
+    // Fetch Mystery Box products
+    const fetchMysteryBoxProducts = async () => {
+      try {
+        setMysteryBoxLoading(true);
+        console.log("Fetching Mystery Box products...");
+        const response = await fetch(
+          "/api/products?category=Mystery%20Box&limit=6&noPagination=true"
+        );
+        if (!response.ok) {
+          throw new Error(`Error fetching Mystery Box products: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Received Mystery Box data:", data);
+
+        let productsData = [];
+        if (data.products && Array.isArray(data.products)) {
+          productsData = data.products;
+        } else if (Array.isArray(data)) {
+          productsData = data;
+        } else {
+          throw new Error("Invalid data format received from API");
+        }
+
+        // Map to client format
+        const mappedProducts = productsData.map((product: any) => ({
+          id: product._id || "",
+          name: product.title || "Mystery Box",
+          price: product.basePrice || 0,
+          image: product.images?.[0] || "/images/image.png",
+          category: product.category || "Mystery Box",
+          team: "Mystery",
+        }));
+
+        console.log("Mapped Mystery Box products:", mappedProducts.length);
+        setMysteryBoxProducts(mappedProducts);
+      } catch (error) {
+        console.error("Error fetching Mystery Box products:", error);
+        setMysteryBoxProducts([]);
+      } finally {
+        setMysteryBoxLoading(false);
+      }
+    };
+
+    // Execute all fetch operations
     const fetchData = async () => {
       try {
-        await Promise.all([fetchSeason2025Products(), fetchFeaturedProducts()]);
+        await Promise.all([fetchSeason2025Products(), fetchFeaturedProducts(), fetchMysteryBoxProducts()]);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -414,6 +459,114 @@ export default function ShopClient({ products }: { products: Product[] }) {
               />
             </Suspense>
           )}
+        </div>
+      </div>
+
+      {/* Mystery Box Section */}
+      <div className="bg-gradient-to-br from-purple-900 via-purple-800 to-pink-900 py-16 sm:py-24 relative overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+          <div className="absolute top-3/4 right-1/4 w-64 h-64 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse" style={{animationDelay: '4s'}}></div>
+        </div>
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center animate-bounce">
+                <span className="text-3xl">🎁</span>
+              </div>
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+              Mystery Box
+            </h2>
+            <p className="text-lg sm:text-xl text-purple-100 max-w-2xl mx-auto">
+              Scatole misteriose piene di sorprese! Ogni box contiene maglie selezionate con cura, 
+              perfette per veri collezionisti che amano le sorprese.
+            </p>
+          </div>
+
+          {/* Products Grid */}
+          <div className="mb-8">
+            {mysteryBoxLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="bg-white/20 backdrop-blur-sm h-64 rounded-2xl border border-white/30"></div>
+                    <div className="h-4 bg-white/20 rounded mt-4 w-3/4"></div>
+                    <div className="h-4 bg-white/20 rounded mt-2 w-1/2"></div>
+                  </div>
+                ))}
+              </div>
+            ) : mysteryBoxProducts.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-4xl">📦</span>
+                </div>
+                <p className="text-white/80 text-lg">I Mystery Box stanno arrivando presto!</p>
+                <p className="text-white/60 text-sm mt-2">Torna a controllare per le nostre sorprese speciali.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {mysteryBoxProducts.map((product, index) => (
+                  <div 
+                    key={product.id} 
+                    className="group relative bg-white/10 backdrop-blur-sm rounded-2xl border border-white/30 p-6 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl animate-fade-in"
+                    style={{animationDelay: `${index * 0.2}s`}}
+                  >
+                    {/* Mystery Box Icon Overlay */}
+                    <div className="absolute top-4 right-4 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-sm animate-pulse">
+                      🎁
+                    </div>
+                    
+                    <div className="aspect-square bg-white/20 rounded-xl mb-4 relative overflow-hidden">
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        className="object-cover object-center group-hover:scale-110 transition-transform duration-300"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-purple-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    
+                    <h3 className="text-white font-bold text-lg mb-2 group-hover:text-yellow-300 transition-colors">
+                      {product.name}
+                    </h3>
+                    <p className="text-purple-100 text-sm mb-4">
+                      Contenuto a sorpresa • Valore garantito superiore al prezzo
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl font-bold text-white">
+                        €{product.price.toFixed(2)}
+                      </span>
+                      <button
+                        onClick={() => router.push(`/products/${product.id}`)}
+                        className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-4 py-2 rounded-full font-semibold hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 transform hover:scale-105"
+                      >
+                        Scopri →
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Call to Action */}
+          <div className="text-center">
+            <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/30">
+              <div className="mr-4">
+                <span className="text-4xl">✨</span>
+              </div>
+              <div className="text-left">
+                <h3 className="text-white font-bold text-lg">Garanzia Soddisfazione 100%</h3>
+                <p className="text-purple-100 text-sm">Non sei soddisfatto? Rimborso completo entro 30 giorni!</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

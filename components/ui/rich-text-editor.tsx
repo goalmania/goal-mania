@@ -13,6 +13,7 @@ import {
   AlignCenter,
   AlignRight,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface RichTextEditorProps {
   initialValue?: string;
@@ -53,59 +54,65 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   return (
     <div className="border border-gray-300 rounded-lg overflow-hidden">
       <div className="flex flex-wrap items-center gap-1 border-b border-gray-200 bg-gray-50 p-2">
-        <button
+        <Button
           type="button"
           onClick={() => handleFormat("bold")}
-          className="p-1.5 rounded hover:bg-gray-200"
+          variant="ghost"
+          size="sm"
           title="Bold"
         >
           <Bold size={18} />
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           onClick={() => handleFormat("italic")}
-          className="p-1.5 rounded hover:bg-gray-200"
+          variant="ghost"
+          size="sm"
           title="Italic"
         >
           <Italic size={18} />
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           onClick={() => handleFormat("underline")}
-          className="p-1.5 rounded hover:bg-gray-200"
+          variant="ghost"
+          size="sm"
           title="Underline"
         >
           <Underline size={18} />
-        </button>
+        </Button>
         <span className="mx-1 w-px h-6 bg-gray-300"></span>
-        <button
+        <Button
           type="button"
           onClick={() => handleFormat("insertUnorderedList")}
-          className="p-1.5 rounded hover:bg-gray-200"
+          variant="ghost"
+          size="sm"
           title="Bullet List"
         >
           <List size={18} />
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           onClick={() => handleFormat("insertOrderedList")}
-          className="p-1.5 rounded hover:bg-gray-200"
+          variant="ghost"
+          size="sm"
           title="Numbered List"
         >
           <ListOrdered size={18} />
-        </button>
+        </Button>
         <span className="mx-1 w-px h-6 bg-gray-300"></span>
-        <button
+        <Button
           type="button"
           onClick={() => {
             const url = prompt("Enter URL");
             if (url) handleFormat("createLink", url);
           }}
-          className="p-1.5 rounded hover:bg-gray-200"
+          variant="ghost"
+          size="sm"
           title="Insert Link"
         >
           <LinkIcon size={18} />
-        </button>
+        </Button>
         <button
           type="button"
           onClick={() => {

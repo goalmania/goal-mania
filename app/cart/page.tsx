@@ -50,7 +50,7 @@ export default function CartPage() {
             <div className="mt-6">
               <Link
                 href="/shop"
-                className="inline-flex items-center rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="inline-flex items-center rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
                 {t("cart.empty.cta")}
               </Link>
@@ -141,7 +141,7 @@ export default function CartPage() {
             <button
               onClick={handleCheckout}
               disabled={isCheckingOut}
-              className="w-full rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 disabled:opacity-50"
+              className="w-full rounded-md border border-transparent bg-primary px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-primary/90 disabled:opacity-50"
             >
               {isCheckingOut
                 ? t("cart.processing")

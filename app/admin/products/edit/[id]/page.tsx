@@ -60,6 +60,7 @@ export default function EditProductPage() {
     hasShorts: true,
     hasSocks: true,
     hasPlayerEdition: true,
+    isMysteryBox: false,
     adultSizes: Array.from(VALID_ADULT_SIZES) as AdultSize[],
     kidsSizes: Array.from(VALID_KID_SIZES) as KidSize[],
     category: "2024/25",

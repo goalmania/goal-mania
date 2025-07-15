@@ -140,7 +140,7 @@ export function OrderStatus() {
           {timeElapsed >= 5 && (
             <button
               onClick={handleRefresh}
-              className="px-3 py-1 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700"
+              className="px-3 py-1 bg-primary text-white text-sm rounded hover:bg-primary/90"
             >
               Refresh
             </button>
@@ -156,7 +156,7 @@ export function OrderStatus() {
       {timeElapsed < 10 && (
         <div className="mt-2 w-full bg-indigo-100 rounded-full h-1.5">
           <div
-            className="bg-indigo-600 h-1.5 rounded-full transition-all duration-300"
+            className="bg-primary h-1.5 rounded-full transition-all duration-300"
             style={{ width: `${(timeElapsed / 10) * 100}%` }}
           ></div>
         </div>

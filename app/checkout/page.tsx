@@ -18,6 +18,7 @@ import {
   PaymentRequestButtonElement,
 } from "@stripe/react-stripe-js";
 import { CouponForm } from "./CouponForm";
+import { Button } from "@/components/ui/button";
 import { refreshUserSession } from "@/lib/utils/session";
 import React from "react";
 
@@ -233,13 +234,15 @@ function PaymentForm({
       <form onSubmit={handleSubmit}>
         <PaymentElement className="mb-6" />
         {error && <div className="text-red-500 mb-4 text-sm">{error}</div>}
-        <button
+        <Button
           type="submit"
           disabled={!stripe || isLoading}
-          className="w-full bg-indigo-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          variant="default"
+          size="lg"
+          className="w-full"
         >
           {isLoading ? "Processing..." : `Pay €${total.toFixed(2)}`}
-        </button>
+        </Button>
       </form>
     </div>
   );

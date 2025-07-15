@@ -70,6 +70,10 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isMysteryBox: {
+      type: Boolean,
+      default: false,
+    },
     hasShorts: {
       type: Boolean,
       default: false,

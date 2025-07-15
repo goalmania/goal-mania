@@ -41,6 +41,7 @@ const productUpdateSchema = z.object({
   slug: z.string().optional(),
   // Allow other fields to be passed through
   isRetro: z.boolean().optional(),
+  isMysteryBox: z.boolean().optional(),
 });
 
 export async function GET(

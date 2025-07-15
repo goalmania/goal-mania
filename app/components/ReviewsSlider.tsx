@@ -322,7 +322,7 @@ export default function ReviewsSlider() {
                     key={`dot-${i}`}
                     className={`h-1.5 sm:h-2 rounded-full transition-all ${
                       isActive
-                        ? "w-4 sm:w-6 bg-indigo-600"
+                        ? "w-4 sm:w-6 bg-primary"
                         : "w-1.5 sm:w-2 bg-gray-300"
                     }`}
                     onClick={() => {

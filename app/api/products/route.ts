@@ -31,6 +31,7 @@ const productSchema = z.object({
   hasShorts: z.boolean().default(true),
   hasSocks: z.boolean().default(true),
   hasPlayerEdition: z.boolean().default(true),
+  isMysteryBox: z.boolean().default(false),
   adultSizes: z
     .array(z.enum(["S", "M", "L", "XL", "XXL", "3XL"]))
     .default(["S", "M", "L", "XL", "XXL"]),

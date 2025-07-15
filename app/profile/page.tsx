@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const profileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -243,132 +247,86 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <form
-              className="bg-white shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"
-              onSubmit={handleSubmit}
-            >
-              <div className="px-4 py-6 sm:p-8">
-                <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                  <div className="sm:col-span-4">
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Name
-                    </label>
-                    <div className="mt-2">
-                      <input
+            <Card className="shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+              <CardHeader>
+                <CardTitle>Profile Information</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit}>
+                  <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div className="sm:col-span-4 space-y-2">
+                      <Label htmlFor="name">Name</Label>
+                      <Input
                         type="text"
                         name="name"
                         id="name"
                         value={formData.name}
                         onChange={handleInputChange}
                         disabled={!isEditing}
-                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
-                          isEditing
-                            ? "ring-gray-300"
-                            : "ring-gray-200 bg-gray-50"
-                        } placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                       />
+                      {validationErrors.name && (
+                        <p className="mt-2 text-sm text-red-600">
+                          {validationErrors.name}
+                        </p>
+                      )}
                     </div>
-                    {validationErrors.name && (
-                      <p className="mt-2 text-sm text-red-600">
-                        {validationErrors.name}
-                      </p>
-                    )}
-                  </div>
 
-                  <div className="sm:col-span-4">
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Email address
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        type="email"
-                        name="email"
+                    <div className="sm:col-span-4 space-y-2">
+                      <Label htmlFor="email">Email address</Label>
+                      <Input
                         id="email"
+                        name="email"
+                        type="email"
+                        autoComplete="email"
                         value={formData.email}
                         onChange={handleInputChange}
                         disabled={!isEditing}
-                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
-                          isEditing
-                            ? "ring-gray-300"
-                            : "ring-gray-200 bg-gray-50"
-                        } placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                       />
+                      {validationErrors.email && (
+                        <p className="mt-2 text-sm text-red-600">
+                          {validationErrors.email}
+                        </p>
+                      )}
                     </div>
-                    {validationErrors.email && (
-                      <p className="mt-2 text-sm text-red-600">
-                        {validationErrors.email}
-                      </p>
+                  </div>
+                  <div className="mt-8 flex">
+                    {!isEditing ? (
+                      <Button
+                        type="button"
+                        onClick={() => setIsEditing(true)}
+                        variant="default"
+                      >
+                        Edit Profile
+                      </Button>
+                    ) : (
+                      <div className="flex gap-3">
+                        <Button
+                          type="submit"
+                          disabled={isLoading}
+                          variant="default"
+                        >
+                          {isLoading ? "Saving..." : "Save Changes"}
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            setIsEditing(false);
+                            setFormData({
+                              name: session?.user?.name || "",
+                              email: session?.user?.email || "",
+                            });
+                            setValidationErrors({});
+                          }}
+                          variant="outline"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
                     )}
                   </div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-                {isEditing ? (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => setIsEditing(false)}
-                      className="text-sm font-semibold leading-6 text-gray-900"
-                      disabled={isLoading}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? "Saving..." : "Save"}
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setIsEditing(true)}
-                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  >
-                    Edit
-                  </button>
-                )}
-              </div>
-
-              {showSuccess && (
-                <div className="rounded-md bg-green-50 p-4 m-6">
-                  <div className="flex">
-                    <div className="ml-3">
-                      <h3 className="text-sm font-medium text-green-800">
-                        Success
-                      </h3>
-                      <div className="mt-2 text-sm text-green-700">
-                        <p>Profile updated successfully</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {error && (
-                <div className="rounded-md bg-red-50 p-4 m-6">
-                  <div className="flex">
-                    <div className="ml-3">
-                      <h3 className="text-sm font-medium text-red-800">
-                        Error
-                      </h3>
-                      <div className="mt-2 text-sm text-red-700">
-                        <p>{error}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </form>
+                </form>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Password Change Section */}

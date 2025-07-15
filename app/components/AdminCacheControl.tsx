@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
 
 export default function AdminCacheControl() {
   const [isRevalidating, setIsRevalidating] = useState(false);
@@ -39,13 +40,14 @@ export default function AdminCacheControl() {
         If you've made database changes but don't see them reflected on the
         site, use this button to refresh the content cache.
       </p>
-      <button
+      <Button
         onClick={handleRevalidate}
         disabled={isRevalidating}
-        className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors disabled:opacity-50"
+        variant="default"
+        size="default"
       >
         {isRevalidating ? "Refreshing..." : "Refresh Site Content"}
-      </button>
+      </Button>
     </div>
   );
 }
