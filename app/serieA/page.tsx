@@ -51,9 +51,9 @@ export default async function SerieAPage() {
   const { featured, regular } = await getSerieAArticles();
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-[#f7f7f9] min-h-screen">
       <div className="container mx-auto px-4 sm:px-6 py-8">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-center text-black">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-center text-[#0e1924] tracking-tight">
           Serie A News
         </h1>
 
@@ -61,7 +61,7 @@ export default async function SerieAPage() {
           {/* Standings Column - Left Side */}
           <div className="lg:col-span-4 order-2 lg:order-1">
             <div className="sticky top-20">
-              <h2 className="text-xl font-bold mb-4 text-black">Serie A</h2>
+              <h2 className="text-xl font-bold mb-4 text-[#0e1924]">Serie A</h2>
               <LeagueStatistics league="serie-a" />
             </div>
           </div>
@@ -76,7 +76,7 @@ export default async function SerieAPage() {
                     <Link
                       key={article._id}
                       href={`/serieA/${article.slug}`}
-                      className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                      className="group block bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-[#e5e7eb]"
                     >
                       <div className="relative h-60 sm:h-64 w-full overflow-hidden">
                         <Image
@@ -87,15 +87,15 @@ export default async function SerieAPage() {
                           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                           priority={true}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0e1924]/80 to-transparent"></div>
                         <div className="absolute bottom-0 left-0 right-0 p-4">
-                          <span className="inline-block px-3 py-1 mb-2 text-xs font-semibold text-white bg-indigo-600 rounded-full">
+                          <span className="inline-block px-3 py-1 mb-2 text-xs font-semibold text-white bg-[#f5963c] rounded-full shadow transition-all duration-300">
                             Featured
                           </span>
-                          <h2 className="text-lg sm:text-xl font-bold text-white mb-2">
+                          <h2 className="text-lg sm:text-xl font-bold text-white mb-2 drop-shadow">
                             {article.title}
                           </h2>
-                          <p className="text-sm text-gray-200 line-clamp-2">
+                          <p className="text-sm text-gray-100 line-clamp-2">
                             {article.summary}
                           </p>
                         </div>
@@ -113,7 +113,7 @@ export default async function SerieAPage() {
                   <Link
                     key={article._id}
                     href={`/serieA/${article.slug}`}
-                    className="group flex flex-col bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
+                    className="group flex flex-col bg-white rounded-2xl shadow border border-[#e5e7eb] overflow-hidden hover:shadow-lg transition-shadow duration-300"
                   >
                     <div className="relative h-40 sm:h-48 w-full">
                       <Image
@@ -125,20 +125,20 @@ export default async function SerieAPage() {
                       />
                     </div>
                     <div className="p-4 flex-1 flex flex-col">
-                      <div className="flex items-center text-xs text-gray-600 mb-2">
+                      <div className="flex items-center text-xs text-gray-500 mb-2">
                         <span>
                           {new Date(article.publishedAt).toLocaleDateString()}
                         </span>
                         <span className="mx-2">•</span>
                         <span>{article.author}</span>
                       </div>
-                      <h2 className="text-base sm:text-lg font-semibold text-black mb-2 group-hover:text-indigo-600 transition-colors duration-200">
+                      <h2 className="text-base sm:text-lg font-semibold text-[#0e1924] mb-2 group-hover:text-[#f5963c] transition-colors duration-300">
                         {article.title}
                       </h2>
                       <p className="text-sm text-gray-700 mb-4 line-clamp-2">
                         {article.summary}
                       </p>
-                      <span className="mt-auto text-indigo-600 text-sm font-medium">
+                      <span className="mt-auto text-[#f5963c] text-sm font-medium group-hover:underline transition-all duration-300">
                         Read more
                       </span>
                     </div>
@@ -149,7 +149,7 @@ export default async function SerieAPage() {
 
             {featured.length === 0 && regular.length === 0 && (
               <div className="text-center py-16">
-                <p className="text-black text-lg">
+                <p className="text-[#0e1924] text-lg">
                   No Serie A news available yet. Check back soon!
                 </p>
               </div>

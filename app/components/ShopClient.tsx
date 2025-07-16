@@ -15,6 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
+import ShopSearchBar from "./ShopSearchBar";
 
 interface Review {
   id: string;
@@ -316,40 +317,11 @@ export default function ShopClient({ products }: { products: Product[] }) {
   const { addItem: addToCart } = cartStore;
 
   return (
-    <div className="bg-white">
-      <ShopNav />
-
-      {/* Search Bar */}
-      <div className="bg-gray-100 py-4 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto">
-          <form onSubmit={handleSearch}>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <MagnifyingGlassIcon
-                  className="h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-              </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-900"
-                placeholder="Cerca prodotti..."
-              />
-              <button
-                type="submit"
-                className="absolute inset-y-0 right-0 px-3 flex items-center bg-indigo-600 text-white rounded-r-md hover:bg-indigo-700"
-              >
-                Cerca
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-
+    <div className="bg-white pt-[112px]">
+      <ShopSearchBar />
       {/* Hero section - adjust height to account for fixed header */}
-      <div className="relative pt-4">
+      <div className="relative">
+       
         <div className="mx-auto max-w-7xl">
           <div className="relative z-10 pt-10 sm:pt-14 lg:w-full lg:max-w-2xl">
             <div className="relative px-4 sm:px-6 py-12 sm:py-16 md:py-24 lg:px-8 lg:py-56 lg:pr-0">
@@ -378,6 +350,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
           </div>
         </div>
       </div>
+
 
       {/* Customer Satisfaction Message */}
       <div className="bg-gray-800 py-10 sm:py-16">

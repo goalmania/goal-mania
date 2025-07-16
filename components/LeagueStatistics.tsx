@@ -32,9 +32,9 @@ export async function LeagueStatistics({ league }: LeagueStatisticsProps) {
   return (
     <div className="space-y-8">
       {/* Standings Table */}
-      <div className="bg-white rounded-md shadow overflow-hidden">
-        <div className="p-4 border-b">
-          <h3 className="text-lg font-medium text-gray-900">Classifica</h3>
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+        <div className="p-4 border-b bg-[#0e1924]">
+          <h3 className="text-lg font-bold text-white tracking-wide">Classifica</h3>
         </div>
 
         {!hasStandingsData ? (
@@ -55,121 +55,128 @@ export async function LeagueStatistics({ league }: LeagueStatisticsProps) {
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className="bg-[#0e1924] sticky top-0 z-10">
                 <tr>
                   <th
                     scope="col"
-                    className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8 sm:w-12"
+                    className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-white uppercase tracking-wider w-8 sm:w-12 rounded-tl-xl"
                   >
                     Pos
                   </th>
                   <th
                     scope="col"
-                    className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-white uppercase tracking-wider"
                   >
                     Squadra
                   </th>
                   <th
                     scope="col"
-                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-8 sm:w-10 hidden sm:table-cell"
+                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-semibold text-white uppercase tracking-wider w-8 sm:w-10 hidden sm:table-cell"
                   >
                     PG
                   </th>
                   <th
                     scope="col"
-                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-8 sm:w-10 hidden sm:table-cell"
+                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-semibold text-white uppercase tracking-wider w-8 sm:w-10 hidden sm:table-cell"
                   >
                     V
                   </th>
                   <th
                     scope="col"
-                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-8 sm:w-10 hidden sm:table-cell"
+                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-semibold text-white uppercase tracking-wider w-8 sm:w-10 hidden sm:table-cell"
                   >
                     P
                   </th>
                   <th
                     scope="col"
-                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-8 sm:w-10 hidden sm:table-cell"
+                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-semibold text-white uppercase tracking-wider w-8 sm:w-10 hidden sm:table-cell"
                   >
                     S
                   </th>
                   <th
                     scope="col"
-                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-10 sm:w-14 hidden md:table-cell"
+                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-semibold text-white uppercase tracking-wider w-10 sm:w-14 hidden md:table-cell"
                   >
                     GF
                   </th>
                   <th
                     scope="col"
-                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-10 sm:w-14 hidden md:table-cell"
+                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-semibold text-white uppercase tracking-wider w-10 sm:w-14 hidden md:table-cell"
                   >
                     GS
                   </th>
                   <th
                     scope="col"
-                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-8 sm:w-12 hidden sm:table-cell"
+                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-semibold text-white uppercase tracking-wider w-8 sm:w-12 hidden sm:table-cell"
                   >
                     DR
                   </th>
                   <th
                     scope="col"
-                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-8 sm:w-12"
+                    className="px-1 sm:px-3 py-2 sm:py-3 text-center text-xs font-semibold text-white uppercase tracking-wider w-8 sm:w-12 rounded-tr-xl"
                   >
                     Pti
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {standings.league.standings[0].map((team) => (
-                  <tr
-                    key={team.team.id}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-sm text-gray-500">
-                      {team.rank}
-                    </td>
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="h-5 w-5 sm:h-6 sm:w-6 relative mr-2 sm:mr-3">
-                          <Image
-                            src={team.team.logo}
-                            alt={team.team.name}
-                            fill
-                            className="object-contain"
-                            sizes="24px"
-                          />
+              <tbody className="bg-white divide-y divide-gray-100">
+                {standings.league.standings[0].map((team, idx) => {
+                  // Highlight top 3
+                  let rowBg = "";
+                  if (idx === 0) rowBg = "bg-gradient-to-r from-yellow-100 via-yellow-50 to-white";
+                  else if (idx === 1) rowBg = "bg-gradient-to-r from-gray-200 via-gray-50 to-white";
+                  else if (idx === 2) rowBg = "bg-gradient-to-r from-orange-100 via-orange-50 to-white";
+                  return (
+                    <tr
+                      key={team.team.id}
+                      className={`hover:bg-[#f6f8fa] transition-colors duration-300 ${rowBg}`}
+                    >
+                      <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-sm text-gray-700 font-bold border-l-4" style={{ borderColor: idx === 0 ? '#f5963c' : '#e5e7eb' }}>
+                        <span className="inline-block w-6 text-center">{team.rank}</span>
+                      </td>
+                      <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="h-5 w-5 sm:h-6 sm:w-6 relative">
+                            <Image
+                              src={team.team.logo}
+                              alt={team.team.name}
+                              fill
+                              className="object-contain"
+                              sizes="24px"
+                            />
+                          </div>
+                          <div className="text-xs sm:text-sm font-medium text-gray-900 truncate max-w-[120px] sm:max-w-none">
+                            {team.team.name}
+                          </div>
                         </div>
-                        <div className="text-xs sm:text-sm font-medium text-gray-900 truncate max-w-[120px] sm:max-w-none">
-                          {team.team.name}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden sm:table-cell">
-                      {team.all.played}
-                    </td>
-                    <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden sm:table-cell">
-                      {team.all.win}
-                    </td>
-                    <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden sm:table-cell">
-                      {team.all.draw}
-                    </td>
-                    <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden sm:table-cell">
-                      {team.all.lose}
-                    </td>
-                    <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden md:table-cell">
-                      {team.all.goals.for}
-                    </td>
-                    <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden md:table-cell">
-                      {team.all.goals.against}
-                    </td>
-                    <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden sm:table-cell">
-                      {team.goalsDiff}
-                    </td>
-                    <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center font-medium text-gray-900">
-                      {team.points}
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden sm:table-cell">
+                        {team.all.played}
+                      </td>
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden sm:table-cell">
+                        {team.all.win}
+                      </td>
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden sm:table-cell">
+                        {team.all.draw}
+                      </td>
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden sm:table-cell">
+                        {team.all.lose}
+                      </td>
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden md:table-cell">
+                        {team.all.goals.for}
+                      </td>
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden md:table-cell">
+                        {team.all.goals.against}
+                      </td>
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden sm:table-cell">
+                        {team.goalsDiff}
+                      </td>
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center font-bold text-[#0e1924]">
+                        {team.points}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

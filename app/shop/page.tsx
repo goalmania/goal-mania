@@ -48,8 +48,8 @@ export default async function ShopPage() {
   }));
 
   return (
-    <div className="pt-[90px] sm:pt-[110px]">
-      <ShopClient products={products} />
+    <div className="">
+        <ShopClient products={products} />
     </div>
   );
 }

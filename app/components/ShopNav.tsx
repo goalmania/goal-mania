@@ -13,6 +13,7 @@ const categoryToPath = {
   SerieA: "/shop/serieA",
   International: "/shop/international",
   Retro: "/shop/retro",
+  "Mystery Box": "/shop/mystery-box",
 };
 
 const categoryToLabel = {
@@ -21,6 +22,7 @@ const categoryToLabel = {
   SerieA: "Serie A",
   International: "International",
   Retro: "Retro Collection",
+  "Mystery Box": "Mystery Box",
 };
 
 export default function ShopNav() {
@@ -28,7 +30,7 @@ export default function ShopNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow sticky top-[46px] sm:top-[64px] z-40">
+    <nav className="bg-white shadow sticky top-0 z-40">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Desktop Navigation */}
         <div className="hidden md:flex h-14 lg:h-16 justify-between">

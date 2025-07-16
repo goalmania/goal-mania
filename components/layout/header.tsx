@@ -21,6 +21,8 @@ import { useWishlistStore } from "@/lib/store/wishlist";
 import { useLanguageStore } from "@/lib/store/language";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 import { usePathname, useRouter } from "next/navigation";
+import ShopNav from "@/app/components/ShopNav";
+import ShopSearchBar from "@/app/components/ShopSearchBar";
 
 // Use this as a proper type
 export interface User {
@@ -120,11 +122,7 @@ export function Header() {
         isScrolled ? "bg-white shadow-md" : "bg-white"
       } ${showBorder ? "border-b-5 border-orange-500" : ""}`}
     >
-      {isShopPage && (
-        <div className="accent-bg text-white text-center py-2 text-xs sm:text-sm font-medium">
-          Spedizione gratuita per le prossime 24 ore
-        </div>
-      )}
+
       <Disclosure as="nav" className="primary-bg text-white shadow">
         {({ open }) => (
           <>
@@ -480,6 +478,17 @@ export function Header() {
           </>
         )}
       </Disclosure>
+      {isShopPage ? (
+        <>
+        <ShopNav />
+        <div className="accent-bg text-white text-center py-2 text-xs sm:text-sm font-medium">
+          Spedizione gratuita per le prossime 24 ore
+        </div>
+        
+        </>
+      ) : (
+       null 
+      )} 
     </header>
   );
 }

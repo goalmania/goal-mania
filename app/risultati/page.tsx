@@ -404,24 +404,24 @@ export default function RisultatiPage() {
   const formattedTomorrow = format(tomorrow, "yyyy-MM-dd");
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-[#f7f8fa] min-h-screen">
       <div className="container mx-auto px-4 py-8 pt-20">
         <div className="mb-8">
-          <h1 className="text-3xl font-oswald font-bold text-black mb-2 inline-block px-3 py-1 rounded-md shadow-sm">
+          <h1 className="text-3xl font-oswald font-bold text-[#0e1924] mb-2 inline-block px-3 py-1 rounded-md shadow-sm bg-white border-l-4 border-[#f5963c]">
             Risultati
           </h1>
-          <p className="text-black font-roboto font-medium">
+          <p className="text-[#0e1924] font-roboto font-medium">
             Risultati delle partite in tempo reale e aggiornamenti
           </p>
         </div>
 
         {/* API Status Banner */}
         {usingMockData && (
-          <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <h3 className="font-semibold text-yellow-700 mb-2">
+          <div className="mb-6 bg-[#fff7e6] border border-[#f5963c] rounded-lg p-4">
+            <h3 className="font-semibold text-[#b85c00] mb-2">
               Utilizzo dati di esempio
             </h3>
-            <p className="text-yellow-600">
+            <p className="text-[#b85c00]">
               Stai visualizzando dati di esempio perché abbiamo raggiunto il
               limite di richieste API o si è verificato un errore.
             </p>
@@ -433,30 +433,30 @@ export default function RisultatiPage() {
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => handleDateChange(formattedYesterday)}
-              className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg border ${
+              className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg border font-roboto font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#f5963c] focus:ring-offset-2 shadow-sm ${
                 date === formattedYesterday
-                  ? "bg-indigo-100 text-indigo-800 border-indigo-300"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
+                  ? "bg-[#0e1924] text-white border-[#0e1924]"
+                  : "bg-white text-[#0e1924] border-[#e5e7eb] hover:bg-[#f6f6f6]"
               }`}
             >
               Ieri
             </button>
             <button
               onClick={() => handleDateChange(formattedToday)}
-              className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg border ${
+              className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg border font-roboto font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#f5963c] focus:ring-offset-2 shadow-sm ${
                 date === formattedToday
-                  ? "bg-indigo-100 text-indigo-800 border-indigo-300"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
+                  ? "bg-[#0e1924] text-white border-[#0e1924]"
+                  : "bg-white text-[#0e1924] border-[#e5e7eb] hover:bg-[#f6f6f6]"
               }`}
             >
               Oggi
             </button>
             <button
               onClick={() => handleDateChange(formattedTomorrow)}
-              className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg border ${
+              className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg border font-roboto font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#f5963c] focus:ring-offset-2 shadow-sm ${
                 date === formattedTomorrow
-                  ? "bg-indigo-100 text-indigo-800 border-indigo-300"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
+                  ? "bg-[#0e1924] text-white border-[#0e1924]"
+                  : "bg-white text-[#0e1924] border-[#e5e7eb] hover:bg-[#f6f6f6]"
               }`}
             >
               Domani
@@ -465,7 +465,7 @@ export default function RisultatiPage() {
               type="date"
               value={date}
               onChange={(e) => handleDateChange(e.target.value)}
-              className="px-3 py-2 sm:px-4 sm:py-2 rounded-lg border bg-white"
+              className="px-3 py-2 sm:px-4 sm:py-2 rounded-lg border bg-white text-[#0e1924] font-roboto font-medium focus:outline-none focus:ring-2 focus:ring-[#f5963c] focus:ring-offset-2 shadow-sm"
             />
           </div>
         </div>
@@ -474,10 +474,10 @@ export default function RisultatiPage() {
         <div className="mb-6 flex flex-wrap gap-2">
           <button
             onClick={() => setSelectedLeague("all")}
-            className={`px-3 py-1 sm:px-4 sm:py-2 rounded-lg text-sm ${
+            className={`px-3 py-1 sm:px-4 sm:py-2 rounded-lg text-sm font-roboto font-medium border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#f5963c] focus:ring-offset-2 shadow-sm ${
               selectedLeague === "all"
-                ? "bg-indigo-100 text-indigo-800 border border-indigo-300"
-                : "bg-white text-gray-700 hover:bg-gray-50 border"
+                ? "bg-[#f5963c] text-white border-[#f5963c]"
+                : "bg-white text-[#0e1924] border-[#e5e7eb] hover:bg-[#f6f6f6]"
             }`}
           >
             Tutte le leghe
@@ -486,10 +486,10 @@ export default function RisultatiPage() {
             <button
               key={league}
               onClick={() => setSelectedLeague(league)}
-              className={`px-3 py-1 sm:px-4 sm:py-2 rounded-lg text-sm ${
+              className={`px-3 py-1 sm:px-4 sm:py-2 rounded-lg text-sm font-roboto font-medium border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#f5963c] focus:ring-offset-2 shadow-sm ${
                 selectedLeague === league
-                  ? "bg-indigo-100 text-indigo-800 border border-indigo-300"
-                  : "bg-white text-gray-700 hover:bg-gray-50 border"
+                  ? "bg-[#f5963c] text-white border-[#f5963c]"
+                  : "bg-white text-[#0e1924] border-[#e5e7eb] hover:bg-[#f6f6f6]"
               }`}
             >
               {league}
@@ -502,18 +502,22 @@ export default function RisultatiPage() {
             {[1, 2, 3, 4, 5].map((i) => (
               <div
                 key={i}
-                className="bg-white rounded-lg shadow-md p-4 animate-pulse h-28"
-              ></div>
+                className="bg-white rounded-lg shadow-md p-4 animate-pulse h-28 border-l-4 border-[#0e1924]"
+              >
+                <div className="h-4 w-1/3 bg-[#e5e7eb] rounded mb-2"></div>
+                <div className="h-6 w-1/2 bg-[#f5963c] rounded mb-2"></div>
+                <div className="h-4 w-1/4 bg-[#e5e7eb] rounded"></div>
+              </div>
             ))}
           </div>
         ) : error ? (
-          <div className="bg-red-50 text-red-600 p-4 rounded-lg">{error}</div>
+          <div className="bg-red-50 text-red-600 p-4 rounded-lg border border-red-200">{error}</div>
         ) : filteredResults.length === 0 ? (
-          <div className="bg-gray-50 p-10 rounded-lg text-center">
-            <h3 className="text-lg font-oswald font-medium text-black">
+          <div className="bg-white p-10 rounded-lg text-center border border-[#e5e7eb] shadow-sm">
+            <h3 className="text-lg font-oswald font-medium text-[#0e1924]">
               Nessun risultato trovato
             </h3>
-            <p className="text-gray-700 font-roboto mt-2">
+            <p className="text-[#0e1924] font-roboto mt-2">
               Non ci sono partite disponibili per la data o la lega selezionata.
             </p>
           </div>
@@ -522,9 +526,9 @@ export default function RisultatiPage() {
             {filteredResults.map((match) => (
               <div
                 key={match.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden"
+                className="bg-white rounded-xl shadow-lg overflow-hidden border border-[#e5e7eb] transition-transform duration-200 hover:scale-[1.01] hover:shadow-xl"
               >
-                <div className="bg-indigo-50 border-b border-indigo-100 text-indigo-800 px-4 py-2 text-sm font-roboto flex justify-between items-center flex-wrap">
+                <div className="bg-[#0e1924] border-b border-[#e5e7eb] text-white px-4 py-2 text-sm font-roboto flex justify-between items-center flex-wrap">
                   <div className="flex items-center">
                     <div className="relative h-4 w-4 mr-2">
                       <Image
@@ -537,7 +541,9 @@ export default function RisultatiPage() {
                     </div>
                     {match.league.name} - {match.league.country}
                   </div>
-                  <div>{formatMatchDate(match.fixture.date)}</div>
+                  <div className="text-[#f5963c] font-semibold">
+                    {formatMatchDate(match.fixture.date)}
+                  </div>
                 </div>
 
                 <div className="p-4">
@@ -552,23 +558,23 @@ export default function RisultatiPage() {
                           unoptimized
                         />
                       </div>
-                      <span className="font-oswald font-medium text-black">
+                      <span className="font-oswald font-medium text-[#0e1924]">
                         {match.teams.home.name}
                       </span>
                     </div>
 
                     <div className="flex items-center space-x-2">
-                      <span className="text-xl font-oswald font-bold text-black">
+                      <span className="text-xl font-oswald font-bold text-[#0e1924]">
                         {match.goals.home !== null ? match.goals.home : "-"}
                       </span>
-                      <span className="text-xl font-oswald text-black">-</span>
-                      <span className="text-xl font-oswald font-bold text-black">
+                      <span className="text-xl font-oswald text-[#0e1924]">-</span>
+                      <span className="text-xl font-oswald font-bold text-[#0e1924]">
                         {match.goals.away !== null ? match.goals.away : "-"}
                       </span>
                     </div>
 
                     <div className="flex items-center space-x-3">
-                      <span className="font-oswald font-medium text-black text-right">
+                      <span className="font-oswald font-medium text-[#0e1924] text-right">
                         {match.teams.away.name}
                       </span>
                       <div className="relative h-8 w-8">
@@ -584,7 +590,15 @@ export default function RisultatiPage() {
                   </div>
 
                   <div className="mt-2 text-center">
-                    <span className="inline-block px-2 py-1 text-xs bg-gray-100 rounded-full text-gray-800">
+                    <span className={`inline-block px-2 py-1 text-xs rounded-full font-roboto font-medium transition-colors duration-200 ${
+                      match.fixture.status.short === "FT"
+                        ? "bg-[#f5963c] text-white"
+                        : match.fixture.status.short === "NS"
+                        ? "bg-[#e5e7eb] text-[#0e1924]"
+                        : match.fixture.status.short === "HT"
+                        ? "bg-[#0e1924] text-white"
+                        : "bg-[#f7f8fa] text-[#0e1924] border border-[#e5e7eb]"
+                    }`}>
                       {match.fixture.status.short === "FT"
                         ? "Partita Terminata"
                         : match.fixture.status.short === "NS"
