@@ -9,6 +9,8 @@ import Product from "@/lib/models/Product";
 import Address from "@/lib/models/Address";
 import OrderDetails from "@/lib/models/OrderDetails";
 import mongoose from "mongoose";
+import { sendEmail } from "@/lib/utils/email";
+import { orderConfirmationTemplate } from "@/lib/utils/email-templates";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-06-30.basil",
@@ -28,6 +30,8 @@ interface AddressType {
 
 interface UserDocument {
   _id: mongoose.Types.ObjectId;
+  email: string;
+  name?: string;
 }
 
 // Define an interface for the item structure
@@ -198,7 +202,20 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
     await newOrder.save();
     console.log("Order created successfully:", newOrder._id);
 
-    // Send order confirmation email (could be implemented here or in a separate service)
+    // Send order confirmation email
+    if (user && user.email) {
+      const { subject, text, html } = orderConfirmationTemplate({
+        userName: user.name,
+        orderId: newOrder._id.toString(),
+        amount: newOrder.amount,
+      });
+      await sendEmail({
+        to: user.email,
+        subject,
+        text,
+        html,
+      });
+    }
   } catch (error) {
     console.error("Error handling successful payment:", error);
     // Log the payment intent ID for debugging

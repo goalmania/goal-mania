@@ -8,6 +8,8 @@ import Order from "@/models/Order";
 import User from "@/lib/models/User";
 import Product from "@/lib/models/Product";
 import Address from "@/lib/models/Address";
+import { sendEmail } from "@/lib/utils/email";
+import { orderConfirmationTemplate } from "@/lib/utils/email-templates";
 
 const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY! });
 
@@ -129,6 +131,21 @@ export async function POST(req: NextRequest) {
     });
 
     await newOrder.save();
+
+    // Send order confirmation email
+    if (user && user.email) {
+      const { subject, text, html } = orderConfirmationTemplate({
+        userName: user.name,
+        orderId: newOrder._id.toString(),
+        amount: newOrder.amount,
+      });
+      await sendEmail({
+        to: user.email,
+        subject,
+        text,
+        html,
+      });
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
