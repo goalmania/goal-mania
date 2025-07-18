@@ -1,3 +1,19 @@
+// MOLLIE CHECKOUT DISABLED - Client does not use Mollie payment system
+// This file has been disabled to prevent build errors
+
+// Return a disabled response
+export async function POST(req: any) {
+  return new Response(
+    JSON.stringify({ error: "Mollie payment system is disabled" }),
+    { 
+      status: 503,
+      headers: { 'Content-Type': 'application/json' }
+    }
+  );
+}
+
+/*
+// Original Mollie implementation (commented out)
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
@@ -120,3 +136,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+*/
