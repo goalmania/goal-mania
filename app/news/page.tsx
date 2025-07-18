@@ -6,6 +6,8 @@ import Article from "@/lib/models/Article";
 import { NewsArticle } from "@/types/news";
 import BentoSection from "./BentoSection";
 import NewsCarousel from "./NewsCarousel";
+import { Suspense } from "react";
+import { LoadingFallback } from "@/components/shared/loading-fallback";
 
 // Disable caching for this page
 export const dynamic = "force-dynamic";
@@ -53,6 +55,8 @@ export default async function NewsPage() {
   const allArticles: NewsArticle[] = [...featured, ...regular];
 
   return (
+    <Suspense fallback={<LoadingFallback />}>
+
     <div className="bg-gradient-to-b from-white to-blue-50 min-h-screen flex flex-col">
       <div className="container mx-auto px-6 sm:px-10 lg:px-20 pt-12 pb-12 flex-1">
         <h1 className="text-5xl font-serif font-bold mb-10 text-left text-black leading-tight">Latest News</h1>
@@ -93,5 +97,6 @@ export default async function NewsPage() {
       </div>
       <NewsCarousel articles={allArticles} />
     </div>
+    </Suspense>
   );
 }

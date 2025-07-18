@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -8,6 +8,7 @@ import {
   getLiveMatches,
   getFixturesByDate,
 } from "@/app/services/clientFootballApi";
+import { LoadingFallback } from "@/components/shared/loading-fallback";
 
 interface Match {
   id: number;
@@ -404,6 +405,8 @@ export default function RisultatiPage() {
   const formattedTomorrow = format(tomorrow, "yyyy-MM-dd");
 
   return (
+    <Suspense fallback={<LoadingFallback />}>
+
     <div className="bg-[#f7f8fa] min-h-screen">
       <div className="container mx-auto px-4 py-8 pt-20">
         <div className="mb-8">
@@ -615,5 +618,6 @@ export default function RisultatiPage() {
         )}
       </div>
     </div>
+    </Suspense>
   );
 }

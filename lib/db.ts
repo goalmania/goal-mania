@@ -7,21 +7,27 @@ if (!MONGODB_URI) {
   throw new Error("Please define the MONGODB_URI environment variable");
 }
 
-let isConnected = false;
+// Use a global variable to cache the connection in serverless environments
+let cached = (global as any).mongoose;
+
+if (!cached) {
+  cached = (global as any).mongoose = { conn: null, promise: null };
+}
 
 const connectDB = async () => {
-  if (isConnected) return;
+  if (cached.conn) return cached.conn;
 
-  try {
-    const db = await mongoose.connect(MONGODB_URI, {
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URI, {
       dbName: "GoalMania",
+      // Add any other mongoose options here
+    }).then((mongoose) => {
+      console.log("✅ MongoDB connected with Mongoose");
+      return mongoose;
     });
-    isConnected = db.connections[0].readyState === 1;
-    console.log("✅ MongoDB connected with Mongoose");
-  } catch (error) {
-    console.error("❌ MongoDB connection error:", error);
-    throw error;
   }
+  cached.conn = await cached.promise;
+  return cached.conn;
 };
 
 export default connectDB;
