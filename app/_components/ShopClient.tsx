@@ -1,20 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
-import { useState, useEffect } from "react";
-import { useWishlistStore } from "@/lib/store/wishlist";
-import { useCartStore } from "@/lib/store/cart";
-import { useTranslation } from "@/lib/hooks/useTranslation";
-import ProductGrid from "@/app/components/ProductGrid";
-import ShopNav from "@/app/components/ShopNav";
-import FAQ from "@/app/components/FAQ";
-import Guarantees from "@/app/components/Guarantees";
-import ReviewsSlider from "@/app/components/ReviewsSlider";
+import ProductGridWrapper from "@/app/_components/ProductGridWrapper";
+import FAQ from "@/app/_components/FAQ";
+import Guarantees from "@/app/_components/Guarantees";
+import ReviewsSlider from "@/app/_components/ReviewsSlider";
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/navigation";
 import ShopSearchBar from "./ShopSearchBar";
 
 interface Review {
@@ -34,287 +25,126 @@ interface Product {
   team: string;
 }
 
-export default function ShopClient({ products }: { products: Product[] }) {
-  // Always declare all hooks at the top level, regardless of whether they're used immediately
-  const [mounted, setMounted] = useState(false);
-  const [season2025Products, setSeason2025Products] = useState<Product[]>([]);
-  const [mysteryBoxProducts, setMysteryBoxProducts] = useState<Product[]>([]);
-  const [featuredProduct, setFeaturedProduct] = useState<Product | null>(null);
-  const [featuredProduct2, setFeaturedProduct2] = useState<Product | null>(
-    null
-  );
-  const [featuredProduct3, setFeaturedProduct3] = useState<Product | null>(
-    null
-  );
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [mysteryBoxLoading, setMysteryBoxLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  // Declare store hooks
-  const wishlistStore = useWishlistStore();
-  const cartStore = useCartStore();
-  const { t } = useTranslation();
-  const router = useRouter();
+async function fetchSeason2025Products(): Promise<Product[]> {
+  try {
+    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const response = await fetch(`${baseUrl}/api/products?category=2025%2F26&limit=8&noPagination=true`, {
+      next: { revalidate: 300 }, // Cache for 5 minutes
+    });
 
-  useEffect(() => {
-    setMounted(true);
-    setIsLoading(true);
-    setError(null);
-
-    // Fetch 2025/26 products
-    const fetchSeason2025Products = async () => {
-      try {
-        console.log("Fetching 2025/26 products...");
-        // Using category=2025%2F26 as / needs to be URL encoded, with noPagination for direct array
-        const response = await fetch(
-          "/api/products?category=2025%2F26&limit=8&noPagination=true"
-        );
-        if (!response.ok) {
-          throw new Error(`Error fetching products: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log("Received data:", data);
-
-        let productsData = [];
-        // Check if the data has a products property (for compatibility with API structure)
-        if (data.products && Array.isArray(data.products)) {
-          productsData = data.products;
-        } else if (Array.isArray(data)) {
-          productsData = data;
-        } else {
-          throw new Error("Invalid data format received from API");
-        }
-
-        // Map to client format
-        const mappedProducts = productsData.map((product: any) => ({
-          id: product._id || "",
-          name: product.title || "Unknown Product",
-          price: product.basePrice || 0,
-          image: product.images?.[0] || "/images/image.png",
-          category: product.category || "Uncategorized",
-          team: product.title ? product.title.split(" ")[0] : "Unknown",
-        }));
-
-        console.log("Mapped products:", mappedProducts.length);
-        setSeason2025Products(mappedProducts);
-      } catch (error) {
-        console.error("Error fetching 2025/26 products:", error);
-        setError(
-          error instanceof Error ? error.message : "Failed to fetch products"
-        );
-        setSeason2025Products([]);
-      }
-    };
-
-    // Fetch featured products for the highlight sections
-    const fetchFeaturedProducts = async () => {
-      try {
-        const response = await fetch("/api/products?feature=true&limit=3");
-        if (!response.ok) {
-          throw new Error(
-            `Error fetching featured products: ${response.status}`
-          );
-        }
-        const data = await response.json();
-
-        // Handle the API response format which returns {products: [...]} object
-        let productsData = [];
-        if (data.products && Array.isArray(data.products)) {
-          productsData = data.products;
-        } else if (Array.isArray(data)) {
-          productsData = data;
-        } else {
-          throw new Error("Invalid data format received from API");
-        }
-
-        if (productsData.length > 0) {
-          // First featured product
-          const product1 = productsData[0];
-          setFeaturedProduct({
-            id: product1._id || "",
-            name: product1.title || "Featured Product",
-            price: product1.basePrice || 0,
-            image: product1.images?.[0] || "/images/image.png",
-            category: product1.category || "Uncategorized",
-            team: product1.title ? product1.title.split(" ")[0] : "Unknown",
-          });
-
-          // Second featured product (if available)
-          if (productsData.length > 1) {
-            const product2 = productsData[1];
-            setFeaturedProduct2({
-              id: product2._id || "",
-              name: product2.title || "Featured Product",
-              price: product2.basePrice || 0,
-              image: product2.images?.[0] || "/images/image.png",
-              category: product2.category || "Uncategorized",
-              team: product2.title ? product2.title.split(" ")[0] : "Unknown",
-            });
-          }
-
-          // Third featured product (if available)
-          if (productsData.length > 2) {
-            const product3 = productsData[2];
-            setFeaturedProduct3({
-              id: product3._id || "",
-              name: product3.title || "Featured Product",
-              price: product3.basePrice || 0,
-              image: product3.images?.[0] || "/images/image.png",
-              category: product3.category || "Uncategorized",
-              team: product3.title ? product3.title.split(" ")[0] : "Unknown",
-            });
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching featured products:", error);
-        // Don't set error state here since we already might have set it above
-        // Just clear the featured products
-        setFeaturedProduct(null);
-        setFeaturedProduct2(null);
-        setFeaturedProduct3(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // Fetch Mystery Box products
-    const fetchMysteryBoxProducts = async () => {
-      try {
-        setMysteryBoxLoading(true);
-        console.log("Fetching Mystery Box products...");
-        const response = await fetch(
-          "/api/products?category=Mystery%20Box&limit=6&noPagination=true"
-        );
-        if (!response.ok) {
-          throw new Error(`Error fetching Mystery Box products: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log("Received Mystery Box data:", data);
-
-        let productsData = [];
-        if (data.products && Array.isArray(data.products)) {
-          productsData = data.products;
-        } else if (Array.isArray(data)) {
-          productsData = data;
-        } else {
-          throw new Error("Invalid data format received from API");
-        }
-
-        // Map to client format
-        const mappedProducts = productsData.map((product: any) => ({
-          id: product._id || "",
-          name: product.title || "Mystery Box",
-          price: product.basePrice || 0,
-          image: product.images?.[0] || "/images/image.png",
-          category: product.category || "Mystery Box",
-          team: "Mystery",
-        }));
-
-        console.log("Mapped Mystery Box products:", mappedProducts.length);
-        setMysteryBoxProducts(mappedProducts);
-      } catch (error) {
-        console.error("Error fetching Mystery Box products:", error);
-        setMysteryBoxProducts([]);
-      } finally {
-        setMysteryBoxLoading(false);
-      }
-    };
-
-    // Execute all fetch operations
-    const fetchData = async () => {
-      try {
-        await Promise.all([fetchSeason2025Products(), fetchFeaturedProducts(), fetchMysteryBoxProducts()]);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  // Add this outside the useEffect hook to make it accessible to the rest of the component
-  const retryFetchSeason2025Products = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      console.log("Retrying 2025/26 products fetch...");
-      const response = await fetch(
-        "/api/products?category=2025%2F26&limit=8&noPagination=true"
-      );
-      if (!response.ok) {
-        throw new Error(`Error fetching products: ${response.status}`);
-      }
-      const data = await response.json();
-
-      let productsData = [];
-      if (data.products && Array.isArray(data.products)) {
-        productsData = data.products;
-      } else if (Array.isArray(data)) {
-        productsData = data;
-      } else {
-        throw new Error("Invalid data format received from API");
-      }
-
-      // Map to client format
-      const mappedProducts = productsData.map((product: any) => ({
-        id: product._id || "",
-        name: product.title || "Unknown Product",
-        price: product.basePrice || 0,
-        image: product.images?.[0] || "/images/image.png",
-        category: product.category || "Uncategorized",
-        team: product.title ? product.title.split(" ")[0] : "Unknown",
-      }));
-
-      setSeason2025Products(mappedProducts);
-    } catch (error) {
-      console.error("Error fetching 2025/26 products:", error);
-      setError(
-        error instanceof Error ? error.message : "Failed to fetch products"
-      );
-      setSeason2025Products([]);
-    } finally {
-      setIsLoading(false);
+    if (!response.ok) {
+      throw new Error(`Error fetching products: ${response.status}`);
     }
-  };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
+    const data = await response.json();
+    let productsData = [];
 
-    router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-  };
+    if (data.products && Array.isArray(data.products)) {
+      productsData = data.products;
+    } else if (Array.isArray(data)) {
+      productsData = data;
+    } else {
+      throw new Error("Invalid data format received from API");
+    }
 
-  // If not mounted, show skeleton loading UI
-  if (!mounted) {
-    return (
-      <div className="bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
-          <div className="animate-pulse">
-            <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
-            <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-              {[...Array(8)].map((_, index) => (
-                <div key={index} className="group">
-                  <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8 h-80"></div>
-                  <div className="mt-4 h-4 bg-gray-200 rounded w-3/4"></div>
-                  <div className="mt-2 h-4 bg-gray-200 rounded w-1/4"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return productsData.map((product: any) => ({
+      id: product._id || "",
+      name: product.title || "Unknown Product",
+      price: product.basePrice || 0,
+      image: product.images?.[0] || "/images/image.png",
+      category: product.category || "Uncategorized",
+      team: product.title ? product.title.split(" ")[0] : "Unknown",
+    }));
+  } catch (error) {
+    console.error("Error fetching 2025/26 products:", error);
+    return [];
   }
+}
 
-  // Extract store methods only after we're mounted and rendering
-  const {
-    addItem: addToWishlist,
-    removeItem: removeFromWishlist,
-    isInWishlist,
-  } = wishlistStore;
-  const { addItem: addToCart } = cartStore;
+async function fetchFeaturedProducts(): Promise<Product[]> {
+  try {
+    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const response = await fetch(`${baseUrl}/api/products?feature=true&limit=3`, {
+      next: { revalidate: 300 }, // Cache for 5 minutes
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching featured products: ${response.status}`);
+    }
+
+    const data = await response.json();
+    let productsData = [];
+
+    if (data.products && Array.isArray(data.products)) {
+      productsData = data.products;
+    } else if (Array.isArray(data)) {
+      productsData = data;
+    } else {
+      throw new Error("Invalid data format received from API");
+    }
+
+    return productsData.map((product: any) => ({
+      id: product._id || "",
+      name: product.title || "Featured Product",
+      price: product.basePrice || 0,
+      image: product.images?.[0] || "/images/image.png",
+      category: product.category || "Uncategorized",
+      team: product.title ? product.title.split(" ")[0] : "Unknown",
+    }));
+  } catch (error) {
+    console.error("Error fetching featured products:", error);
+    return [];
+  }
+}
+
+async function fetchMysteryBoxProducts(): Promise<Product[]> {
+  try {
+    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const response = await fetch(`${baseUrl}/api/products?category=Mystery%20Box&limit=6&noPagination=true`, {
+      next: { revalidate: 300 }, // Cache for 5 minutes
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching Mystery Box products: ${response.status}`);
+    }
+
+    const data = await response.json();
+    let productsData = [];
+
+    if (data.products && Array.isArray(data.products)) {
+      productsData = data.products;
+    } else if (Array.isArray(data)) {
+      productsData = data;
+    } else {
+      throw new Error("Invalid data format received from API");
+    }
+
+    return productsData.map((product: any) => ({
+      id: product._id || "",
+      name: product.title || "Mystery Box",
+      price: product.basePrice || 0,
+      image: product.images?.[0] || "/images/image.png",
+      category: product.category || "Mystery Box",
+      team: "Mystery",
+    }));
+  } catch (error) {
+    console.error("Error fetching Mystery Box products:", error);
+    return [];
+  }
+}
+
+export default async function ShopClient({ products }: { products: Product[] }) {
+  // Fetch all data in parallel
+  const [season2025Products, featuredProducts, mysteryBoxProducts] = await Promise.all([
+    fetchSeason2025Products(),
+    fetchFeaturedProducts(),
+    fetchMysteryBoxProducts()
+  ]);
+
+  // Extract featured products
+  const featuredProduct = featuredProducts[0] || null;
+  const featuredProduct2 = featuredProducts[1] || null;
+  const featuredProduct3 = featuredProducts[2] || null;
 
   return (
     <div className="bg-white pt-[112px]">
@@ -327,10 +157,11 @@ export default function ShopClient({ products }: { products: Product[] }) {
             <div className="relative px-4 sm:px-6 py-12 sm:py-16 md:py-24 lg:px-8 lg:py-56 lg:pr-0">
               <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
-                  {t("shop.hero.title")}
+                  Scopri le nostre maglie
                 </h1>
                 <p className="mt-4 sm:mt-6 text-sm sm:text-base md:text-lg leading-6 sm:leading-8 text-gray-600">
-                  {t("shop.hero.description")}
+                  Le migliori maglie delle squadre italiane e internazionali, 
+                  con qualità premium e spedizione gratuita.
                 </p>
               </div>
             </div>
@@ -383,53 +214,13 @@ export default function ShopClient({ products }: { products: Product[] }) {
           </Link>
         </div>
         <div className="mt-6">
-          {isLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="bg-gray-200 h-48 md:h-64 rounded-lg"></div>
-                  <div className="h-4 bg-gray-200 rounded mt-2 w-3/4"></div>
-                  <div className="h-4 bg-gray-200 rounded mt-2 w-1/2"></div>
-                </div>
-              ))}
-            </div>
-          ) : error ? (
-            <div className="text-center py-8 text-red-500">
-              <p>{error}</p>
-              <button
-                onClick={retryFetchSeason2025Products}
-                className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-              >
-                Riprova
-              </button>
-            </div>
-          ) : season2025Products.length === 0 ? (
+          {season2025Products.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <p>Nessun prodotto disponibile in questa categoria.</p>
             </div>
           ) : (
             <Suspense fallback={<div>Loading...</div>}>
-              <ProductGrid
-                products={season2025Products}
-                onWishlistToggle={(product) => {
-                  const productId = product.id.toString();
-                  if (isInWishlist(productId)) {
-                    removeFromWishlist(productId);
-                  } else {
-                    addToWishlist({
-                      id: productId,
-                      name: product.name,
-                      price: product.price,
-                      image: product.image,
-                      team: product.team,
-                    });
-                  }
-                }}
-                onAddToCart={(product) => {
-                  router.push(`/products/${product.id}`);
-                }}
-                isInWishlist={isInWishlist}
-              />
+              <ProductGridWrapper products={season2025Products} />
             </Suspense>
           )}
         </div>
@@ -463,17 +254,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
 
           {/* Products Grid */}
           <div className="mb-8">
-            {mysteryBoxLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(3)].map((_, i) => (
-                  <div key={i} className="animate-pulse">
-                    <div className="bg-white/20 backdrop-blur-sm h-64 rounded-2xl border border-white/30"></div>
-                    <div className="h-4 bg-white/20 rounded mt-4 w-3/4"></div>
-                    <div className="h-4 bg-white/20 rounded mt-2 w-1/2"></div>
-                  </div>
-                ))}
-              </div>
-            ) : mysteryBoxProducts.length === 0 ? (
+            {mysteryBoxProducts.length === 0 ? (
               <div className="text-center py-12">
                 <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-4xl">📦</span>
@@ -515,12 +296,12 @@ export default function ShopClient({ products }: { products: Product[] }) {
                       <span className="text-2xl font-bold text-white">
                         €{product.price.toFixed(2)}
                       </span>
-                      <button
-                        onClick={() => router.push(`/products/${product.id}`)}
+                      <Link
+                        href={`/products/${product.id}`}
                         className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-4 py-2 rounded-full font-semibold hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 transform hover:scale-105"
                       >
                         Scopri →
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 ))}

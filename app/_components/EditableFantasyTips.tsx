@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { ArrowUpCircle, ArrowDownCircle, Edit, Save, X } from "lucide-react";
 import axios from "axios";
 
@@ -41,43 +41,44 @@ export default function EditableFantasyTips() {
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Load tips from API on component mount
-  useEffect(() => {
-    const fetchTips = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axios.get("/api/fantasy-tips");
+  // Memoized fetch function to prevent unnecessary re-renders
+  const fetchTips = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get("/api/fantasy-tips");
 
-        if (
-          response.data &&
-          response.data.recommended &&
-          response.data.notRecommended
-        ) {
-          setTips({
-            recommended: response.data.recommended,
-            notRecommended: response.data.notRecommended,
-          });
-          setEditedTips({
-            recommended: response.data.recommended,
-            notRecommended: response.data.notRecommended,
-          });
-        }
-      } catch (err) {
-        console.error("Error fetching fantasy tips:", err);
-        setError(
-          "Impossibile caricare i consigli. Utilizzando dati di esempio."
-        );
-        // Use initial data as fallback
-      } finally {
-        setIsLoading(false);
+      if (
+        response.data &&
+        response.data.recommended &&
+        response.data.notRecommended
+      ) {
+        setTips({
+          recommended: response.data.recommended,
+          notRecommended: response.data.notRecommended,
+        });
+        setEditedTips({
+          recommended: response.data.recommended,
+          notRecommended: response.data.notRecommended,
+        });
       }
-    };
-
-    fetchTips();
+    } catch (err) {
+      console.error("Error fetching fantasy tips:", err);
+      setError(
+        "Impossibile caricare i consigli. Utilizzando dati di esempio."
+      );
+      // Use initial data as fallback
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  // Save tips to API
-  const saveTips = async () => {
+  // Load tips from API on component mount
+  useEffect(() => {
+    fetchTips();
+  }, [fetchTips]);
+
+  // Memoized save function
+  const saveTips = useCallback(async () => {
     try {
       setIsSaving(true);
       const response = await axios.post("/api/fantasy-tips", editedTips);
@@ -96,16 +97,16 @@ export default function EditableFantasyTips() {
     } finally {
       setIsSaving(false);
     }
-  };
+  }, [editedTips]);
 
-  // Cancel editing
-  const cancelEditing = () => {
+  // Memoized cancel function
+  const cancelEditing = useCallback(() => {
     setEditedTips(tips);
     setIsEditing(false);
-  };
+  }, [tips]);
 
-  // Handling input changes
-  const handlePlayerChange = (
+  // Memoized input change handler
+  const handlePlayerChange = useCallback((
     listType: "recommended" | "notRecommended",
     index: number,
     field: keyof Player,
@@ -116,18 +117,18 @@ export default function EditableFantasyTips() {
       newList[index] = { ...newList[index], [field]: value };
       return { ...prev, [listType]: newList };
     });
-  };
+  }, []);
 
-  // Add new player
-  const addPlayer = (listType: "recommended" | "notRecommended") => {
+  // Memoized add player function
+  const addPlayer = useCallback((listType: "recommended" | "notRecommended") => {
     setEditedTips((prev) => ({
       ...prev,
       [listType]: [...prev[listType], { name: "", team: "", reason: "" }],
     }));
-  };
+  }, []);
 
-  // Remove player
-  const removePlayer = (
+  // Memoized remove player function
+  const removePlayer = useCallback((
     listType: "recommended" | "notRecommended",
     index: number
   ) => {
@@ -135,15 +136,18 @@ export default function EditableFantasyTips() {
       ...prev,
       [listType]: prev[listType].filter((_, i) => i !== index),
     }));
-  };
+  }, []);
+
+  // Memoized loading skeleton
+  const loadingSkeleton = useMemo(() => (
+    <div className="space-y-4 animate-pulse">
+      <div className="h-40 bg-gray-100 rounded-lg"></div>
+      <div className="h-40 bg-gray-100 rounded-lg"></div>
+    </div>
+  ), []);
 
   if (isLoading) {
-    return (
-      <div className="space-y-4 animate-pulse">
-        <div className="h-40 bg-gray-100 rounded-lg"></div>
-        <div className="h-40 bg-gray-100 rounded-lg"></div>
-      </div>
-    );
+    return loadingSkeleton;
   }
 
   return (

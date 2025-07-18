@@ -9,7 +9,7 @@ interface FixturesSectionProps {
 
 // Dynamic import with no SSR
 const UpcomingFixtures = dynamic(
-  () => import("@/app/components/UpcomingFixtures"),
+  () => import("@/app/_components/UpcomingFixtures"),
   { ssr: false }
 );
 

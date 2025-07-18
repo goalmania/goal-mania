@@ -4,9 +4,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // Import new components
-import SerieALiveMatchesSection from "@/app/components/SerieALiveMatchesSection";
-import { SerieANews } from "@/app/components/SerieANews";
-import EditableFantasyTips from "@/app/components/EditableFantasyTips";
+import SerieALiveMatchesSection from "@/app/_components/SerieALiveMatchesSection";
+import { SerieANews } from "@/app/_components/SerieANews";
+import EditableFantasyTips from "@/app/_components/EditableFantasyTips";
+import { LoadingFallback } from "@/components/shared/loading-fallback";
 
 export const metadata: Metadata = {
   title: "Fantacalcio | Goal Mania",
@@ -23,6 +24,8 @@ const leagues = [
 
 export default function FantasyFootballPage() {
   return (
+    <Suspense fallback={<LoadingFallback />}>
+
     <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 py-8 overflow-x-hidden">
       <div className="container mx-auto px-4 sm:px-6">
         {/* Decorative Section Header */}
@@ -41,7 +44,9 @@ export default function FantasyFootballPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="bg-white">
+                <Suspense fallback={<LoadingFallback />}>
                 <SerieALiveMatchesSection />
+                </Suspense>
               </CardContent>
             </Card>
 
@@ -53,7 +58,9 @@ export default function FantasyFootballPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="bg-white">
+                <Suspense fallback={<LoadingFallback />}>
                 <SerieANews />
+                </Suspense>
               </CardContent>
             </Card>
           </div>
@@ -68,12 +75,15 @@ export default function FantasyFootballPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="pl-6">
+                <Suspense fallback={<LoadingFallback />}>
                 <EditableFantasyTips />
+                </Suspense>
               </CardContent>
             </Card>
           </div>
         </div>
       </div>
     </div>
+    </Suspense>
   );
 }

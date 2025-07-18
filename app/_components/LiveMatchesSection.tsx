@@ -1,13 +1,5 @@
-"use client";
-
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
-
-// Dynamic import with no SSR is allowed in a client component
-const LiveFootballMatches = dynamic(
-  () => import("@/app/components/LiveFootballMatches"),
-  { ssr: false }
-);
+import LiveFootballMatches from "./LiveFootballMatches";
 
 export default function LiveMatchesSection() {
   return (

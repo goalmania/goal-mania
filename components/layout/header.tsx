@@ -21,8 +21,8 @@ import { useWishlistStore } from "@/lib/store/wishlist";
 import { useLanguageStore } from "@/lib/store/language";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 import { usePathname, useRouter } from "next/navigation";
-import ShopNav from "@/app/components/ShopNav";
-import ShopSearchBar from "@/app/components/ShopSearchBar";
+import ShopNav from "@/app/_components/ShopNav";
+import ShopSearchBar from "@/app/_components/ShopSearchBar";
 
 // Use this as a proper type
 export interface User {
@@ -171,7 +171,7 @@ export function Header() {
                       </button>
 
                       {internationalOpen && (
-                        <div className="absolute left-0 z-10 mt-1 w-40 origin-top-left rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className="absolute left-0 z-50 mt-1 w-40 origin-top-left rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                           {internationalNavItems.map((item) => (
                             <Link
                               key={item.name}

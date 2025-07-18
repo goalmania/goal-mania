@@ -4,8 +4,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
-import { JerseyAdBlock } from "@/app/components/JerseyAdBlock";
-import ArticleContent from "@/app/components/ArticleContent";
+import { JerseyAdBlock } from "@/app/_components/JerseyAdBlock";
+import ArticleContent from "@/app/_components/ArticleContent";
 
 // Disable caching for this page
 export const dynamic = "force-dynamic";

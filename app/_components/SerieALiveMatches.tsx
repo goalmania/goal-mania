@@ -1,8 +1,4 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import Image from "next/image";
-import axios from "axios";
 
 interface Match {
   id: number;
@@ -141,67 +137,93 @@ const mockMatches: Match[] = [
   },
 ];
 
-export default function SerieALiveMatches() {
-  const [matches, setMatches] = useState<Match[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+async function fetchLiveMatches(): Promise<{ matches: Match[]; error?: string }> {
+  const API_KEY = process.env.FOOTBALL_API;
 
-  useEffect(() => {
-    const fetchLiveMatches = async () => {
-      try {
-        // Attempt to fetch live matches from the API
-        const response = await axios.get("/api/football/live-matches");
-
-        if (
-          response.data &&
-          response.data.matches &&
-          response.data.matches.length > 0
-        ) {
-          // Filter matches to show only Serie A
-          const serieAMatches = response.data.matches.filter(
-            (match: Match) => match.league.name === "Serie A"
-          );
-
-          if (serieAMatches.length > 0) {
-            setMatches(serieAMatches);
-          } else {
-            setMatches(mockMatches);
-            setError(
-              "No live Serie A matches currently. Showing recent matches instead."
-            );
-          }
-        } else {
-          // If no live matches, fallback to mock data
-          setMatches(mockMatches);
-          setError(
-            "No live Serie A matches currently. Showing recent matches instead."
-          );
-        }
-      } catch (err) {
-        console.error("Error fetching live matches:", err);
-        setError("Failed to load live matches. Using sample data instead.");
-        // Use mock data as fallback
-        setMatches(mockMatches);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchLiveMatches();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="bg-gray-100 animate-pulse h-24 rounded-lg"
-          ></div>
-        ))}
-      </div>
-    );
+  if (!API_KEY) {
+    return { matches: mockMatches, error: "API key not configured" };
   }
+
+  try {
+    // Fetch live matches directly from the external API
+    const response = await fetch(
+      "https://v3.football.api-sports.io/fixtures?live=all",
+      {
+        method: "GET",
+        headers: {
+          "x-apisports-key": API_KEY,
+          "Content-Type": "application/json",
+        },
+        // Add cache control for better performance
+        next: { revalidate: 60 }, // Revalidate every 60 seconds
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`API responded with status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    // Transform API response to match our interface
+    const matches = data.response.map((fixture: any) => ({
+      id: fixture.fixture.id,
+      league: {
+        name: fixture.league.name,
+        logo: fixture.league.logo,
+        country: fixture.league.country,
+      },
+      teams: {
+        home: {
+          name: fixture.teams.home.name,
+          logo: fixture.teams.home.logo,
+        },
+        away: {
+          name: fixture.teams.away.name,
+          logo: fixture.teams.away.logo,
+        },
+      },
+      goals: {
+        home: fixture.goals.home,
+        away: fixture.goals.away,
+      },
+      fixture: {
+        date: fixture.fixture.date,
+        status: {
+          short: fixture.fixture.status.short,
+          long: fixture.fixture.status.long,
+        },
+        venue: {
+          name: fixture.fixture.venue.name || "Unknown Venue",
+          city: fixture.fixture.venue.city || "Unknown City",
+        },
+      },
+    }));
+
+    // Filter matches to show only Serie A
+    const serieAMatches = matches.filter(
+      (match: Match) => match.league.name === "Serie A"
+    );
+
+    if (serieAMatches.length > 0) {
+      return { matches: serieAMatches };
+    } else {
+      return { 
+        matches: mockMatches, 
+        error: "No live Serie A matches currently. Showing recent matches instead." 
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching live matches:", error);
+    return { 
+      matches: mockMatches, 
+      error: "Failed to load live matches. Using sample data instead." 
+    };
+  }
+}
+
+export default async function SerieALiveMatches() {
+  const { matches, error } = await fetchLiveMatches();
 
   return (
     <div className="space-y-4">

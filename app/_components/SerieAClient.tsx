@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react";
 import { useWishlistStore } from "@/lib/store/wishlist";
 import { useCartStore } from "@/lib/store/cart";
-import ProductGrid from "@/app/components/ProductGrid";
-import ShopNav from "@/app/components/ShopNav";
+import ProductGrid from "@/app/_components/ProductGrid";
 import { Suspense } from "react";
 
 interface Product {
@@ -16,11 +15,7 @@ interface Product {
   team: string;
 }
 
-export default function Season2025Client({
-  products,
-}: {
-  products: Product[];
-}) {
+export default function SerieAClient({ products }: { products: Product[] }) {
   const {
     addItem: addToWishlist,
     removeItem: removeFromWishlist,
@@ -37,7 +32,7 @@ export default function Season2025Client({
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-          2025/26 Collection
+          Serie A & International Collection
         </h2>
         <div className="mt-6">
           <Suspense fallback={<div>Loading...</div>}>

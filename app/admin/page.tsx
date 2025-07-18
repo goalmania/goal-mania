@@ -8,7 +8,7 @@ import {
   ShoppingBagIcon,
 } from "@heroicons/react/24/outline";
 import { toast } from "react-hot-toast";
-import AdminCacheControl from "@/app/components/AdminCacheControl";
+import AdminCacheControl from "@/app/_components/AdminCacheControl";
 
 interface Stat {
   name: string;

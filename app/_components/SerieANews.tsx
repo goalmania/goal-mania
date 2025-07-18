@@ -1,9 +1,5 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import axios from "axios";
 
 interface NewsItem {
   _id: string;
@@ -59,72 +55,35 @@ const mockNews: NewsItem[] = [
   },
 ];
 
-export function SerieANews() {
-  const [news, setNews] = useState<NewsItem[]>(mockNews);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+async function fetchNews(): Promise<NewsItem[]> {
+  try {
+    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const response = await fetch(`${baseUrl}/api/news/serie-a?limit=4`, {
+      next: { revalidate: 300 }, // Cache for 5 minutes
+    });
 
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axios.get("/api/news/serie-a?limit=4");
+    if (!response.ok) {
+      throw new Error('Failed to fetch news');
+    }
 
-        if (
-          response.data &&
-          response.data.articles &&
-          response.data.articles.length > 0
-        ) {
-          setNews(response.data.articles);
-        } else {
-          // Use mock data as fallback
-          setError("Nessuna notizia trovata. Mostrando contenuto di esempio.");
-        }
-      } catch (err) {
-        console.error("Error fetching Serie A news:", err);
-        setError(
-          "Impossibile caricare le notizie. Mostrando contenuto di esempio."
-        );
-        // Keep using mock data
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchNews();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[1, 2].map((i) => (
-            <div
-              key={i}
-              className="bg-gray-100 animate-pulse h-64 rounded-lg"
-            ></div>
-          ))}
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {[1, 2].map((i) => (
-            <div
-              key={i}
-              className="bg-gray-100 animate-pulse h-24 rounded-lg"
-            ></div>
-          ))}
-        </div>
-      </div>
-    );
+    const data = await response.json();
+    
+    if (data && data.articles && data.articles.length > 0) {
+      return data.articles;
+    }
+    
+    return mockNews;
+  } catch (error) {
+    console.error("Error fetching Serie A news:", error);
+    return mockNews;
   }
+}
+
+export async function SerieANews() {
+  const news = await fetchNews();
 
   return (
     <div className="space-y-6">
-      {error && (
-        <div className="p-3 text-sm text-amber-800 bg-amber-50 rounded-md mb-4">
-          {error}
-        </div>
-      )}
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {news.slice(0, 2).map((article) => (
           <Link

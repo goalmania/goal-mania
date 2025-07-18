@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
-import ProductDetailClient from "@/app/components/ProductDetailClient";
+import ProductDetailClient from "@/app/_components/ProductDetailClient";
 import { Suspense } from "react";
 import mongoose from "mongoose";
 

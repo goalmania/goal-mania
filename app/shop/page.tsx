@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
-import ShopClient from "@/app/components/ShopClient";
+import ShopClient from "@/app/_components/ShopClient";
 import { IProduct } from "@/lib/types/product";
 
 // Disable caching for this page

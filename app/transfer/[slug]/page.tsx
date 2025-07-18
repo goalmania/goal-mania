@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
-import ArticleContent from "@/app/components/ArticleContent";
+import ArticleContent from "@/app/_components/ArticleContent";
 
 // Disable caching for this page
 export const dynamic = "force-dynamic";

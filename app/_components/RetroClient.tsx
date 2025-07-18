@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { useWishlistStore } from "@/lib/store/wishlist";
 import { useCartStore } from "@/lib/store/cart";
-import ProductGrid from "@/app/components/ProductGrid";
-import ShopNav from "@/app/components/ShopNav";
+import ProductGrid from "@/app/_components/ProductGrid";
+import ShopNav from "@/app/_components/ShopNav";
 import { Suspense } from "react";
 
 interface Product {
