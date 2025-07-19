@@ -17,7 +17,12 @@ type TemplateKey = keyof typeof templates;
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { to, template, params }: { to: string; template: TemplateKey; params: Record<string, any> } = body;
+    const { to, template, params, language = 'it' }: { 
+      to: string; 
+      template: TemplateKey; 
+      params: Record<string, any>;
+      language?: 'it' | 'en';
+    } = body;
 
     if (!to || !template || !templates[template]) {
       return NextResponse.json(
@@ -50,8 +55,8 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Generate email content using the selected template
-    const { subject, text, html } = templates[template](params as any);
+    // Generate email content using the selected template with language support
+    const { subject, text, html } = await templates[template]({ ...params, language } as any);
 
     // Send the email
     const result = await sendEmail({ to, subject, text, html });

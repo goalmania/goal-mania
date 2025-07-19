@@ -12,6 +12,7 @@ interface UserDocument {
   email: string;
   name: string;
   _id: string;
+  language?: string;
 }
 
 // POST /api/orders/[id]/notify-shipping - Send shipping notification to user
@@ -53,9 +54,9 @@ export async function POST(
       );
     }
 
-    // Get user email
+    // Get user email and language preference
     const user = (await User.findById(order.userId)
-      .select("email name")
+      .select("email name language")
       .lean()) as unknown as UserDocument;
 
     if (!user) {
@@ -63,10 +64,14 @@ export async function POST(
     }
 
     // Use template for shipping notification email
-    const { subject, text, html } = shippingNotificationTemplate({
+    const userLanguage = user.language || 'it'; // Default to Italian
+    
+    const { subject, text, html } = await shippingNotificationTemplate({
       userName: user.name,
       orderId: String(order._id),
       trackingCode: order.trackingCode,
+      items: order.items,
+      language: userLanguage as 'it' | 'en',
     });
     await sendEmail({
       to: user.email,

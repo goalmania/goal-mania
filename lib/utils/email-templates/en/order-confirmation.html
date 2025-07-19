@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmation</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc;">
+  <div style="max-width: 600px; margin: 0 auto; background: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #0e1924 0%, #1a365d 100%); padding: 40px 30px; text-align: center; border-radius: 12px 12px 0 0;">
+      <h1 style="color: white; margin: 0; font-size: 32px; font-weight: 700;">🎉 ORDER CONFIRMED!</h1>
+      <p style="color: #f5963c; margin: 10px 0 0 0; font-size: 18px; font-weight: 600;">Your Goal Mania Jersey is on its way</p>
+    </div>
+    
+    <!-- Content -->
+    <div style="padding: 50px 40px;">
+      <h2 style="color: #0e1924; margin: 0 0 25px 0; font-size: 26px; font-weight: 600;">Hi{{userName}},</h2>
+      
+      <!-- Success Message -->
+      <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 6px solid #0e1924; padding: 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
+        <p style="margin: 0; color: #0e1924; font-size: 17px; font-weight: 600; line-height: 1.5;">EXCELLENT CHOICE! Your order has been confirmed and we're already working on it.</p>
+      </div>
+      
+      <!-- Order Details Card -->
+      <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 16px; padding: 30px; margin: 30px 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+        <h3 style="color: #0e1924; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">📦 Order Details</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
+              <span style="color: #64748b; font-weight: 500; font-size: 15px;">Order Number:</span>
+            </td>
+            <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; text-align: right;">
+              <span style="color: #0e1924; font-weight: 700; font-size: 16px;">#{{orderId}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 0;">
+              <span style="color: #64748b; font-weight: 500; font-size: 15px;">Total Amount:</span>
+            </td>
+            <td style="padding: 12px 0; text-align: right;">
+              <span style="color: #0e1924; font-weight: 700; font-size: 18px;">€{{amount}}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+      
+      <!-- Product Cards Section -->
+      <div style="margin: 40px 0;">
+        <h3 style="color: #0e1924; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">🛍️ Your Products</h3>
+        {{productCards}}
+      </div>
+      
+      <!-- Next Steps -->
+      <div style="margin: 40px 0;">
+        <h3 style="color: #0e1924; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">⚡ What's Next</h3>
+        
+        <!-- Steps Container -->
+        <div style="background: #f8fafc; border-radius: 16px; padding: 30px; margin: 20px 0;">
+          <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+            <tr>
+              <td style="width: 40px; vertical-align: top; padding-top: 3px;">
+                <div style="background: #0e1924; color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-size: 14px; font-weight: 700;">1</div>
+              </td>
+              <td style="vertical-align: top; padding-left: 15px;">
+                <span style="color: #374151; font-size: 16px; line-height: 1.5; font-weight: 500;">We'll process your order within 24 hours</span>
+              </td>
+            </tr>
+          </table>
+          <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+            <tr>
+              <td style="width: 40px; vertical-align: top; padding-top: 3px;">
+                <div style="background: #0e1924; color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-size: 14px; font-weight: 700;">2</div>
+              </td>
+              <td style="vertical-align: top; padding-left: 15px;">
+                <span style="color: #374151; font-size: 16px; line-height: 1.5; font-weight: 500;">You'll get shipping confirmation with tracking</span>
+              </td>
+            </tr>
+          </table>
+          <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+            <tr>
+              <td style="width: 40px; vertical-align: top; padding-top: 3px;">
+                <div style="background: #0e1924; color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-size: 14px; font-weight: 700;">3</div>
+              </td>
+              <td style="vertical-align: top; padding-left: 15px;">
+                <span style="color: #374151; font-size: 16px; line-height: 1.5; font-weight: 500;">Delivery typically takes 3-5 business days</span>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      
+      <!-- CTA Button -->
+      <div style="text-align: center; margin: 40px 0;">
+        <a href="{{NEXT_PUBLIC_BASE_URL}}/account/orders" style="background: linear-gradient(135deg, #f5963c 0%, #ed8936 100%); color: white; padding: 18px 36px; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 17px; display: inline-block; box-shadow: 0 6px 20px rgba(245, 150, 60, 0.3); letter-spacing: 0.5px;">View Order Status</a>
+      </div>
+      
+      <!-- Thank You Message -->
+      <div style="text-align: center; margin: 40px 0; padding: 25px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; border: 2px solid #f59e0b;">
+        <p style="margin: 0; color: #92400e; font-weight: 700; font-size: 17px;">🏆 Thank you for choosing Goal Mania!</p>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div style="background: #0e1924; padding: 40px; text-align: center; border-radius: 0 0 12px 12px;">
+      <p style="color: #94a3b8; margin: 0; font-size: 15px; line-height: 1.6;">Best regards,<br><strong>The Goal Mania Team</strong></p>
+    </div>
+  </div>
+</body>
+</html> 

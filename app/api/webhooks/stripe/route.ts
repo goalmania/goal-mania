@@ -32,6 +32,7 @@ interface UserDocument {
   _id: mongoose.Types.ObjectId;
   email: string;
   name?: string;
+  language?: string;
 }
 
 // Define an interface for the item structure
@@ -204,10 +205,15 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
 
     // Send order confirmation email
     if (user && user.email) {
-      const { subject, text, html } = orderConfirmationTemplate({
+      // Get user's preferred language (you can add this to user model later)
+      const userLanguage = user.language || 'it'; // Default to Italian
+      
+      const { subject, text, html } = await orderConfirmationTemplate({
         userName: user.name,
         orderId: newOrder._id.toString(),
         amount: newOrder.amount,
+        items: processedItems,
+        language: userLanguage as 'it' | 'en',
       });
       await sendEmail({
         to: user.email,
