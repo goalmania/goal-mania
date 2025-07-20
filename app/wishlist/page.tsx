@@ -8,6 +8,17 @@ import { useCartStore } from "@/lib/store/cart";
 import { useWishlistStore } from "@/lib/store/wishlist";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { 
+  HeartIcon, 
+  ShoppingCartIcon, 
+  EyeIcon, 
+  TrashIcon,
+  ArrowRightIcon 
+} from "@heroicons/react/24/outline";
 
 export default function WishlistPage() {
   const [mounted, setMounted] = useState(false);
@@ -50,22 +61,27 @@ export default function WishlistPage() {
 
   if (wishlistItems.length === 0) {
     return (
-      <div className="min-h-screen bg-white py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-              {t("wishlist.empty.title")}
-            </h1>
-            <p className="mt-4 text-lg text-gray-500">
-              {t("wishlist.empty.description")}
-            </p>
-            <div className="mt-6">
-              <Link
-                href="/shop"
-                className="inline-flex items-center rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-              >
-                {t("wishlist.empty.cta")}
-              </Link>
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+          <div className="max-w-md mx-auto text-center space-y-6">
+            <div className="w-20 h-20 mx-auto bg-muted rounded-full flex items-center justify-center">
+              <HeartIcon className="w-10 h-10 text-muted-foreground" />
+            </div>
+            <div className="space-y-2">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
+                {t("wishlist.empty.title")}
+              </h1>
+              <p className="text-base sm:text-lg text-muted-foreground">
+                {t("wishlist.empty.description")}
+              </p>
+            </div>
+            <div className="pt-4">
+              <Button asChild size="lg" className="w-full sm:w-auto">
+                <Link href="/shop">
+                  {t("wishlist.empty.cta")}
+                  <ArrowRightIcon className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -74,52 +90,122 @@ export default function WishlistPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-8">
-          {t("wishlist.title")}
-        </h1>
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+        {/* Header */}
+        <div className="mb-8 sm:mb-12 space-y-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+              <HeartIcon className="w-5 h-5 text-primary" />
+            </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
+              {t("wishlist.title")}
+            </h1>
+          </div>
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
+            Your saved items and favorites. Add them to cart when you're ready to purchase.
+          </p>
+          <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+            <span>{wishlistItems.length} item{wishlistItems.length !== 1 ? 's' : ''}</span>
+            <span>•</span>
+            <span>Wishlist</span>
+          </div>
+        </div>
 
-        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        {/* Wishlist Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {wishlistItems.map((item) => (
-            <div key={item.id} className="group relative flex flex-col">
-              <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+            <Card key={item.id} className="group overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-sm">
+              {/* Product Image */}
+              <div className="relative aspect-square overflow-hidden bg-muted">
                 <Image
                   src={getImagePath(item.image)}
                   alt={item.name || "Product image"}
-                  className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                  width={500}
-                  height={500}
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 />
-              </div>
-              <div className="mt-4 flex justify-between">
-                <div>
-                  <h3 className="text-sm text-gray-700">
-                    <Link href={`/products/${item.id}`}>{item.name}</Link>
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-500">{item.team}</p>
+                
+                {/* Remove Button */}
+                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    className="h-8 w-8 bg-white/90 hover:bg-white shadow-sm"
+                    onClick={() => removeItem(item.id)}
+                  >
+                    <TrashIcon className="h-4 w-4 text-destructive" />
+                  </Button>
                 </div>
-                <p className="text-sm font-medium text-gray-900">
-                  €{item.price.toFixed(2)}
-                </p>
               </div>
-              <div className="mt-4 flex gap-2">
-                <Link
-                  href={`/products/${item.id}`}
-                  className="flex-1 text-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                >
-                  {t("wishlist.view")}
-                </Link>
-                <button
-                  onClick={() => removeItem(item.id)}
-                  className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-black shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                >
-                  {t("wishlist.remove")}
-                </button>
-              </div>
-            </div>
+
+              {/* Product Info */}
+              <CardContent className="p-6 space-y-4">
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-primary transition-colors">
+                    <Link href={`/products/${item.id}`} className="hover:underline">
+                      {item.name}
+                    </Link>
+                  </h3>
+                  {item.team && (
+                    <Badge variant="outline" className="w-fit text-xs">
+                      {item.team}
+                    </Badge>
+                  )}
+                </div>
+
+                {/* Price */}
+                <div className="flex items-center justify-between">
+                  <p className="text-xl font-bold text-primary">
+                    €{item.price.toFixed(2)}
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col gap-3 pt-2">
+                  <Button 
+                    asChild 
+                    className="w-full"
+                  >
+                    <Link href={`/products/${item.id}`}>
+                      <EyeIcon className="mr-2 h-4 w-4" />
+                      View Details
+                    </Link>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => moveToCart(item)}
+                  >
+                    <ShoppingCartIcon className="mr-2 h-4 w-4" />
+                    Add to Cart
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
+
+        {/* Bottom CTA */}
+        {wishlistItems.length > 0 && (
+          <div className="mt-16 lg:mt-20">
+            <Separator className="mb-8" />
+            <div className="text-center space-y-4">
+              <h2 className="text-xl sm:text-2xl font-semibold">
+                Ready to shop more?
+              </h2>
+              <p className="text-muted-foreground max-w-md mx-auto">
+                Discover more amazing products and add them to your wishlist.
+              </p>
+              <Button asChild size="lg">
+                <Link href="/shop">
+                  Continue Shopping
+                  <ArrowRightIcon className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
