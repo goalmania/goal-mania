@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
     const status = url.searchParams.get("status");
     const featured = url.searchParams.get("featured");
     const league = url.searchParams.get("league");
+    const search = url.searchParams.get("search");
     const limit = url.searchParams.get("limit")
       ? parseInt(url.searchParams.get("limit")!)
       : 10;
@@ -27,6 +28,16 @@ export async function GET(req: NextRequest) {
     if (status) query.status = status;
     if (featured === "true") query.featured = true;
     if (league) query.league = league;
+
+    // Add search functionality
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { summary: { $regex: search, $options: 'i' } },
+        { content: { $regex: search, $options: 'i' } },
+        { author: { $regex: search, $options: 'i' } },
+      ];
+    }
 
     const articles = await Article.find(query)
       .sort({ createdAt: -1 })

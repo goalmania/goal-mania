@@ -10,6 +10,9 @@ export default function ArticleContent({
   className = "",
 }: ArticleContentProps) {
   return (
-    <div className={`${styles.articleContent} ${className}`}>{content}</div>
+    <div 
+      className={`${styles.articleContent} ${className}`}
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
   );
 }

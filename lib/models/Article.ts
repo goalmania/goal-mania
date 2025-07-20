@@ -1,10 +1,18 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 
+export interface ArticleImage {
+  id: string;
+  url: string;
+  alt?: string;
+  isMain?: boolean;
+}
+
 export interface IArticle extends Document {
   title: string;
   content: string;
   summary: string;
-  image: string;
+  image: string; // Keep for backward compatibility
+  images: ArticleImage[]; // New multiple images array
   category: "news" | "transferMarket" | "serieA" | "internationalTeams";
   league?: string; // For internationalTeams: LaLiga, Premier League, Bundesliga, etc.
   author: string;
@@ -17,12 +25,20 @@ export interface IArticle extends Document {
   featuredJerseyId?: string; // ID of a jersey to feature in this article
 }
 
+const ArticleImageSchema = new Schema<ArticleImage>({
+  id: { type: String, required: true },
+  url: { type: String, required: true },
+  alt: { type: String },
+  isMain: { type: Boolean, default: false },
+}, { _id: false });
+
 const ArticleSchema = new Schema<IArticle>(
   {
     title: { type: String, required: true },
     content: { type: String, required: true },
     summary: { type: String, required: true },
-    image: { type: String, required: true },
+    image: { type: String, required: true }, // Keep for backward compatibility
+    images: { type: [ArticleImageSchema], default: [] }, // New multiple images array
     category: {
       type: String,
       required: true,
@@ -63,6 +79,22 @@ ArticleSchema.pre("save", function (next) {
     !this.publishedAt
   ) {
     this.publishedAt = new Date();
+  }
+  next();
+});
+
+// Ensure main image is set for backward compatibility
+ArticleSchema.pre("save", function (next) {
+  // If we have images but no main image is set, set the first one as main
+  if (this.images && this.images.length > 0) {
+    const mainImage = this.images.find(img => img.isMain);
+    if (mainImage) {
+      this.image = mainImage.url;
+    } else {
+      // Set first image as main if no main image is specified
+      this.images[0].isMain = true;
+      this.image = this.images[0].url;
+    }
   }
   next();
 });

@@ -63,7 +63,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" type="image/x-icon" />
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <Script
           id="facebook-pixel"
           strategy="afterInteractive"
