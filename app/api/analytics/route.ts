@@ -25,10 +25,10 @@ export async function GET() {
     const totalArticles = await Article.countDocuments();
     const totalOrders = await Order.countDocuments();
 
-    // Get recent orders (last 5)
+    // Get recent orders (last 10)
     const recentOrders = await Order.find({})
       .sort({ createdAt: -1 })
-      .limit(5)
+      .limit(10)
       .lean();
 
     // Calculate order status distribution
@@ -38,6 +38,9 @@ export async function GET() {
           _id: "$status",
           count: { $sum: 1 }
         }
+      },
+      {
+        $sort: { count: -1 }
       }
     ]);
 
@@ -52,14 +55,14 @@ export async function GET() {
       }
     ]);
 
-    // Get orders by date (last 7 days)
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    // Get orders by date (last 30 days)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
     const recentOrdersByDate = await Order.aggregate([
       {
         $match: {
-          createdAt: { $gte: sevenDaysAgo }
+          createdAt: { $gte: thirtyDaysAgo }
         }
       },
       {
@@ -69,6 +72,30 @@ export async function GET() {
           },
           count: { $sum: 1 },
           revenue: { $sum: "$amount" }
+        }
+      },
+      {
+        $sort: { _id: 1 }
+      }
+    ]);
+
+    // Get monthly revenue data (last 12 months)
+    const twelveMonthsAgo = new Date();
+    twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
+
+    const monthlyRevenue = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: twelveMonthsAgo }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m", date: "$createdAt" }
+          },
+          revenue: { $sum: "$amount" },
+          orders: { $sum: 1 }
         }
       },
       {
@@ -91,7 +118,7 @@ export async function GET() {
         name,
         value,
       })
-    );
+    ).sort((a, b) => b.value - a.value);
 
     // If no products with categories, provide default categories
     if (revenueDataByCategory.length === 0) {
@@ -107,6 +134,49 @@ export async function GET() {
     const mysteryBoxOrders = await Order.countDocuments({
       "items.customization.excludedShirts": { $exists: true, $ne: [] }
     });
+
+    // Get top selling products (by order count)
+    const topProducts = await Order.aggregate([
+      {
+        $unwind: "$items"
+      },
+      {
+        $group: {
+          _id: "$items.productId",
+          totalSold: { $sum: "$items.quantity" },
+          totalRevenue: { $sum: { $multiply: ["$items.price", "$items.quantity"] } }
+        }
+      },
+      {
+        $sort: { totalSold: -1 }
+      },
+      {
+        $limit: 10
+      }
+    ]);
+
+    // Get user registration trend (last 30 days)
+    const userRegistrationTrend = await User.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: thirtyDaysAgo }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { _id: 1 }
+      }
+    ]);
+
+    // Calculate conversion rate (orders / users)
+    const conversionRate = totalUsers > 0 ? (totalOrders / totalUsers) * 100 : 0;
 
     return NextResponse.json({
       stats: {
@@ -139,8 +209,12 @@ export async function GET() {
         count: status.count,
       })),
       recentOrdersByDate,
+      monthlyRevenue,
       revenueDataByCategory,
       mysteryBoxOrders,
+      topProducts,
+      userRegistrationTrend,
+      conversionRate,
     });
   } catch (error) {
     console.error("Error fetching analytics data:", error);
