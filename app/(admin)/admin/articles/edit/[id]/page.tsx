@@ -53,6 +53,20 @@ export default function EditArticlePage() {
     featured: false,
     featuredJerseyId: "",
   });
+  const [originalFormData, setOriginalFormData] = useState({
+    title: "",
+    summary: "",
+    content: "",
+    image: "",
+    images: [] as ArticleImage[],
+    category: "news",
+    league: "",
+    author: "",
+    status: "draft",
+    featured: false,
+    featuredJerseyId: "",
+  });
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(!isNewArticle);
@@ -65,6 +79,36 @@ export default function EditArticlePage() {
     }
     fetchJerseys();
   }, [articleId, isNewArticle]);
+
+  // Check for unsaved changes
+  useEffect(() => {
+    const hasChanges = 
+      formData.title !== originalFormData.title ||
+      formData.summary !== originalFormData.summary ||
+      formData.content !== originalFormData.content ||
+      formData.category !== originalFormData.category ||
+      formData.league !== originalFormData.league ||
+      formData.author !== originalFormData.author ||
+      formData.status !== originalFormData.status ||
+      formData.featured !== originalFormData.featured ||
+      formData.featuredJerseyId !== originalFormData.featuredJerseyId ||
+      JSON.stringify(formData.images) !== JSON.stringify(originalFormData.images);
+    
+    setHasUnsavedChanges(hasChanges);
+  }, [formData, originalFormData]);
+
+  // Warn user before leaving with unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedChanges]);
 
   const fetchArticle = async () => {
     try {
@@ -87,7 +131,7 @@ export default function EditArticlePage() {
         }];
       }
       
-      setFormData({
+      const articleData = {
         title: article.title,
         summary: article.summary || "",
         content: article.content,
@@ -99,7 +143,10 @@ export default function EditArticlePage() {
         status: article.status,
         featured: article.featured || false,
         featuredJerseyId: article.featuredJerseyId || "",
-      });
+      };
+      
+      setFormData(articleData);
+      setOriginalFormData(articleData); // Set original data for comparison
     } catch (error) {
       console.error("Error fetching article:", error);
       toast.error("Failed to load article");
@@ -307,6 +354,11 @@ export default function EditArticlePage() {
       }
 
       toast.success(`Article ${isNewArticle ? 'created' : 'updated'} successfully`);
+      
+      // Update original form data to reflect saved state
+      setOriginalFormData(articleData);
+      setHasUnsavedChanges(false);
+      
       router.push("/admin/articles");
     } catch (error) {
       console.error("Error saving article:", error);
@@ -351,10 +403,26 @@ export default function EditArticlePage() {
             <p className="mt-1 text-base text-gray-700">
               {isNewArticle ? "Add a new article to your content library" : "Update article content and settings"}
             </p>
+            {hasUnsavedChanges && (
+              <div className="mt-2 flex items-center space-x-2">
+                <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+                <span className="text-sm text-orange-600 font-medium">
+                  You have unsaved changes
+                </span>
+              </div>
+            )}
           </div>
           <Button
             variant="ghost"
-            onClick={() => router.push("/admin/articles")}
+            onClick={() => {
+              if (hasUnsavedChanges) {
+                if (confirm("You have unsaved changes. Are you sure you want to leave?")) {
+                  router.push("/admin/articles");
+                }
+              } else {
+                router.push("/admin/articles");
+              }
+            }}
             className="flex items-center space-x-2"
           >
             <ArrowLeftIcon className="h-4 w-4" />
@@ -429,6 +497,11 @@ export default function EditArticlePage() {
                 <CardTitle>Article Content</CardTitle>
               </CardHeader>
               <CardContent>
+                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                  <p className="text-sm text-blue-700">
+                    💡 <strong>Tip:</strong> Formatting changes (bold, italic, etc.) are applied immediately but not saved until you click "Update Article" below.
+                  </p>
+                </div>
                 <RichTextEditor
                   content={formData.content}
                   onChange={(content) => setFormData(prev => ({ ...prev, content }))}
@@ -635,7 +708,9 @@ export default function EditArticlePage() {
                       ? "Saving..."
                       : isNewArticle
                       ? "Create Article"
-                      : "Update Article"}
+                      : hasUnsavedChanges 
+                        ? "Update Article (Unsaved Changes)"
+                        : "Update Article"}
                   </Button>
                   <Button
                     type="button"

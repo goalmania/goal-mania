@@ -166,6 +166,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
       <div className="flex flex-wrap gap-1">
         {/* Text Formatting */}
         <Button
+          type="button"
           variant={editor.isActive("bold") ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleBold().run()}
@@ -175,6 +176,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
           <Bold className="h-4 w-4" />
         </Button>
         <Button
+          type="button"
           variant={editor.isActive("italic") ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -184,6 +186,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
           <Italic className="h-4 w-4" />
         </Button>
         <Button
+          type="button"
           variant={editor.isActive("underline") ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleUnderline().run()}
@@ -192,6 +195,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
           <UnderlineIcon className="h-4 w-4" />
         </Button>
         <Button
+          type="button"
           variant={editor.isActive("strike") ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleStrike().run()}
@@ -204,6 +208,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
 
         {/* Headings */}
         <Button
+          type="button"
           variant={editor.isActive("heading", { level: 1 }) ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
@@ -212,6 +217,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
           <Heading1 className="h-4 w-4" />
         </Button>
         <Button
+          type="button"
           variant={editor.isActive("heading", { level: 2 }) ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
@@ -220,6 +226,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
           <Heading2 className="h-4 w-4" />
         </Button>
         <Button
+          type="button"
           variant={editor.isActive("heading", { level: 3 }) ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
@@ -232,6 +239,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
 
         {/* Lists */}
         <Button
+          type="button"
           variant={editor.isActive("bulletList") ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -240,6 +248,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
           <List className="h-4 w-4" />
         </Button>
         <Button
+          type="button"
           variant={editor.isActive("orderedList") ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -252,6 +261,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
 
         {/* Alignment */}
         <Button
+          type="button"
           variant={editor.isActive({ textAlign: "left" }) ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().setTextAlign("left").run()}
@@ -260,6 +270,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
           <AlignLeft className="h-4 w-4" />
         </Button>
         <Button
+          type="button"
           variant={editor.isActive({ textAlign: "center" }) ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().setTextAlign("center").run()}
@@ -268,6 +279,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
           <AlignCenter className="h-4 w-4" />
         </Button>
         <Button
+          type="button"
           variant={editor.isActive({ textAlign: "right" }) ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().setTextAlign("right").run()}
@@ -276,6 +288,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
           <AlignRight className="h-4 w-4" />
         </Button>
         <Button
+          type="button"
           variant={editor.isActive({ textAlign: "justify" }) ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().setTextAlign("justify").run()}
@@ -288,6 +301,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
 
         {/* Other */}
         <Button
+          type="button"
           variant={editor.isActive("blockquote") ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -296,6 +310,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
           <Quote className="h-4 w-4" />
         </Button>
         <Button
+          type="button"
           variant={editor.isActive("codeBlock") ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
@@ -308,6 +323,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
 
         {/* Links and Images */}
         <Button
+          type="button"
           variant={editor.isActive("link") ? "default" : "ghost"}
           size="sm"
           onClick={() => {
@@ -329,6 +345,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
           <LinkIcon className="h-4 w-4" />
         </Button>
         <Button
+          type="button"
           variant="ghost"
           size="sm"
           onClick={() => setShowImageDialog(true)}
@@ -342,6 +359,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
         {/* Colors */}
         <div className="flex items-center gap-1">
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => setColor("#000000")}
@@ -349,6 +367,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
             title="Black"
           />
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => setColor("#dc2626")}
@@ -356,6 +375,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
             title="Red"
           />
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => setColor("#2563eb")}
@@ -363,6 +383,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
             title="Blue"
           />
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => setColor("#059669")}
@@ -370,6 +391,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
             title="Green"
           />
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => setColor("#d97706")}
@@ -377,6 +399,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
             title="Orange"
           />
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => setColor("#7c3aed")}
@@ -390,6 +413,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
         {/* Highlight */}
         <div className="flex items-center gap-1">
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => setHighlight("#fef3c7")}
@@ -397,6 +421,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
             title="Yellow Highlight"
           />
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => setHighlight("#fecaca")}
@@ -404,6 +429,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
             title="Red Highlight"
           />
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => setHighlight("#bfdbfe")}
@@ -411,6 +437,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
             title="Blue Highlight"
           />
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => setHighlight("#bbf7d0")}
@@ -502,6 +529,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
             <div className="flex justify-end space-x-3 mt-6">
               {editor.isActive("link") && (
                 <Button
+                  type="button"
                   variant="outline"
                   onClick={() => {
                     removeLink();
@@ -515,6 +543,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 </Button>
               )}
               <Button
+                type="button"
                 variant="outline"
                 onClick={() => {
                   setShowLinkDialog(false);
@@ -525,6 +554,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 Cancel
               </Button>
               <Button 
+                type="button"
                 onClick={editor.isActive("link") ? updateLink : setLink}
                 disabled={!linkUrl.trim()}
               >
@@ -636,6 +666,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
             </div>
             <div className="flex justify-end space-x-3 mt-6">
               <Button
+                type="button"
                 variant="outline"
                 onClick={() => {
                   setShowImageDialog(false);
@@ -645,6 +676,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 Cancel
               </Button>
               <Button 
+                type="button"
                 onClick={addImage}
                 disabled={!imageUrl.trim()}
               >
@@ -733,11 +765,23 @@ export const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
   }
 
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
+    <div 
+      className="border border-gray-200 rounded-lg overflow-hidden"
+      onClick={(e) => {
+        // Prevent form submission when clicking inside the editor
+        e.stopPropagation();
+      }}
+    >
       <MenuBar editor={editor} />
       <EditorContent 
         editor={editor} 
         className="focus:outline-none"
+        onKeyDown={(e) => {
+          // Prevent form submission on Enter key
+          if (e.key === 'Enter' && e.ctrlKey) {
+            e.preventDefault();
+          }
+        }}
         style={{
           '--tw-prose-body': '#374151',
           '--tw-prose-headings': '#111827',
