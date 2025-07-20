@@ -8,10 +8,7 @@ export const KidSizeSchema = z.enum(["XS", "S", "M", "L", "XL"]);
 export const PatchSchema = z.enum([
   "champions-league",
   "serie-a", 
-  "coppa-italia",
-  "supercoppa-italiana",
-  "europa-league",
-  "conference-league"
+  "coppa-italia"
 ]);
 
 // Category enum
@@ -45,8 +42,7 @@ export const ProductFormSchema = z.object({
   
   shippingPrice: z.number()
     .min(0, "Shipping price must be 0 or greater")
-    .max(100, "Shipping price must be less than €100")
-    .default(0),
+    .max(100, "Shipping price must be less than €100"),
   
   stockQuantity: z.number()
     .int("Stock quantity must be a whole number")
@@ -56,28 +52,26 @@ export const ProductFormSchema = z.object({
   category: CategorySchema,
   
   // Product options
-  hasShorts: z.boolean().default(true),
-  hasSocks: z.boolean().default(true),
-  hasPlayerEdition: z.boolean().default(true),
-  isRetro: z.boolean().default(false),
-  isMysteryBox: z.boolean().default(false),
-  allowsNameOnShirt: z.boolean().default(true),
-  allowsNumberOnShirt: z.boolean().default(true),
+  hasShorts: z.boolean(),
+  hasSocks: z.boolean(),
+  hasPlayerEdition: z.boolean(),
+  isRetro: z.boolean(),
+  isMysteryBox: z.boolean(),
+  allowsNameOnShirt: z.boolean(),
+  allowsNumberOnShirt: z.boolean(),
   
   // Status
-  isActive: z.boolean().default(true),
-  feature: z.boolean().default(true),
+  isActive: z.boolean(),
+  feature: z.boolean(),
   
   // Sizes
   adultSizes: z.array(AdultSizeSchema)
     .min(1, "At least one adult size must be selected"),
   
-  kidsSizes: z.array(KidSizeSchema)
-    .default([]),
+  kidsSizes: z.array(KidSizeSchema),
   
   // Patches
-  availablePatches: z.array(PatchSchema)
-    .default([]),
+  availablePatches: z.array(PatchSchema),
   
   // Images
   images: z.array(z.string().url("Invalid image URL"))

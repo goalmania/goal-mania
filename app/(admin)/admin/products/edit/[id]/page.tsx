@@ -772,11 +772,11 @@ export default function EditProductPage() {
                           <div className="flex items-center space-x-2">
                             <Checkbox
                               id={`patch-${patch.id}`}
-                              checked={field.value?.includes(patch.id)}
+                              checked={field.value?.includes(patch.id as any)}
                               onCheckedChange={(checked) => {
                                 const currentPatches = field.value || [];
                                 const newPatches = checked
-                                  ? [...currentPatches, patch.id]
+                                  ? [...currentPatches, patch.id as any]
                                   : currentPatches.filter(p => p !== patch.id);
                                 field.onChange(newPatches);
                               }}

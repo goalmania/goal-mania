@@ -1,5 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 
+export type FormStep = "basic" | "pricing" | "options" | "images";
+
 interface Product {
   _id: string;
   title: string;
