@@ -102,6 +102,13 @@ export async function GET(req: NextRequest) {
       query.feature = true;
     }
 
+    // Add mystery box filter if requested
+    const type = searchParams.get("type");
+    if (type === "mysteryBox") {
+      query.isMysteryBox = true;
+      console.log("Mystery Box filter applied - query.isMysteryBox = true");
+    }
+
     console.log("Products API Query:", JSON.stringify(query, null, 2));
 
     // Build sort object

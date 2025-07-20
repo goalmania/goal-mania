@@ -5,6 +5,7 @@ export interface Product {
   image: string;
   category: string;
   team: string;
+  isMysteryBox?: boolean;
 }
 
 export interface Team {

@@ -26,7 +26,7 @@ export default function HeroSection() {
                 <ChevronRightIcon className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-[#0e1924] px-6 sm:px-8 md:px-10 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg">
+            <Button asChild variant="outline" size="lg" className="border-white text-primary hover:bg-white hover:text-[#0e1924] px-6 sm:px-8 md:px-10 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg">
               <Link href="/shop/serieA">
                 Serie A
               </Link>

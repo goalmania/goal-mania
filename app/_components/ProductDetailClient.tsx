@@ -13,6 +13,19 @@ import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const PATCH_PRICES = {
   "europa-league": 3,
@@ -297,71 +310,91 @@ export default function ProductDetailClient({
           {/* Image gallery - takes 3 columns on large screens */}
           <div className="lg:col-span-3">
             <div className="lg:sticky lg:top-24 self-start">
-              <div className="grid grid-cols-1 gap-6">
-                {/* Main image */}
-                <div className="relative aspect-square rounded-lg overflow-hidden bg-gray-100 w-full shadow-sm hover:shadow-md transition-shadow duration-300">
-                  <Image
-                    src={
-                      product.images[selectedImage] || "/images/placeholder.png"
-                    }
-                    alt={product.title || "Product image"}
-                    fill
-                    className="object-contain object-center hover:scale-[1.02] transition-transform duration-300"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 66vw, 50vw"
-                    priority
-                  />
+              <Card className="overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="grid grid-cols-1 gap-6">
+                    {/* Main image */}
+                    <div className="relative aspect-square overflow-hidden bg-gray-100 w-full">
+                      <Image
+                        src={
+                          product.images[selectedImage] || "/images/placeholder.png"
+                        }
+                        alt={product.title || "Product image"}
+                        fill
+                        className="object-contain object-center hover:scale-[1.02] transition-transform duration-300"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 66vw, 50vw"
+                        priority
+                      />
 
-                  <button
-                    onClick={handleWishlistToggle}
-                    className="absolute top-3 right-3 p-1.5 sm:p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-md hover:bg-white transition-colors duration-200"
-                    aria-label={
-                      isInWishlist(product._id)
-                        ? "Remove from wishlist"
-                        : "Add to wishlist"
-                    }
-                  >
-                    {isInWishlist(product._id) ? (
-                      <HeartIconSolid className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
-                    ) : (
-                      <HeartIcon className="h-4 w-4 sm:h-5 sm:w-5 text-black" />
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              onClick={handleWishlistToggle}
+                              variant="secondary"
+                              size="icon"
+                              className="absolute top-3 right-3 h-8 w-8 bg-white/80 backdrop-blur-sm shadow-md hover:bg-white"
+                              aria-label={
+                                isInWishlist(product._id)
+                                  ? "Remove from wishlist"
+                                  : "Add to wishlist"
+                              }
+                            >
+                              {isInWishlist(product._id) ? (
+                                <HeartIconSolid className="h-4 w-4 text-red-500" />
+                              ) : (
+                                <HeartIcon className="h-4 w-4 text-black" />
+                              )}
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {isInWishlist(product._id) ? "Remove from wishlist" : "Add to wishlist"}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+
+                    {/* Thumbnail images */}
+                    {product.images.length > 1 && (
+                      <div className="flex flex-wrap gap-3 justify-center p-4">
+                        {product.images.map((image, index) => (
+                          <Button
+                            key={index}
+                            onClick={() => setSelectedImage(index)}
+                            variant={index === selectedImage ? "default" : "outline"}
+                            size="icon"
+                            className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden"
+                          >
+                            <Image
+                              src={image}
+                              alt={`${product.title} thumbnail ${index + 1}`}
+                              fill
+                              className="object-cover object-center"
+                              sizes="80px"
+                            />
+                          </Button>
+                        ))}
+                      </div>
                     )}
-                  </button>
-                </div>
-
-                {/* Thumbnail images */}
-                {product.images.length > 1 && (
-                  <div className="flex flex-wrap gap-3 justify-center">
-                    {product.images.map((image, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setSelectedImage(index)}
-                        className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden bg-gray-100 transition-all duration-200 ${
-                          index === selectedImage
-                            ? "ring-2 ring-indigo-500 scale-105"
-                            : "hover:ring-1 hover:ring-indigo-300 opacity-80 hover:opacity-100"
-                        }`}
-                      >
-                        <Image
-                          src={image}
-                          alt={`${product.title} thumbnail ${index + 1}`}
-                          fill
-                          className="object-cover object-center"
-                          sizes="80px"
-                        />
-                      </button>
-                    ))}
                   </div>
-                )}
-              </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
 
           {/* Product info - takes 2 columns on large screens */}
           <div className="lg:col-span-2 lg:pl-8">
             <div className="space-y-6">
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black">
-                {product.title}
-              </h1>
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-black">
+                  {product.title}
+                </h1>
+                {product.isMysteryBox && (
+                  <Badge variant="secondary" className="mt-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+                    🎁 Mystery Box
+                  </Badge>
+                )}
+              </div>
 
               <div>
                 <h2 className="sr-only">Product information</h2>
@@ -370,7 +403,9 @@ export default function ProductDetailClient({
                 </p>
               </div>
 
-              <div className="border-t border-gray-200 pt-4">
+              <Separator />
+
+              <div>
                 <h3 className="sr-only">Description</h3>
                 <div className="prose prose-sm sm:prose text-black">
                   {product.description}
@@ -378,351 +413,303 @@ export default function ProductDetailClient({
               </div>
 
               {/* Quantity selector */}
-              <div className="border-t border-gray-200 pt-4">
-                <h3 className="text-sm sm:text-base font-medium text-black mb-2">
-                  Quantity
-                </h3>
-                <div className="flex items-center space-x-3">
-                  <button
-                    type="button"
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="p-1.5 sm:p-2 border border-gray-300 rounded-md text-black hover:bg-gray-50"
-                  >
-                    <span className="sr-only">Decrease quantity</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-3 w-3 sm:h-4 sm:w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Quantity</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center space-x-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="h-8 w-8"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M20 12H4"
-                      />
-                    </svg>
-                  </button>
-                  <span className="text-sm sm:text-base font-medium text-black w-8 text-center">
-                    {quantity}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="p-1.5 sm:p-2 border border-gray-300 rounded-md text-black hover:bg-gray-50"
-                  >
-                    <span className="sr-only">Increase quantity</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-3 w-3 sm:h-4 sm:w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                      <span className="sr-only">Decrease quantity</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-3 w-3 sm:h-4 sm:w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M20 12H4"
+                        />
+                      </svg>
+                    </Button>
+                    <span className="text-sm sm:text-base font-medium text-black w-8 text-center">
+                      {quantity}
+                    </span>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="h-8 w-8"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
+                      <span className="sr-only">Increase quantity</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-3 w-3 sm:h-4 sm:w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 4v16m8-8H4"
+                        />
+                      </svg>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
 
               {/* Customization options */}
-              <div className="border-t border-gray-200 pt-4">
-                <h3 className="text-lg font-medium text-black mb-4">
-                  Customize Your Jersey
-                </h3>
-
-                {/* Size Selection */}
-                <div className="space-y-3 mb-4">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-sm sm:text-base font-medium text-black">
-                      Size
-                    </h3>
-                    {product.kidsSizes && product.kidsSizes.length > 0 && (
-                      <div className="form-control">
-                        <label className="label cursor-pointer gap-2">
-                          <span className="label-text text-xs sm:text-sm text-black">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Customize Your Jersey</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Size Selection */}
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <Label className="text-sm sm:text-base font-medium">
+                        Size
+                      </Label>
+                      {product.kidsSizes && product.kidsSizes.length > 0 && (
+                        <div className="flex items-center space-x-2">
+                          <Label htmlFor="kid-size" className="text-xs sm:text-sm">
                             Kid Size
-                          </span>
-                          <input
-                            type="checkbox"
-                            className="toggle toggle-sm toggle-primary"
+                          </Label>
+                          <Switch
+                            id="kid-size"
                             checked={customization.isKidSize}
-                            onChange={(e) =>
+                            onCheckedChange={(checked) =>
                               setCustomization({
                                 ...customization,
-                                isKidSize: e.target.checked,
+                                isKidSize: checked,
                                 // Clear existing size if switching between adult/kid
                                 size: "",
                               })
                             }
                           />
-                        </label>
-                      </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
+                      {customization.isKidSize
+                        ? (product.kidsSizes && product.kidsSizes.length > 0
+                            ? product.kidsSizes
+                            : []
+                          ).map((size) => (
+                            <Button
+                              key={size}
+                              type="button"
+                              variant={customization.size === size ? "default" : "outline"}
+                              size="sm"
+                              onClick={() =>
+                                setCustomization({ ...customization, size })
+                              }
+                            >
+                              {size}
+                            </Button>
+                          ))
+                        : (product.adultSizes && product.adultSizes.length > 0
+                            ? product.adultSizes
+                            : []
+                          ).map((size) => (
+                            <Button
+                              key={size}
+                              type="button"
+                              variant={customization.size === size ? "default" : "outline"}
+                              size="sm"
+                              onClick={() =>
+                                setCustomization({ ...customization, size })
+                              }
+                            >
+                              {size}
+                            </Button>
+                          ))}
+                    </div>
+                    {errors.size && (
+                      <Alert variant="destructive">
+                        <AlertDescription>{errors.size}</AlertDescription>
+                      </Alert>
                     )}
                   </div>
 
-                  <div className="flex flex-wrap gap-2 sm:gap-3">
-                    {customization.isKidSize
-                      ? (product.kidsSizes && product.kidsSizes.length > 0
-                          ? product.kidsSizes
-                          : []
-                        ).map((size) => (
-                          <button
-                            key={size}
-                            type="button"
-                            onClick={() =>
-                              setCustomization({ ...customization, size })
-                            }
-                            className={`px-2.5 py-1.5 sm:px-3 sm:py-2 border rounded-md text-xs sm:text-sm font-medium ${
-                              customization.size === size
-                                ? "border-indigo-600 bg-indigo-600 text-white"
-                                : "border-gray-300 text-black hover:bg-gray-50"
-                            }`}
-                          >
-                            {size}
-                          </button>
-                        ))
-                      : (product.adultSizes && product.adultSizes.length > 0
-                          ? product.adultSizes
-                          : []
-                        ).map((size) => (
-                          <button
-                            key={size}
-                            type="button"
-                            onClick={() =>
-                              setCustomization({ ...customization, size })
-                            }
-                            className={`px-2.5 py-1.5 sm:px-3 sm:py-2 border rounded-md text-xs sm:text-sm font-medium ${
-                              customization.size === size
-                                ? "border-indigo-600 bg-indigo-600 text-white"
-                                : "border-gray-300 text-black hover:bg-gray-50"
-                            }`}
-                          >
-                            {size}
-                          </button>
-                        ))}
-                  </div>
-                  {errors.size && (
-                    <p className="text-red-500 text-xs mt-1">{errors.size}</p>
-                  )}
-                </div>
-
-                {/* Mystery Box Exclusion List - Only for Mystery Box products */}
-                {product.isMysteryBox && (
-                  <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
-                    <div className="flex items-center mb-3">
-                      <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center mr-3">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <h4 className="text-sm font-semibold text-purple-800">
-                        🎁 Mystery Box Preferences
-                      </h4>
-                    </div>
-                    <label className="block text-sm font-medium text-purple-700 mb-2">
-                      Shirts you'd prefer NOT to receive (Optional - up to 5):
-                    </label>
-                    <p className="text-xs text-purple-600 mb-3">
-                      Help us personalize your mystery box! List any teams or specific shirts you'd prefer to avoid.
-                    </p>
-                    <textarea
-                      value={(customization as any).excludedShirts?.join('\n') || ''}
-                      onChange={(e) => {
-                        const lines = e.target.value.split('\n').slice(0, 5).filter(line => line.trim() !== '');
-                        setCustomization((prev) => ({
-                          ...prev,
-                          excludedShirts: lines
-                        }));
-                      }}
-                      placeholder="Example:&#10;AC Milan Home&#10;Juventus Away&#10;Inter Milan&#10;Roma&#10;Napoli"
-                      rows={5}
-                      className="w-full rounded-md border-purple-300 text-gray-800 placeholder-gray-500 focus:border-purple-500 focus:ring-purple-500 sm:text-sm bg-white/80"
-                    />
-                    <div className="flex justify-between items-center mt-2">
-                      <p className="text-xs text-purple-600">
-                        {((customization as any).excludedShirts?.length || 0)}/5 exclusions
-                      </p>
-                      <div className="flex items-center text-xs text-purple-600">
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        We'll do our best to avoid these items
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Jersey Type (Player or Fan Edition) - Hide for Mystery Box */}
-                {!product.isMysteryBox && (
-                <div className="mt-4">
-                  <label className="block text-sm font-medium text-black">
-                    Jersey Type
-                  </label>
-                  <div className="mt-2 space-y-2">
-                    <div className="relative flex items-start">
-                      <div className="flex h-5 items-center">
-                        <input
-                          type="radio"
-                          id="fan-edition"
-                          name="jersey-type"
-                          checked={!customization.isPlayerEdition}
-                          onChange={() =>
-                            setCustomization((prev) => ({
-                              ...prev,
-                              isPlayerEdition: false,
-                            }))
-                          }
-                          className="h-4 w-4 border-gray-300 text-accent focus:ring-accent"
-                        />
-                      </div>
-                      <div className="ml-3">
-                        <label
-                          htmlFor="fan-edition"
-                          className="text-sm text-black"
-                        >
-                          Fan Edition
-                        </label>
-                      </div>
-                    </div>
-
-                    <div className="relative flex items-start">
-                      <div className="flex h-5 items-center">
-                        <input
-                          type="radio"
-                          id="player-edition"
-                          name="jersey-type"
-                          checked={customization.isPlayerEdition}
-                          onChange={() =>
-                            setCustomization((prev) => ({
-                              ...prev,
-                              isPlayerEdition: true,
-                            }))
-                          }
-                          className="h-4 w-4 border-gray-300 text-accent focus:ring-accent"
-                        />
-                      </div>
-                      <div className="ml-3">
-                        <label
-                          htmlFor="player-edition"
-                          className="text-sm text-black"
-                        >
-                          Player Edition (+€{EXTRAS_PRICES.player_edition})
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                )}
-
-                {/* Name and Number - Hide for Mystery Box */}
-                {!product.isMysteryBox && (
-                <div className="mt-4 grid grid-cols-2 gap-4">
-                  {product.allowsNameOnShirt && (
-                    <div>
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-medium text-black"
-                      >
-                        Name on Shirt
-                      </label>
-                      <div className="mt-1 relative rounded-md shadow-sm">
-                        <input
-                          type="text"
-                          id="name"
-                          value={customization.name}
-                          onChange={(e) =>
-                            setCustomization((prev) => ({
-                              ...prev,
-                              name: e.target.value.toUpperCase(),
-                            }))
-                          }
-                          maxLength={20}
-                          placeholder="Enter name"
-                          className="block w-full rounded-md border-gray-300 pr-10 text-black placeholder-black focus:border-accent focus:ring-accent sm:text-sm transition duration-150 ease-in-out hover:border-gray-400 py-3"
-                        />
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                          <span className="text-black sm:text-sm">ABC</span>
+                  {/* Mystery Box Exclusion List - Only for Mystery Box products */}
+                  {product.isMysteryBox && (
+                    <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+                      <CardHeader>
+                        <div className="flex items-center">
+                          <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center mr-3">
+                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </div>
+                          <CardTitle className="text-sm text-purple-800">
+                            🎁 Mystery Box Preferences
+                          </CardTitle>
                         </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {product.allowsNumberOnShirt && (
-                    <div>
-                      <label
-                        htmlFor="number"
-                        className="block text-sm font-medium text-black"
-                      >
-                        Number on Shirt
-                      </label>
-                      <div className="mt-1 relative rounded-md shadow-sm">
-                        <input
-                          type="text"
-                          id="number"
-                          value={customization.number}
-                          onChange={(e) =>
+                        <CardDescription className="text-purple-700">
+                          Help us personalize your mystery box! List any teams or specific shirts you'd prefer to avoid.
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Label className="block text-sm font-medium text-purple-700 mb-2">
+                          Shirts you'd prefer NOT to receive (Optional - up to 5):
+                        </Label>
+                        <Textarea
+                          value={(customization as any).excludedShirts?.join('\n') || ''}
+                          onChange={(e) => {
+                            const lines = e.target.value.split('\n').slice(0, 5).filter(line => line.trim() !== '');
                             setCustomization((prev) => ({
                               ...prev,
-                              number: e.target.value
-                                .replace(/[^0-9]/g, "")
-                                .slice(0, 2),
-                            }))
-                          }
-                          maxLength={2}
-                          placeholder="Enter number"
-                          className="block w-full rounded-md border-gray-300 pr-10 text-black placeholder-black focus:border-accent focus:ring-accent sm:text-sm transition duration-150 ease-in-out hover:border-gray-400 py-3"
+                              excludedShirts: lines
+                            }));
+                          }}
+                          placeholder="Example:&#10;AC Milan Home&#10;Juventus Away&#10;Inter Milan&#10;Roma&#10;Napoli"
+                          rows={5}
+                          className="border-purple-300 focus:border-purple-500 focus:ring-purple-500"
                         />
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                          <span className="text-black sm:text-sm">00</span>
+                        <div className="flex justify-between items-center mt-2">
+                          <p className="text-xs text-purple-600">
+                            {((customization as any).excludedShirts?.length || 0)}/5 exclusions
+                          </p>
+                          <div className="flex items-center text-xs text-purple-600">
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            We'll do our best to avoid these items
+                          </div>
                         </div>
-                      </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Jersey Type (Player or Fan Edition) - Hide for Mystery Box */}
+                  {!product.isMysteryBox && (
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium">Jersey Type</Label>
+                      <RadioGroup
+                        value={customization.isPlayerEdition ? "player" : "fan"}
+                        onValueChange={(value) =>
+                          setCustomization((prev) => ({
+                            ...prev,
+                            isPlayerEdition: value === "player",
+                          }))
+                        }
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="fan" id="fan-edition" />
+                          <Label htmlFor="fan-edition" className="text-sm">
+                            Fan Edition
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="player" id="player-edition" />
+                          <Label htmlFor="player-edition" className="text-sm">
+                            Player Edition (+€{EXTRAS_PRICES.player_edition})
+                          </Label>
+                        </div>
+                      </RadioGroup>
                     </div>
                   )}
-                </div>
-                )}
 
-                {/* Patches - Hide for Mystery Box */}
-                {!product.isMysteryBox && product.availablePatches &&
-                  product.availablePatches.length > 0 && (
-                    <div className="mt-6">
-                      <label className="text-sm font-medium text-black">
-                        Add Official Patches
-                      </label>
-                      <div className="mt-2 grid grid-cols-2 gap-4">
-                        {product.availablePatches.map((patch) => (
-                          <div
-                            key={patch}
-                            className="relative flex items-start"
-                          >
-                            <div className="flex h-5 items-center">
-                              <input
-                                type="checkbox"
-                                checked={customization.selectedPatches.includes(
-                                  patch
-                                )}
-                                onChange={() => {
+                  {/* Name and Number - Hide for Mystery Box */}
+                  {!product.isMysteryBox && (
+                    <div className="grid grid-cols-2 gap-4">
+                      {product.allowsNameOnShirt && (
+                        <div className="space-y-2">
+                          <Label htmlFor="name" className="text-sm font-medium">
+                            Name on Shirt
+                          </Label>
+                          <div className="relative">
+                            <Input
+                              type="text"
+                              id="name"
+                              value={customization.name}
+                              onChange={(e) =>
+                                setCustomization((prev) => ({
+                                  ...prev,
+                                  name: e.target.value.toUpperCase(),
+                                }))
+                              }
+                              maxLength={20}
+                              placeholder="Enter name"
+                              className="pr-10"
+                            />
+                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                              <span className="text-black sm:text-sm">ABC</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {product.allowsNumberOnShirt && (
+                        <div className="space-y-2">
+                          <Label htmlFor="number" className="text-sm font-medium">
+                            Number on Shirt
+                          </Label>
+                          <div className="relative">
+                            <Input
+                              type="text"
+                              id="number"
+                              value={customization.number}
+                              onChange={(e) =>
+                                setCustomization((prev) => ({
+                                  ...prev,
+                                  number: e.target.value
+                                    .replace(/[^0-9]/g, "")
+                                    .slice(0, 2),
+                                }))
+                              }
+                              maxLength={2}
+                              placeholder="Enter number"
+                              className="pr-10"
+                            />
+                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                              <span className="text-black sm:text-sm">00</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Patches - Hide for Mystery Box */}
+                  {!product.isMysteryBox && product.availablePatches &&
+                    product.availablePatches.length > 0 && (
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium">
+                          Add Official Patches
+                        </Label>
+                        <div className="grid grid-cols-2 gap-4">
+                          {product.availablePatches.map((patch) => (
+                            <div key={patch} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={patch}
+                                checked={customization.selectedPatches.includes(patch)}
+                                onCheckedChange={(checked) => {
                                   setCustomization((prev) => ({
                                     ...prev,
-                                    selectedPatches:
-                                      prev.selectedPatches.includes(patch)
-                                        ? prev.selectedPatches.filter(
-                                            (p) => p !== patch
-                                          )
-                                        : [...prev.selectedPatches, patch],
+                                    selectedPatches: checked
+                                      ? [...prev.selectedPatches, patch]
+                                      : prev.selectedPatches.filter((p) => p !== patch),
                                   }));
                                 }}
-                                className="h-4 w-4 rounded border-gray-300 text-accent focus:ring-accent"
                               />
-                            </div>
-                            <div className="ml-3">
-                              <label className="text-sm text-black">
+                              <Label htmlFor={patch} className="text-sm">
                                 {patch === "champions-league"
                                   ? "Coppa Europea"
                                   : patch === "serie-a"
@@ -736,73 +723,63 @@ export default function ProductDetailClient({
                                       )
                                       .join(" ")}{" "}
                                 (+€{PATCH_PRICES[patch]})
-                              </label>
+                              </Label>
                             </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                  {/* Extras - Hide for Mystery Box */}
+                  {!product.isMysteryBox && (
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium">
+                        Add Matching Items
+                      </Label>
+                      <div className="space-y-4">
+                        {product.hasShorts && (
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="shorts"
+                              checked={customization.includeShorts}
+                              onCheckedChange={(checked) =>
+                                setCustomization((prev) => ({
+                                  ...prev,
+                                  includeShorts: checked as boolean,
+                                }))
+                              }
+                            />
+                            <Label htmlFor="shorts" className="text-sm">
+                              Add Matching Shorts (+€{EXTRAS_PRICES.shorts})
+                            </Label>
                           </div>
-                        ))}
+                        )}
+
+                        {product.hasSocks && (
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="socks"
+                              checked={customization.includeSocks}
+                              onCheckedChange={(checked) =>
+                                setCustomization((prev) => ({
+                                  ...prev,
+                                  includeSocks: checked as boolean,
+                                }))
+                              }
+                            />
+                            <Label htmlFor="socks" className="text-sm">
+                              Add Matching Socks (+€{EXTRAS_PRICES.socks})
+                            </Label>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
-
-                {/* Extras - Hide for Mystery Box */}
-                {!product.isMysteryBox && (
-                <div className="mt-6">
-                  <label className="text-sm font-medium text-black">
-                    Add Matching Items
-                  </label>
-                  <div className="mt-2 space-y-4">
-                    {product.hasShorts && (
-                      <div className="relative flex items-start">
-                        <div className="flex h-5 items-center">
-                          <input
-                            type="checkbox"
-                            checked={customization.includeShorts}
-                            onChange={(e) =>
-                              setCustomization((prev) => ({
-                                ...prev,
-                                includeShorts: e.target.checked,
-                              }))
-                            }
-                            className="h-4 w-4 rounded border-gray-300 text-accent focus:ring-accent"
-                          />
-                        </div>
-                        <div className="ml-3">
-                          <label className="text-sm text-black">
-                            Add Matching Shorts (+€{EXTRAS_PRICES.shorts})
-                          </label>
-                        </div>
-                      </div>
-                    )}
-
-                    {product.hasSocks && (
-                      <div className="relative flex items-start">
-                        <div className="flex h-5 items-center">
-                          <input
-                            type="checkbox"
-                            checked={customization.includeSocks}
-                            onChange={(e) =>
-                              setCustomization((prev) => ({
-                                ...prev,
-                                includeSocks: e.target.checked,
-                              }))
-                            }
-                            className="h-4 w-4 rounded border-gray-300 text-accent focus:ring-accent"
-                          />
-                        </div>
-                        <div className="ml-3">
-                          <label className="text-sm text-black">
-                            Add Matching Socks (+€{EXTRAS_PRICES.socks})
-                          </label>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                )}
-              </div>
+                </CardContent>
+              </Card>
 
               {/* Add to Cart buttons */}
-              <div className="mt-8 flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Button
                   type="button"
                   onClick={handleAddToCart}
@@ -824,140 +801,141 @@ export default function ProductDetailClient({
               </div>
 
               {/* Trust Badges */}
-              <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-                <div className="flex flex-col items-center text-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-8 w-8 text-primary"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="mt-2 text-xs font-medium text-black">
-                    Free Shipping
-                  </span>
-                </div>
-                <div className="flex flex-col items-center text-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-8 w-8 text-primary"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                    />
-                  </svg>
-                  <span className="mt-2 text-xs font-medium text-black">
-                    Secure Checkout
-                  </span>
-                </div>
-                <div className="flex flex-col items-center text-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-8 w-8 text-primary"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                    />
-                  </svg>
-                  <span className="mt-2 text-xs font-medium text-black">
-                    100% Money-Back Guarantee
-                  </span>
-                </div>
-                <div className="flex flex-col items-center text-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-8 w-8 text-primary"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  <span className="mt-2 text-xs font-medium text-black">
-                    24/7 Customer Support
-                  </span>
-                </div>
-              </div>
-
-              {/* Product Information */}
-              <div className="mt-8 border-t border-gray-200 pt-8">
-                <div className="prose prose-sm max-w-none">
-                  <h3 className="text-lg font-medium text-black mb-4">
-                    Product Information
-                  </h3>
-
-                  <div className="space-y-6">
-                    {/* Quality and Materials */}
-                    <div>
-                      <h4 className="font-medium text-black">
-                        Premium Quality Materials
-                      </h4>
-                      <p className="mt-2 text-black">
-                        Our jerseys are crafted from high-quality, breathable
-                        materials that ensure comfort during wear. Each jersey
-                        is made with attention to detail, featuring:
-                      </p>
-                      <ul className="mt-2 list-disc pl-5 text-black">
-                        <li>
-                          Premium polyester fabric with moisture-wicking
-                          technology
-                        </li>
-                        <li>Durable stitching for long-lasting wear</li>
-                        <li>Official team and sponsor logos</li>
-                        <li>Authentic design and colors</li>
-                      </ul>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                    <div className="flex flex-col items-center text-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-8 w-8 text-primary"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      <span className="mt-2 text-xs font-medium text-black">
+                        Free Shipping
+                      </span>
                     </div>
-
-                    {/* Delivery Information */}
-                    <div>
-                      <h4 className="font-medium text-black">
-                        Delivery Information
-                      </h4>
-                      <div className="mt-2 space-y-2 text-black">
-                        <p>• Shipping: 7–14 days</p>
-                        <p>• Refund: max within 7 days</p>
-                      </div>
+                    <div className="flex flex-col items-center text-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-8 w-8 text-primary"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                        />
+                      </svg>
+                      <span className="mt-2 text-xs font-medium text-black">
+                        Secure Checkout
+                      </span>
                     </div>
-
-                    {/* Secure Shopping */}
-                    <div>
-                      <h4 className="font-medium text-black">
-                        Secure Shopping Guarantee
-                      </h4>
-                      <div className="mt-2 space-y-2 text-black">
-                        <p>• 100% Authentic Product Guarantee</p>
-                        <p>• Secure Payment Processing</p>
-                        <p>• Money-Back Guarantee</p>
-                        <p>• Customer Support 7 Days a Week</p>
-                      </div>
+                    <div className="flex flex-col items-center text-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-8 w-8 text-primary"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                        />
+                      </svg>
+                      <span className="mt-2 text-xs font-medium text-black">
+                        100% Money-Back Guarantee
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-center text-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-8 w-8 text-primary"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <span className="mt-2 text-xs font-medium text-black">
+                        24/7 Customer Support
+                      </span>
                     </div>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
+
+              {/* Product Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Product Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Quality and Materials */}
+                  <div>
+                    <h4 className="font-medium text-black">
+                      Premium Quality Materials
+                    </h4>
+                    <p className="mt-2 text-black">
+                      Our jerseys are crafted from high-quality, breathable
+                      materials that ensure comfort during wear. Each jersey
+                      is made with attention to detail, featuring:
+                    </p>
+                    <ul className="mt-2 list-disc pl-5 text-black">
+                      <li>
+                        Premium polyester fabric with moisture-wicking
+                        technology
+                      </li>
+                      <li>Durable stitching for long-lasting wear</li>
+                      <li>Official team and sponsor logos</li>
+                      <li>Authentic design and colors</li>
+                    </ul>
+                  </div>
+
+                  {/* Delivery Information */}
+                  <div>
+                    <h4 className="font-medium text-black">
+                      Delivery Information
+                    </h4>
+                    <div className="mt-2 space-y-2 text-black">
+                      <p>• Shipping: 7–14 days</p>
+                      <p>• Refund: max within 7 days</p>
+                    </div>
+                  </div>
+
+                  {/* Secure Shopping */}
+                  <div>
+                    <h4 className="font-medium text-black">
+                      Secure Shopping Guarantee
+                    </h4>
+                    <div className="mt-2 space-y-2 text-black">
+                      <p>• 100% Authentic Product Guarantee</p>
+                      <p>• Secure Payment Processing</p>
+                      <p>• Money-Back Guarantee</p>
+                      <p>• Customer Support 7 Days a Week</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
@@ -973,52 +951,54 @@ export default function ProductDetailClient({
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Review summary */}
             <div className="lg:col-span-1">
-              <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-                <div className="flex flex-col items-center">
-                  <div className="flex items-center mb-2">
-                    {[0, 1, 2, 3, 4].map((rating) => (
-                      <StarIcon
-                        key={rating}
-                        className={`h-6 w-6 ${
-                          product.averageRating > rating
-                            ? "text-yellow-400"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex flex-col items-center">
+                    <div className="flex items-center mb-2">
+                      {[0, 1, 2, 3, 4].map((rating) => (
+                        <StarIcon
+                          key={rating}
+                          className={`h-6 w-6 ${
+                            product.averageRating > rating
+                              ? "text-yellow-400"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <p className="text-lg font-semibold text-black">
+                      {product.averageRating?.toFixed(1) || "0.0"}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Based on {product.reviews?.length || 0} reviews
+                    </p>
                   </div>
-                  <p className="text-lg font-semibold text-black">
-                    {product.averageRating?.toFixed(1) || "0.0"}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Based on {product.reviews?.length || 0} reviews
-                  </p>
-                </div>
 
-                {session ? (
-                  <Button
-                    onClick={() =>
-                      document
-                        .getElementById("review-form")
-                        ?.scrollIntoView({ behavior: "smooth" })
-                    }
-                    variant="default"
-                    size="sm"
-                    className="mt-6 w-full"
-                  >
-                    Write a Review
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={() => signIn()}
-                    variant="default"
-                    size="sm"
-                    className="mt-6 w-full"
-                  >
-                    Sign in to Review
-                  </Button>
-                )}
-              </div>
+                  {session ? (
+                    <Button
+                      onClick={() =>
+                        document
+                          .getElementById("review-form")
+                          ?.scrollIntoView({ behavior: "smooth" })
+                      }
+                      variant="default"
+                      size="sm"
+                      className="mt-6 w-full"
+                    >
+                      Write a Review
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => signIn()}
+                      variant="default"
+                      size="sm"
+                      className="mt-6 w-full"
+                    >
+                      Sign in to Review
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
             </div>
 
             {/* Review list */}
@@ -1026,146 +1006,137 @@ export default function ProductDetailClient({
               <div className="space-y-8">
                 {reviews.length > 0 ? (
                   reviews.map((review, index) => (
-                    <div
-                      key={index}
-                      className="border-b border-gray-200 pb-6 last:border-b-0"
-                    >
-                      <div className="flex items-center gap-4 mb-2">
-                        <div className="flex items-center">
-                          {[0, 1, 2, 3, 4].map((rating) => (
-                            <StarIcon
-                              key={rating}
-                              className={`h-4 w-4 ${
-                                review.rating > rating
-                                  ? "text-yellow-400"
-                                  : "text-gray-300"
-                              }`}
-                            />
-                          ))}
+                    <Card key={index}>
+                      <CardContent className="pt-6">
+                        <div className="flex items-center gap-4 mb-2">
+                          <div className="flex items-center">
+                            {[0, 1, 2, 3, 4].map((rating) => (
+                              <StarIcon
+                                key={rating}
+                                className={`h-4 w-4 ${
+                                  review.rating > rating
+                                    ? "text-yellow-400"
+                                    : "text-gray-300"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                          <p className="text-sm font-medium text-black">
+                            {review.userName || "Anonymous"}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {new Date(review.createdAt).toLocaleDateString()}
+                          </p>
                         </div>
-                        <p className="text-sm font-medium text-black">
-                          {review.userName || "Anonymous"}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {new Date(review.createdAt).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <p className="text-sm text-gray-800">{review.comment}</p>
-                    </div>
+                        <p className="text-sm text-gray-800">{review.comment}</p>
+                      </CardContent>
+                    </Card>
                   ))
                 ) : (
-                  <div className="text-center py-8">
-                    <p className="text-gray-500">No reviews yet.</p>
-                    <p className="text-sm text-gray-400 mt-2">
-                      Be the first to review this product!
-                    </p>
-                  </div>
+                  <Card>
+                    <CardContent className="pt-6 text-center py-8">
+                      <p className="text-gray-500">No reviews yet.</p>
+                      <p className="text-sm text-gray-400 mt-2">
+                        Be the first to review this product!
+                      </p>
+                    </CardContent>
+                  </Card>
                 )}
               </div>
 
               {/* Review form */}
               {session && (
-                <div
-                  id="review-form"
-                  className="mt-12 bg-gray-50 p-6 rounded-lg"
-                >
-                  <h3 className="text-lg font-medium text-black mb-4">
-                    Write a Review
-                  </h3>
-                  {reviewFeedback && (
-                    <div
-                      className={`mb-4 rounded-md p-4 ${
-                        reviewFeedback.type === "success"
-                          ? "bg-green-50"
-                          : "bg-red-50"
-                      }`}
-                    >
-                      <div className="flex">
-                        <div className="flex-shrink-0">
-                          {reviewFeedback.type === "success" ? (
-                            <CheckCircleIcon
-                              className="h-5 w-5 text-green-400"
-                              aria-hidden="true"
-                            />
-                          ) : (
-                            <XCircleIcon
-                              className="h-5 w-5 text-red-400"
-                              aria-hidden="true"
-                            />
-                          )}
-                        </div>
-                        <div className="ml-3">
-                          <p
-                            className={`text-sm font-medium ${
-                              reviewFeedback.type === "success"
-                                ? "text-green-800"
-                                : "text-red-800"
-                            }`}
-                          >
-                            {reviewFeedback.message}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  <form onSubmit={handleSubmitReview} className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-black mb-2">
-                        Rating
-                      </label>
-                      <div className="flex items-center gap-2">
-                        {[1, 2, 3, 4, 5].map((rating) => (
-                          <button
-                            key={rating}
-                            type="button"
-                            onClick={() =>
-                              setReviewInput((prev) => ({
-                                ...prev,
-                                rating,
-                              }))
-                            }
-                            className="p-1 rounded-full hover:bg-gray-100 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          >
-                            <StarIcon
-                              className={`h-5 w-5 ${
-                                reviewInput.rating >= rating
-                                  ? "text-yellow-400"
-                                  : "text-gray-300"
+                <Card id="review-form" className="mt-12">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Write a Review</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {reviewFeedback && (
+                      <Alert className={`mb-4 ${
+                        reviewFeedback.type === "success" ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"
+                      }`}>
+                        <div className="flex">
+                          <div className="flex-shrink-0">
+                            {reviewFeedback.type === "success" ? (
+                              <CheckCircleIcon
+                                className="h-5 w-5 text-green-400"
+                                aria-hidden="true"
+                              />
+                            ) : (
+                              <XCircleIcon
+                                className="h-5 w-5 text-red-400"
+                                aria-hidden="true"
+                              />
+                            )}
+                          </div>
+                          <div className="ml-3">
+                            <AlertDescription
+                              className={`${
+                                reviewFeedback.type === "success"
+                                  ? "text-green-800"
+                                  : "text-red-800"
                               }`}
-                            />
-                          </button>
-                        ))}
+                            >
+                              {reviewFeedback.message}
+                            </AlertDescription>
+                          </div>
+                        </div>
+                      </Alert>
+                    )}
+                    <form onSubmit={handleSubmitReview} className="space-y-4">
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium">Rating</Label>
+                        <div className="flex items-center gap-2">
+                          {[1, 2, 3, 4, 5].map((rating) => (
+                            <Button
+                              key={rating}
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                setReviewInput((prev) => ({
+                                  ...prev,
+                                  rating,
+                                }))
+                              }
+                              className="p-1 rounded-full hover:bg-gray-100"
+                            >
+                              <StarIcon
+                                className={`h-5 w-5 ${
+                                  reviewInput.rating >= rating
+                                    ? "text-yellow-400"
+                                    : "text-gray-300"
+                                }`}
+                              />
+                            </Button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-black mb-2">
-                        Comment
-                      </label>
-                      <textarea
-                        value={reviewInput.comment}
-                        onChange={(e) =>
-                          setReviewInput((prev) => ({
-                            ...prev,
-                            comment: e.target.value,
-                          }))
-                        }
-                        rows={4}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-black"
-                        placeholder="Share your experience with this product..."
-                        required
-                      />
-                    </div>
-                    <div>
-                      <button
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium">Comment</Label>
+                        <Textarea
+                          value={reviewInput.comment}
+                          onChange={(e) =>
+                            setReviewInput((prev) => ({
+                              ...prev,
+                              comment: e.target.value,
+                            }))
+                          }
+                          rows={4}
+                          placeholder="Share your experience with this product..."
+                          required
+                        />
+                      </div>
+                      <Button
                         type="submit"
                         disabled={isSubmittingReview}
-                        className="w-full bg-indigo-600 border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="w-full"
                       >
                         {isSubmittingReview ? "Submitting..." : "Submit Review"}
-                      </button>
-                    </div>
-                  </form>
-                </div>
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
               )}
             </div>
           </div>

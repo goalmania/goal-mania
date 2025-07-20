@@ -100,7 +100,7 @@ async function fetchFeaturedProducts(): Promise<Product[]> {
 async function fetchMysteryBoxProducts(): Promise<Product[]> {
   try {
     const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/products?category=Mystery%20Box&limit=6&noPagination=true`, {
+    const response = await fetch(`${baseUrl}/api/products?type=mysteryBox&limit=6&noPagination=true`, {
       next: { revalidate: 300 }, // Cache for 5 minutes
     });
 

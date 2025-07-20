@@ -44,22 +44,49 @@ async function getFeaturedProducts(): Promise<Product[]> {
 async function getMysteryBoxProducts(): Promise<Product[]> {
   try {
     const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/products?type=mysteryBox&limit=3`, {
-      next: { revalidate: 300 }
+    const response = await fetch(`${baseUrl}/api/products?type=mysteryBox&limit=3&noPagination=true`, {
+      next: { revalidate: 0 } // Disable caching for debugging
     });
 
-    if (!response.ok) return [];
+    if (!response.ok) {
+      console.error("Mystery Box API response not ok:", response.status);
+      return [];
+    }
 
     const data = await response.json();
     const products = data.products || data || [];
     
-    return products.slice(0, 3).map((product: any) => ({
+    console.log("Mystery Box API Response:", {
+      totalProducts: products.length,
+      products: products.map((p: any) => ({
+        id: p._id,
+        title: p.title,
+        isMysteryBox: p.isMysteryBox,
+        category: p.category
+      }))
+    });
+    
+    // Only return actual mystery box products
+    const mysteryBoxProducts = products.filter((product: any) => product.isMysteryBox === true);
+    
+    console.log("Filtered Mystery Box Products:", {
+      count: mysteryBoxProducts.length,
+      products: mysteryBoxProducts.map((p: any) => ({
+        id: p._id,
+        title: p.title,
+        isMysteryBox: p.isMysteryBox,
+        category: p.category
+      }))
+    });
+    
+    return mysteryBoxProducts.slice(0, 3).map((product: any) => ({
       id: product._id || "",
-      name: product.title || "Mystery Box",
+      name: product.title || "Scatola Misteriosa",
       price: product.basePrice || 0,
       image: product.images?.[0] || "/images/image.png",
       category: product.category || "Mystery Box",
-      team: product.title ? product.title.split(" ")[0] : "Unknown",
+      team: "Mystery Box", // Mystery boxes don't have specific teams
+      isMysteryBox: product.isMysteryBox || false,
     }));
   } catch (error) {
     console.error("Error fetching mystery box products:", error);
