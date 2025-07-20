@@ -52,10 +52,16 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const category = searchParams.get("category") || "all";
     const page = parseInt(searchParams.get("page") || "1", 10);
-    const limit = parseInt(searchParams.get("limit") || "10", 10);
+    const limit = parseInt(searchParams.get("limit") || "20", 10);
     const search = searchParams.get("search") || "";
     const featured = searchParams.get("feature") === "true";
     const includeInactive = searchParams.get("includeInactive") === "true";
+    const sortBy = searchParams.get("sortBy") || "createdAt";
+    const sortOrder = searchParams.get("sortOrder") || "desc";
+
+    // Validate pagination parameters
+    const validatedPage = Math.max(1, page);
+    const validatedLimit = Math.min(100, Math.max(1, limit)); // Cap at 100 items per page
 
     await connectDB();
 
@@ -82,9 +88,13 @@ export async function GET(req: NextRequest) {
       query.category = category;
     }
 
-    // Add search filter if provided
+    // Add search filter if provided - search in title, description, and category
     if (search) {
-      query.title = { $regex: search, $options: "i" };
+      query.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+      ];
     }
 
     // Add featured filter if requested
@@ -94,31 +104,58 @@ export async function GET(req: NextRequest) {
 
     console.log("Products API Query:", JSON.stringify(query, null, 2));
 
-    // Count total documents for pagination
-    const totalProducts = await Product.countDocuments(query);
+    // Build sort object
+    const sortObject: any = {};
+    sortObject[sortBy] = sortOrder === "asc" ? 1 : -1;
 
-    // Fetch products with pagination
-    const products = await Product.find(query)
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
+    // Use Promise.all for parallel execution of count and find operations
+    const [totalProducts, products] = await Promise.all([
+      Product.countDocuments(query),
+      Product.find(query)
+        .sort(sortObject)
+        .skip((validatedPage - 1) * validatedLimit)
+        .limit(validatedLimit)
+        .lean()
+        .select('_id title description basePrice retroPrice shippingPrice stockQuantity images isRetro hasShorts hasSocks category availablePatches allowsNumberOnShirt allowsNameOnShirt isActive feature slug isMysteryBox createdAt')
+    ]);
 
     console.log(`Found ${products.length} products matching the criteria`);
 
+    // Calculate pagination info
+    const totalPages = Math.ceil(totalProducts / validatedLimit);
+    const hasNextPage = validatedPage < totalPages;
+    const hasPreviousPage = validatedPage > 1;
+
     // For backward compatibility, return just the products array if not requesting pagination info
     if (req.nextUrl.searchParams.has("noPagination")) {
-      return NextResponse.json(products);
+      return NextResponse.json(products, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+        },
+      });
     }
 
-    return NextResponse.json({
+    const response = {
       products,
       pagination: {
         total: totalProducts,
-        page,
-        limit,
-        totalPages: Math.ceil(totalProducts / limit),
+        page: validatedPage,
+        limit: validatedLimit,
+        totalPages,
+        hasNextPage,
+        hasPreviousPage,
       },
+    };
+
+    // Add appropriate cache headers based on the request type
+    const cacheHeaders = {
+      'Cache-Control': search || !includeInactive 
+        ? 'no-cache, no-store, must-revalidate' // Don't cache search results or filtered results
+        : 'public, s-maxage=300, stale-while-revalidate=600', // Cache regular product lists for 5 minutes
+    };
+
+    return NextResponse.json(response, {
+      headers: cacheHeaders,
     });
   } catch (error) {
     console.error("[PRODUCTS_GET]", error);

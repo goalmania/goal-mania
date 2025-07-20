@@ -70,7 +70,7 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <>
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">
@@ -129,6 +129,6 @@ export default function AnalyticsPage() {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }

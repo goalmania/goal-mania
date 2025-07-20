@@ -7,7 +7,7 @@ import Product from "@/lib/models/Product";
 import Article from "@/lib/models/Article";
 import Order from "@/models/Order";
 
-// Analytics API with real data from database
+// Enhanced Analytics API with comprehensive data for admin dashboard
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
@@ -25,10 +25,59 @@ export async function GET() {
     const totalArticles = await Article.countDocuments();
     const totalOrders = await Order.countDocuments();
 
-    // Calculate revenue distribution based on product categories
-    const products = await Product.find();
+    // Get recent orders (last 5)
+    const recentOrders = await Order.find({})
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .lean();
 
-    // Group products by category and calculate value
+    // Calculate order status distribution
+    const orderStatuses = await Order.aggregate([
+      {
+        $group: {
+          _id: "$status",
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    // Calculate total revenue
+    const revenueData = await Order.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: "$amount" },
+          averageOrderValue: { $avg: "$amount" }
+        }
+      }
+    ]);
+
+    // Get orders by date (last 7 days)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const recentOrdersByDate = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: sevenDaysAgo }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
+          },
+          count: { $sum: 1 },
+          revenue: { $sum: "$amount" }
+        }
+      },
+      {
+        $sort: { _id: 1 }
+      }
+    ]);
+
+    // Calculate product categories distribution
+    const products = await Product.find();
     const categoryMap = new Map();
 
     products.forEach((product) => {
@@ -37,8 +86,7 @@ export async function GET() {
       categoryMap.set(category, currentValue + 1);
     });
 
-    // Convert map to array format needed for the pie chart
-    const revenueData = Array.from(categoryMap.entries()).map(
+    const revenueDataByCategory = Array.from(categoryMap.entries()).map(
       ([name, value]) => ({
         name,
         value,
@@ -46,14 +94,19 @@ export async function GET() {
     );
 
     // If no products with categories, provide default categories
-    if (revenueData.length === 0) {
-      revenueData.push(
+    if (revenueDataByCategory.length === 0) {
+      revenueDataByCategory.push(
         { name: "Jerseys", value: 0 },
         { name: "Equipment", value: 0 },
         { name: "Accessories", value: 0 },
         { name: "Footwear", value: 0 }
       );
     }
+
+    // Get mystery box orders count
+    const mysteryBoxOrders = await Order.countDocuments({
+      "items.customization.excludedShirts": { $exists: true, $ne: [] }
+    });
 
     return NextResponse.json({
       stats: {
@@ -70,7 +123,24 @@ export async function GET() {
           value: totalArticles,
         },
       },
-      revenueData,
+      revenue: {
+        total: revenueData[0]?.totalRevenue || 0,
+        average: revenueData[0]?.averageOrderValue || 0,
+      },
+      recentOrders: recentOrders.map(order => ({
+        id: order._id,
+        amount: order.amount,
+        status: order.status,
+        createdAt: order.createdAt,
+        itemsCount: order.items.length,
+      })),
+      orderStatuses: orderStatuses.map(status => ({
+        status: status._id,
+        count: status.count,
+      })),
+      recentOrdersByDate,
+      revenueDataByCategory,
+      mysteryBoxOrders,
     });
   } catch (error) {
     console.error("Error fetching analytics data:", error);

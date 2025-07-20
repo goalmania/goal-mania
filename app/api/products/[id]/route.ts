@@ -385,6 +385,89 @@ export async function PUT(
   }
 }
 
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { error: "Invalid product ID format" },
+        { status: 400 }
+      );
+    }
+
+    const session = await getServerSession(authOptions);
+
+    // Check if session exists
+    if (!session) {
+      return NextResponse.json(
+        { error: "Unauthorized - Not logged in" },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+    console.log("Received PATCH request data:", JSON.stringify(body, null, 2));
+
+    // Create a minimal update schema for PATCH requests
+    const patchSchema = z.object({
+      isActive: z.boolean().optional(),
+      feature: z.boolean().optional(),
+      stockQuantity: z.number().optional(),
+      basePrice: z.number().optional(),
+      retroPrice: z.number().optional(),
+      shippingPrice: z.number().optional(),
+    });
+
+    try {
+      const validatedData = patchSchema.parse(body);
+
+      await connectDB();
+
+      const product = await Product.findByIdAndUpdate(id, validatedData, {
+        new: true,
+        runValidators: false,
+      });
+
+      if (!product) {
+        return NextResponse.json(
+          { error: "Product not found" },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json(product);
+    } catch (validationError) {
+      console.error("Validation error:", validationError);
+      if (validationError instanceof z.ZodError) {
+        return NextResponse.json(
+          {
+            error: "Validation error",
+            details: validationError.errors,
+          },
+          { status: 400 }
+        );
+      }
+      throw validationError;
+    }
+  } catch (error) {
+    console.error("Error updating product:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error occurred";
+
+    return NextResponse.json(
+      {
+        error: "Failed to update product",
+        message: errorMessage,
+      },
+      { status: 500 }
+    );
+  }
+}
+
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
