@@ -15,6 +15,7 @@ import {
   IconHelp,
   IconInnerShadowTop,
   IconListDetails,
+  IconLogout,
   IconReport,
   IconSearch,
   IconSettings,
@@ -22,6 +23,7 @@ import {
   IconTicket,
   IconUsers,
 } from "@tabler/icons-react"
+import { useSession } from "next-auth/react"
 
 import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
@@ -38,11 +40,6 @@ import {
 } from "@/components/ui/sidebar"
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Dashboard",
@@ -81,7 +78,7 @@ const data = {
     },
     {
       title: "Settings",
-      url: "/admin/settings",
+      url: "/profile",
       icon: IconSettings,
     },
   ],
@@ -170,6 +167,19 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session, status } = useSession()
+
+  // Create user object from session data
+  const user = session?.user ? {
+    name: session.user.name || "User",
+    email: session.user.email || "",
+    avatar: "/images/default-avatar.png"
+  } : {
+    name: "Loading...",
+    email: "",
+    avatar: "/images/default-avatar.png"
+  }
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -193,7 +203,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   )

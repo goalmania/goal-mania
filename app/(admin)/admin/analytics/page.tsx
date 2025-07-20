@@ -385,14 +385,14 @@ export default function AnalyticsPage() {
               </CardHeader>
               <CardContent>
                 <ChartContainer config={chartConfig} className="aspect-auto h-[300px] w-full">
-                  <PieChart>
-                    <Pie
+              <PieChart>
+                <Pie
                       data={categoryChartData}
-                      cx="50%"
-                      cy="50%"
+                  cx="50%"
+                  cy="50%"
                       outerRadius={100}
-                      fill="#8884d8"
-                      dataKey="value"
+                  fill="#8884d8"
+                  dataKey="value"
                       label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                     >
                       {categoryChartData.map((entry, index) => (
@@ -687,8 +687,8 @@ export default function AnalyticsPage() {
                   >
                     {statusChartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
+                  ))}
+                </Pie>
                   <ChartTooltip
                     content={
                       <ChartTooltipContent
@@ -696,7 +696,7 @@ export default function AnalyticsPage() {
                       />
                     }
                   />
-                </PieChart>
+              </PieChart>
               </ChartContainer>
             </CardContent>
           </Card>
@@ -715,14 +715,14 @@ export default function AnalyticsPage() {
                       <p className="text-sm text-gray-500">
                         {order.itemsCount} items • {formatDate(order.createdAt)}
                       </p>
-                    </div>
+            </div>
                     <div className="text-right">
                       <p className="font-medium">{formatCurrency(order.amount)}</p>
                       <Badge className={getStatusColor(order.status)}>
                         {order.status}
                       </Badge>
-                    </div>
-                  </div>
+        </div>
+      </div>
                 ))}
               </div>
             </CardContent>
@@ -780,8 +780,8 @@ export default function AnalyticsPage() {
                 <div className="text-center p-4 bg-green-50 rounded-lg">
                   <div className="text-2xl font-bold text-green-600">{conversionRate.toFixed(1)}%</div>
                   <p className="text-sm text-green-600">Conversion Rate</p>
-                </div>
-              </div>
+          </div>
+        </div>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Users to Orders Ratio</span>
@@ -790,8 +790,8 @@ export default function AnalyticsPage() {
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Average Revenue per User</span>
                   <span className="text-sm font-medium">{formatCurrency(stats.users.value > 0 ? revenue.total / stats.users.value : 0)}</span>
-                </div>
-              </div>
+        </div>
+      </div>
             </CardContent>
           </Card>
         </TabsContent>
