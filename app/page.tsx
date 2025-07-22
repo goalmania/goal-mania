@@ -1,12 +1,10 @@
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import HeroSection from "@/components/home/HeroSection";
-import TeamCarousel from "@/components/home/TeamCarousel";
-import FeaturedProducts from "@/components/home/FeaturedProducts";
-import MysteryBoxSection from "@/components/home/MysteryBoxSection";
-import GuaranteesSection from "@/components/home/GuaranteesSection";
 import NewsSection from "@/components/home/NewsSection";
 import { Product } from "@/lib/types/home";
+import FeaturedProducts from "@/components/home/FeaturedProducts";
+import GuaranteesSection from "@/components/home/GuaranteesSection";
 
 // Enable caching for better performance
 export const revalidate = 300; // Revalidate every 5 minutes
@@ -95,36 +93,31 @@ async function getMysteryBoxProducts(): Promise<Product[]> {
 }
 
 export default async function Home() {
-  // Fetch all data in parallel for better performance
-  const [featuredArticles, featuredProducts, mysteryBoxProducts] = await Promise.all([
-    // Fetch articles
-    (async () => {
-      try {
-        await connectDB();
-        return await Article.find({
-          status: "published",
-          featured: true,
-        })
-          .sort({ publishedAt: -1 })
-          .limit(3)
-          .lean();
-      } catch (error) {
-        console.error("Error fetching articles:", error);
-        return [];
-      }
-    })(),
-    getFeaturedProducts(),
-    getMysteryBoxProducts()
-  ]);
+  // Fetch articles only
+  const featuredArticles = await (async () => {
+    try {
+      await connectDB();
+      return await Article.find({
+        status: "published",
+        featured: true,
+      })
+        .sort({ publishedAt: -1 })
+        .limit(3)
+        .lean();
+    } catch (error) {
+      console.error("Error fetching articles:", error);
+      return [];
+    }
+  })();
 
-    return (
-      <div className="bg-white min-h-screen">
-        <HeroSection />
-        <TeamCarousel />
-        <FeaturedProducts products={featuredProducts} />
-        <MysteryBoxSection products={mysteryBoxProducts} />
-        <GuaranteesSection />
-        <NewsSection articles={featuredArticles} />
-      </div>
-    );
+  const featuredProducts = await getFeaturedProducts();
+
+  return (
+    <div className="bg-white min-h-screen">
+      <HeroSection />
+      <FeaturedProducts products={featuredProducts} />
+      <GuaranteesSection />
+      <NewsSection articles={featuredArticles} />
+    </div>
+  );
 }

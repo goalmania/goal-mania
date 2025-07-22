@@ -50,15 +50,15 @@ export default function TeamCard({ team }: TeamCardProps) {
             />
           </div>
 
-          {/* Team Name */}
+          {/* Team Nickname */}
           <h3 className={`font-bold text-white text-sm sm:text-base md:text-lg mb-1 transition-colors duration-300 drop-shadow-lg`}>
-            {team.name}
+            {team.nickname}
           </h3>
 
-          {/* Team Nickname */}
-          <p className={`text-xs sm:text-sm ${team.textColor} font-medium opacity-80 transition-opacity duration-300`}>
-            {team.nickname}
-          </p>
+          {/* Team Name */}
+          {/* <p className={`text-xs sm:text-sm ${team.textColor} font-medium opacity-80 transition-opacity duration-300`}>
+            {team.name}
+          </p> */}
 
           {/* Corner Accent */}
           <div className={`absolute top-0 right-0 w-0 h-0 border-l-[20px] border-l-transparent border-t-[20px] ${team.borderColor} opacity-40 transition-opacity duration-300`}></div>
@@ -81,7 +81,7 @@ export default function TeamCard({ team }: TeamCardProps) {
           <div className="relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mb-4 opacity-60">
             <Image
               src={team.logo}
-              alt={team.name}
+              alt={team.nickname}
               fill
               className="object-contain"
               sizes="(max-width: 640px) 48px, (max-width: 768px) 56px, 64px"
@@ -99,7 +99,7 @@ export default function TeamCard({ team }: TeamCardProps) {
 
           {/* Team Name (Small) */}
           <p className="text-white/60 text-xs sm:text-sm mt-3 font-medium">
-            {team.name} Collection
+            {team.nickname} Collection
           </p>
         </div>
       </div>

@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import ShopSearchBar from "./ShopSearchBar";
+import TeamCarousel from "@/components/home/TeamCarousel";
 
 interface Review {
   id: string;
@@ -182,6 +183,8 @@ export default async function ShopClient({ products }: { products: Product[] }) 
         </div>
       </div>
 
+      <TeamCarousel />
+
 
       {/* Customer Satisfaction Message */}
       <div className="bg-gray-800 py-10 sm:py-16">
@@ -317,7 +320,7 @@ export default async function ShopClient({ products }: { products: Product[] }) 
               </div>
               <div className="text-left">
                 <h3 className="text-white font-bold text-lg">Garanzia Soddisfazione 100%</h3>
-                <p className="text-purple-100 text-sm">Non sei soddisfatto? Rimborso completo entro 30 giorni!</p>
+                <p className="text-purple-100 text-sm">Non sei soddisfatto? Rimborso completo entro 7 giorni!</p>
               </div>
             </div>
           </div>

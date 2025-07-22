@@ -3,6 +3,7 @@ import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import ShopClient from "@/app/_components/ShopClient";
 import { IProduct } from "@/lib/types/product";
+import TeamCarousel from "@/components/home/TeamCarousel";
 
 // Disable caching for this page
 export const dynamic = "force-dynamic";
@@ -49,7 +50,7 @@ export default async function ShopPage() {
 
   return (
     <div className="">
-        <ShopClient products={products} />
+      <ShopClient products={products} />
     </div>
   );
 }

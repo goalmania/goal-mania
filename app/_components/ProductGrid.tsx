@@ -54,19 +54,20 @@ export default function ProductGrid({
       {products.map((product) => (
         <div
           key={product.id}
-          className="group relative bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden h-full flex flex-col"
+          className="group relative bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden h-full flex flex-col border border-transparent hover:border-[#f5963c] hover:ring-2 hover:ring-[#f5963c] hover:ring-opacity-40 focus-within:border-[#f5963c] focus-within:ring-2 focus-within:ring-[#f5963c] focus-within:ring-opacity-40 transition-all duration-300"
+          style={{ boxShadow: '0 2px 8px 0 rgba(245,150,60,0.08)' }}
         >
           <Link
             href={product.id ? `/products/${product.id}` : "#"}
             className="flex-shrink-0"
           >
-            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-t-lg bg-gray-200">
+            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-t-lg bg-gray-200 relative">
               <Image
                 src={product.image || "/images/image.png"}
                 alt={product.name || "Product image"}
                 width={500}
                 height={500}
-                className="h-full w-full object-cover object-center transform group-hover:scale-105 transition-transform duration-300"
+                className="h-full w-full object-cover object-center transform group-hover:scale-110 transition-transform duration-300 ease-in-out group-hover:shadow-[0_0_0_4px_#f5963c55]"
                 sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
               />
               <button
@@ -88,13 +89,15 @@ export default function ProductGrid({
                   <HeartIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
                 )}
               </button>
+              {/* Orange animated accent bar on hover */}
+              <div className="absolute bottom-0 left-0 w-full h-1 bg-[#f5963c] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
             </div>
           </Link>
 
           <div className="p-2 sm:p-4 flex flex-col flex-grow">
             <div className="mb-2 flex-grow">
               <Link href={product.id ? `/products/${product.id}` : "#"}>
-                <h3 className="text-xs flex justify-center text-center items-center sm:text-sm font-medium text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
+                <h3 className="text-xs flex justify-center text-center items-center sm:text-sm font-medium text-gray-900 group-hover:text-[#f5963c] transition-colors duration-200 line-clamp-2">
                   {product.name}
                 </h3>
               </Link>
@@ -109,7 +112,7 @@ export default function ProductGrid({
               </div>
             </div>
             <div className="flex items-center justify-center mt-auto">
-              <p className="text-xs sm:text-base md:text-lg font-semibold text-[#F1803A]">
+              <p className="text-xs sm:text-base md:text-lg font-semibold text-[#f5963c]">
                 €{Number(product.price).toFixed(2)}
               </p>
             </div>
