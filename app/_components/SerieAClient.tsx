@@ -5,15 +5,7 @@ import { useWishlistStore } from "@/lib/store/wishlist";
 import { useCartStore } from "@/lib/store/cart";
 import ProductGrid from "@/app/_components/ProductGrid";
 import { Suspense } from "react";
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  team: string;
-}
+import { Product } from "@/lib/types/product";
 
 export default function SerieAClient({ products }: { products: Product[] }) {
   const {
@@ -48,7 +40,7 @@ export default function SerieAClient({ products }: { products: Product[] }) {
                     name: product.name,
                     price: product.price,
                     image: product.image,
-                    team: product.team,
+                    team: product.team || "",
                   });
                 }
               }}

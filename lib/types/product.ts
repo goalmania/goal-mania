@@ -22,12 +22,27 @@ export type KidSize = (typeof VALID_KID_SIZES)[number];
 export type Patch = (typeof VALID_PATCHES)[number];
 export type Category = (typeof PRODUCT_CATEGORIES)[number];
 
+// Simple Product interface for grid components
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  category?: string;
+  team?: string;
+  availablePatches?: string[];
+}
+
 export interface Review {
   _id: string;
   userId: string;
   userName: string;
   rating: number;
   comment: string;
+  media?: {
+    images: string[];
+    videos: string[];
+  };
   createdAt: Date;
   updatedAt: Date;
 }

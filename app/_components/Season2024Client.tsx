@@ -6,15 +6,7 @@ import { useCartStore } from "@/lib/store/cart";
 import ProductGrid from "@/app/_components/ProductGrid";
 import ShopNav from "@/app/_components/ShopNav";
 import { Suspense } from "react";
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  team: string;
-}
+import { Product } from "@/lib/types/product";
 
 export default function Season2024Client({
   products,
@@ -53,7 +45,7 @@ export default function Season2024Client({
                     name: product.name,
                     price: product.price,
                     image: product.image,
-                    team: product.team,
+                    team: product.team || "",
                   });
                 }
               }}

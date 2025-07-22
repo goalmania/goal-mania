@@ -1,15 +1,45 @@
+"use client";
+
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
-import { Product } from "@/lib/types/home";
+import ProductCard from "@/components/ui/ProductCard";
+import { useWishlistStore } from "@/lib/store/wishlist";
+import { useCartStore } from "@/lib/store/cart";
+import { useRouter } from "next/navigation";
+import { Product } from "@/lib/types/product";
 
 interface FeaturedProductsProps {
   products: Product[];
 }
 
 export default function FeaturedProducts({ products }: FeaturedProductsProps) {
+  const router = useRouter();
+  const wishlistStore = useWishlistStore();
+  const cartStore = useCartStore();
+
+  const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = wishlistStore;
+  const { addItem: addToCart } = cartStore;
+
+  const handleWishlistToggle = (product: Product) => {
+    const productId = product.id.toString();
+    if (isInWishlist(productId)) {
+      removeFromWishlist(productId);
+    } else {
+      addToWishlist({
+        id: productId,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        team: product.team || "",
+      });
+    }
+  };
+
+  const handleAddToCart = (product: Product) => {
+    router.push(`/products/${product.id}`);
+  };
+
   if (products.length === 0) return null;
 
   return (
@@ -18,30 +48,26 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-6 sm:mb-8 md:mb-10">
           Prodotti in Evidenza
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {products.map((product) => (
-            <Card key={product.id} className="group overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:scale-105 h-full">
-              <Link href={`/products/${product.id}`} className="block h-full flex flex-col">
-                <div className="relative h-40 sm:h-48 md:h-56 w-full flex-shrink-0">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-300"
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                </div>
-                <CardContent className="p-3 sm:p-4 md:p-6 flex-1 flex flex-col">
-                  <h3 className="font-semibold text-[#0e1924] mb-2 line-clamp-2 text-sm sm:text-base md:text-lg">
-                    {product.name}
-                  </h3>
-                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-[#f5963c] mt-auto">
-                    €{product.price.toFixed(2)}
-                  </p>
-                </CardContent>
-              </Link>
-            </Card>
+            <ProductCard
+              key={product.id}
+              id={product.id}
+              name={product.name}
+              price={product.price}
+              image={product.image}
+              category={product.category || ""}
+              team={product.team || ""}
+              availablePatches={product.availablePatches || []}
+              href={`/products/${product.id}`}
+              cardHeight="md"
+              imageAspectRatio="portrait"
+              onWishlistToggle={handleWishlistToggle}
+              onAddToCart={handleAddToCart}
+              isInWishlist={isInWishlist}
+              showWishlistButton={true}
+              product={product}
+            />
           ))}
         </div>
         <div className="text-center mt-6 sm:mt-8 md:mt-10">

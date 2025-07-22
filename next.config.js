@@ -8,6 +8,7 @@ const nextConfig = {
       "goalmania.shop",
       "media.api-sports.io",
       "crests.football-data.org",
+      "upload.wikimedia.org", // Added for Ocreact badge
     ],
   },
   async headers() {

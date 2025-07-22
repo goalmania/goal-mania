@@ -24,6 +24,7 @@ interface Product {
   image: string;
   category: string;
   team: string;
+  availablePatches?: string[];
 }
 
 async function fetchSeason2025Products(): Promise<Product[]> {
@@ -55,6 +56,7 @@ async function fetchSeason2025Products(): Promise<Product[]> {
       image: product.images?.[0] || "/images/image.png",
       category: product.category || "Uncategorized",
       team: product.title ? product.title.split(" ")[0] : "Unknown",
+      availablePatches: product.availablePatches || [],
     }));
   } catch (error) {
     console.error("Error fetching 2025/26 products:", error);
@@ -91,6 +93,7 @@ async function fetchFeaturedProducts(): Promise<Product[]> {
       image: product.images?.[0] || "/images/image.png",
       category: product.category || "Uncategorized",
       team: product.title ? product.title.split(" ")[0] : "Unknown",
+      availablePatches: product.availablePatches || [],
     }));
   } catch (error) {
     console.error("Error fetching featured products:", error);
@@ -127,6 +130,7 @@ async function fetchMysteryBoxProducts(): Promise<Product[]> {
       image: product.images?.[0] || "/images/image.png",
       category: product.category || "Mystery Box",
       team: "Mystery",
+      availablePatches: product.availablePatches || [],
     }));
   } catch (error) {
     console.error("Error fetching Mystery Box products:", error);

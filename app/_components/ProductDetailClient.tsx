@@ -21,11 +21,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption } from "@/components/ui/table";
+import { ProductSizeChart } from "@/app/_components/ProductSizeChart";
+import ProductReviews from "@/app/_components/ProductReviews";
 
 const PATCH_PRICES = {
   "europa-league": 3,
@@ -62,16 +66,7 @@ export default function ProductDetailClient({
     isKidSize: false,
     excludedShirts: [] as string[],
   });
-  const [reviewInput, setReviewInput] = useState({
-    rating: 5,
-    comment: "",
-  });
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
-  const [reviewFeedback, setReviewFeedback] = useState<{
-    type: "success" | "error";
-    message: string;
-  } | null>(null);
   const [errors, setErrors] = useState<{
     size?: string;
   }>({});
@@ -221,84 +216,53 @@ export default function ProductDetailClient({
     }
   };
 
-  const handleSubmitReview = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleReviewSubmit = async (reviewData: any) => {
+    const response = await fetch(`/api/products/${product._id}/reviews`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reviewData),
+      credentials: "include",
+    });
 
-    // Check authentication status
-    if (isStatusLoading()) {
-      // Session is still loading, don't proceed yet
-      return;
-    }
-
-    if (!session) {
-      // Show feedback before redirecting
-      setReviewFeedback({
-        type: "error",
-        message: "You must be logged in to submit a review",
-      });
-
-      // Delay redirect to allow user to see the message
-      setTimeout(() => {
+    if (!response.ok) {
+      const error = await response.json();
+      if (response.status === 401) {
         signIn();
-      }, 1500);
-      return;
+        throw new Error("Session expired. Please sign in again.");
+      } else {
+        throw new Error(error.error || "Failed to submit review");
+      }
     }
 
-    setIsSubmittingReview(true);
-    setReviewFeedback(null);
+    // Fetch updated reviews
+    const updatedReviewsResponse = await fetch(
+      `/api/products/${product._id}/reviews`
+    );
+    if (!updatedReviewsResponse.ok) {
+      throw new Error("Failed to fetch updated reviews");
+    }
 
+    const updatedReviews = await updatedReviewsResponse.json();
+    setReviews(updatedReviews);
+  };
+
+  const handleReviewDelete = async (reviewId: string) => {
+    // Remove the review from local state immediately for optimistic update
+    setReviews(prevReviews => prevReviews.filter(review => review._id !== reviewId));
+    
+    // Fetch updated reviews to ensure consistency
     try {
-      const response = await fetch(`/api/products/${product._id}/reviews`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(reviewInput),
-        credentials: "include", // Include cookies for session
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        // If unauthorized, redirect to sign in page
-        if (response.status === 401) {
-          signIn();
-          throw new Error("Session expired. Please sign in again.");
-        } else {
-          throw new Error(error.error || "Failed to submit review");
-        }
-      }
-
-      // Fetch updated reviews
       const updatedReviewsResponse = await fetch(
         `/api/products/${product._id}/reviews`
       );
-      if (!updatedReviewsResponse.ok) {
-        throw new Error("Failed to fetch updated reviews");
+      if (updatedReviewsResponse.ok) {
+        const updatedReviews = await updatedReviewsResponse.json();
+        setReviews(updatedReviews);
       }
-
-      const updatedReviews = await updatedReviewsResponse.json();
-      setReviews(updatedReviews);
-
-      // Reset form and show success message
-      setReviewInput({ rating: 5, comment: "" });
-      setReviewFeedback({
-        type: "success",
-        message: "Review submitted successfully!",
-      });
-
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setReviewFeedback(null);
-      }, 3000);
     } catch (error) {
-      console.error("Error submitting review:", error);
-      setReviewFeedback({
-        type: "error",
-        message:
-          error instanceof Error ? error.message : "Failed to submit review",
-      });
-    } finally {
-      setIsSubmittingReview(false);
+      console.error("Error fetching updated reviews after deletion:", error);
     }
   };
 
@@ -376,9 +340,12 @@ export default function ProductDetailClient({
                         ))}
                       </div>
                     )}
+                    
                   </div>
                 </CardContent>
               </Card>
+{/* Size Chart below images */}
+                    <ProductSizeChart />
             </div>
           </div>
 
@@ -941,207 +908,13 @@ export default function ProductDetailClient({
         </div>
       </div>
 
-      {/* Reviews section - completely separate from product details */}
-      <div className="border-t border-gray-200 bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-          <h2 className="text-xl sm:text-2xl font-bold text-black mb-8">
-            Customer Reviews
-          </h2>
-
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Review summary */}
-            <div className="lg:col-span-1">
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="flex flex-col items-center">
-                    <div className="flex items-center mb-2">
-                      {[0, 1, 2, 3, 4].map((rating) => (
-                        <StarIcon
-                          key={rating}
-                          className={`h-6 w-6 ${
-                            product.averageRating > rating
-                              ? "text-yellow-400"
-                              : "text-gray-300"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <p className="text-lg font-semibold text-black">
-                      {product.averageRating?.toFixed(1) || "0.0"}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Based on {product.reviews?.length || 0} reviews
-                    </p>
-                  </div>
-
-                  {session ? (
-                    <Button
-                      onClick={() =>
-                        document
-                          .getElementById("review-form")
-                          ?.scrollIntoView({ behavior: "smooth" })
-                      }
-                      variant="default"
-                      size="sm"
-                      className="mt-6 w-full"
-                    >
-                      Write a Review
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => signIn()}
-                      variant="default"
-                      size="sm"
-                      className="mt-6 w-full"
-                    >
-                      Sign in to Review
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Review list */}
-            <div className="lg:col-span-3">
-              <div className="space-y-8">
-                {reviews.length > 0 ? (
-                  reviews.map((review, index) => (
-                    <Card key={index}>
-                      <CardContent className="pt-6">
-                        <div className="flex items-center gap-4 mb-2">
-                          <div className="flex items-center">
-                            {[0, 1, 2, 3, 4].map((rating) => (
-                              <StarIcon
-                                key={rating}
-                                className={`h-4 w-4 ${
-                                  review.rating > rating
-                                    ? "text-yellow-400"
-                                    : "text-gray-300"
-                                }`}
-                              />
-                            ))}
-                          </div>
-                          <p className="text-sm font-medium text-black">
-                            {review.userName || "Anonymous"}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            {new Date(review.createdAt).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <p className="text-sm text-gray-800">{review.comment}</p>
-                      </CardContent>
-                    </Card>
-                  ))
-                ) : (
-                  <Card>
-                    <CardContent className="pt-6 text-center py-8">
-                      <p className="text-gray-500">No reviews yet.</p>
-                      <p className="text-sm text-gray-400 mt-2">
-                        Be the first to review this product!
-                      </p>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
-
-              {/* Review form */}
-              {session && (
-                <Card id="review-form" className="mt-12">
-                  <CardHeader>
-                    <CardTitle className="text-lg">Write a Review</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {reviewFeedback && (
-                      <Alert className={`mb-4 ${
-                        reviewFeedback.type === "success" ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"
-                      }`}>
-                        <div className="flex">
-                          <div className="flex-shrink-0">
-                            {reviewFeedback.type === "success" ? (
-                              <CheckCircleIcon
-                                className="h-5 w-5 text-green-400"
-                                aria-hidden="true"
-                              />
-                            ) : (
-                              <XCircleIcon
-                                className="h-5 w-5 text-red-400"
-                                aria-hidden="true"
-                              />
-                            )}
-                          </div>
-                          <div className="ml-3">
-                            <AlertDescription
-                              className={`${
-                                reviewFeedback.type === "success"
-                                  ? "text-green-800"
-                                  : "text-red-800"
-                              }`}
-                            >
-                              {reviewFeedback.message}
-                            </AlertDescription>
-                          </div>
-                        </div>
-                      </Alert>
-                    )}
-                    <form onSubmit={handleSubmitReview} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">Rating</Label>
-                        <div className="flex items-center gap-2">
-                          {[1, 2, 3, 4, 5].map((rating) => (
-                            <Button
-                              key={rating}
-                              type="button"
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                setReviewInput((prev) => ({
-                                  ...prev,
-                                  rating,
-                                }))
-                              }
-                              className="p-1 rounded-full hover:bg-gray-100"
-                            >
-                              <StarIcon
-                                className={`h-5 w-5 ${
-                                  reviewInput.rating >= rating
-                                    ? "text-yellow-400"
-                                    : "text-gray-300"
-                                }`}
-                              />
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">Comment</Label>
-                        <Textarea
-                          value={reviewInput.comment}
-                          onChange={(e) =>
-                            setReviewInput((prev) => ({
-                              ...prev,
-                              comment: e.target.value,
-                            }))
-                          }
-                          rows={4}
-                          placeholder="Share your experience with this product..."
-                          required
-                        />
-                      </div>
-                      <Button
-                        type="submit"
-                        disabled={isSubmittingReview}
-                        className="w-full"
-                      >
-                        {isSubmittingReview ? "Submitting..." : "Submit Review"}
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Reviews section */}
+      <ProductReviews 
+        product={product}
+        reviews={reviews}
+        onReviewSubmit={handleReviewSubmit}
+        onReviewDelete={handleReviewDelete}
+      />
     </div>
   );
 }

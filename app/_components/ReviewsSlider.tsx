@@ -5,6 +5,7 @@ import { StarIcon } from "@heroicons/react/20/solid";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 import Image from "next/image";
+import ReviewMediaDisplay from "@/components/ReviewMediaDisplay";
 
 interface Review {
   id: string;
@@ -12,6 +13,10 @@ interface Review {
   userName: string;
   rating: number;
   comment: string;
+  media?: {
+    images: string[];
+    videos: string[];
+  };
   createdAt: string;
   updatedAt: string;
   productId: string;
@@ -298,6 +303,16 @@ export default function ReviewsSlider() {
                   <p className="text-xs sm:text-sm md:text-base text-gray-600 flex-grow line-clamp-4 sm:line-clamp-6">
                     {extractComment(review)}
                   </p>
+                  
+                  {/* Display review media if available */}
+                  {review.media && (review.media.images?.length > 0 || review.media.videos?.length > 0) && (
+                    <div className="mt-3">
+                      <ReviewMediaDisplay 
+                        media={review.media} 
+                        className="mt-2"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

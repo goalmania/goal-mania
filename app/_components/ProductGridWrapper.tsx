@@ -4,15 +4,7 @@ import { useWishlistStore } from "@/lib/store/wishlist";
 import { useCartStore } from "@/lib/store/cart";
 import { useRouter } from "next/navigation";
 import ProductGrid from "./ProductGrid";
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  team: string;
-}
+import { Product } from "@/lib/types/product";
 
 interface ProductGridWrapperProps {
   products: Product[];
@@ -36,7 +28,7 @@ export default function ProductGridWrapper({ products }: ProductGridWrapperProps
         name: product.name,
         price: product.price,
         image: product.image,
-        team: product.team,
+        team: product.team || "",
       });
     }
   };

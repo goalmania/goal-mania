@@ -31,6 +31,8 @@ async function getFeaturedProducts(): Promise<Product[]> {
       image: product.images?.[0] || "/images/image.png",
       category: product.category || "Uncategorized",
       team: product.title ? product.title.split(" ")[0] : "Unknown",
+      availablePatches: product.availablePatches || [],
+      isMysteryBox: product.isMysteryBox || false,
     }));
   } catch (error) {
     console.error("Error fetching featured products:", error);
