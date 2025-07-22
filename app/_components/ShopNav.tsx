@@ -38,7 +38,7 @@ export default function ShopNav() {
             <div className="flex space-x-6 lg:space-x-8">
               <Link
                 href="/shop"
-                className={`inline-flex items-center px-1 pt-1 text-sm font-medium ${
+                className={`inline-flex items-center justify-center px-1 pt-1 text-sm font-medium min-h-[32px] leading-none ${
                   pathname === "/shop"
                     ? "border-b-2 border-indigo-500 text-gray-900"
                     : "border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
@@ -53,7 +53,7 @@ export default function ShopNav() {
                     categoryToPath[category] ||
                     `/shop/${category.toLowerCase()}`
                   }
-                  className={`inline-flex items-center px-1 pt-1 text-sm font-medium ${
+                  className={`inline-flex items-center justify-center px-1 pt-1 text-sm font-medium min-h-[32px] leading-none ${
                     pathname === categoryToPath[category]
                       ? "border-b-2 border-indigo-500 text-gray-900"
                       : "border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"

@@ -81,6 +81,7 @@ export default function EditProductPage() {
       shippingPrice: 0,
       stockQuantity: 0,
       images: [],
+      videos: [],
       hasShorts: true,
       hasSocks: true,
       hasPlayerEdition: true,
@@ -251,6 +252,59 @@ export default function EditProductPage() {
     setValue("images", currentImages.filter(img => img !== imageUrl));
   };
 
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) return;
+
+    setUploadingImages(true);
+    const files = Array.from(e.target.files);
+    const uploadPromises = files.map(async (file) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
+
+      try {
+        const response = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL!, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) throw new Error("Upload failed");
+        const data = await response.json();
+        return data.secure_url;
+      } catch (error) {
+        console.error("Upload error:", error);
+        return null;
+      }
+    });
+
+    try {
+      const urls = (await Promise.all(uploadPromises)).filter(Boolean);
+      const currentVideos = getValues("videos") || [];
+      setValue("videos", [...currentVideos, ...urls]);
+      toast.success(`${urls.length} video(s) uploaded successfully`);
+    } catch (error) {
+      console.error("Error uploading videos:", error);
+      toast.error("Failed to upload videos");
+    } finally {
+      setUploadingImages(false);
+    }
+  };
+
+  const handleVideoUrlAdd = (videoUrl: string) => {
+    if (!videoUrl.trim()) return;
+
+    const currentVideos = getValues("videos") || [];
+    if (!currentVideos.includes(videoUrl)) {
+      setValue("videos", [...currentVideos, videoUrl]);
+      toast.success("Video URL added successfully");
+    }
+  };
+
+  const handleVideoRemove = (videoUrl: string) => {
+    const currentVideos = getValues("videos") || [];
+    setValue("videos", currentVideos.filter(video => video !== videoUrl));
+  };
+
   const handleSubmit = async (data: ProductFormData) => {
     setIsLoading(true);
     setError(null);
@@ -293,7 +347,7 @@ export default function EditProductPage() {
       basic: ["title", "description", "stockQuantity", "category", "isMysteryBox"],
       pricing: ["basePrice", "retroPrice", "shippingPrice"],
       options: ["hasShorts", "hasSocks", "hasPlayerEdition", "isRetro", "allowsNameOnShirt", "allowsNumberOnShirt", "availablePatches", "adultSizes", "kidsSizes", "isActive", "feature"],
-      images: ["images"],
+      images: ["images", "videos"],
     };
 
     const fields = fieldsToValidate[currentStep];
@@ -372,8 +426,8 @@ export default function EditProductPage() {
     },
     {
       id: "images" as FormStep,
-      title: "Images",
-      description: "Product photos",
+      title: "Images & Videos",
+      description: "Product photos & videos",
       isCompleted: getStepStatus("images"),
     },
   ];
@@ -1018,6 +1072,128 @@ export default function EditProductPage() {
                         </div>
                         {errors.images && (
                           <p className="text-xs text-red-500">{errors.images.message}</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              />
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Videos Step */}
+        {currentStep === "images" && (
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <span>Product Videos</span>
+              </CardTitle>
+              <CardDescription>
+                Upload and manage product video previews
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Video File Upload */}
+              <div className="space-y-2">
+                <Label>Upload Videos</Label>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    type="file"
+                    multiple
+                    accept="video/*"
+                    onChange={handleVideoUpload}
+                    disabled={uploadingImages}
+                    className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#f5963c] file:text-white hover:file:bg-[#e0852e]"
+                  />
+                  {uploadingImages && (
+                    <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#f5963c]"></div>
+                      <span>Uploading...</span>
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Supported formats: MP4, WebM, MOV. Maximum 5 videos per product.
+                </p>
+              </div>
+
+              <Separator />
+
+              {/* Manual Video URL */}
+              <Controller
+                name="videos"
+                control={control}
+                render={({ field }) => (
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="videoUrl">Add Video URL</Label>
+                      <div className="flex space-x-2">
+                        <Input
+                          type="text"
+                          id="videoUrl"
+                          placeholder="https://example.com/video.mp4"
+                          className="flex-1"
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              const input = e.target as HTMLInputElement;
+                              if (input.value.trim()) {
+                                handleVideoUrlAdd(input.value.trim());
+                                input.value = '';
+                              }
+                            }
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          onClick={(e) => {
+                            const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                            if (input.value.trim()) {
+                              handleVideoUrlAdd(input.value.trim());
+                              input.value = '';
+                            }
+                          }}
+                          size="sm"
+                        >
+                          Add
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Video Preview */}
+                    {field.value && field.value.length > 0 && (
+                      <div className="space-y-4">
+                        <Label>Video Preview ({field.value.length} videos)</Label>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          {field.value.map((url, index) => (
+                            <div
+                              key={index}
+                              className="relative aspect-video overflow-hidden rounded-lg border border-gray-200 group"
+                            >
+                              <video
+                                src={url}
+                                controls
+                                className="w-full h-full object-cover"
+                                preload="metadata"
+                              />
+                              <Button
+                                type="button"
+                                onClick={() => handleVideoRemove(url)}
+                                variant="destructive"
+                                size="sm"
+                                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0"
+                              >
+                                <XMarkIcon className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                        {errors.videos && (
+                          <p className="text-xs text-red-500">{errors.videos.message}</p>
                         )}
                       </div>
                     )}

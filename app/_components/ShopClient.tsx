@@ -174,16 +174,22 @@ export default async function ShopClient({ products }: { products: Product[] }) 
         </div>
         {/* Image section - full width on mobile, half width on desktop */}
         <div className="bg-gray-50 h-64 sm:h-72 md:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:h-full lg:w-1/2">
-          <div className="h-full w-full relative">
+          <Link href="/shop/retro" className="block h-full w-full relative group">
             <Image
-              src="/images/shop/shophome.jpg"
-              alt="Shop Hero"
+              src="/banners/banner_2.jpeg"
+              alt="Retro Collection"
               fill
-              className="object-cover"
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 1024px) 100vw, 50vw"
               priority
             />
-          </div>
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
+              <div className="text-white text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <p className="text-lg font-semibold">Retro Collection</p>
+                <p className="text-sm">Scopri le maglie vintage</p>
+              </div>
+            </div>
+          </Link>
         </div>
       </div>
 

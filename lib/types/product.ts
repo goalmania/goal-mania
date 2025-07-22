@@ -56,6 +56,7 @@ export interface IProduct {
   shippingPrice: number;
   stockQuantity: number;
   images: string[];
+  videos?: string[];
   adultSizes: AdultSize[];
   kidsSizes: KidSize[];
   category: Category;

@@ -78,6 +78,11 @@ export const ProductFormSchema = z.object({
     .min(1, "At least one image is required")
     .max(10, "Maximum 10 images allowed"),
   
+  // Videos
+  videos: z.array(z.string().url("Invalid video URL"))
+    .max(5, "Maximum 5 videos allowed")
+    .optional(),
+  
   // Optional fields
   slug: z.string().optional(),
   categories: z.array(z.string()).optional(),
@@ -120,6 +125,7 @@ export const OptionsSchema = z.object({
 
 export const ImagesSchema = z.object({
   images: ProductFormSchema.shape.images,
+  videos: ProductFormSchema.shape.videos,
 });
 
 // Step form schema for multi-step validation

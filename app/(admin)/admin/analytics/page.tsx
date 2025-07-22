@@ -81,6 +81,11 @@ interface AnalyticsData {
   }>;
   mysteryBoxOrders: number;
   conversionRate: number;
+  // Shopify-style metrics
+  averageOrderValue: number;
+  customerLifetimeValue: number;
+  repeatCustomerRate: number;
+  cartAbandonmentRate: number;
 }
 
 const COLORS = ["#0e1924", "#f5963c", "#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4"];
@@ -221,7 +226,11 @@ export default function AnalyticsPage() {
     topProducts,
     userRegistrationTrend,
     mysteryBoxOrders,
-    conversionRate
+    conversionRate,
+    averageOrderValue,
+    customerLifetimeValue,
+    repeatCustomerRate,
+    cartAbandonmentRate
   } = analyticsData;
 
   // Prepare data for charts
@@ -323,12 +332,13 @@ export default function AnalyticsPage() {
 
       {/* Charts Tabs */}
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="revenue">Revenue</TabsTrigger>
           <TabsTrigger value="products">Products</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="shopify">Shopify Metrics</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -792,6 +802,92 @@ export default function AnalyticsPage() {
                   <span className="text-sm font-medium">{formatCurrency(stats.users.value > 0 ? revenue.total / stats.users.value : 0)}</span>
         </div>
       </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="shopify" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Shopify-Style Business Metrics</CardTitle>
+              <CardDescription>Key performance indicators for e-commerce success</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="text-center p-6 bg-blue-50 rounded-lg">
+                  <div className="text-3xl font-bold text-blue-600 mb-2">
+                    {formatCurrency(averageOrderValue)}
+                  </div>
+                  <p className="text-sm text-blue-600 font-medium">Average Order Value</p>
+                  <p className="text-xs text-gray-500 mt-1">Per transaction</p>
+                </div>
+                
+                <div className="text-center p-6 bg-green-50 rounded-lg">
+                  <div className="text-3xl font-bold text-green-600 mb-2">
+                    {formatCurrency(customerLifetimeValue)}
+                  </div>
+                  <p className="text-sm text-green-600 font-medium">Customer Lifetime Value</p>
+                  <p className="text-xs text-gray-500 mt-1">Per customer</p>
+                </div>
+                
+                <div className="text-center p-6 bg-purple-50 rounded-lg">
+                  <div className="text-3xl font-bold text-purple-600 mb-2">
+                    {conversionRate.toFixed(1)}%
+                  </div>
+                  <p className="text-sm text-purple-600 font-medium">Conversion Rate</p>
+                  <p className="text-xs text-gray-500 mt-1">Users to customers</p>
+                </div>
+                
+                <div className="text-center p-6 bg-orange-50 rounded-lg">
+                  <div className="text-3xl font-bold text-orange-600 mb-2">
+                    {repeatCustomerRate.toFixed(1)}%
+                  </div>
+                  <p className="text-sm text-orange-600 font-medium">Repeat Customer Rate</p>
+                  <p className="text-xs text-gray-500 mt-1">Returning customers</p>
+                </div>
+              </div>
+              
+              <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Revenue Metrics</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Total Revenue</span>
+                      <span className="font-semibold">{formatCurrency(revenue.total)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Average Order Value</span>
+                      <span className="font-semibold">{formatCurrency(averageOrderValue)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Customer Lifetime Value</span>
+                      <span className="font-semibold">{formatCurrency(customerLifetimeValue)}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Customer Metrics</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Total Customers</span>
+                      <span className="font-semibold">{stats.users.value.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Conversion Rate</span>
+                      <span className="font-semibold">{conversionRate.toFixed(1)}%</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Repeat Customer Rate</span>
+                      <span className="font-semibold">{repeatCustomerRate.toFixed(1)}%</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

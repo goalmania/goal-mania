@@ -108,6 +108,16 @@ export default function RootLayout({
     `,
           }}
         />
+        
+        {/* Google AdSense */}
+        {process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID && (
+          <Script
+            id="google-adsense"
+            strategy="afterInteractive"
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID}`}
+            crossOrigin="anonymous"
+          />
+        )}
 
         <Providers>
           <div className="min-h-screen flex flex-col">

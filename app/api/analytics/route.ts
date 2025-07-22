@@ -178,6 +178,13 @@ export async function GET() {
     // Calculate conversion rate (orders / users)
     const conversionRate = totalUsers > 0 ? (totalOrders / totalUsers) * 100 : 0;
 
+    // Calculate additional Shopify-style metrics
+    const averageOrderValue = revenueData[0]?.averageOrderValue || 0;
+    const totalRevenue = revenueData[0]?.totalRevenue || 0;
+    const customerLifetimeValue = totalUsers > 0 ? totalRevenue / totalUsers : 0;
+    const repeatCustomerRate = 0; // This would need additional tracking
+    const cartAbandonmentRate = 0; // This would need additional tracking
+
     return NextResponse.json({
       stats: {
         users: {
@@ -215,6 +222,11 @@ export async function GET() {
       topProducts,
       userRegistrationTrend,
       conversionRate,
+      // Shopify-style metrics
+      averageOrderValue,
+      customerLifetimeValue,
+      repeatCustomerRate,
+      cartAbandonmentRate,
     });
   } catch (error) {
     console.error("Error fetching analytics data:", error);

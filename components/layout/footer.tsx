@@ -58,9 +58,8 @@ export function Footer() {
           </div>
           <h2 className="text-3xl font-bold tracking-wide mb-2">Goal<span className="text-[#f5963c]">Mania</span></h2>
           <p className="text-center max-w-md text-sm text-white/80 mb-2">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu auctor leo, vitae dapibus sapien. Etiam vehicula lacus ac suscipit accumsan.
+            Goalmania è il punto di riferimento per chi vive di calcio. Ogni giorno raccontiamo storie, notizie e curiosità dal mondo del pallone. In più, ti offriamo le maglie più amate — attuali e retrò — a partire da 30€, con spedizione gratuita.
           </p>
-          <button className="mt-2 px-4 py-2 bg-[#f5963c] text-[#0e1924] font-semibold rounded hover:bg-[#ffb366] transition">Read more</button>
         </div>
         {/* Navigation */}
         <nav className="grid grid-cols-2 gap-x-4 gap-y-3 sm:flex sm:justify-center sm:space-x-12 mb-6" aria-label="Footer">
@@ -82,7 +81,7 @@ export function Footer() {
           ))}
         </div>
         <p className="text-center text-xs leading-5 text-white/60 border-t border-white/20 pt-4 w-full">
-          &copy; {new Date().getFullYear()} Goal Mania. All rights reserved.
+          © 2025 Goalmania. Tutti i diritti riservati. La tua dose quotidiana di calcio ⚽ | Maglie da calcio da 30€ con spedizione gratuita
         </p>
         <div className="flex flex-wrap justify-center gap-4 mt-2 text-xs text-white/60">
           <Link href="/terms">Terms & Conditions</Link>

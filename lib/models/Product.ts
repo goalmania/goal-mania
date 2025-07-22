@@ -70,6 +70,10 @@ const productSchema = new mongoose.Schema(
         message: "At least one image is required",
       },
     },
+    videos: {
+      type: [String],
+      default: [],
+    },
     isRetro: {
       type: Boolean,
       default: false,

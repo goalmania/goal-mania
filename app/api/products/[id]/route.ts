@@ -27,6 +27,7 @@ const productUpdateSchema = z.object({
     .min(0, "Stock quantity cannot be negative")
     .default(0),
   images: z.array(z.string()).min(1, "At least one image is required"),
+  videos: z.array(z.string()).optional(),
   hasShorts: z.boolean().default(true).optional(),
   hasSocks: z.boolean().default(true).optional(),
   hasPlayerEdition: z.boolean().default(true).optional(),

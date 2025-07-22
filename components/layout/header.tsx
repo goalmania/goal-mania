@@ -168,12 +168,12 @@ export function Header() {
               </div>
               
               {/* Desktop Navigation */}
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-2 md:space-x-4">
+              <div className="hidden sm:ml-6 sm:flex sm:space-x-2 md:space-x-4 items-center">
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-xs md:text-sm font-medium text-white hover:border-accent transition-colors duration-150"
+                    className="inline-flex items-center justify-center border-b-2 border-transparent px-1 pt-1 text-xs md:text-sm font-medium text-white hover:border-accent transition-colors duration-150 min-h-[32px] leading-none whitespace-nowrap"
                   >
                     {t(item.name)}
                   </Link>
@@ -184,9 +184,9 @@ export function Header() {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-xs md:text-sm font-medium text-white hover:border-white transition-colors duration-150 h-auto p-0"
+                      className="inline-flex items-center justify-center border-b-2 border-transparent px-1 pt-1 text-xs md:text-sm font-medium text-white hover:border-white transition-colors duration-150 h-auto p-0 min-h-[32px] leading-none"
                     >
-                      <span>Camp. Esteri</span>
+                      <span>{language === "en" ? "International" : "Camp. Esteri"}</span>
                       <ChevronDownIcon
                         className={`ml-1 h-3 w-3 transition-transform ${
                           internationalOpen ? "rotate-180" : ""
@@ -441,7 +441,7 @@ function MobileMenu({
             <Link
               key={item.name}
               href={item.href}
-              className="block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
+              className="block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700 leading-none"
             >
               {t(item.name)}
             </Link>

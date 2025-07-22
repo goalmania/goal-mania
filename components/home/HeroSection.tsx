@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { AuroraText } from "../magicui/aurora-text";
 import clsx from "clsx";
+import Image from "next/image";
 
 export default function HeroSection() {
   return (
     <section className="relative h-screen bg-gradient-to-br from-[#0e1924] via-[#0e1924] to-[#1a2a3a] text-white overflow-hidden min-h-[60vh] flex items-center justify-center">
-      <div className="absolute inset-0 bg-[url('/images/shop/shophome.jpg')] bg-cover bg-center opacity-20"></div>
+      <div className="absolute inset-0 bg-[url('/banners/banner_1.jpeg')] bg-cover bg-center opacity-20"></div>
       <div className="absolute inset-0 animate-gradient-move bg-gradient-to-tr from-[#0e1924]/80 via-[#f5963c]/30 to-[#0e1924]/80 opacity-60 mix-blend-lighten pointer-events-none" />
+      
       <div className="relative z-10 w-full flex justify-center">
         <div className="max-w-3xl w-full text-center flex flex-col items-center px-4 py-12 sm:py-16 md:py-20 lg:py-24 xl:py-28 bg-transparent">
           <h1 className="mb-4 sm:mb-6">
