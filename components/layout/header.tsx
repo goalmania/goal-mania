@@ -109,7 +109,7 @@ export function Header() {
   useEffect(() => {
     setMounted(true);
 
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && session) {
       // Update cart count
       const cartCount = cart.getItemCount();
       setCartItemCount(cartCount);
@@ -117,8 +117,11 @@ export function Header() {
       // Update wishlist count
       const wishlistCount = wishlist.items.length;
       setWishlistItemCount(wishlistCount);
+    } else {
+      setCartItemCount(0);
+      setWishlistItemCount(0);
     }
-  }, [cart, wishlist]);
+  }, [cart, wishlist, session]);
 
   const toggleLanguage = () => {
     setLanguage(language === "en" ? "it" : "en");
@@ -239,7 +242,7 @@ export function Header() {
                     aria-label="Wishlist"
                   >
                     <HeartIcon className="h-5 w-5 sm:h-6 sm:w-6" />
-                    {wishlistItemCount > 0 && (
+                    {session && wishlistItemCount > 0 && (
                       <Badge 
                         variant="destructive" 
                         className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs"
@@ -259,7 +262,7 @@ export function Header() {
                     aria-label="Cart"
                   >
                     <ShoppingCartIcon className="h-5 w-5 sm:h-6 sm:w-6" />
-                    {cartItemCount > 0 && (
+                    {session && cartItemCount > 0 && (
                       <Badge 
                         variant="destructive" 
                         className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs"
@@ -312,18 +315,18 @@ export function Header() {
                           </Link>
                         </DropdownMenuItem>
                         {session.user.role === "admin" && (
-                                                   <DropdownMenuItem asChild>
-                           <Link href="/admin" className="flex items-center">
-                             <Cog6ToothIcon className="mr-2 h-4 w-4" />
-                             {t("adminPanel")}
-                           </Link>
-                         </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/admin" className="flex items-center">
+                              <Cog6ToothIcon className="mr-2 h-4 w-4" />
+                              {t("adminPanel")}
+                            </Link>
+                          </DropdownMenuItem>
                         )}
                         <DropdownMenuSeparator />
-                                                 <DropdownMenuItem onClick={() => signOut()}>
-                           <ArrowRightOnRectangleIcon className="mr-2 h-4 w-4" />
-                           {t("signOut")}
-                         </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => signOut()}>
+                          <ArrowRightOnRectangleIcon className="mr-2 h-4 w-4" />
+                          {t("signOut")}
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   ) : (

@@ -2,22 +2,30 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
+const PRIVATE_ROUTES = [
+  "/wishlist",
+  "/cart",
+  "/profile",
+  "/admin"
+];
+
 export async function middleware(request: NextRequest) {
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
+  const pathname = request.nextUrl.pathname;
+  const isPrivateRoute = PRIVATE_ROUTES.some((route) => pathname === route || pathname.startsWith(route + "/"));
+  const isAdminRoute = pathname.startsWith("/admin");
 
-  if (isAdminRoute) {
+  if (isPrivateRoute) {
     if (!token) {
-      return NextResponse.redirect(new URL("/auth/signin", request.url));
+      const callbackUrl = encodeURIComponent(request.nextUrl.pathname + request.nextUrl.search);
+      const signinUrl = new URL(`/auth/signin?callbackUrl=${callbackUrl}&reason=auth-required`, request.url);
+      return NextResponse.redirect(signinUrl);
     }
-
-    // Allow access to admin routes if the user is an admin or if role is undefined
-    // This handles cases where the token exists but might not have a role property yet
-    if (token.role !== "admin" && token.role !== undefined) {
+    if (isAdminRoute && token.role !== "admin") {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
@@ -26,5 +34,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/wishlist/:path*", "/cart/:path*", "/profile/:path*", "/admin/:path*"],
 };
