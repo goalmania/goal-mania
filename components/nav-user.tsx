@@ -1,12 +1,8 @@
 "use client"
 
 import {
-  IconCreditCard,
   IconDotsVertical,
   IconLogout,
-  IconNotification,
-  IconUserCircle,
-  IconLanguage,
 } from "@tabler/icons-react"
 
 import {
@@ -17,7 +13,6 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -30,8 +25,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { signOut } from "next-auth/react"
-import { useLanguage } from "@/lib/utils/language"
-import { useI18n } from "@/lib/hooks/useI18n"
 
 export function NavUser({
   user,
@@ -43,29 +36,7 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
-  const { language, toggleLanguage, isHydrated } = useLanguage()
-  const { t, i18n } = useI18n()
 
-  // Debug: Log current state
-  console.log('🎯 NavUser render - language:', language, 'hydrated:', isHydrated, 'translation:', t('auth.signOut'))
-  console.log('🎯 NavUser i18n context:', {
-    i18nLanguage: i18n.language,
-    i18nReady: i18n.isInitialized,
-    storeLanguage: language
-  })
-
-  // Don't render until hydrated to avoid hydration mismatch
-  if (!isHydrated) {
-    console.log('⏳ NavUser: Waiting for hydration...')
-    return <div>Loading...</div>
-  }
-
-  const handleLanguageToggle = () => {
-    console.log('🔄 NavUser: Language toggle clicked, current language:', language)
-    console.log('🔄 NavUser: i18n language before toggle:', i18n.language)
-    toggleLanguage()
-    console.log('🔄 NavUser: toggleLanguage called')
-  }
 
   return (
     <div>
@@ -111,18 +82,9 @@ export function NavUser({
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem onClick={handleLanguageToggle}>
-                  <IconLanguage />
-                  <span className="ml-2">
-                    {language === "en" ? t('language.switchToItalian') : t('language.switchToEnglish')}
-                  </span>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => signOut()}>
                 <IconLogout />
-                <span className="ml-2">{t('auth.signOut')}</span>
+                <span className="ml-2">Sign out</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
