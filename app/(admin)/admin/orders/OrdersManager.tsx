@@ -380,7 +380,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
     }
   };
 
-  const handleSendShippingNotification = async () => {
+  const handleSendOrderNotification = async () => {
     if (
       !selectedOrder ||
       !selectedOrder.trackingCode ||
@@ -410,13 +410,13 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
       }
 
       const data = await response.json();
-      toast.success(`Shipping notification sent to ${data.sentTo}`);
+      toast.success(`Order notification sent to ${data.sentTo}`);
     } catch (error) {
       console.error("Error sending notification:", error);
       toast.error(
         error instanceof Error
           ? error.message
-          : "Failed to send shipping notification"
+          : "Failed to send order notification"
       );
     } finally {
       setIsSendingNotification(false);
@@ -931,7 +931,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
               Print Invoice
             </DropdownMenuItem>
             {row.original.status === "shipped" && row.original.trackingCode && (
-              <DropdownMenuItem onClick={() => handleSendShippingNotification()}>
+              <DropdownMenuItem onClick={() => handleSendOrderNotification()}>
                 <EnvelopeIcon className="mr-2 h-4 w-4" />
                 Send Notification
               </DropdownMenuItem>
@@ -1421,13 +1421,13 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                           </p>
                           {selectedOrder.status === "shipped" && (
                           <Button
-                              onClick={handleSendShippingNotification}
+                              onClick={handleSendOrderNotification}
                               disabled={isSendingNotification}
                             variant="outline"
                             size="sm"
                             className="mt-2"
                           >
-                            {isSendingNotification ? "Sending..." : "Send Shipping Notification"}
+                            {isSendingNotification ? "Sending..." : "Send Order Notification"}
                           </Button>
                           )}
                         </div>

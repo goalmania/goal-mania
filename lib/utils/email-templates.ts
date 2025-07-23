@@ -375,4 +375,103 @@ export async function orderStatusUpdateTemplate({
     text: texts[language],
     html
   };
+}
+
+export async function contactFormSubmissionTemplate({ 
+  firstName, 
+  lastName, 
+  email, 
+  subject, 
+  message, 
+  language = 'it' 
+}: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  subject: string;
+  message: string;
+  language?: 'it' | 'en';
+}) {
+  const template = loadTemplate('contact-form-submission', language);
+  const html = replaceVariables(template, {
+    firstName,
+    lastName,
+    email,
+    subject,
+    message,
+    language: language === 'en' ? 'English' : 'Italiano',
+    timestamp: new Date().toLocaleString(language === 'en' ? 'en-US' : 'it-IT', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZoneName: 'short'
+    })
+  });
+
+  const subjects = {
+    it: `📧 Nuova Richiesta di Contatto - ${subject}`,
+    en: `📧 New Contact Form Submission - ${subject}`
+  };
+
+  const texts = {
+    it: `Nuova richiesta di contatto dal sito web Goal Mania:\n\nNome: ${firstName} ${lastName}\nEmail: ${email}\nOggetto: ${subject}\nLingua: Italiano\n\nMessaggio:\n${message}\n\n---\nQuesto messaggio è stato inviato dal modulo di contatto di Goal Mania.`,
+    en: `New contact form submission from Goal Mania website:\n\nName: ${firstName} ${lastName}\nEmail: ${email}\nSubject: ${subject}\nLanguage: English\n\nMessage:\n${message}\n\n---\nThis message was sent from the Goal Mania contact form.`
+  };
+
+  return {
+    subject: subjects[language],
+    text: texts[language],
+    html
+  };
+}
+
+export async function contactAutoReplyTemplate({ 
+  firstName, 
+  lastName, 
+  email, 
+  subject, 
+  message, 
+  language = 'it' 
+}: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  subject: string;
+  message: string;
+  language?: 'it' | 'en';
+}) {
+  const template = loadTemplate('contact-auto-reply', language);
+  const html = replaceVariables(template, {
+    firstName,
+    lastName,
+    email,
+    subject,
+    message,
+    timestamp: new Date().toLocaleString(language === 'en' ? 'en-US' : 'it-IT', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZoneName: 'short'
+    })
+  });
+
+  const subjects = {
+    it: "Grazie per aver contattato Goal Mania",
+    en: "Thank you for contacting Goal Mania"
+  };
+
+  const texts = {
+    it: `Gentile ${firstName} ${lastName},\n\nGrazie per aver contattato Goal Mania! Abbiamo ricevuto il tuo messaggio e ti risponderemo entro 24 ore.\n\nDettagli del tuo messaggio:\nOggetto: ${subject}\nMessaggio: ${message}\n\nNel frattempo, puoi:\n- Consultare la nostra sezione FAQ per risposte rapide\n- Seguirci sui social media per aggiornamenti\n- Sfogliare la nostra ultima collezione di maglie\n\nCordiali saluti,\nIl Team di Goal Mania\n\n---\nQuesta è una risposta automatica. Non rispondere a questa email.`,
+    en: `Dear ${firstName} ${lastName},\n\nThank you for contacting Goal Mania! We have received your message and will get back to you within 24 hours.\n\nYour message details:\nSubject: ${subject}\nMessage: ${message}\n\nIn the meantime, you can:\n- Check our FAQ section for quick answers\n- Follow us on social media for updates\n- Browse our latest jersey collection\n\nBest regards,\nThe Goal Mania Team\n\n---\nThis is an automated response. Please do not reply to this email.`
+  };
+
+  return {
+    subject: subjects[language],
+    text: texts[language],
+    html
+  };
 } 

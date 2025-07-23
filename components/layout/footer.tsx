@@ -4,11 +4,11 @@ import Image from "next/image";
 const navigation = {
   main: [
     { name: "About", href: "/about" },
-    { name: "Blog", href: "/blog" },
+    { name: "News", href: "/news" },
     { name: "Contact", href: "/contact" },
     { name: "Terms", href: "/terms" },
     { name: "Privacy", href: "/privacy" },
-    { name: "Shipping", href: "/shipping" },
+    { name: "Orders", href: "/account/orders" },
   ],
   social: [
     {
