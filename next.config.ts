@@ -8,6 +8,11 @@ const withAutoCert = autoCert({
 });
 
 const nextConfig: NextConfig = {
+  i18n: {
+    defaultLocale: 'it',
+    locales: ['en', 'it'],
+    localeDetection: false,
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },

@@ -5,8 +5,11 @@ import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { AuroraText } from "../magicui/aurora-text";
 import clsx from "clsx";
 import Image from "next/image";
+import { useI18n } from "@/lib/hooks/useI18n";
 
 export default function HeroSection() {
+  const { t } = useI18n();
+  
   return (
     <section className="relative h-screen bg-gradient-to-br from-[#0e1924] via-[#0e1924] to-[#1a2a3a] text-white overflow-hidden min-h-[60vh] flex items-center justify-center">
       <div className="absolute inset-0 bg-[url('/banners/banner_1.jpeg')] bg-cover bg-center opacity-20"></div>
@@ -19,13 +22,12 @@ export default function HeroSection() {
               {/* Minimal aurora effect, just for accent */}
               <span className="inline-block align-middle">
                 <AuroraText colors={["#f5963c", "#ff7433"]} className="[&>*]:!bg-clip-text [&>*]:!text-transparent">
-                  Maglie attuali
+                  {t('hero.title')}
                 </AuroraText>
               </span>
-              <span className="block mt-1 text-white">e retrò a partire da 30€</span>
             </span>
             <span className="block mt-4 text-base md:text-xl lg:text-2xl font-medium text-white/80">
-              Spedizione sempre gratuita, qualità garantita.
+              {t('hero.subtitle')}
             </span>
           </h1>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center px-4 mt-2">
@@ -38,7 +40,7 @@ export default function HeroSection() {
               )}
             >
               <Link href="/shop">
-                Scopri le Maglie
+                {t('hero.cta')}
                 <ChevronRightIcon className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
               </Link>
             </Button>
@@ -48,7 +50,7 @@ export default function HeroSection() {
               size="lg"
               className="border-white text-primary hover:bg-white hover:text-[#0e1924] px-6 sm:px-8 md:px-10 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg transition-colors duration-300"
             >
-              <Link href="/shop/serieA">Serie A</Link>
+              <Link href="/shop/serieA">{t('navigation.serieA')}</Link>
             </Button>
           </div>
         </div>

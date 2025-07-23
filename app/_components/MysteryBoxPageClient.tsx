@@ -6,6 +6,7 @@ import Image from "next/image";
 import { ShoppingCartIcon, SparklesIcon, GiftIcon } from "@heroicons/react/24/outline";
 import { useCartStore } from "@/lib/store/cart";
 import { Product } from "@/lib/types/home";
+import { useI18n } from "@/lib/hooks/useI18n";
 
 interface MysteryBoxPageClientProps {
   products: Product[];
@@ -14,6 +15,7 @@ interface MysteryBoxPageClientProps {
 export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientProps) {
   const { addItem } = useCartStore();
   const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({});
+  const { t } = useI18n();
 
   const handleAddToCart = async (product: Product) => {
     setLoadingStates(prev => ({ ...prev, [product.id]: true }));
@@ -64,26 +66,25 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
             </div>
             
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-6">
-              Scatola Misteriosa
+              {t('mysteryBox.title')}
             </h1>
             
             <p className="mx-auto max-w-3xl text-xl sm:text-2xl text-purple-100 mb-8">
-              Scopri la magia delle nostre scatole misteriose! Ogni scatola contiene una maglia a sorpresa 
-              delle migliori squadre italiane e internazionali.
+              {t('mysteryBox.description')}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
                 <div className="text-2xl font-bold">🎁</div>
-                <div className="text-sm">Maglia a Sorpresa</div>
+                <div className="text-sm">{t('mysteryBox.features.surprise')}</div>
               </div>
               <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
                 <div className="text-2xl font-bold">⚽</div>
-                <div className="text-sm">Squadre Top</div>
+                <div className="text-sm">{t('mysteryBox.features.teams')}</div>
               </div>
               <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
                 <div className="text-2xl font-bold">🚚</div>
-                <div className="text-sm">Spedizione Gratuita</div>
+                <div className="text-sm">{t('mysteryBox.features.shipping')}</div>
               </div>
             </div>
           </div>
@@ -95,11 +96,10 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Le Nostre Scatole Misteriose
+              {t('mysteryBox.subtitle')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Scegli la tua scatola misteriosa e preparati per una sorpresa emozionante! 
-              Ogni scatola è unica e contiene maglie di qualità premium.
+              {t('mysteryBox.subtitle')}
             </p>
           </div>
 
@@ -107,10 +107,10 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
             <div className="text-center py-12">
               <GiftIcon className="mx-auto h-16 w-16 text-gray-400 mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Nessuna Scatola Misteriosa Disponibile
+                {t('mysteryBox.empty')}
               </h3>
               <p className="text-gray-600">
-                Torna presto per scoprire le nostre nuove scatole misteriose!
+                {t('mysteryBox.emptyDescription')}
               </p>
             </div>
           ) : (
@@ -145,8 +145,7 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
                     </h3>
                     
                     <p className="text-gray-600 mb-4">
-                      Una scatola misteriosa piena di sorprese! Contiene una maglia a sorpresa 
-                      delle migliori squadre italiane e internazionali.
+                      {t('mysteryBox.product.description')}
                     </p>
 
                     <div className="flex items-center justify-between mb-4">
@@ -154,7 +153,7 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
                         €{product.price.toFixed(2)}
                       </div>
                       <div className="text-sm text-gray-500">
-                        Spedizione gratuita
+                        {t('mysteryBox.product.freeShipping')}
                       </div>
                     </div>
 
@@ -162,15 +161,15 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
                     <div className="space-y-2 mb-6">
                       <div className="flex items-center text-sm text-gray-600">
                         <SparklesIcon className="h-4 w-4 text-purple-500 mr-2" />
-                        Maglia a sorpresa di qualità premium
+                        {t('mysteryBox.product.features.premium')}
                       </div>
                       <div className="flex items-center text-sm text-gray-600">
                         <SparklesIcon className="h-4 w-4 text-purple-500 mr-2" />
-                        Squadre italiane e internazionali
+                        {t('mysteryBox.product.features.teams')}
                       </div>
                       <div className="flex items-center text-sm text-gray-600">
                         <SparklesIcon className="h-4 w-4 text-purple-500 mr-2" />
-                        Possibilità di escludere fino a 5 maglie
+                        {t('mysteryBox.product.features.exclude')}
                       </div>
                     </div>
 
@@ -186,7 +185,7 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
                         ) : (
                           <>
                             <ShoppingCartIcon className="h-5 w-5" />
-                            Aggiungi al Carrello
+                            {t('mysteryBox.product.addToCart')}
                           </>
                         )}
                       </button>
@@ -195,7 +194,7 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
                         href={`/products/${product.id}`}
                         className="block w-full text-center text-purple-600 hover:text-purple-700 font-medium py-2 px-4 border border-purple-600 rounded-lg hover:bg-purple-50 transition-colors duration-200"
                       >
-                        Scopri di Più
+                        {t('mysteryBox.product.learnMore')}
                       </Link>
                     </div>
                   </div>
@@ -211,10 +210,10 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Come Funziona
+              {t('mysteryBox.process.title')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Il processo è semplice e divertente! Ecco come funziona la nostra scatola misteriosa.
+              {t('mysteryBox.process.description')}
             </p>
           </div>
 
@@ -223,9 +222,9 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
               <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-purple-600">1</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Scegli la Scatola</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">{t('mysteryBox.steps.step1.title')}</h3>
               <p className="text-gray-600">
-                Seleziona la scatola misteriosa che preferisci e aggiungila al carrello.
+                {t('mysteryBox.steps.step1.description')}
               </p>
             </div>
 
@@ -233,9 +232,9 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
               <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-purple-600">2</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Escludi le Maglie</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">{t('mysteryBox.steps.step2.title')}</h3>
               <p className="text-gray-600">
-                Puoi escludere fino a 5 maglie che non vuoi ricevere nella tua scatola.
+                {t('mysteryBox.steps.step2.description')}
               </p>
             </div>
 
@@ -243,9 +242,9 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
               <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-purple-600">3</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Ricevi la Sorpresa</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">{t('mysteryBox.steps.step3.title')}</h3>
               <p className="text-gray-600">
-                Ricevi la tua scatola misteriosa con una maglia a sorpresa di qualità premium!
+                {t('mysteryBox.steps.step3.description')}
               </p>
             </div>
           </div>
@@ -256,16 +255,16 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
       <div className="bg-gradient-to-r from-purple-600 to-pink-600 py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Pronto per l'Avventura?
+            {t('mysteryBox.cta.title')}
           </h2>
           <p className="text-xl text-purple-100 mb-8 max-w-2xl mx-auto">
-            Unisciti a migliaia di clienti che hanno già scoperto la magia delle nostre scatole misteriose!
+            {t('mysteryBox.cta.description')}
           </p>
           <Link
             href="/shop"
             className="inline-flex items-center bg-white text-purple-600 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors duration-200"
           >
-            Esplora Tutti i Prodotti
+            {t('mysteryBox.cta.button')}
           </Link>
         </div>
       </div>

@@ -14,7 +14,21 @@
     "signUp": "Sign Up",
     "signOut": "Sign Out",
     "myProfile": "My Profile",
-    "myOrders": "My Orders"
+    "myOrders": "My Orders",
+    "email": "Email address",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot password?",
+    "pleaseSignIn": "Please sign in to continue.",
+    "orContinueWith": "Or continue with",
+    "continueWithGoogle": "Continue with Google",
+    "notAMember": "Not a member?",
+    "signUpNow": "Sign up now"
+  },
+  "language": {
+    "switchToItalian": "Switch to Italian",
+    "switchToEnglish": "Switch to English"
   },
   "shop": {
     "hero": {
@@ -111,5 +125,132 @@
   "profile": "Profile",
   "orders": "Orders",
   "adminPanel": "Admin Panel",
-  "signOut": "Sign Out"
+  "signOut": "Sign Out",
+  "hero": {
+    "title": "Current and retro jerseys from €30",
+    "subtitle": "Always free shipping, guaranteed quality.",
+    "cta": "Discover jerseys"
+  },
+  "home": {
+    "featuredProducts": "Featured Products",
+    "viewAllProducts": "View All Products",
+    "latestNews": "Latest News",
+    "readAllNews": "Read All News",
+    "readMore": "Read more →",
+    "favoriteTeams": "Your Favorite Teams",
+    "collection": "Collection",
+    "mysteryBox": {
+      "title": "🎁 Mystery Box",
+      "description": "Discover the surprise! Each box contains exclusive jerseys with guaranteed value higher than the price.",
+      "surpriseContent": "Surprise content • Guaranteed value higher than price",
+      "discover": "Discover →"
+    },
+    "news": {
+      "news": "News",
+      "transfer": "Transfer",
+      "serieA": "Serie A",
+      "international": "International"
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "Sorry, we couldn't find the page you're looking for.",
+    "goHome": "Go back home",
+    "contactSupport": "Contact support"
+  },
+  "apiConfig": {
+    "checking": "Checking API configuration...",
+    "error": "Error during API verification",
+    "noApiKey": "API Football: API key not configured",
+    "invalidApiKey": "API Football: Invalid API key",
+    "configurationIssues": "API Football: Configuration issues",
+    "moreDetails": "More details",
+    "lessDetails": "Less details",
+    "currentStatus": "Current status",
+    "apiKeyConfigured": "API key configured",
+    "apiKeyValid": "API key valid",
+    "toResolve": "To resolve",
+    "addVariable": "Add or update the variable",
+    "inFile": "in the file",
+    "forServerSide": "for server-side use and",
+    "forClientSide": "for client-side use.",
+    "useHeader": "Make sure to use the header",
+    "inApiRequests": "in API requests",
+    "getApiKey": "Get an API key from",
+    "restartServer": "Restart the development server after configuring the API key",
+    "unknownError": "Unknown error occurred"
+  },
+  "orders": {
+    "cancelOrder": "Cancel Order",
+    "cancelSuccess": "Order cancelled successfully",
+    "cancelFailed": "Failed to cancel order",
+    "cancelConfirmation": "Are you sure you want to cancel this order? This action cannot be undone.",
+    "confirmCancel": "Yes, Cancel Order",
+    "keepOrder": "No, Keep Order"
+  },
+  "league": {
+    "upcomingMatches": "Upcoming Matches",
+    "noDataAvailable": "No data available",
+    "loadError": "Unable to load upcoming matches for this league. Please try again later or contact the administrator if the problem persists.",
+    "live": "LIVE",
+    "finished": "FINISHED",
+    "unknownRound": "Unknown Round"
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "processing": "Processing..."
+  },
+  "guarantees": {
+    "title": "Why Choose GoalMania",
+    "freeShipping": {
+      "title": "Free Shipping",
+      "description": "On all orders over €50"
+    },
+    "quality": {
+      "title": "Quality Guarantee",
+      "description": "100% authentic or refund"
+    },
+    "returns": {
+      "title": "Easy Returns",
+      "description": "30 days to change your mind"
+    },
+    "rating": {
+      "title": "4.8/5 Rating",
+      "description": "Over 1200 happy customers"
+    }
+  },
+  "footer": {
+    "description": "Goalmania is the reference point for those who live football. Every day we tell stories, news and curiosities from the world of football. Plus, we offer you the most loved jerseys — current and retro — starting from €30, with free shipping.",
+    "copyright": "© 2025 Goalmania. All rights reserved. Your daily dose of football ⚽ | Football jerseys from €30 with free shipping"
+  },
+  "admin": {
+    "dashboard": "Admin Dashboard",
+    "welcome": "Welcome to your admin dashboard. Here you can manage products, orders, users, and view analytics.",
+    "failedToLoad": "Failed to load analytics data. Please try again.",
+    "overview": "Overview",
+    "recentOrders": "Recent Orders",
+    "analytics": "Analytics",
+    "revenueTrend": "Revenue Trend (Last 7 Days)",
+    "dailyRevenueAndOrders": "Daily revenue and order count",
+    "orderStatusDistribution": "Order Status Distribution",
+    "currentOrderStatusBreakdown": "Current order status breakdown",
+    "noRecentData": "No recent data available",
+    "averageOrderValue": "Average Order Value",
+    "perOrder": "Per order",
+    "mysteryBoxOrders": "Mystery Box Orders",
+    "specialOrders": "Special orders",
+    "publishedArticles": "Published Articles",
+    "contentPieces": "Content pieces",
+    "latestOrdersFromStore": "Latest 5 orders from your store",
+    "noOrdersFound": "No orders found",
+    "productCategories": "Product Categories",
+    "distributionByCategory": "Distribution by category",
+    "quickActions": "Quick Actions",
+    "commonAdminTasks": "Common admin tasks",
+    "manageProducts": "Manage Products",
+    "viewAllOrders": "View All Orders",
+    "manageUsers": "Manage Users",
+    "createArticle": "Create Article"
+  }
 }

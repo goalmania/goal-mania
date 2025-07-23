@@ -1,3 +1,4 @@
+"use client";
 import {
   Carousel,
   CarouselContent,
@@ -6,6 +7,7 @@ import {
   CarouselNext,
 } from "@/components/ui/carousel";
 import TeamCard from "./TeamCard";
+import { useI18n } from "@/lib/hooks/useI18n";
 
 // Team data for carousel
 const teams = [
@@ -92,11 +94,13 @@ const teams = [
 ];
 
 export default function TeamCarousel() {
+  const { t } = useI18n();
+
   return (
     <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-6 sm:mb-8 md:mb-10">
-          Le Tue Squadre Preferite
+          {t('home.favoriteTeams')}
         </h2>
         <div className="relative">
           <Carousel

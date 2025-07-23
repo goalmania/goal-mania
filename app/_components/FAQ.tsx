@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { useI18n } from "@/lib/hooks/useI18n";
 
 const faqs = [
   {
@@ -38,11 +39,12 @@ const faqs = [
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const { t } = useI18n();
 
   return (
     <div className="mx-auto max-w-4xl divide-y divide-gray-900/10">
       <h2 className="text-xl sm:text-2xl font-bold leading-tight sm:leading-10 tracking-tight text-gray-900">
-        FAQ
+        {t('faq.title')}
       </h2>
       <dl className="mt-6 sm:mt-10 space-y-4 sm:space-y-6 divide-y divide-gray-900/10">
         {faqs.map((faq, index) => (

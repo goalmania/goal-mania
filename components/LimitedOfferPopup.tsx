@@ -8,6 +8,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useI18n } from "@/lib/hooks/useI18n";
 
 interface FeaturedProduct {
   id: string;
@@ -20,6 +21,7 @@ export function LimitedOfferPopup() {
   const [isVisible, setIsVisible] = useState(false);
   const [featuredProduct, setFeaturedProduct] = useState<FeaturedProduct | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { t } = useI18n();
 
   // Fetch featured product and check if popup has been dismissed
   useEffect(() => {
@@ -159,13 +161,13 @@ export function LimitedOfferPopup() {
                 variant="secondary" 
                 className="bg-[#f5963c] text-white font-bold text-sm px-4 py-2 mb-2"
               >
-                OFFERTA LIMITATA
+                {t('popup.limitedOffer')}
               </Badge>
               <h3 className="text-xl font-bold text-gray-900 mb-1">
-                MAGLIE DA CALCIO
+                {t('popup.jerseys')}
               </h3>
               <p className="text-lg font-semibold text-[#f5963c]">
-                A SOLI 30€
+                {t('popup.price')}
               </p>
             </motion.div>
 

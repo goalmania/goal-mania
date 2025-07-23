@@ -14,7 +14,21 @@
     "signUp": "Registrati",
     "signOut": "Esci",
     "myProfile": "Il mio profilo",
-    "myOrders": "I miei ordini"
+    "myOrders": "I miei ordini",
+    "email": "Indirizzo email",
+    "emailPlaceholder": "Inserisci la tua email",
+    "password": "Password",
+    "passwordPlaceholder": "Inserisci la tua password",
+    "forgotPassword": "Password dimenticata?",
+    "pleaseSignIn": "Accedi per continuare.",
+    "orContinueWith": "Oppure continua con",
+    "continueWithGoogle": "Continua con Google",
+    "notAMember": "Non sei registrato?",
+    "signUpNow": "Registrati ora"
+  },
+  "language": {
+    "switchToItalian": "Passa all'Italiano",
+    "switchToEnglish": "Passa all'Inglese"
   },
   "shop": {
     "hero": {
@@ -111,5 +125,132 @@
   "profile": "Profilo",
   "orders": "Ordini",
   "adminPanel": "Pannello di Amministrazione",
-  "signOut": "Disconnetti"
+  "signOut": "Disconnetti",
+  "hero": {
+    "title": "Maglie attuali e retrò a partire da 30€",
+    "subtitle": "Spedizione sempre gratuita, qualità garantita.",
+    "cta": "Scopri le maglie"
+  },
+  "home": {
+    "featuredProducts": "Prodotti in Evidenza",
+    "viewAllProducts": "Vedi Tutti i Prodotti",
+    "latestNews": "Ultime Notizie",
+    "readAllNews": "Leggi Tutte le Notizie",
+    "readMore": "Leggi di più →",
+    "favoriteTeams": "Le Tue Squadre Preferite",
+    "collection": "Collezione",
+    "mysteryBox": {
+      "title": "🎁 Scatola Misteriosa",
+      "description": "Scopri la sorpresa! Ogni scatola contiene maglie esclusive con valore garantito superiore al prezzo.",
+      "surpriseContent": "Contenuto a sorpresa • Valore garantito superiore al prezzo",
+      "discover": "Scopri →"
+    },
+    "news": {
+      "news": "Notizie",
+      "transfer": "Calciomercato",
+      "serieA": "Serie A",
+      "international": "Internazionale"
+    }
+  },
+  "notFound": {
+    "title": "Pagina non trovata",
+    "description": "Spiacenti, non riusciamo a trovare la pagina che stai cercando.",
+    "goHome": "Torna alla home",
+    "contactSupport": "Contatta il supporto"
+  },
+  "apiConfig": {
+    "checking": "Verificando configurazione API...",
+    "error": "Errore durante la verifica API",
+    "noApiKey": "API Football: Chiave API non configurata",
+    "invalidApiKey": "API Football: Chiave API non valida",
+    "configurationIssues": "API Football: Problemi di configurazione",
+    "moreDetails": "Più dettagli",
+    "lessDetails": "Meno dettagli",
+    "currentStatus": "Stato attuale",
+    "apiKeyConfigured": "Chiave API configurata",
+    "apiKeyValid": "Chiave API valida",
+    "toResolve": "Per risolvere",
+    "addVariable": "Aggiungi o aggiorna la variabile",
+    "inFile": "nel file",
+    "forServerSide": "per uso server-side e",
+    "forClientSide": "per uso client-side.",
+    "useHeader": "Assicurati di utilizzare l'intestazione",
+    "inApiRequests": "nelle richieste API",
+    "getApiKey": "Ottieni una chiave API da",
+    "restartServer": "Riavvia il server di sviluppo dopo aver configurato la chiave API",
+    "unknownError": "Errore sconosciuto"
+  },
+  "orders": {
+    "cancelOrder": "Annulla Ordine",
+    "cancelSuccess": "Ordine annullato con successo",
+    "cancelFailed": "Impossibile annullare l'ordine",
+    "cancelConfirmation": "Sei sicuro di voler annullare questo ordine? Questa azione non può essere annullata.",
+    "confirmCancel": "Sì, Annulla Ordine",
+    "keepOrder": "No, Mantieni Ordine"
+  },
+  "league": {
+    "upcomingMatches": "Prossime Partite",
+    "noDataAvailable": "Dati non disponibili",
+    "loadError": "Non è stato possibile caricare le partite in programma per questa lega. Riprova più tardi o contatta l'amministratore se il problema persiste.",
+    "live": "IN DIRETTA",
+    "finished": "TERMINATA",
+    "unknownRound": "Giornata Sconosciuta"
+  },
+  "common": {
+    "yes": "Sì",
+    "no": "No",
+    "processing": "Elaborazione..."
+  },
+  "guarantees": {
+    "title": "Perché Scegliere GoalMania",
+    "freeShipping": {
+      "title": "Spedizione Gratuita",
+      "description": "Su tutti gli ordini superiori a €50"
+    },
+    "quality": {
+      "title": "Garanzia Qualità",
+      "description": "100% autentico o rimborso"
+    },
+    "returns": {
+      "title": "Reso Facile",
+      "description": "30 giorni per cambiare idea"
+    },
+    "rating": {
+      "title": "4.8/5 Rating",
+      "description": "Oltre 1200 clienti felici"
+    }
+  },
+  "footer": {
+    "description": "Goalmania è il punto di riferimento per chi vive il calcio. Ogni giorno raccontiamo storie, notizie e curiosità dal mondo del calcio. In più, ti offriamo le maglie più amate — attuali e retrò — a partire da 30€, con spedizione gratuita.",
+    "copyright": "© 2025 Goalmania. Tutti i diritti riservati. La tua dose quotidiana di calcio ⚽ | Maglie da calcio da 30€ con spedizione gratuita"
+  },
+  "admin": {
+    "dashboard": "Pannello di Amministrazione",
+    "welcome": "Benvenuto nel tuo pannello di amministrazione. Qui puoi gestire prodotti, ordini, utenti e visualizzare le analisi.",
+    "failedToLoad": "Impossibile caricare i dati analitici. Riprova.",
+    "overview": "Panoramica",
+    "recentOrders": "Ordini Recenti",
+    "analytics": "Analisi",
+    "revenueTrend": "Tendenza Ricavi (Ultimi 7 Giorni)",
+    "dailyRevenueAndOrders": "Ricavi giornalieri e numero di ordini",
+    "orderStatusDistribution": "Distribuzione Stato Ordini",
+    "currentOrderStatusBreakdown": "Ripartizione attuale dello stato degli ordini",
+    "noRecentData": "Nessun dato recente disponibile",
+    "averageOrderValue": "Valore Medio Ordine",
+    "perOrder": "Per ordine",
+    "mysteryBoxOrders": "Ordini Scatola Misteriosa",
+    "specialOrders": "Ordini speciali",
+    "publishedArticles": "Articoli Pubblicati",
+    "contentPieces": "Pezzi di contenuto",
+    "latestOrdersFromStore": "Ultimi 5 ordini dal tuo negozio",
+    "noOrdersFound": "Nessun ordine trovato",
+    "productCategories": "Categorie Prodotti",
+    "distributionByCategory": "Distribuzione per categoria",
+    "quickActions": "Azioni Rapide",
+    "commonAdminTasks": "Attività amministrative comuni",
+    "manageProducts": "Gestisci Prodotti",
+    "viewAllOrders": "Visualizza Tutti gli Ordini",
+    "manageUsers": "Gestisci Utenti",
+    "createArticle": "Crea Articolo"
+  }
 }

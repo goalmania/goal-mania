@@ -8,6 +8,7 @@ import { useWishlistStore } from "@/lib/store/wishlist";
 import { useCartStore } from "@/lib/store/cart";
 import { useRouter } from "next/navigation";
 import { Product } from "@/lib/types/product";
+import { useI18n } from "@/lib/hooks/useI18n";
 
 interface FeaturedProductsProps {
   products: Product[];
@@ -17,6 +18,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
   const router = useRouter();
   const wishlistStore = useWishlistStore();
   const cartStore = useCartStore();
+  const { t } = useI18n();
 
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = wishlistStore;
   const { addItem: addToCart } = cartStore;
@@ -46,7 +48,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
     <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-6 sm:mb-8 md:mb-10">
-          Prodotti in Evidenza
+          {t('home.featuredProducts')}
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {products.map((product) => (
@@ -73,7 +75,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
         <div className="text-center mt-6 sm:mt-8 md:mt-10">
           <Button asChild variant="outline" size="lg" className="border-[#f5963c] text-[#f5963c] hover:bg-[#f5963c] hover:text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg">
             <Link href="/shop">
-              Vedi Tutti i Prodotti
+              {t('home.viewAllProducts')}
               <ChevronRightIcon className="ml-2 h-4 w-4" />
             </Link>
           </Button>

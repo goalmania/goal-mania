@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useState } from "react";
+import { useI18n } from "@/lib/hooks/useI18n";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -95,6 +96,7 @@ Questo messaggio è stato inviato dal modulo di contatto di Goal Mania.
 // Contact form component
 function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useI18n();
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -124,21 +126,13 @@ function ContactForm() {
       });
 
       if (response.ok) {
-        toast.success(
-          data.language === "en" 
-            ? "Message sent successfully! We'll get back to you soon." 
-            : "Messaggio inviato con successo! Ti risponderemo presto."
-        );
+        toast.success(t('contact.success'));
         form.reset();
       } else {
         throw new Error("Failed to send message");
       }
     } catch (error) {
-      toast.error(
-        data.language === "en"
-          ? "Failed to send message. Please try again."
-          : "Impossibile inviare il messaggio. Riprova."
-      );
+      toast.error(t('contact.error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -150,13 +144,10 @@ function ContactForm() {
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-[#0e1924]">
-          {selectedLanguage === "en" ? "Send us a Message" : "Inviaci un Messaggio"}
+          {t('contact.title')}
         </CardTitle>
         <CardDescription>
-          {selectedLanguage === "en" 
-            ? "We'd love to hear from you. Send us a message and we'll respond as soon as possible."
-            : "Ci piacerebbe sentire da te. Inviaci un messaggio e ti risponderemo il prima possibile."
-          }
+          {t('contact.description')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -169,11 +160,11 @@ function ContactForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      {selectedLanguage === "en" ? "First Name" : "Nome"}
+                      {t('contact.firstName')}
                     </FormLabel>
                     <FormControl>
                       <Input 
-                        placeholder={selectedLanguage === "en" ? "Your first name" : "Il tuo nome"} 
+                        placeholder={t('contact.firstNamePlaceholder')} 
                         {...field} 
                       />
                     </FormControl>
@@ -187,11 +178,11 @@ function ContactForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      {selectedLanguage === "en" ? "Last Name" : "Cognome"}
+                      {t('contact.lastName')}
                     </FormLabel>
                     <FormControl>
                       <Input 
-                        placeholder={selectedLanguage === "en" ? "Your last name" : "Il tuo cognome"} 
+                        placeholder={t('contact.lastNamePlaceholder')} 
                         {...field} 
                       />
                     </FormControl>
@@ -207,12 +198,12 @@ function ContactForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    {selectedLanguage === "en" ? "Email Address" : "Indirizzo Email"}
+                    {t('contact.email')}
                   </FormLabel>
                   <FormControl>
                     <Input 
                       type="email"
-                      placeholder={selectedLanguage === "en" ? "your.email@example.com" : "tua.email@esempio.com"} 
+                      placeholder={t('contact.emailPlaceholder')} 
                       {...field} 
                     />
                   </FormControl>
@@ -227,38 +218,34 @@ function ContactForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    {selectedLanguage === "en" ? "Subject" : "Oggetto"}
+                    {t('contact.subject')}
                   </FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue 
-                          placeholder={
-                            selectedLanguage === "en" 
-                              ? "Select a subject" 
-                              : "Seleziona un oggetto"
-                          } 
+                          placeholder={t('contact.subject')} 
                         />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="order">
-                        {selectedLanguage === "en" ? "Order Inquiry" : "Richiesta Ordine"}
+                        {t('contact.subjects.order')}
                       </SelectItem>
                       <SelectItem value="product">
-                        {selectedLanguage === "en" ? "Product Question" : "Domanda Prodotto"}
+                        {t('contact.subjects.product')}
                       </SelectItem>
-                      <SelectItem value="order">
-                        {selectedLanguage === "en" ? "Order & Delivery" : "Ordine e Consegna"}
+                      <SelectItem value="delivery">
+                        {t('contact.subjects.delivery')}
                       </SelectItem>
                       <SelectItem value="returns">
-                        {selectedLanguage === "en" ? "Returns & Exchanges" : "Resi e Cambi"}
+                        {t('contact.subjects.returns')}
                       </SelectItem>
                       <SelectItem value="sizing">
-                        {selectedLanguage === "en" ? "Sizing Help" : "Aiuto Taglie"}
+                        {t('contact.subjects.sizing')}
                       </SelectItem>
                       <SelectItem value="other">
-                        {selectedLanguage === "en" ? "Other" : "Altro"}
+                        {t('contact.subjects.other')}
                       </SelectItem>
                     </SelectContent>
                   </Select>
@@ -273,7 +260,7 @@ function ContactForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    {selectedLanguage === "en" ? "Preferred Language" : "Lingua Preferita"}
+                    {t('contact.language')}
                   </FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
@@ -287,10 +274,7 @@ function ContactForm() {
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    {selectedLanguage === "en" 
-                      ? "We'll respond in your preferred language."
-                      : "Ti risponderemo nella tua lingua preferita."
-                    }
+                    {t('contact.languageDescription')}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -303,16 +287,12 @@ function ContactForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    {selectedLanguage === "en" ? "Message" : "Messaggio"}
+                    {t('contact.message')}
                   </FormLabel>
                   <FormControl>
                     <Textarea 
                       rows={5}
-                      placeholder={
-                        selectedLanguage === "en" 
-                          ? "Tell us how we can help you..." 
-                          : "Raccontaci come possiamo aiutarti..."
-                      }
+                      placeholder={t('contact.messagePlaceholder')}
                       {...field} 
                     />
                   </FormControl>
@@ -330,12 +310,12 @@ function ContactForm() {
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   <span>
-                    {selectedLanguage === "en" ? "Sending..." : "Invio..."}
+                    {t('contact.sending')}
                   </span>
                 </div>
               ) : (
                 <span>
-                  {selectedLanguage === "en" ? "Send Message" : "Invia Messaggio"}
+                  {t('contact.submit')}
                 </span>
               )}
             </Button>
@@ -348,15 +328,17 @@ function ContactForm() {
 
 // Social media component
 function SocialMediaSection() {
+  const { t } = useI18n();
+  
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-[#0e1924] flex items-center">
           <Mail className="h-6 w-6 mr-2 text-[#f5963c]" />
-          Follow Us on Social Media
+          {t('contact.page.socialMedia.title')}
         </CardTitle>
         <CardDescription>
-          Stay connected with Goal Mania for the latest football news, jersey updates, and exclusive offers.
+          {t('contact.page.socialMedia.description')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -368,7 +350,7 @@ function SocialMediaSection() {
             className="flex items-center space-x-3 p-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
           >
             <Instagram className="h-6 w-6" />
-            <span className="font-semibold">Instagram</span>
+            <span className="font-semibold">{t('contact.page.socialMedia.instagram')}</span>
           </a>
           
           <a 
@@ -378,7 +360,7 @@ function SocialMediaSection() {
             className="flex items-center space-x-3 p-4 bg-black rounded-lg text-white hover:bg-gray-800 transition-all duration-200"
           >
             <Twitter className="h-6 w-6" />
-            <span className="font-semibold">Twitter</span>
+            <span className="font-semibold">{t('contact.page.socialMedia.twitter')}</span>
           </a>
           
           <a 
@@ -391,7 +373,7 @@ function SocialMediaSection() {
               <path d="M9.37,23.5a7.468,7.468,0,0,1-7.5-7.5,7.407,7.407,0,0,1,5.483-7.14v3.746a3.763,3.763,0,1,0,4.017,6.344V6.621h3.253a6.3,6.3,0,0,0,.687,3.257h-.687a10.494,10.494,0,0,1-5.253,9.285V23.5Z" />
               <path d="M19.87,0.5H16.62V15.75a3.75,3.75,0,1,1-3.75-3.75h0V8.254a7.5,7.5,0,1,0,7.5,7.5V6.621h1a6.254,6.254,0,0,0,3.63-1.156V2.211A6.257,6.257,0,0,1,19.87.5Z" />
             </svg>
-            <span className="font-semibold">TikTok</span>
+            <span className="font-semibold">{t('contact.page.socialMedia.tiktok')}</span>
           </a>
         </div>
       </CardContent>
@@ -401,14 +383,16 @@ function SocialMediaSection() {
 
 // Main contact page component
 export default function ContactPage() {
+  const { t } = useI18n();
+  
   return (
     <div className="bg-gradient-to-b from-white to-blue-50 min-h-screen">
       <div className="container mx-auto px-6 sm:px-10 lg:px-20 pt-12 pb-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-serif font-bold mb-6 text-black">Contact Us</h1>
+          <h1 className="text-5xl font-serif font-bold mb-6 text-black">{t('contact.page.title')}</h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Have questions about our football jerseys or need assistance? We're here to help!
+            {t('contact.page.subtitle')}
           </p>
         </div>
 
@@ -416,10 +400,9 @@ export default function ContactPage() {
           {/* Contact Information */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold mb-6 text-[#0e1924]">Get in Touch</h2>
+              <h2 className="text-3xl font-bold mb-6 text-[#0e1924]">{t('contact.page.getInTouch')}</h2>
               <p className="text-gray-600 mb-8">
-                Our team is dedicated to providing you with the best football jersey experience. 
-                Whether you have questions about sizing, orders, or our products, we're here to help.
+                {t('contact.page.getInTouchDescription')}
               </p>
             </div>
 

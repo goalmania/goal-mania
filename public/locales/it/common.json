@@ -1,0 +1,298 @@
+{
+  "navigation": {
+    "home": "Home",
+    "news": "News",
+    "transfer": "Calciomercato",
+    "serieA": "Serie A",
+    "results": "Risultati",
+    "fantasyFootball": "Fantacalcio",
+    "about": "Chi Siamo",
+    "shop": "Shop"
+  },
+  "auth": {
+    "signIn": "Accedi",
+    "signUp": "Registrati",
+    "signOut": "Esci",
+    "myProfile": "Il mio profilo",
+    "myOrders": "I miei ordini"
+  },
+  "shop": {
+    "hero": {
+      "title": "Indossa la passione, vivi il calcio!",
+      "description": "Scopri la nostra collezione esclusiva di maglie da calcio con qualità premium, design unici e prezzi imbattibili. Perfetto per ogni tifoso.",
+      "subtitle": "Scopri la nostra collezione esclusiva di maglie da calcio. Qualità premium, design unici e prezzi imbattibili.",
+      "cta": "Scopri le maglie"
+    },
+    "featuredProducts": "Prodotti in Evidenza",
+    "trust": {
+      "title": "Oltre 1200 Clienti Felici ⭐️",
+      "subtitle": "La nostra community di appassionati cresce ogni giorno. Unisciti a chi ha già scelto la qualità e l'autenticità."
+    },
+    "highlights": {
+      "quality": {
+        "title": "Qualità Super",
+        "description": "Le nostre maglie sono capi curati nei minimi dettagli con materiali premium. Perfette per i veri appassionati che vogliono collezionare emozioni, non solo tessuto."
+      },
+      "unique": {
+        "title": "Modelli introvabili",
+        "description": "Collezione esclusiva di maglie rare e limited edition. Trova pezzi unici che non troverai da nessun'altra parte."
+      },
+      "fit": {
+        "title": "Vestibilità perfetta",
+        "description": "Ogni maglia è realizzata per garantire il massimo comfort e una vestibilità impeccabile. Taglie accurate e materiali che si adattano perfettamente al corpo."
+      }
+    },
+    "features": {
+      "title": "Affidabilità Garantita ✅",
+      "subtitle": "La tua soddisfazione è la nostra priorità. Ecco perché offriamo servizi che garantiscono un'esperienza d'acquisto sicura e senza pensieri.",
+      "secure": {
+        "title": "Pagamenti Protetti",
+        "description": "Garantiamo transazioni senza rischi, mettendo la tua sicurezza al primo posto. Puoi fare acquisti con fiducia, sapendo che ogni transazione è gestita con sistemi affidabili e di sicurezza massima."
+      },
+      "guarantee": {
+        "title": "Garanzia di 7 Giorni",
+        "description": "Con la nostra garanzia di 7 giorni, offriamo la tranquillità di poter provare il tuo acquisto senza preoccupazioni. Se per qualsiasi motivo non fossi completamente soddisfatto, hai 7 giorni per restituire il prodotto e ottenere un rimborso completo."
+      },
+      "returns": {
+        "title": "Reso Gratuito",
+        "description": "Offriamo resi gratuiti per garantire che ogni acquisto soddisfi le tue aspettative. Se per qualsiasi motivo desideri restituire il tuo prodotto, rendilo entro 7 giorni e goditi un reso senza costi aggiuntivi."
+      },
+      "tracking": {
+        "title": "Ordine Tracciabile",
+        "description": "Ogni acquisto offre la tranquillità di un ordine completamente tracciabile. Per fare ciò, semplicemente inserisci il numero del pacco che forniremo nell'apposita pagina \"Traccia il Tuo Ordine\"!"
+      }
+    },
+    "reviews": {
+      "title": "Cosa dicono i nostri clienti",
+      "rating": "4.8 su 5 stelle",
+      "addToCart": "Aggiungi al carrello",
+      "addToWishlist": "Aggiungi ai preferiti",
+      "removeFromWishlist": "Rimuovi dai preferiti"
+    }
+  },
+  "wishlist": {
+    "empty": {
+      "title": "La tua lista dei desideri è vuota",
+      "description": "Aggiungi i tuoi prodotti preferiti alla lista dei desideri per tenerli d'occhio.",
+      "cta": "Continua lo shopping"
+    },
+    "title": "La tua lista dei desideri",
+    "remove": "Rimuovi",
+    "addToCart": "Aggiungi al carrello",
+    "view": "Visualizza prodotto"
+  },
+  "cart": {
+    "empty": {
+      "title": "Il tuo carrello è vuoto",
+      "description": "Sembra che non hai ancora aggiunto nulla al carrello.",
+      "cta": "Continua lo shopping"
+    },
+    "title": "Carrello",
+    "subtitle": "Rivedi i tuoi articoli e procedi al checkout",
+    "shoppingCart": "Carrello",
+    "itemsInCart": "articoli nel tuo carrello",
+    "subtotal": "Subtotale",
+    "shipping": "Spedizione e tasse calcolate al checkout",
+    "checkout": "Procedi all'acquisto",
+    "processing": "Elaborazione...",
+    "or": "o",
+    "continueShopping": "Continua lo shopping",
+    "proceedToCheckout": "Procedi al checkout",
+    "orderSummary": "Riepilogo Ordine",
+    "orderSummaryDesc": "Rivedi i tuoi articoli e il totale",
+    "items": "Articoli",
+    "priceBreakdown": "Dettaglio Prezzi",
+    "shippingFree": "Gratuita",
+    "total": "Totale",
+    "includesVat": "Include IVA",
+    "trustIndicators": {
+      "secure": "Sicuro",
+      "fast": "Veloce",
+      "quality": "Qualità"
+    }
+  },
+  "product": {
+    "addToCart": "Aggiungi al carrello",
+    "addToWishlist": "Aggiungi alla lista dei desideri",
+    "removeFromWishlist": "Rimuovi dalla lista dei desideri",
+    "quantity": "Quantità",
+    "features": "Caratteristiche",
+    "shipping": "Informazioni sulla spedizione",
+    "shippingInfo": "Spedizione gratuita su tutti gli ordini. La spedizione avviene solitamente entro 1-2 giorni lavorativi."
+  },
+  "sale": "Spedizione gratuita per le prossime 24 ore",
+  "search": "Cerca",
+  "news": "Vedi tutte le notizie",
+  "profile": "Profilo",
+  "orders": "Ordini",
+  "adminPanel": "Pannello di Amministrazione",
+  "signOut": "Disconnetti",
+  "hero": {
+    "title": "Maglie attuali e retrò a partire da 30€",
+    "subtitle": "Spedizione sempre gratuita, qualità garantita.",
+    "cta": "Scopri le maglie"
+  },
+  "mysteryBox": {
+    "title": "Scatola Misteriosa",
+    "description": "Scopri la magia delle nostre scatole misteriose! Ogni scatola contiene una maglia a sorpresa delle migliori squadre italiane e internazionali.",
+    "subtitle": "Scegli la tua scatola misteriosa e preparati per una sorpresa emozionante! Ogni scatola è unica e contiene maglie di qualità premium.",
+    "empty": "Nessuna Scatola Misteriosa Disponibile",
+    "emptyDescription": "Torna presto per scoprire le nostre nuove scatole misteriose!",
+    "features": {
+      "surprise": "Maglia a Sorpresa",
+      "teams": "Squadre Top",
+      "shipping": "Spedizione Gratuita"
+    },
+    "process": {
+      "title": "Come Funziona",
+      "description": "Il processo è semplice e divertente! Ecco come funziona la nostra scatola misteriosa.",
+      "step1": "Seleziona la scatola misteriosa che preferisci e aggiungila al carrello.",
+      "step2": "Completa il tuo ordine con pagamento sicuro.",
+      "step3": "Ricevi la tua scatola misteriosa con una maglia a sorpresa di qualità premium!"
+    },
+    "product": {
+      "description": "Una scatola misteriosa piena di sorprese! Contiene una maglia a sorpresa delle migliori squadre italiane e internazionali.",
+      "freeShipping": "Spedizione gratuita",
+      "features": {
+        "premium": "Maglia a sorpresa di qualità premium",
+        "teams": "Squadre italiane e internazionali",
+        "exclude": "Possibilità di escludere fino a 5 maglie"
+      },
+      "addToCart": "Aggiungi al Carrello",
+      "learnMore": "Scopri di Più"
+    },
+    "steps": {
+      "step1": {
+        "title": "Scegli la Scatola",
+        "description": "Seleziona la scatola misteriosa che preferisci e aggiungila al carrello."
+      },
+      "step2": {
+        "title": "Escludi le Maglie",
+        "description": "Puoi escludere fino a 5 maglie che non vuoi ricevere nella tua scatola."
+      },
+      "step3": {
+        "title": "Ricevi la Sorpresa",
+        "description": "Ricevi la tua scatola misteriosa con una maglia a sorpresa di qualità premium!"
+      }
+    },
+    "cta": {
+      "title": "Pronto per l'Avventura?",
+      "description": "Unisciti a migliaia di clienti che hanno già scoperto la magia delle nostre scatole misteriose!",
+      "button": "Esplora Tutti i Prodotti"
+    }
+  },
+  "guarantees": {
+    "title": "Perché Scegliere GoalMania",
+    "freeShipping": {
+      "title": "Spedizione Gratuita",
+      "description": "Su tutti gli ordini superiori a €50"
+    },
+    "quality": {
+      "title": "Garanzia Qualità",
+      "description": "100% autentico o rimborso"
+    },
+    "returns": {
+      "title": "Reso Facile",
+      "description": "30 giorni per cambiare idea"
+    },
+    "rating": {
+      "title": "4.8/5 Rating",
+      "description": "Oltre 1200 clienti felici"
+    }
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "welcome": "Bentornato! Ecco una panoramica delle prestazioni e dei dati del tuo negozio.",
+    "analytics": "Dashboard Analitiche",
+    "failedToLoad": "Impossibile caricare i dati della dashboard"
+  },
+  "fantasy": {
+    "title": "Suggerimenti Fantacalcio",
+    "edit": "Modifica",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "saving": "Salvando...",
+    "error": "Impossibile caricare i consigli. Utilizzando dati di esempio."
+  },
+  "popup": {
+    "limitedOffer": "OFFERTA LIMITATA",
+    "jerseys": "MAGLIE DA CALCIO",
+    "price": "A SOLI 30€"
+  },
+  "footer": {
+    "description": "Goalmania è il punto di riferimento per chi vive di calcio. Ogni giorno raccontiamo storie, notizie e curiosità dal mondo del pallone. In più, ti offriamo le maglie più amate — attuali e retrò — a partire da 30€, con spedizione gratuita.",
+    "copyright": "© 2025 Goalmania. Tutti i diritti riservati. La tua dose quotidiana di calcio ⚽ | Maglie da calcio da 30€ con spedizione gratuita"
+  },
+  "contact": {
+    "title": "Inviaci un Messaggio",
+    "description": "Ci piacerebbe sentire da te. Inviaci un messaggio e ti risponderemo il prima possibile.",
+    "firstName": "Nome",
+    "firstNamePlaceholder": "Il tuo nome",
+    "lastName": "Cognome",
+    "lastNamePlaceholder": "Il tuo cognome",
+    "email": "Indirizzo Email",
+    "emailPlaceholder": "tua.email@esempio.com",
+    "subject": "Oggetto",
+    "message": "Messaggio",
+    "messagePlaceholder": "Raccontaci come possiamo aiutarti...",
+    "language": "Lingua Preferita",
+    "languageDescription": "Ti risponderemo nella tua lingua preferita.",
+    "submit": "Invia Messaggio",
+    "sending": "Invio in corso...",
+    "success": "Messaggio inviato con successo! Ti risponderemo presto.",
+    "error": "Impossibile inviare il messaggio. Riprova.",
+    "subjects": {
+      "order": "Richiesta Ordine",
+      "product": "Domanda Prodotto",
+      "delivery": "Ordine e Consegna",
+      "returns": "Resi e Cambi",
+      "sizing": "Aiuto Taglie",
+      "other": "Altro"
+    },
+    "page": {
+      "title": "Contattaci",
+      "subtitle": "Hai domande sui nostri prodotti o hai bisogno di assistenza? Siamo qui per aiutarti!",
+      "getInTouch": "Mettiti in Contatto",
+      "getInTouchDescription": "Il nostro team è dedicato a fornirti la migliore esperienza con le maglie da calcio. Che tu abbia domande su taglie, ordini o i nostri prodotti, siamo qui per aiutarti.",
+      "features": {
+        "emailSupport": "Supporto Email",
+        "emailSupportDesc": "Supporto clienti 24/7",
+        "secure": "Sicuro",
+        "secureDesc": "Form crittografati SSL",
+        "fastResponse": "Risposta Rapida",
+        "fastResponseDesc": "Risposta entro 24 ore"
+      },
+      "socialMedia": {
+        "title": "Seguici sui Social Media",
+        "description": "Rimani connesso con Goal Mania per le ultime notizie di calcio, aggiornamenti sulle maglie e offerte esclusive.",
+        "instagram": "Instagram",
+        "twitter": "Twitter",
+        "tiktok": "TikTok"
+      }
+    }
+  },
+  "faq": {
+    "title": "FAQ",
+    "contactEmail": "goalmaniaofficial@gmail.com"
+  },
+  "home": {
+    "featuredProducts": "Prodotti in Evidenza",
+    "viewAllProducts": "Vedi Tutti i Prodotti",
+    "latestNews": "Ultime Notizie",
+    "readAllNews": "Leggi Tutte le Notizie",
+    "readMore": "Leggi di più →",
+    "favoriteTeams": "Le Tue Squadre Preferite",
+    "mysteryBox": {
+      "title": "🎁 Scatola Misteriosa",
+      "description": "Scopri la sorpresa! Ogni box contiene maglie esclusive con valore garantito superiore al prezzo.",
+      "surpriseContent": "Contenuto a sorpresa • Valore garantito superiore al prezzo",
+      "discover": "Scopri →"
+    },
+    "news": {
+      "news": "News",
+      "transfer": "Calciomercato",
+      "serieA": "Serie A",
+      "international": "Internazionale"
+    }
+  }
+}

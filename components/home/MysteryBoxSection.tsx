@@ -1,12 +1,17 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Product } from "@/lib/types/home";
+import { useI18n } from "@/lib/hooks/useI18n";
 
 interface MysteryBoxSectionProps {
   products: Product[];
 }
 
 export default function MysteryBoxSection({ products }: MysteryBoxSectionProps) {
+  const { t } = useI18n();
+  
   if (products.length === 0) return null;
 
   return (

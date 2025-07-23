@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Team } from "@/lib/types/home";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/hooks/useI18n";
 
 interface TeamCardProps {
   team: Team;
@@ -13,6 +14,7 @@ interface TeamCardProps {
 export default function TeamCard({ team }: TeamCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const router = useRouter();
+  const { t } = useI18n();
 
   const handleShopClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -94,12 +96,12 @@ export default function TeamCard({ team }: TeamCardProps) {
             onClick={handleShopClick}
             className="relative z-20 cursor-pointer"
           >
-            Shop Now
+            {t('shop.hero.cta')}
           </Button>
 
           {/* Team Name (Small) */}
           <p className="text-white/60 text-xs sm:text-sm mt-3 font-medium">
-            {team.nickname} Collection
+            {team.nickname} {t('home.collection')}
           </p>
         </div>
       </div>

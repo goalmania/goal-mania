@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { ArrowUpCircle, ArrowDownCircle, Edit, Save, X } from "lucide-react";
 import axios from "axios";
+import { useI18n } from "@/lib/hooks/useI18n";
 
 interface Player {
   name: string;
@@ -40,6 +41,7 @@ export default function EditableFantasyTips() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const { t } = useI18n();
 
   // Memoized fetch function to prevent unnecessary re-renders
   const fetchTips = useCallback(async () => {
@@ -63,9 +65,7 @@ export default function EditableFantasyTips() {
       }
     } catch (err) {
       console.error("Error fetching fantasy tips:", err);
-      setError(
-        "Impossibile caricare i consigli. Utilizzando dati di esempio."
-      );
+      setError(t('fantasy.error'));
       // Use initial data as fallback
     } finally {
       setIsLoading(false);
@@ -159,7 +159,7 @@ export default function EditableFantasyTips() {
       )}
 
       <div className="flex justify-between items-center mb-2">
-        <h3 className="font-semibold">Suggerimenti Fantacalcio</h3>
+        <h3 className="font-semibold">{t('fantasy.title')}</h3>
         {isEditing ? (
           <div className="flex space-x-2">
             <button
@@ -172,7 +172,7 @@ export default function EditableFantasyTips() {
               } rounded-md transition-colors`}
             >
               <Save size={14} />
-              <span>{isSaving ? "Salvando..." : "Salva"}</span>
+              <span>{isSaving ? t('fantasy.saving') : t('fantasy.save')}</span>
             </button>
             <button
               onClick={cancelEditing}
@@ -180,7 +180,7 @@ export default function EditableFantasyTips() {
               className="p-1.5 text-xs flex items-center gap-1 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 transition-colors"
             >
               <X size={14} />
-              <span>Annulla</span>
+              <span>{t('fantasy.cancel')}</span>
             </button>
           </div>
         ) : (
@@ -189,7 +189,7 @@ export default function EditableFantasyTips() {
             className="p-1.5 text-xs flex items-center gap-1 bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 transition-colors"
           >
             <Edit size={14} />
-            <span>Modifica</span>
+            <span>{t('fantasy.edit')}</span>
           </button>
         )}
       </div>

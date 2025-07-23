@@ -20,8 +20,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCartStore } from "@/lib/store/cart";
 import { useWishlistStore } from "@/lib/store/wishlist";
-import { useLanguageStore } from "@/lib/store/language";
-import { useTranslation } from "@/lib/hooks/useTranslation";
+import { useLanguage } from "@/lib/utils/language";
+import { useI18n } from "@/lib/hooks/useI18n";
 import { usePathname, useRouter } from "next/navigation";
 import ShopNav from "@/app/_components/ShopNav";
 import ShopSearchBar from "@/app/_components/ShopSearchBar";
@@ -90,8 +90,8 @@ export function Header() {
   const wishlist = useWishlistStore();
   const [cartItemCount, setCartItemCount] = useState(0);
   const [wishlistItemCount, setWishlistItemCount] = useState(0);
-  const { language, setLanguage } = useLanguageStore();
-  const { t } = useTranslation();
+  const { language, toggleLanguage } = useLanguage();
+  const { t } = useI18n();
   const router = useRouter();
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -123,10 +123,6 @@ export function Header() {
     }
   }, [cart, wishlist, session]);
 
-  const toggleLanguage = () => {
-    setLanguage(language === "en" ? "it" : "en");
-  };
-
   const handleMobileSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!mobileSearchQuery.trim()) return;
@@ -154,11 +150,11 @@ export function Header() {
               <div className="flex flex-shrink-0 items-center px-1">
                 <Link href="/" className="flex items-center">
                   <Image
-                    src="/images/image.png"
+                    src="/logos/brand_logo.png"
                     alt="Goal Mania Logo"
-                    width={28}
-                    height={28}
-                    className="mr-2 rounded sm:w-8 sm:h-8"
+                    width={32}
+                    height={32}
+                    className="mr-2 sm:w-8 sm:h-8"
                     style={{ objectFit: "contain" }}
                   />
                   <span className="goalmania-title text-base sm:text-xl font-bold text-white tracking-tight">
@@ -311,7 +307,7 @@ export function Header() {
                         <DropdownMenuItem asChild>
                           <Link href="/account/orders" className="flex items-center">
                             <ShoppingCartIcon className="mr-2 h-4 w-4" />
-                            {t("orders")}
+                            {t("auth.myOrders")}
                           </Link>
                         </DropdownMenuItem>
                         {session.user.role === "admin" && (
@@ -380,7 +376,7 @@ export function Header() {
         <>
           <ShopNav />
           <div className="accent-bg text-white text-center py-2 text-xs sm:text-sm font-medium">
-            Spedizione gratuita per le prossime 24 ore
+            {t('sale')}
           </div>
         </>
       ) : null}

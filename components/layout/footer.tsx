@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useI18n } from "@/lib/hooks/useI18n";
 
 const navigation = {
   main: [
@@ -47,18 +48,26 @@ const navigation = {
 };
 
 export function Footer() {
+  const { t } = useI18n();
+  
   return (
     <footer className="bg-gradient-to-t from-[#f5963c] to-[#0e1924] text-white pt-10 pb-4">
       <div className="mx-auto max-w-7xl px-4 flex flex-col items-center">
         {/* Logo and Brand */}
         <div className="flex flex-col items-center mb-6">
-          {/* Placeholder logo - replace src with your actual logo file */}
           <div className="mb-2">
-            <Image src="/favicon.ico" alt="GoalMania Logo" width={64} height={64} className="rounded-full shadow-lg" />
+            <Image 
+              src="/logos/brand_logo.png" 
+              alt="GoalMania Logo" 
+              width={80} 
+              height={80} 
+              className="shadow-lg" 
+              style={{ objectFit: "contain" }}
+            />
           </div>
           <h2 className="text-3xl font-bold tracking-wide mb-2">Goal<span className="text-[#f5963c]">Mania</span></h2>
           <p className="text-center max-w-md text-sm text-white/80 mb-2">
-            Goalmania è il punto di riferimento per chi vive di calcio. Ogni giorno raccontiamo storie, notizie e curiosità dal mondo del pallone. In più, ti offriamo le maglie più amate — attuali e retrò — a partire da 30€, con spedizione gratuita.
+            {t('footer.description')}
           </p>
         </div>
         {/* Navigation */}
@@ -81,7 +90,7 @@ export function Footer() {
           ))}
         </div>
         <p className="text-center text-xs leading-5 text-white/60 border-t border-white/20 pt-4 w-full">
-          © 2025 Goalmania. Tutti i diritti riservati. La tua dose quotidiana di calcio ⚽ | Maglie da calcio da 30€ con spedizione gratuita
+          {t('footer.copyright')}
         </p>
         <div className="flex flex-wrap justify-center gap-4 mt-2 text-xs text-white/60">
           <Link href="/terms">Terms & Conditions</Link>
