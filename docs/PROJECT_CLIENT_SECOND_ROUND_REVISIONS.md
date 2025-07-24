@@ -7,10 +7,10 @@ The following are the requested updates and revisions for the next project itera
 1. **Admin Panel Accessibility** (DONE)
    - The admin panel is still not accessible. Please verify and resolve the issue so that the backend is working properly.
 
-2. **Mystery Box Page**
+2. **Mystery Box Page** (DONE)
    - There are no text descriptions for the product sizes. Keep the current size format, but update the style to match the new design—without reducing image quality. It's important that the images retain their sharpness and proportions.
 
-3. **FAQ Title Styling**
+3. **FAQ Title Styling** (DONE)
    - The FAQ title is still not styled correctly. Please adjust it to match the visual identity of the site.
 
 4. **Homepage & Shop Graphics**
