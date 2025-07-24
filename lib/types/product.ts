@@ -11,9 +11,9 @@ export const VALID_PATCHES = [
 export const PRODUCT_CATEGORIES = [
   "2024/25",
   "2025/26",
+  "Retro",
   "SerieA",
   "International",
-  "Retro",
   "Mystery Box",
 ] as const;
 

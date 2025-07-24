@@ -16,7 +16,7 @@ The following are the requested updates and revisions for the next project itera
 4. **Homepage & Shop Graphics** (DONE)
    - On both the homepage and the shop section, the graphics I sent you need to be placed inside rounded rectangular containers. These should also include a call-to-action button within each block to improve user engagement.
 
-5. **Shop Section Intro & Graphics**
+5. **Shop Section Intro & Graphics** (DONE)
    - In the shop section, you can remove the introductory part that says "Discover our shirts". Replace it with the first visual graphic (the one I sent you) inside the new styled rectangle.
    - The graphic with “90s and 2000s” should go in the Retro section, and please move the Retro category close to the 2025/26 category in the shop menu.
 

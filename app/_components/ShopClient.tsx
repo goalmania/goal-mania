@@ -70,8 +70,8 @@ export default function ShopClient({
         <div className="flex justify-center items-center lg:absolute lg:inset-y-0 lg:right-0 lg:h-full lg:w-1/2 p-4">
           <Card className="w-full h-64 sm:h-72 md:h-96 flex flex-col justify-end items-center overflow-hidden rounded-2xl shadow-2xl p-0 relative">
             <Image
-              src="/banners/banner_2.jpeg"
-              alt={t('shop.banner2.alt', 'Retro Collection')}
+              src="/banners/banner_1.jpeg"
+              alt={t('shop.banner1.alt', 'Retro Collection')}
               fill
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"
