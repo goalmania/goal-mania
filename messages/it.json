@@ -317,5 +317,9 @@
       { "question": "C'è una Garanzia?", "answer": "Certo! Se il prodotto dovesse arrivare danneggiato o diverso da come te lo aspettavi, contattaci alla mail 'goalmaniaofficial@gmail.com'. Ti risponderemo al più presto!" },
       { "question": "Accettate Resi?", "answer": "Certamente! Accettiamo resi entro un periodo massimo di 7 giorni dalla data di acquisto. La tua soddisfazione è la nostra priorità, e desideriamo garantire che ogni cliente sia felice con il proprio acquisto." }
     ]
+  },
+  "banners": {
+    "cta": "Acquista ora",
+    "alt": "Banner promozionale maglie calcio"
   }
 }

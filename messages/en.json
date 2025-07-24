@@ -317,5 +317,9 @@
       { "question": "Is there a guarantee?", "answer": "Of course! If the product arrives damaged or different from what you expected, contact us at 'goalmaniaofficial@gmail.com'. We will reply as soon as possible!" },
       { "question": "Do you accept returns?", "answer": "Certainly! We accept returns within a maximum period of 7 days from the date of purchase. Your satisfaction is our priority, and we want to ensure that every customer is happy with their purchase." }
     ]
+  },
+  "banners": {
+    "cta": "Shop Now",
+    "alt": "Football jersey promotion banner"
   }
 }

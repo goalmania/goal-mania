@@ -13,7 +13,7 @@ The following are the requested updates and revisions for the next project itera
 3. **FAQ Title Styling** (DONE)
    - The FAQ title is still not styled correctly. Please adjust it to match the visual identity of the site.
 
-4. **Homepage & Shop Graphics**
+4. **Homepage & Shop Graphics** (DONE)
    - On both the homepage and the shop section, the graphics I sent you need to be placed inside rounded rectangular containers. These should also include a call-to-action button within each block to improve user engagement.
 
 5. **Shop Section Intro & Graphics**

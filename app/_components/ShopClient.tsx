@@ -1,3 +1,4 @@
+"use client";
 import ProductGridWrapper from "@/app/_components/ProductGridWrapper";
 import FAQ from "@/app/_components/FAQ";
 import Guarantees from "@/app/_components/Guarantees";
@@ -8,6 +9,9 @@ import Link from "next/link";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import ShopSearchBar from "./ShopSearchBar";
 import TeamCarousel from "@/components/home/TeamCarousel";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/hooks/useI18n";
 
 interface Review {
   id: string;
@@ -27,124 +31,16 @@ interface Product {
   availablePatches?: string[];
 }
 
-async function fetchSeason2025Products(): Promise<Product[]> {
-  try {
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/products?category=2025%2F26&limit=8&noPagination=true`, {
-      next: { revalidate: 300 }, // Cache for 5 minutes
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error fetching products: ${response.status}`);
-    }
-
-    const data = await response.json();
-    let productsData = [];
-
-    if (data.products && Array.isArray(data.products)) {
-      productsData = data.products;
-    } else if (Array.isArray(data)) {
-      productsData = data;
-    } else {
-      throw new Error("Invalid data format received from API");
-    }
-
-    return productsData.map((product: any) => ({
-      id: product._id || "",
-      name: product.title || "Unknown Product",
-      price: product.basePrice || 0,
-      image: product.images?.[0] || "/images/image.png",
-      category: product.category || "Uncategorized",
-      team: product.title ? product.title.split(" ")[0] : "Unknown",
-      availablePatches: product.availablePatches || [],
-    }));
-  } catch (error) {
-    console.error("Error fetching 2025/26 products:", error);
-    return [];
-  }
-}
-
-async function fetchFeaturedProducts(): Promise<Product[]> {
-  try {
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/products?feature=true&limit=3`, {
-      next: { revalidate: 300 }, // Cache for 5 minutes
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error fetching featured products: ${response.status}`);
-    }
-
-    const data = await response.json();
-    let productsData = [];
-
-    if (data.products && Array.isArray(data.products)) {
-      productsData = data.products;
-    } else if (Array.isArray(data)) {
-      productsData = data;
-    } else {
-      throw new Error("Invalid data format received from API");
-    }
-
-    return productsData.map((product: any) => ({
-      id: product._id || "",
-      name: product.title || "Featured Product",
-      price: product.basePrice || 0,
-      image: product.images?.[0] || "/images/image.png",
-      category: product.category || "Uncategorized",
-      team: product.title ? product.title.split(" ")[0] : "Unknown",
-      availablePatches: product.availablePatches || [],
-    }));
-  } catch (error) {
-    console.error("Error fetching featured products:", error);
-    return [];
-  }
-}
-
-async function fetchMysteryBoxProducts(): Promise<Product[]> {
-  try {
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/products?type=mysteryBox&limit=6&noPagination=true`, {
-      next: { revalidate: 300 }, // Cache for 5 minutes
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error fetching Mystery Box products: ${response.status}`);
-    }
-
-    const data = await response.json();
-    let productsData = [];
-
-    if (data.products && Array.isArray(data.products)) {
-      productsData = data.products;
-    } else if (Array.isArray(data)) {
-      productsData = data;
-    } else {
-      throw new Error("Invalid data format received from API");
-    }
-
-    return productsData.map((product: any) => ({
-      id: product._id || "",
-      name: product.title || "Mystery Box",
-      price: product.basePrice || 0,
-      image: product.images?.[0] || "/images/image.png",
-      category: product.category || "Mystery Box",
-      team: "Mystery",
-      availablePatches: product.availablePatches || [],
-    }));
-  } catch (error) {
-    console.error("Error fetching Mystery Box products:", error);
-    return [];
-  }
-}
-
-export default async function ShopClient({ products }: { products: Product[] }) {
-  // Fetch all data in parallel
-  const [season2025Products, featuredProducts, mysteryBoxProducts] = await Promise.all([
-    fetchSeason2025Products(),
-    fetchFeaturedProducts(),
-    fetchMysteryBoxProducts()
-  ]);
+export default function ShopClient({
+  season2025Products = [],
+  featuredProducts = [],
+  mysteryBoxProducts = [],
+}: {
+  season2025Products: Product[];
+  featuredProducts: Product[];
+  mysteryBoxProducts: Product[];
+}) {
+  const { t } = useI18n();
 
   // Extract featured products
   const featuredProduct = featuredProducts[0] || null;
@@ -156,40 +52,41 @@ export default async function ShopClient({ products }: { products: Product[] }) 
       <ShopSearchBar />
       {/* Hero section - adjust height to account for fixed header */}
       <div className="relative">
-       
         <div className="mx-auto max-w-7xl">
           <div className="relative z-10 pt-10 sm:pt-14 lg:w-full lg:max-w-2xl">
             <div className="relative px-4 sm:px-6 py-12 sm:py-16 md:py-24 lg:px-8 lg:py-56 lg:pr-0">
               <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
-                  Scopri le nostre maglie
+                  {t('shop.hero.title', 'Scopri le nostre maglie')}
                 </h1>
                 <p className="mt-4 sm:mt-6 text-sm sm:text-base md:text-lg leading-6 sm:leading-8 text-gray-600">
-                  Le migliori maglie delle squadre italiane e internazionali, 
-                  con qualità premium e spedizione gratuita.
+                  {t('shop.hero.subtitle', 'Le migliori maglie delle squadre italiane e internazionali, con qualità premium e spedizione gratuita.')}
                 </p>
               </div>
             </div>
           </div>
         </div>
         {/* Image section - full width on mobile, half width on desktop */}
-        <div className="bg-gray-50 h-64 sm:h-72 md:h-96 lg:absolute lg:inset-y-0 lg:right-0 lg:h-full lg:w-1/2">
-          <Link href="/shop/retro" className="block h-full w-full relative group">
+        <div className="flex justify-center items-center lg:absolute lg:inset-y-0 lg:right-0 lg:h-full lg:w-1/2 p-4">
+          <Card className="w-full h-64 sm:h-72 md:h-96 flex flex-col justify-end items-center overflow-hidden rounded-2xl shadow-2xl p-0 relative">
             <Image
               src="/banners/banner_2.jpeg"
-              alt="Retro Collection"
+              alt={t('shop.banner2.alt', 'Retro Collection')}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"
               priority
             />
-            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
-              <div className="text-white text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <p className="text-lg font-semibold">Retro Collection</p>
-                <p className="text-sm">Scopri le maglie vintage</p>
+            <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center p-6">
+              <div className="text-white text-center mb-4">
+                <p className="text-lg font-semibold drop-shadow">{t('shop.banner2.title', 'Retro Collection')}</p>
+                <p className="text-sm drop-shadow">{t('shop.banner2.subtitle', 'Scopri le maglie vintage')}</p>
               </div>
+              <Button asChild size="lg" className="bg-[#f5963c] hover:bg-[#e0852e] text-white font-semibold rounded-lg shadow-lg transition-transform duration-300 ease-in-out">
+                <Link href="/shop/retro">{t('shop.banner2.cta', 'Scopri ora')}</Link>
+              </Button>
             </div>
-          </Link>
+          </Card>
         </div>
       </div>
 

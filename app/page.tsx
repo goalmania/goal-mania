@@ -5,6 +5,7 @@ import NewsSection from "@/components/home/NewsSection";
 import { Product } from "@/lib/types/home";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
 import GuaranteesSection from "@/components/home/GuaranteesSection";
+import BannerBlock from "@/components/home/BannerBlock";
 
 // Enable caching for better performance
 export const revalidate = 300; // Revalidate every 5 minutes
@@ -115,7 +116,7 @@ export default async function Home() {
   const featuredProducts = await getFeaturedProducts();
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white min-h-screen relative">
       <HeroSection />
       <FeaturedProducts products={featuredProducts} />
       <GuaranteesSection />
