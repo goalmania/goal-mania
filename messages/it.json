@@ -131,6 +131,60 @@
     "subtitle": "Spedizione sempre gratuita, qualità garantita.",
     "cta": "Scopri le maglie"
   },
+  "mysteryBox": {
+    "title": "Scatola Misteriosa",
+    "description": "Scopri la magia delle nostre scatole misteriose! Ogni scatola contiene una maglia a sorpresa delle migliori squadre italiane e internazionali.",
+    "subtitle": "Scegli la tua scatola misteriosa e preparati per una sorpresa emozionante! Ogni scatola è unica e contiene maglie di qualità premium.",
+    "empty": "Nessuna Scatola Misteriosa Disponibile",
+    "emptyDescription": "Torna presto per scoprire le nostre nuove scatole misteriose!",
+    "features": {
+      "surprise": "Maglia a Sorpresa",
+      "teams": "Squadre Top",
+      "shipping": "Spedizione Gratuita"
+    },
+    "process": {
+      "title": "Come Funziona",
+      "description": "Il processo è semplice e divertente! Ecco come funziona la nostra scatola misteriosa.",
+      "step1": "Seleziona la scatola misteriosa che preferisci e aggiungila al carrello.",
+      "step2": "Completa il tuo ordine con pagamento sicuro.",
+      "step3": "Ricevi la tua scatola misteriosa con una maglia a sorpresa di qualità premium!"
+    },
+    "product": {
+      "description": "Una scatola misteriosa piena di sorprese! Contiene una maglia a sorpresa delle migliori squadre italiane e internazionali.",
+      "freeShipping": "Spedizione gratuita",
+      "features": {
+        "premium": "Maglia a sorpresa di qualità premium",
+        "teams": "Squadre italiane e internazionali",
+        "exclude": "Possibilità di escludere fino a 5 maglie"
+      },
+      "addToCart": "Aggiungi al Carrello",
+      "learnMore": "Scopri di Più",
+      "trust": {
+        "freeShipping": "Spedizione gratuita",
+        "secure": "Pagamento sicuro",
+        "premium": "Qualità premium"
+      }
+    },
+    "steps": {
+      "step1": {
+        "title": "Scegli la Scatola",
+        "description": "Seleziona la scatola misteriosa che preferisci e aggiungila al carrello."
+      },
+      "step2": {
+        "title": "Escludi le Maglie",
+        "description": "Puoi escludere fino a 5 maglie che non vuoi ricevere nella tua scatola."
+      },
+      "step3": {
+        "title": "Ricevi la Sorpresa",
+        "description": "Ricevi la tua scatola misteriosa con una maglia a sorpresa di qualità premium!"
+      }
+    },
+    "cta": {
+      "title": "Pronto per l'Avventura?",
+      "description": "Unisciti a migliaia di clienti che hanno già scoperto la magia delle nostre scatole misteriose!",
+      "button": "Esplora Tutti i Prodotti"
+    }
+  },
   "home": {
     "featuredProducts": "Prodotti in Evidenza",
     "viewAllProducts": "Vedi Tutti i Prodotti",

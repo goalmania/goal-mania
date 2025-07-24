@@ -46,7 +46,7 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
   };
 
   return (
-    <div className="bg-white pt-[112px] min-h-screen">
+    <div className="bg-white mt-[112px] h-max">
       {/* Hero Section with Purple/Pink Gradient */}
       <div className="relative overflow-hidden bg-gradient-to-br from-purple-900 via-purple-800 to-pink-900">
         {/* Animated Background Elements */}
@@ -118,58 +118,84 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
               {products.map((product) => (
                 <div
                   key={product.id}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group"
+                  className="bg-white rounded-2xl border border-gray-200 shadow-md overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:border-purple-400 hover:scale-[1.035] flex flex-col h-full"
+                  tabIndex={0}
+                  aria-label={product.name}
                 >
                   {/* Product Image */}
-                  <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
+                  <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100 border-b border-gray-100 group-hover:scale-105 transition-transform duration-300 will-change-transform">
                     <Image
                       src={product.image}
                       alt={product.name}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      quality={90}
+                      className="object-cover"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      priority={true}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                    
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
                     {/* Mystery Box Badge */}
-                    <div className="absolute top-4 left-4 bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1">
+                    <div className="absolute top-4 left-4 bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1 shadow-md">
                       <GiftIcon className="h-4 w-4" />
-                      Mystery Box
+                      {t('mysteryBox.title')}
                     </div>
                   </div>
 
                   {/* Product Info */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  <div className="p-6 flex flex-col flex-1">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-700 transition-colors">
                       {product.name}
                     </h3>
-                    
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-gray-600 mb-4 text-sm">
                       {t('mysteryBox.product.description')}
                     </p>
 
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-between mb-3">
                       <div className="text-2xl font-bold text-purple-600">
                         €{product.price.toFixed(2)}
                       </div>
-                      <div className="text-sm text-gray-500">
-                        {t('mysteryBox.product.freeShipping')}
+                      <div className="flex items-center gap-1 text-xs text-purple-700 bg-purple-50 rounded-full px-2 py-1 font-medium">
+                        <svg className="h-4 w-4 text-purple-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                        {t('mysteryBox.product.trust.freeShipping')}
                       </div>
                     </div>
 
-                    {/* Features */}
-                    <div className="space-y-2 mb-6">
-                      <div className="flex items-center text-sm text-gray-600">
-                        <SparklesIcon className="h-4 w-4 text-purple-500 mr-2" />
-                        {t('mysteryBox.product.features.premium')}
+                    {/* Sizes Display - only show if needed, here always for demo */}
+                    <div className="mb-3">
+                      <div className="flex flex-wrap gap-2 justify-start items-center">
+                        {/* Adult Sizes */}
+                        {["S", "M", "L", "XL", "XXL", "3XL"].map((size) => (
+                          <span
+                            key={size}
+                            className="px-3 py-1 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-semibold text-xs shadow-sm border border-purple-200"
+                          >
+                            {size}
+                          </span>
+                        ))}
+                        {/* Kids Sizes (uncomment if needed) */}
+                        {/*
+                        {["16", "18", "20", "22", "24", "26"].map((size) => (
+                          <span
+                            key={size}
+                            className="px-3 py-1 rounded-full bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-700 font-semibold text-xs shadow-sm border border-orange-200"
+                          >
+                            {size}
+                          </span>
+                        ))}
+                        */}
                       </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <SparklesIcon className="h-4 w-4 text-purple-500 mr-2" />
-                        {t('mysteryBox.product.features.teams')}
+                    </div>
+
+                    {/* Trust/Info Row */}
+                    <div className="flex flex-wrap gap-3 mb-5 mt-auto">
+                     
+                      <div className="flex items-center gap-1 text-xs text-orange-700 bg-orange-50 rounded-full px-2 py-1 font-medium">
+                        <svg className="h-4 w-4 text-orange-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                        {t('mysteryBox.product.trust.secure')}
                       </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <SparklesIcon className="h-4 w-4 text-purple-500 mr-2" />
-                        {t('mysteryBox.product.features.exclude')}
+                      <div className="flex items-center gap-1 text-xs text-pink-700 bg-pink-50 rounded-full px-2 py-1 font-medium">
+                        <SparklesIcon className="h-4 w-4 text-pink-400" />
+                        {t('mysteryBox.product.trust.premium')}
                       </div>
                     </div>
 
@@ -178,7 +204,8 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
                       <button
                         onClick={() => handleAddToCart(product)}
                         disabled={loadingStates[product.id]}
-                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-lg font-medium hover:from-purple-700 hover:to-pink-700 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-lg font-bold text-base hover:from-purple-700 hover:to-pink-700 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md focus:outline-none focus:ring-2 focus:ring-purple-400"
+                        aria-label={t('mysteryBox.product.addToCart')}
                       >
                         {loadingStates[product.id] ? (
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -189,10 +216,10 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
                           </>
                         )}
                       </button>
-                      
                       <Link
                         href={`/products/${product.id}`}
                         className="block w-full text-center text-purple-600 hover:text-purple-700 font-medium py-2 px-4 border border-purple-600 rounded-lg hover:bg-purple-50 transition-colors duration-200"
+                        aria-label={t('mysteryBox.product.learnMore')}
                       >
                         {t('mysteryBox.product.learnMore')}
                       </Link>

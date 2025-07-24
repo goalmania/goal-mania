@@ -131,6 +131,60 @@
     "subtitle": "Always free shipping, guaranteed quality.",
     "cta": "Discover jerseys"
   },
+  "mysteryBox": {
+    "title": "Mystery Box",
+    "description": "Discover the magic of our mystery boxes! Each box contains a surprise jersey from the best Italian and international teams.",
+    "subtitle": "Choose your mystery box and get ready for an exciting surprise! Each box is unique and contains premium quality jerseys.",
+    "empty": "No Mystery Boxes Available",
+    "emptyDescription": "Come back soon to discover our new mystery boxes!",
+    "features": {
+      "surprise": "Surprise Jersey",
+      "teams": "Top Teams",
+      "shipping": "Free Shipping"
+    },
+    "process": {
+      "title": "How It Works",
+      "description": "The process is simple and fun! Here's how our mystery box works.",
+      "step1": "Select the mystery box you prefer and add it to your cart.",
+      "step2": "Complete your order with secure payment.",
+      "step3": "Receive your mystery box with a premium quality surprise jersey!"
+    },
+    "product": {
+      "description": "A mystery box full of surprises! Contains a surprise jersey from the best Italian and international teams.",
+      "freeShipping": "Free shipping",
+      "features": {
+        "premium": "Premium quality surprise jersey",
+        "teams": "Italian and international teams",
+        "exclude": "Possibility to exclude up to 5 jerseys"
+      },
+      "addToCart": "Add to Cart",
+      "learnMore": "Learn More",
+      "trust": {
+        "freeShipping": "Free Shipping",
+        "secure": "Secure Checkout",
+        "premium": "Premium Quality"
+      }
+    },
+    "steps": {
+      "step1": {
+        "title": "Choose the Box",
+        "description": "Select the mystery box you prefer and add it to your cart."
+      },
+      "step2": {
+        "title": "Exclude Jerseys",
+        "description": "You can exclude up to 5 jerseys that you don't want to receive in your box."
+      },
+      "step3": {
+        "title": "Receive the Surprise",
+        "description": "Receive your mystery box with a premium quality surprise jersey!"
+      }
+    },
+    "cta": {
+      "title": "Ready for the Adventure?",
+      "description": "Join thousands of customers who have already discovered the magic of our mystery boxes!",
+      "button": "Explore All Products"
+    }
+  },
   "home": {
     "featuredProducts": "Featured Products",
     "viewAllProducts": "View All Products",
