@@ -82,6 +82,12 @@
       "addToCart": "Aggiungi al carrello",
       "addToWishlist": "Aggiungi ai preferiti",
       "removeFromWishlist": "Rimuovi dai preferiti"
+    },
+    "team": {
+      "description": "Scopri le maglie ufficiali e il merchandising per"
+    },
+    "serieA": {
+      "description": "Scopri la nostra collezione completa di maglie Serie A e internazionali"
     }
   },
   "wishlist": {

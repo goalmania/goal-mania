@@ -43,7 +43,7 @@ export default async function InternationalShopPage() {
     price: product.basePrice || 0, // Ensure price is never undefined
     image: product.images?.[0] || "/images/image.png", // Ensure image is never undefined with a fallback
     category: product.category || "International", // Ensure category is never undefined
-    team: product.title ? product.title.split(" ")[0] : "Unknown", // Ensure team is never undefined
+    team: product.title ? product.title.split(" ")[1] : "Unknown", // Extract team name (second word)
   }));
 
   return <SerieAClient products={products} />;

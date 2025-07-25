@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 async function getRetroProducts() {
   await connectDB();
   const products = await Product.find({
-    category: "Retro",
+    category: "retro",
     isActive: true,
   }).sort({ feature: -1, createdAt: -1 });
   return JSON.parse(JSON.stringify(products)); // Serialize the Mongoose documents
@@ -43,7 +43,7 @@ export default async function RetroShopPage() {
     price: product.basePrice || 0, // Ensure price is never undefined
     image: product.images?.[0] || "/images/image.png", // Ensure image is never undefined with a fallback
     category: product.category || "Retro", // Ensure category is never undefined
-    team: product.title ? product.title.split(" ")[0] : "Unknown", // Ensure team is never undefined
+    team: product.title ? product.title.split(" ")[1] : "Unknown", // Extract team name (second word)
   }));
 
   return <RetroClient products={products} />;

@@ -43,7 +43,7 @@ export default async function Season2025ShopPage() {
     price: product.basePrice || 0, // Ensure price is never undefined
     image: product.images?.[0] || "/images/image.png", // Ensure image is never undefined with a fallback
     category: product.category || "2025/26", // Ensure category is never undefined
-    team: product.title ? product.title.split(" ")[0] : "Unknown", // Ensure team is never undefined
+    team: product.title ? product.title.split(" ")[1] : "Unknown", // Extract team name (second word)
   }));
 
   return <Season2025Client products={products} />;

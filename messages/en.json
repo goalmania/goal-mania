@@ -82,6 +82,12 @@
       "addToCart": "Add to Cart",
       "addToWishlist": "Add to Wishlist",
       "removeFromWishlist": "Remove from Wishlist"
+    },
+    "team": {
+      "description": "Discover the official shirts and merchandise for"
+    },
+    "serieA": {
+      "description": "Discover our complete collection of Serie A and international team shirts"
     }
   },
   "wishlist": {

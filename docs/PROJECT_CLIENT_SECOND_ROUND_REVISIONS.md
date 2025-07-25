@@ -20,7 +20,7 @@ The following are the requested updates and revisions for the next project itera
    - In the shop section, you can remove the introductory part that says "Discover our shirts". Replace it with the first visual graphic (the one I sent you) inside the new styled rectangle.
    - The graphic with “90s and 2000s” should go in the Retro section, and please move the Retro category close to the 2025/26 category in the shop menu.
 
-6. **Team Logo Carousel**
+6. **Team Logo Carousel** (DONE)
    - When a user clicks on a team logo in the carousel, it should open a dedicated page showing only the shirts from that team.
 
 7. **Patches Section & Product Detail Styling**
