@@ -32,9 +32,9 @@ async function getTeamProducts(teamSlug: string) {
 }
 
 interface TeamPageProps {
-  params: {
+  params: Promise<{
     team: string;
-  };
+  }>;
 }
 
 export default async function TeamShopPage({ params }: TeamPageProps) {

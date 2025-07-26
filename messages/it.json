@@ -312,6 +312,14 @@
     "viewAllOrders": "Visualizza Tutti gli Ordini",
     "manageUsers": "Gestisci Utenti",
     "createArticle": "Crea Articolo",
+    "products": {
+      "confirmDelete": "Elimina Prodotto",
+      "confirmDeleteMessage": "Sei sicuro di voler eliminare questo prodotto? Questa azione non può essere annullata.",
+      "deleteButton": "Elimina",
+      "cancelButton": "Annulla",
+      "deleteSuccess": "Prodotto eliminato con successo!",
+      "deleteFailed": "Impossibile eliminare il prodotto"
+    },
     "patches": {
       "management": "Gestione Patch",
       "manage": "Gestisci Patch",

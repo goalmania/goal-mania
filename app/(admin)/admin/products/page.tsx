@@ -19,7 +19,18 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { toast } from "react-hot-toast";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -669,9 +680,13 @@ function ProductDataTable({
 
 export default function ProductsPage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [showInactive, setShowInactive] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [optimisticProducts, setOptimisticProducts] = useState<IProduct[]>([]);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Use the optimized products hook
   const {
@@ -700,11 +715,18 @@ export default function ProductsPage() {
     router.push(`/admin/products/edit/${productId}`);
   };
 
-  const handleDeleteProduct = async (productId: string) => {
-    if (!confirm("Are you sure you want to delete this product? This action cannot be undone.")) return;
+  const handleDeleteProduct = (productId: string) => {
+    setProductToDelete(productId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteProduct = async () => {
+    if (!productToDelete) return;
+
+    setIsDeleting(true);
 
     try {
-      const response = await fetch(`/api/products/${productId}`, {
+      const response = await fetch(`/api/products/${productToDelete}`, {
         method: "DELETE",
       });
 
@@ -719,11 +741,21 @@ export default function ProductsPage() {
         search: searchTerm,
         includeInactive: showInactive,
       });
-      toast.success("Product deleted successfully");
+      
+      toast.success(t("admin.products.deleteSuccess"));
+      setDeleteDialogOpen(false);
+      setProductToDelete(null);
     } catch (error) {
       console.error("Error deleting product:", error);
-      toast.error("Failed to delete product");
+      toast.error(t("admin.products.deleteFailed"));
+    } finally {
+      setIsDeleting(false);
     }
+  };
+
+  const cancelDeleteProduct = () => {
+    setDeleteDialogOpen(false);
+    setProductToDelete(null);
   };
 
   const handleToggleStatus = async (productId: string, isActive: boolean) => {
@@ -895,6 +927,33 @@ export default function ProductsPage() {
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("admin.products.confirmDelete")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("admin.products.confirmDeleteMessage")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel 
+              onClick={cancelDeleteProduct}
+              disabled={isDeleting}
+            >
+              {t("admin.products.cancelButton")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteProduct}
+              disabled={isDeleting}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isDeleting ? "Deleting..." : t("admin.products.deleteButton")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

@@ -26,6 +26,9 @@ The following are the requested updates and revisions for the next project itera
 7. **Patches Section & Product Detail Styling**
    - The Patches section is still missing the images—please upload those.
    - Within the product detail pages, use orange and blue as accent colors to match our branding.
+   **Comments**
+      - Created a robust Global Patch management system and Available Patches
+      - Admin can assign patches, update, delete or create new ones
 
 8. **Admin Video Uploads in Shop**
    - In the Shop section, there needs to be a dedicated area where only the admin can upload videos that showcase the shirts. These videos should appear in the product pages when relevant.

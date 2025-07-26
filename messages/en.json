@@ -312,6 +312,14 @@
     "viewAllOrders": "View All Orders",
     "manageUsers": "Manage Users",
     "createArticle": "Create Article",
+    "products": {
+      "confirmDelete": "Delete Product",
+      "confirmDeleteMessage": "Are you sure you want to delete this product? This action cannot be undone.",
+      "deleteButton": "Delete",
+      "cancelButton": "Cancel",
+      "deleteSuccess": "Product deleted successfully!",
+      "deleteFailed": "Failed to delete product"
+    },
     "patches": {
       "management": "Patch Management",
       "manage": "Manage Patches",
