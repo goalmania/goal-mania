@@ -24,10 +24,10 @@ const updatePatchSchema = z.object({
 // GET - Public access for reading a specific patch
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // Validate ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -49,7 +49,7 @@ export async function GET(
     }
 
     // Only return active patches for public access
-    if (!patch.isActive) {
+    if (!(patch as any).isActive) {
       return NextResponse.json(
         { error: "Patch not found" },
         { status: 404 }
@@ -69,7 +69,7 @@ export async function GET(
 // PUT - Admin only for updating patches
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -90,7 +90,7 @@ export async function PUT(
       );
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     // Validate ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -148,7 +148,7 @@ export async function PUT(
 // DELETE - Admin only for deleting patches
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -169,7 +169,7 @@ export async function DELETE(
       );
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     // Validate ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
