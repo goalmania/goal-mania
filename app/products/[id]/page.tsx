@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
+import Patch from "@/lib/models/Patch";
 import ProductDetailClient from "@/app/_components/ProductDetailClient";
 import { Suspense } from "react";
 import mongoose from "mongoose";
@@ -33,7 +34,14 @@ async function getProduct(id: string) {
       return null;
     }
 
-    return JSON.parse(JSON.stringify(product)); // Serialize the Mongoose document
+    // Serialize the product
+    const serializedProduct = JSON.parse(JSON.stringify(product));
+    
+    // Fetch ALL active patches (global for all products)
+    const patches = await Patch.find({ isActive: true }).lean();
+    serializedProduct.patches = patches;
+
+    return serializedProduct;
   } catch (error) {
     console.error("Error fetching product:", error);
     return null;

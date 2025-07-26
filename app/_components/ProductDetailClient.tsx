@@ -9,6 +9,19 @@ import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { useWishlistStore } from "@/lib/store/wishlist";
 import { useCartStore } from "@/lib/store/cart";
 import { IProduct, Review, Patch } from "@/lib/types/product";
+
+// Define interface for actual patch objects
+interface PatchObject {
+  _id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  category: string;
+  price: number;
+  isActive: boolean;
+  isFeatured: boolean;
+  sortOrder: number;
+}
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
@@ -48,7 +61,7 @@ const EXTRAS_PRICES = {
 export default function ProductDetailClient({
   product,
 }: {
-  product: IProduct;
+  product: IProduct & { patches?: PatchObject[] };
 }) {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -60,7 +73,7 @@ export default function ProductDetailClient({
     number: "",
     includeShorts: false,
     includeSocks: false,
-    selectedPatches: [] as Patch[],
+    selectedPatches: [] as PatchObject[],
     size: "",
     isPlayerEdition: false,
     isKidSize: false,
@@ -99,7 +112,7 @@ export default function ProductDetailClient({
 
     // Add patches price
     customization.selectedPatches.forEach((patch) => {
-      total += PATCH_PRICES[patch];
+      total += patch.price;
     });
 
     // Add player edition price
@@ -172,7 +185,7 @@ export default function ProductDetailClient({
       customization: {
         name: customization.name,
         number: customization.number,
-        selectedPatches: customization.selectedPatches,
+        selectedPatches: customization.selectedPatches.map(p => p.category as Patch),
         includeShorts: customization.includeShorts,
         includeSocks: customization.includeSocks,
         isPlayerEdition: customization.isPlayerEdition,
@@ -692,41 +705,29 @@ export default function ProductDetailClient({
                   )}
 
                   {/* Patches - Hide for Mystery Box */}
-                  {!product.isMysteryBox && product.availablePatches &&
-                    product.availablePatches.length > 0 && (
+                  {!product.isMysteryBox && product.patches &&
+                    product.patches.length > 0 && (
                       <div className="space-y-3">
                         <Label className="text-sm font-medium">
                           Add Official Patches
                         </Label>
                         <div className="grid grid-cols-2 gap-4">
-                          {product.availablePatches.map((patch) => (
-                            <div key={patch} className="flex items-center space-x-2">
+                          {product.patches.map((patch) => (
+                            <div key={patch._id} className="flex items-center space-x-2">
                               <Checkbox
-                                id={patch}
-                                checked={customization.selectedPatches.includes(patch)}
+                                id={patch._id}
+                                checked={customization.selectedPatches.some(p => p._id === patch._id)}
                                 onCheckedChange={(checked) => {
                                   setCustomization((prev) => ({
                                     ...prev,
                                     selectedPatches: checked
                                       ? [...prev.selectedPatches, patch]
-                                      : prev.selectedPatches.filter((p) => p !== patch),
+                                      : prev.selectedPatches.filter((p) => p._id !== patch._id),
                                   }));
                                 }}
                               />
-                              <Label htmlFor={patch} className="text-sm">
-                                {patch === "champions-league"
-                                  ? "Coppa Europea"
-                                  : patch === "serie-a"
-                                  ? "Campionato Nazionale"
-                                  : patch
-                                      .split("-")
-                                      .map(
-                                        (word: string) =>
-                                          word.charAt(0).toUpperCase() +
-                                          word.slice(1)
-                                      )
-                                      .join(" ")}{" "}
-                                (+€{PATCH_PRICES[patch]})
+                              <Label htmlFor={patch._id} className="text-sm">
+                                {patch.title} (+€{patch.price})
                               </Label>
                             </div>
                           ))}

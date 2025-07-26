@@ -3,9 +3,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
+import Patch from "@/lib/models/Patch";
 import { z } from "zod";
 import mongoose from "mongoose";
-import { VALID_PATCHES } from "@/lib/types/product";
+
 
 // More flexible schema for updates - make more fields optional
 const productUpdateSchema = z.object({
@@ -34,7 +35,6 @@ const productUpdateSchema = z.object({
   adultSizes: z.array(z.string()).default(["S", "M", "L", "XL", "XXL"]),
   kidsSizes: z.array(z.string()).default([]),
   category: z.string(), // Accept any category value when updating
-  availablePatches: z.array(z.string()).default([]).optional(),
   allowsNumberOnShirt: z.boolean().default(true).optional(),
   allowsNameOnShirt: z.boolean().default(true).optional(),
   isActive: z.boolean().default(true).optional(),
@@ -43,6 +43,8 @@ const productUpdateSchema = z.object({
   // Allow other fields to be passed through
   isRetro: z.boolean().optional(),
   isMysteryBox: z.boolean().optional(),
+  // Patch relationships
+  patchIds: z.array(z.string()).optional().default([]),
 });
 
 export async function GET(
@@ -59,10 +61,10 @@ export async function GET(
     // Check if the ID is a valid MongoDB ObjectId
     if (mongoose.Types.ObjectId.isValid(id)) {
       // If it's a valid ObjectId, search by _id
-      product = await Product.findById(id);
+      product = await Product.findById(id).populate('patchIds');
     } else {
       // If not a valid ObjectId, try looking up by slug
-      product = await Product.findOne({ slug: id });
+      product = await Product.findOne({ slug: id }).populate('patchIds');
     }
 
     if (!product) {
@@ -332,6 +334,23 @@ export async function PUT(
       }
 
       await connectDB();
+
+      // Handle patch relationships
+      if (validatedData.patchIds) {
+        // Validate that all patchIds exist
+        const Patch = require('@/lib/models/Patch').default;
+        const existingPatches = await Patch.find({ 
+          _id: { $in: validatedData.patchIds },
+          isActive: true 
+        });
+        
+        if (existingPatches.length !== validatedData.patchIds.length) {
+          return NextResponse.json(
+            { error: "One or more patches not found or inactive" },
+            { status: 400 }
+          );
+        }
+      }
 
       // Use findByIdAndUpdate with { runValidators: false } to skip mongoose validations
       const product = await Product.findByIdAndUpdate(id, validatedData, {

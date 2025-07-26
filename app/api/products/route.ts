@@ -5,7 +5,6 @@ import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { z } from "zod";
 import {
-  VALID_PATCHES,
   VALID_ADULT_SIZES,
   VALID_KID_SIZES,
   PRODUCT_CATEGORIES,
@@ -38,14 +37,13 @@ const productSchema = z.object({
     .default(["S", "M", "L", "XL", "XXL"]),
   kidsSizes: z.array(z.enum(["XS", "S", "M", "L", "XL"])).default([]),
   category: z.enum(PRODUCT_CATEGORIES),
-  availablePatches: z
-    .array(z.enum(["champions-league", "serie-a", "coppa-italia"]))
-    .default([]),
   allowsNumberOnShirt: z.boolean().default(true),
   allowsNameOnShirt: z.boolean().default(true),
   isActive: z.boolean().default(true),
   feature: z.boolean().default(true),
   slug: z.string().optional(),
+  // Patch relationships
+  patchIds: z.array(z.string()).optional().default([]),
 });
 
 export async function GET(req: NextRequest) {
@@ -124,7 +122,7 @@ export async function GET(req: NextRequest) {
         .skip((validatedPage - 1) * validatedLimit)
         .limit(validatedLimit)
         .lean()
-        .select('_id title description basePrice retroPrice shippingPrice stockQuantity images isRetro hasShorts hasSocks category availablePatches allowsNumberOnShirt allowsNameOnShirt isActive feature slug isMysteryBox createdAt')
+        .select('_id title description basePrice retroPrice shippingPrice stockQuantity images isRetro hasShorts hasSocks category allowsNumberOnShirt allowsNameOnShirt isActive feature slug isMysteryBox createdAt')
     ]);
 
     console.log(`Found ${products.length} products matching the criteria`);
@@ -292,6 +290,23 @@ export async function POST(request: Request) {
     // Validate input
     try {
       const validatedData = productSchema.parse(processedBody);
+
+      // Handle patch relationships
+      if (validatedData.patchIds && validatedData.patchIds.length > 0) {
+        // Validate that all patchIds exist
+        const Patch = require('@/lib/models/Patch').default;
+        const existingPatches = await Patch.find({ 
+          _id: { $in: validatedData.patchIds },
+          isActive: true 
+        });
+        
+        if (existingPatches.length !== validatedData.patchIds.length) {
+          return NextResponse.json(
+            { error: "One or more patches not found or inactive" },
+            { status: 400 }
+          );
+        }
+      }
 
       // Generate slug from title if not provided
       if (!validatedData.slug) {

@@ -39,7 +39,10 @@ The following are the requested updates and revisions for the next project itera
 11. **Why Choose GoalMania Section**
     - In the “Why choose GoalMania” section, make sure it clearly states that shipping is always free, and update the return policy to 7 days, not 30.
 
----
+12. **Add Google Analytics & Adsense**
 
-**Note:**
-Let me know when all of these updates are complete or if you need any assets again. Thanks! 
+13. **Fix the Styling of Ad in the article**
+   - Style make it more visible and lead the reader to click on the link
+   - always keeping the same size improving the graphics maybe putting orange color shading a little to make the button visible the shirt the titles
+
+---

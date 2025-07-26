@@ -311,7 +311,18 @@
     "manageProducts": "Manage Products",
     "viewAllOrders": "View All Orders",
     "manageUsers": "Manage Users",
-    "createArticle": "Create Article"
+    "createArticle": "Create Article",
+    "patches": {
+      "management": "Patch Management",
+      "manage": "Manage Patches",
+      "create": "Create Patch",
+      "confirmDelete": "Are you sure you want to delete",
+      "actionCannotBeUndone": "This action cannot be undone.",
+      "deleteSuccess": "Patch deleted successfully!",
+      "deleteFailed": "Failed to delete patch",
+      "createSuccess": "Patch created successfully!",
+      "updateSuccess": "Patch updated successfully!"
+    }
   },
   "faq": {
     "title": "Frequently Asked Questions",

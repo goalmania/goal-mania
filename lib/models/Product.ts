@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import {
   VALID_ADULT_SIZES,
   VALID_KID_SIZES,
-  VALID_PATCHES,
   PRODUCT_CATEGORIES,
 } from "@/lib/types/product";
 
@@ -111,11 +110,11 @@ const productSchema = new mongoose.Schema(
       required: true,
       enum: PRODUCT_CATEGORIES,
     },
-    availablePatches: {
-      type: [String],
-      enum: VALID_PATCHES,
-      default: [],
-    },
+    // Reference to actual Patch documents
+    patchIds: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Patch',
+    }],
     allowsNumberOnShirt: {
       type: Boolean,
       default: true,

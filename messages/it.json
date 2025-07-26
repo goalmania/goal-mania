@@ -311,7 +311,18 @@
     "manageProducts": "Gestisci Prodotti",
     "viewAllOrders": "Visualizza Tutti gli Ordini",
     "manageUsers": "Gestisci Utenti",
-    "createArticle": "Crea Articolo"
+    "createArticle": "Crea Articolo",
+    "patches": {
+      "management": "Gestione Patch",
+      "manage": "Gestisci Patch",
+      "create": "Crea Patch",
+      "confirmDelete": "Sei sicuro di voler eliminare",
+      "actionCannotBeUndone": "Questa azione non può essere annullata.",
+      "deleteSuccess": "Patch eliminata con successo!",
+      "deleteFailed": "Impossibile eliminare la patch",
+      "createSuccess": "Patch creata con successo!",
+      "updateSuccess": "Patch aggiornata con successo!"
+    }
   },
   "faq": {
     "title": "Domande Frequenti",

@@ -1,17 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import {
   IProduct,
   VALID_ADULT_SIZES,
   VALID_KID_SIZES,
-  VALID_PATCHES,
   PRODUCT_CATEGORIES,
   AdultSize,
   KidSize,
-  Patch,
 } from "@/lib/types/product";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,38 +39,33 @@ import { ProductFormSchema, ProductFormData } from "@/lib/schemas/product";
 import { StepIndicator } from "@/components/admin/StepIndicator";
 import { StockQuantityInput } from "@/components/admin/StockQuantityInput";
 import { FormStep } from "@/hooks/useProductForm";
+import { usePatches } from "@/hooks/usePatches";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { PatchForm } from "@/components/admin/patches/patch-form";
+import { PatchManagementDialog } from "@/components/admin/patches/PatchManagementDialog";
+import { useTranslation } from "@/lib/hooks/useTranslation";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import Link from "next/link";
+import { PatchsCard } from "@/components/admin/patches/patchs-card";
 
-const PATCHES = VALID_PATCHES.map((id: string) => {
-  // Map patch IDs to display names
-  let name = "";
-  if (id === "champions-league") {
-    name = "Coppa Europea";
-  } else if (id === "serie-a") {
-    name = "Campionato Nazionale";
-  } else if (id === "coppa-italia") {
-    name = "Coppa Nazionale";
-  } else {
-    name = id
-      .split("-")
-      .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-  }
-  return { id, name };
-});
+
 
 export default function EditProductPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const params = useParams();
   const productId = typeof params?.id === "string" ? params.id : "";
+  const patchFilters = useMemo(() => ({}), []);
+  const { patches, loading: patchesLoading } = usePatches(patchFilters);
 
   const [currentStep, setCurrentStep] = useState<FormStep>("basic");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [uploadingImages, setUploadingImages] = useState(false);
+  const [patchDialogOpen, setPatchDialogOpen] = useState(false);
 
   // Initialize form with React Hook Form
   const form = useForm<ProductFormData>({
-    resolver: zodResolver(ProductFormSchema),
     defaultValues: {
       title: "",
       description: "",
@@ -86,15 +79,15 @@ export default function EditProductPage() {
       hasSocks: true,
       hasPlayerEdition: true,
       isMysteryBox: false,
-      adultSizes: [...VALID_ADULT_SIZES],
-      kidsSizes: [...VALID_KID_SIZES],
-      category: "2024/25",
-      availablePatches: [],
+      adultSizes: [...VALID_ADULT_SIZES] as AdultSize[],
+      kidsSizes: [...VALID_KID_SIZES] as KidSize[],
+      category: "2024/25" as const,
       allowsNumberOnShirt: true,
       allowsNameOnShirt: true,
       isActive: true,
       feature: true,
       isRetro: false,
+      patchIds: [],
     },
     mode: "onChange",
   });
@@ -705,7 +698,6 @@ export default function EditProductPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
-                    <Cog6ToothIcon className="h-5 w-5" />
                     <span>Product Options</span>
                   </CardTitle>
                   <CardDescription>
@@ -807,44 +799,8 @@ export default function EditProductPage() {
                 </CardContent>
               </Card>
 
-              {/* Available Patches */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Available Patches</CardTitle>
-                  <CardDescription>
-                    Select which patches are available for this product
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="grid grid-cols-1 gap-2">
-                    {PATCHES.map((patch) => (
-                      <Controller
-                        key={patch.id}
-                        name="availablePatches"
-                        control={control}
-                        render={({ field }) => (
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id={`patch-${patch.id}`}
-                              checked={field.value?.includes(patch.id as any)}
-                              onCheckedChange={(checked) => {
-                                const currentPatches = field.value || [];
-                                const newPatches = checked
-                                  ? [...currentPatches, patch.id as any]
-                                  : currentPatches.filter(p => p !== patch.id);
-                                field.onChange(newPatches);
-                              }}
-                            />
-                            <Label htmlFor={`patch-${patch.id}`} className="text-sm">
-                              {patch.name}
-                            </Label>
-                          </div>
-                        )}
-                      />
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                            {/* Global Patches */}
+              <PatchsCard control={control} />
             </div>
 
             {/* Sizes */}

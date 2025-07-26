@@ -70,8 +70,10 @@ export const ProductFormSchema = z.object({
   
   kidsSizes: z.array(KidSizeSchema),
   
-  // Patches
-  availablePatches: z.array(PatchSchema),
+  // Patches - link to global patches
+  patchIds: z.array(z.string())
+    .optional()
+    .default([]),
   
   // Images
   images: z.array(z.string().url("Invalid image URL"))
@@ -116,11 +118,11 @@ export const OptionsSchema = z.object({
   isRetro: ProductFormSchema.shape.isRetro,
   allowsNameOnShirt: ProductFormSchema.shape.allowsNameOnShirt,
   allowsNumberOnShirt: ProductFormSchema.shape.allowsNumberOnShirt,
-  availablePatches: ProductFormSchema.shape.availablePatches,
   adultSizes: ProductFormSchema.shape.adultSizes,
   kidsSizes: ProductFormSchema.shape.kidsSizes,
   isActive: ProductFormSchema.shape.isActive,
   feature: ProductFormSchema.shape.feature,
+  patchIds: ProductFormSchema.shape.patchIds,
 });
 
 export const ImagesSchema = z.object({
