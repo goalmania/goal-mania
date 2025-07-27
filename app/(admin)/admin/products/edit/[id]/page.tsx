@@ -40,13 +40,15 @@ import { StepIndicator } from "@/components/admin/StepIndicator";
 import { StockQuantityInput } from "@/components/admin/StockQuantityInput";
 import { FormStep } from "@/hooks/useProductForm";
 import { usePatches } from "@/hooks/usePatches";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PatchForm } from "@/components/admin/patches/patch-form";
 import { PatchManagementDialog } from "@/components/admin/patches/PatchManagementDialog";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { PatchsCard } from "@/components/admin/patches/patchs-card";
+
+
 
 
 
@@ -63,6 +65,9 @@ export default function EditProductPage() {
   const [error, setError] = useState<string | null>(null);
   const [uploadingImages, setUploadingImages] = useState(false);
   const [patchDialogOpen, setPatchDialogOpen] = useState(false);
+  const [videoDialogOpen, setVideoDialogOpen] = useState(false);
+  const [selectedVideoUrl, setSelectedVideoUrl] = useState<string>("");
+  const [uploadProgress, setUploadProgress] = useState<{[key: string]: number}>({});
 
   // Initialize form with React Hook Form
   const form = useForm<ProductFormData>({
@@ -74,7 +79,7 @@ export default function EditProductPage() {
       shippingPrice: 0,
       stockQuantity: 0,
       images: [],
-      videos: [],
+      videos: [], // Ensure videos is always initialized as empty array
       hasShorts: true,
       hasSocks: true,
       hasPlayerEdition: true,
@@ -184,6 +189,14 @@ export default function EditProductPage() {
         }
       });
 
+      // Ensure videos field is properly initialized even if missing from database
+      if (!processedProduct.videos) {
+        setValue("videos", []);
+        console.log("Initialized empty videos array for product:", productId);
+      } else {
+        console.log("Loaded videos for product:", productId, processedProduct.videos);
+      }
+
     } catch (error) {
       console.error("Error fetching product:", error);
       setError("Failed to fetch product data");
@@ -248,33 +261,261 @@ export default function EditProductPage() {
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
 
+    // Validate Cloudinary configuration
+    const cloudinaryUrl = process.env.NEXT_PUBLIC_CLOUDINARY_URL;
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+    
+    if (!cloudinaryUrl || !uploadPreset) {
+      toast.error("Cloudinary configuration missing. Please check environment variables.");
+      console.error("Missing Cloudinary configuration:", {
+        url: cloudinaryUrl || 'NOT SET',
+        preset: uploadPreset || 'NOT SET',
+        fullUrl: cloudinaryUrl,
+        fullPreset: uploadPreset
+      });
+      return;
+    }
+
+    // Test network connectivity
+    console.log("Testing Cloudinary connectivity...");
+    try {
+      const testResponse = await fetch(cloudinaryUrl.replace('/upload', '/ping'), {
+        method: 'GET',
+        mode: 'cors'
+      });
+      console.log("Cloudinary ping test:", testResponse.status);
+    } catch (pingError) {
+      console.warn("Cloudinary ping failed (this might be normal):", pingError);
+    }
+
+    console.log("Starting video upload...");
     setUploadingImages(true);
     const files = Array.from(e.target.files);
-    const uploadPromises = files.map(async (file) => {
+    
+    // Enhanced validation with detailed error reporting
+    const validFiles: File[] = [];
+    const rejectedFiles: Array<{file: File, reason: string}> = [];
+    
+    files.forEach(file => {
+      const isVideo = file.type.startsWith('video/') || file.name.toLowerCase().endsWith('.mp4') || file.name.toLowerCase().endsWith('.mov') || file.name.toLowerCase().endsWith('.webm');
+      const isValidSize = file.size <= 500 * 1024 * 1024; // 500MB limit
+      const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+      
+      console.log(`File validation:`, {
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        sizeInMB: `${sizeInMB}MB`,
+        isVideo,
+        isValidSize,
+        valid: isVideo && isValidSize
+      });
+      
+      if (!isVideo) {
+        rejectedFiles.push({file, reason: `Invalid file type: ${file.type}. Expected video file.`});
+      } else if (!isValidSize) {
+        rejectedFiles.push({file, reason: `File too large: ${sizeInMB}MB. Maximum allowed: 500MB.`});
+      } else {
+        validFiles.push(file);
+      }
+    });
+
+    // Show detailed error messages for rejected files
+    if (rejectedFiles.length > 0) {
+      rejectedFiles.forEach(({file, reason}) => {
+        console.error(`Rejected file: ${file.name} - ${reason}`);
+        toast.error(`${file.name}: ${reason}`);
+      });
+    }
+
+    if (validFiles.length === 0) {
+      toast.error("No valid video files to upload");
+      setUploadingImages(false);
+      return;
+    }
+
+    console.log(`Proceeding with ${validFiles.length} valid files out of ${files.length} total`);
+
+    const uploadPromises = validFiles.map(async (file, index) => {
+      const fileId = `${file.name}-${Date.now()}`;
+      setUploadProgress(prev => ({ ...prev, [fileId]: 0 }));
+      
+      // Simulate progress for large files
+      const fileSize = file.size;
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          const currentProgress = prev[fileId] || 0;
+          if (currentProgress < 90) {
+            const increment = Math.random() * 10 + 5; // Random increment between 5-15%
+            return { ...prev, [fileId]: Math.min(90, currentProgress + increment) };
+          }
+          return prev;
+        });
+      }, 1000);
+      
+      console.log(`Uploading video ${index + 1}/${validFiles.length}: ${file.name}`);
+      
+      // Sanitize filename for Cloudinary
+      const sanitizedFileName = file.name
+        .replace(/[^a-zA-Z0-9.-]/g, '_') // Replace special chars with underscore
+        .replace(/_{2,}/g, '_') // Replace multiple underscores with single
+        .replace(/^_|_$/g, ''); // Remove leading/trailing underscores
+      
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
+      formData.append("resource_type", "video");
+      formData.append("public_id", `product_videos/${sanitizedFileName}_${Date.now()}`);
+      
+      // Optimized parameters for faster upload
+      formData.append("quality", "auto:good"); // Good quality, faster processing
+      formData.append("fetch_format", "auto");
+      formData.append("chunk_size", "10000000"); // 10MB chunks for better speed
+      formData.append("eager", "sp_hd/mp4"); // Pre-generate optimized version
 
-      try {
-        const response = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL!, {
-          method: "POST",
-          body: formData,
-        });
+      console.log(`Upload details:`, {
+        originalName: file.name,
+        sanitizedName: sanitizedFileName,
+        size: (file.size / (1024 * 1024)).toFixed(2) + 'MB',
+        sizeBytes: file.size,
+        type: file.type,
+        cloudinaryUrl: cloudinaryUrl,
+        uploadPreset: uploadPreset,
+        publicId: `product_videos/${sanitizedFileName}_${Date.now()}`,
+        formDataEntries: formData.entries ? Array.from(formData.entries()).map(([key, value]) => [key, typeof value === 'string' ? value : 'File']) : 'FormData not iterable'
+      });
 
-        if (!response.ok) throw new Error("Upload failed");
-        const data = await response.json();
-        return data.secure_url;
-      } catch (error) {
-        console.error("Upload error:", error);
-        return null;
+      // Retry mechanism
+      const maxRetries = 3;
+      let retryCount = 0;
+
+      while (retryCount < maxRetries) {
+        try {
+          // Add timeout for large files
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 900000); // 15 minute timeout
+
+          console.log(`Making fetch request to: ${cloudinaryUrl}`);
+          console.log(`Request headers will be auto-set by browser for FormData`);
+          
+          const response = await fetch(cloudinaryUrl, {
+            method: "POST",
+            body: formData,
+            signal: controller.signal,
+            mode: 'cors', // Explicitly set CORS mode
+            credentials: 'omit', // Don't send credentials
+          });
+
+          clearTimeout(timeoutId);
+          clearInterval(progressInterval);
+          
+          // Update progress to 100% on successful response
+          setUploadProgress(prev => ({ ...prev, [fileId]: 100 }));
+          
+          console.log(`Upload response status for ${file.name}:`, response.status);
+          
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`Upload failed for ${file.name}:`, {
+              status: response.status,
+              statusText: response.statusText,
+              errorText,
+              attempt: retryCount + 1
+            });
+            
+            // Check if it's a retryable error
+            if (response.status >= 500 || response.status === 429) {
+              throw new Error(`Server error: ${response.status} - Retrying...`);
+            } else {
+              throw new Error(`Upload failed: ${response.status} - ${response.statusText}`);
+            }
+          }
+          
+          const data = await response.json();
+          console.log(`Upload successful for ${file.name}:`, data.secure_url);
+          
+          // Clear progress for this file
+          setUploadProgress(prev => {
+            const newPrev = { ...prev };
+            delete newPrev[fileId];
+            return newPrev;
+          });
+          
+          return data.secure_url;
+          
+        } catch (error) {
+          retryCount++;
+          console.error(`Upload error for ${file.name} (attempt ${retryCount}):`, {
+            error,
+            errorMessage: error instanceof Error ? error.message : 'Unknown error',
+            errorName: error instanceof Error ? error.name : 'Unknown',
+            errorStack: error instanceof Error ? error.stack : 'No stack',
+            fileSize: file.size,
+            fileName: file.name,
+            cloudinaryUrl,
+            uploadPreset,
+            retryCount,
+            maxRetries
+          });
+          
+          if (error instanceof Error) {
+            if (error.name === 'AbortError') {
+              toast.error(`Upload timeout for ${file.name} (max 15 minutes)`);
+              break;
+            } else if (error.message.includes('Failed to fetch')) {
+              // Network/CORS/URL issues
+              if (retryCount < maxRetries) {
+                toast.error(`Network error uploading ${file.name}, retrying... (${retryCount}/${maxRetries})`);
+                await new Promise(resolve => setTimeout(resolve, 3000 * retryCount));
+                continue;
+              } else {
+                toast.error(`Network error: Cannot reach Cloudinary. Check your internet connection and Cloudinary URL.`);
+                console.error('Failed to fetch troubleshooting:', {
+                  suggestion: 'This usually means: 1) Invalid Cloudinary URL, 2) Network connectivity issues, 3) CORS problems, 4) Firewall blocking the request',
+                  cloudinaryUrl,
+                  uploadPreset,
+                  fileSize: file.size,
+                  browserInfo: navigator.userAgent
+                });
+                break;
+              }
+            } else if (retryCount < maxRetries && error.message.includes('Server error')) {
+              toast.error(`Upload failed for ${file.name}, retrying... (${retryCount}/${maxRetries})`);
+              await new Promise(resolve => setTimeout(resolve, 2000 * retryCount));
+              continue;
+            } else {
+              toast.error(`Failed to upload ${file.name}: ${error.message}`);
+              break;
+            }
+          } else {
+            toast.error(`Failed to upload ${file.name}: Unknown error`);
+            break;
+          }
+        }
       }
+      
+      // Clear progress for failed upload
+      clearInterval(progressInterval);
+      setUploadProgress(prev => {
+        const newPrev = { ...prev };
+        delete newPrev[fileId];
+        return newPrev;
+      });
+      
+      return null;
     });
 
     try {
       const urls = (await Promise.all(uploadPromises)).filter(Boolean);
-      const currentVideos = getValues("videos") || [];
-      setValue("videos", [...currentVideos, ...urls]);
-      toast.success(`${urls.length} video(s) uploaded successfully`);
+      console.log("Successfully uploaded video URLs:", urls);
+      
+      if (urls.length > 0) {
+        const currentVideos = getValues("videos") || [];
+        setValue("videos", [...currentVideos, ...urls]);
+        toast.success(`${urls.length} video(s) uploaded successfully`);
+      } else {
+        toast.error("No videos were uploaded successfully");
+      }
     } catch (error) {
       console.error("Error uploading videos:", error);
       toast.error("Failed to upload videos");
@@ -1068,12 +1309,35 @@ export default function EditProductPage() {
                   {uploadingImages && (
                     <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#f5963c]"></div>
-                      <span>Uploading...</span>
+                      <span>Uploading videos...</span>
                     </div>
                   )}
                 </div>
+                
+                {/* Upload Progress */}
+                {Object.keys(uploadProgress).length > 0 && (
+                  <div className="space-y-2 mt-2">
+                    <Label>Upload Progress</Label>
+                    {Object.entries(uploadProgress).map(([fileId, progress]) => {
+                      const fileName = fileId.split('-')[0];
+                      return (
+                        <div key={fileId} className="flex items-center space-x-2 text-xs bg-gray-50 p-2 rounded">
+                          <span className="truncate flex-1 font-medium">{fileName}</span>
+                          <div className="w-24 bg-gray-200 rounded-full h-2">
+                            <div 
+                              className="bg-[#f5963c] h-2 rounded-full transition-all duration-300" 
+                              style={{ width: `${progress}%` }}
+                            ></div>
+                          </div>
+                          <span className="text-[#f5963c] font-medium min-w-[3rem]">{progress}%</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+                
                 <p className="text-xs text-muted-foreground">
-                  Supported formats: MP4, WebM, MOV. Maximum 5 videos per product.
+                  Supported formats: MP4, WebM, MOV. Maximum 5 videos per product, 500MB each.
                 </p>
               </div>
 
@@ -1120,22 +1384,50 @@ export default function EditProductPage() {
                       </div>
                     </div>
 
+
                     {/* Video Preview */}
                     {field.value && field.value.length > 0 && (
                       <div className="space-y-4">
                         <Label>Video Preview ({field.value.length} videos)</Label>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                           {field.value.map((url, index) => (
                             <div
                               key={index}
-                              className="relative aspect-video overflow-hidden rounded-lg border border-gray-200 group"
+                              className="relative aspect-video overflow-hidden rounded-lg border border-gray-200 group cursor-pointer hover:border-[#f5963c] transition-colors"
+                              onClick={() => {
+                                setSelectedVideoUrl(url);
+                                setVideoDialogOpen(true);
+                              }}
                             >
                               <video
                                 src={url}
-                                controls
-                                className="w-full h-full object-cover"
+                                className="object-cover w-full h-full"
                                 preload="metadata"
+                                muted
+                                onMouseEnter={(e) => {
+                                  const video = e.target as HTMLVideoElement;
+                                  video.currentTime = 1; // Show frame at 1 second for thumbnail
+                                }}
                               />
+                              
+                              {/* Play overlay */}
+                              <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
+                                  <svg className="h-4 w-4 text-[#f5963c]" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                  </svg>
+                                </div>
+                              </div>
+
+                              {/* Video indicator */}
+                              <div className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm text-white px-2 py-1 rounded text-xs flex items-center gap-1">
+                                <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                Video {index + 1}
+                              </div>
+
+                              {/* Remove button - same as images */}
                               <Button
                                 type="button"
                                 onClick={() => handleVideoRemove(url)}
@@ -1151,6 +1443,13 @@ export default function EditProductPage() {
                         {errors.videos && (
                           <p className="text-xs text-red-500">{errors.videos.message}</p>
                         )}
+                      </div>
+                    )}
+
+                    {/* Show message when no videos */}
+                    {(!field.value || field.value.length === 0) && (
+                      <div className="text-sm text-gray-500 italic">
+                        No videos uploaded yet. Upload videos above or add video URLs.
                       </div>
                     )}
                   </div>
@@ -1207,6 +1506,26 @@ export default function EditProductPage() {
           </div>
         </div>
       </form>
+
+      {/* Video Dialog */}
+      <Dialog open={videoDialogOpen} onOpenChange={setVideoDialogOpen}>
+        <DialogContent className="max-w-4xl w-[90vw] max-h-[90vh]">
+          <DialogHeader>
+            <DialogTitle>Video Preview</DialogTitle>
+          </DialogHeader>
+          <div className="relative w-full">
+            <video
+              src={selectedVideoUrl}
+              controls
+              autoPlay
+              className="w-full h-auto max-h-[70vh] rounded-lg"
+              preload="metadata"
+            >
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

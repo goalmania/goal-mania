@@ -80,6 +80,12 @@ export async function GET(
       console.log("Setting default shipping price to 0");
     }
 
+    // Ensure videos field exists with default empty array
+    if (!productObj.videos) {
+      productObj.videos = [];
+      console.log("Setting default videos array for product:", id);
+    }
+
     // Handle migration from old schema to new schema if necessary
     if (
       productObj.sizes &&

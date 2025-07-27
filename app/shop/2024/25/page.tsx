@@ -44,6 +44,7 @@ export default async function Season2024ShopPage() {
     image: product.images?.[0] || "/images/image.png", // Ensure image is never undefined with a fallback
     category: product.category || "2024/25", // Ensure category is never undefined
     team: product.title ? product.title.split(" ")[1] : "Unknown", // Extract team name (second word)
+    videos: product.videos || [], // Include videos for showcase
   }));
 
   return <Season2024Client products={products} />;

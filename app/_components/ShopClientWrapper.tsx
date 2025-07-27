@@ -8,6 +8,7 @@ interface Product {
   category: string;
   team: string;
   availablePatches?: string[];
+  videos?: string[];
 }
 
 async function fetchSeason2025Products(): Promise<Product[]> {
@@ -36,6 +37,7 @@ async function fetchSeason2025Products(): Promise<Product[]> {
       category: product.category || "Uncategorized",
       team: product.title ? product.title.split(" ")[0] : "Unknown",
       availablePatches: product.availablePatches || [],
+      videos: product.videos || [], // Include videos for showcase
     }));
   } catch (error) {
     console.error("Error fetching 2025/26 products:", error);
@@ -69,6 +71,7 @@ async function fetchFeaturedProducts(): Promise<Product[]> {
       category: product.category || "Uncategorized",
       team: product.title ? product.title.split(" ")[0] : "Unknown",
       availablePatches: product.availablePatches || [],
+      videos: product.videos || [], // Include videos for showcase
     }));
   } catch (error) {
     console.error("Error fetching featured products:", error);
@@ -102,6 +105,7 @@ async function fetchMysteryBoxProducts(): Promise<Product[]> {
       category: product.category || "Mystery Box",
       team: "Mystery",
       availablePatches: product.availablePatches || [],
+      videos: product.videos || [], // Include videos for showcase
     }));
   } catch (error) {
     console.error("Error fetching Mystery Box products:", error);

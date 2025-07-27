@@ -44,6 +44,7 @@ export default async function SerieAShopPage() {
     image: product.images?.[0] || "/images/image.png", // Ensure image is never undefined with a fallback
     category: product.category || "SeriesA", // Ensure category is never undefined
     team: product.title ? product.title.split(" ")[1] : "Unknown", // Extract team name (second word)
+    videos: product.videos || [], // Include videos for showcase
   }));
 
   return <SerieAClient products={products} />;

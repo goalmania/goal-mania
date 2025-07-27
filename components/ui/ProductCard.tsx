@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
+import { PlayIcon } from "@heroicons/react/24/solid";
 
 interface ProductCardProps {
   id: string;
@@ -15,6 +16,7 @@ interface ProductCardProps {
   category?: string;
   team?: string;
   availablePatches?: string[];
+  videos?: string[];
   badges?: Array<{
     text: string;
     color?: string;
@@ -40,6 +42,7 @@ export default function ProductCard({
   category,
   team,
   availablePatches = [],
+  videos = [],
   badges = [],
   onWishlistToggle,
   isInWishlist,
@@ -52,6 +55,8 @@ export default function ProductCard({
   product,
 }: ProductCardProps) {
   const [mounted, setMounted] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -103,15 +108,48 @@ export default function ProductCard({
         style={{ boxShadow: '0 4px 16px 0 rgba(245,150,60,0.10)' }}
       >
         {/* Image section */}
-        <div className="flex-shrink-0 relative" style={{ flexBasis: '70%', height: '70%' }}>
+        <div 
+          className="flex-shrink-0 relative" 
+          style={{ flexBasis: '70%', height: '70%' }}
+          onMouseEnter={() => {
+            setIsHovered(true);
+            if (videos.length > 0) {
+              setTimeout(() => setShowVideo(true), 500);
+            }
+          }}
+          onMouseLeave={() => {
+            setIsHovered(false);
+            setShowVideo(false);
+          }}
+        >
           <div className={`relative w-full h-full bg-gray-200 overflow-hidden rounded-t-2xl ${imageAspectClasses[imageAspectRatio]}`}>
-            <Image
-              src={image || "/images/image.png"}
-              alt={name || "Product image"}
-              fill
-              className="object-cover object-center h-full w-full group-hover:scale-110 transition-transform duration-300 ease-in-out group-hover:shadow-[0_0_0_4px_#f5963c55]"
-              sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
-            />
+            {/* Video overlay */}
+            {videos.length > 0 && showVideo && isHovered ? (
+              <video
+                src={videos[0]}
+                autoPlay
+                loop
+                muted
+                className="object-cover object-center h-full w-full transition-opacity duration-300"
+                style={{ opacity: showVideo ? 1 : 0 }}
+              />
+            ) : (
+              <Image
+                src={image || "/images/image.png"}
+                alt={name || "Product image"}
+                fill
+                className="object-cover object-center h-full w-full group-hover:scale-110 transition-transform duration-300 ease-in-out group-hover:shadow-[0_0_0_4px_#f5963c55]"
+                sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+              />
+            )}
+
+            {/* Video indicator */}
+            {videos.length > 0 && (
+              <div className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm text-white px-2 py-1 rounded-full flex items-center gap-1 text-xs">
+                <PlayIcon className="h-3 w-3" />
+                <span>{videos.length}</span>
+              </div>
+            )}
             
             {/* Wishlist button */}
             {showWishlistButton && onWishlistToggle && (

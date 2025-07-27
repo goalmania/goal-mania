@@ -31,6 +31,7 @@ export interface Product {
   category?: string;
   team?: string;
   availablePatches?: string[];
+  videos?: string[];
 }
 
 export interface Review {

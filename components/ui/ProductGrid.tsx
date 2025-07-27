@@ -10,6 +10,7 @@ interface Product {
   category?: string;
   team?: string;
   availablePatches?: string[];
+  videos?: string[];
   [key: string]: any; // Allow additional properties
 }
 
@@ -78,6 +79,7 @@ export default function ProductGrid({
           category={product.category}
           team={product.team}
           availablePatches={product.availablePatches}
+          videos={product.videos}
           badges={customBadges ? customBadges(product) : []}
           onWishlistToggle={onWishlistToggle}
           isInWishlist={isInWishlist}

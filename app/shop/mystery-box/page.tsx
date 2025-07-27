@@ -45,6 +45,7 @@ export default async function MysteryBoxPage() {
     category: product.category || "Mystery Box",
     team: "Mystery Box",
     isMysteryBox: product.isMysteryBox || false,
+    videos: product.videos || [], // Include videos for showcase
   }));
 
   return (

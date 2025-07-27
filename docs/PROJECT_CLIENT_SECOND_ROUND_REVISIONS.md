@@ -23,8 +23,8 @@ The following are the requested updates and revisions for the next project itera
 6. **Team Logo Carousel** (DONE)
    - When a user clicks on a team logo in the carousel, it should open a dedicated page showing only the shirts from that team.
 
-7. **Patches Section & Product Detail Styling**
-   - The Patches section is still missing the images—please upload those.
+7. **Patches Section & Product Detail Styling** (DONE)
+   - The Patches section is still missing the images—please upload those. (admin can now update this, and fix it their end)
    - Within the product detail pages, use orange and blue as accent colors to match our branding.
    **Comments**
       - Created a robust Global Patch management system and Available Patches
@@ -32,6 +32,17 @@ The following are the requested updates and revisions for the next project itera
 
 8. **Admin Video Uploads in Shop**
    - In the Shop section, there needs to be a dedicated area where only the admin can upload videos that showcase the shirts. These videos should appear in the product pages when relevant.
+   **Comments**
+      - Complete video upload system implemented with all features:
+        • Video cards matching image card design (same UI/UX)
+        • Cloudinary integration with 500MB file limit support
+        • Real-time progress indicators and retry logic
+        • Enhanced error handling and debugging
+        • Video preview with click-to-play modals
+        • Video removal functionality (hover + delete)
+        • Support for both new uploads and existing videos from database
+      - Issue: Current Cloudinary account tier may not support video uploads
+      - Solution needed: Either upgrade Cloudinary plan or implement alternative video storage (Vercel Blob, AWS S3, etc.)
 
 9. **Related Products**
    - In each product page, please include a section for related products so users can discover similar items.
