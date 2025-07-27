@@ -30,7 +30,7 @@ The following are the requested updates and revisions for the next project itera
       - Created a robust Global Patch management system and Available Patches
       - Admin can assign patches, update, delete or create new ones
 
-8. **Admin Video Uploads in Shop**
+8. **Admin Video Uploads in Shop** (DONE)
    - In the Shop section, there needs to be a dedicated area where only the admin can upload videos that showcase the shirts. These videos should appear in the product pages when relevant.
    **Comments**
       - Complete video upload system implemented with all features:

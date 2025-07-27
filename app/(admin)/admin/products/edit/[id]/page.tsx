@@ -33,6 +33,7 @@ import {
   EyeIcon,
   EyeSlashIcon
 } from "@heroicons/react/24/outline";
+import { getCloudinaryUrl, getCloudinaryUploadPreset } from "@/lib/constants";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProductFormSchema, ProductFormData } from "@/lib/schemas/product";
@@ -41,6 +42,16 @@ import { StockQuantityInput } from "@/components/admin/StockQuantityInput";
 import { FormStep } from "@/hooks/useProductForm";
 import { usePatches } from "@/hooks/usePatches";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { PatchForm } from "@/components/admin/patches/patch-form";
 import { PatchManagementDialog } from "@/components/admin/patches/PatchManagementDialog";
 import { useTranslation } from "@/lib/hooks/useTranslation";
@@ -64,10 +75,13 @@ export default function EditProductPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [uploadingImages, setUploadingImages] = useState(false);
+  const [uploadingVideos, setUploadingVideos] = useState(false);
   const [patchDialogOpen, setPatchDialogOpen] = useState(false);
   const [videoDialogOpen, setVideoDialogOpen] = useState(false);
   const [selectedVideoUrl, setSelectedVideoUrl] = useState<string>("");
   const [uploadProgress, setUploadProgress] = useState<{[key: string]: number}>({});
+  const [deleteVideoDialogOpen, setDeleteVideoDialogOpen] = useState(false);
+  const [videoToDelete, setVideoToDelete] = useState<string>("");
 
   // Initialize form with React Hook Form
   const form = useForm<ProductFormData>({
@@ -216,7 +230,7 @@ export default function EditProductPage() {
       formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
 
       try {
-        const response = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL!, {
+        const response = await fetch(getCloudinaryUrl(), {
           method: "POST",
           body: formData,
         });
@@ -262,16 +276,26 @@ export default function EditProductPage() {
     if (!e.target.files?.length) return;
 
     // Validate Cloudinary configuration
-    const cloudinaryUrl = process.env.NEXT_PUBLIC_CLOUDINARY_URL;
-    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+    const cloudinaryUrl = getCloudinaryUrl('video');
+    const uploadPreset = getCloudinaryUploadPreset();
+    
+    console.log("Cloudinary Configuration Check:", {
+      cloudinaryUrl,
+      uploadPreset,
+      baseUrl: process.env.NEXT_PUBLIC_CLOUDINARY_URL,
+      expectedUrl: "https://api.cloudinary.com/v1_1/dj5p3cwir/video/upload",
+      expectedPreset: "ml_default"
+    });
     
     if (!cloudinaryUrl || !uploadPreset) {
-      toast.error("Cloudinary configuration missing. Please check environment variables.");
+      const errorMsg = `Cloudinary configuration missing. Expected URL: https://api.cloudinary.com/v1_1/dj5p3cwir and preset: ml_default`;
+      toast.error(errorMsg);
       console.error("Missing Cloudinary configuration:", {
         url: cloudinaryUrl || 'NOT SET',
         preset: uploadPreset || 'NOT SET',
         fullUrl: cloudinaryUrl,
-        fullPreset: uploadPreset
+        fullPreset: uploadPreset,
+        suggestion: "Please check your .env.local file and ensure NEXT_PUBLIC_CLOUDINARY_URL=https://api.cloudinary.com/v1_1/dj5p3cwir and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=ml_default"
       });
       return;
     }
@@ -289,7 +313,7 @@ export default function EditProductPage() {
     }
 
     console.log("Starting video upload...");
-    setUploadingImages(true);
+    setUploadingVideos(true);
     const files = Array.from(e.target.files);
     
     // Enhanced validation with detailed error reporting
@@ -298,7 +322,7 @@ export default function EditProductPage() {
     
     files.forEach(file => {
       const isVideo = file.type.startsWith('video/') || file.name.toLowerCase().endsWith('.mp4') || file.name.toLowerCase().endsWith('.mov') || file.name.toLowerCase().endsWith('.webm');
-      const isValidSize = file.size <= 500 * 1024 * 1024; // 500MB limit
+      const isValidSize = file.size <= 100 * 1024 * 1024; // 100MB limit (Cloudinary free tier)
       const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
       
       console.log(`File validation:`, {
@@ -314,7 +338,7 @@ export default function EditProductPage() {
       if (!isVideo) {
         rejectedFiles.push({file, reason: `Invalid file type: ${file.type}. Expected video file.`});
       } else if (!isValidSize) {
-        rejectedFiles.push({file, reason: `File too large: ${sizeInMB}MB. Maximum allowed: 500MB.`});
+        rejectedFiles.push({file, reason: `File too large: ${sizeInMB}MB. Maximum allowed: 100MB.`});
       } else {
         validFiles.push(file);
       }
@@ -330,7 +354,7 @@ export default function EditProductPage() {
 
     if (validFiles.length === 0) {
       toast.error("No valid video files to upload");
-      setUploadingImages(false);
+      setUploadingVideos(false);
       return;
     }
 
@@ -347,7 +371,7 @@ export default function EditProductPage() {
           const currentProgress = prev[fileId] || 0;
           if (currentProgress < 90) {
             const increment = Math.random() * 10 + 5; // Random increment between 5-15%
-            return { ...prev, [fileId]: Math.min(90, currentProgress + increment) };
+            return { ...prev, [fileId]: parseFloat(Math.min(90, currentProgress + increment).toFixed(2)) };
           }
           return prev;
         });
@@ -363,7 +387,7 @@ export default function EditProductPage() {
       
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
+      formData.append("upload_preset", uploadPreset);
       formData.append("resource_type", "video");
       formData.append("public_id", `product_videos/${sanitizedFileName}_${Date.now()}`);
       
@@ -371,7 +395,6 @@ export default function EditProductPage() {
       formData.append("quality", "auto:good"); // Good quality, faster processing
       formData.append("fetch_format", "auto");
       formData.append("chunk_size", "10000000"); // 10MB chunks for better speed
-      formData.append("eager", "sp_hd/mp4"); // Pre-generate optimized version
 
       console.log(`Upload details:`, {
         originalName: file.name,
@@ -410,7 +433,7 @@ export default function EditProductPage() {
           clearInterval(progressInterval);
           
           // Update progress to 100% on successful response
-          setUploadProgress(prev => ({ ...prev, [fileId]: 100 }));
+          setUploadProgress(prev => ({ ...prev, [fileId]: 100.00 }));
           
           console.log(`Upload response status for ${file.name}:`, response.status);
           
@@ -520,7 +543,7 @@ export default function EditProductPage() {
       console.error("Error uploading videos:", error);
       toast.error("Failed to upload videos");
     } finally {
-      setUploadingImages(false);
+      setUploadingVideos(false);
     }
   };
 
@@ -535,8 +558,29 @@ export default function EditProductPage() {
   };
 
   const handleVideoRemove = (videoUrl: string) => {
+    setVideoToDelete(videoUrl);
+    setDeleteVideoDialogOpen(true);
+  };
+
+  const confirmVideoRemove = () => {
     const currentVideos = getValues("videos") || [];
-    setValue("videos", currentVideos.filter(video => video !== videoUrl));
+    setValue("videos", currentVideos.filter(video => video !== videoToDelete));
+    setDeleteVideoDialogOpen(false);
+    setVideoToDelete("");
+    toast.success("Video removed successfully");
+  };
+
+  // Helper function to ensure proper video URL format
+  const getVideoUrl = (url: string) => {
+    if (!url) return url;
+    
+    // If it's a Cloudinary URL without extension, add .mp4
+    if (url.includes('cloudinary.com') && !url.match(/\.(mp4|webm|mov|avi)$/i)) {
+      return url + '.mp4';
+    }
+    
+    // Return as-is for other URLs
+    return url;
   };
 
   const handleSubmit = async (data: ProductFormData) => {
@@ -1303,10 +1347,10 @@ export default function EditProductPage() {
                     multiple
                     accept="video/*"
                     onChange={handleVideoUpload}
-                    disabled={uploadingImages}
+                    disabled={uploadingVideos}
                     className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#f5963c] file:text-white hover:file:bg-[#e0852e]"
                   />
-                  {uploadingImages && (
+                  {uploadingVideos && (
                     <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#f5963c]"></div>
                       <span>Uploading videos...</span>
@@ -1329,7 +1373,7 @@ export default function EditProductPage() {
                               style={{ width: `${progress}%` }}
                             ></div>
                           </div>
-                          <span className="text-[#f5963c] font-medium min-w-[3rem]">{progress}%</span>
+                          <span className="text-[#f5963c] font-medium min-w-[3rem]">{progress.toFixed(2)}%</span>
                         </div>
                       );
                     })}
@@ -1337,7 +1381,7 @@ export default function EditProductPage() {
                 )}
                 
                 <p className="text-xs text-muted-foreground">
-                  Supported formats: MP4, WebM, MOV. Maximum 5 videos per product, 500MB each.
+                  Supported formats: MP4, WebM, MOV. Maximum 5 videos per product, 100MB each.
                 </p>
               </div>
 
@@ -1395,18 +1439,30 @@ export default function EditProductPage() {
                               key={index}
                               className="relative aspect-video overflow-hidden rounded-lg border border-gray-200 group cursor-pointer hover:border-[#f5963c] transition-colors"
                               onClick={() => {
+                                console.log("Video clicked:", url);
                                 setSelectedVideoUrl(url);
                                 setVideoDialogOpen(true);
+                                console.log("Video dialog should open with URL:", url);
                               }}
                             >
                               <video
-                                src={url}
+                                src={getVideoUrl(url)}
                                 className="object-cover w-full h-full"
                                 preload="metadata"
                                 muted
+                                playsInline
+                                crossOrigin="anonymous"
                                 onMouseEnter={(e) => {
                                   const video = e.target as HTMLVideoElement;
                                   video.currentTime = 1; // Show frame at 1 second for thumbnail
+                                }}
+                                onError={(e) => {
+                                  console.error("Thumbnail video error for URL:", url);
+                                  console.error("Formatted URL:", getVideoUrl(url));
+                                  console.error("Error details:", e);
+                                }}
+                                onLoadedData={() => {
+                                  console.log("Thumbnail loaded for:", url);
                                 }}
                               />
                               
@@ -1427,10 +1483,31 @@ export default function EditProductPage() {
                                 Video {index + 1}
                               </div>
 
+                              {/* Play button - visible on hover */}
+                              <Button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  console.log("Play button clicked for:", url);
+                                  setSelectedVideoUrl(url);
+                                  setVideoDialogOpen(true);
+                                }}
+                                variant="outline"
+                                size="sm"
+                                className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0 bg-white/90"
+                              >
+                                <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M8 5v14l11-7z"/>
+                                </svg>
+                              </Button>
+
                               {/* Remove button - same as images */}
                               <Button
                                 type="button"
-                                onClick={() => handleVideoRemove(url)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleVideoRemove(url);
+                                }}
                                 variant="destructive"
                                 size="sm"
                                 className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0"
@@ -1515,17 +1592,64 @@ export default function EditProductPage() {
           </DialogHeader>
           <div className="relative w-full">
             <video
-              src={selectedVideoUrl}
+              src={getVideoUrl(selectedVideoUrl)}
               controls
               autoPlay
+              muted
+              playsInline
+              crossOrigin="anonymous"
               className="w-full h-auto max-h-[70vh] rounded-lg"
               preload="metadata"
+              onLoadStart={() => console.log("Video load started:", selectedVideoUrl)}
+              onLoadedData={() => console.log("Video loaded successfully:", selectedVideoUrl)}
+              onError={(e) => {
+                console.error("Video error:", e);
+                console.error("Original URL:", selectedVideoUrl);
+                console.error("Formatted URL:", getVideoUrl(selectedVideoUrl));
+                
+                // Try to reload without crossOrigin if it fails
+                const video = e.target as HTMLVideoElement;
+                if (video.crossOrigin) {
+                  console.log("Retrying without crossOrigin...");
+                  video.crossOrigin = '';
+                  video.load();
+                }
+              }}
+              onCanPlay={() => console.log("Video can play:", selectedVideoUrl)}
             >
               Your browser does not support the video tag.
             </video>
+            {selectedVideoUrl && (
+              <div className="mt-2 text-xs text-gray-500 break-all">
+                Video URL: {selectedVideoUrl}
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Video Confirmation Dialog */}
+      <AlertDialog open={deleteVideoDialogOpen} onOpenChange={setDeleteVideoDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Video</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this video? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteVideoDialogOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmVideoRemove}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

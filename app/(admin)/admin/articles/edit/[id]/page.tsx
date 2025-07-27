@@ -15,6 +15,7 @@ import { toast } from "react-hot-toast";
 import { IArticle } from "@/lib/models/Article";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import DraggableImageGallery, { ArticleImage } from "@/components/admin/DraggableImageGallery";
+import { getCloudinaryUrl } from "@/lib/constants";
 
 const CATEGORY_OPTIONS = [
   { value: "news", label: "Main News" },
@@ -213,7 +214,7 @@ export default function EditArticlePage() {
           process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
         );
 
-        const response = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL!, {
+        const response = await fetch(getCloudinaryUrl(), {
           method: "POST",
           body: formData,
         });

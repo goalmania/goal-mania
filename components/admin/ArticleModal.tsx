@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "react-hot-toast";
 import { IArticle } from "@/lib/models/Article";
+import { getCloudinaryUrl } from "@/lib/constants";
 
 const CATEGORY_OPTIONS = [
   { value: "news", label: "Main News" },
@@ -130,7 +131,7 @@ export default function ArticleModal({
         process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
       );
 
-      const response = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL!, {
+      const response = await fetch(getCloudinaryUrl(), {
         method: "POST",
         body: formData,
       });

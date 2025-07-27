@@ -33,6 +33,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { toast } from "react-hot-toast";
 import { StepIndicator } from "@/components/admin/StepIndicator";
+import { getCloudinaryUrl } from "@/lib/constants";
 
 interface UploadedImage {
   url: string;
@@ -117,7 +118,7 @@ export const PatchForm = ({ isDialog = false, onSuccess, onCancel, initialData }
       // Add folder for patches
       formData.append("folder", "patches");
 
-      const response = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL!, {
+      const response = await fetch(getCloudinaryUrl(), {
         method: "POST",
         body: formData,
       });

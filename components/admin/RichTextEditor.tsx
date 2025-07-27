@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
+import { getCloudinaryUrl } from "@/lib/constants";
 
 interface RichTextEditorProps {
   content: string;
@@ -69,7 +70,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
       formData.append("file", file);
       formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
 
-      const response = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL!, {
+      const response = await fetch(getCloudinaryUrl(), {
         method: "POST",
         body: formData,
       });

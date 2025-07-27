@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { getCloudinaryUrl } from "@/lib/constants";
 
 export async function POST(request: Request) {
   try {
@@ -53,7 +54,8 @@ export async function POST(request: Request) {
       // Add folder for reviews
       formData.append("folder", "reviews");
 
-      const response = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL!, {
+      const cloudinaryUrl = getCloudinaryUrl(isValidVideo ? 'video' : 'image');
+      const response = await fetch(cloudinaryUrl, {
         method: "POST",
         body: formData,
       });
