@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PRODUCT_CATEGORIES } from "@/lib/types/product";
 import { useState } from "react";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon, CubeIcon } from "@heroicons/react/24/outline";
 
 const categoryToPath = {
   "2024/25": "/shop/2024/25",
@@ -59,7 +59,10 @@ export default function ShopNav() {
                       : "border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
                   }`}
                 >
-                  {categoryToLabel[category] || category}
+                  <span className="flex items-center gap-1">
+                    {category === "Mystery Box" && <CubeIcon className="w-4 h-4" />}
+                    {categoryToLabel[category] || category}
+                  </span>
                 </Link>
               ))}
             </div>
@@ -120,7 +123,10 @@ export default function ShopNav() {
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {categoryToLabel[category] || category}
+                    <span className="flex items-center gap-2">
+                      {category === "Mystery Box" && <CubeIcon className="w-4 h-4" />}
+                      {categoryToLabel[category] || category}
+                    </span>
                   </Link>
                 ))}
               </div>

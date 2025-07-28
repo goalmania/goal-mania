@@ -49,13 +49,24 @@ The following are the requested updates and revisions for the next project itera
    **Comments**
    - This would take too much refactorig and complex algorithim to be implemented thus making it out of scope for now
 
-10. **Mystery Box Menu Icon**
+10. **Mystery Box Menu Icon** (DONE)
     - In the main menu, for the Mystery Box link, add a small box icon next to the text, to visually reinforce the idea.
+    **Comments**
+    - Added CubeIcon from Heroicons next to "Mystery Box" text in shop navigation
+    - Icon appears in both desktop and mobile menu versions
+    - Maintains consistent spacing and design with existing navigation
 
 11. **Why Choose GoalMania Section** (DONE)
     - In the “Why choose GoalMania” section, make sure it clearly states that shipping is always free, and update the return policy to 7 days, not 30.
 
-12. **Add Google Analytics & Adsense**
+12. **Add Google Analytics & Adsense** (DONE)
+    **Comments**
+    - Google Analytics 4 integration implemented in app/layout.tsx with conditional loading
+    - Google AdSense script integration implemented with conditional loading
+    - Environment variables configured: NEXT_PUBLIC_GA_MEASUREMENT_ID and NEXT_PUBLIC_ADSENSE_PUBLISHER_ID
+    - Both services load only when environment variables are properly set
+    - Added environment variable documentation to env.example file
+    - Production-ready implementation with proper async loading strategies
 
 13. **Fix the Styling of Ad in the article** (DONE)
    - Style make it more visible and lead the reader to click on the link
