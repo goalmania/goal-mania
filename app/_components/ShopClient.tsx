@@ -54,11 +54,11 @@ export default function ShopClient({
       <div className="relative px-0">
         <div className="mx-0 w-screen px-0 py-8">
           {/* Image section - full width */}
-          <Card className="w-screen h-screen sm:h-[500px] md:h-[600px] flex flex-col justify-end items-center overflow-hidden rounded-none shadow-2xl p-0 mx-0 relative border-0">
+          <Card className="max-w-[80vw] bg-white h-screen flex flex-col justify-center items-center overflow-hidden rounded-2xl shadow-2xl p-0 mx-auto relative border-0">
             <Image
               src="/banners/banner_1.jpeg"
               alt={t('shop.banner1.alt', 'Retro Collection')}
-              className="object-cover"
+              className="object-cover px-auto w-full"
               fill
               objectFit="cover"
               priority
