@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 async function getSerieAProducts() {
   await connectDB();
   const products = await Product.find({
-    category: "SeriesA/International",
+    category: "International",
     isActive: true,
   }).sort({ feature: -1, createdAt: -1 });
   return JSON.parse(JSON.stringify(products)); // Serialize the Mongoose documents
@@ -42,7 +42,7 @@ export default async function SerieAShopPage() {
     name: product.title || "Untitled Product", // Ensure name is never undefined
     price: product.basePrice || 0, // Ensure price is never undefined
     image: product.images?.[0] || "/images/image.png", // Ensure image is never undefined with a fallback
-    category: product.category || "SeriesA/International", // Ensure category is never undefined
+    category: product.category || "International", // Ensure category is never undefined
     team: product.title ? product.title.split(" ")[1] : "Unknown", // Extract team name (second word)
     videos: product.videos || [], // Include videos for showcase
   }));

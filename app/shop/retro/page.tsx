@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 async function getRetroProducts() {
   await connectDB();
   const products = await Product.find({
-    category: "retro",
+    category: "Retro",
     isActive: true,
   }).sort({ feature: -1, createdAt: -1 });
   return JSON.parse(JSON.stringify(products)); // Serialize the Mongoose documents

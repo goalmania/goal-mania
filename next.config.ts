@@ -32,6 +32,8 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "goalmania.shop",
+        port: "",
+        pathname: "/**",
       },
       {
         protocol: "https",

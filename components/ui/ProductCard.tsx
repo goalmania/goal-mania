@@ -134,10 +134,9 @@ export default function ProductCard({
                 style={{ opacity: showVideo ? 1 : 0 }}
               />
             ) : (
-              <Image
+              <img
                 src={image || "/images/image.png"}
                 alt={name || "Product image"}
-                fill
                 className="object-cover object-center h-full w-full group-hover:scale-110 transition-transform duration-300 ease-in-out group-hover:shadow-[0_0_0_4px_#f5963c55]"
                 sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
               />

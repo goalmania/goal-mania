@@ -51,38 +51,24 @@ export default function ShopClient({
     <div className="bg-white pt-[112px]">
       <ShopSearchBar />
       {/* Hero section - adjust height to account for fixed header */}
-      <div className="relative">
-        <div className="mx-auto max-w-7xl">
-          <div className="relative z-10 pt-10 sm:pt-14 lg:w-full lg:max-w-2xl">
-            <div className="relative px-4 sm:px-6 py-12 sm:py-16 md:py-24 lg:px-8 lg:py-56 lg:pr-0">
-              <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
-                  {t('shop.hero.title', 'Scopri le nostre maglie')}
-                </h1>
-                <p className="mt-4 sm:mt-6 text-sm sm:text-base md:text-lg leading-6 sm:leading-8 text-gray-600">
-                  {t('shop.hero.subtitle', 'Le migliori maglie delle squadre italiane e internazionali, con qualità premium e spedizione gratuita.')}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Image section - full width on mobile, half width on desktop */}
-        <div className="flex justify-center items-center lg:absolute lg:inset-y-0 lg:right-0 lg:h-full lg:w-1/2 p-4">
-          <Card className="w-full h-64 sm:h-72 md:h-96 flex flex-col justify-end items-center overflow-hidden rounded-2xl shadow-2xl p-0 relative">
+      <div className="relative px-0">
+        <div className="mx-0 w-screen px-0 py-8">
+          {/* Image section - full width */}
+          <Card className="w-screen h-screen sm:h-[500px] md:h-[600px] flex flex-col justify-end items-center overflow-hidden rounded-none shadow-2xl p-0 mx-0 relative border-0">
             <Image
               src="/banners/banner_1.jpeg"
               alt={t('shop.banner1.alt', 'Retro Collection')}
-              fill
               className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
+              fill
+              objectFit="cover"
               priority
             />
             <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center p-6">
-              <div className="text-white text-center mb-4">
-                <p className="text-lg font-semibold drop-shadow">{t('shop.banner2.title', 'Retro Collection')}</p>
-                <p className="text-sm drop-shadow">{t('shop.banner2.subtitle', 'Scopri le maglie vintage')}</p>
+              <div className="text-white text-center mb-6">
+                <p className="text-2xl sm:text-3xl md:text-4xl font-bold drop-shadow mb-2">{t('shop.banner2.title', 'Retro Collection')}</p>
+                <p className="text-lg sm:text-xl drop-shadow">{t('shop.banner2.subtitle', 'Scopri le maglie vintage')}</p>
               </div>
-              <Button asChild size="lg" className="bg-[#f5963c] hover:bg-[#e0852e] text-white font-semibold rounded-lg shadow-lg transition-transform duration-300 ease-in-out">
+              <Button asChild size="lg" className="bg-[#f5963c] hover:bg-[#e0852e] text-white font-semibold rounded-lg shadow-lg transition-transform duration-300 ease-in-out px-8 py-4 text-lg">
                 <Link href="/shop/retro">{t('shop.banner2.cta', 'Scopri ora')}</Link>
               </Button>
             </div>

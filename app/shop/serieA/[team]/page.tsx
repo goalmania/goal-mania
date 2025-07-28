@@ -21,9 +21,8 @@ async function getTeamProducts(teamSlug: string) {
   // Convert team slug to proper case for matching
   const teamName = teamSlug.charAt(0).toUpperCase() + teamSlug.slice(1).toLowerCase();
   
-  // Search for team name as the second word in the title (after "Maglia")
+  // Search for team name in title across all categories (not just SerieA which doesn't exist)
   const products = await Product.find({
-    category: "SeriesA",
     isActive: true,
     title: { $regex: new RegExp(`^Maglia\\s+${teamName}`, 'i') } // Match "Maglia [TeamName]" at start of title
   }).sort({ feature: -1, createdAt: -1 });
@@ -71,7 +70,7 @@ export default async function TeamShopPage({ params }: TeamPageProps) {
     name: product.title || "Untitled Product", // Ensure name is never undefined
     price: product.basePrice || 0, // Ensure price is never undefined
     image: product.images?.[0] || "/images/image.png", // Ensure image is never undefined with a fallback
-    category: product.category || "SeriesA", // Ensure category is never undefined
+    category: product.category || "SerieA", // Ensure category is never undefined
     team: product.title ? product.title.split(" ")[1] : "Unknown", // Extract team name (second word)
     videos: product.videos || [], // Include videos for showcase
   }));

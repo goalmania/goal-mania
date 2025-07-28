@@ -8,9 +8,17 @@ export const dynamic = "force-dynamic";
 
 async function getSerieAProducts() {
   await connectDB();
+  // Get Serie A team products across all categories since "SerieA" category doesn't exist
+  // Look for products with team names in title
+  const serieATeams = ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio", 
+    "Atalanta", "Fiorentina", "Torino", "Bologna", "Sassuolo",
+    "Udinese", "Monza", "Lecce", "Frosinone", "Cagliari",
+    "Genoa", "Empoli", "Verona", "Salernitana"];
+  
+  const teamRegex = serieATeams.join("|");
   const products = await Product.find({
-    category: "SeriesA",
     isActive: true,
+    title: { $regex: new RegExp(`^Maglia\\s+(${teamRegex})`, 'i') }
   }).sort({ feature: -1, createdAt: -1 });
   return JSON.parse(JSON.stringify(products)); // Serialize the Mongoose documents
 }
@@ -42,7 +50,7 @@ export default async function SerieAShopPage() {
     name: product.title || "Untitled Product", // Ensure name is never undefined
     price: product.basePrice || 0, // Ensure price is never undefined
     image: product.images?.[0] || "/images/image.png", // Ensure image is never undefined with a fallback
-    category: product.category || "SeriesA", // Ensure category is never undefined
+    category: product.category || "SerieA", // Ensure category is never undefined
     team: product.title ? product.title.split(" ")[1] : "Unknown", // Extract team name (second word)
     videos: product.videos || [], // Include videos for showcase
   }));

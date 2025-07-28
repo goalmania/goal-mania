@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 async function getInternationalProducts() {
   await connectDB();
   const products = await Product.find({
-    $or: [{ category: "International" }, { category: "SeriesA/International" }],
+    category: "International",
     isActive: true,
   }).sort({ feature: -1, createdAt: -1 });
   return JSON.parse(JSON.stringify(products)); // Serialize the Mongoose documents
