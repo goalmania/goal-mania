@@ -63,11 +63,7 @@ export default function ShopClient({
               objectFit="cover"
               priority
             />
-            <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center p-6">
-              <div className="text-white text-center mb-6">
-                <p className="text-2xl sm:text-3xl md:text-4xl font-bold drop-shadow mb-2">{t('shop.banner2.title', 'Retro Collection')}</p>
-                <p className="text-lg sm:text-xl drop-shadow">{t('shop.banner2.subtitle', 'Scopri le maglie vintage')}</p>
-              </div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
               <Button asChild size="lg" className="bg-[#f5963c] hover:bg-[#e0852e] text-white font-semibold rounded-lg shadow-lg transition-transform duration-300 ease-in-out px-8 py-4 text-lg">
                 <Link href="/shop/retro">{t('shop.banner2.cta', 'Scopri ora')}</Link>
               </Button>
