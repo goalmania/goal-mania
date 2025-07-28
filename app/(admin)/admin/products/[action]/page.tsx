@@ -505,13 +505,26 @@ export default function ProductForm() {
   const getVideoUrl = (url: string) => {
     if (!url) return url;
     
-    // If it's a Cloudinary URL without extension, add .mp4
-    if (url.includes('cloudinary.com') && !url.match(/\.(mp4|webm|mov|avi)$/i)) {
-      return url + '.mp4';
+    try {
+      // Clean up malformed URLs (e.g., double extensions)
+      if (url.includes('cloudinary.com')) {
+        // Remove duplicate extensions like .mp4.mp4
+        const cleanUrl = url.replace(/\.(mp4|webm|mov|avi)\.(mp4|webm|mov|avi)$/i, '.$1');
+        
+        // If it's a Cloudinary URL without extension, add .mp4
+        if (!cleanUrl.match(/\.(mp4|webm|mov|avi)$/i)) {
+          return cleanUrl + '.mp4';
+        }
+        
+        return cleanUrl;
+      }
+      
+      // Return as-is for other URLs
+      return url;
+    } catch (error) {
+      console.warn('Error processing video URL:', url, error);
+      return url;
     }
-    
-    // Return as-is for other URLs
-    return url;
   };
 
   const handleSubmit = async (data: ProductFormData) => {
@@ -1369,15 +1382,16 @@ export default function ProductForm() {
                                 preload="metadata"
                                 muted
                                 playsInline
-                                crossOrigin="anonymous"
                                 onMouseEnter={(e) => {
                                   const video = e.target as HTMLVideoElement;
                                   video.currentTime = 1; // Show frame at 1 second for thumbnail
                                 }}
                                 onError={(e) => {
-                                  console.error("Thumbnail video error for URL:", url);
-                                  console.error("Formatted URL:", getVideoUrl(url));
-                                  console.error("Error details:", e);
+                                  // Prevent the error from bubbling up and causing console errors
+                                  e.preventDefault();
+                                  console.warn("Thumbnail video failed to load for URL:", url);
+                                  console.warn("Formatted URL:", getVideoUrl(url));
+                                  console.warn("This video may be corrupted or the URL may be malformed");
                                 }}
                                 onLoadedData={() => {
                                   console.log("Thumbnail loaded for:", url);
@@ -1489,38 +1503,25 @@ export default function ProductForm() {
           </DialogHeader>
           <div className="relative w-full">
             <video
+              key={selectedVideoUrl} // Force re-render when URL changes
               src={getVideoUrl(selectedVideoUrl)}
               controls
-              autoPlay
               muted
               playsInline
-              crossOrigin="anonymous"
               className="w-full h-auto max-h-[70vh] rounded-lg"
               preload="metadata"
               onLoadStart={() => console.log("Video load started:", selectedVideoUrl)}
               onLoadedData={() => console.log("Video loaded successfully:", selectedVideoUrl)}
               onError={(e) => {
-                console.error("Video error:", e);
-                console.error("Original URL:", selectedVideoUrl);
-                console.error("Formatted URL:", getVideoUrl(selectedVideoUrl));
-                
-                // Try to reload without crossOrigin if it fails
-                const video = e.target as HTMLVideoElement;
-                if (video.crossOrigin) {
-                  console.log("Retrying without crossOrigin...");
-                  video.crossOrigin = '';
-                  video.load();
-                }
+                e.preventDefault();
+                console.warn("Dialog video failed to load:", selectedVideoUrl);
+                console.warn("Formatted URL:", getVideoUrl(selectedVideoUrl));
+                console.warn("This video may be corrupted or the URL may be malformed");
               }}
               onCanPlay={() => console.log("Video can play:", selectedVideoUrl)}
             >
               Your browser does not support the video tag.
             </video>
-            {selectedVideoUrl && (
-              <div className="mt-2 text-xs text-gray-500 break-all">
-                Video URL: {selectedVideoUrl}
-              </div>
-            )}
           </div>
         </DialogContent>
       </Dialog>

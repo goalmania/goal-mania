@@ -48,7 +48,9 @@ export function VideoThumbnail({
   };
 
   const handleVideoError = (e: any) => {
-    console.error("Video failed to load:", videoUrl, e);
+    e.preventDefault();
+    console.warn("Video thumbnail failed to load:", videoUrl);
+    console.warn("This video may be corrupted or the URL may be malformed");
     setIsLoading(false);
     setThumbnailError(true);
   };
@@ -70,7 +72,6 @@ export function VideoThumbnail({
             className="w-full h-full object-cover"
             preload="metadata"
             muted
-            crossOrigin="anonymous"
             onLoadedMetadata={handleVideoLoad}
             onError={handleVideoError}
             onCanPlay={handleVideoLoad}
@@ -128,11 +129,14 @@ export function VideoThumbnail({
             <video
               src={videoUrl}
               controls
-              autoPlay
               className="w-full h-auto max-h-[70vh] rounded-lg"
               preload="metadata"
-              crossOrigin="anonymous"
-              onError={(e) => console.error("Dialog video error:", e)}
+              muted
+              playsInline
+              onError={(e) => {
+                e.preventDefault();
+                console.warn("Dialog video failed to load:", videoUrl);
+              }}
               onCanPlay={() => console.log("Dialog video can play")}
             >
               Your browser does not support the video tag.

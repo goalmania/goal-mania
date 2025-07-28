@@ -1,13 +1,16 @@
 import type { NextConfig } from "next";
 
-// @ts-expect-error - No type definitions available for anchor-pki
-import autoCert from "anchor-pki/auto-cert/integrations/next";
+// Temporarily disable auto-cert due to configuration issues
+// // @ts-expect-error - No type definitions available for anchor-pki
+// import autoCert from "anchor-pki/auto-cert/integrations/next";
 
-const withAutoCert = autoCert({
-  enabledEnv: "development",
-});
+// const withAutoCert = autoCert({
+//   enabledEnv: "development",
+//   allowIdentifiers: "localhost,127.0.0.1,*.localhost",
+// });
 
 const nextConfig: NextConfig = {
+  reactStrictMode: true,
   i18n: {
     defaultLocale: 'it',
     locales: ['en', 'it'],
@@ -37,31 +40,31 @@ const nextConfig: NextConfig = {
     ],
   },
   // Add Next.js headers for better security and cookie handling
-  headers: async () => {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          {
-            key: "X-DNS-Prefetch-Control",
-            value: "on",
-          },
-          {
-            key: "Strict-Transport-Security",
-            value: "max-age=63072000; includeSubDomains; preload",
-          },
-          {
-            key: "X-Content-Type-Options",
-            value: "nosniff",
-          },
-          {
-            key: "Referrer-Policy",
-            value: "origin-when-cross-origin",
-          },
-        ],
-      },
-    ];
-  },
+  // headers: async () => {
+  //   return [
+  //     {
+  //       source: "/(.*)",
+  //       headers: [
+  //         {
+  //           key: "X-DNS-Prefetch-Control",
+  //           value: "on",
+  //         },
+  //         {
+  //           key: "Strict-Transport-Security",
+  //           value: "max-age=63072000; includeSubDomains; preload",
+  //         },
+  //         {
+  //           key: "X-Content-Type-Options",
+  //           value: "nosniff",
+  //         },
+  //         {
+  //           key: "Referrer-Policy",
+  //           value: "origin-when-cross-origin",
+  //         },
+  //       ],
+  //     },
+  //   ];
+  // },
 };
 
-export default withAutoCert(nextConfig);
+export default nextConfig;
