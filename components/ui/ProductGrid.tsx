@@ -23,7 +23,7 @@ interface ProductGridProps {
   showAddToCartButton?: boolean;
   gridCols?: 1 | 2 | 3 | 4 | 5 | 6;
   gap?: "sm" | "md" | "lg";
-  cardHeight?: "sm" | "md" | "lg";
+  cardHeight?: "sm" | "lg";
   imageAspectRatio?: "square" | "portrait" | "landscape";
   className?: string;
   customBadges?: (product: Product) => Array<{
@@ -42,7 +42,7 @@ export default function ProductGrid({
   showAddToCartButton = false,
   gridCols = 3,
   gap = "md",
-  cardHeight = "md",
+  cardHeight = "lg",
   imageAspectRatio = "portrait",
   className = "",
   customBadges,

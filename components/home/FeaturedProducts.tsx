@@ -62,7 +62,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
               team={product.team || ""}
               availablePatches={product.availablePatches || []}
               href={`/products/${product.id}`}
-              cardHeight="md"
+              cardHeight="lg"
               imageAspectRatio="portrait"
               onWishlistToggle={handleWishlistToggle}
               onAddToCart={handleAddToCart}

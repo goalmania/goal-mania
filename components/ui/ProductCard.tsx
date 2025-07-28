@@ -28,7 +28,7 @@ interface ProductCardProps {
   showWishlistButton?: boolean;
   showAddToCartButton?: boolean;
   imageAspectRatio?: "square" | "portrait" | "landscape";
-  cardHeight?: "sm" | "md" | "lg";
+  cardHeight?: "sm" | "lg";
   className?: string;
   product?: any; // Full product object for callbacks
 }
@@ -50,7 +50,7 @@ export default function ProductCard({
   showWishlistButton = true,
   showAddToCartButton = false,
   imageAspectRatio = "portrait",
-  cardHeight = "md",
+  cardHeight = "lg",
   className = "",
   product,
 }: ProductCardProps) {

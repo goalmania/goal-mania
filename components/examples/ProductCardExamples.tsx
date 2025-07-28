@@ -107,7 +107,7 @@ export function ProductCardAspectRatioExample() {
             category={product.category}
             team={product.team}
             imageAspectRatio="portrait"
-            cardHeight="md"
+            cardHeight="lg"
           />
         </div>
         <div>

@@ -27,7 +27,7 @@ export default function ProductGrid({
       showAddToCartButton={false}
       gridCols={3}
       gap="md"
-      cardHeight="md"
+      cardHeight="lg"
       imageAspectRatio="portrait"
     />
   );
