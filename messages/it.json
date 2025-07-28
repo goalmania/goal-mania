@@ -265,7 +265,7 @@
     "title": "Perché Scegliere GoalMania",
     "freeShipping": {
       "title": "Spedizione Gratuita",
-      "description": "Su tutti gli ordini superiori a €50"
+      "description": "Sempre gratuita su tutti gli ordini"
     },
     "quality": {
       "title": "Garanzia Qualità",
@@ -273,7 +273,7 @@
     },
     "returns": {
       "title": "Reso Facile",
-      "description": "30 giorni per cambiare idea"
+      "description": "7 giorni per cambiare idea"
     },
     "rating": {
       "title": "4.8/5 Rating",
@@ -318,7 +318,11 @@
       "deleteButton": "Elimina",
       "cancelButton": "Annulla",
       "deleteSuccess": "Prodotto eliminato con successo!",
-      "deleteFailed": "Impossibile eliminare il prodotto"
+      "deleteFailed": "Impossibile eliminare il prodotto",
+      "relatedProducts": "Prodotti Correlati",
+      "discoverSimilarItems": "Scopri articoli simili",
+      "featured": "In Evidenza",
+      "retro": "Retro"
     },
     "patches": {
       "management": "Gestione Patch",

@@ -44,18 +44,20 @@ The following are the requested updates and revisions for the next project itera
       - Issue: Current Cloudinary account tier may not support video uploads
       - Solution needed: Either upgrade Cloudinary plan or implement alternative video storage (Vercel Blob, AWS S3, etc.)
 
-9. **Related Products**
+9. **Related Products** (OUT OF SCOPE)
    - In each product page, please include a section for related products so users can discover similar items.
+   **Comments**
+   - This would take too much refactorig and complex algorithim to be implemented thus making it out of scope for now
 
 10. **Mystery Box Menu Icon**
     - In the main menu, for the Mystery Box link, add a small box icon next to the text, to visually reinforce the idea.
 
-11. **Why Choose GoalMania Section**
+11. **Why Choose GoalMania Section** (DONE)
     - In the “Why choose GoalMania” section, make sure it clearly states that shipping is always free, and update the return policy to 7 days, not 30.
 
 12. **Add Google Analytics & Adsense**
 
-13. **Fix the Styling of Ad in the article**
+13. **Fix the Styling of Ad in the article** (DONE)
    - Style make it more visible and lead the reader to click on the link
    - always keeping the same size improving the graphics maybe putting orange color shading a little to make the button visible the shirt the titles
 

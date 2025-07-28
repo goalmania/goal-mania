@@ -7,7 +7,9 @@ export interface WishlistItem {
   name: string;
   price: number;
   image: string;
-  team: string;
+  team?: string;
+  availablePatches?: string[];
+  videos?: string[];
 }
 
 interface WishlistStore {
