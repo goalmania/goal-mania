@@ -43,7 +43,6 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, Dialog
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption } from "@/components/ui/table";
 import { ProductSizeChart } from "@/app/_components/ProductSizeChart";
 import ProductReviews from "@/app/_components/ProductReviews";
-import RelatedProducts from "@/app/_components/RelatedProducts";
 
 const PATCH_PRICES = {
   "europa-league": 3,
@@ -955,11 +954,6 @@ export default function ProductDetailClient({
         onReviewDelete={handleReviewDelete}
       />
 
-      {/* Related Products section */}
-      <RelatedProducts 
-        productId={product._id}
-        currentProductTitle={product.title}
-      />
     </div>
   );
 }
