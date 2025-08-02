@@ -22,6 +22,7 @@ import {
   IconShoppingBag,
   IconTicket,
   IconUsers,
+  IconShirt,
 } from "@tabler/icons-react"
 import { useSession } from "next-auth/react"
 
@@ -65,6 +66,11 @@ const data = {
       title: "Users",
       url: "/admin/users",
       icon: IconUsers,
+    },
+    {
+      title: "Teams",
+      url: "/admin/teams",
+      icon: IconShirt,
     },
     {
       title: "Coupons",

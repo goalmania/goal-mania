@@ -9,6 +9,7 @@ import { Product } from "@/lib/types/product";
 import { useI18n } from "@/lib/hooks/useI18n";
 import Link from "next/link";
 import { ChevronRightIcon, HomeIcon } from "@heroicons/react/24/outline";
+import { TeamCarousel } from "@/components/home/TeamCarousel";
 
 interface SerieAClientProps {
   products: Product[];
@@ -100,6 +101,7 @@ export default function SerieAClient({ products, teamSlug }: SerieAClientProps) 
             {t('shop.serieA.description', 'Discover our complete collection of Serie A and international team shirts')}
           </p>
         )}
+        <TeamCarousel isInternational={true} />
         <div className="mt-6">
           <Suspense fallback={<div>Loading...</div>}>
             <ProductGrid

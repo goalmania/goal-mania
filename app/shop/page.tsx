@@ -2,10 +2,6 @@
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import ShopClientWrapper from "@/app/_components/ShopClientWrapper";
-import { IProduct } from "@/lib/types/product";
-import TeamCarousel from "@/components/home/TeamCarousel";
-import BannerBlock from "@/components/home/BannerBlock";
-
 // Disable caching for this page
 export const dynamic = "force-dynamic";
 

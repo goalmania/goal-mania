@@ -198,6 +198,8 @@
     "readAllNews": "Leggi Tutte le Notizie",
     "readMore": "Leggi di più →",
     "favoriteTeams": "Le Tue Squadre Preferite",
+    "serieATeams": "Squadre Serie A",
+    "internationalTeams": "Squadre Internazionali",
     "collection": "Collezione",
     "mysteryBox": {
       "title": "🎁 Scatola Misteriosa",
@@ -259,7 +261,9 @@
   "common": {
     "yes": "Sì",
     "no": "No",
-    "processing": "Elaborazione..."
+    "processing": "Elaborazione...",
+    "error": "Errore",
+    "noData": "Nessun dato disponibile"
   },
   "guarantees": {
     "title": "Perché Scegliere GoalMania",

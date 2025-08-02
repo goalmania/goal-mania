@@ -198,6 +198,8 @@
     "readAllNews": "Read All News",
     "readMore": "Read more →",
     "favoriteTeams": "Your Favorite Teams",
+    "serieATeams": "Serie A Teams",
+    "internationalTeams": "International Teams",
     "collection": "Collection",
     "mysteryBox": {
       "title": "🎁 Mystery Box",
@@ -259,7 +261,9 @@
   "common": {
     "yes": "Yes",
     "no": "No",
-    "processing": "Processing..."
+    "processing": "Processing...",
+    "error": "Error",
+    "noData": "No data available"
   },
   "guarantees": {
     "title": "Why Choose GoalMania",

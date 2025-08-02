@@ -8,7 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import ShopSearchBar from "./ShopSearchBar";
-import TeamCarousel from "@/components/home/TeamCarousel";
+import { TeamCarousel } from "@/components/home/TeamCarousel";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/hooks/useI18n";
