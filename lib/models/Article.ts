@@ -99,6 +99,16 @@ ArticleSchema.pre("save", function (next) {
   next();
 });
 
+// Enhanced indexes for better query performance
+ArticleSchema.index({ status: 1, publishedAt: -1 }); // For published articles sorted by date
+ArticleSchema.index({ category: 1, status: 1, publishedAt: -1 }); // Category-based queries
+ArticleSchema.index({ featured: 1, status: 1, publishedAt: -1 }); // Featured articles
+ArticleSchema.index({ slug: 1 }); // Unique slug lookups
+ArticleSchema.index({ league: 1, category: 1, status: 1 }); // International team articles
+ArticleSchema.index({ title: "text", summary: "text", content: "text" }); // Text search
+ArticleSchema.index({ createdAt: -1 }); // Recent articles
+ArticleSchema.index({ author: 1, createdAt: -1 }); // Author-based queries
+
 export const Article: Model<IArticle> =
   mongoose.models.Article || mongoose.model<IArticle>("Article", ArticleSchema);
 

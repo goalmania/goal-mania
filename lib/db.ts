@@ -20,9 +20,21 @@ const connectDB = async () => {
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGODB_URI, {
       dbName: "GoalMania",
-      // Add any other mongoose options here
+      // Connection pool optimization
+      maxPoolSize: 10, // Maintain up to 10 socket connections
+      serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+      socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+      bufferCommands: false, // Disable mongoose buffering
+      // Performance optimizations
+      maxIdleTimeMS: 30000, // Close connections after 30 seconds of inactivity
+      // Compression
+      compressors: ["zlib"],
+      // Read preference for better load distribution
+      readPreference: "secondaryPreferred",
     }).then((mongoose) => {
-      console.log("✅ MongoDB connected with Mongoose");
+      console.log("✅ MongoDB connected with optimized settings");
+      // Set default query options for better performance
+      mongoose.set("strictQuery", false);
       return mongoose;
     });
   }

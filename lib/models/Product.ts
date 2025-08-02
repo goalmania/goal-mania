@@ -126,10 +126,10 @@ const productSchema = new mongoose.Schema(
     slug: {
       type: String,
       required: true,
-      index: true,
       unique: true,
       lowercase: true,
       trim: true,
+      index: true, // This creates the index automatically
     },
     isActive: {
       type: Boolean,
@@ -169,7 +169,7 @@ productSchema.virtual("averageRating").get(function () {
   return sum / this.reviews.length;
 });
 
-// Create indexes
+// Create indexes (email and slug indexes are created automatically by schema definition)
 productSchema.index({ title: "text", description: "text" });
 productSchema.index({ category: 1 });
 productSchema.index({ isActive: 1 });

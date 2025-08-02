@@ -6,8 +6,9 @@ import User from "@/lib/models/User";
 import Product from "@/lib/models/Product";
 import Article from "@/lib/models/Article";
 import Order from "@/models/Order";
+import { AnalyticsCache } from "@/lib/cache";
 
-// Enhanced Analytics API with comprehensive data for admin dashboard
+// Enhanced Analytics API with comprehensive data for admin dashboard and optimized performance
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
@@ -17,163 +18,146 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Check cache first
+    const cacheKey = AnalyticsCache.createKey('dashboard', new Date().toDateString());
+    const cachedData = AnalyticsCache.get(cacheKey);
+    if (cachedData) {
+      return NextResponse.json(cachedData, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=1800, stale-while-revalidate=3600',
+          'X-Cache': 'HIT'
+        }
+      });
+    }
+
     await connectDB();
 
-    // Get real counts from database
-    const totalUsers = await User.countDocuments();
-    const totalProducts = await Product.countDocuments();
-    const totalArticles = await Article.countDocuments();
-    const totalOrders = await Order.countDocuments();
-
-    // Get recent orders (last 10)
-    const recentOrders = await Order.find({})
-      .sort({ createdAt: -1 })
-      .limit(10)
-      .lean();
-
-    // Calculate order status distribution
-    const orderStatuses = await Order.aggregate([
-      {
-        $group: {
-          _id: "$status",
-          count: { $sum: 1 }
-        }
-      },
-      {
-        $sort: { count: -1 }
-      }
-    ]);
-
-    // Calculate total revenue
-    const revenueData = await Order.aggregate([
-      {
-        $group: {
-          _id: null,
-          totalRevenue: { $sum: "$amount" },
-          averageOrderValue: { $avg: "$amount" }
-        }
-      }
-    ]);
-
-    // Get orders by date (last 30 days)
+    // Define date ranges once
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-    const recentOrdersByDate = await Order.aggregate([
-      {
-        $match: {
-          createdAt: { $gte: thirtyDaysAgo }
-        }
-      },
-      {
-        $group: {
-          _id: {
-            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
-          },
-          count: { $sum: 1 },
-          revenue: { $sum: "$amount" }
-        }
-      },
-      {
-        $sort: { _id: 1 }
-      }
-    ]);
-
-    // Get monthly revenue data (last 12 months)
+    
     const twelveMonthsAgo = new Date();
     twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
 
-    const monthlyRevenue = await Order.aggregate([
-      {
-        $match: {
-          createdAt: { $gte: twelveMonthsAgo }
+    // Execute all database operations in parallel using Promise.all
+    const [
+      totalUsers,
+      totalProducts, 
+      totalArticles,
+      totalOrders,
+      recentOrders,
+      orderStatuses,
+      revenueData,
+      recentOrdersByDate,
+      monthlyRevenue,
+      mysteryBoxOrders,
+      topProducts,
+      userRegistrationTrend,
+      categoryData
+    ] = await Promise.all([
+      // Basic counts with lean queries
+      User.countDocuments(),
+      Product.countDocuments(),
+      Article.countDocuments(),
+      Order.countDocuments(),
+
+      // Recent orders with field selection
+      Order.find({})
+        .sort({ createdAt: -1 })
+        .limit(10)
+        .select('_id amount status createdAt items')
+        .lean(),
+
+      // Order statuses aggregation
+      Order.aggregate([
+        { $group: { _id: "$status", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+      ]),
+
+      // Revenue aggregation
+      Order.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalRevenue: { $sum: "$amount" },
+            averageOrderValue: { $avg: "$amount" }
+          }
         }
-      },
-      {
-        $group: {
-          _id: {
-            $dateToString: { format: "%Y-%m", date: "$createdAt" }
-          },
-          revenue: { $sum: "$amount" },
-          orders: { $sum: 1 }
-        }
-      },
-      {
-        $sort: { _id: 1 }
-      }
+      ]),
+
+      // Recent orders by date
+      Order.aggregate([
+        { $match: { createdAt: { $gte: thirtyDaysAgo } } },
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+            count: { $sum: 1 },
+            revenue: { $sum: "$amount" }
+          }
+        },
+        { $sort: { _id: 1 } }
+      ]),
+
+      // Monthly revenue
+      Order.aggregate([
+        { $match: { createdAt: { $gte: twelveMonthsAgo } } },
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+            revenue: { $sum: "$amount" },
+            orders: { $sum: 1 }
+          }
+        },
+        { $sort: { _id: 1 } }
+      ]),
+
+      // Mystery box orders count
+      Order.countDocuments({
+        "items.customization.excludedShirts": { $exists: true, $ne: [] }
+      }),
+
+      // Top selling products
+      Order.aggregate([
+        { $unwind: "$items" },
+        {
+          $group: {
+            _id: "$items.productId",
+            totalSold: { $sum: "$items.quantity" },
+            totalRevenue: { $sum: { $multiply: ["$items.price", "$items.quantity"] } }
+          }
+        },
+        { $sort: { totalSold: -1 } },
+        { $limit: 10 }
+      ]),
+
+      // User registration trend
+      User.aggregate([
+        { $match: { createdAt: { $gte: thirtyDaysAgo } } },
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+            count: { $sum: 1 }
+          }
+        },
+        { $sort: { _id: 1 } }
+      ]),
+
+      // Product categories - optimized aggregation instead of loading all products
+      Product.aggregate([
+        { $group: { _id: "$category", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+      ])
     ]);
 
-    // Calculate product categories distribution
-    const products = await Product.find();
-    const categoryMap = new Map();
-
-    products.forEach((product) => {
-      const category = product.category || "Uncategorized";
-      const currentValue = categoryMap.get(category) || 0;
-      categoryMap.set(category, currentValue + 1);
-    });
-
-    const revenueDataByCategory = Array.from(categoryMap.entries()).map(
-      ([name, value]) => ({
-        name,
-        value,
-      })
-    ).sort((a, b) => b.value - a.value);
-
-    // If no products with categories, provide default categories
-    if (revenueDataByCategory.length === 0) {
-      revenueDataByCategory.push(
-        { name: "Jerseys", value: 0 },
-        { name: "Equipment", value: 0 },
-        { name: "Accessories", value: 0 },
-        { name: "Footwear", value: 0 }
-      );
-    }
-
-    // Get mystery box orders count
-    const mysteryBoxOrders = await Order.countDocuments({
-      "items.customization.excludedShirts": { $exists: true, $ne: [] }
-    });
-
-    // Get top selling products (by order count)
-    const topProducts = await Order.aggregate([
-      {
-        $unwind: "$items"
-      },
-      {
-        $group: {
-          _id: "$items.productId",
-          totalSold: { $sum: "$items.quantity" },
-          totalRevenue: { $sum: { $multiply: ["$items.price", "$items.quantity"] } }
-        }
-      },
-      {
-        $sort: { totalSold: -1 }
-      },
-      {
-        $limit: 10
-      }
-    ]);
-
-    // Get user registration trend (last 30 days)
-    const userRegistrationTrend = await User.aggregate([
-      {
-        $match: {
-          createdAt: { $gte: thirtyDaysAgo }
-        }
-      },
-      {
-        $group: {
-          _id: {
-            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
-          },
-          count: { $sum: 1 }
-        }
-      },
-      {
-        $sort: { _id: 1 }
-      }
-    ]);
+    // Process category data
+    const revenueDataByCategory = categoryData.length > 0 
+      ? categoryData.map(({ _id, count }) => ({ name: _id || "Uncategorized", value: count }))
+      : [
+          { name: "Jerseys", value: 0 },
+          { name: "Equipment", value: 0 },
+          { name: "Accessories", value: 0 },
+          { name: "Footwear", value: 0 }
+        ];
 
     // Calculate conversion rate (orders / users)
     const conversionRate = totalUsers > 0 ? (totalOrders / totalUsers) * 100 : 0;
@@ -185,31 +169,23 @@ export async function GET() {
     const repeatCustomerRate = 0; // This would need additional tracking
     const cartAbandonmentRate = 0; // This would need additional tracking
 
-    return NextResponse.json({
+    const analyticsData = {
       stats: {
-        users: {
-          value: totalUsers,
-        },
-        products: {
-          value: totalProducts,
-        },
-        orders: {
-          value: totalOrders,
-        },
-        articles: {
-          value: totalArticles,
-        },
+        users: { value: totalUsers },
+        products: { value: totalProducts },
+        orders: { value: totalOrders },
+        articles: { value: totalArticles },
       },
       revenue: {
-        total: revenueData[0]?.totalRevenue || 0,
-        average: revenueData[0]?.averageOrderValue || 0,
+        total: totalRevenue,
+        average: averageOrderValue,
       },
       recentOrders: recentOrders.map(order => ({
         id: order._id,
         amount: order.amount,
         status: order.status,
         createdAt: order.createdAt,
-        itemsCount: order.items.length,
+        itemsCount: order.items?.length || 0,
       })),
       orderStatuses: orderStatuses.map(status => ({
         status: status._id,
@@ -227,6 +203,16 @@ export async function GET() {
       customerLifetimeValue,
       repeatCustomerRate,
       cartAbandonmentRate,
+    };
+
+    // Cache the results for 30 minutes
+    AnalyticsCache.set(cacheKey, analyticsData);
+
+    return NextResponse.json(analyticsData, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=1800, stale-while-revalidate=3600',
+        'X-Cache': 'MISS'
+      }
     });
   } catch (error) {
     console.error("Error fetching analytics data:", error);

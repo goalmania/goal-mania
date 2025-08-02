@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { FootballCache } from "@/lib/cache";
 
 // Try different environment variable names for the API key
 const API_KEY =
@@ -8,10 +9,6 @@ const API_KEY =
   "YOUR_API_KEY";
 
 const API_BASE_URL = "https://api.football-data.org/v4";
-
-// In-memory cache for API responses
-const cache = new Map<string, { data: any; timestamp: number }>();
-const CACHE_DURATION = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
 
 // Retry configuration
 const MAX_RETRIES = 3;
@@ -420,6 +417,20 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  // Create cache key
+  const cacheKey = FootballCache.createKey('standings', leagueId, season);
+  
+  // Check cache first
+  const cachedData = FootballCache.get(cacheKey);
+  if (cachedData) {
+    return NextResponse.json(cachedData, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
+        'X-Cache': 'HIT'
+      }
+    });
+  }
+
   try {
     const response = await fetch(
       `https://api.football-data.org/v4/competitions/${leagueId}/standings?season=${season}`,
@@ -427,7 +438,7 @@ export async function GET(request: NextRequest) {
         headers: {
           "X-Auth-Token": process.env.NEXT_FOOTBALL_API || "",
         },
-        next: { revalidate: 3600 }, // Cache for 1 hour
+        // Remove next.revalidate as we're handling caching manually
       }
     );
 
@@ -436,7 +447,16 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await response.json();
-    return NextResponse.json(data);
+    
+    // Cache the response for 1 hour
+    FootballCache.set(cacheKey, data);
+    
+    return NextResponse.json(data, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
+        'X-Cache': 'MISS'
+      }
+    });
   } catch (error) {
     console.error("Error fetching standings:", error);
     return NextResponse.json(

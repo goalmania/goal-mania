@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { z } from "zod";
+import { ProductCache } from "@/lib/cache";
 import {
   VALID_ADULT_SIZES,
   VALID_KID_SIZES,
@@ -61,6 +62,27 @@ export async function GET(req: NextRequest) {
     // Validate pagination parameters
     const validatedPage = Math.max(1, page);
     const validatedLimit = Math.min(100, Math.max(1, limit)); // Cap at 100 items per page
+
+    // Create cache key for this specific query
+    const cacheKey = ProductCache.createKey(
+      category, 
+      validatedPage, 
+      validatedLimit, 
+      `${search}-${featured}-${includeInactive}-${sortBy}-${sortOrder}`
+    );
+    
+    // Check cache first (but skip cache for search queries and admin queries)
+    if (!search && !includeInactive) {
+      const cachedData = ProductCache.get(cacheKey);
+      if (cachedData) {
+        return NextResponse.json(cachedData, {
+          headers: {
+            'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1200',
+            'X-Cache': 'HIT'
+          }
+        });
+      }
+    }
 
     await connectDB();
 
@@ -153,11 +175,17 @@ export async function GET(req: NextRequest) {
       },
     };
 
+    // Cache the response for non-search, non-admin queries
+    if (!search && !includeInactive) {
+      ProductCache.set(cacheKey, response);
+    }
+
     // Add appropriate cache headers based on the request type
     const cacheHeaders = {
       'Cache-Control': search || !includeInactive 
         ? 'no-cache, no-store, must-revalidate' // Don't cache search results or filtered results
-        : 'public, s-maxage=300, stale-while-revalidate=600', // Cache regular product lists for 5 minutes
+        : 'public, s-maxage=600, stale-while-revalidate=1200', // Cache regular product lists for 10 minutes
+      'X-Cache': 'MISS'
     };
 
     return NextResponse.json(response, {
