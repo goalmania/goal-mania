@@ -93,7 +93,9 @@ export async function POST(req: NextRequest) {
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(finalAmount * 100), // Convert to cents
         currency: "eur",
-        payment_method_types: ["card"],
+        automatic_payment_methods: {
+          enabled: true,
+        },
         metadata: {
           userId: session.user.id || "",
           addressId,

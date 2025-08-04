@@ -474,4 +474,61 @@ export async function contactAutoReplyTemplate({
     text: texts[language],
     html
   };
+}
+
+export async function invoiceTemplate({ 
+  userName, 
+  orderId, 
+  amount, 
+  items = [],
+  invoiceNumber,
+  invoiceDate,
+  paymentMethod = "Credit Card",
+  language = 'it' 
+}: { 
+  userName?: string; 
+  orderId: string; 
+  amount: number; 
+  items?: any[];
+  invoiceNumber: string;
+  invoiceDate: string;
+  paymentMethod?: string;
+  language?: 'it' | 'en';
+}) {
+  // Generate product cards HTML
+  const productCardsHtml = await generateProductCards(items, language);
+  
+  // Calculate totals
+  const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const tax = 0; // Add tax calculation if needed
+  const total = subtotal + tax;
+  
+  const template = loadTemplate('invoice', language);
+  const html = replaceVariables(template, {
+    userName: userName || '',
+    orderId,
+    invoiceNumber,
+    invoiceDate,
+    paymentMethod,
+    subtotal: subtotal.toFixed(2),
+    tax: tax.toFixed(2),
+    total: total.toFixed(2),
+    productCards: productCardsHtml
+  });
+
+  const subjects = {
+    it: `🧾 Fattura #${invoiceNumber} - Ordine #${orderId}`,
+    en: `🧾 Invoice #${invoiceNumber} - Order #${orderId}`
+  };
+
+  const texts = {
+    it: `Ciao${userName ? ' ' + userName : ''},\n\n🧾 Ecco la tua fattura per l'ordine #${orderId}.\n\n📋 Dettagli Fattura:\nNumero Fattura: ${invoiceNumber}\nData: ${invoiceDate}\nMetodo di Pagamento: ${paymentMethod}\n\n💰 Totale: €${total.toFixed(2)}\n\nGrazie per aver scelto Goal Mania!\n\nCordiali saluti,\nIl Team Goal Mania`,
+    en: `Hi${userName ? ' ' + userName : ''},\n\n🧾 Here's your invoice for order #${orderId}.\n\n📋 Invoice Details:\nInvoice Number: ${invoiceNumber}\nDate: ${invoiceDate}\nPayment Method: ${paymentMethod}\n\n💰 Total: €${total.toFixed(2)}\n\nThank you for choosing Goal Mania!\n\nBest regards,\nThe Goal Mania Team`
+  };
+
+  return {
+    subject: subjects[language],
+    text: texts[language],
+    html
+  };
 } 

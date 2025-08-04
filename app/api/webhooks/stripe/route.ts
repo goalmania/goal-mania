@@ -10,7 +10,7 @@ import Address from "@/lib/models/Address";
 import OrderDetails from "@/lib/models/OrderDetails";
 import mongoose from "mongoose";
 import { sendEmail } from "@/lib/utils/email";
-import { orderConfirmationTemplate } from "@/lib/utils/email-templates";
+import { orderConfirmationTemplate, invoiceTemplate } from "@/lib/utils/email-templates";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-06-30.basil",
@@ -221,6 +221,37 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
         text,
         html,
       });
+
+      console.log(`Order confirmation email sent to ${user.email} for order ${newOrder._id}`);
+
+      // Send invoice email
+      try {
+        const invoiceNumber = `INV-${newOrder._id.toString().slice(-8).toUpperCase()}`;
+        const invoiceDate = new Date().toLocaleDateString('en-GB');
+
+        const { subject: invoiceSubject, text: invoiceText, html: invoiceHtml } = await invoiceTemplate({
+          userName: user.name,
+          orderId: newOrder._id.toString(),
+          amount: newOrder.amount,
+          items: processedItems,
+          invoiceNumber,
+          invoiceDate,
+          paymentMethod: "Credit Card",
+          language: userLanguage as 'it' | 'en',
+        });
+
+        await sendEmail({
+          to: user.email,
+          subject: invoiceSubject,
+          text: invoiceText,
+          html: invoiceHtml,
+        });
+
+        console.log(`Invoice email sent to ${user.email} for order ${newOrder._id}`);
+      } catch (invoiceError) {
+        console.error("Error sending invoice email:", invoiceError);
+        // Don't fail the request if invoice email fails
+      }
     }
   } catch (error) {
     console.error("Error handling successful payment:", error);

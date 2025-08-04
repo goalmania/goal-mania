@@ -207,6 +207,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
   const [trackingCode, setTrackingCode] = useState("");
   const [isSavingTracking, setIsSavingTracking] = useState(false);
   const [isSendingNotification, setIsSendingNotification] = useState(false);
+  const [isSendingInvoice, setIsSendingInvoice] = useState(false);
 
   // Load user data for orders
   const loadUserData = useCallback(async (userId: string) => {
@@ -420,6 +421,43 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
       );
     } finally {
       setIsSendingNotification(false);
+    }
+  };
+
+  const handleSendInvoice = async () => {
+    if (!selectedOrder) {
+      toast.error("No order selected");
+      return;
+    }
+
+    setIsSendingInvoice(true);
+    try {
+      const response = await fetch(
+        `/api/orders/${selectedOrder._id}/send-invoice`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to send invoice");
+      }
+
+      const data = await response.json();
+      toast.success(`Invoice sent successfully to ${data.sentTo}`);
+    } catch (error) {
+      console.error("Error sending invoice:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to send invoice"
+      );
+    } finally {
+      setIsSendingInvoice(false);
     }
   };
 
@@ -929,6 +967,10 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
             <DropdownMenuItem onClick={() => handlePrintInvoice()}>
               <PrinterIcon className="mr-2 h-4 w-4" />
               Print Invoice
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleSendInvoice()}>
+              <EnvelopeIcon className="mr-2 h-4 w-4" />
+              Send Invoice Email
             </DropdownMenuItem>
             {row.original.status === "shipped" && row.original.trackingCode && (
               <DropdownMenuItem onClick={() => handleSendOrderNotification()}>
@@ -1492,6 +1534,14 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                 <Button variant="outline" onClick={handlePrintInvoice}>
                   <PrinterIcon className="mr-2 h-4 w-4" />
                   Print Invoice
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={handleSendInvoice}
+                  disabled={isSendingInvoice}
+                >
+                  <EnvelopeIcon className="mr-2 h-4 w-4" />
+                  {isSendingInvoice ? "Sending..." : "Send Invoice Email"}
                 </Button>
                 <Button onClick={() => setIsDetailsModalOpen(false)}>
                       Close
