@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { SessionProvider } from "next-auth/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "react-hot-toast";
 import { I18nextProvider } from "react-i18next";
@@ -48,40 +47,36 @@ function I18nProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient());
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <SessionProvider>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <I18nProvider>
-            {children}
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                duration: 3000,
-                style: {
-                  background: "#fff",
-                  color: "#333",
-                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    <SessionProvider>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+        <I18nProvider>
+          {children}
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                background: "#fff",
+                color: "#333",
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              },
+              success: {
+                iconTheme: {
+                  primary: "#10B981",
+                  secondary: "#FFFFFF",
                 },
-                success: {
-                  iconTheme: {
-                    primary: "#10B981",
-                    secondary: "#FFFFFF",
-                  },
+              },
+              error: {
+                iconTheme: {
+                  primary: "#EF4444",
+                  secondary: "#FFFFFF",
                 },
-                error: {
-                  iconTheme: {
-                    primary: "#EF4444",
-                    secondary: "#FFFFFF",
-                  },
-                },
-              }}
-            />
-          </I18nProvider>
-        </ThemeProvider>
-      </SessionProvider>
-    </QueryClientProvider>
+              },
+            }}
+          />
+        </I18nProvider>
+      </ThemeProvider>
+    </SessionProvider>
   );
 }

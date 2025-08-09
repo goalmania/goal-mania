@@ -96,11 +96,11 @@ export default function RootLayout({
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
-              strategy="afterInteractive"
+              strategy="lazyOnload"
             />
             <Script
               id="google-analytics"
-              strategy="afterInteractive"
+              strategy="lazyOnload"
               dangerouslySetInnerHTML={{
                 __html: `
       window.dataLayer = window.dataLayer || [];
@@ -117,7 +117,7 @@ export default function RootLayout({
         {process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID && (
           <Script
             id="google-adsense"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID}`}
             crossOrigin="anonymous"
           />

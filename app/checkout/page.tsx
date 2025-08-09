@@ -9,14 +9,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { loadStripe } from "@stripe/stripe-js";
-import {
-  Elements,
-  PaymentElement,
-  useStripe,
-  useElements,
-  PaymentRequestButtonElement,
-} from "@stripe/react-stripe-js";
+import dynamic from "next/dynamic";
 import { CouponForm } from "./CouponForm";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,17 +36,7 @@ import {
 import { refreshUserSession } from "@/lib/utils/session";
 import React from "react";
 
-// Initialize Stripe with publishable key
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "",
-  {
-    // Adding wallet configuration
-    betas: [
-      "payment_element_apple_pay_beta_1",
-      "payment_element_google_pay_beta_1",
-    ],
-  }
-);
+const PaymentStep = dynamic(() => import("./PaymentStep"), { ssr: false });
 
 interface Address {
   _id?: string;
@@ -68,227 +51,6 @@ interface Address {
   isDefault: boolean;
 }
 
-// PaymentForm component that will be rendered inside Elements
-function PaymentForm({
-  clientSecret,
-  onSuccess,
-  isLoading,
-  setIsLoading,
-  total,
-}: {
-  clientSecret: string;
-  onSuccess: () => void;
-  isLoading: boolean;
-  setIsLoading: (loading: boolean) => void;
-  total: number;
-}) {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [error, setError] = useState<string | null>(null);
-  const [paymentRequest, setPaymentRequest] = useState<any>(null);
-
-  console.log("PAY: ", paymentRequest);
-  const [canMakePayment, setCanMakePayment] = useState(false);
-
-  // Set up payment request for Apple Pay/Google Pay
-  useEffect(() => {
-    if (stripe) {
-      console.log("Setting up payment request with Stripe instance");
-      const pr = stripe.paymentRequest({
-        country: "IT",
-        currency: "eur",
-        total: {
-          label: "Goal Mania Order",
-          amount: Math.round(total * 100),
-        },
-        requestPayerName: true,
-        requestPayerEmail: true,
-        requestPayerPhone: false,
-        requestShipping: false,
-        disableWallets: [], // Ensure all wallets are enabled
-      });
-
-      // Check if the Payment Request is available
-      pr.canMakePayment().then((result) => {
-        console.log("Payment request canMakePayment result:", result);
-        if (result) {
-          setPaymentRequest(pr);
-          setCanMakePayment(true);
-          console.log("Digital wallet available:", result);
-          console.log(
-            "Available wallet methods:",
-            result.applePay ? "Apple Pay" : "",
-            result.googlePay ? "Google Pay" : ""
-          );
-        } else {
-          console.log("No digital wallet available on this device/browser");
-        }
-      });
-
-      // Handle payment completion
-      pr.on("paymentmethod", async (e) => {
-        console.log("Payment method received:", e.paymentMethod.type);
-        setIsLoading(true);
-        setError(null);
-
-        try {
-          const { error: confirmError, paymentIntent } =
-            await stripe.confirmCardPayment(
-              clientSecret,
-              { payment_method: e.paymentMethod.id },
-              { handleActions: false }
-            );
-
-          if (confirmError) {
-            e.complete("fail");
-            setError(confirmError.message || "Payment failed");
-            setIsLoading(false);
-            return;
-          }
-
-          e.complete("success");
-
-          if (paymentIntent.status === "requires_action") {
-            const { error } = await stripe.confirmCardPayment(clientSecret);
-            if (error) {
-              setError(error.message || "Payment failed");
-            } else {
-              toast.success("Payment successful!");
-              onSuccess();
-            }
-          } else {
-            toast.success("Payment successful!");
-            onSuccess();
-          }
-        } catch (err) {
-          console.error("Payment error:", err);
-          e.complete("fail");
-          setError(err instanceof Error ? err.message : "Payment failed");
-        }
-
-        setIsLoading(false);
-      });
-    }
-  }, [stripe, total, clientSecret, onSuccess, setIsLoading]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!stripe || !elements) {
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    const { error: submitError, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        // Remove the return_url as we want to handle success in our code
-        // return_url: `${window.location.origin}/account/orders?success=true`,
-      },
-      redirect: "if_required",
-    });
-
-    if (submitError) {
-      setError(submitError.message || "Payment failed");
-      setIsLoading(false);
-      return;
-    }
-
-    if (paymentIntent && paymentIntent.status === "succeeded") {
-      toast.success("Payment successful!");
-      onSuccess();
-    } else if (paymentIntent && paymentIntent.status === "processing") {
-      toast.success("Your payment is processing!");
-      onSuccess();
-    } else if (
-      paymentIntent &&
-      paymentIntent.status === "requires_payment_method"
-    ) {
-      setError("Your payment was not successful, please try again.");
-    } else {
-      setError("Something went wrong with the payment");
-    }
-
-    setIsLoading(false);
-  };
-
-  return (
-    <div className="space-y-6">
-      {canMakePayment && paymentRequest ? (
-        <Card className="border-2 border-green-200 bg-green-50">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2 mb-4">
-              <CheckCircleIcon className="h-5 w-5 text-green-600" />
-              <p className="text-sm font-medium text-green-800">
-                Express Checkout Available
-              </p>
-            </div>
-            <div className="space-y-4">
-              <PaymentRequestButtonElement
-                options={{
-                  paymentRequest,
-                  style: {
-                    paymentRequestButton: {
-                      theme: "dark",
-                      height: "48px",
-                      type: "buy",
-                    },
-                  },
-                }}
-              />
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="bg-green-50 px-2 text-gray-500">
-                    Or pay with card
-                  </span>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card className="border border-gray-200">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2 mb-4">
-              <CreditCardIcon className="h-5 w-5 text-gray-600" />
-              <p className="text-sm font-medium text-gray-700">
-                Standard Payment Methods
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <Card>
-          <CardContent className="pt-6">
-            <PaymentElement className="mb-6" />
-            {error && (
-              <Alert variant="destructive" className="mb-4">
-                <ExclamationTriangleIcon className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-            <Button
-              type="submit"
-              disabled={!stripe || isLoading}
-              variant="default"
-              size="lg"
-              className="w-full bg-[#f5963c] hover:bg-[#e0852e] text-white"
-            >
-              {isLoading ? "Processing..." : `Pay €${total.toFixed(2)}`}
-            </Button>
-          </CardContent>
-        </Card>
-      </form>
-    </div>
-  );
-}
 
 export default function CheckoutPage() {
   const { data: session, status, update: updateSession } = useSession();
@@ -1028,18 +790,7 @@ export default function CheckoutPage() {
                 </CardHeader>
                 <CardContent className="p-6">
                   {clientSecret && (
-                    <Elements
-                      stripe={stripePromise}
-                      options={{ clientSecret, appearance: { theme: "stripe" } }}
-                    >
-                      <PaymentForm
-                        clientSecret={clientSecret}
-                        onSuccess={handlePaymentSuccess}
-                        isLoading={isLoading}
-                        setIsLoading={setIsLoading}
-                        total={total}
-                      />
-                    </Elements>
+                    <PaymentStep clientSecret={clientSecret} total={total} onSuccess={handlePaymentSuccess} />
                   )}
                   <Button
                     type="button"

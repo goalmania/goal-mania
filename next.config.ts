@@ -1,4 +1,10 @@
 import type { NextConfig } from "next";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+  analyzerMode: "static",
+  openAnalyzer: false,
+});
 
 // Temporarily disable auto-cert due to configuration issues
 // // @ts-expect-error - No type definitions available for anchor-pki
@@ -11,6 +17,14 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  experimental: {
+    optimizePackageImports: [
+      "recharts",
+      "@heroicons/react",
+      "lucide-react",
+      "@radix-ui/react-icons",
+    ],
+  },
   i18n: {
     defaultLocale: 'it',
     locales: ['en', 'it'],
@@ -69,4 +83,4 @@ const nextConfig: NextConfig = {
   // },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

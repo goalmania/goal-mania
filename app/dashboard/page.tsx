@@ -1,6 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar"
-import { ChartAreaInteractive } from "@/components/chart-area-interactive"
-import { DataTable } from "@/components/data-table"
+import dynamic from "next/dynamic"
 import { SectionCards } from "@/components/section-cards"
 import { SiteHeader } from "@/components/site-header"
 import {
@@ -9,6 +8,12 @@ import {
 } from "@/components/ui/sidebar"
 
 import data from "./data.json"
+
+const ChartAreaInteractive = dynamic(() =>
+  import("@/components/chart-area-interactive").then((m) => m.ChartAreaInteractive)
+)
+
+const DataTable = dynamic(() => import("@/components/data-table").then((m) => m.DataTable))
 
 export default function Page() {
   return (

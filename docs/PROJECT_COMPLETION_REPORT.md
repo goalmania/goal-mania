@@ -1,7 +1,7 @@
 # Goal-Mania E-commerce Platform - Project Completion Report
 
-**Project Duration:** 1 Week  
-**Completion Date:** December 2024  
+**Project Duration:** July 14, 2025 – August 9, 2025 (27 days)  
+**Completion Date:** August 9, 2025  
 **Status:** ✅ COMPLETED  
 
 ---
@@ -101,7 +101,16 @@ Successfully transformed Goal-Mania from a basic e-commerce site into a modern, 
 - Mobile-responsive design
 
 ### 7. Checkout & Payment System
-**Status:** ✅ 95% Complete (Stripe integration blocked due to Government of India compliance)
+**Status:** ✅ Fully Implemented (Stripe fixed and live)
+
+**What’s new/fixed:**
+- Stripe fully configured with secure webhook verification and latest API version
+- End‑to‑end order flow on successful payment intent:
+  - Reads `metadata` (userId, addressId)
+  - Creates order in DB, decrements product stock, applies coupon data
+  - Persists `paymentIntentId` for traceability
+- Robust error handling and JSON responses in API routes
+- Admin endpoints validate Mongo IDs and session roles
 
 **Implemented Features:**
 - Restructured checkout form with proper fields:
@@ -109,13 +118,7 @@ Successfully transformed Goal-Mania from a basic e-commerce site into a modern, 
   - Zip Code, Country, Phone, Email
 - Mobile-friendly checkout process
 - Performance optimization
-- Order confirmation system
-
-**Blocked Item:**
-- Stripe account integration blocked due to Government of India compliance regulations
-- Client must complete compliance documentation with Stripe and Indian regulatory authorities
-- Timeline: 4-8 weeks for full compliance approval
-- Current payment system remains functional but requires client setup
+- Order confirmation system via email (see Mailing Services section)
 
 ### 8. Post-Order Experience
 **Status:** ✅ Fully Implemented
@@ -147,7 +150,21 @@ Successfully transformed Goal-Mania from a basic e-commerce site into a modern, 
 - Status update emails with progress bars
 - Professional email templates (EN/IT)
 
-### 10. Animations & Dynamic Sections
+### 10. Email & Mailing Services
+**Status:** ✅ Fully Implemented
+
+**Integration:**
+- Attached SMTP mailing via Nodemailer transporter (ENV‑driven: host, port, secure, auth)
+- Centralized `sendEmail` utility with configurable sender
+- HTML email templates with EN/IT localization and dynamic product cards
+
+**Operational Emails:**
+- Order confirmation (triggered from Stripe webhook on success)
+- Invoice delivery (manual admin action and automatic after confirmation)
+- Shipping notifications (requires `status = shipped` and `trackingCode`)
+- Contact form: admin notification + auto‑reply to user
+
+### 11. Animations & Dynamic Sections
 **Status:** ✅ Fully Implemented
 
 **Animation Features:**
@@ -159,7 +176,7 @@ Successfully transformed Goal-Mania from a basic e-commerce site into a modern, 
 - Loading animations
 - Cross-device compatibility
 
-### 11. Additional Polish & Features
+### 12. Additional Polish & Features
 **Status:** ✅ Fully Implemented
 
 **Extra Enhancements:**
@@ -177,18 +194,18 @@ Successfully transformed Goal-Mania from a basic e-commerce site into a modern, 
 ## 🛠️ Technical Stack & Architecture
 
 **Frontend:**
-- Next.js 14 with App Router
-- React 18 with TypeScript
-- Tailwind CSS for styling
-- Shadcn/ui component library
-- SWR for data fetching
+- Next.js 15 (App Router)
+- React 19 with TypeScript
+- Tailwind CSS 4 for styling
+- shadcn/ui component library
+- TanStack Query for data fetching and caching
 - React Hook Form for forms
 
 **Backend:**
 - Next.js API routes
 - MongoDB with Mongoose
 - NextAuth.js for authentication
-- Email.js for notifications
+- Nodemailer for email notifications
 - File upload handling
 
 **Performance:**
@@ -197,6 +214,18 @@ Successfully transformed Goal-Mania from a basic e-commerce site into a modern, 
 - Bundle optimization
 - CDN integration
 - Caching strategies
+
+---
+
+## 🛡️ Articles & Roles Improvements
+
+**Status:** ✅ Implemented
+
+- Introduced new user role: `journalist`
+- Role‑based article permissions:
+  - `admin` and `journalist`: create and update articles
+  - `admin` only: delete articles
+- Server‑side enforcement in article API routes with session checks
 
 ---
 
@@ -252,9 +281,21 @@ Successfully transformed Goal-Mania from a basic e-commerce site into a modern, 
    - Email notification system
 
 4. **Integration Issues**
-   - Stripe compliance (workaround implemented)
+   - Stripe end‑to‑end payment flow fixed and verified
    - Database optimization
    - API performance tuning
+
+---
+
+## ✅ Issues Resolved
+
+- Fixed Stripe integration: webhook signature verification, payment intent handling, and order creation
+- Product stock now decremented reliably after successful payments
+- Mailing services attached: SMTP transport configured; standardized localized templates (EN/IT)
+- Admin actions hardened with ObjectId validation and role checks
+- Article workflow upgraded with new `journalist` role and guarded routes
+- Shipping notifications gated to require `shipped` status and `trackingCode`
+- Safer lean() casting and improved error responses across API routes
 
 ---
 
