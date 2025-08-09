@@ -27,7 +27,7 @@ export default function NewsSection({ articles }: NewsSectionProps) {
           {articles.map((article: Article) => (
             <Card key={article._id} className="group overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col bg-white">
               <Link
-                href={`/serieA/${article.slug}`}
+                href={`/${article.category === "transferMarket" ? "transfer" : article.category}/${article.slug}`}
                 className="block h-full flex flex-col"
               >
                 <div className="relative h-40 sm:h-48 md:h-56 w-full flex-shrink-0">

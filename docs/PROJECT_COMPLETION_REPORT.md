@@ -43,6 +43,16 @@ Successfully transformed Goal-Mania from a basic e-commerce site into a modern, 
 - Implemented SWR for data fetching and caching
 - Added optimistic UI updates
 
+#### Bundle & Rendering Optimization (Aug 2025)
+- Integrated bundle analysis in the build:
+  - Enable with `ANALYZE=true pnpm build`
+  - Reports saved to `.next/analyze/{client,nodejs,edge}.html`
+- Checkout performance: lazy-load Stripe UI via dynamic import; `stripe-js` is only fetched on the payment step
+- Charts performance: tree-shook Recharts with named imports and isolated charts behind dynamic imports (dashboard/admin)
+- Global bundle trimming: removed global `QueryClientProvider` to avoid shipping TanStack Query to every page
+- Next.js `optimizePackageImports` enabled for `recharts`, icon libraries, and Radix to reduce client bundle size
+- Third-party scripts (GA, AdSense) deferred with `strategy="lazyOnload"` to minimize main-thread contention
+
 **Responsive Design:**
 - Mobile-first approach across all pages
 - Touch-friendly navigation and interactions
@@ -242,6 +252,12 @@ Successfully transformed Goal-Mania from a basic e-commerce site into a modern, 
 - Page load time: <2s ✅
 - Mobile performance: Excellent ✅
 - Cross-browser compatibility: 100% ✅
+
+### Recent Build Snapshot (local prod build)
+- Shared First Load JS: 100 kB
+- `/checkout` First Load JS: 174 kB (Stripe UI lazy-loaded)
+- `/dashboard` First Load JS: 349 kB (charts/data table dynamically imported)
+- Analyzer reports: `.next/analyze/client.html`, `.next/analyze/nodejs.html`, `.next/analyze/edge.html`
 
 ---
 
