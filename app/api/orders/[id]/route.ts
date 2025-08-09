@@ -132,26 +132,27 @@ export async function PATCH(
     await connectDB();
     
     // Get the current order to compare status changes
-    const currentOrder = await Order.findById(id).lean();
+    const currentOrder = await Order.findById(id).lean<OrderType | null>();
     if (!currentOrder) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
     const updatedOrder = await Order.findByIdAndUpdate(id, updateData, {
       new: true,
-    }).lean();
+    }).lean<OrderType | null>();
 
     if (!updatedOrder) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
     // Send email notifications for status changes
-    if (data.status && data.status !== currentOrder.status) {
+    if (data.status && currentOrder && data.status !== currentOrder.status) {
       try {
         // Get user information
-        const user = (await User.findById(updatedOrder.userId)
-          .select("email name language")
-          .lean()) as UserDocument;
+        const userDoc = await User.findById(updatedOrder.userId).select(
+          "email name language"
+        );
+        const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
 
         if (user && user.email) {
           const userLanguage = user.language || 'it'; // Default to Italian
@@ -188,11 +189,12 @@ export async function PATCH(
     }
 
     // Send shipping notification if status is "shipped" and tracking code is provided
-    if (data.status === "shipped" && data.trackingCode && currentOrder.status !== "shipped") {
+    if (data.status === "shipped" && data.trackingCode && currentOrder && currentOrder.status !== "shipped") {
       try {
-        const user = (await User.findById(updatedOrder.userId)
-          .select("email name language")
-          .lean()) as UserDocument;
+        const userDoc = await User.findById(updatedOrder.userId).select(
+          "email name language"
+        );
+        const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
 
         if (user && user.email) {
           const userLanguage = user.language || 'it';

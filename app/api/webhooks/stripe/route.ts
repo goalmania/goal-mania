@@ -156,8 +156,9 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
     // Get coupon data
     const coupon = orderDetails.couponData;
 
-    // Get user information
-    const user = (await User.findById(userId)) as UserDocument;
+    // Get user information (ensure plain object with expected fields)
+    const userDoc = await User.findById(userId).select("email name language");
+    const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
     if (!user) {
       console.error("User not found:", userId);
       return;

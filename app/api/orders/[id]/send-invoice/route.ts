@@ -16,6 +16,15 @@ interface UserDocument {
   language?: string;
 }
 
+// Minimal shape needed from Order when using lean()
+interface OrderLean {
+  _id: mongoose.Types.ObjectId;
+  userId: string;
+  items: any[];
+  paymentIntentId?: string;
+  amount: number;
+}
+
 // POST /api/orders/[id]/send-invoice - Send invoice email to customer
 export async function POST(
   request: Request,
@@ -41,16 +50,17 @@ export async function POST(
     await connectDB();
 
     // Find the order
-    const order = await Order.findById(id).lean();
+    const order = await Order.findById(id).lean<OrderLean | null>();
 
     if (!order) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
-    // Get user information
-    const user = (await User.findById(order.userId)
-      .select("email name language")
-      .lean()) as UserDocument;
+    // Get user information (avoid unsafe cast on lean result)
+    const userDoc = await User.findById(order.userId).select(
+      "email name language"
+    );
+    const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });

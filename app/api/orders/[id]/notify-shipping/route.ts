@@ -54,10 +54,11 @@ export async function POST(
       );
     }
 
-    // Get user email and language preference
-    const user = (await User.findById(order.userId)
-      .select("email name language")
-      .lean()) as unknown as UserDocument;
+    // Get user email and language preference (convert safely)
+    const userDoc = await User.findById(order.userId).select(
+      "email name language"
+    );
+    const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
