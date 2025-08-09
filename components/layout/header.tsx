@@ -14,6 +14,7 @@ import {
   UserIcon,
   ArrowRightOnRectangleIcon,
   Cog6ToothIcon,
+  PencilIcon,
 } from "@heroicons/react/24/outline";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
@@ -315,6 +316,14 @@ export function Header() {
                             <Link href="/admin" className="flex items-center">
                               <Cog6ToothIcon className="mr-2 h-4 w-4" />
                               {t("adminPanel")}
+                            </Link>
+                          </DropdownMenuItem>
+                        )}
+                        {session.user.role === "journalist" && (
+                          <DropdownMenuItem asChild>
+                            <Link href="/admin/articles" className="flex items-center">
+                              <PencilIcon className="mr-2 h-4 w-4" />
+                              {t("authorPanel")}
                             </Link>
                           </DropdownMenuItem>
                         )}

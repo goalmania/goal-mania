@@ -201,6 +201,10 @@ export async function PUT(
         { status: 401 }
       );
     }
+    const role = (session.user as any)?.role as string | undefined;
+    if (role !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
     const body = await request.json();
     console.log("Received product update data:", JSON.stringify(body, null, 2));
@@ -434,6 +438,10 @@ export async function PATCH(
         { status: 401 }
       );
     }
+    const role2 = (session.user as any)?.role as string | undefined;
+    if (role2 !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
     const body = await request.json();
     console.log("Received PATCH request data:", JSON.stringify(body, null, 2));
@@ -516,6 +524,10 @@ export async function DELETE(
         { error: "Unauthorized - Not logged in" },
         { status: 401 }
       );
+    }
+    const role3 = (session.user as any)?.role as string | undefined;
+    if (role3 !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     // For debugging

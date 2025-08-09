@@ -140,6 +140,7 @@ export function EditUserModal({
               <SelectContent>
                 <SelectItem value="user">User</SelectItem>
                 <SelectItem value="premium">Premium</SelectItem>
+                <SelectItem value="journalist">Journalist</SelectItem>
                 <SelectItem value="admin">Admin</SelectItem>
               </SelectContent>
             </Select>

@@ -6,6 +6,16 @@ import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import { JerseyAdBlock } from "@/app/_components/JerseyAdBlock";
 import ArticleContent from "@/app/_components/ArticleContent";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
 
 // Disable caching for this page
 export const dynamic = "force-dynamic";
@@ -129,6 +139,25 @@ export default async function ArticlePage({
 
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
+      {/* Breadcrumb */}
+      <div className="max-w-3xl mx-auto mb-6">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/news">News</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{article.title}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
+
       <article className="max-w-3xl mx-auto text-black">
         {/* Article Header */}
         <header className="mb-8">
@@ -150,16 +179,18 @@ export default async function ArticlePage({
         </header>
 
         {/* Article Featured Image */}
-        <div className="relative h-[50vh] w-full mb-8 rounded-lg overflow-hidden">
-          <Image
-            src={article.image}
-            alt={article.title}
-            fill
-            className="object-cover"
-            priority
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 50vw"
-          />
-        </div>
+        <Card className="overflow-hidden mb-8">
+          <div className="relative h-[50vh] w-full">
+            <Image
+              src={article.image}
+              alt={article.title}
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 50vw"
+            />
+          </div>
+        </Card>
 
         {/* First part of article content */}
         <ArticleContent
@@ -168,7 +199,11 @@ export default async function ArticlePage({
         />
 
         {/* Jersey Ad Block */}
-        <JerseyAdBlock jerseyId={article.featuredJerseyId} />
+        <div className="my-8">
+          <Separator className="mb-6" />
+          <JerseyAdBlock jerseyId={article.featuredJerseyId} />
+          <Separator className="mt-6" />
+        </div>
 
         {/* Second part of article content */}
         {contentSecondPart && (
@@ -198,38 +233,32 @@ export default async function ArticlePage({
       {/* Related Articles */}
       {relatedArticles.length > 0 && (
         <section className="max-w-5xl mx-auto mt-16">
-          <h2 className="text-2xl font-bold mb-6 text-black">
-            Related Articles
-          </h2>
+          <h2 className="text-2xl font-bold mb-6 text-black">Related Articles</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {relatedArticles.map((related: any) => (
-              <Link
-                key={related._id}
-                href={`/news/${related.slug}`}
-                className="group flex flex-col bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
-              >
-                <div className="relative h-48 w-full">
-                  <Image
-                    src={related.image}
-                    alt={related.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-                  />
-                </div>
-                <div className="p-4 flex-1 flex flex-col">
-                  <div className="flex items-center text-xs text-gray-500 mb-2">
-                    <span>
-                      {new Date(related.publishedAt).toLocaleDateString()}
-                    </span>
+              <Link key={related._id} href={`/news/${related.slug}`}>
+                <Card className="group flex flex-col overflow-hidden hover:shadow-md transition-shadow duration-300">
+                  <div className="relative h-48 w-full">
+                    <Image
+                      src={related.image}
+                      alt={related.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+                    />
                   </div>
-                  <h3 className="text-lg font-semibold text-black mb-2 group-hover:text-indigo-600 transition-colors duration-200">
-                    {related.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                    {related.summary}
-                  </p>
-                </div>
+                  <CardContent className="p-4 flex-1 flex flex-col">
+                    <div className="flex items-center text-xs text-gray-500 mb-2">
+                      <span>{new Date(related.publishedAt).toLocaleDateString()}</span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-black mb-2 group-hover:text-indigo-600 transition-colors duration-200">
+                      {related.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                      {related.summary}
+                    </p>
+                  </CardContent>
+                </Card>
               </Link>
             ))}
           </div>

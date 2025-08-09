@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { 
   PencilIcon, 
@@ -142,7 +143,8 @@ function ArticleDataTable({
   onCategoryFilterChange,
   statusFilter,
   onStatusFilterChange,
-  router
+  router,
+  canDelete,
 }: {
   articles: IArticle[];
   onEdit: (articleId: string) => void;
@@ -161,6 +163,7 @@ function ArticleDataTable({
   statusFilter: string;
   onStatusFilterChange: (status: string) => void;
   router: any;
+  canDelete: boolean;
 }) {
   const [data, setData] = useState(() => articles);
   const [rowSelection, setRowSelection] = useState({});
@@ -339,14 +342,16 @@ function ArticleDataTable({
           >
             <PencilIcon className="h-4 w-4" />
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onDelete((row.original._id || row.original.slug || '') as string)}
-            className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-          >
-            <TrashIcon className="h-4 w-4" />
-          </Button>
+          {canDelete && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onDelete((row.original._id || row.original.slug || '') as string)}
+              className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+            >
+              <TrashIcon className="h-4 w-4" />
+            </Button>
+          )}
         </div>
       ),
       enableSorting: false,
@@ -665,6 +670,7 @@ function ArticleDataTable({
 
 export default function ArticlesPage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const [showDrafts, setShowDrafts] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
@@ -917,6 +923,7 @@ export default function ArticlesPage() {
         statusFilter={statusFilter}
         onStatusFilterChange={handleStatusFilterChange}
         router={router}
+        canDelete={session?.user?.role === "admin"}
       />
 
     </>

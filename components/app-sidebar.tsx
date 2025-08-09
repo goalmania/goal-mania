@@ -186,6 +186,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     avatar: "/images/default-avatar.png"
   }
 
+  // Determine visible nav items based on role
+  const role = session?.user?.role
+  const navItems = React.useMemo(() => {
+    if (role === "journalist") {
+      return data.navMain.filter((item) => item.url === "/admin/articles")
+    }
+    return data.navMain
+  }, [role])
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -203,7 +212,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navItems} />
         {/* <NavDocuments items={data.documents} /> */}
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>

@@ -37,28 +37,25 @@ export default function BentoSection({ articles, reverse = false }: BentoSection
   );
 
   const gridArticles = (
-    <div className="flex flex-col gap-6 w-full max-w-xs mx-auto">
+    <div className="grid grid-cols-2 gap-4 w-full max-w-md lg:max-w-lg">
       {grid.map((news) => (
         <Link href={`/news/${news.slug}`} key={news.id} className="block">
-          <Card className="flex flex-row shadow-sm border border-gray-200 bg-white text-black">
-            <div className="relative w-28 h-28 rounded-l-2xl overflow-hidden flex-shrink-0">
+          <Card className="shadow-md border border-gray-200 bg-white text-black hover:shadow-lg transition-shadow duration-200">
+            <div className="relative w-full h-32 sm:h-36 rounded-t-xl overflow-hidden">
               <Image src={news.image} alt={news.title} fill className="object-cover" />
             </div>
-            <div className="flex flex-col justify-between flex-1">
-              <CardHeader className="pb-1 pt-3 px-4">
-                <CardTitle className="text-base font-semibold line-clamp-2 text-black">{news.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="px-4 pb-3 pt-0">
-                <div className="flex items-center text-xs text-gray-500 mb-1 gap-2">
-                  <span>{new Date(news.publishedAt).toLocaleDateString()}</span>
-                  <span className="mx-1">•</span>
-                  <span>{news.author}</span>
-                </div>
-                <CardDescription className="text-xs text-gray-700 line-clamp-2">
-                  {news.summary}
-                </CardDescription>
-              </CardContent>
-            </div>
+            <CardHeader className="pb-2 pt-3 px-4">
+              <CardTitle className="text-sm font-semibold line-clamp-2 text-black">
+                {news.title}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="px-4 pb-4 pt-0">
+              <div className="flex items-center text-xs text-gray-500 gap-2">
+                <span>{new Date(news.publishedAt).toLocaleDateString()}</span>
+                <span className="mx-1">•</span>
+                <span className="truncate">{news.author}</span>
+              </div>
+            </CardContent>
           </Card>
         </Link>
       ))}

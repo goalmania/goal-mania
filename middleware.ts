@@ -18,6 +18,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const isPrivateRoute = PRIVATE_ROUTES.some((route) => pathname === route || pathname.startsWith(route + "/"));
   const isAdminRoute = pathname.startsWith("/admin");
+  const isArticlesAdminRoute = pathname.startsWith("/admin/articles");
 
   if (isPrivateRoute) {
     if (!token) {
@@ -25,8 +26,13 @@ export async function middleware(request: NextRequest) {
       const signinUrl = new URL(`/auth/signin?callbackUrl=${callbackUrl}&reason=auth-required`, request.url);
       return NextResponse.redirect(signinUrl);
     }
-    if (isAdminRoute && token.role !== "admin") {
-      return NextResponse.redirect(new URL("/", request.url));
+    if (isAdminRoute) {
+      const role = token.role as string | undefined;
+      const isJournalistAllowedHere = isArticlesAdminRoute && role === "journalist";
+      const isAdmin = role === "admin";
+      if (!isAdmin && !isJournalistAllowedHere) {
+        return NextResponse.redirect(new URL("/", request.url));
+      }
     }
   }
 

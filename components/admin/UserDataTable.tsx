@@ -256,6 +256,8 @@ export function UserDataTable({
               ? "default" 
               : row.original.role === "premium"
               ? "secondary"
+              : row.original.role === "journalist"
+              ? "outline"
               : "outline"
           }
           className={
@@ -263,6 +265,8 @@ export function UserDataTable({
               ? "bg-purple-100 text-purple-800" 
               : row.original.role === "premium"
               ? "bg-green-100 text-green-800"
+              : row.original.role === "journalist"
+              ? "bg-amber-100 text-amber-800"
               : "bg-blue-100 text-blue-800"
           }
         >
@@ -294,6 +298,7 @@ export function UserDataTable({
           <SelectContent>
             <SelectItem value="user">User</SelectItem>
             <SelectItem value="premium">Premium</SelectItem>
+            <SelectItem value="journalist">Journalist</SelectItem>
             <SelectItem value="admin">Admin</SelectItem>
           </SelectContent>
         </Select>

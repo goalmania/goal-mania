@@ -29,7 +29,7 @@ const NewsCarousel: React.FC<NewsCarouselProps> = ({ articles }) => {
 
   return (
     <div className="mt-16 flex flex-col items-center w-full">
-      <h2 className="text-3xl font-bold mb-6 text-[#0e1924] text-center w-full">More News</h2>
+      <h2 className="text-3xl font-bold mb-6 text-[#0e1924] text-center w-full">Latest News</h2>
       <div className="relative w-full flex items-center justify-center max-w-6xl">
         {/* Left Arrow */}
         <Button
@@ -50,7 +50,7 @@ const NewsCarousel: React.FC<NewsCarouselProps> = ({ articles }) => {
             <Link
               key={article.id}
               href={`/news/${article.slug}`}
-              className="min-w-[280px] max-w-xs bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out flex-shrink-0 border border-gray-100 hover:border-[#f5963c]"
+              className="min-w-[280px] max-w-xs bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out flex-shrink-0 border border-gray-100 hover:border-[#f5963c]"
             >
               <div className="relative w-full h-40 rounded-t-lg overflow-hidden">
                 {article.image && (

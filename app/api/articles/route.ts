@@ -73,6 +73,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const role = (session.user as any)?.role as string | undefined;
+    if (role !== "admin" && role !== "journalist") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     const data = await req.json();
 
     await connectDB();
