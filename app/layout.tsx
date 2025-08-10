@@ -62,6 +62,28 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" type="image/x-icon" />
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+         {/* Resource hints to improve LCP/FCP */}
+         {/* Facebook Pixel */}
+         <link rel="preconnect" href="https://connect.facebook.net" />
+         <link rel="dns-prefetch" href="//connect.facebook.net" />
+         <link rel="preconnect" href="https://www.facebook.com" />
+         <link rel="dns-prefetch" href="//www.facebook.com" />
+         {/* Google Tag Manager / Analytics */}
+         <link rel="preconnect" href="https://www.googletagmanager.com" />
+         <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+         <link rel="preconnect" href="https://www.google-analytics.com" />
+         <link rel="dns-prefetch" href="//www.google-analytics.com" />
+         {/* Google AdSense */}
+         <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+         <link rel="dns-prefetch" href="//pagead2.googlesyndication.com" />
+         {/* Cloudinary (images) */}
+         <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
+         <link rel="dns-prefetch" href="//res.cloudinary.com" />
+         {/* Google Fonts for admin pages that import CSS */}
+         <link rel="preconnect" href="https://fonts.googleapis.com" />
+         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
       </head>
       <body className={inter.className} suppressHydrationWarning>
         <Script

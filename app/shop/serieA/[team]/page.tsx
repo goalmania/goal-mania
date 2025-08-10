@@ -4,8 +4,8 @@ import Product from "@/lib/models/Product";
 import { IProduct } from "@/lib/types/product";
 import { notFound } from "next/navigation";
 
-// Disable caching for this page
-export const dynamic = "force-dynamic";
+// Enable ISR for team-specific pages
+export const revalidate = 300;
 
 // Define valid teams
 const validTeams = [

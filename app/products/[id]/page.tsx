@@ -6,8 +6,8 @@ import ProductDetailClient from "@/app/_components/ProductDetailClient";
 import { Suspense } from "react";
 import mongoose from "mongoose";
 
-// Disable caching for this page
-export const dynamic = "force-dynamic";
+// Incremental Static Regeneration for product detail
+export const revalidate = 600;
 
 async function getProduct(id: string) {
   if (!id || typeof id !== "string") {

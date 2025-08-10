@@ -3,8 +3,8 @@ import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { IProduct } from "@/lib/types/product";
 
-// Disable caching for this page
-export const dynamic = "force-dynamic";
+// Enable ISR for international shop listing
+export const revalidate = 300;
 
 async function getInternationalProducts() {
   await connectDB();

@@ -22,7 +22,9 @@ export default function BannerBlock({ imageSrc, ctaHref, className }: BannerBloc
           width={600}
           height={320}
           className="rounded-xl object-cover w-full h-auto max-h-64"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 600px"
           priority
+          fetchPriority="high"
         />
         <Button
           asChild

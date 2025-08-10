@@ -18,8 +18,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-// Disable caching for this page
-export const dynamic = "force-dynamic";
+// Enable ISR for news listing
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "News | Goal Mania",

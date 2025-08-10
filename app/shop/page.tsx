@@ -2,8 +2,8 @@
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import ShopClientWrapper from "@/app/_components/ShopClientWrapper";
-// Disable caching for this page
-export const dynamic = "force-dynamic";
+// Cache shop page and revalidate periodically
+export const revalidate = 300;
 
 async function getFeaturedProducts() {
   await connectDB();

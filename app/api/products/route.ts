@@ -13,6 +13,9 @@ import {
 import mongoose from "mongoose";
 import { NextRequest } from "next/server";
 
+// Enable ISR caching for this route handler
+export const revalidate = 600;
+
 // Schema for input validation
 const productSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters"),
@@ -182,8 +185,8 @@ export async function GET(req: NextRequest) {
 
     // Add appropriate cache headers based on the request type
     const cacheHeaders = {
-      'Cache-Control': search || !includeInactive 
-        ? 'no-cache, no-store, must-revalidate' // Don't cache search results or filtered results
+      'Cache-Control': (search || includeInactive)
+        ? 'no-cache, no-store, must-revalidate' // Don't cache search results or admin-filtered results
         : 'public, s-maxage=600, stale-while-revalidate=1200', // Cache regular product lists for 10 minutes
       'X-Cache': 'MISS'
     };

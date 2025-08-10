@@ -6,8 +6,8 @@ import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import ArticleContent from "@/app/_components/ArticleContent";
 
-// Disable caching for this page
-export const dynamic = "force-dynamic";
+// Enable ISR for international article pages
+export const revalidate = 300;
 
 // Generate metadata for the page
 export async function generateMetadata({

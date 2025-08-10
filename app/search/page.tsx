@@ -9,8 +9,8 @@ export const metadata: Metadata = {
   description: "Cerca prodotti e notizie su Goal Mania",
 };
 
-// Disable caching for this page
-export const dynamic = "force-dynamic";
+// Pure client page: pre-render statically for fastest TTFB
+export const dynamic = "force-static";
 
 export default function SearchPage() {
   return <SearchClient initialProducts={[]} initialArticles={[]} query="" />;

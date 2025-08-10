@@ -17,8 +17,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 
-// Disable caching for this page
-export const dynamic = "force-dynamic";
+// Enable ISR for news article pages
+export const revalidate = 300;
 
 // Generate metadata for the page
 export async function generateMetadata({

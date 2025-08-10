@@ -3,8 +3,8 @@ import Product from "@/lib/models/Product";
 import { IProduct } from "@/lib/types/product";
 import MysteryBoxPageClient from "@/app/_components/MysteryBoxPageClient";
 
-// Disable caching for this page
-export const dynamic = "force-dynamic";
+// Enable ISR for mystery box listing
+export const revalidate = 300;
 
 async function getMysteryBoxProducts() {
   await connectDB();
