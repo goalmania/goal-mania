@@ -40,10 +40,10 @@ export default function ProductGrid({
   isInWishlist,
   showWishlistButton = true,
   showAddToCartButton = false,
-  gridCols = 3,
+  gridCols = 4,
   gap = "md",
   cardHeight = "lg",
-  imageAspectRatio = "portrait",
+  imageAspectRatio = "square",
   className = "",
   customBadges,
 }: ProductGridProps) {
@@ -52,7 +52,8 @@ export default function ProductGrid({
     1: "grid-cols-1",
     2: "grid-cols-1 sm:grid-cols-2",
     3: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
-    4: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
+    // Match: grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4
+    4: "grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
     5: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5",
     6: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6",
   };
@@ -60,13 +61,14 @@ export default function ProductGrid({
   // Gap classes
   const gapClasses = {
     sm: "gap-2",
-    md: "gap-4",
+    // Match: gap-3 sm:gap-6
+    md: "gap-3 sm:gap-6",
     lg: "gap-6",
   };
 
   return (
     <div
-      className={`grid ${gridColClasses[gridCols]} ${gapClasses[gap]} px-4 sm:px-6 md:px-8 py-6 ${className}`}
+      className={`grid ${gridColClasses[gridCols]} ${gapClasses[gap]} ${className}`}
     >
       {products.map((product) => (
         <ProductCard

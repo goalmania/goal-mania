@@ -6,6 +6,7 @@ import Link from "next/link";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import { PlayIcon } from "@heroicons/react/24/solid";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 
 interface ProductCardProps {
   id: string;
@@ -49,7 +50,7 @@ export default function ProductCard({
   onAddToCart,
   showWishlistButton = true,
   showAddToCartButton = false,
-  imageAspectRatio = "portrait",
+  imageAspectRatio = "square",
   cardHeight = "lg",
   className = "",
   product,
@@ -57,6 +58,7 @@ export default function ProductCard({
   const [mounted, setMounted] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setMounted(true);
@@ -101,15 +103,13 @@ export default function ProductCard({
   };
 
   return (
-    <Link href={href} className="h-full w-full">
+    <Link href={href} className="w-full">
       <div
-        className={`group relative bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden ${heightClasses[cardHeight]} flex flex-col border border-transparent hover:border-[#f5963c] hover:ring-1 hover:ring-[#f5963c] hover:ring-opacity-40 focus-within:border-[#f5963c] focus-within:ring-1 focus-within:ring-[#f5963c] focus-within:ring-opacity-40 transition-all duration-300 m-1 ${className}`}
-        style={{ boxShadow: '0 2px 8px 0 rgba(245,150,60,0.08)' }}
+        className={`group relative bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col ${className}`}
       >
         {/* Image section */}
-        <div 
-          className="flex-shrink-0 relative" 
-          style={{ flexBasis: '65%', height: '65%' }}
+        <div
+          className="flex-shrink-0 relative"
           onMouseEnter={() => {
             setIsHovered(true);
             if (videos.length > 0) {
@@ -121,7 +121,7 @@ export default function ProductCard({
             setShowVideo(false);
           }}
         >
-          <div className={`relative w-full h-full bg-gray-200 overflow-hidden rounded-t-xl ${imageAspectClasses[imageAspectRatio]}`}>
+          <div className={`relative w-full bg-gray-200 overflow-hidden rounded-t-lg ${imageAspectRatio === 'square' ? 'aspect-square' : imageAspectClasses[imageAspectRatio]}`}>
             {/* Video overlay */}
             {videos.length > 0 && showVideo && isHovered ? (
               <video
@@ -136,38 +136,31 @@ export default function ProductCard({
               <img
                 src={image || "/images/image.png"}
                 alt={name || "Product image"}
-                className="object-contain object-center h-full w-full transition-transform duration-300 ease-in-out group-hover:shadow-[0_0_0_4px_#f5963c55]"
+                className="h-full w-full object-cover object-center transform group-hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
               />
             )}
 
-            {/* Video indicator */}
-            {videos.length > 0 && (
-              <div className="absolute bottom-1.5 left-1.5 bg-black/60 backdrop-blur-sm text-white px-1.5 py-0.5 rounded-full flex items-center gap-1 text-xs">
-                <PlayIcon className="h-2.5 w-2.5" />
-                <span>{videos.length}</span>
-              </div>
-            )}
-            
             {/* Wishlist button */}
             {showWishlistButton && onWishlistToggle && (
               <button
                 onClick={handleWishlistToggle}
-                className="absolute right-1.5 top-1.5 rounded-full bg-white/60 backdrop-blur-sm p-1 shadow-sm hover:bg-white/80 transition-colors duration-200 z-10"
+                className="absolute right-2 top-2 rounded-full bg-white/80 backdrop-blur-sm p-1.5 sm:p-2.5 shadow-md hover:bg-white transition-colors duration-200 z-10"
                 aria-label={
                   isInWishlist && isInWishlist(id)
-                    ? "Remove from wishlist"
-                    : "Add to wishlist"
+                    ? t('product.removeFromWishlist')
+                    : t('product.addToWishlist')
                 }
               >
                 {isInWishlist && isInWishlist(id) ? (
-                  <HeartIconSolid className="h-3 w-3 text-red-500" />
+                  <HeartIconSolid className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
                 ) : (
-                  <HeartIcon className="h-3 w-3 text-gray-600" />
+                  <HeartIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
                 )}
               </button>
             )}
 
+            {/* Wishlist button */}
             {/* Add to cart button */}
             {showAddToCartButton && onAddToCart && (
               <button
@@ -180,16 +173,13 @@ export default function ProductCard({
                 </svg>
               </button>
             )}
-            
-            {/* Orange animated accent bar on hover */}
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-[#f5963c] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
           </div>
         </div>
 
         {/* Info section */}
-        <div className="flex flex-col flex-grow justify-between p-2 sm:p-3 gap-1" style={{ flexBasis: '35%', height: '35%' }}>
-          <div className="mb-1 flex-grow">
-            <h3 className="text-xs flex justify-center text-center items-center sm:text-sm font-semibold text-gray-900 group-hover:text-[#f5963c] transition-colors duration-200 line-clamp-2">
+        <div className="p-2 sm:p-4 flex flex-col flex-grow">
+          <div className="mb-2 flex-grow">
+            <h3 className="text-xs flex justify-center text-center items-center sm:text-sm font-medium text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
               {name}
             </h3>
             
@@ -202,7 +192,7 @@ export default function ProductCard({
                   </p>
                 )}
                 {category && team && (
-                  <span className="h-0.5 w-0.5 rounded-full bg-gray-300 hidden sm:block"></span>
+                  <span className="h-1 w-1 rounded-full bg-gray-300 hidden sm:block"></span>
                 )}
                 {team && (
                   <p className="text-[10px] sm:text-xs text-gray-500">
@@ -215,9 +205,7 @@ export default function ProductCard({
 
           {/* Price */}
           <div className="flex items-center justify-center mt-auto">
-            <p className="text-sm sm:text-base font-bold text-[#f5963c]">
-              €{Number(price).toFixed(2)}
-            </p>
+            <p className="text-xs sm:text-base md:text-lg font-semibold text-[#F1803A]">€{Number(price).toFixed(2)}</p>
           </div>
 
           {/* Badges section */}
