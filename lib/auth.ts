@@ -57,7 +57,7 @@ export const authOptions: NextAuthOptions = {
             id: user._id.toString(),
             email: user.email,
             name: user.name,
-            role: user.role,
+            role: user.role as string | undefined,
           };
         } catch (error) {
           console.error("Auth error:", error);
@@ -71,6 +71,21 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
+    // Explicitly set cookie path to '/'
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === "production"
+        ? "__Secure-next-auth.session-token"
+        : "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
@@ -84,7 +99,8 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
-        token.role = user.role;
+        token.role = user.role as string | undefined;
+        console.log("[NextAuth][JWT Callback] Set token role:", token.role);
       }
 
       // Handle updates to the session
@@ -92,9 +108,12 @@ export const authOptions: NextAuthOptions = {
         if (session.user) {
           token.name = session.user.name;
           token.email = session.user.email;
+          // Do not update role here to avoid accidental removal
         }
       }
 
+      // Always log token on callback
+      console.log("[NextAuth][JWT Callback] Token:", token);
       return token;
     },
     async session({ session, token }) {
@@ -102,10 +121,11 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
-        if (token.role) {
-          session.user.role = token.role as string;
-        }
+        session.user.role = token.role as string | undefined;
+        console.log("[NextAuth][Session Callback] Set session user role:", session.user.role);
       }
+      // Always log session on callback
+      console.log("[NextAuth][Session Callback] Session:", session);
       return session;
     },
   },

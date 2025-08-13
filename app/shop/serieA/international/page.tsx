@@ -1,15 +1,15 @@
-import SerieAClient from "@/app/components/SerieAClient";
+import SerieAClient from "@/app/_components/SerieAClient";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { IProduct } from "@/lib/types/product";
 
-// Disable caching for this page
-export const dynamic = "force-dynamic";
+// Enable ISR for Serie A international listing
+export const revalidate = 300;
 
 async function getSerieAProducts() {
   await connectDB();
   const products = await Product.find({
-    category: "SeriesA/International",
+    category: "International",
     isActive: true,
   }).sort({ feature: -1, createdAt: -1 });
   return JSON.parse(JSON.stringify(products)); // Serialize the Mongoose documents
@@ -18,14 +18,33 @@ async function getSerieAProducts() {
 export default async function SerieAShopPage() {
   const serverProducts = await getSerieAProducts();
 
+  // Log products that might cause issues
+  serverProducts.forEach((product: IProduct, index: number) => {
+    if (!product._id) {
+      console.warn(`Product at index ${index} is missing _id:`, product);
+    }
+    if (!product.images || !product.images.length) {
+      console.warn(
+        `Product with ID ${product._id || "unknown"} is missing images:`,
+        product
+      );
+    }
+  });
+
+  // Filter out products with missing essential data
+  const validProducts = serverProducts.filter(
+    (product: IProduct) => product._id && product.title
+  );
+
   // Map server products to client format
-  const products = serverProducts.map((product: IProduct) => ({
-    id: product._id,
-    name: product.title,
-    price: product.basePrice,
-    image: product.images[0],
-    category: product.category,
-    team: product.title.split(" ")[0], // Extract team name from title
+  const products = validProducts.map((product: IProduct) => ({
+    id: product._id || "", // Ensure id is never undefined
+    name: product.title || "Untitled Product", // Ensure name is never undefined
+    price: product.basePrice || 0, // Ensure price is never undefined
+    image: product.images?.[0] || "/images/image.png", // Ensure image is never undefined with a fallback
+    category: product.category || "International", // Ensure category is never undefined
+    team: product.title ? product.title.split(" ")[1] : "Unknown", // Extract team name (second word)
+    videos: product.videos || [], // Include videos for showcase
   }));
 
   return <SerieAClient products={products} />;

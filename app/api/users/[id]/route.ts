@@ -29,10 +29,9 @@ export async function GET(
     const session = await getServerSession(authOptions);
     console.log("API /users/[id]: Session:", session ? "Valid" : "Invalid");
 
-    // Find the user by ID
-    const user = (await User.findById(userId)
-      .select("-password")
-      .lean()) as UserDocument;
+    // Find the user by ID (avoid unsafe casting from lean)
+    const userDoc = await User.findById(userId).select("-password");
+    const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
 
     if (!user) {
       console.log("API /users/[id]: User not found");

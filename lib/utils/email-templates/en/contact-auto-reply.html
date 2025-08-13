@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank you for contacting Goal Mania</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc;">
+  <div style="max-width: 600px; margin: 0 auto; background: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #0e1924 0%, #1a365d 100%); padding: 40px 30px; text-align: center; border-radius: 12px 12px 0 0;">
+      <h1 style="color: white; margin: 0; font-size: 32px; font-weight: 700;">⚽ Goal Mania</h1>
+      <p style="color: #f5963c; margin: 10px 0 0 0; font-size: 18px; font-weight: 600;">Your football jersey destination</p>
+    </div>
+    
+    <!-- Content -->
+    <div style="padding: 50px 40px;">
+      <!-- Thank You Message -->
+      <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 6px solid #0e1924; padding: 30px; margin: 25px 0; border-radius: 0 12px 12px 0;">
+        <h2 style="color: #0e1924; margin: 0 0 15px 0; font-size: 24px; font-weight: 600;">Thank you for contacting us!</h2>
+        <p style="margin: 0; color: #0e1924; font-size: 17px; font-weight: 600; line-height: 1.5;">Dear {{firstName}} {{lastName}},</p>
+        <p style="margin: 15px 0 0 0; color: #374151; font-size: 16px; line-height: 1.6;">We have received your message and will get back to you within 24 hours.</p>
+      </div>
+      
+      <!-- Message Details Card -->
+      <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 16px; padding: 30px; margin: 30px 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+        <h3 style="color: #0e1924; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">📝 Your Message Details</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
+              <span style="color: #64748b; font-weight: 500; font-size: 15px;">Subject:</span>
+            </td>
+            <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; text-align: right;">
+              <span style="color: #0e1924; font-weight: 600; font-size: 16px;">{{subject}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 0;">
+              <span style="color: #64748b; font-weight: 500; font-size: 15px;">Submitted:</span>
+            </td>
+            <td style="padding: 12px 0; text-align: right;">
+              <span style="color: #0e1924; font-weight: 600; font-size: 16px;">{{timestamp}}</span>
+            </td>
+          </tr>
+        </table>
+        
+        <!-- Message Content -->
+        <div style="margin-top: 20px;">
+          <h4 style="color: #0e1924; margin: 0 0 10px 0; font-size: 16px; font-weight: 600;">Your Message:</h4>
+          <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <p style="margin: 0; color: #374151; font-size: 15px; line-height: 1.6; white-space: pre-wrap;">{{message}}</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- While You Wait Section -->
+      <div style="margin: 40px 0;">
+        <h3 style="color: #0e1924; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">⏳ While You Wait</h3>
+        
+        <!-- Quick Actions -->
+        <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; border-radius: 12px; padding: 25px; margin: 20px 0;">
+          <h4 style="color: #92400e; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">Quick Actions</h4>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <a href="{{NEXT_PUBLIC_BASE_URL}}/shop" style="color: #f5963c; text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center;">
+              🛍️ Browse our latest jersey collection
+            </a>
+            <a href="https://www.instagram.com/goalmaniaofficial/" style="color: #f5963c; text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center;">
+              📱 Follow us on social media for updates
+            </a>
+                          <a href="{{NEXT_PUBLIC_BASE_URL}}/account/orders" style="color: #f5963c; text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center;">
+                📦 Check order information
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Response Time Info -->
+      <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #22c55e; border-radius: 12px; padding: 20px; margin: 25px 0; text-align: center;">
+        <p style="margin: 0; color: #166534; font-weight: 600; font-size: 15px;">⏰ We typically respond within 24 hours during business days</p>
+      </div>
+      
+      <!-- CTA Button -->
+      <div style="text-align: center; margin: 40px 0;">
+        <a href="{{NEXT_PUBLIC_BASE_URL}}/shop" style="background: linear-gradient(135deg, #f5963c 0%, #ed8936 100%); color: white; padding: 18px 36px; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 17px; display: inline-block; box-shadow: 0 6px 20px rgba(245, 150, 60, 0.3); letter-spacing: 0.5px;">Shop Now</a>
+      </div>
+      
+      <!-- Thank You Message -->
+      <div style="text-align: center; margin: 40px 0; padding: 25px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; border: 2px solid #f59e0b;">
+        <p style="margin: 0; color: #92400e; font-weight: 700; font-size: 17px;">🏆 Thank you for choosing Goal Mania!</p>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div style="background: #0e1924; padding: 40px; text-align: center; border-radius: 0 0 12px 12px;">
+      <p style="color: #94a3b8; margin: 0; font-size: 15px; line-height: 1.6;">Best regards,<br><strong>The Goal Mania Team</strong></p>
+      <p style="color: #64748b; margin: 15px 0 0 0; font-size: 12px;">This is an automated response. Please do not reply to this email.</p>
+    </div>
+  </div>
+</body>
+</html> 

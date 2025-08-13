@@ -20,6 +20,7 @@ export interface OrderItem {
     size?: string;
     isKidSize?: boolean;
     hasCustomization?: boolean;
+    excludedShirts?: string[];
   };
 }
 
@@ -76,6 +77,7 @@ const OrderSchema = new Schema<IOrder>({
         size: String,
         isKidSize: Boolean,
         hasCustomization: Boolean,
+        excludedShirts: [String],
       },
     },
   ],

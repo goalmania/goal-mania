@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Inter, Italianno } from "next/font/google";
 import { Metadata, Viewport } from "next";
 import { Providers } from "@/components/providers";
@@ -61,8 +62,30 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" type="image/x-icon" />
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+         {/* Resource hints to improve LCP/FCP */}
+         {/* Facebook Pixel */}
+         <link rel="preconnect" href="https://connect.facebook.net" />
+         <link rel="dns-prefetch" href="//connect.facebook.net" />
+         <link rel="preconnect" href="https://www.facebook.com" />
+         <link rel="dns-prefetch" href="//www.facebook.com" />
+         {/* Google Tag Manager / Analytics */}
+         <link rel="preconnect" href="https://www.googletagmanager.com" />
+         <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+         <link rel="preconnect" href="https://www.google-analytics.com" />
+         <link rel="dns-prefetch" href="//www.google-analytics.com" />
+         {/* Google AdSense */}
+         <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+         <link rel="dns-prefetch" href="//pagead2.googlesyndication.com" />
+         {/* Cloudinary (images) */}
+         <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
+         <link rel="dns-prefetch" href="//res.cloudinary.com" />
+         {/* Google Fonts for admin pages that import CSS */}
+         <link rel="preconnect" href="https://fonts.googleapis.com" />
+         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <Script
           id="facebook-pixel"
           strategy="afterInteractive"
@@ -91,28 +114,40 @@ export default function RootLayout({
             alt=""
           />
         </noscript>
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-LGL162TKF8"
-          strategy="afterInteractive"
-        />
-        <Script
-          id="google-analytics"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
+              strategy="lazyOnload"
+            />
+            <Script
+              id="google-analytics"
+              strategy="lazyOnload"
+              dangerouslySetInnerHTML={{
+                __html: `
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-LGL162TKF8');
+      gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');
     `,
-          }}
-        />
+              }}
+            />
+          </>
+        )}
+        
+        {/* Google AdSense */}
+        {process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID && (
+          <Script
+            id="google-adsense"
+            strategy="lazyOnload"
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID}`}
+            crossOrigin="anonymous"
+          />
+        )}
 
         <Providers>
           <div className="min-h-screen flex flex-col">
-            <Header />
-            <Container>{children}</Container>
-            <Footer />
+            {children}
             <ToastProvider />
           </div>
         </Providers>

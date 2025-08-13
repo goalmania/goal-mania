@@ -14,7 +14,21 @@
     "signUp": "Registrati",
     "signOut": "Esci",
     "myProfile": "Il mio profilo",
-    "myOrders": "I miei ordini"
+    "myOrders": "I miei ordini",
+    "email": "Indirizzo email",
+    "emailPlaceholder": "Inserisci la tua email",
+    "password": "Password",
+    "passwordPlaceholder": "Inserisci la tua password",
+    "forgotPassword": "Password dimenticata?",
+    "pleaseSignIn": "Accedi per continuare.",
+    "orContinueWith": "Oppure continua con",
+    "continueWithGoogle": "Continua con Google",
+    "notAMember": "Non sei registrato?",
+    "signUpNow": "Registrati ora"
+  },
+  "language": {
+    "switchToItalian": "Passa all'Italiano",
+    "switchToEnglish": "Passa all'Inglese"
   },
   "shop": {
     "hero": {
@@ -68,6 +82,12 @@
       "addToCart": "Aggiungi al carrello",
       "addToWishlist": "Aggiungi ai preferiti",
       "removeFromWishlist": "Rimuovi dai preferiti"
+    },
+    "team": {
+      "description": "Scopri le maglie ufficiali e il merchandising per"
+    },
+    "serieA": {
+      "description": "Scopri la nostra collezione completa di maglie Serie A e internazionali"
     }
   },
   "wishlist": {
@@ -111,5 +131,229 @@
   "profile": "Profilo",
   "orders": "Ordini",
   "adminPanel": "Pannello di Amministrazione",
-  "signOut": "Disconnetti"
+  "authorPanel": "Pannello di Autore",
+  "signOut": "Disconnetti",
+  "hero": {
+    "title": "Maglie attuali e retrò a partire da 30€",
+    "subtitle": "Spedizione sempre gratuita, qualità garantita.",
+    "cta": "Scopri le maglie"
+  },
+  "mysteryBox": {
+    "title": "Scatola Misteriosa",
+    "description": "Scopri la magia delle nostre scatole misteriose! Ogni scatola contiene una maglia a sorpresa delle migliori squadre italiane e internazionali.",
+    "subtitle": "Scegli la tua scatola misteriosa e preparati per una sorpresa emozionante! Ogni scatola è unica e contiene maglie di qualità premium.",
+    "empty": "Nessuna Scatola Misteriosa Disponibile",
+    "emptyDescription": "Torna presto per scoprire le nostre nuove scatole misteriose!",
+    "features": {
+      "surprise": "Maglia a Sorpresa",
+      "teams": "Squadre Top",
+      "shipping": "Spedizione Gratuita"
+    },
+    "process": {
+      "title": "Come Funziona",
+      "description": "Il processo è semplice e divertente! Ecco come funziona la nostra scatola misteriosa.",
+      "step1": "Seleziona la scatola misteriosa che preferisci e aggiungila al carrello.",
+      "step2": "Completa il tuo ordine con pagamento sicuro.",
+      "step3": "Ricevi la tua scatola misteriosa con una maglia a sorpresa di qualità premium!"
+    },
+    "product": {
+      "description": "Una scatola misteriosa piena di sorprese! Contiene una maglia a sorpresa delle migliori squadre italiane e internazionali.",
+      "freeShipping": "Spedizione gratuita",
+      "features": {
+        "premium": "Maglia a sorpresa di qualità premium",
+        "teams": "Squadre italiane e internazionali",
+        "exclude": "Possibilità di escludere fino a 5 maglie"
+      },
+      "addToCart": "Aggiungi al Carrello",
+      "learnMore": "Scopri di Più",
+      "trust": {
+        "freeShipping": "Spedizione gratuita",
+        "secure": "Pagamento sicuro",
+        "premium": "Qualità premium"
+      }
+    },
+    "steps": {
+      "step1": {
+        "title": "Scegli la Scatola",
+        "description": "Seleziona la scatola misteriosa che preferisci e aggiungila al carrello."
+      },
+      "step2": {
+        "title": "Escludi le Maglie",
+        "description": "Puoi escludere fino a 5 maglie che non vuoi ricevere nella tua scatola."
+      },
+      "step3": {
+        "title": "Ricevi la Sorpresa",
+        "description": "Ricevi la tua scatola misteriosa con una maglia a sorpresa di qualità premium!"
+      }
+    },
+    "cta": {
+      "title": "Pronto per l'Avventura?",
+      "description": "Unisciti a migliaia di clienti che hanno già scoperto la magia delle nostre scatole misteriose!",
+      "button": "Esplora Tutti i Prodotti"
+    }
+  },
+  "home": {
+    "featuredProducts": "Prodotti in Evidenza",
+    "viewAllProducts": "Vedi Tutti i Prodotti",
+    "latestNews": "Ultime Notizie",
+    "readAllNews": "Leggi Tutte le Notizie",
+    "readMore": "Leggi di più →",
+    "favoriteTeams": "Le Tue Squadre Preferite",
+    "serieATeams": "Squadre Serie A",
+    "internationalTeams": "Squadre Internazionali",
+    "collection": "Collezione",
+    "mysteryBox": {
+      "title": "🎁 Scatola Misteriosa",
+      "description": "Scopri la sorpresa! Ogni scatola contiene maglie esclusive con valore garantito superiore al prezzo.",
+      "surpriseContent": "Contenuto a sorpresa • Valore garantito superiore al prezzo",
+      "discover": "Scopri →"
+    },
+    "news": {
+      "news": "Notizie",
+      "transfer": "Calciomercato",
+      "serieA": "Serie A",
+      "international": "Internazionale"
+    }
+  },
+  "notFound": {
+    "title": "Pagina non trovata",
+    "description": "Spiacenti, non riusciamo a trovare la pagina che stai cercando.",
+    "goHome": "Torna alla home",
+    "contactSupport": "Contatta il supporto"
+  },
+  "apiConfig": {
+    "checking": "Verificando configurazione API...",
+    "error": "Errore durante la verifica API",
+    "noApiKey": "API Football: Chiave API non configurata",
+    "invalidApiKey": "API Football: Chiave API non valida",
+    "configurationIssues": "API Football: Problemi di configurazione",
+    "moreDetails": "Più dettagli",
+    "lessDetails": "Meno dettagli",
+    "currentStatus": "Stato attuale",
+    "apiKeyConfigured": "Chiave API configurata",
+    "apiKeyValid": "Chiave API valida",
+    "toResolve": "Per risolvere",
+    "addVariable": "Aggiungi o aggiorna la variabile",
+    "inFile": "nel file",
+    "forServerSide": "per uso server-side e",
+    "forClientSide": "per uso client-side.",
+    "useHeader": "Assicurati di utilizzare l'intestazione",
+    "inApiRequests": "nelle richieste API",
+    "getApiKey": "Ottieni una chiave API da",
+    "restartServer": "Riavvia il server di sviluppo dopo aver configurato la chiave API",
+    "unknownError": "Errore sconosciuto"
+  },
+  "orders": {
+    "cancelOrder": "Annulla Ordine",
+    "cancelSuccess": "Ordine annullato con successo",
+    "cancelFailed": "Impossibile annullare l'ordine",
+    "cancelConfirmation": "Sei sicuro di voler annullare questo ordine? Questa azione non può essere annullata.",
+    "confirmCancel": "Sì, Annulla Ordine",
+    "keepOrder": "No, Mantieni Ordine"
+  },
+  "league": {
+    "upcomingMatches": "Prossime Partite",
+    "noDataAvailable": "Dati non disponibili",
+    "loadError": "Non è stato possibile caricare le partite in programma per questa lega. Riprova più tardi o contatta l'amministratore se il problema persiste.",
+    "live": "IN DIRETTA",
+    "finished": "TERMINATA",
+    "unknownRound": "Giornata Sconosciuta"
+  },
+  "common": {
+    "yes": "Sì",
+    "no": "No",
+    "processing": "Elaborazione...",
+    "error": "Errore",
+    "noData": "Nessun dato disponibile"
+  },
+  "guarantees": {
+    "title": "Perché Scegliere GoalMania",
+    "freeShipping": {
+      "title": "Spedizione Gratuita",
+      "description": "Sempre gratuita su tutti gli ordini"
+    },
+    "quality": {
+      "title": "Garanzia Qualità",
+      "description": "100% autentico o rimborso"
+    },
+    "returns": {
+      "title": "Reso Facile",
+      "description": "7 giorni per cambiare idea"
+    },
+    "rating": {
+      "title": "4.8/5 Rating",
+      "description": "Oltre 1200 clienti felici"
+    }
+  },
+  "footer": {
+    "description": "Goalmania è il punto di riferimento per chi vive il calcio. Ogni giorno raccontiamo storie, notizie e curiosità dal mondo del calcio. In più, ti offriamo le maglie più amate — attuali e retrò — a partire da 30€, con spedizione gratuita.",
+    "copyright": "© 2025 Goalmania. Tutti i diritti riservati. La tua dose quotidiana di calcio ⚽ | Maglie da calcio da 30€ con spedizione gratuita"
+  },
+  "admin": {
+    "dashboard": "Pannello di Amministrazione",
+    "welcome": "Benvenuto nel tuo pannello di amministrazione. Qui puoi gestire prodotti, ordini, utenti e visualizzare le analisi.",
+    "failedToLoad": "Impossibile caricare i dati analitici. Riprova.",
+    "overview": "Panoramica",
+    "recentOrders": "Ordini Recenti",
+    "analytics": "Analisi",
+    "revenueTrend": "Tendenza Ricavi (Ultimi 7 Giorni)",
+    "dailyRevenueAndOrders": "Ricavi giornalieri e numero di ordini",
+    "orderStatusDistribution": "Distribuzione Stato Ordini",
+    "currentOrderStatusBreakdown": "Ripartizione attuale dello stato degli ordini",
+    "noRecentData": "Nessun dato recente disponibile",
+    "averageOrderValue": "Valore Medio Ordine",
+    "perOrder": "Per ordine",
+    "mysteryBoxOrders": "Ordini Scatola Misteriosa",
+    "specialOrders": "Ordini speciali",
+    "publishedArticles": "Articoli Pubblicati",
+    "contentPieces": "Pezzi di contenuto",
+    "latestOrdersFromStore": "Ultimi 5 ordini dal tuo negozio",
+    "noOrdersFound": "Nessun ordine trovato",
+    "productCategories": "Categorie Prodotti",
+    "distributionByCategory": "Distribuzione per categoria",
+    "quickActions": "Azioni Rapide",
+    "commonAdminTasks": "Attività amministrative comuni",
+    "manageProducts": "Gestisci Prodotti",
+    "viewAllOrders": "Visualizza Tutti gli Ordini",
+    "manageUsers": "Gestisci Utenti",
+    "createArticle": "Crea Articolo",
+    "products": {
+      "confirmDelete": "Elimina Prodotto",
+      "confirmDeleteMessage": "Sei sicuro di voler eliminare questo prodotto? Questa azione non può essere annullata.",
+      "deleteButton": "Elimina",
+      "cancelButton": "Annulla",
+      "deleteSuccess": "Prodotto eliminato con successo!",
+      "deleteFailed": "Impossibile eliminare il prodotto",
+      "relatedProducts": "Prodotti Correlati",
+      "discoverSimilarItems": "Scopri articoli simili",
+      "featured": "In Evidenza",
+      "retro": "Retro"
+    },
+    "patches": {
+      "management": "Gestione Patch",
+      "manage": "Gestisci Patch",
+      "create": "Crea Patch",
+      "confirmDelete": "Sei sicuro di voler eliminare",
+      "actionCannotBeUndone": "Questa azione non può essere annullata.",
+      "deleteSuccess": "Patch eliminata con successo!",
+      "deleteFailed": "Impossibile eliminare la patch",
+      "createSuccess": "Patch creata con successo!",
+      "updateSuccess": "Patch aggiornata con successo!"
+    }
+  },
+  "faq": {
+    "title": "Domande Frequenti",
+    "questions": [
+      { "question": "Dopo Quanto Arriva?", "answer": "La tua attesa sarà breve! Solitamente impiega tra i 10-14 giorni per arrivare a casa tua. Puoi controllare lo stato del tuo ordine nella sezione 'Traccia il tuo ordine'!" },
+      { "question": "I Pagamenti Sono Sicuri?", "answer": "Assolutamente. La sicurezza dei tuoi pagamenti è la nostra massima priorità. Utilizziamo sistemi di pagamento sicuri e affidabili per garantire una transazione senza preoccupazioni." },
+      { "question": "Che Metodi di Pagamento Accettate?", "answer": "Gli acquisti sul nostro sito possono essere effettuati tramite: Visa, Mastercard, American Express, Maestro e PayPal. Non accettiamo pagamenti in contanti, tramite assegno, contrassegno o bonifico bancario. Ogni acquisto avviene nella massima sicurezza per proteggere i tuoi dati personali e le informazioni sulla tua carta di credito da accessi non autorizzati." },
+      { "question": "Come è la Qualità del Prodotto?", "answer": "La qualità del nostro prodotto è ottima. Mettiamo grande cura nella selezione dei materiali e nel processo di produzione per garantire che ogni articolo soddisfi gli standard più elevati." },
+      { "question": "C'è una Garanzia?", "answer": "Certo! Se il prodotto dovesse arrivare danneggiato o diverso da come te lo aspettavi, contattaci alla mail 'goalmaniaofficial@gmail.com'. Ti risponderemo al più presto!" },
+      { "question": "Accettate Resi?", "answer": "Certamente! Accettiamo resi entro un periodo massimo di 7 giorni dalla data di acquisto. La tua soddisfazione è la nostra priorità, e desideriamo garantire che ogni cliente sia felice con il proprio acquisto." }
+    ]
+  },
+  "banners": {
+    "cta": "Acquista ora",
+    "alt": "Banner promozionale maglie calcio"
+  }
 }

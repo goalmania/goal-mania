@@ -20,7 +20,7 @@ const leagueCodeMap: Record<string, string> = {
   other: "OTHER", // Other leagues
 };
 
-interface FixtureResponse {
+export interface FixtureResponse {
   league: {
     id: number;
     name: string;

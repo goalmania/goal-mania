@@ -53,9 +53,6 @@ const couponSchema = new Schema<ICoupon>(
   }
 );
 
-// Add index for faster lookups
-couponSchema.index({ code: 1 });
-
 // Add validation to ensure expiry date is in the future
 couponSchema.pre("validate", function (next) {
   if (this.expiresAt && this.expiresAt < new Date()) {

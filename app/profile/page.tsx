@@ -4,6 +4,28 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  User, 
+  Mail, 
+  Shield, 
+  Edit3, 
+  Save, 
+  X, 
+  CheckCircle, 
+  AlertCircle,
+  Eye,
+  EyeOff,
+  Settings,
+  UserCheck
+} from "lucide-react";
 
 const profileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -45,6 +67,11 @@ export default function ProfilePage() {
   const [isPasswordLoading, setIsPasswordLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showPasswordSuccess, setShowPasswordSuccess] = useState(false);
+  const [showPasswords, setShowPasswords] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -62,16 +89,17 @@ export default function ProfilePage() {
         email: session.user.email || "",
       });
     } else if (session === null) {
-      // Only redirect if session is definitely null (not undefined/loading)
       router.push("/auth/signin");
     }
   }, [session, router]);
 
-  // Don't try to redirect here - this runs during server-side rendering
   if (!session) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#f5963c] mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg">Loading your profile...</p>
+        </div>
       </div>
     );
   }
@@ -94,10 +122,8 @@ export default function ProfilePage() {
     setShowSuccess(false);
 
     try {
-      // Validate form data
       profileSchema.parse(formData);
 
-      // Update profile
       const response = await fetch("/api/user/profile", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -110,7 +136,6 @@ export default function ProfilePage() {
         throw new Error(data.message || "Failed to update profile");
       }
 
-      // Force update the session with new user data
       await updateSession({
         user: {
           ...session.user,
@@ -119,7 +144,6 @@ export default function ProfilePage() {
         },
       });
 
-      // Force UI update
       setFormData({
         name: formData.name,
         email: formData.email,
@@ -128,9 +152,6 @@ export default function ProfilePage() {
       setIsEditing(false);
       setShowSuccess(true);
 
-      console.log("Profile updated with:", formData);
-
-      // Hide success message after 3 seconds
       setTimeout(() => {
         setShowSuccess(false);
       }, 3000);
@@ -170,10 +191,8 @@ export default function ProfilePage() {
     setShowPasswordSuccess(false);
 
     try {
-      // Validate password data
       passwordSchema.parse(passwordData);
 
-      // Update password
       const response = await fetch("/api/user/change-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -186,7 +205,6 @@ export default function ProfilePage() {
         throw new Error(data.message || "Failed to update password");
       }
 
-      // Reset password form
       setPasswordData({
         currentPassword: "",
         newPassword: "",
@@ -196,7 +214,6 @@ export default function ProfilePage() {
       setIsChangingPassword(false);
       setShowPasswordSuccess(true);
 
-      // Hide success message after 3 seconds
       setTimeout(() => {
         setShowPasswordSuccess(false);
       }, 3000);
@@ -218,327 +235,402 @@ export default function ProfilePage() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-50">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-        <div className="space-y-10 divide-y divide-gray-900/10">
-          <div className="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-3">
-            <div className="px-4 sm:px-0">
-              <h2 className="text-2xl font-bold leading-7 text-gray-900">
-                Profile
-              </h2>
-              <p className="mt-1 text-sm leading-6 text-gray-600">
-                This information will be displayed publicly so be careful what
-                you share.
-              </p>
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
-              <div className="mt-8">
-                <h3 className="text-base font-semibold leading-6 text-gray-900">
-                  Current session data:
-                </h3>
-                <div className="mt-2 text-sm text-gray-600">
-                  <p>Name: {session.user.name}</p>
-                  <p>Email: {session.user.email}</p>
-                </div>
+  const togglePasswordVisibility = (field: keyof typeof showPasswords) => {
+    setShowPasswords(prev => ({
+      ...prev,
+      [field]: !prev[field]
+    }));
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16">
+        {/* Header Section */}
+        <div className="text-center mb-12">
+          <div className="flex justify-center mb-8">
+            <div className="relative">
+              <Avatar className="h-20 w-20 border-4 border-[#f5963c] shadow-lg">
+                <AvatarFallback className="bg-gradient-to-br from-[#f5963c] to-[#e67e22] text-white text-xl font-semibold">
+                  {getInitials(session.user?.name || "U")}
+                </AvatarFallback>
+              </Avatar>
+              <div className="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1">
+                <UserCheck className="h-3 w-3 text-white" />
               </div>
             </div>
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome back, {session.user?.name?.split(" ")[0]}!
+          </h1>
+          <p className="text-gray-600 text-lg">
+            Manage your account settings and preferences
+          </p>
+        </div>
 
-            <form
-              className="bg-white shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"
-              onSubmit={handleSubmit}
-            >
-              <div className="px-4 py-6 sm:p-8">
-                <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                  <div className="sm:col-span-4">
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Name
-                    </label>
-                    <div className="mt-2">
-                      <input
+        <Tabs defaultValue="profile" className="space-y-8">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 bg-white shadow-sm border">
+            <TabsTrigger value="profile" className="data-[state=active]:bg-[#f5963c] data-[state=active]:text-white">
+              <User className="h-4 w-4 mr-2" />
+              Profile
+            </TabsTrigger>
+            <TabsTrigger value="security" className="data-[state=active]:bg-[#f5963c] data-[state=active]:text-white">
+              <Shield className="h-4 w-4 mr-2" />
+              Security
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="profile" className="space-y-6">
+            <Card className="bg-white shadow-lg border-0">
+              <CardHeader className="pb-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-xl font-semibold text-gray-900 flex items-center">
+                      <User className="h-5 w-5 mr-2 text-[#f5963c]" />
+                      Profile Information
+                    </CardTitle>
+                    <CardDescription className="text-gray-600 mt-1">
+                      Update your personal information and contact details
+                    </CardDescription>
+                  </div>
+                  <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
+                    Active Account
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="text-gray-700 font-medium">
+                        Full Name
+                      </Label>
+                      <Input
                         type="text"
                         name="name"
                         id="name"
                         value={formData.name}
                         onChange={handleInputChange}
                         disabled={!isEditing}
-                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
-                          isEditing
-                            ? "ring-gray-300"
-                            : "ring-gray-200 bg-gray-50"
-                        } placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+                        className="border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c]"
+                        placeholder="Enter your full name"
                       />
+                      {validationErrors.name && (
+                        <p className="text-sm text-red-600 flex items-center">
+                          <AlertCircle className="h-4 w-4 mr-1" />
+                          {validationErrors.name}
+                        </p>
+                      )}
                     </div>
-                    {validationErrors.name && (
-                      <p className="mt-2 text-sm text-red-600">
-                        {validationErrors.name}
-                      </p>
-                    )}
-                  </div>
 
-                  <div className="sm:col-span-4">
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Email address
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        type="email"
-                        name="email"
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-gray-700 font-medium">
+                        Email Address
+                      </Label>
+                      <Input
                         id="email"
+                        name="email"
+                        type="email"
+                        autoComplete="email"
                         value={formData.email}
                         onChange={handleInputChange}
                         disabled={!isEditing}
-                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
-                          isEditing
-                            ? "ring-gray-300"
-                            : "ring-gray-200 bg-gray-50"
-                        } placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+                        className="border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c]"
+                        placeholder="Enter your email address"
                       />
+                      {validationErrors.email && (
+                        <p className="text-sm text-red-600 flex items-center">
+                          <AlertCircle className="h-4 w-4 mr-1" />
+                          {validationErrors.email}
+                        </p>
+                      )}
                     </div>
-                    {validationErrors.email && (
-                      <p className="mt-2 text-sm text-red-600">
-                        {validationErrors.email}
-                      </p>
+                  </div>
+
+                  {showSuccess && (
+                    <Alert className="border-green-200 bg-green-50">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <AlertDescription className="text-green-800">
+                        Profile updated successfully!
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
+                  {error && (
+                    <Alert className="border-red-200 bg-red-50">
+                      <AlertCircle className="h-4 w-4 text-red-600" />
+                      <AlertDescription className="text-red-800">
+                        {error}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
+                  <div className="flex gap-3 pt-4">
+                    {!isEditing ? (
+                      <Button
+                        type="button"
+                        onClick={() => setIsEditing(true)}
+                        className="bg-[#f5963c] hover:bg-[#e67e22] text-white"
+                      >
+                        <Edit3 className="h-4 w-4 mr-2" />
+                        Edit Profile
+                      </Button>
+                    ) : (
+                      <>
+                        <Button
+                          type="submit"
+                          disabled={isLoading}
+                          className="bg-[#f5963c] hover:bg-[#e67e22] text-white"
+                        >
+                          {isLoading ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                              Saving...
+                            </>
+                          ) : (
+                            <>
+                              <Save className="h-4 w-4 mr-2" />
+                              Save Changes
+                            </>
+                          )}
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            setIsEditing(false);
+                            setFormData({
+                              name: session?.user?.name || "",
+                              email: session?.user?.email || "",
+                            });
+                            setValidationErrors({});
+                          }}
+                          variant="outline"
+                          className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                        >
+                          <X className="h-4 w-4 mr-2" />
+                          Cancel
+                        </Button>
+                      </>
                     )}
                   </div>
+                </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="security" className="space-y-6">
+            <Card className="bg-white shadow-lg border-0">
+              <CardHeader className="pb-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-xl font-semibold text-gray-900 flex items-center">
+                      <Shield className="h-5 w-5 mr-2 text-[#f5963c]" />
+                      Security Settings
+                    </CardTitle>
+                    <CardDescription className="text-gray-600 mt-1">
+                      Update your password to keep your account secure
+                    </CardDescription>
+                  </div>
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200">
+                    Secure
+                  </Badge>
                 </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-                {isEditing ? (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => setIsEditing(false)}
-                      className="text-sm font-semibold leading-6 text-gray-900"
-                      disabled={isLoading}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? "Saving..." : "Save"}
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setIsEditing(true)}
-                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  >
-                    Edit
-                  </button>
-                )}
-              </div>
-
-              {showSuccess && (
-                <div className="rounded-md bg-green-50 p-4 m-6">
-                  <div className="flex">
-                    <div className="ml-3">
-                      <h3 className="text-sm font-medium text-green-800">
-                        Success
-                      </h3>
-                      <div className="mt-2 text-sm text-green-700">
-                        <p>Profile updated successfully</p>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handlePasswordSubmit} className="space-y-6">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="currentPassword" className="text-gray-700 font-medium">
+                        Current Password
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          type={showPasswords.current ? "text" : "password"}
+                          name="currentPassword"
+                          id="currentPassword"
+                          value={passwordData.currentPassword}
+                          onChange={handlePasswordInputChange}
+                          disabled={!isChangingPassword}
+                          className="border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c] pr-10"
+                          placeholder="Enter current password"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                          onClick={() => togglePasswordVisibility('current')}
+                        >
+                          {showPasswords.current ? (
+                            <EyeOff className="h-4 w-4 text-gray-400" />
+                          ) : (
+                            <Eye className="h-4 w-4 text-gray-400" />
+                          )}
+                        </Button>
                       </div>
+                      {passwordValidationErrors.currentPassword && (
+                        <p className="text-sm text-red-600 flex items-center">
+                          <AlertCircle className="h-4 w-4 mr-1" />
+                          {passwordValidationErrors.currentPassword}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="newPassword" className="text-gray-700 font-medium">
+                        New Password
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          type={showPasswords.new ? "text" : "password"}
+                          name="newPassword"
+                          id="newPassword"
+                          value={passwordData.newPassword}
+                          onChange={handlePasswordInputChange}
+                          disabled={!isChangingPassword}
+                          className="border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c] pr-10"
+                          placeholder="Enter new password"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                          onClick={() => togglePasswordVisibility('new')}
+                        >
+                          {showPasswords.new ? (
+                            <EyeOff className="h-4 w-4 text-gray-400" />
+                          ) : (
+                            <Eye className="h-4 w-4 text-gray-400" />
+                          )}
+                        </Button>
+                      </div>
+                      {passwordValidationErrors.newPassword && (
+                        <p className="text-sm text-red-600 flex items-center">
+                          <AlertCircle className="h-4 w-4 mr-1" />
+                          {passwordValidationErrors.newPassword}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="confirmPassword" className="text-gray-700 font-medium">
+                        Confirm New Password
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          type={showPasswords.confirm ? "text" : "password"}
+                          name="confirmPassword"
+                          id="confirmPassword"
+                          value={passwordData.confirmPassword}
+                          onChange={handlePasswordInputChange}
+                          disabled={!isChangingPassword}
+                          className="border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c] pr-10"
+                          placeholder="Confirm new password"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                          onClick={() => togglePasswordVisibility('confirm')}
+                        >
+                          {showPasswords.confirm ? (
+                            <EyeOff className="h-4 w-4 text-gray-400" />
+                          ) : (
+                            <Eye className="h-4 w-4 text-gray-400" />
+                          )}
+                        </Button>
+                      </div>
+                      {passwordValidationErrors.confirmPassword && (
+                        <p className="text-sm text-red-600 flex items-center">
+                          <AlertCircle className="h-4 w-4 mr-1" />
+                          {passwordValidationErrors.confirmPassword}
+                        </p>
+                      )}
                     </div>
                   </div>
-                </div>
-              )}
 
-              {error && (
-                <div className="rounded-md bg-red-50 p-4 m-6">
-                  <div className="flex">
-                    <div className="ml-3">
-                      <h3 className="text-sm font-medium text-red-800">
-                        Error
-                      </h3>
-                      <div className="mt-2 text-sm text-red-700">
-                        <p>{error}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </form>
-          </div>
+                  {showPasswordSuccess && (
+                    <Alert className="border-green-200 bg-green-50">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <AlertDescription className="text-green-800">
+                        Password updated successfully!
+                      </AlertDescription>
+                    </Alert>
+                  )}
 
-          {/* Password Change Section */}
-          <div className="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
-            <div className="px-4 sm:px-0">
-              <h2 className="text-2xl font-bold leading-7 text-gray-900">
-                Change Password
-              </h2>
-              <p className="mt-1 text-sm leading-6 text-gray-600">
-                Update your password to keep your account secure.
-              </p>
-            </div>
+                  {passwordError && (
+                    <Alert className="border-red-200 bg-red-50">
+                      <AlertCircle className="h-4 w-4 text-red-600" />
+                      <AlertDescription className="text-red-800">
+                        {passwordError}
+                      </AlertDescription>
+                    </Alert>
+                  )}
 
-            <form
-              className="bg-white shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"
-              onSubmit={handlePasswordSubmit}
-            >
-              <div className="px-4 py-6 sm:p-8">
-                <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                  <div className="sm:col-span-4">
-                    <label
-                      htmlFor="currentPassword"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Current Password
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        type="password"
-                        name="currentPassword"
-                        id="currentPassword"
-                        value={passwordData.currentPassword}
-                        onChange={handlePasswordInputChange}
-                        disabled={!isChangingPassword}
-                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
-                          isChangingPassword
-                            ? "ring-gray-300"
-                            : "ring-gray-200 bg-gray-50"
-                        } placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
-                      />
-                    </div>
-                    {passwordValidationErrors.currentPassword && (
-                      <p className="mt-2 text-sm text-red-600">
-                        {passwordValidationErrors.currentPassword}
-                      </p>
+                  <div className="flex gap-3 pt-4">
+                    {!isChangingPassword ? (
+                      <Button
+                        type="button"
+                        onClick={() => setIsChangingPassword(true)}
+                        className="bg-[#f5963c] hover:bg-[#e67e22] text-white"
+                      >
+                        <Shield className="h-4 w-4 mr-2" />
+                        Change Password
+                      </Button>
+                    ) : (
+                      <>
+                        <Button
+                          type="submit"
+                          disabled={isPasswordLoading}
+                          className="bg-[#f5963c] hover:bg-[#e67e22] text-white"
+                        >
+                          {isPasswordLoading ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                              Updating...
+                            </>
+                          ) : (
+                            <>
+                              <Save className="h-4 w-4 mr-2" />
+                              Update Password
+                            </>
+                          )}
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            setIsChangingPassword(false);
+                            setPasswordData({
+                              currentPassword: "",
+                              newPassword: "",
+                              confirmPassword: "",
+                            });
+                            setPasswordValidationErrors({});
+                          }}
+                          variant="outline"
+                          className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                        >
+                          <X className="h-4 w-4 mr-2" />
+                          Cancel
+                        </Button>
+                      </>
                     )}
                   </div>
-
-                  <div className="sm:col-span-4">
-                    <label
-                      htmlFor="newPassword"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      New Password
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        type="password"
-                        name="newPassword"
-                        id="newPassword"
-                        value={passwordData.newPassword}
-                        onChange={handlePasswordInputChange}
-                        disabled={!isChangingPassword}
-                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
-                          isChangingPassword
-                            ? "ring-gray-300"
-                            : "ring-gray-200 bg-gray-50"
-                        } placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
-                      />
-                    </div>
-                    {passwordValidationErrors.newPassword && (
-                      <p className="mt-2 text-sm text-red-600">
-                        {passwordValidationErrors.newPassword}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="sm:col-span-4">
-                    <label
-                      htmlFor="confirmPassword"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Confirm New Password
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        type="password"
-                        name="confirmPassword"
-                        id="confirmPassword"
-                        value={passwordData.confirmPassword}
-                        onChange={handlePasswordInputChange}
-                        disabled={!isChangingPassword}
-                        className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
-                          isChangingPassword
-                            ? "ring-gray-300"
-                            : "ring-gray-200 bg-gray-50"
-                        } placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
-                      />
-                    </div>
-                    {passwordValidationErrors.confirmPassword && (
-                      <p className="mt-2 text-sm text-red-600">
-                        {passwordValidationErrors.confirmPassword}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-                {isChangingPassword ? (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => setIsChangingPassword(false)}
-                      className="text-sm font-semibold leading-6 text-gray-900"
-                      disabled={isPasswordLoading}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                      disabled={isPasswordLoading}
-                    >
-                      {isPasswordLoading ? "Updating..." : "Update Password"}
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setIsChangingPassword(true)}
-                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  >
-                    Change Password
-                  </button>
-                )}
-              </div>
-
-              {showPasswordSuccess && (
-                <div className="rounded-md bg-green-50 p-4 m-6">
-                  <div className="flex">
-                    <div className="ml-3">
-                      <h3 className="text-sm font-medium text-green-800">
-                        Success
-                      </h3>
-                      <div className="mt-2 text-sm text-green-700">
-                        <p>Password updated successfully</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {passwordError && (
-                <div className="rounded-md bg-red-50 p-4 m-6">
-                  <div className="flex">
-                    <div className="ml-3">
-                      <h3 className="text-sm font-medium text-red-800">
-                        Error
-                      </h3>
-                      <div className="mt-2 text-sm text-red-700">
-                        <p>{passwordError}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </form>
-          </div>
-        </div>
+                </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

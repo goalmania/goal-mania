@@ -19,6 +19,7 @@ export interface CartItem {
     size: string;
     isKidSize: boolean;
     hasCustomization: boolean;
+    excludedShirts?: string[];
   };
 }
 

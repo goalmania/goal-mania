@@ -11,9 +11,10 @@ export const VALID_PATCHES = [
 export const PRODUCT_CATEGORIES = [
   "2024/25",
   "2025/26",
+  "Retro",
   "SerieA",
   "International",
-  "Retro",
+  "Mystery Box",
 ] as const;
 
 export type AdultSize = (typeof VALID_ADULT_SIZES)[number];
@@ -21,12 +22,28 @@ export type KidSize = (typeof VALID_KID_SIZES)[number];
 export type Patch = (typeof VALID_PATCHES)[number];
 export type Category = (typeof PRODUCT_CATEGORIES)[number];
 
+// Simple Product interface for grid components
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  category?: string;
+  team?: string;
+  availablePatches?: string[];
+  videos?: string[];
+}
+
 export interface Review {
   _id: string;
   userId: string;
   userName: string;
   rating: number;
   comment: string;
+  media?: {
+    images: string[];
+    videos: string[];
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -40,6 +57,7 @@ export interface IProduct {
   shippingPrice: number;
   stockQuantity: number;
   images: string[];
+  videos?: string[];
   adultSizes: AdultSize[];
   kidsSizes: KidSize[];
   category: Category;
@@ -52,6 +70,7 @@ export interface IProduct {
   isActive: boolean;
   feature: boolean;
   isRetro: boolean;
+  isMysteryBox: boolean;
   reviews: Review[];
   averageRating: number;
   createdAt: Date;
@@ -75,6 +94,7 @@ export interface CartItem {
     size: string;
     isKidSize: boolean;
     hasCustomization: boolean;
+    excludedShirts?: string[];
   };
 }
 

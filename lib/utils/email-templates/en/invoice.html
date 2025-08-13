@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goal Mania Invoice</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc;">
+  <div style="max-width: 600px; margin: 0 auto; background: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #0e1924 0%, #1a365d 100%); padding: 40px 30px; text-align: center; border-radius: 12px 12px 0 0;">
+      <h1 style="color: white; margin: 0; font-size: 32px; font-weight: 700;">🧾 INVOICE</h1>
+      <p style="color: #f5963c; margin: 10px 0 0 0; font-size: 18px; font-weight: 600;">Goal Mania - Your passion for football</p>
+    </div>
+    
+    <!-- Content -->
+    <div style="padding: 40px 30px;">
+      <h2 style="color: #0e1924; margin: 0 0 20px 0; font-size: 24px; font-weight: 600;">Hi{{userName}},</h2>
+      
+      <!-- Invoice Header -->
+      <div style="background: #f8fafc; border-radius: 12px; padding: 25px; margin: 25px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div>
+            <h3 style="color: #0e1924; margin: 0 0 10px 0; font-size: 18px; font-weight: 600;">📋 Invoice Details</h3>
+            <p style="color: #64748b; margin: 5px 0; font-size: 14px;">Invoice Number: <strong>{{invoiceNumber}}</strong></p>
+            <p style="color: #64748b; margin: 5px 0; font-size: 14px;">Date: <strong>{{invoiceDate}}</strong></p>
+          </div>
+          <div style="text-align: right;">
+            <p style="color: #64748b; margin: 5px 0; font-size: 14px;">Order #: <strong>{{orderId}}</strong></p>
+            <p style="color: #64748b; margin: 5px 0; font-size: 14px;">Payment: <strong>{{paymentMethod}}</strong></p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Products Section -->
+      <div style="margin: 40px 0;">
+        <h3 style="color: #0e1924; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">🛍️ Ordered Products</h3>
+        {{productCards}}
+      </div>
+      
+      <!-- Invoice Summary -->
+      <div style="background: #f8fafc; border-radius: 12px; padding: 25px; margin: 25px 0;">
+        <h3 style="color: #0e1924; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">💰 Invoice Summary</h3>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0; padding: 10px 0; border-bottom: 1px solid #e2e8f0;">
+          <span style="color: #64748b; font-weight: 500;">Subtotal:</span>
+          <span style="color: #0e1924; font-weight: 700; font-size: 16px;">€{{subtotal}}</span>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0; padding: 10px 0; border-bottom: 1px solid #e2e8f0;">
+          <span style="color: #64748b; font-weight: 500;">VAT:</span>
+          <span style="color: #0e1924; font-weight: 700; font-size: 16px;">€{{tax}}</span>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 25px 0 10px 0; padding: 15px 0; border-top: 2px solid #0e1924;">
+          <span style="color: #0e1924; font-weight: 700; font-size: 18px;">TOTAL:</span>
+          <span style="color: #0e1924; font-weight: 700; font-size: 20px;">€{{total}}</span>
+        </div>
+      </div>
+      
+      <!-- Payment Status -->
+      <div style="background: #ecfdf5; border: 2px solid #059669; border-radius: 12px; padding: 20px; margin: 25px 0; text-align: center;">
+        <div style="color: #065f46; font-weight: 600; font-size: 16px; margin-bottom: 5px;">✅ Payment Completed</div>
+        <div style="color: #059669; font-size: 14px;">Your order has been processed successfully</div>
+      </div>
+      
+      <!-- CTA Button -->
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="{{NEXT_PUBLIC_BASE_URL}}/account/orders" style="
+          display: inline-block;
+          background: linear-gradient(135deg, #0e1924 0%, #1a365d 100%);
+          color: white;
+          padding: 15px 30px;
+          text-decoration: none;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 16px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        ">View Order</a>
+      </div>
+      
+      <!-- Footer -->
+      <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; text-align: center;">
+        <p style="color: #64748b; margin: 0; font-size: 14px;">
+          Thank you for choosing Goal Mania!<br>
+          For any questions, contact us at <a href="mailto:support@goal-mania.com" style="color: #0e1924; text-decoration: none;">support@goal-mania.com</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html> 

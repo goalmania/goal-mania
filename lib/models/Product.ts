@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import {
   VALID_ADULT_SIZES,
   VALID_KID_SIZES,
-  VALID_PATCHES,
   PRODUCT_CATEGORIES,
 } from "@/lib/types/product";
 
@@ -12,6 +11,10 @@ const reviewSchema = new mongoose.Schema(
     userName: { type: String, required: true },
     rating: { type: Number, required: true, min: 1, max: 5 },
     comment: { type: String, required: true },
+    media: {
+      images: [{ type: String }],
+      videos: [{ type: String }]
+    },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
   },
@@ -66,7 +69,15 @@ const productSchema = new mongoose.Schema(
         message: "At least one image is required",
       },
     },
+    videos: {
+      type: [String],
+      default: [],
+    },
     isRetro: {
+      type: Boolean,
+      default: false,
+    },
+    isMysteryBox: {
       type: Boolean,
       default: false,
     },
@@ -99,11 +110,11 @@ const productSchema = new mongoose.Schema(
       required: true,
       enum: PRODUCT_CATEGORIES,
     },
-    availablePatches: {
-      type: [String],
-      enum: VALID_PATCHES,
-      default: [],
-    },
+    // Reference to actual Patch documents
+    patchIds: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Patch',
+    }],
     allowsNumberOnShirt: {
       type: Boolean,
       default: true,
@@ -115,10 +126,10 @@ const productSchema = new mongoose.Schema(
     slug: {
       type: String,
       required: true,
-      index: true,
       unique: true,
       lowercase: true,
       trim: true,
+      index: true, // This creates the index automatically
     },
     isActive: {
       type: Boolean,
@@ -158,7 +169,7 @@ productSchema.virtual("averageRating").get(function () {
   return sum / this.reviews.length;
 });
 
-// Create indexes
+// Create indexes (email and slug indexes are created automatically by schema definition)
 productSchema.index({ title: "text", description: "text" });
 productSchema.index({ category: 1 });
 productSchema.index({ isActive: 1 });

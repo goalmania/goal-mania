@@ -3,7 +3,6 @@
 "use client";
 
 import { Fragment, useState, useEffect, useRef } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
   XMarkIcon,
@@ -12,15 +11,42 @@ import {
   LanguageIcon,
   ChevronDownIcon,
   MagnifyingGlassIcon,
+  UserIcon,
+  ArrowRightOnRectangleIcon,
+  Cog6ToothIcon,
+  PencilIcon,
 } from "@heroicons/react/24/outline";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import { useCartStore } from "@/lib/store/cart";
 import { useWishlistStore } from "@/lib/store/wishlist";
-import { useLanguageStore } from "@/lib/store/language";
-import { useTranslation } from "@/lib/hooks/useTranslation";
+import { useLanguage } from "@/lib/utils/language";
+import { useI18n } from "@/lib/hooks/useI18n";
 import { usePathname, useRouter } from "next/navigation";
+import ShopNav from "@/app/_components/ShopNav";
+import ShopSearchBar from "@/app/_components/ShopSearchBar";
+
+// Shadcn components
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 // Use this as a proper type
 export interface User {
@@ -42,18 +68,6 @@ const navigation = [
   { name: "navigation.transfer", href: "/transfer" },
   { name: "navigation.serieA", href: "/serieA" },
   { name: "navigation.results", href: "/risultati" },
-  { name: "navigation.fantasyFootball", href: "/fantasyFootball" },
-];
-
-const navigation1 = [
-  { name: "navigation.home", href: "/" },
-  { name: "navigation.news", href: "/news" },
-  { name: "navigation.transfer", href: "/transfer" },
-  { name: "navigation.serieA", href: "/serieA" },
-  { name: "navigation.results", href: "/risultati" },
-];
-
-const navigation2 = [
   { name: "navigation.fantasyFootball", href: "/fantasyFootball" },
   { name: "navigation.shop", href: "/shop" },
 ];
@@ -77,13 +91,11 @@ export function Header() {
   const wishlist = useWishlistStore();
   const [cartItemCount, setCartItemCount] = useState(0);
   const [wishlistItemCount, setWishlistItemCount] = useState(0);
-  const { language, setLanguage } = useLanguageStore();
-  const { t } = useTranslation();
+  const { language, toggleLanguage } = useLanguage();
+  const { t } = useI18n();
   const router = useRouter();
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isInternationalMenuOpen, setIsInternationalMenuOpen] = useState(false);
 
   // Check if current page is a shop page
   const isShopPage =
@@ -98,7 +110,7 @@ export function Header() {
   useEffect(() => {
     setMounted(true);
 
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && session) {
       // Update cart count
       const cartCount = cart.getItemCount();
       setCartItemCount(cartCount);
@@ -106,12 +118,11 @@ export function Header() {
       // Update wishlist count
       const wishlistCount = wishlist.items.length;
       setWishlistItemCount(wishlistCount);
+    } else {
+      setCartItemCount(0);
+      setWishlistItemCount(0);
     }
-  }, [cart, wishlist]);
-
-  const toggleLanguage = () => {
-    setLanguage(language === "en" ? "it" : "en");
-  };
+  }, [cart, wishlist, session]);
 
   const handleMobileSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,390 +138,410 @@ export function Header() {
   }
 
   return (
-    <Disclosure
-      as="nav"
-      className={`fixed w-full top-0 h-fit primary-bg text-white shadow z-50 transition-all duration-300 ${
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled ? "bg-white shadow-md" : "bg-white"
       } ${showBorder ? "border-b-5 border-orange-500" : ""}`}
     >
-      {({ open }) => (
-        <div className="">
-          {isShopPage && (
-            <div className="accent-bg h-[32px] md:h-[40px] flex justify-center items-center text-white text-center py-2 text-xs sm:text-sm font-medium">
-              {t("sale")}
-            </div>
-          )}
-          <div className="h-[40px] px-2 sm:h-[56px] md:h-[64px] lg:h-[80px] sm:px-6 lg:px-8">
-            <div className="flex lg:h-full sm:h-14 justify-between items-center">
-              <div className="flex items-center w-full">
-                <div className="flex flex-shrink-0 items-center px-1">
-                  <Link href="/" className="flex items-center">
-                    <Image
-                      src="/images/image.png"
-                      alt="Goal Mania Logo"
-                      width={28}
-                      height={28}
-                      className="mr-2 rounded sm:w-8 sm:h-8"
-                      style={{ objectFit: "contain" }}
-                    />
-                    <span className="goalmania-title text-base sm:text-xl font-bold text-white tracking-tight">
-                      GOALMANIA
-                    </span>
-                  </Link>
-                </div>
-                <div className="hidden lg:flex 2xl:flex-row w-full 2xl:gap-4 flex-col gap-1 py-3">
-                  <div className="w-full flex gap-4 2xl:justify-end items-center justify-center">
-                    {navigation1.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-xs md:text-sm font-medium text-white hover:border-accent transition-colors duration-150"
-                      >
-                        {t(item.name)}
-                      </Link>
-                    ))}
-                  </div>
-                  <div className="w-full flex gap-4 2xl:justify-start items-center justify-center">
-                    {navigation2.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-xs md:text-sm font-medium text-white hover:border-accent transition-colors duration-150"
-                      >
-                        {t(item.name)}
-                      </Link>
-                    ))}
-
-                    {/* International Dropdown */}
-                    <div className="relative">
-                      <button
-                        onClick={() => setInternationalOpen(!internationalOpen)}
-                        className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-xs md:text-sm font-medium text-white hover:border-white transition-colors duration-150"
-                      >
-                        <span>Camp. Esteri</span>
-                        <ChevronDownIcon
-                          className={`ml-1 h-3 w-3 transition-transform ${
-                            internationalOpen ? "rotate-180" : ""
-                          }`}
-                          aria-hidden="true"
-                        />
-                      </button>
-
-                      {internationalOpen && (
-                        <div className="absolute left-0 z-10 mt-1 w-40 origin-top-left rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                          {internationalNavItems.map((item) => (
-                            <Link
-                              key={item.name}
-                              href={item.href}
-                              className="block px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-100"
-                              onClick={() => setInternationalOpen(false)}
-                            >
-                              {item.name}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+      <nav className="primary-bg text-white shadow">
+        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+          <div className="flex h-14 sm:h-16 justify-between items-center">
+            {/* Logo and Navigation */}
+            <div className="flex items-center">
+              <div className="flex flex-shrink-0 items-center px-1">
+                <Link href="/" className="flex items-center">
+                  <Image
+                    src="/logos/brand_logo.png"
+                    alt="Goal Mania Logo"
+                    width={32}
+                    height={32}
+                    className="mr-2 sm:w-8 sm:h-8"
+                    style={{ objectFit: "contain" }}
+                  />
+                  <span className="goalmania-title text-base sm:text-xl font-bold text-white tracking-tight">
+                    GOALMANIA
+                  </span>
+                </Link>
               </div>
-
-              <div className="flex items-center">
-                <div className="flex items-center space-x-1 sm:space-x-3">
-                  <button
-                    onClick={toggleLanguage}
-                    className="relative p-1.5 cursor-pointer sm:p-1 text-white hover:text-gray-200 flex items-center transition-colors duration-150"
-                    aria-label="Toggle language"
-                  >
-                    <LanguageIcon
-                      className="h-5 w-5 sm:h-4 sm:w-4 mr-0.5 sm:mr-1"
-                      aria-hidden="true"
-                    />
-                    <span className="text-xs font-medium">
-                      {language.toUpperCase()}
-                    </span>
-                  </button>
-
-                  {/* Search Button with Dropdown - Only visible on desktop */}
-                  <div className="hidden sm:block relative">
-                    <SearchDropdown />
-                  </div>
-
+              
+              {/* Desktop Navigation */}
+              <div className="hidden sm:ml-6 sm:flex sm:space-x-2 md:space-x-4 items-center">
+                {navigation.map((item) => (
                   <Link
-                    href="/wishlist"
-                    className="relative p-1.5 sm:p-1 text-white hover:text-gray-200 transition-colors duration-150"
+                    key={item.name}
+                    href={item.href}
+                    className="inline-flex items-center justify-center border-b-2 border-transparent px-1 pt-1 text-xs md:text-sm font-medium text-white hover:border-accent transition-colors duration-150 min-h-[32px] leading-none whitespace-nowrap"
+                  >
+                    {t(item.name)}
+                  </Link>
+                ))}
+
+                {/* International Dropdown */}
+                <DropdownMenu open={internationalOpen} onOpenChange={setInternationalOpen}>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="inline-flex items-center justify-center border-b-2 border-transparent px-1 pt-1 text-xs md:text-sm font-medium text-white hover:border-white transition-colors duration-150 h-auto p-0 min-h-[32px] leading-none"
+                    >
+                      <span>{language === "en" ? "International" : "Camp. Esteri"}</span>
+                      <ChevronDownIcon
+                        className={`ml-1 h-3 w-3 transition-transform ${
+                          internationalOpen ? "rotate-180" : ""
+                        }`}
+                        aria-hidden="true"
+                      />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-40">
+                    {internationalNavItems.map((item) => (
+                      <DropdownMenuItem key={item.name} asChild>
+                        <Link
+                          href={item.href}
+                          onClick={() => setInternationalOpen(false)}
+                        >
+                          {item.name}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+
+            {/* Right Side Actions */}
+            <div className="flex items-center">
+              <div className="flex items-center space-x-1 sm:space-x-3">
+                {/* Language Toggle */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleLanguage}
+                  className="text-white hover:text-gray-200 hover:bg-transparent"
+                  aria-label="Toggle language"
+                >
+                  <LanguageIcon className="h-5 w-5 sm:h-4 sm:w-4 mr-0.5 sm:mr-1" />
+                  <span className="text-xs font-medium">
+                    {language.toUpperCase()}
+                  </span>
+                </Button>
+
+                {/* Search Button with Dropdown - Only visible on desktop */}
+                <div className="hidden sm:block relative">
+                  <SearchDropdown />
+                </div>
+
+                {/* Wishlist */}
+                <Link href="/wishlist" className="relative">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-white hover:text-gray-200 hover:bg-transparent"
                     aria-label="Wishlist"
                   >
-                    <HeartIcon
-                      className="h-5 w-5 sm:h-6 sm:w-6"
-                      aria-hidden="true"
-                    />
-                    {wishlistItemCount > 0 && (
-                      <span className="absolute -top-1 -right-1 inline-flex items-center justify-center w-4 h-4 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                    <HeartIcon className="h-5 w-5 sm:h-6 sm:w-6" />
+                    {session && wishlistItemCount > 0 && (
+                      <Badge 
+                        variant="destructive" 
+                        className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs"
+                      >
                         {wishlistItemCount}
-                      </span>
+                      </Badge>
                     )}
-                  </Link>
+                  </Button>
+                </Link>
 
-                  <Link
-                    href="/cart"
-                    className="relative p-1.5 sm:p-1 text-white hover:text-gray-200 transition-colors duration-150"
+                {/* Cart */}
+                <Link href="/cart" className="relative">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-white hover:text-gray-200 hover:bg-transparent"
                     aria-label="Cart"
                   >
-                    <ShoppingCartIcon
-                      className="h-5 w-5 sm:h-6 sm:w-6"
-                      aria-hidden="true"
-                    />
-                    {cartItemCount > 0 && (
-                      <span className="absolute -top-1 -right-1 inline-flex items-center justify-center w-4 h-4 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                    <ShoppingCartIcon className="h-5 w-5 sm:h-6 sm:w-6" />
+                    {session && cartItemCount > 0 && (
+                      <Badge 
+                        variant="destructive" 
+                        className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs"
+                      >
                         {cartItemCount}
-                      </span>
+                      </Badge>
                     )}
-                  </Link>
+                  </Button>
+                </Link>
 
-                  {/* Profile dropdown - Desktop */}
-                  <div className="hidden sm:block ml-1">
-                    {session ? (
-                      <Menu as="div" className="relative">
-                        <Menu.Button className="relative flex rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white">
-                          <span className="sr-only">Open user menu</span>
-                          <Image
-                            width={32}
-                            height={32}
-                            className="h-8 w-8 rounded-full object-cover"
-                            src={getUserImage(session.user)}
-                            alt="Profile"
-                          />
-                        </Menu.Button>
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
-                        >
-                          <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <Menu.Item>
-                              {({ active }) => (
-                                <Link
-                                  href="/profile"
-                                  className={`${
-                                    active ? "bg-gray-100" : ""
-                                  } block px-4 py-2 text-sm text-gray-700`}
-                                >
-                                  {t("profile")}
-                                </Link>
-                              )}
-                            </Menu.Item>
-                            <Menu.Item>
-                              {({ active }) => (
-                                <Link
-                                  href="/account/orders"
-                                  className={`${
-                                    active ? "bg-gray-100" : ""
-                                  } block px-4 py-2 text-sm text-gray-700`}
-                                >
-                                  {t("orders")}
-                                </Link>
-                              )}
-                            </Menu.Item>
-                            {session.user.role === "admin" && (
-                              <Menu.Item>
-                                {({ active }) => (
-                                  <Link
-                                    href="/admin"
-                                    className={`${
-                                      active ? "bg-gray-100" : ""
-                                    } block px-4 py-2 text-sm text-gray-700`}
-                                  >
-                                    {t("adminPanel")}
-                                  </Link>
-                                )}
-                              </Menu.Item>
-                            )}
-                            <Menu.Item>
-                              {({ active }) => (
-                                <button
-                                  onClick={() => signOut()}
-                                  className={`${
-                                    active ? "bg-gray-100" : ""
-                                  } block w-full text-left px-4 py-2 text-sm text-gray-700`}
-                                >
-                                  {t("signOut")}
-                                </button>
-                              )}
-                            </Menu.Item>
-                          </Menu.Items>
-                        </Transition>
-                      </Menu>
-                    ) : (
-                      <Link
-                        href="/auth/signin"
-                        className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-[#f1803a] hover:bg-[#e06d29] rounded-md transition-colors duration-150"
-                      >
+                {/* Profile dropdown - Desktop */}
+                <div className="hidden sm:block ml-1">
+                  {session ? (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="relative h-8 w-8 rounded-full p-0">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage
+                              src={getUserImage(session.user)}
+                              alt="Profile"
+                            />
+                            <AvatarFallback>
+                              <UserIcon className="h-4 w-4" />
+                            </AvatarFallback>
+                          </Avatar>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuLabel>
+                          <div className="flex flex-col space-y-1">
+                            <p className="text-sm font-medium leading-none">
+                              {session.user.name}
+                            </p>
+                            <p className="text-xs leading-none text-muted-foreground">
+                              {session.user.email}
+                            </p>
+                          </div>
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link href="/profile" className="flex items-center">
+                            <UserIcon className="mr-2 h-4 w-4" />
+                            {t("profile")}
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href="/account/orders" className="flex items-center">
+                            <ShoppingCartIcon className="mr-2 h-4 w-4" />
+                            {t("auth.myOrders")}
+                          </Link>
+                        </DropdownMenuItem>
+                        {session.user.role === "admin" && (
+                          <DropdownMenuItem asChild>
+                            <Link href="/admin" className="flex items-center">
+                              <Cog6ToothIcon className="mr-2 h-4 w-4" />
+                              {t("adminPanel")}
+                            </Link>
+                          </DropdownMenuItem>
+                        )}
+                        {session.user.role === "journalist" && (
+                          <DropdownMenuItem asChild>
+                            <Link href="/admin/articles" className="flex items-center">
+                              <PencilIcon className="mr-2 h-4 w-4" />
+                              {t("authorPanel")}
+                            </Link>
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => signOut()}>
+                          <ArrowRightOnRectangleIcon className="mr-2 h-4 w-4" />
+                          {t("signOut")}
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : (
+                    <Button
+                      variant="orange"
+                      size="sm"
+                      asChild
+                    >
+                      <Link href="/auth/signin">
                         {t("signIn")}
                       </Link>
-                    )}
-                  </div>
+                    </Button>
+                  )}
+                </div>
 
-                  {/* Mobile sign in link */}
-                  <div className="sm:hidden">
-                    {!session && (
-                      <Link
-                        href="/auth/signin"
-                        className="text-white bg-[#f1803a] hover:bg-[#e06d29] px-3 py-1 rounded-md text-xs font-medium transition-colors duration-150"
-                      >
+                {/* Mobile sign in link */}
+                <div className="sm:hidden">
+                  {!session && (
+                    <Button
+                      variant="orange"
+                      size="sm"
+                      asChild
+                    >
+                      <Link href="/auth/signin">
                         {t("signIn")}
                       </Link>
-                    )}
-                  </div>
+                    </Button>
+                  )}
+                </div>
 
-                  {/* Mobile menu button */}
-                  <div className="lg:hidden -mr-1">
-                    <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-1.5 text-white hover:text-gray-200 focus:outline-none">
-                      <span className="sr-only">Open main menu</span>
-                      {open ? (
-                        <XMarkIcon
-                          className="block h-6 w-6"
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <Bars3Icon
-                          className="block h-6 w-6"
-                          aria-hidden="true"
-                        />
-                      )}
-                    </Disclosure.Button>
-                  </div>
+                {/* Mobile menu button */}
+                <div className="sm:hidden -mr-1">
+                  <MobileMenu 
+                    session={session}
+                    navigation={navigation}
+                    internationalNavItems={internationalNavItems}
+                    mobileSearchQuery={mobileSearchQuery}
+                    setMobileSearchQuery={setMobileSearchQuery}
+                    handleMobileSearch={handleMobileSearch}
+                    t={t}
+                    getUserImage={getUserImage}
+                  />
                 </div>
               </div>
             </div>
           </div>
-
-          <Disclosure.Panel className="lg:hidden">
-            {/* Mobile search field */}
-            <div className="px-2 pt-2 pb-1">
-              <form onSubmit={handleMobileSearch} className="relative">
-                <input
-                  type="text"
-                  value={mobileSearchQuery}
-                  onChange={(e) => setMobileSearchQuery(e.target.value)}
-                  placeholder={t("search")}
-                  className="w-full py-2 pl-8 pr-3 text-sm text-gray-900 bg-gray-100 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-                <MagnifyingGlassIcon
-                  className="absolute left-2 cursor-pointer top-2.5 h-4 w-4 text-gray-500"
-                  aria-hidden="true"
-                />
-              </form>
-            </div>
-
-            {/* Mobile nav links */}
-            <div className="space-y-1 px-2 pb-3 pt-2">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
-                >
-                  {t(item.name)}
-                </Link>
-              ))}
-
-              {/* International submenu for mobile */}
-              <Disclosure>
-                {({ open }) => (
-                  <div>
-                    <Disclosure.Button className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700">
-                      <span>Camp. Esteri</span>
-                      <ChevronDownIcon
-                        className={`${
-                          open ? "rotate-180" : ""
-                        } h-4 w-4 transition-transform`}
-                      />
-                    </Disclosure.Button>
-                    <Disclosure.Panel className="px-4 py-1 text-sm">
-                      <div className="space-y-1">
-                        {internationalNavItems.map((item) => (
-                          <Link
-                            key={item.name}
-                            href={item.href}
-                            className="block py-1.5 text-gray-300 hover:text-white"
-                          >
-                            {item.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </Disclosure.Panel>
-                  </div>
-                )}
-              </Disclosure>
-            </div>
-
-            {/* Mobile profile section */}
-            {session && (
-              <div className="border-t border-gray-700 px-3 py-3">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <Image
-                      width={40}
-                      height={40}
-                      className="h-10 w-10 rounded-full object-cover"
-                      src={getUserImage(session.user)}
-                      alt="Profile"
-                    />
-                  </div>
-                  <div className="ml-3">
-                    <div className="text-sm font-medium text-white">
-                      {session.user.name}
-                    </div>
-                    <div className="text-xs text-gray-300">
-                      {session.user.email}
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-3 space-y-1">
-                  <Link
-                    href="/profile"
-                    className="block rounded-md px-3 py-2 md:py-1 text-sm font-medium text-white hover:bg-gray-700"
-                  >
-                    {t("profile")}
-                  </Link>
-                  <Link
-                    href="/account/orders"
-                    className="block rounded-md px-3 py-2 md:py-1 text-sm font-medium text-white hover:bg-gray-700"
-                  >
-                    {t("orders")}
-                  </Link>
-                  {session.user.role === "admin" && (
-                    <Link
-                      href="/admin"
-                      className="block rounded-md px-3 py-2 md:py-1 text-sm font-medium text-white hover:bg-gray-700"
-                    >
-                      {t("adminPanel")}
-                    </Link>
-                  )}
-                  <button
-                    onClick={() => signOut()}
-                    className="block w-full text-left rounded-md px-3 py-2 md:py-1 text-sm font-medium text-white hover:bg-gray-700"
-                  >
-                    {t("signOut")}
-                  </button>
-                </div>
-              </div>
-            )}
-          </Disclosure.Panel>
         </div>
-      )}
-    </Disclosure>
+      </nav>
+      
+      {isShopPage ? (
+        <>
+          <ShopNav />
+          <div className="accent-bg text-white text-center py-2 text-xs sm:text-sm font-medium">
+            {t('sale')}
+          </div>
+        </>
+      ) : null}
+    </header>
   );
 }
 
-//This is for seaching products
+// Mobile Menu Component using Shadcn Sheet
+function MobileMenu({ 
+  session, 
+  navigation, 
+  internationalNavItems, 
+  mobileSearchQuery, 
+  setMobileSearchQuery, 
+  handleMobileSearch, 
+  t, 
+  getUserImage 
+}: any) {
+  const [internationalOpen, setInternationalOpen] = useState(false);
+
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-white hover:text-gray-200 hover:bg-transparent"
+        >
+          <Bars3Icon className="h-6 w-6" />
+          <span className="sr-only">Open main menu</span>
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="right" className="w-[300px] sm:w-[400px] bg-gray-900 text-white">
+        <SheetHeader>
+          <SheetTitle className="text-white">Menu</SheetTitle>
+        </SheetHeader>
+        
+        {/* Mobile search field */}
+        <div className="px-2 pt-4 pb-2">
+          <form onSubmit={handleMobileSearch} className="relative">
+            <Input
+              type="text"
+              value={mobileSearchQuery}
+              onChange={(e) => setMobileSearchQuery(e.target.value)}
+              placeholder={t("search")}
+              className="w-full py-2 pl-8 pr-3 text-sm text-gray-900 bg-gray-100 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+            <MagnifyingGlassIcon
+              className="absolute left-2 top-2.5 h-4 w-4 text-gray-500"
+              aria-hidden="true"
+            />
+          </form>
+        </div>
+
+        {/* Mobile nav links */}
+        <div className="space-y-1 px-2 pb-3 pt-2">
+          {navigation.map((item: any) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className="block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700 leading-none"
+            >
+              {t(item.name)}
+            </Link>
+          ))}
+
+          {/* International submenu for mobile */}
+          <DropdownMenu open={internationalOpen} onOpenChange={setInternationalOpen}>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700 h-auto"
+              >
+                <span>Camp. Esteri</span>
+                <ChevronDownIcon
+                  className={`${
+                    internationalOpen ? "rotate-180" : ""
+                  } h-4 w-4 transition-transform`}
+                />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-full">
+              {internationalNavItems.map((item: any) => (
+                <DropdownMenuItem key={item.name} asChild>
+                  <Link
+                    href={item.href}
+                    onClick={() => setInternationalOpen(false)}
+                    className="block py-1.5 text-gray-300 hover:text-white"
+                  >
+                    {item.name}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        {/* Mobile profile section */}
+        {session && (
+          <div className="border-t border-gray-700 px-3 py-3 mt-4">
+            <div className="flex items-center">
+              <Avatar className="h-10 w-10">
+                <AvatarImage
+                  src={getUserImage(session.user)}
+                  alt="Profile"
+                />
+                <AvatarFallback>
+                  <UserIcon className="h-4 w-4" />
+                </AvatarFallback>
+              </Avatar>
+              <div className="ml-3">
+                <div className="text-sm font-medium text-white">
+                  {session.user.name}
+                </div>
+                <div className="text-xs text-gray-300">
+                  {session.user.email}
+                </div>
+              </div>
+            </div>
+            <div className="mt-3 space-y-1">
+              <Link
+                href="/profile"
+                className="block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
+              >
+                {t("profile")}
+              </Link>
+              <Link
+                href="/account/orders"
+                className="block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
+              >
+                {t("orders")}
+              </Link>
+              {session.user.role === "admin" && (
+                <Link
+                  href="/admin"
+                  className="block rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700"
+                >
+                  {t("adminPanel")}
+                </Link>
+              )}
+              <Button
+                variant="ghost"
+                onClick={() => signOut()}
+                className="block w-full text-left rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700 h-auto"
+              >
+                {t("signOut")}
+              </Button>
+            </div>
+          </div>
+        )}
+      </SheetContent>
+    </Sheet>
+  );
+}
+
 function SearchDropdown() {
-  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
@@ -543,26 +574,25 @@ function SearchDropdown() {
 
   return (
     <div ref={searchRef}>
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-1.5 sm:p-1 cursor-pointer text-white hover:text-gray-200 transition-colors duration-150"
+        className="text-white hover:text-gray-200 hover:bg-transparent"
         aria-label="Search"
       >
-        <MagnifyingGlassIcon
-          className="h-5 w-5 sm:h-4 sm:w-4"
-          aria-hidden="true"
-        />
-      </button>
+        <MagnifyingGlassIcon className="h-5 w-5 sm:h-4 sm:w-4" />
+      </Button>
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-64 sm:w-72 bg-white rounded-md shadow-lg py-1 z-10">
           <form onSubmit={handleSearch} className="px-3 py-2">
             <div className="relative">
-              <input
+              <Input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t("search")}
+                placeholder="Cerca..."
                 className="block w-full rounded-md border-0 py-2 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm leading-6"
                 autoFocus
               />
@@ -572,14 +602,16 @@ function SearchDropdown() {
                   aria-hidden="true"
                 />
               </div>
-              <button
+              <Button
                 type="submit"
-                className="absolute inset-y-0 right-0 flex items-center pr-2"
+                variant="ghost"
+                size="sm"
+                className="absolute inset-y-0 right-0 flex items-center pr-2 h-auto"
               >
                 <span className="text-xs text-indigo-600 font-medium">
-                  {t("search")}
+                  Cerca
                 </span>
-              </button>
+              </Button>
             </div>
           </form>
         </div>

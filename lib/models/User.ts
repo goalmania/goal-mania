@@ -6,7 +6,7 @@ export interface IUser {
   email: string;
   username?: string;
   password: string;
-  role: "admin" | "user" | "premium";
+  role: "admin" | "user" | "premium" | "journalist";
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema<IUser>(
       trim: true,
       lowercase: true,
       match: [/^\S+@\S+\.\S+$/, "Please enter a valid email"],
+      index: true, // This creates the index automatically
     },
     username: {
       type: String,
@@ -39,7 +40,7 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     role: {
       type: String,
-      enum: ["admin", "user", "premium"],
+      enum: ["admin", "user", "premium", "journalist"],
       default: "user",
     },
   },
@@ -47,6 +48,12 @@ const userSchema = new mongoose.Schema<IUser>(
     timestamps: true,
   }
 );
+
+// Enhanced indexes for better query performance
+userSchema.index({ role: 1 }); // For admin queries
+userSchema.index({ createdAt: -1 }); // For recent users
+userSchema.index({ name: "text", email: "text" }); // Text search capability
+userSchema.index({ role: 1, createdAt: -1 }); // Compound index for admin dashboard
 
 // Add any instance methods here if needed
 userSchema.methods.toJSON = function () {

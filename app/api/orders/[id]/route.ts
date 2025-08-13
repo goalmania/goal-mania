@@ -4,6 +4,9 @@ import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Order from "@/models/Order";
 import OrderDetails from "@/lib/models/OrderDetails";
+import User from "@/lib/models/User";
+import { sendEmail } from "@/lib/utils/email";
+import { orderStatusUpdateTemplate, shippingNotificationTemplate } from "@/lib/utils/email-templates";
 import mongoose from "mongoose";
 
 // Type for order with necessary properties
@@ -12,6 +15,13 @@ interface OrderType {
   userId: string;
   status: string;
   [key: string]: any;
+}
+
+interface UserDocument {
+  _id: mongoose.Types.ObjectId;
+  email: string;
+  name?: string;
+  language?: string;
 }
 
 // GET /api/orders/[id] - Get order by ID
@@ -120,12 +130,102 @@ export async function PATCH(
     }
 
     await connectDB();
+    
+    // Get the current order to compare status changes
+    const currentOrder = await Order.findById(id).lean<OrderType | null>();
+    if (!currentOrder) {
+      return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    }
+
     const updatedOrder = await Order.findByIdAndUpdate(id, updateData, {
       new: true,
-    }).lean();
+    }).lean<OrderType | null>();
 
     if (!updatedOrder) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    }
+
+    // Send email notifications for status changes
+    if (data.status && currentOrder && data.status !== currentOrder.status) {
+      try {
+        // Get user information
+        const userDoc = await User.findById(updatedOrder.userId).select(
+          "email name language"
+        );
+        const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
+
+        if (user && user.email) {
+          const userLanguage = user.language || 'it'; // Default to Italian
+          
+          // Get detailed order items
+          const orderDetails = await OrderDetails.findOne({
+            paymentIntentId: updatedOrder.paymentIntentId,
+          });
+
+          const items = orderDetails?.fullItems || updatedOrder.items;
+
+          // Send status update email
+          const { subject, text, html } = await orderStatusUpdateTemplate({
+            userName: user.name,
+            orderId: updatedOrder._id.toString(),
+            status: data.status,
+            items: items,
+            language: userLanguage as 'it' | 'en',
+          });
+
+          await sendEmail({
+            to: user.email,
+            subject,
+            text,
+            html,
+          });
+
+          console.log(`Status update email sent to ${user.email} for order ${updatedOrder._id}`);
+        }
+      } catch (emailError) {
+        console.error("Error sending status update email:", emailError);
+        // Don't fail the request if email fails
+      }
+    }
+
+    // Send shipping notification if status is "shipped" and tracking code is provided
+    if (data.status === "shipped" && data.trackingCode && currentOrder && currentOrder.status !== "shipped") {
+      try {
+        const userDoc = await User.findById(updatedOrder.userId).select(
+          "email name language"
+        );
+        const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
+
+        if (user && user.email) {
+          const userLanguage = user.language || 'it';
+          
+          const orderDetails = await OrderDetails.findOne({
+            paymentIntentId: updatedOrder.paymentIntentId,
+          });
+
+          const items = orderDetails?.fullItems || updatedOrder.items;
+
+          const { subject, text, html } = await shippingNotificationTemplate({
+            userName: user.name,
+            orderId: updatedOrder._id.toString(),
+            trackingCode: data.trackingCode,
+            items: items,
+            language: userLanguage as 'it' | 'en',
+          });
+
+          await sendEmail({
+            to: user.email,
+            subject,
+            text,
+            html,
+          });
+
+          console.log(`Shipping notification email sent to ${user.email} for order ${updatedOrder._id}`);
+        }
+      } catch (emailError) {
+        console.error("Error sending shipping notification email:", emailError);
+        // Don't fail the request if email fails
+      }
     }
 
     return NextResponse.json(

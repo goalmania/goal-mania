@@ -1,13 +1,15 @@
 import Link from "next/link";
+import Image from "next/image";
+import { useI18n } from "@/lib/hooks/useI18n";
 
 const navigation = {
   main: [
     { name: "About", href: "/about" },
-    { name: "Blog", href: "/blog" },
+    { name: "News", href: "/news" },
     { name: "Contact", href: "/contact" },
     { name: "Terms", href: "/terms" },
     { name: "Privacy", href: "/privacy" },
-    { name: "Shipping", href: "/shipping" },
+    { name: "Orders", href: "/account/orders" },
   ],
   social: [
     {
@@ -46,41 +48,56 @@ const navigation = {
 };
 
 export function Footer() {
+  const { t } = useI18n();
+  
   return (
-    <footer className="bg-white">
-      <div className="mx-auto max-w-7xl overflow-hidden px-4 py-8 sm:py-12 lg:px-8">
-        <nav
-          className="grid grid-cols-2 gap-x-4 gap-y-3 sm:flex sm:justify-center sm:space-x-12"
-          aria-label="Footer"
-        >
+    <footer className="bg-gradient-to-t from-[#f5963c] to-[#0e1924] text-white pt-10 pb-4">
+      <div className="mx-auto max-w-7xl px-4 flex flex-col items-center">
+        {/* Logo and Brand */}
+        <div className="flex flex-col items-center mb-6">
+          <div className="mb-2">
+            <Image 
+              src="/logos/brand_logo.png" 
+              alt="GoalMania Logo" 
+              width={80} 
+              height={80} 
+              className="shadow-lg" 
+              style={{ objectFit: "contain" }}
+            />
+          </div>
+          <h2 className="text-3xl font-bold tracking-wide mb-2">Goal<span className="text-[#f5963c]">Mania</span></h2>
+          <p className="text-center max-w-md text-sm text-white/80 mb-2">
+            {t('footer.description')}
+          </p>
+        </div>
+        {/* Navigation */}
+        <nav className="grid grid-cols-2 gap-x-4 gap-y-3 sm:flex sm:justify-center sm:space-x-12 mb-6" aria-label="Footer">
           {navigation.main.map((item) => (
             <div key={item.name} className="text-center sm:text-left">
-              <Link
-                href={item.href}
-                className="text-xs sm:text-sm leading-6 text-gray-600 hover:text-gray-900"
-              >
+              <Link href={item.href} className="text-xs sm:text-sm leading-6 text-white/80 hover:text-white">
                 {item.name}
               </Link>
             </div>
           ))}
         </nav>
-        <div className="mt-6 sm:mt-8 flex justify-center space-x-8 sm:space-x-10">
+        {/* Social Icons */}
+        <div className="flex justify-center space-x-8 sm:space-x-10 mb-6">
           {navigation.social.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-gray-500"
-            >
+            <a key={item.name} href={item.href} target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white">
               <span className="sr-only">{item.name}</span>
-              <item.icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
+              <item.icon className="h-6 w-6" aria-hidden="true" />
             </a>
           ))}
         </div>
-        <p className="mt-6 sm:mt-8 text-center text-xs leading-5 text-gray-500">
-          &copy; {new Date().getFullYear()} Goal Mania. All rights reserved.
+        <p className="text-center text-xs leading-5 text-white/60 border-t border-white/20 pt-4 w-full">
+          {t('footer.copyright')}
         </p>
+        <div className="flex flex-wrap justify-center gap-4 mt-2 text-xs text-white/60">
+          <Link href="/terms">Terms & Conditions</Link>
+          <Link href="/privacy">Privacy</Link>
+          <Link href="/accessibility">Accessibility Information</Link>
+          <Link href="/contact">Contact us</Link>
+        </div>
       </div>
     </footer>
   );

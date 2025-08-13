@@ -5,11 +5,14 @@ import connectDB from "@/lib/db";
 import Order, { IOrder } from "@/models/Order";
 import User from "@/lib/models/User";
 import mongoose from "mongoose";
+import { sendEmail } from "@/lib/utils/email";
+import { shippingNotificationTemplate } from "@/lib/utils/email-templates";
 
 interface UserDocument {
   email: string;
   name: string;
   _id: string;
+  language?: string;
 }
 
 // POST /api/orders/[id]/notify-shipping - Send shipping notification to user
@@ -51,30 +54,32 @@ export async function POST(
       );
     }
 
-    // Get user email
-    const user = (await User.findById(order.userId)
-      .select("email name")
-      .lean()) as unknown as UserDocument;
+    // Get user email and language preference (convert safely)
+    const userDoc = await User.findById(order.userId).select(
+      "email name language"
+    );
+    const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // In a real application, you would send an actual email here
-    // For now, we'll just simulate it
-
-    console.log(`Sending shipping notification email to ${user.email}`);
-    console.log(`Order ID: ${order._id}`);
-    console.log(`Tracking Number: ${order.trackingCode}`);
-
-    // In a real app, you would use a service like SendGrid, AWS SES, etc.
-    // Example:
-    // await sendEmail({
-    //   to: user.email,
-    //   subject: "Your Order Has Been Shipped!",
-    //   text: `Your order #${order._id} has been shipped! Track your package with tracking number: ${order.trackingCode}`,
-    //   html: `<p>Your order #${order._id} has been shipped!</p><p>Track your package with tracking number: <strong>${order.trackingCode}</strong></p>`
-    // });
+    // Use template for shipping notification email
+    const userLanguage = user.language || 'it'; // Default to Italian
+    
+    const { subject, text, html } = await shippingNotificationTemplate({
+      userName: user.name,
+      orderId: String(order._id),
+      trackingCode: order.trackingCode,
+      items: order.items,
+      language: userLanguage as 'it' | 'en',
+    });
+    await sendEmail({
+      to: user.email,
+      subject,
+      text,
+      html,
+    });
 
     return NextResponse.json(
       {

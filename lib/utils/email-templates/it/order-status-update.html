@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aggiornamento Stato Ordine</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc;">
+  <div style="max-width: 600px; margin: 0 auto; background: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #0e1924 0%, #1a365d 100%); padding: 40px 30px; text-align: center; border-radius: 12px 12px 0 0;">
+      <h1 style="color: white; margin: 0; font-size: 32px; font-weight: 700;">📊 AGGIORNAMENTO STATO</h1>
+      <p style="color: #f5963c; margin: 10px 0 0 0; font-size: 18px; font-weight: 600;">Il progresso del tuo ordine è stato aggiornato</p>
+    </div>
+    
+    <!-- Content -->
+    <div style="padding: 40px 30px;">
+      <h2 style="color: #0e1924; margin: 0 0 20px 0; font-size: 24px; font-weight: 600;">Ciao{{userName}},</h2>
+      
+      <!-- Status Card -->
+      <div style="background: {{statusBg}}; border: 2px solid {{statusBorder}}; border-radius: 12px; padding: 25px; margin: 25px 0;">
+        <h3 style="color: {{statusText}}; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">📦 Aggiornamento Stato Ordine</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
+          <span style="color: #64748b; font-weight: 500;">Numero Ordine:</span>
+          <span style="color: #0e1924; font-weight: 700; font-size: 16px;">#{{orderId}}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
+          <span style="color: #64748b; font-weight: 500;">Stato Attuale:</span>
+          <span style="color: {{statusText}}; font-weight: 700; font-size: 16px; background: white; padding: 6px 12px; border-radius: 6px; border: 1px solid {{statusBorder}};">{{status}}</span>
+        </div>
+      </div>
+      
+      <!-- Progress Timeline -->
+      <div style="margin: 40px 0;">
+        <h3 style="color: #0e1924; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">📈 Progresso Ordine</h3>
+        
+        <!-- Progress Container -->
+        <div style="background: #f8fafc; border-radius: 12px; padding: 30px; margin: 20px 0;">
+          <div style="position: relative;">
+            {{stepsHtml}}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Product Cards Section -->
+      <div style="margin: 40px 0;">
+        <h3 style="color: #0e1924; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">🛍️ I Tuoi Prodotti</h3>
+        {{productCards}}
+      </div>
+      
+      <!-- CTA Button -->
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="{{NEXT_PUBLIC_BASE_URL}}/account/orders" style="background: linear-gradient(135deg, #0e1924 0%, #1a365d 100%); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block; box-shadow: 0 4px 12px rgba(14, 25, 36, 0.3);">Visualizza Dettagli Completi Ordine</a>
+      </div>
+      
+      <div style="text-align: center; margin: 30px 0; padding: 20px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 8px;">
+        <p style="margin: 0; color: #92400e; font-weight: 600; font-size: 16px;">🏆 Grazie per aver scelto Goal Mania!</p>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div style="background: #0e1924; padding: 30px; text-align: center; border-radius: 0 0 12px 12px;">
+      <p style="color: #94a3b8; margin: 0; font-size: 14px;">Cordiali saluti,<br>Il Team Goal Mania</p>
+    </div>
+  </div>
+</body>
+</html> 

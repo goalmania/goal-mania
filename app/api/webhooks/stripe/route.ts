@@ -9,9 +9,11 @@ import Product from "@/lib/models/Product";
 import Address from "@/lib/models/Address";
 import OrderDetails from "@/lib/models/OrderDetails";
 import mongoose from "mongoose";
+import { sendEmail } from "@/lib/utils/email";
+import { orderConfirmationTemplate, invoiceTemplate } from "@/lib/utils/email-templates";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-04-30.basil",
+  apiVersion: "2025-06-30.basil",
 });
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
@@ -28,6 +30,9 @@ interface AddressType {
 
 interface UserDocument {
   _id: mongoose.Types.ObjectId;
+  email: string;
+  name?: string;
+  language?: string;
 }
 
 // Define an interface for the item structure
@@ -151,8 +156,9 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
     // Get coupon data
     const coupon = orderDetails.couponData;
 
-    // Get user information
-    const user = (await User.findById(userId)) as UserDocument;
+    // Get user information (ensure plain object with expected fields)
+    const userDoc = await User.findById(userId).select("email name language");
+    const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
     if (!user) {
       console.error("User not found:", userId);
       return;
@@ -198,7 +204,56 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
     await newOrder.save();
     console.log("Order created successfully:", newOrder._id);
 
-    // Send order confirmation email (could be implemented here or in a separate service)
+    // Send order confirmation email
+    if (user && user.email) {
+      // Get user's preferred language (you can add this to user model later)
+      const userLanguage = user.language || 'it'; // Default to Italian
+      
+      const { subject, text, html } = await orderConfirmationTemplate({
+        userName: user.name,
+        orderId: newOrder._id.toString(),
+        amount: newOrder.amount,
+        items: processedItems,
+        language: userLanguage as 'it' | 'en',
+      });
+      await sendEmail({
+        to: user.email,
+        subject,
+        text,
+        html,
+      });
+
+      console.log(`Order confirmation email sent to ${user.email} for order ${newOrder._id}`);
+
+      // Send invoice email
+      try {
+        const invoiceNumber = `INV-${newOrder._id.toString().slice(-8).toUpperCase()}`;
+        const invoiceDate = new Date().toLocaleDateString('en-GB');
+
+        const { subject: invoiceSubject, text: invoiceText, html: invoiceHtml } = await invoiceTemplate({
+          userName: user.name,
+          orderId: newOrder._id.toString(),
+          amount: newOrder.amount,
+          items: processedItems,
+          invoiceNumber,
+          invoiceDate,
+          paymentMethod: "Credit Card",
+          language: userLanguage as 'it' | 'en',
+        });
+
+        await sendEmail({
+          to: user.email,
+          subject: invoiceSubject,
+          text: invoiceText,
+          html: invoiceHtml,
+        });
+
+        console.log(`Invoice email sent to ${user.email} for order ${newOrder._id}`);
+      } catch (invoiceError) {
+        console.error("Error sending invoice email:", invoiceError);
+        // Don't fail the request if invoice email fails
+      }
+    }
   } catch (error) {
     console.error("Error handling successful payment:", error);
     // Log the payment intent ID for debugging
