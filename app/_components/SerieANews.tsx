@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getBaseUrl } from "@/lib/utils/baseUrl";
 
 interface NewsItem {
   _id: string;
@@ -57,7 +58,7 @@ const mockNews: NewsItem[] = [
 
 async function fetchNews(): Promise<NewsItem[]> {
   try {
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const response = await fetch(`${baseUrl}/api/news/serie-a?limit=4`, {
       next: { revalidate: 300 }, // Cache for 5 minutes
     });

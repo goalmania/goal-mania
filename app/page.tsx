@@ -6,6 +6,7 @@ import { Product } from "@/lib/types/home";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
 import GuaranteesSection from "@/components/home/GuaranteesSection";
 import BannerBlock from "@/components/home/BannerBlock";
+import { getBaseUrl } from "@/lib/utils/baseUrl";
 
 // Enable caching for better performance
 export const revalidate = 300; // Revalidate every 5 minutes
@@ -15,7 +16,7 @@ export const revalidate = 300; // Revalidate every 5 minutes
 // Fetch featured products
 async function getFeaturedProducts(): Promise<Product[]> {
   try {
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const response = await fetch(`${baseUrl}/api/products?feature=true&limit=4`, {
       next: { revalidate: 300 }
     });
@@ -44,7 +45,7 @@ async function getFeaturedProducts(): Promise<Product[]> {
 // Fetch mystery box products
 async function getMysteryBoxProducts(): Promise<Product[]> {
   try {
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const response = await fetch(`${baseUrl}/api/products?type=mysteryBox&limit=3&noPagination=true`, {
       next: { revalidate: 0 } // Disable caching for debugging
     });

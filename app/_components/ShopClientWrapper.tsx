@@ -1,4 +1,5 @@
 import ShopClient from "./ShopClient";
+import { getBaseUrl } from "@/lib/utils/baseUrl";
 
 interface Product {
   id: string;
@@ -13,7 +14,7 @@ interface Product {
 
 async function fetchSeason2025Products(): Promise<Product[]> {
   try {
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const response = await fetch(`${baseUrl}/api/products?category=2025%2F26&limit=8&noPagination=true`, {
       next: { revalidate: 300 }, // Cache for 5 minutes
     });
@@ -47,7 +48,7 @@ async function fetchSeason2025Products(): Promise<Product[]> {
 
 async function fetchFeaturedProducts(): Promise<Product[]> {
   try {
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const response = await fetch(`${baseUrl}/api/products?feature=true&limit=3`, {
       next: { revalidate: 300 }, // Cache for 5 minutes
     });
@@ -81,7 +82,7 @@ async function fetchFeaturedProducts(): Promise<Product[]> {
 
 async function fetchMysteryBoxProducts(): Promise<Product[]> {
   try {
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const response = await fetch(`${baseUrl}/api/products?type=mysteryBox&limit=6&noPagination=true`, {
       next: { revalidate: 300 }, // Cache for 5 minutes
     });
