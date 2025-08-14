@@ -1,12 +1,5 @@
 import { NextResponse } from "next/server";
-
-function getBaseUrl(): string {
-  const envUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL;
-  if (envUrl) return envUrl.replace(/\/$/, "");
-  const vercelUrl = process.env.VERCEL_URL;
-  if (vercelUrl) return `https://${vercelUrl.replace(/\/$/, "")}`;
-  return "http://localhost:3000";
-}
+import { getBaseUrl } from "@/lib/utils/baseUrl";
 
 // Key pages and APIs to keep warm. Keep this list short and high-impact.
 const PAGE_PATHS: string[] = [

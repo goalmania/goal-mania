@@ -1,9 +1,14 @@
 import NextAuth from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { getBaseUrl } from "@/lib/utils/baseUrl";
+
+// Set NEXTAUTH_URL dynamically based on getBaseUrl()
+process.env.NEXTAUTH_URL = getBaseUrl();
 
 // Log configuration on startup to help debug
 console.log("NextAuth configuration:", {
-  baseUrl: process.env.NEXTAUTH_URL || "http://localhost:3000",
+  baseUrl: getBaseUrl(),
+  nextAuthUrl: process.env.NEXTAUTH_URL,
   hasSecret: !!process.env.NEXTAUTH_SECRET,
   providers: authOptions.providers.map((provider) => provider.id),
   debug: authOptions.debug,
