@@ -667,32 +667,30 @@ export default function EditArticlePage() {
                   </Label>
                 </div>
 
-                {formData.category === "news" && (
-                  <div>
-                    <Label htmlFor="featuredJerseyId" className="block text-sm font-medium text-black">
-                      Featured Jersey in Article
-                    </Label>
-                    <Select
-                      value={formData.featuredJerseyId || "none"}
-                      onValueChange={(value) => setFormData(prev => ({ ...prev, featuredJerseyId: value }))}
-                    >
-                      <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="None (Default)" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">None (Default)</SelectItem>
-                        {jerseys.map((jersey) => (
-                          <SelectItem key={jersey.id} value={jersey.id}>
-                            {jersey.title}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <p className="mt-1 text-xs text-gray-500">
-                      Select a jersey to feature in the middle of this article
-                    </p>
-                  </div>
-                )}
+                <div>
+                  <Label htmlFor="featuredJerseyId" className="block text-sm font-medium text-black">
+                    Featured Jersey in Article
+                  </Label>
+                  <Select
+                    value={formData.featuredJerseyId || "none"}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, featuredJerseyId: value }))}
+                  >
+                    <SelectTrigger className="mt-1">
+                      <SelectValue placeholder="None (Default)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">None (Default)</SelectItem>
+                      {jerseys.map((jersey) => (
+                        <SelectItem key={jersey.id} value={jersey.id}>
+                          {jersey.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="mt-1 text-xs text-gray-500">
+                    Select a jersey to feature in the middle of this article
+                  </p>
+                </div>
               </CardContent>
             </Card>
 
