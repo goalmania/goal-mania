@@ -34,6 +34,7 @@ import {
   GlobeAltIcon
 } from "@heroicons/react/24/outline";
 import { refreshUserSession } from "@/lib/utils/session";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 import React from "react";
 
 const PaymentStep = dynamic(() => import("./PaymentStep"), { ssr: false });
@@ -53,6 +54,7 @@ interface Address {
 
 
 export default function CheckoutPage() {
+  const { t } = useTranslation();
   const { data: session, status, update: updateSession } = useSession();
   const router = useRouter();
   const { items, getTotal, clearCart } = useCartStore();
@@ -445,10 +447,10 @@ export default function CheckoutPage() {
 
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-[#0e1924] mb-2">
-            Checkout
+            {t("checkout.title")}
           </h1>
           <p className="text-gray-600">
-            Complete your order with secure payment
+            {t("checkout.description")}
           </p>
         </div>
 
@@ -460,10 +462,10 @@ export default function CheckoutPage() {
                 <CardHeader className="bg-gradient-to-r from-[#0e1924] to-[#1a2a3a] text-white p-6">
                   <CardTitle className="flex items-center gap-2 text-white">
                     <MapPinIcon className="h-5 w-5 text-[#f5963c]" />
-                    Shipping Address
+                    {t("checkout.shippingAddress")}
                   </CardTitle>
                   <CardDescription className="text-gray-200">
-                    Select your delivery address or add a new one
+                    {t("checkout.shippingAddressDescription")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
@@ -536,7 +538,7 @@ export default function CheckoutPage() {
                           className="flex items-center gap-2 border-2 border-gray-200 hover:border-[#f5963c] hover:bg-orange-50 transition-all duration-200"
                         >
                           <PlusIcon className="h-4 w-4" />
-                          Add New Address
+                          {t("checkout.addNewAddress")}
                         </Button>
                         <div className="flex gap-3">
                           {/* Test button - only visible in development */}
@@ -558,24 +560,24 @@ export default function CheckoutPage() {
                               )}
                             </Button>
                           )}
-                          <Button
-                            type="button"
-                            onClick={handleContinueToPayment}
-                            disabled={!selectedAddressId || isLoading}
-                            className="bg-gradient-to-r from-[#f5963c] to-orange-500 hover:from-[#e0852e] hover:to-orange-600 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50"
-                          >
-                            {isLoading ? (
-                              <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                Processing...
-                              </div>
-                            ) : (
-                              <div className="flex items-center gap-2">
-                                <CreditCardIcon className="h-4 w-4" />
-                                Continue to Payment
-                              </div>
-                            )}
-                          </Button>
+                            <Button
+                              type="button"
+                              onClick={handleContinueToPayment}
+                              disabled={!selectedAddressId || isLoading}
+                              className="bg-gradient-to-r from-[#f5963c] to-orange-500 hover:from-[#e0852e] hover:to-orange-600 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50"
+                            >
+                              {isLoading ? (
+                                <div className="flex items-center gap-2">
+                                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                  {t("checkout.processing")}...
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-2">
+                                  <CreditCardIcon className="h-4 w-4" />
+                                  {t("checkout.continueToPayment")}
+                                </div>
+                              )}
+                            </Button>
                         </div>
                       </div>
                     </>
@@ -752,7 +754,7 @@ export default function CheckoutPage() {
                             onClick={() => setIsAddingAddress(false)}
                             className="border-2 border-gray-200 hover:border-gray-300 transition-all duration-200"
                           >
-                            Cancel
+                            {t("checkout.cancel")}
                           </Button>
                         )}
                         <Button
@@ -763,12 +765,12 @@ export default function CheckoutPage() {
                           {isLoading ? (
                             <div className="flex items-center gap-2">
                               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                              Saving...
+                              {t("checkout.saving")}...
                             </div>
                           ) : (
                             <div className="flex items-center gap-2">
                               <CheckCircleIcon className="h-4 w-4" />
-                              Save Address
+                              {t("checkout.saveAddress")}
                             </div>
                           )}
                         </Button>
@@ -782,16 +784,21 @@ export default function CheckoutPage() {
                 <CardHeader className="bg-gradient-to-r from-[#0e1924] to-[#1a2a3a] text-white p-6">
                   <CardTitle className="flex items-center gap-2 text-white">
                     <CreditCardIcon className="h-5 w-5 text-[#f5963c]" />
-                    Payment Information
+                    {t("checkout.paymentInformation")}
                   </CardTitle>
                   <CardDescription className="text-gray-200">
-                    Complete your purchase with secure payment
+                    {t("checkout.paymentDescription")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
-                  {clientSecret && (
-                    <PaymentStep clientSecret={clientSecret} total={total} onSuccess={handlePaymentSuccess} />
-                  )}
+                  <PaymentStep 
+                    clientSecret={clientSecret} 
+                    total={total} 
+                    onSuccess={handlePaymentSuccess}
+                    items={items}
+                    addressId={selectedAddressId || ""}
+                    coupon={appliedCoupon}
+                  />
                   <Button
                     type="button"
                     variant="outline"
@@ -800,7 +807,7 @@ export default function CheckoutPage() {
                     className="mt-6 flex items-center gap-2"
                   >
                     <ArrowLeftIcon className="h-4 w-4" />
-                    Back to Shipping
+                    {t("checkout.backToShipping")}
                   </Button>
                 </CardContent>
               </Card>
@@ -826,10 +833,10 @@ export default function CheckoutPage() {
                       d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
                     />
                   </svg>
-                  Order Summary
+                  {t("checkout.orderSummary")}
                 </CardTitle>
                 <CardDescription className="text-gray-200">
-                  Review your items and total
+                  {t("checkout.orderSummaryDescription")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6">
@@ -837,7 +844,7 @@ export default function CheckoutPage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-semibold text-[#0e1924] uppercase tracking-wide">
-                      Items ({items.length})
+                      {t("checkout.items")} ({items.length})
                     </h3>
                     <Badge variant="secondary" className="bg-[#f5963c] text-white">
                       {items.reduce((acc, item) => acc + item.quantity, 0)} items
@@ -897,7 +904,7 @@ export default function CheckoutPage() {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-semibold text-[#0e1924] uppercase tracking-wide">
-                      Discounts
+                      {t("checkout.discounts")}
                     </h3>
                     {appliedCoupon && (
                       <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
@@ -917,12 +924,12 @@ export default function CheckoutPage() {
                 {/* Price Breakdown */}
                 <div className="space-y-3">
                   <h3 className="text-sm font-semibold text-[#0e1924] uppercase tracking-wide">
-                    Price Breakdown
+                    {t("checkout.priceBreakdown")}
                   </h3>
                   
                   <div className="space-y-2">
                     <div className="flex justify-between items-center py-1">
-                      <span className="text-sm text-gray-600">Subtotal</span>
+                      <span className="text-sm text-gray-600">{t("checkout.subtotal")}</span>
                       <span className="font-medium text-[#0e1924]">€{subtotal.toFixed(2)}</span>
                     </div>
 
@@ -939,7 +946,7 @@ export default function CheckoutPage() {
                     )}
 
                     <div className="flex justify-between items-center py-1">
-                      <span className="text-sm text-gray-600">Shipping</span>
+                      <span className="text-sm text-gray-600">{t("checkout.shipping")}</span>
                       <span className="font-medium text-green-600">Free</span>
                     </div>
                   </div>
@@ -948,10 +955,10 @@ export default function CheckoutPage() {
 
                   {/* Total */}
                   <div className="flex justify-between items-center py-2">
-                    <span className="text-lg font-bold text-[#0e1924]">Total</span>
+                    <span className="text-lg font-bold text-[#0e1924]">{t("checkout.total")}</span>
                     <div className="text-right">
                       <span className="text-2xl font-bold text-[#0e1924]">€{total.toFixed(2)}</span>
-                      <p className="text-xs text-gray-500">Includes VAT</p>
+                      <p className="text-xs text-gray-500">{t("checkout.includesVat")}</p>
                     </div>
                   </div>
                 </div>
@@ -965,7 +972,7 @@ export default function CheckoutPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
-                      <span className="text-xs text-gray-600">Secure</span>
+                      <span className="text-xs text-gray-600">{t("checkout.secure")}</span>
                     </div>
                     <div className="flex flex-col items-center">
                       <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mb-1">
@@ -973,7 +980,7 @@ export default function CheckoutPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
                       </div>
-                      <span className="text-xs text-gray-600">Fast</span>
+                      <span className="text-xs text-gray-600">{t("checkout.fast")}</span>
                     </div>
                     <div className="flex flex-col items-center">
                       <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mb-1">
@@ -981,7 +988,7 @@ export default function CheckoutPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
                       </div>
-                      <span className="text-xs text-gray-600">Quality</span>
+                      <span className="text-xs text-gray-600">{t("checkout.quality")}</span>
                     </div>
                   </div>
                 </div>
