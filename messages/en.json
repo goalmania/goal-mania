@@ -30,18 +30,22 @@
     "switchToItalian": "Switch to Italian",
     "switchToEnglish": "Switch to English"
   },
-  "shop": {
-    "hero": {
-      "title": "Wear the passion, live football!",
-      "description": "Discover our exclusive collection of football jerseys with premium quality, unique designs, and unbeatable prices. Perfect for every football fan.",
-      "subtitle": "Discover our exclusive collection of football jerseys. Premium quality, unique designs, and unbeatable prices.",
-      "cta": "Discover jerseys"
-    },
-    "featuredProducts": "Featured Products",
-    "trust": {
-      "title": "Over 1200 Happy Customers ⭐️",
-      "subtitle": "Our community of enthusiasts grows every day. Join those who have already chosen quality and authenticity."
-    },
+      "shop": {
+      "hero": {
+        "title": "Wear the passion, live football!",
+        "description": "Discover our exclusive collection of football jerseys with premium quality, unique designs, and unbeatable prices. Perfect for every football fan.",
+        "subtitle": "Discover our exclusive collection of football jerseys. Premium quality, unique designs, and unbeatable prices.",
+        "cta": "Discover jerseys"
+      },
+      "featuredProducts": "Featured Products",
+      "offers": {
+        "availableOffers": "Available Offers",
+        "automaticDiscounts": "Automatic discounts that apply to this product"
+      },
+      "trust": {
+        "title": "Over 1200 Happy Customers ⭐️",
+        "subtitle": "Our community of enthusiasts grows every day. Join those who have already chosen quality and authenticity."
+      },
     "highlights": {
       "quality": {
         "title": "Super Quality",
@@ -127,6 +131,7 @@
     "orderSummaryDescription": "Review your items and total",
     "items": "Items",
     "discounts": "Discounts",
+    "discountRules": "Available Discount Rules",
     "priceBreakdown": "Price Breakdown",
     "subtotal": "Subtotal",
     "shipping": "Shipping",
@@ -370,6 +375,44 @@
       "deleteFailed": "Failed to delete patch",
       "createSuccess": "Patch created successfully!",
       "updateSuccess": "Patch updated successfully!"
+    },
+    "discountRules": {
+      "title": "Discount Rules",
+      "management": "Discount Rules Management",
+      "manage": "Manage Discount Rules",
+      "create": "Create Discount Rule",
+      "edit": "Edit Discount Rule",
+      "delete": "Delete Discount Rule",
+      "confirmDelete": "Are you sure you want to delete this discount rule?",
+      "actionCannotBeUndone": "This action cannot be undone.",
+      "deleteSuccess": "Discount rule deleted successfully!",
+      "deleteFailed": "Failed to delete discount rule",
+      "createSuccess": "Discount rule created successfully!",
+      "updateSuccess": "Discount rule updated successfully!",
+      "name": "Rule Name",
+      "description": "Description",
+      "type": "Rule Type",
+      "isActive": "Active",
+      "expiresAt": "Expires At",
+      "maxUses": "Max Uses",
+      "currentUses": "Current Uses",
+      "priority": "Priority",
+      "minQuantity": "Min Quantity",
+      "maxQuantity": "Max Quantity",
+      "discountPercentage": "Discount Percentage",
+      "discountAmount": "Discount Amount",
+      "buyQuantity": "Buy Quantity",
+      "getFreeQuantity": "Get Free Quantity",
+      "freeProductIds": "Free Product IDs",
+      "applicableCategories": "Applicable Categories",
+      "applicableProductIds": "Applicable Product IDs",
+      "excludedProductIds": "Excluded Product IDs",
+      "quantityBased": "Quantity Based",
+      "buyXGetY": "Buy X Get Y Free",
+      "percentageOff": "Percentage Off",
+      "fixedAmountOff": "Fixed Amount Off",
+      "noRules": "No discount rules found",
+      "createFirstRule": "Create your first discount rule to get started"
     }
   },
   "faq": {

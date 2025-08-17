@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { useCartStore } from "@/lib/store/cart";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -11,6 +11,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import dynamic from "next/dynamic";
 import { CouponForm } from "./CouponForm";
+import { DiscountRulesForm } from "./DiscountRulesForm";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -57,10 +58,23 @@ export default function CheckoutPage() {
   const { t } = useTranslation();
   const { data: session, status, update: updateSession } = useSession();
   const router = useRouter();
-  const { items, getTotal, clearCart } = useCartStore();
+  const { items, getTotal, clearCart, appliedDiscountRules, applyDiscountRules } = useCartStore();
   // Create the ref at component level
   const hasRefreshedRef = useRef(false);
   const [sessionRefreshed, setSessionRefreshed] = useState(false);
+
+  // Memoize the cartItems to prevent unnecessary re-renders
+  const cartItems = useMemo(() => 
+    items.map(item => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      image: item.image,
+      category: undefined // Cart items don't have category, will be handled by discount rules API
+    })), 
+    [items]
+  );
 
   const [step, setStep] = useState<"address" | "payment">("address");
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -87,16 +101,20 @@ export default function CheckoutPage() {
     code: string;
   } | null>(null);
 
+
+
   // Payment state
   const [clientSecret, setClientSecret] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   // Calculate totals
   const subtotal = getTotal();
-  const discountAmount = appliedCoupon
+  const couponDiscount = appliedCoupon
     ? (subtotal * appliedCoupon.discountPercentage) / 100
     : 0;
-  const total = subtotal - discountAmount;
+  const discountRulesAmount = appliedDiscountRules.reduce((sum: number, rule: any) => sum + rule.discountAmount, 0);
+  const totalDiscountAmount = couponDiscount + discountRulesAmount;
+  const total = subtotal - totalDiscountAmount;
 
   // Refresh session to get latest user data
   useEffect(() => {
@@ -223,9 +241,10 @@ export default function CheckoutPage() {
                 id: appliedCoupon.couponId,
                 code: appliedCoupon.code,
                 discountPercentage: appliedCoupon.discountPercentage,
-                discountAmount: discountAmount,
+                discountAmount: couponDiscount,
               }
             : null,
+          discountRules: appliedDiscountRules.length > 0 ? appliedDiscountRules : null,
         }),
       });
 
@@ -273,10 +292,11 @@ export default function CheckoutPage() {
           ? {
               code: appliedCoupon.code,
               discountPercentage: appliedCoupon.discountPercentage,
-              discountAmount: discountAmount,
+              discountAmount: couponDiscount,
               id: appliedCoupon.couponId,
             }
           : null,
+        discountRules: appliedDiscountRules.length > 0 ? appliedDiscountRules : null,
       };
 
       console.log("Sending order request:", JSON.stringify(requestBody));
@@ -344,7 +364,7 @@ export default function CheckoutPage() {
             ? {
                 code: appliedCoupon.code,
                 discountPercentage: appliedCoupon.discountPercentage,
-                discountAmount: discountAmount,
+                discountAmount: couponDiscount,
                 id: appliedCoupon.couponId,
               }
             : null,
@@ -900,6 +920,28 @@ export default function CheckoutPage() {
 
                 <Separator className="bg-gray-200 my-6" />
 
+                {/* Discount Rules Form */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-semibold text-[#0e1924] uppercase tracking-wide">
+                      {t("checkout.discountRules")}
+                    </h3>
+                    {appliedDiscountRules.length > 0 && (
+                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                        {appliedDiscountRules.length} Applied
+                      </Badge>
+                    )}
+                  </div>
+                  
+                  <DiscountRulesForm
+                    cartItems={cartItems}
+                    onApplyDiscounts={applyDiscountRules}
+                    isDisabled={isLoading || step !== "address"}
+                  />
+                </div>
+
+                <Separator className="bg-gray-200 my-6" />
+
                 {/* Coupon Form */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -936,13 +978,29 @@ export default function CheckoutPage() {
                     {appliedCoupon && (
                       <div className="flex justify-between items-center py-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm text-green-600">Discount</span>
+                          <span className="text-sm text-green-600">Coupon Discount</span>
                           <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
                             {appliedCoupon.code}
                           </Badge>
                         </div>
-                        <span className="font-medium text-green-600">-€{discountAmount.toFixed(2)}</span>
+                        <span className="font-medium text-green-600">-€{couponDiscount.toFixed(2)}</span>
                       </div>
+                    )}
+
+                    {appliedDiscountRules.length > 0 && (
+                      <>
+                        {appliedDiscountRules.map((rule) => (
+                          <div key={rule._id} className="flex justify-between items-center py-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm text-green-600">Discount Rule</span>
+                              <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
+                                {rule.name}
+                              </Badge>
+                            </div>
+                            <span className="font-medium text-green-600">-€{rule.discountAmount.toFixed(2)}</span>
+                          </div>
+                        ))}
+                      </>
                     )}
 
                     <div className="flex justify-between items-center py-1">

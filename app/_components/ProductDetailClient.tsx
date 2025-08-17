@@ -43,6 +43,7 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, Dialog
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption } from "@/components/ui/table";
 import { ProductSizeChart } from "@/app/_components/ProductSizeChart";
 import ProductReviews from "@/app/_components/ProductReviews";
+import DiscountRulesDisplay from "@/app/_components/DiscountRulesDisplay";
 
 const PATCH_PRICES = {
   "europa-league": 3,
@@ -804,6 +805,18 @@ export default function ProductDetailClient({
                   Buy Now
                 </Button>
               </div>
+
+              {/* Available Discount Rules */}
+              <DiscountRulesDisplay
+                productId={product._id}
+                productCategory={product.category}
+                onApplyDiscount={(rule: any) => {
+                  // Handle discount rule application
+                  console.log("Applied discount rule:", rule);
+                }}
+                showToAllUsers={true}
+                autoApply={true}
+              />
 
               {/* Trust Badges */}
               <Card>
