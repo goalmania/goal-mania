@@ -14,7 +14,7 @@ export const DiscountRuleFormSchema = z.object({
     required_error: "Please select a discount type"
   }),
   
-  isActive: z.boolean().default(true),
+  isActive: z.boolean(),
   
   expiresAt: z.string().optional().nullable(),
   
@@ -67,12 +67,12 @@ export const DiscountRuleFormSchema = z.object({
     .optional()
     .nullable(),
   
-  freeProductIds: z.array(z.string()).default([]),
+  freeProductIds: z.array(z.string()),
   
   // Category and product targeting
-  applicableCategories: z.array(z.string()).default([]),
-  applicableProductIds: z.array(z.string()).default([]),
-  excludedProductIds: z.array(z.string()).default([]),
+  applicableCategories: z.array(z.string()),
+  applicableProductIds: z.array(z.string()),
+  excludedProductIds: z.array(z.string()),
   
   // Eligibility conditions
   eligibilityConditions: z.object({
@@ -93,8 +93,8 @@ export const DiscountRuleFormSchema = z.object({
       .optional()
       .nullable(),
     
-    requiredCategories: z.array(z.string()).default([]),
-    excludedCategories: z.array(z.string()).default([]),
+    requiredCategories: z.array(z.string()),
+    excludedCategories: z.array(z.string()),
     
     timeRestrictions: z.object({
       startTime: z.string()
@@ -107,7 +107,7 @@ export const DiscountRuleFormSchema = z.object({
         .optional()
         .nullable(),
       
-      daysOfWeek: z.array(z.number().min(0).max(6)).default([]),
+      daysOfWeek: z.array(z.number().min(0).max(6)),
     }).optional(),
     
     userRestrictions: z.object({
@@ -117,7 +117,7 @@ export const DiscountRuleFormSchema = z.object({
         .optional()
         .nullable(),
       
-      userTypes: z.array(z.enum(["new", "returning", "vip"])).default([]),
+      userTypes: z.array(z.enum(["new", "returning", "vip"])),
     }).optional(),
   }).optional(),
 });
