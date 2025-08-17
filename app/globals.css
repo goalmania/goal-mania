@@ -33,6 +33,8 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-brand-orange-foreground: var(--brand-orange-foreground);
+  --color-brand-orange: var(--brand-orange);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -51,8 +53,10 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.13 0.02 248.5); /* Brand blue #0e1924 */
   --primary-foreground: oklch(0.985 0 0);
+  --brand-orange: oklch(0.7 0.15 51.8); /* Brand orange #f5963c */
+  --brand-orange-foreground: oklch(0.145 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -85,8 +89,10 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --primary: oklch(0.13 0.02 248.5); /* Brand blue #0e1924 - keep consistent in dark mode */
+  --primary-foreground: oklch(0.985 0 0);
+  --brand-orange: oklch(0.7 0.15 51.8); /* Brand orange #f5963c */
+  --brand-orange-foreground: oklch(0.145 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -119,6 +125,50 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Marquee animations */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+@keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+  }
+}
+
+.animate-marquee {
+  animation: marquee var(--duration) linear infinite;
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration) linear infinite;
+}
+
+/* 3D Flip Card Styles */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
 }
 
 /* Custom styles */
@@ -341,4 +391,178 @@
   .thin-scrollbar::-webkit-scrollbar-thumb:hover {
     background-color: #999;
   }
+}
+
+/* TipTap Editor Styles */
+.ProseMirror {
+  outline: none;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.ProseMirror h1 {
+  font-size: 2em;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.25;
+}
+
+.ProseMirror h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.25;
+}
+
+.ProseMirror h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.25;
+}
+
+.ProseMirror p {
+  margin-bottom: 1em;
+}
+
+.ProseMirror ul {
+  margin-bottom: 1em;
+  padding-left: 2em;
+  list-style-type: disc;
+}
+
+.ProseMirror ol {
+  margin-bottom: 1em;
+  padding-left: 2em;
+  list-style-type: decimal;
+}
+
+.ProseMirror li {
+  margin-bottom: 0.5em;
+  display: list-item;
+}
+
+.ProseMirror ul li {
+  list-style-type: disc;
+  list-style-position: outside;
+}
+
+.ProseMirror ol li {
+  list-style-type: decimal;
+  list-style-position: outside;
+}
+
+/* Ensure list markers are visible */
+.ProseMirror ul li::marker {
+  color: #374151;
+  font-weight: normal;
+}
+
+.ProseMirror ol li::marker {
+  color: #374151;
+  font-weight: normal;
+}
+
+.ProseMirror blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1em;
+  margin: 1em 0;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.ProseMirror code {
+  background-color: #f3f4f6;
+  padding: 0.125em 0.25em;
+  border-radius: 0.25em;
+  font-family: monospace;
+  font-size: 0.875em;
+}
+
+.ProseMirror pre {
+  background-color: #f3f4f6;
+  padding: 1em;
+  border-radius: 0.5em;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.ProseMirror pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5em;
+  margin: 1em 0;
+}
+
+.ProseMirror a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.ProseMirror a:hover {
+  color: #1d4ed8;
+}
+
+.ProseMirror strong {
+  font-weight: 600;
+}
+
+.ProseMirror em {
+  font-style: italic;
+}
+
+.ProseMirror u {
+  text-decoration: underline;
+}
+
+.ProseMirror s {
+  text-decoration: line-through;
+}
+
+/* Text alignment */
+.ProseMirror [data-text-align="left"] {
+  text-align: left;
+}
+
+.ProseMirror [data-text-align="center"] {
+  text-align: center;
+}
+
+.ProseMirror [data-text-align="right"] {
+  text-align: right;
+}
+
+.ProseMirror [data-text-align="justify"] {
+  text-align: justify;
+}
+
+/* Placeholder styling */
+.ProseMirror p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Focus styles */
+.ProseMirror:focus {
+  outline: none;
+}
+
+/* Selection styles */
+.ProseMirror ::selection {
+  background: #c1d1ff;
+}
+
+.ProseMirror ::-moz-selection {
+  background: #c1d1ff;
 }

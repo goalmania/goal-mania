@@ -19,17 +19,31 @@ export interface CartItem {
     size: string;
     isKidSize: boolean;
     hasCustomization: boolean;
+    excludedShirts?: string[];
   };
+}
+
+export interface AppliedDiscountRule {
+  _id: string;
+  name: string;
+  description: string;
+  type: string;
+  discountAmount: number;
+  discountPercentage?: number;
+  appliedToItems: string[];
 }
 
 interface CartStore {
   items: CartItem[];
+  appliedDiscountRules: AppliedDiscountRule[];
   addItem: (item: Omit<CartItem, "quantity"> & { quantity?: number }) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   getTotal: () => number;
   getItemCount: () => number;
+  applyDiscountRules: (rules: AppliedDiscountRule[]) => void;
+  clearDiscountRules: () => void;
 }
 
 // Check if window is defined (browser) or not (server/SSR)
@@ -39,6 +53,7 @@ export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
+      appliedDiscountRules: [],
       addItem: (item) => {
         const safePrice =
           typeof item.price === "string"
@@ -98,14 +113,25 @@ export const useCartStore = create<CartStore>()(
       },
       getTotal: () => {
         const state = get();
-        return state.items.reduce(
+        const subtotal = state.items.reduce(
           (total, item) => total + Number(item.price) * item.quantity,
           0
         );
+        const discountAmount = state.appliedDiscountRules.reduce(
+          (total, rule) => total + rule.discountAmount,
+          0
+        );
+        return subtotal - discountAmount;
       },
       getItemCount: () => {
         const state = get();
         return state.items.reduce((count, item) => count + item.quantity, 0);
+      },
+      applyDiscountRules: (rules) => {
+        set({ appliedDiscountRules: rules });
+      },
+      clearDiscountRules: () => {
+        set({ appliedDiscountRules: [] });
       },
     }),
     {

@@ -4,9 +4,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // Import new components
-import SerieALiveMatchesSection from "@/app/components/SerieALiveMatchesSection";
-import { SerieANews } from "@/app/components/SerieANews";
-import EditableFantasyTips from "@/app/components/EditableFantasyTips";
+import SerieALiveMatchesSection from "@/app/_components/SerieALiveMatchesSection";
+import { SerieANews } from "@/app/_components/SerieANews";
+import EditableFantasyTips from "@/app/_components/EditableFantasyTips";
+import { LoadingFallback } from "@/components/shared/loading-fallback";
 
 export const metadata: Metadata = {
   title: "Fantacalcio | Goal Mania",
@@ -23,56 +24,66 @@ const leagues = [
 
 export default function FantasyFootballPage() {
   return (
-    <div className="min-h-screen bg-white py-8 overflow-x-hidden">
+    <Suspense fallback={<LoadingFallback />}>
+
+    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 py-8 overflow-x-hidden">
       <div className="container mx-auto px-4 sm:px-6">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-black">
+        {/* Decorative Section Header */}
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#0e1924] drop-shadow-md transition-colors duration-300 mb-8">
           Fantacalcio
         </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Main Content Area */}
-          <div className="lg:col-span-8 space-y-6">
+          <div className="lg:col-span-8 space-y-8">
             {/* Live Matches Section - Serie A Only */}
-            <Card className="overflow-hidden bg-white border border-gray-100 shadow-sm">
+            <Card className="overflow-hidden bg-white border border-gray-100 shadow-lg rounded-2xl transition-shadow duration-300 hover:shadow-xl">
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-black">
+                <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-black">
                   Partite in Diretta - Serie A
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="bg-white">
+                <Suspense fallback={<LoadingFallback />}>
                 <SerieALiveMatchesSection />
+                </Suspense>
               </CardContent>
             </Card>
 
             {/* Serie A News Section */}
-            <Card className="overflow-hidden bg-white border border-gray-100 shadow-sm">
+            <Card className="overflow-hidden bg-white border border-gray-100 shadow-lg rounded-2xl transition-shadow duration-300 hover:shadow-xl">
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-black">
+                <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0e1924]">
                   Notizie Serie A
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="bg-white">
+                <Suspense fallback={<LoadingFallback />}>
                 <SerieANews />
+                </Suspense>
               </CardContent>
             </Card>
           </div>
 
           {/* Sidebar */}
-          <div className="lg:col-span-4 space-y-6">
+          <div className="lg:col-span-4 space-y-8">
             {/* Fantasy Tips - Editable */}
-            <Card className="overflow-hidden bg-white border border-gray-100 shadow-sm">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-black">
+            <Card className="overflow-hidden bg-white border border-gray-100 shadow-lg rounded-2xl relative transition-shadow duration-300 hover:shadow-xl">
+              <CardHeader className="pb-3 pl-6">
+                <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-black">
                   Consigli Fantacalcio
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pl-6">
+                <Suspense fallback={<LoadingFallback />}>
                 <EditableFantasyTips />
+                </Suspense>
               </CardContent>
             </Card>
           </div>
         </div>
       </div>
     </div>
+    </Suspense>
   );
 }

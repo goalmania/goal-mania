@@ -1,286 +1,150 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { CheckCircleIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 export default function ApiTestPage() {
-  const [data, setData] = useState<any>(null);
+  const [paypalEnvStatus, setPaypalEnvStatus] = useState<any>(null);
+  const [paypalScriptStatus, setPaypalScriptStatus] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [league, setLeague] = useState("140"); // La Liga by default
-  const [apiKey, setApiKey] = useState("");
-  const [useMockData, setUseMockData] = useState(false);
-  const [envStatus, setEnvStatus] = useState<{ [key: string]: boolean }>({});
 
-  // Check which environment variables are set
-  useEffect(() => {
-    const checkEnvVars = async () => {
-      try {
-        const response = await fetch("/api/check-env");
-        if (response.ok) {
-          const data = await response.json();
-          setEnvStatus(data);
-        }
-      } catch (err) {
-        console.error("Error checking environment variables:", err);
-      }
+  const checkPayPalEnv = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/check-paypal-env");
+      const data = await response.json();
+      setPaypalEnvStatus(data);
+    } catch (error) {
+      console.error("Error checking PayPal environment:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkPayPalScript = () => {
+    const status = {
+      windowPaypal: typeof window !== 'undefined' && !!(window as any).paypal,
+      paypalVersion: typeof window !== 'undefined' && (window as any).paypal ? (window as any).paypal.version : 'Not loaded',
+      userAgent: typeof window !== 'undefined' ? navigator.userAgent : 'Server side',
+      timestamp: new Date().toISOString()
     };
+    setPaypalScriptStatus(status);
+  };
 
-    checkEnvVars();
+  useEffect(() => {
+    checkPayPalEnv();
+    checkPayPalScript();
   }, []);
 
-  const testEndpoint = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Test our internal API endpoint
-      const url = `/api/football/standings?league=${league}`;
-      const options: RequestInit = {};
-
-      // Add API key as a custom header if provided
-      if (apiKey) {
-        options.headers = {
-          "X-Football-Api-Key": apiKey,
-        };
-        console.log("Using direct API key from input field");
-      } else {
-        console.log("Using API key from environment variables");
-      }
-
-      // Optionally force mock data
-      if (useMockData) {
-        options.headers = {
-          ...options.headers,
-          "X-Use-Mock-Data": "true",
-        };
-        console.log("Forcing mock data");
-      }
-
-      const response = await fetch(url, options);
-      console.log("Response status:", response.status);
-
-      if (!response.ok) {
-        throw new Error(`API responded with status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log("API result:", result);
-      setData(result);
-    } catch (err) {
-      console.error("Error testing API:", err);
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Testing direct API call
-  const testDirectApi = async () => {
-    setLoading(true);
-    setError(null);
-
-    const leagueMapping: Record<string, string> = {
-      "39": "PL", // Premier League
-      "140": "PD", // La Liga
-      "78": "BL1", // Bundesliga
-      "61": "FL1", // Ligue 1
-      "135": "SA", // Serie A
-    };
-
-    const competitionCode = leagueMapping[league] || "PD";
-
-    try {
-      // Use the provided API key or fallback
-      const keyToUse = apiKey || process.env.NEXT_PUBLIC_FOOTBALL_API_KEY || "";
-
-      if (!keyToUse) {
-        setError("No API key provided. Please enter an API key.");
-        setLoading(false);
-        return;
-      }
-
-      // Make a direct call to the football-data.org API
-      const response = await fetch(
-        `https://api.football-data.org/v4/competitions/${competitionCode}/standings`,
-        {
-          headers: {
-            "X-Auth-Token": keyToUse,
-          },
-        }
-      );
-
-      console.log("Direct API response status:", response.status);
-
-      if (!response.ok) {
-        throw new Error(`Direct API responded with status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log("Direct API result:", result);
-      setData({ directApi: result });
-    } catch (err) {
-      console.error("Error testing direct API:", err);
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Testing specific endpoint for La Liga
-  const testSpecificEndpoint = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Direct test of the La Liga endpoint
-      const keyToUse = apiKey || process.env.NEXT_PUBLIC_FOOTBALL_API_KEY || "";
-
-      if (!keyToUse) {
-        setError("No API key provided. Please enter an API key.");
-        setLoading(false);
-        return;
-      }
-
-      console.log("Testing specific La Liga endpoint");
-      const response = await fetch(
-        "https://api.football-data.org/v4/competitions/PD/standings",
-        {
-          headers: {
-            "X-Auth-Token": keyToUse,
-          },
-        }
-      );
-
-      console.log("La Liga endpoint response status:", response.status);
-
-      if (!response.ok) {
-        throw new Error(
-          `La Liga endpoint responded with status: ${response.status}`
-        );
-      }
-
-      const result = await response.json();
-      console.log("La Liga endpoint result:", result);
-      setData({ laLigaEndpoint: result });
-    } catch (err) {
-      console.error("Error testing La Liga endpoint:", err);
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Football API Test</h1>
+    <div className="container mx-auto p-6 space-y-6">
+      <h1 className="text-3xl font-bold text-center mb-8">API & PayPal Debug Page</h1>
+      
+      {/* PayPal Environment Check */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CheckCircleIcon className="h-5 w-5 text-green-600" />
+            PayPal Environment Status
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Button onClick={checkPayPalEnv} disabled={loading} className="mb-4">
+            {loading ? "Checking..." : "Check PayPal Environment"}
+          </Button>
+          
+          {paypalEnvStatus && (
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-semibold mb-2">Environment Variables:</h3>
+                <pre className="bg-gray-100 p-3 rounded text-sm overflow-auto">
+                  {JSON.stringify(paypalEnvStatus.environment, null, 2)}
+                </pre>
+              </div>
+              
+              <div>
+                <h3 className="font-semibold mb-2">PayPal Authentication Test:</h3>
+                <pre className="bg-gray-100 p-3 rounded text-sm overflow-auto">
+                  {JSON.stringify(paypalEnvStatus.paypalAuthTest, null, 2)}
+                </pre>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-      {Object.keys(envStatus).length > 0 && (
-        <div className="mb-4 p-3 bg-gray-100 rounded">
-          <h2 className="font-semibold mb-2">Environment Variables:</h2>
-          <ul className="text-sm">
-            {Object.entries(envStatus).map(([name, isSet]) => (
-              <li
-                key={name}
-                className={isSet ? "text-green-600" : "text-red-600"}
-              >
-                {name}: {isSet ? "✓ Set" : "✗ Not set"}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {/* PayPal Script Status */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CheckCircleIcon className="h-5 w-5 text-blue-600" />
+            PayPal Script Status
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Button onClick={checkPayPalScript} className="mb-4">
+            Check PayPal Script
+          </Button>
+          
+          {paypalScriptStatus && (
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-semibold mb-2">Script Status:</h3>
+                <pre className="bg-gray-100 p-3 rounded text-sm overflow-auto">
+                  {JSON.stringify(paypalScriptStatus, null, 2)}
+                </pre>
+              </div>
+              
+              {!paypalScriptStatus.windowPaypal && (
+                <Alert variant="destructive">
+                  <ExclamationTriangleIcon className="h-4 w-4" />
+                  <AlertDescription>
+                    PayPal script is not loaded in the browser. This could be due to:
+                    <ul className="list-disc list-inside mt-2 ml-4">
+                      <li>Ad blockers or security software</li>
+                      <li>Network connectivity issues</li>
+                      <li>Script loading failures</li>
+                      <li>CORS issues</li>
+                    </ul>
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-      <div className="mb-4">
-        <label className="block mb-2 font-medium">API Key (required):</label>
-        <input
-          type="text"
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
-          placeholder="Enter your football-data.org API key"
-          className="border rounded p-2 w-full md:w-96 mb-2"
-        />
-        <p className="text-xs text-gray-600">
-          Get an API key from{" "}
-          <a
-            href="https://www.football-data.org/client/register"
-            target="_blank"
-            className="text-blue-600 underline"
-          >
-            football-data.org
-          </a>
-        </p>
-      </div>
-
-      <div className="mb-4">
-        <label className="block mb-2 font-medium">Select League:</label>
-        <select
-          value={league}
-          onChange={(e) => setLeague(e.target.value)}
-          className="border rounded p-2 w-full md:w-64"
-        >
-          <option value="39">Premier League</option>
-          <option value="140">La Liga</option>
-          <option value="78">Bundesliga</option>
-          <option value="61">Ligue 1</option>
-        </select>
-      </div>
-
-      <div className="mb-4">
-        <label className="flex items-center">
-          <input
-            type="checkbox"
-            checked={useMockData}
-            onChange={(e) => setUseMockData(e.target.checked)}
-            className="mr-2"
-          />
-          <span>Force Mock Data (for internal API test)</span>
-        </label>
-      </div>
-
-      <div className="flex flex-wrap gap-4 mb-6">
-        <button
-          onClick={testEndpoint}
-          disabled={loading}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
-        >
-          Test Internal API
-        </button>
-
-        <button
-          onClick={testDirectApi}
-          disabled={loading || !apiKey}
-          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
-        >
-          Test Direct API
-        </button>
-
-        <button
-          onClick={testSpecificEndpoint}
-          disabled={loading || !apiKey}
-          className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded disabled:opacity-50"
-        >
-          Test La Liga Endpoint
-        </button>
-      </div>
-
-      {loading && <p className="text-gray-600">Loading...</p>}
-
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          <p className="font-bold">Error:</p>
-          <p>{error}</p>
-        </div>
-      )}
-
-      {data && (
-        <div className="mt-4">
-          <h2 className="text-xl font-semibold mb-2">Response Data:</h2>
-          <pre className="bg-gray-100 p-4 rounded overflow-auto max-h-96">
-            {JSON.stringify(data, null, 2)}
-          </pre>
-        </div>
-      )}
+      {/* Troubleshooting Tips */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ExclamationTriangleIcon className="h-5 w-5 text-orange-600" />
+            Troubleshooting Tips
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3 text-sm">
+            <p><strong>If PayPal script is not loading:</strong></p>
+            <ul className="list-disc list-inside ml-4 space-y-1">
+              <li>Disable ad blockers or security software temporarily</li>
+              <li>Check browser console for CORS errors</li>
+              <li>Ensure you're using HTTPS in production</li>
+              <li>Verify PayPal credentials are correct</li>
+            </ul>
+            
+            <p className="mt-4"><strong>If authentication is failing:</strong></p>
+            <ul className="list-disc list-inside ml-4 space-y-1">
+              <li>Check that PAYPAL_MODE matches your credentials</li>
+              <li>Verify client ID and secret are from the same environment</li>
+              <li>Ensure PayPal application is properly configured</li>
+              <li>Check PayPal developer dashboard for any restrictions</li>
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

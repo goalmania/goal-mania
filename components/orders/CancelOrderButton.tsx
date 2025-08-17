@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useI18n } from "@/lib/hooks/useI18n";
 
 interface CancelOrderButtonProps {
   orderId: string;
@@ -12,6 +13,7 @@ export default function CancelOrderButton({ orderId }: CancelOrderButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const router = useRouter();
+  const { t } = useI18n();
 
   const handleCancel = async () => {
     try {
@@ -25,16 +27,16 @@ export default function CancelOrderButton({ orderId }: CancelOrderButtonProps) {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Failed to cancel order");
+        throw new Error(error.message || t('orders.cancelFailed'));
       }
 
-      toast.success("Order cancelled successfully");
+      toast.success(t('orders.cancelSuccess'));
       setShowConfirmation(false);
       router.refresh(); // Refresh the page to update order status
     } catch (error) {
       console.error("Error cancelling order:", error);
       toast.error(
-        error instanceof Error ? error.message : "Failed to cancel order"
+        error instanceof Error ? error.message : t('orders.cancelFailed')
       );
     } finally {
       setIsLoading(false);
@@ -49,7 +51,7 @@ export default function CancelOrderButton({ orderId }: CancelOrderButtonProps) {
         className="text-sm font-medium text-red-600 hover:text-red-500"
         disabled={isLoading}
       >
-        {isLoading ? "Processing..." : "Cancel Order"}
+        {isLoading ? t('common.processing') : t('orders.cancelOrder')}
       </button>
 
       {/* Confirmation Modal */}
@@ -77,12 +79,11 @@ export default function CancelOrderButton({ orderId }: CancelOrderButtonProps) {
                   </div>
                   <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                     <h3 className="text-base font-semibold leading-6 text-gray-900">
-                      Cancel Order
+                      {t('orders.cancelOrder')}
                     </h3>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
-                        Are you sure you want to cancel this order? This action
-                        cannot be undone.
+                        {t('orders.cancelConfirmation')}
                       </p>
                     </div>
                   </div>
@@ -94,7 +95,7 @@ export default function CancelOrderButton({ orderId }: CancelOrderButtonProps) {
                     onClick={handleCancel}
                     disabled={isLoading}
                   >
-                    {isLoading ? "Processing..." : "Yes, Cancel Order"}
+                    {isLoading ? t('common.processing') : t('orders.confirmCancel')}
                   </button>
                   <button
                     type="button"
@@ -102,7 +103,7 @@ export default function CancelOrderButton({ orderId }: CancelOrderButtonProps) {
                     onClick={() => setShowConfirmation(false)}
                     disabled={isLoading}
                   >
-                    No, Keep Order
+                    {t('orders.keepOrder')}
                   </button>
                 </div>
               </div>

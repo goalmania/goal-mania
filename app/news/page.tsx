@@ -3,9 +3,23 @@ import Image from "next/image";
 import Link from "next/link";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
+import { NewsArticle } from "@/types/news";
+import BentoSection from "./BentoSection";
+import NewsCarousel from "./NewsCarousel";
+import { Suspense } from "react";
+import { LoadingFallback } from "@/components/shared/loading-fallback";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
-// Disable caching for this page
-export const dynamic = "force-dynamic";
+// Enable ISR for news listing
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "News | Goal Mania",
@@ -45,102 +59,79 @@ async function getNewsArticles() {
 }
 
 export default async function NewsPage() {
+  // Fetch real articles
   const { featured, regular } = await getNewsArticles();
+  const allArticles: NewsArticle[] = [...featured, ...regular];
 
   return (
-    <div className="bg-white min-h-screen">
-      <div className="container mx-auto px-4 sm:px-6 py-8">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-center text-black">
-          Latest Football News
-        </h1>
+    <Suspense fallback={<LoadingFallback />}>
 
-        {/* Featured Articles */}
-        {featured.length > 0 && (
-          <section className="mb-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {featured.map((article: any) => (
-                <Link
-                  key={article._id}
-                  href={`/news/${article.slug}`}
-                  className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-                >
-                  <div className="relative h-60 sm:h-64 w-full overflow-hidden">
-                    <Image
-                      src={article.image}
-                      alt={article.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                      priority={true}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <span className="inline-block px-3 py-1 mb-2 text-xs font-semibold text-white bg-indigo-600 rounded-full">
-                        Featured
-                      </span>
-                      <h2 className="text-lg sm:text-xl font-bold text-white mb-2">
-                        {article.title}
-                      </h2>
-                      <p className="text-sm text-gray-200 line-clamp-2">
-                        {article.summary}
-                      </p>
+    <div className="bg-gradient-to-b from-white to-[#e6f1ff] min-h-screen flex flex-col">
+      <div className="container mx-auto px-6 sm:px-10 lg:px-20 pt-12 pb-12 flex-1">
+        {/* Breadcrumb */}
+        <div className="mb-6">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>News</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+
+        <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-10 text-left text-[#0e1924] leading-tight">Latest News</h1>
+        {/* Render logic based on article count */}
+        {allArticles.length === 1 && (
+          <div className="w-full max-w-3xl mx-auto">
+            <BentoSection articles={allArticles} />
+          </div>
+        )}
+        {allArticles.length > 1 && (
+          <div className="flex flex-col gap-16">
+            {Array.from({ length: Math.ceil(allArticles.length / 5) }).map((_, i) => {
+              const start = i * 5;
+              const end = start + 5;
+              const sectionArticles = allArticles.slice(start, end);
+              // If only 1 article in this section, render full width
+              if (sectionArticles.length === 1) {
+                return (
+                  <div key={i} className="w-full max-w-3xl mx-auto">
+                    <BentoSection articles={sectionArticles} />
+                    <div className="mt-3 text-right">
+                      <Link href="/news" className="text-xs font-semibold tracking-wide text-[#0e1924] hover:text-[#f5963c] uppercase">See all</Link>
                     </div>
                   </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Regular Articles */}
-        <section>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {regular.map((article: any) => (
-              <Link
-                key={article._id}
-                href={`/news/${article.slug}`}
-                className="group flex flex-col bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
-              >
-                <div className="relative h-40 sm:h-48 w-full">
-                  <Image
-                    src={article.image}
-                    alt={article.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                );
+              }
+              // Alternate reverse for every other section
+              return (
+                <div key={i}>
+                  <BentoSection
+                    articles={sectionArticles}
+                    reverse={i % 2 === 1}
                   />
-                </div>
-                <div className="p-4 flex-1 flex flex-col">
-                  <div className="flex items-center text-xs text-gray-600 mb-2">
-                    <span>
-                      {new Date(article.publishedAt).toLocaleDateString()}
-                    </span>
-                    <span className="mx-2">•</span>
-                    <span>{article.author}</span>
+                  <div className="mt-3 text-right">
+                    <Link href="/news" className="text-xs font-semibold tracking-wide text-[#0e1924] hover:text-[#f5963c] uppercase">See all</Link>
                   </div>
-                  <h2 className="text-base sm:text-lg font-semibold text-black mb-2 group-hover:text-indigo-600 transition-colors duration-200">
-                    {article.title}
-                  </h2>
-                  <p className="text-sm text-gray-700 mb-4 line-clamp-2">
-                    {article.summary}
-                  </p>
-                  <span className="mt-auto text-indigo-600 text-sm font-medium">
-                    Read more
-                  </span>
                 </div>
-              </Link>
-            ))}
+              );
+            })}
           </div>
-        </section>
-
-        {featured.length === 0 && regular.length === 0 && (
-          <div className="text-center py-16">
-            <p className="text-black text-lg">
-              No news articles available yet. Check back soon!
-            </p>
-          </div>
+        )}
+        {allArticles.length === 0 && (
+          <Alert className="max-w-2xl mx-auto">
+            <AlertDescription className="text-center">
+              No news articles found.
+            </AlertDescription>
+          </Alert>
         )}
       </div>
+      <NewsCarousel articles={allArticles} />
     </div>
+    </Suspense>
   );
 }

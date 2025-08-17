@@ -7,21 +7,39 @@ if (!MONGODB_URI) {
   throw new Error("Please define the MONGODB_URI environment variable");
 }
 
-let isConnected = false;
+// Use a global variable to cache the connection in serverless environments
+let cached = (global as any).mongoose;
+
+if (!cached) {
+  cached = (global as any).mongoose = { conn: null, promise: null };
+}
 
 const connectDB = async () => {
-  if (isConnected) return;
+  if (cached.conn) return cached.conn;
 
-  try {
-    const db = await mongoose.connect(MONGODB_URI, {
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URI, {
       dbName: "GoalMania",
+      // Connection pool optimization
+      maxPoolSize: 10, // Maintain up to 10 socket connections
+      serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+      socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+      bufferCommands: false, // Disable mongoose buffering
+      // Performance optimizations
+      maxIdleTimeMS: 30000, // Close connections after 30 seconds of inactivity
+      // Compression
+      compressors: ["zlib"],
+      // Read preference for better load distribution
+      readPreference: "secondaryPreferred",
+    }).then((mongoose) => {
+      console.log("✅ MongoDB connected with optimized settings");
+      // Set default query options for better performance
+      mongoose.set("strictQuery", false);
+      return mongoose;
     });
-    isConnected = db.connections[0].readyState === 1;
-    console.log("✅ MongoDB connected with Mongoose");
-  } catch (error) {
-    console.error("❌ MongoDB connection error:", error);
-    throw error;
   }
+  cached.conn = await cached.promise;
+  return cached.conn;
 };
 
 export default connectDB;

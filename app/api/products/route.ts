@@ -4,14 +4,17 @@ import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { z } from "zod";
+import { ProductCache } from "@/lib/cache";
 import {
-  VALID_PATCHES,
   VALID_ADULT_SIZES,
   VALID_KID_SIZES,
   PRODUCT_CATEGORIES,
 } from "@/lib/types/product";
 import mongoose from "mongoose";
 import { NextRequest } from "next/server";
+
+// Enable ISR caching for this route handler
+export const revalidate = 600;
 
 // Schema for input validation
 const productSchema = z.object({
@@ -28,22 +31,23 @@ const productSchema = z.object({
     .min(0, "Stock quantity cannot be negative")
     .default(0),
   images: z.array(z.string()).min(1, "At least one image is required"),
+  videos: z.array(z.string()).optional(),
   hasShorts: z.boolean().default(true),
   hasSocks: z.boolean().default(true),
   hasPlayerEdition: z.boolean().default(true),
+  isMysteryBox: z.boolean().default(false),
   adultSizes: z
     .array(z.enum(["S", "M", "L", "XL", "XXL", "3XL"]))
     .default(["S", "M", "L", "XL", "XXL"]),
   kidsSizes: z.array(z.enum(["XS", "S", "M", "L", "XL"])).default([]),
   category: z.enum(PRODUCT_CATEGORIES),
-  availablePatches: z
-    .array(z.enum(["champions-league", "serie-a", "coppa-italia"]))
-    .default([]),
   allowsNumberOnShirt: z.boolean().default(true),
   allowsNameOnShirt: z.boolean().default(true),
   isActive: z.boolean().default(true),
   feature: z.boolean().default(true),
   slug: z.string().optional(),
+  // Patch relationships
+  patchIds: z.array(z.string()).optional().default([]),
 });
 
 export async function GET(req: NextRequest) {
@@ -51,10 +55,37 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const category = searchParams.get("category") || "all";
     const page = parseInt(searchParams.get("page") || "1", 10);
-    const limit = parseInt(searchParams.get("limit") || "10", 10);
+    const limit = parseInt(searchParams.get("limit") || "20", 10);
     const search = searchParams.get("search") || "";
     const featured = searchParams.get("feature") === "true";
     const includeInactive = searchParams.get("includeInactive") === "true";
+    const sortBy = searchParams.get("sortBy") || "createdAt";
+    const sortOrder = searchParams.get("sortOrder") || "desc";
+
+    // Validate pagination parameters
+    const validatedPage = Math.max(1, page);
+    const validatedLimit = Math.min(100, Math.max(1, limit)); // Cap at 100 items per page
+
+    // Create cache key for this specific query
+    const cacheKey = ProductCache.createKey(
+      category, 
+      validatedPage, 
+      validatedLimit, 
+      `${search}-${featured}-${includeInactive}-${sortBy}-${sortOrder}`
+    );
+    
+    // Check cache first (but skip cache for search queries and admin queries)
+    if (!search && !includeInactive) {
+      const cachedData = ProductCache.get(cacheKey);
+      if (cachedData) {
+        return NextResponse.json(cachedData, {
+          headers: {
+            'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1200',
+            'X-Cache': 'HIT'
+          }
+        });
+      }
+    }
 
     await connectDB();
 
@@ -81,9 +112,13 @@ export async function GET(req: NextRequest) {
       query.category = category;
     }
 
-    // Add search filter if provided
+    // Add search filter if provided - search in title, description, and category
     if (search) {
-      query.title = { $regex: search, $options: "i" };
+      query.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+      ];
     }
 
     // Add featured filter if requested
@@ -91,33 +126,73 @@ export async function GET(req: NextRequest) {
       query.feature = true;
     }
 
+    // Add mystery box filter if requested
+    const type = searchParams.get("type");
+    if (type === "mysteryBox") {
+      query.isMysteryBox = true;
+      console.log("Mystery Box filter applied - query.isMysteryBox = true");
+    }
+
     console.log("Products API Query:", JSON.stringify(query, null, 2));
 
-    // Count total documents for pagination
-    const totalProducts = await Product.countDocuments(query);
+    // Build sort object
+    const sortObject: any = {};
+    sortObject[sortBy] = sortOrder === "asc" ? 1 : -1;
 
-    // Fetch products with pagination
-    const products = await Product.find(query)
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
+    // Use Promise.all for parallel execution of count and find operations
+    const [totalProducts, products] = await Promise.all([
+      Product.countDocuments(query),
+      Product.find(query)
+        .sort(sortObject)
+        .skip((validatedPage - 1) * validatedLimit)
+        .limit(validatedLimit)
+        .lean()
+        .select('_id title description basePrice retroPrice shippingPrice stockQuantity images isRetro hasShorts hasSocks category allowsNumberOnShirt allowsNameOnShirt isActive feature slug isMysteryBox createdAt')
+    ]);
 
     console.log(`Found ${products.length} products matching the criteria`);
 
+    // Calculate pagination info
+    const totalPages = Math.ceil(totalProducts / validatedLimit);
+    const hasNextPage = validatedPage < totalPages;
+    const hasPreviousPage = validatedPage > 1;
+
     // For backward compatibility, return just the products array if not requesting pagination info
     if (req.nextUrl.searchParams.has("noPagination")) {
-      return NextResponse.json(products);
+      return NextResponse.json(products, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+        },
+      });
     }
 
-    return NextResponse.json({
+    const response = {
       products,
       pagination: {
         total: totalProducts,
-        page,
-        limit,
-        totalPages: Math.ceil(totalProducts / limit),
+        page: validatedPage,
+        limit: validatedLimit,
+        totalPages,
+        hasNextPage,
+        hasPreviousPage,
       },
+    };
+
+    // Cache the response for non-search, non-admin queries
+    if (!search && !includeInactive) {
+      ProductCache.set(cacheKey, response);
+    }
+
+    // Add appropriate cache headers based on the request type
+    const cacheHeaders = {
+      'Cache-Control': (search || includeInactive)
+        ? 'no-cache, no-store, must-revalidate' // Don't cache search results or admin-filtered results
+        : 'public, s-maxage=600, stale-while-revalidate=1200', // Cache regular product lists for 10 minutes
+      'X-Cache': 'MISS'
+    };
+
+    return NextResponse.json(response, {
+      headers: cacheHeaders,
     });
   } catch (error) {
     console.error("[PRODUCTS_GET]", error);
@@ -133,6 +208,10 @@ export async function POST(request: Request) {
     const session = await getServerSession(authOptions);
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const role = (session.user as any)?.role as string | undefined;
+    if (role !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     await connectDB();
@@ -246,6 +325,23 @@ export async function POST(request: Request) {
     // Validate input
     try {
       const validatedData = productSchema.parse(processedBody);
+
+      // Handle patch relationships
+      if (validatedData.patchIds && validatedData.patchIds.length > 0) {
+        // Validate that all patchIds exist
+        const Patch = require('@/lib/models/Patch').default;
+        const existingPatches = await Patch.find({ 
+          _id: { $in: validatedData.patchIds },
+          isActive: true 
+        });
+        
+        if (existingPatches.length !== validatedData.patchIds.length) {
+          return NextResponse.json(
+            { error: "One or more patches not found or inactive" },
+            { status: 400 }
+          );
+        }
+      }
 
       // Generate slug from title if not provided
       if (!validatedData.slug) {

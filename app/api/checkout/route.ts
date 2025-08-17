@@ -7,7 +7,7 @@ import OrderDetails from "@/lib/models/OrderDetails";
 
 // Initialize Stripe with the secret key from environment variables
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-04-30.basil",
+  apiVersion: "2025-06-30.basil",
 });
 
 interface CartItem {
@@ -93,7 +93,9 @@ export async function POST(req: NextRequest) {
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(finalAmount * 100), // Convert to cents
         currency: "eur",
-        payment_method_types: ["card"],
+        automatic_payment_methods: {
+          enabled: true,
+        },
         metadata: {
           userId: session.user.id || "",
           addressId,

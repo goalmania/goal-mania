@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useI18n } from "@/lib/hooks/useI18n";
 
 interface ApiConfigStatus {
   hasApiKey: boolean;
@@ -14,6 +15,7 @@ export function ApiConfigCheck() {
   const [isLoading, setIsLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useI18n();
 
   useEffect(() => {
     async function checkApiConfig() {
@@ -28,21 +30,21 @@ export function ApiConfigCheck() {
         const data = await response.json();
         setStatus(data.environmentStatus);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error occurred");
+        setError(err instanceof Error ? err.message : t('apiConfig.unknownError'));
       } finally {
         setIsLoading(false);
       }
     }
 
     checkApiConfig();
-  }, []);
+  }, [t]);
 
   if (isLoading) {
     return (
       <div className="fixed bottom-4 right-4 bg-white rounded-lg shadow-lg p-4 z-50 max-w-sm">
         <div className="flex items-center">
           <div className="animate-spin h-4 w-4 border-2 border-blue-500 rounded-full border-t-transparent mr-2"></div>
-          <span>Verificando configurazione API...</span>
+          <span>{t('apiConfig.checking')}</span>
         </div>
       </div>
     );
@@ -54,7 +56,7 @@ export function ApiConfigCheck() {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <div className="mr-2 text-red-500">⚠️</div>
-            <span>Errore durante la verifica API: {error}</span>
+            <span>{t('apiConfig.error')}: {error}</span>
           </div>
           <button
             onClick={() => setIsExpanded(false)}
@@ -79,10 +81,10 @@ export function ApiConfigCheck() {
           <div className="mr-2 text-amber-500">⚠️</div>
           <span className="font-medium">
             {!status.hasApiKey
-              ? "API Football: Chiave API non configurata"
+              ? t('apiConfig.noApiKey')
               : !status.isApiKeyValid
-              ? "API Football: Chiave API non valida"
-              : "API Football: Problemi di configurazione"}
+              ? t('apiConfig.invalidApiKey')
+              : t('apiConfig.configurationIssues')}
           </span>
         </div>
         <div className="flex space-x-2">
@@ -90,7 +92,7 @@ export function ApiConfigCheck() {
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-amber-700 hover:text-amber-900"
           >
-            {isExpanded ? "Meno dettagli" : "Più dettagli"}
+            {isExpanded ? t('apiConfig.lessDetails') : t('apiConfig.moreDetails')}
           </button>
           <button
             onClick={() => setIsExpanded(false)}
@@ -103,53 +105,53 @@ export function ApiConfigCheck() {
 
       {isExpanded && (
         <div className="mt-3 text-sm border-t border-amber-200 pt-3">
-          <p className="mb-2">Stato attuale:</p>
+          <p className="mb-2">{t('apiConfig.currentStatus')}:</p>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              Chiave API configurata:{" "}
+              {t('apiConfig.apiKeyConfigured')}:{" "}
               <span
                 className={status.hasApiKey ? "text-green-600" : "text-red-600"}
               >
-                {status.hasApiKey ? "Sì" : "No"}
+                {status.hasApiKey ? t('common.yes') : t('common.no')}
               </span>
             </li>
             {status.hasApiKey && (
               <li>
-                Chiave API valida:{" "}
+                {t('apiConfig.apiKeyValid')}:{" "}
                 <span
                   className={
                     status.isApiKeyValid ? "text-green-600" : "text-red-600"
                   }
                 >
-                  {status.isApiKeyValid ? "Sì" : "No"}
+                  {status.isApiKeyValid ? t('common.yes') : t('common.no')}
                 </span>
               </li>
             )}
           </ul>
 
           <div className="mt-3">
-            <p className="mb-2 font-medium">Per risolvere:</p>
+            <p className="mb-2 font-medium">{t('apiConfig.toResolve')}:</p>
             <ol className="list-decimal pl-5 space-y-1">
               <li>
-                Aggiungi o aggiorna la variabile{" "}
+                {t('apiConfig.addVariable')}{" "}
                 <code className="bg-amber-100 px-1 rounded">FOOTBALL_API</code>{" "}
-                nel file{" "}
+                {t('apiConfig.inFile')}{" "}
                 <code className="bg-amber-100 px-1 rounded">.env.local</code>{" "}
-                per uso server-side e{" "}
+                {t('apiConfig.forServerSide')}{" "}
                 <code className="bg-amber-100 px-1 rounded">
                   NEXT_PUBLIC_FOOTBALL_API_KEY
                 </code>{" "}
-                per uso client-side.
+                {t('apiConfig.forClientSide')}.
               </li>
               <li>
-                Assicurati di utilizzare l&apos;intestazione{" "}
+                {t('apiConfig.useHeader')}{" "}
                 <code className="bg-amber-100 px-1 rounded">
                   x-apisports-key
                 </code>{" "}
-                nelle richieste API
+                {t('apiConfig.inApiRequests')}
               </li>
               <li>
-                Ottieni una chiave API da{" "}
+                {t('apiConfig.getApiKey')}{" "}
                 <a
                   href="https://dashboard.api-football.com/"
                   target="_blank"
@@ -160,8 +162,7 @@ export function ApiConfigCheck() {
                 </a>
               </li>
               <li>
-                Riavvia il server di sviluppo dopo aver configurato la chiave
-                API
+                {t('apiConfig.restartServer')}
               </li>
             </ol>
           </div>

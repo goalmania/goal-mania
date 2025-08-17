@@ -7,53 +7,860 @@ import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { OrderStatus } from "./OrderStatus";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon, EyeIcon, TruckIcon } from "@heroicons/react/24/outline";
+import { z } from "zod";
+import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type UniqueIdentifier,
+} from "@dnd-kit/core";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import {
+  IconChevronDown,
+  IconChevronLeft,
+  IconChevronRight,
+  IconChevronsLeft,
+  IconChevronsRight,
+  IconDotsVertical,
+  IconLayoutColumns,
+  IconGripVertical,
+  IconCircleCheckFilled,
+  IconLoader,
+} from "@tabler/icons-react";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  Row,
+  SortingState,
+  useReactTable,
+  VisibilityState,
+} from "@tanstack/react-table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 
-interface OrderItem {
-  productId: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image?: string;
-  customization?: {
-    name?: string;
-    number?: string;
-    selectedPatches?: Array<{
-      id: string;
-      name: string;
-      image: string;
-      price?: number;
-    }>;
-    includeShorts?: boolean;
-    includeSocks?: boolean;
-    isPlayerEdition?: boolean;
-    size?: string;
-    isKidSize?: boolean;
-    hasCustomization?: boolean;
-  };
+// Schema for order data
+const orderSchema = z.object({
+  _id: z.string(),
+  userId: z.string(),
+  items: z.array(z.object({
+    productId: z.string(),
+    name: z.string(),
+    price: z.number(),
+    quantity: z.number(),
+    image: z.string().optional(),
+    customization: z.object({
+      name: z.string().optional(),
+      number: z.string().optional(),
+      selectedPatches: z.array(z.object({
+        id: z.string(),
+        name: z.string(),
+        image: z.string(),
+        price: z.number().optional(),
+      })).optional(),
+      includeShorts: z.boolean().optional(),
+      includeSocks: z.boolean().optional(),
+      isPlayerEdition: z.boolean().optional(),
+      size: z.string().optional(),
+      isKidSize: z.boolean().optional(),
+      hasCustomization: z.boolean().optional(),
+    }).optional(),
+  })),
+  amount: z.number(),
+  status: z.enum(["pending", "processing", "shipped", "delivered", "cancelled"]),
+  shippingAddress: z.object({
+    street: z.string(),
+    city: z.string(),
+    state: z.string(),
+    postalCode: z.string(),
+    country: z.string(),
+  }),
+  coupon: z.object({
+    code: z.string(),
+    discountPercentage: z.number(),
+    discountAmount: z.number(),
+  }).optional(),
+  trackingCode: z.string().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
+type Order = z.infer<typeof orderSchema>;
+
+// Create a separate component for the drag handle
+function DragHandle({ id }: { id: string }) {
+  const { attributes, listeners } = useSortable({
+    id,
+  });
+
+  return (
+    <Button
+      {...attributes}
+      {...listeners}
+      variant="ghost"
+      size="icon"
+      className="text-muted-foreground size-7 hover:bg-transparent"
+    >
+      <IconGripVertical className="text-muted-foreground size-3" />
+      <span className="sr-only">Drag to reorder</span>
+    </Button>
+  );
 }
 
-interface Order {
-  _id: string;
-  userId: string;
-  items: OrderItem[];
-  amount: number;
-  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
-  shippingAddress: {
-    street: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    country: string;
+// Draggable row component
+function DraggableRow({ row }: { row: Row<Order> }) {
+  const { transform, transition, setNodeRef, isDragging } = useSortable({
+    id: row.original._id,
+  });
+
+  return (
+    <TableRow
+      data-state={row.getIsSelected() && "selected"}
+      data-dragging={isDragging}
+      ref={setNodeRef}
+      className="relative z-0 data-[dragging=true]:z-10 data-[dragging=true]:opacity-80"
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition: transition,
+      }}
+    >
+      {row.getVisibleCells().map((cell) => (
+        <TableCell key={cell.id}>
+          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        </TableCell>
+      ))}
+    </TableRow>
+  );
+}
+
+// Order details dialog component
+function OrderDetailsDialog({ order, isOpen, onClose }: { 
+  order: Order | null; 
+  isOpen: boolean; 
+  onClose: () => void; 
+}) {
+  if (!order) return null;
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
-  coupon?: {
-    code: string;
-    discountPercentage: number;
-    discountAmount: number;
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "processing":
+        return "bg-blue-100 text-blue-800";
+      case "shipped":
+        return "bg-purple-100 text-purple-800";
+      case "delivered":
+        return "bg-green-100 text-green-800";
+      case "cancelled":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
   };
-  trackingCode?: string;
-  createdAt: string;
-  updatedAt: string;
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-6 sm:p-8">
+        <DialogHeader className="pb-6">
+          <DialogTitle className="text-2xl sm:text-3xl">Order Details</DialogTitle>
+          <DialogDescription className="text-base">
+            Order placed on {formatDate(order.createdAt)}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-8">
+          {/* Order Info */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Order ID</Label>
+              <p className="text-sm font-mono bg-muted p-3 rounded-md">{order._id}</p>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Status</Label>
+              <Badge className={`${getStatusColor(order.status)} text-sm px-3 py-1`}>
+                {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+              </Badge>
+            </div>
+          </div>
+
+          <Separator className="my-8" />
+
+          {/* Items */}
+          <div className="space-y-4">
+            <Label className="text-lg font-semibold">Items</Label>
+            <div className="space-y-6">
+              {order.items.map((item, index) => (
+                <div key={index} className="flex flex-col">
+                  <div className="flex items-start space-x-4">
+                    {item.image && (
+                      <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden border flex-shrink-0">
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          fill
+                          style={{ objectFit: "cover" }}
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-base sm:text-lg mb-2">{item.name}</p>
+                      <p className="text-sm text-muted-foreground mb-2">
+                        €{item.price.toFixed(2)} x {item.quantity}
+                      </p>
+                      <p className="font-semibold text-lg">
+                        €{(item.price * item.quantity).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+
+                  {item.customization && (
+                    <div className="mt-4 ml-0 sm:ml-24 bg-muted/50 p-4 sm:p-6 rounded-lg">
+                      <h4 className="text-sm font-semibold mb-4">Customizations</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                        {item.customization.size && (
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium">Size:</span>
+                            <span className="bg-background px-3 py-1 rounded-md">
+                              {item.customization.size}{" "}
+                              {item.customization.isKidSize ? "(Kid)" : ""}
+                            </span>
+                          </div>
+                        )}
+                        {item.customization.name && (
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium">Name:</span>
+                            <span className="bg-background px-3 py-1 rounded-md">
+                              {item.customization.name}
+                            </span>
+                          </div>
+                        )}
+                        {item.customization.number && (
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium">Number:</span>
+                            <span className="bg-background px-3 py-1 rounded-md">
+                              {item.customization.number}
+                            </span>
+                          </div>
+                        )}
+                        {item.customization.isPlayerEdition && (
+                          <div className="flex justify-between items-center sm:col-span-2">
+                            <span className="font-medium">Player Edition:</span>
+                            <Badge variant="secondary">Yes</Badge>
+                          </div>
+                        )}
+                        {item.customization.includeShorts && (
+                          <div className="flex justify-between items-center sm:col-span-2">
+                            <span className="font-medium">Includes Shorts:</span>
+                            <Badge variant="secondary">Yes</Badge>
+                          </div>
+                        )}
+                        {item.customization.includeSocks && (
+                          <div className="flex justify-between items-center sm:col-span-2">
+                            <span className="font-medium">Includes Socks:</span>
+                            <Badge variant="secondary">Yes</Badge>
+                          </div>
+                        )}
+                        {item.customization.selectedPatches &&
+                          item.customization.selectedPatches.length > 0 && (
+                            <div className="sm:col-span-2 space-y-3">
+                              <p className="font-medium">Patches:</p>
+                              <div className="flex flex-wrap gap-2">
+                                {item.customization.selectedPatches.map(
+                                  (patch) => (
+                                    <div
+                                      key={patch.id}
+                                      className="flex items-center bg-background p-2 px-3 rounded-md border"
+                                    >
+                                      <span className="text-sm">
+                                        {patch.name}
+                                      </span>
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <Separator className="my-8" />
+
+          {/* Shipping Address */}
+          <div className="space-y-4">
+            <Label className="text-lg font-semibold">Shipping Address</Label>
+            <div className="bg-muted/30 p-4 sm:p-6 rounded-lg space-y-2 text-sm">
+              <p className="font-medium">{order.shippingAddress.street}</p>
+              <p>
+                {order.shippingAddress.city}, {order.shippingAddress.state}{" "}
+                {order.shippingAddress.postalCode}
+              </p>
+              <p className="font-medium">{order.shippingAddress.country}</p>
+            </div>
+          </div>
+
+          {/* Tracking Information */}
+          {order.trackingCode && (
+            <>
+              <Separator className="my-8" />
+              <div className="space-y-4">
+                <Label className="text-lg font-semibold">Tracking Information</Label>
+                <div className="bg-blue-50 dark:bg-blue-950/30 p-4 sm:p-6 rounded-lg space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <TruckIcon className="h-6 w-6 text-blue-500 flex-shrink-0" />
+                    <div>
+                      <p className="text-blue-700 dark:text-blue-300 font-semibold">
+                        Tracking Number: {order.trackingCode}
+                      </p>
+                      <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">
+                        You can use this tracking number to follow your package's journey.
+                      </p>
+                    </div>
+                  </div>
+                  <Button asChild className="w-full sm:w-auto">
+                    <a
+                      href={`https://www.packagetrackr.com/track/${order.trackingCode}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Track My Package
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+
+          <Separator className="my-8" />
+
+          {/* Payment Summary */}
+          <div className="space-y-4">
+            <Label className="text-lg font-semibold">Payment Summary</Label>
+            <div className="bg-muted/30 p-4 sm:p-6 rounded-lg space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-base">Subtotal</span>
+                <span className="text-base font-medium">€{order.amount.toFixed(2)}</span>
+              </div>
+              {order.coupon && (
+                <div className="flex justify-between items-center text-green-600 dark:text-green-400">
+                  <span className="text-sm">
+                    Discount ({order.coupon.code} - {order.coupon.discountPercentage}%)
+                  </span>
+                  <span className="text-sm font-medium">-€{order.coupon.discountAmount.toFixed(2)}</span>
+                </div>
+              )}
+              <Separator />
+              <div className="flex justify-between items-center">
+                <span className="text-xl font-bold">Total</span>
+                <span className="text-xl font-bold">€{order.amount.toFixed(2)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function OrdersDataTable({ orders }: { orders: Order[] }) {
+  const [data, setData] = useState(() => orders);
+  const [rowSelection, setRowSelection] = useState({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, {}),
+    useSensor(TouchSensor, {}),
+    useSensor(KeyboardSensor, {})
+  );
+
+  const dataIds = React.useMemo<UniqueIdentifier[]>(
+    () => data?.map(({ _id }) => _id) || [],
+    [data]
+  );
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "processing":
+        return "bg-blue-100 text-blue-800 border-blue-200";
+      case "shipped":
+        return "bg-purple-100 text-purple-800 border-purple-200";
+      case "delivered":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "cancelled":
+        return "bg-red-100 text-red-800 border-red-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "pending":
+        return <IconLoader className="h-3 w-3 mr-1" />;
+      case "processing":
+        return <IconLoader className="h-3 w-3 mr-1" />;
+      case "shipped":
+        return <TruckIcon className="h-3 w-3 mr-1" />;
+      case "delivered":
+        return <IconCircleCheckFilled className="h-3 w-3 mr-1 fill-green-500" />;
+      case "cancelled":
+        return <XMarkIcon className="h-3 w-3 mr-1" />;
+      default:
+        return null;
+    }
+  };
+
+  const columns: ColumnDef<Order>[] = [
+    {
+      id: "drag",
+      header: () => null,
+      cell: ({ row }) => <DragHandle id={row.original._id} />,
+    },
+    {
+      id: "select",
+      header: ({ table }) => (
+        <div className="flex items-center justify-center">
+          <Checkbox
+            checked={
+              table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && "indeterminate")
+            }
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            aria-label="Select all"
+          />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="flex items-center justify-center">
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+          />
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "_id",
+      header: "Order ID",
+      cell: ({ row }) => (
+        <div className="font-mono text-sm">
+          #{row.original._id.substring(row.original._id.length - 8)}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "createdAt",
+      header: "Date",
+      cell: ({ row }) => (
+        <div className="text-sm">
+          {formatDate(row.original.createdAt)}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        const status = row.original.status;
+        return (
+          <Badge className={`${getStatusColor(status)} border`}>
+            {getStatusIcon(status)}
+            <span className="hidden sm:inline">{status.charAt(0).toUpperCase() + status.slice(1)}</span>
+            <span className="sm:hidden">{status.charAt(0).toUpperCase()}</span>
+          </Badge>
+        );
+      },
+    },
+    {
+      accessorKey: "amount",
+      header: "Total",
+      cell: ({ row }) => (
+        <div className="font-medium text-sm">
+          €{Number(row.original.amount).toFixed(2)}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "items",
+      header: "Items",
+      cell: ({ row }) => (
+        <div className="text-sm text-muted-foreground">
+          <span className="hidden sm:inline">{row.original.items.length} item{row.original.items.length !== 1 ? 's' : ''}</span>
+          <span className="sm:hidden">{row.original.items.length}</span>
+        </div>
+      ),
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <IconDotsVertical className="h-4 w-4" />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => {
+              setSelectedOrder(row.original);
+              setIsDetailsOpen(true);
+            }}>
+              <EyeIcon className="mr-2 h-4 w-4" />
+              View Details
+            </DropdownMenuItem>
+            {row.original.status === "shipped" && row.original.trackingCode && (
+              <DropdownMenuItem asChild>
+                <a
+                  href={`https://www.packagetrackr.com/track/${row.original.trackingCode}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <TruckIcon className="mr-2 h-4 w-4" />
+                  Track Package
+                </a>
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+  ];
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      sorting,
+      columnVisibility,
+      rowSelection,
+      columnFilters,
+      pagination,
+    },
+    getRowId: (row) => row._id,
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+  });
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (active && over && active.id !== over.id) {
+      setData((data) => {
+        const oldIndex = dataIds.indexOf(active.id);
+        const newIndex = dataIds.indexOf(over.id);
+        return arrayMove(data, oldIndex, newIndex);
+      });
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header with search and filters */}
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+        <div className="flex-1">
+          <div className="relative max-w-md">
+            <Input
+              placeholder="Search orders by ID..."
+              value={(table.getColumn("_id")?.getFilterValue() as string) ?? ""}
+              onChange={(event) =>
+                table.getColumn("_id")?.setFilterValue(event.target.value)
+              }
+              className="w-full"
+            />
+          </div>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Select
+            value={(table.getColumn("status")?.getFilterValue() as string) ?? "all"}
+            onValueChange={(value) =>
+              table.getColumn("status")?.setFilterValue(value === "all" ? "" : value)
+            }
+          >
+            <SelectTrigger className="w-full sm:w-40">
+              <SelectValue placeholder="All Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="processing">Processing</SelectItem>
+              <SelectItem value="shipped">Shipped</SelectItem>
+              <SelectItem value="delivered">Delivered</SelectItem>
+              <SelectItem value="cancelled">Cancelled</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="w-full sm:w-auto">
+                <IconLayoutColumns className="mr-2 h-4 w-4" />
+                <span className="hidden sm:inline">Columns</span>
+                <span className="sm:hidden">View</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+
+      {/* Orders Table */}
+      <div className="rounded-lg border bg-card">
+        <DndContext
+          collisionDetection={closestCenter}
+          modifiers={[restrictToVerticalAxis]}
+          onDragEnd={handleDragEnd}
+          sensors={sensors}
+        >
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        <TableHead key={header.id} className="px-4 py-3">
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                        </TableHead>
+                      );
+                    })}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  <SortableContext
+                    items={dataIds}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {table.getRowModel().rows.map((row) => (
+                      <DraggableRow key={row.id} row={row} />
+                    ))}
+                  </SortableContext>
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-32 text-center"
+                    >
+                      <div className="flex flex-col items-center justify-center space-y-2">
+                        <p className="text-muted-foreground">No orders found.</p>
+                        <p className="text-sm text-muted-foreground">Try adjusting your search or filters.</p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </DndContext>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
+        <div className="flex-1 text-sm text-muted-foreground text-center sm:text-left">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
+        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+          <div className="flex items-center space-x-2">
+            <Label htmlFor="rows-per-page" className="text-sm font-medium hidden sm:block">
+              Rows per page
+            </Label>
+            <Select
+              value={`${table.getState().pagination.pageSize}`}
+              onValueChange={(value) => {
+                table.setPageSize(Number(value));
+              }}
+            >
+              <SelectTrigger className="h-8 w-[70px]">
+                <SelectValue placeholder={table.getState().pagination.pageSize} />
+              </SelectTrigger>
+              <SelectContent side="top">
+                {[10, 20, 30, 40, 50].map((pageSize) => (
+                  <SelectItem key={pageSize} value={`${pageSize}`}>
+                    {pageSize}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </div>
+            <div className="flex items-center space-x-1">
+              <Button
+                variant="outline"
+                className="hidden h-8 w-8 p-0 lg:flex"
+                onClick={() => table.setPageIndex(0)}
+                disabled={!table.getCanPreviousPage()}
+              >
+                <span className="sr-only">Go to first page</span>
+                <IconChevronsLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                className="h-8 w-8 p-0"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+              >
+                <span className="sr-only">Go to previous page</span>
+                <IconChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                className="h-8 w-8 p-0"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+              >
+                <span className="sr-only">Go to next page</span>
+                <IconChevronRight className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                className="hidden h-8 w-8 p-0 lg:flex"
+                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                disabled={!table.getCanNextPage()}
+              >
+                <span className="sr-only">Go to last page</span>
+                <IconChevronsRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Order Details Dialog */}
+      <OrderDetailsDialog
+        order={selectedOrder}
+        isOpen={isDetailsOpen}
+        onClose={() => {
+          setIsDetailsOpen(false);
+          setSelectedOrder(null);
+        }}
+      />
+    </div>
+  );
 }
 
 function OrdersContent() {
@@ -62,8 +869,6 @@ function OrdersContent() {
   const searchParams = useSearchParams();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [refreshAttempts, setRefreshAttempts] = useState(0);
   const isSuccess = searchParams?.get("success") === "true";
   const viewOrderId = searchParams?.get("view");
@@ -108,18 +913,6 @@ function OrdersContent() {
     }
   }, [isSuccess, orders.length, refreshAttempts]);
 
-  // Open order details when view parameter is present
-  useEffect(() => {
-    if (viewOrderId && orders.length > 0) {
-      const orderToView = orders.find((order) => order._id === viewOrderId);
-      if (orderToView) {
-        handleViewDetails(orderToView);
-        // Clear the view parameter after opening the modal
-        router.replace("/account/orders", { scroll: false });
-      }
-    }
-  }, [viewOrderId, orders, router]);
-
   const fetchOrders = async () => {
     try {
       setIsLoading(true);
@@ -139,58 +932,9 @@ function OrdersContent() {
     }
   };
 
-  const handleViewDetails = (order: Order) => {
-    setSelectedOrder(order);
-    setIsDetailsModalOpen(true);
-  };
-
-  const handleCancelOrder = async (orderId: string) => {
-    try {
-      const response = await fetch(`/api/orders/${orderId}/cancel`, {
-        method: "POST",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to cancel order");
-      }
-
-      toast.success("Order cancelled successfully");
-      fetchOrders();
-      setIsDetailsModalOpen(false);
-    } catch (error) {
-      console.error("Error cancelling order:", error);
-      toast.error("Failed to cancel order");
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "bg-yellow-100 text-yellow-800";
-      case "processing":
-        return "bg-blue-100 text-blue-800";
-      case "shipped":
-        return "bg-purple-100 text-purple-800";
-      case "delivered":
-        return "bg-green-100 text-green-800";
-      case "cancelled":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
   if (status === "loading" || isLoading) {
     return (
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="flex justify-center items-center h-64">
           <div className="loading loading-spinner loading-lg"></div>
         </div>
@@ -199,389 +943,38 @@ function OrdersContent() {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6 text-black">My Orders</h1>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
+      <div className="space-y-2">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">My Orders</h1>
+        <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
+          View and track your order history with detailed information about each purchase.
+        </p>
+      </div>
 
       {/* Show order status when success=true */}
       <OrderStatus />
 
       {orders.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
-          <p className="text-gray-600 mb-4">
-            You haven't placed any orders yet.
-          </p>
-          <button
-            onClick={() => router.push("/shop")}
-            className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
-          >
-            Browse Products
-          </button>
+        <div className="bg-card rounded-xl border p-8 sm:p-12 text-center max-w-md mx-auto">
+          <div className="space-y-4">
+            <div className="w-16 h-16 mx-auto bg-muted rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-lg sm:text-xl font-semibold">No Orders Yet</h3>
+              <p className="text-muted-foreground">
+                You haven't placed any orders yet. Start shopping to see your order history here.
+              </p>
+            </div>
+            <Button onClick={() => router.push("/shop")} className="w-full sm:w-auto">
+              Browse Products
+            </Button>
+          </div>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider"
-                  >
-                    Order ID
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider"
-                  >
-                    Date
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider"
-                  >
-                    Status
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider"
-                  >
-                    Total
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider"
-                  >
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {orders.map((order) => (
-                  <tr key={order._id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
-                      {order._id.substring(0, 8)}...
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
-                      {formatDate(order.createdAt)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
-                          order.status
-                        )}`}
-                      >
-                        {order.status.charAt(0).toUpperCase() +
-                          order.status.slice(1)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
-                      €{order.amount.toFixed(2)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex space-x-3">
-                        <button
-                          onClick={() => handleViewDetails(order)}
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          View Details
-                        </button>
-
-                        {order.status === "shipped" && order.trackingCode && (
-                          <a
-                            href={`https://www.packagetrackr.com/track/${order.trackingCode}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition-colors"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-4 w-4 mr-1"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z" />
-                              <path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" />
-                            </svg>
-                            Track Package
-                          </a>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* Order Details Modal */}
-      {isDetailsModalOpen && selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg max-w-3xl w-full p-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-black">
-                Order Details
-              </h2>
-              <button
-                onClick={() => setIsDetailsModalOpen(false)}
-                className="text-black hover:text-gray-700"
-              >
-                <XMarkIcon className="h-5 w-5" />
-              </button>
-            </div>
-
-            <div className="mb-4">
-              <p className="text-sm text-black">
-                Order placed on {formatDate(selectedOrder.createdAt)}
-              </p>
-              <p className="text-sm text-black">
-                Order ID: <span className="font-mono">{selectedOrder._id}</span>
-              </p>
-              <div className="mt-2">
-                <span
-                  className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
-                    selectedOrder.status
-                  )}`}
-                >
-                  {selectedOrder.status.charAt(0).toUpperCase() +
-                    selectedOrder.status.slice(1)}
-                </span>
-              </div>
-            </div>
-
-            <div className="border-t border-gray-200 pt-4 mb-6">
-              <h3 className="font-medium text-black mb-2">Items</h3>
-              <div className="space-y-4">
-                {selectedOrder.items.map((item, index) => (
-                  <div key={index} className="flex flex-col">
-                    <div className="flex items-center">
-                      {item.image && (
-                        <div className="relative w-16 h-16 mr-4 rounded-md overflow-hidden border border-gray-200">
-                          <Image
-                            src={item.image || "/placeholder.png"}
-                            alt={item.name}
-                            fill
-                            style={{ objectFit: "cover" }}
-                          />
-                        </div>
-                      )}
-                      <div className="flex-1">
-                        <p className="font-medium text-black">{item.name}</p>
-                        <p className="text-sm text-black">
-                          €{item.price.toFixed(2)} x {item.quantity}
-                        </p>
-                      </div>
-                      <p className="font-medium text-black">
-                        €{(item.price * item.quantity).toFixed(2)}
-                      </p>
-                    </div>
-
-                    {item.customization && (
-                      <div className="ml-20 mt-2 bg-gray-50 p-3 rounded-md">
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">
-                          Customizations
-                        </h4>
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                          {item.customization.size && (
-                            <div className="flex justify-between">
-                              <span className="text-black">Size:</span>
-                              <span className="text-black font-medium">
-                                {item.customization.size}{" "}
-                                {item.customization.isKidSize ? "(Kid)" : ""}
-                              </span>
-                            </div>
-                          )}
-
-                          {item.customization.name && (
-                            <div className="flex justify-between">
-                              <span className="text-black">Name:</span>
-                              <span className="text-black font-medium">
-                                {item.customization.name}
-                              </span>
-                            </div>
-                          )}
-
-                          {item.customization.number && (
-                            <div className="flex justify-between">
-                              <span className="text-black">Number:</span>
-                              <span className="text-black font-medium">
-                                {item.customization.number}
-                              </span>
-                            </div>
-                          )}
-
-                          {item.customization.isPlayerEdition && (
-                            <div className="flex justify-between col-span-2">
-                              <span className="text-black">
-                                Player Edition:
-                              </span>
-                              <span className="text-black font-medium">
-                                Yes
-                              </span>
-                            </div>
-                          )}
-
-                          {item.customization.includeShorts && (
-                            <div className="flex justify-between col-span-2">
-                              <span className="text-black">
-                                Includes Shorts:
-                              </span>
-                              <span className="text-black font-medium">
-                                Yes
-                              </span>
-                            </div>
-                          )}
-
-                          {item.customization.includeSocks && (
-                            <div className="flex justify-between col-span-2">
-                              <span className="text-black">
-                                Includes Socks:
-                              </span>
-                              <span className="text-black font-medium">
-                                Yes
-                              </span>
-                            </div>
-                          )}
-
-                          {item.customization.selectedPatches &&
-                            item.customization.selectedPatches.length > 0 && (
-                              <div className="col-span-2 mt-2">
-                                <p className="text-black mb-1">Patches:</p>
-                                <div className="flex flex-wrap gap-2">
-                                  {item.customization.selectedPatches.map(
-                                    (patch) => (
-                                      <div
-                                        key={patch.id}
-                                        className="flex items-center bg-white p-1 px-2 rounded border"
-                                      >
-                                        <span className="text-sm text-black">
-                                          {patch.name}
-                                        </span>
-                                      </div>
-                                    )
-                                  )}
-                                </div>
-                              </div>
-                            )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="border-t border-gray-200 pt-4 mb-6">
-              <h3 className="font-medium text-black mb-2">Shipping Address</h3>
-              <p className="text-black">
-                {selectedOrder.shippingAddress.street}
-              </p>
-              <p className="text-black">
-                {selectedOrder.shippingAddress.city},{" "}
-                {selectedOrder.shippingAddress.state}{" "}
-                {selectedOrder.shippingAddress.postalCode}
-              </p>
-              <p className="text-black">
-                {selectedOrder.shippingAddress.country}
-              </p>
-            </div>
-
-            {selectedOrder.trackingCode && (
-              <div className="border-t border-gray-200 pt-4 mb-6">
-                <h3 className="font-medium text-black mb-2">
-                  Tracking Information
-                </h3>
-                <div className="bg-blue-50 p-4 rounded-md">
-                  <div className="flex items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 text-blue-500 mr-2"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z" />
-                      <path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" />
-                    </svg>
-                    <p className="text-blue-700 font-medium">
-                      Tracking Number: {selectedOrder.trackingCode}
-                    </p>
-                  </div>
-                  <p className="text-sm text-blue-600 mt-2">
-                    You can use this tracking number to follow your package's
-                    journey.
-                  </p>
-                  <div className="mt-3">
-                    <a
-                      href={`https://www.packagetrackr.com/track/${selectedOrder.trackingCode}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 mr-2"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      Track My Package
-                    </a>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="border-t border-gray-200 pt-4 mb-6">
-              <h3 className="font-medium text-black mb-2">Payment Summary</h3>
-              <div className="flex justify-between mb-2">
-                <p className="text-black">Subtotal</p>
-                <p className="text-black">€{selectedOrder.amount.toFixed(2)}</p>
-              </div>
-
-              {selectedOrder.coupon && (
-                <div className="flex justify-between mb-2 text-green-600">
-                  <p>
-                    Discount
-                    {` (${selectedOrder.coupon.code} - ${selectedOrder.coupon.discountPercentage}%)`}
-                  </p>
-                  <p>-€{selectedOrder.coupon.discountAmount.toFixed(2)}</p>
-                </div>
-              )}
-
-              <div className="flex justify-between font-semibold text-lg mt-2 pt-2 border-t">
-                <p className="text-black">Total</p>
-                <p className="text-black">€{selectedOrder.amount.toFixed(2)}</p>
-              </div>
-            </div>
-
-            <div className="flex justify-end space-x-3">
-              <button
-                onClick={() => setIsDetailsModalOpen(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
-              >
-                Close
-              </button>
-
-              {/* Only show cancel button if order is pending or processing */}
-              {(selectedOrder.status === "pending" ||
-                selectedOrder.status === "processing") && (
-                <button
-                  onClick={() => handleCancelOrder(selectedOrder._id)}
-                  className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700"
-                >
-                  Cancel Order
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+        <OrdersDataTable orders={orders} />
       )}
     </div>
   );
@@ -590,10 +983,17 @@ function OrdersContent() {
 // Loading fallback for Suspense
 function OrdersLoading() {
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6 text-black">My Orders</h1>
-      <div className="flex justify-center items-center h-64">
-        <div className="loading loading-spinner loading-lg"></div>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">My Orders</h1>
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
+            View and track your order history with detailed information about each purchase.
+          </p>
+        </div>
+        <div className="flex justify-center items-center h-64">
+          <div className="loading loading-spinner loading-lg"></div>
+        </div>
       </div>
     </div>
   );

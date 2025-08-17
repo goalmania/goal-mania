@@ -25,7 +25,7 @@ export async function PUT(
     const { role } = await req.json();
     console.log("Update user role API: New role", role);
 
-    if (!role || !["admin", "user", "premium"].includes(role)) {
+    if (!role || !["admin", "user", "premium", "journalist"].includes(role)) {
       return NextResponse.json(
         { error: "Invalid role specified" },
         { status: 400 }

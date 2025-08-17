@@ -3,9 +3,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
+import Patch from "@/lib/models/Patch";
 import { z } from "zod";
 import mongoose from "mongoose";
-import { VALID_PATCHES } from "@/lib/types/product";
+
 
 // More flexible schema for updates - make more fields optional
 const productUpdateSchema = z.object({
@@ -27,13 +28,13 @@ const productUpdateSchema = z.object({
     .min(0, "Stock quantity cannot be negative")
     .default(0),
   images: z.array(z.string()).min(1, "At least one image is required"),
+  videos: z.array(z.string()).optional(),
   hasShorts: z.boolean().default(true).optional(),
   hasSocks: z.boolean().default(true).optional(),
   hasPlayerEdition: z.boolean().default(true).optional(),
   adultSizes: z.array(z.string()).default(["S", "M", "L", "XL", "XXL"]),
   kidsSizes: z.array(z.string()).default([]),
   category: z.string(), // Accept any category value when updating
-  availablePatches: z.array(z.string()).default([]).optional(),
   allowsNumberOnShirt: z.boolean().default(true).optional(),
   allowsNameOnShirt: z.boolean().default(true).optional(),
   isActive: z.boolean().default(true).optional(),
@@ -41,6 +42,9 @@ const productUpdateSchema = z.object({
   slug: z.string().optional(),
   // Allow other fields to be passed through
   isRetro: z.boolean().optional(),
+  isMysteryBox: z.boolean().optional(),
+  // Patch relationships
+  patchIds: z.array(z.string()).optional().default([]),
 });
 
 export async function GET(
@@ -57,10 +61,10 @@ export async function GET(
     // Check if the ID is a valid MongoDB ObjectId
     if (mongoose.Types.ObjectId.isValid(id)) {
       // If it's a valid ObjectId, search by _id
-      product = await Product.findById(id);
+      product = await Product.findById(id).populate('patchIds');
     } else {
       // If not a valid ObjectId, try looking up by slug
-      product = await Product.findOne({ slug: id });
+      product = await Product.findOne({ slug: id }).populate('patchIds');
     }
 
     if (!product) {
@@ -74,6 +78,12 @@ export async function GET(
     if (productObj.shippingPrice === undefined) {
       productObj.shippingPrice = 0;
       console.log("Setting default shipping price to 0");
+    }
+
+    // Ensure videos field exists with default empty array
+    if (!productObj.videos) {
+      productObj.videos = [];
+      console.log("Setting default videos array for product:", id);
     }
 
     // Handle migration from old schema to new schema if necessary
@@ -190,6 +200,10 @@ export async function PUT(
         { error: "Unauthorized - Not logged in" },
         { status: 401 }
       );
+    }
+    const role = (session.user as any)?.role as string | undefined;
+    if (role !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const body = await request.json();
@@ -331,6 +345,23 @@ export async function PUT(
 
       await connectDB();
 
+      // Handle patch relationships
+      if (validatedData.patchIds) {
+        // Validate that all patchIds exist
+        const Patch = require('@/lib/models/Patch').default;
+        const existingPatches = await Patch.find({ 
+          _id: { $in: validatedData.patchIds },
+          isActive: true 
+        });
+        
+        if (existingPatches.length !== validatedData.patchIds.length) {
+          return NextResponse.json(
+            { error: "One or more patches not found or inactive" },
+            { status: 400 }
+          );
+        }
+      }
+
       // Use findByIdAndUpdate with { runValidators: false } to skip mongoose validations
       const product = await Product.findByIdAndUpdate(id, validatedData, {
         new: true,
@@ -384,6 +415,93 @@ export async function PUT(
   }
 }
 
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { error: "Invalid product ID format" },
+        { status: 400 }
+      );
+    }
+
+    const session = await getServerSession(authOptions);
+
+    // Check if session exists
+    if (!session) {
+      return NextResponse.json(
+        { error: "Unauthorized - Not logged in" },
+        { status: 401 }
+      );
+    }
+    const role2 = (session.user as any)?.role as string | undefined;
+    if (role2 !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const body = await request.json();
+    console.log("Received PATCH request data:", JSON.stringify(body, null, 2));
+
+    // Create a minimal update schema for PATCH requests
+    const patchSchema = z.object({
+      isActive: z.boolean().optional(),
+      feature: z.boolean().optional(),
+      stockQuantity: z.number().optional(),
+      basePrice: z.number().optional(),
+      retroPrice: z.number().optional(),
+      shippingPrice: z.number().optional(),
+    });
+
+    try {
+      const validatedData = patchSchema.parse(body);
+
+      await connectDB();
+
+      const product = await Product.findByIdAndUpdate(id, validatedData, {
+        new: true,
+        runValidators: false,
+      });
+
+      if (!product) {
+        return NextResponse.json(
+          { error: "Product not found" },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json(product);
+    } catch (validationError) {
+      console.error("Validation error:", validationError);
+      if (validationError instanceof z.ZodError) {
+        return NextResponse.json(
+          {
+            error: "Validation error",
+            details: validationError.errors,
+          },
+          { status: 400 }
+        );
+      }
+      throw validationError;
+    }
+  } catch (error) {
+    console.error("Error updating product:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error occurred";
+
+    return NextResponse.json(
+      {
+        error: "Failed to update product",
+        message: errorMessage,
+      },
+      { status: 500 }
+    );
+  }
+}
+
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -406,6 +524,10 @@ export async function DELETE(
         { error: "Unauthorized - Not logged in" },
         { status: 401 }
       );
+    }
+    const role3 = (session.user as any)?.role as string | undefined;
+    if (role3 !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     // For debugging

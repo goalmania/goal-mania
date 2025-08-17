@@ -16,29 +16,35 @@ export function LeagueTabs({ children, leagueName }: LeagueTabsProps) {
 
   return (
     <div className="w-full">
-      <div className="border-b">
-        <div className="flex space-x-2">
+      <div className="border-b border-gray-200">
+        <div className="flex space-x-1 md:space-x-2">
           {tabNames.map((tab, index) => (
             <button
               key={index}
               onClick={() => setActiveTab(index)}
               className={cn(
-                "px-4 py-2 text-sm font-medium transition-colors",
-                "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:ring-indigo-500",
+                "px-3 py-2 md:px-4 md:py-3 text-sm md:text-base font-medium transition-all duration-300 rounded-t-lg",
+                "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#f5963c]",
+                "hover:bg-gray-50",
                 activeTab === index
-                  ? "border-b-2 border-indigo-600 text-indigo-600"
-                  : "text-black hover:text-black"
+                  ? "border-b-2 border-[#f5963c] text-[#f5963c] bg-white shadow-sm"
+                  : "text-gray-600 hover:text-[#0e1924]"
               )}
               aria-selected={activeTab === index}
               role="tab"
               aria-controls={`tab-panel-${index}`}
             >
-              {tab}
+              <span className="flex items-center space-x-2">
+                <span>{tab}</span>
+                {activeTab === index && (
+                  <span className="w-2 h-2 bg-[#f5963c] rounded-full animate-pulse"></span>
+                )}
+              </span>
             </button>
           ))}
         </div>
       </div>
-      <div className="mt-4">
+      <div className="mt-6">
         {children.slice(0, 2).map((child, index) => (
           <div
             key={index}
@@ -47,8 +53,10 @@ export function LeagueTabs({ children, leagueName }: LeagueTabsProps) {
             aria-labelledby={`tab-${index}`}
             hidden={activeTab !== index}
             className={cn(
-              "rounded-md",
-              activeTab === index ? "animate-in fade-in-0" : "hidden"
+              "rounded-lg",
+              activeTab === index 
+                ? "animate-in slide-in-from-bottom-2 duration-300 ease-out" 
+                : "hidden"
             )}
           >
             {child}

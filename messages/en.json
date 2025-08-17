@@ -14,20 +14,38 @@
     "signUp": "Sign Up",
     "signOut": "Sign Out",
     "myProfile": "My Profile",
-    "myOrders": "My Orders"
+    "myOrders": "My Orders",
+    "email": "Email address",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot password?",
+    "pleaseSignIn": "Please sign in to continue.",
+    "orContinueWith": "Or continue with",
+    "continueWithGoogle": "Continue with Google",
+    "notAMember": "Not a member?",
+    "signUpNow": "Sign up now"
   },
-  "shop": {
-    "hero": {
-      "title": "Wear the passion, live football!",
-      "description": "Discover our exclusive collection of football jerseys with premium quality, unique designs, and unbeatable prices. Perfect for every football fan.",
-      "subtitle": "Discover our exclusive collection of football jerseys. Premium quality, unique designs, and unbeatable prices.",
-      "cta": "Discover jerseys"
-    },
-    "featuredProducts": "Featured Products",
-    "trust": {
-      "title": "Over 1200 Happy Customers ⭐️",
-      "subtitle": "Our community of enthusiasts grows every day. Join those who have already chosen quality and authenticity."
-    },
+  "language": {
+    "switchToItalian": "Switch to Italian",
+    "switchToEnglish": "Switch to English"
+  },
+      "shop": {
+      "hero": {
+        "title": "Wear the passion, live football!",
+        "description": "Discover our exclusive collection of football jerseys with premium quality, unique designs, and unbeatable prices. Perfect for every football fan.",
+        "subtitle": "Discover our exclusive collection of football jerseys. Premium quality, unique designs, and unbeatable prices.",
+        "cta": "Discover jerseys"
+      },
+      "featuredProducts": "Featured Products",
+      "offers": {
+        "availableOffers": "Available Offers",
+        "automaticDiscounts": "Automatic discounts that apply to this product"
+      },
+      "trust": {
+        "title": "Over 1200 Happy Customers ⭐️",
+        "subtitle": "Our community of enthusiasts grows every day. Join those who have already chosen quality and authenticity."
+      },
     "highlights": {
       "quality": {
         "title": "Super Quality",
@@ -68,6 +86,12 @@
       "addToCart": "Add to Cart",
       "addToWishlist": "Add to Wishlist",
       "removeFromWishlist": "Remove from Wishlist"
+    },
+    "team": {
+      "description": "Discover the official shirts and merchandise for"
+    },
+    "serieA": {
+      "description": "Discover our complete collection of Serie A and international team shirts"
     }
   },
   "wishlist": {
@@ -96,6 +120,38 @@
     "continueShopping": "Continue Shopping",
     "proceedToCheckout": "Proceed to Checkout"
   },
+  "checkout": {
+    "title": "Checkout",
+    "description": "Complete your order with secure payment",
+    "shippingAddress": "Shipping Address",
+    "shippingAddressDescription": "Select your delivery address or add a new one",
+    "paymentInformation": "Payment Information",
+    "paymentDescription": "Complete your purchase with secure payment",
+    "orderSummary": "Order Summary",
+    "orderSummaryDescription": "Review your items and total",
+    "items": "Items",
+    "discounts": "Discounts",
+    "discountRules": "Available Discount Rules",
+    "priceBreakdown": "Price Breakdown",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "total": "Total",
+    "includesVat": "Includes VAT",
+    "secure": "Secure",
+    "fast": "Fast",
+    "quality": "Quality",
+    "backToShipping": "Back to Shipping",
+    "continueToPayment": "Continue to Payment",
+    "addNewAddress": "Add New Address",
+    "saveAddress": "Save Address",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "processing": "Processing...",
+    "payWithPayPal": "Pay with PayPal",
+    "payWithCard": "Pay with Card",
+    "paymentMethods": "Payment Methods",
+    "choosePaymentMethod": "Choose your preferred payment method"
+  },
   "product": {
     "addToCart": "Add to Cart",
     "addToWishlist": "Add to Wishlist",
@@ -111,5 +167,267 @@
   "profile": "Profile",
   "orders": "Orders",
   "adminPanel": "Admin Panel",
-  "signOut": "Sign Out"
+  "authorPanel": "Author Panel",
+  "signOut": "Sign Out",
+  "hero": {
+    "title": "Current and retro jerseys from €30",
+    "subtitle": "Always free shipping, guaranteed quality.",
+    "cta": "Discover jerseys"
+  },
+  "mysteryBox": {
+    "title": "Mystery Box",
+    "description": "Discover the magic of our mystery boxes! Each box contains a surprise jersey from the best Italian and international teams.",
+    "subtitle": "Choose your mystery box and get ready for an exciting surprise! Each box is unique and contains premium quality jerseys.",
+    "empty": "No Mystery Boxes Available",
+    "emptyDescription": "Come back soon to discover our new mystery boxes!",
+    "features": {
+      "surprise": "Surprise Jersey",
+      "teams": "Top Teams",
+      "shipping": "Free Shipping"
+    },
+    "process": {
+      "title": "How It Works",
+      "description": "The process is simple and fun! Here's how our mystery box works.",
+      "step1": "Select the mystery box you prefer and add it to your cart.",
+      "step2": "Complete your order with secure payment.",
+      "step3": "Receive your mystery box with a premium quality surprise jersey!"
+    },
+    "product": {
+      "description": "A mystery box full of surprises! Contains a surprise jersey from the best Italian and international teams.",
+      "freeShipping": "Free shipping",
+      "features": {
+        "premium": "Premium quality surprise jersey",
+        "teams": "Italian and international teams",
+        "exclude": "Possibility to exclude up to 5 jerseys"
+      },
+      "addToCart": "Add to Cart",
+      "learnMore": "Learn More",
+      "trust": {
+        "freeShipping": "Free Shipping",
+        "secure": "Secure Checkout",
+        "premium": "Premium Quality"
+      }
+    },
+    "steps": {
+      "step1": {
+        "title": "Choose the Box",
+        "description": "Select the mystery box you prefer and add it to your cart."
+      },
+      "step2": {
+        "title": "Exclude Jerseys",
+        "description": "You can exclude up to 5 jerseys that you don't want to receive in your box."
+      },
+      "step3": {
+        "title": "Receive the Surprise",
+        "description": "Receive your mystery box with a premium quality surprise jersey!"
+      }
+    },
+    "cta": {
+      "title": "Ready for the Adventure?",
+      "description": "Join thousands of customers who have already discovered the magic of our mystery boxes!",
+      "button": "Explore All Products"
+    }
+  },
+  "home": {
+    "featuredProducts": "Featured Products",
+    "viewAllProducts": "View All Products",
+    "latestNews": "Latest News",
+    "readAllNews": "Read All News",
+    "readMore": "Read more →",
+    "favoriteTeams": "Your Favorite Teams",
+    "serieATeams": "Serie A Teams",
+    "internationalTeams": "International Teams",
+    "collection": "Collection",
+    "mysteryBox": {
+      "title": "🎁 Mystery Box",
+      "description": "Discover the surprise! Each box contains exclusive jerseys with guaranteed value higher than the price.",
+      "surpriseContent": "Surprise content • Guaranteed value higher than price",
+      "discover": "Discover →"
+    },
+    "news": {
+      "news": "News",
+      "transfer": "Transfer",
+      "serieA": "Serie A",
+      "international": "International"
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "Sorry, we couldn't find the page you're looking for.",
+    "goHome": "Go back home",
+    "contactSupport": "Contact support"
+  },
+  "apiConfig": {
+    "checking": "Checking API configuration...",
+    "error": "Error during API verification",
+    "noApiKey": "API Football: API key not configured",
+    "invalidApiKey": "API Football: Invalid API key",
+    "configurationIssues": "API Football: Configuration issues",
+    "moreDetails": "More details",
+    "lessDetails": "Less details",
+    "currentStatus": "Current status",
+    "apiKeyConfigured": "API key configured",
+    "apiKeyValid": "API key valid",
+    "toResolve": "To resolve",
+    "addVariable": "Add or update the variable",
+    "inFile": "in the file",
+    "forServerSide": "for server-side use and",
+    "forClientSide": "for client-side use.",
+    "useHeader": "Make sure to use the header",
+    "inApiRequests": "in API requests",
+    "getApiKey": "Get an API key from",
+    "restartServer": "Restart the development server after configuring the API key",
+    "unknownError": "Unknown error occurred"
+  },
+  "orders": {
+    "cancelOrder": "Cancel Order",
+    "cancelSuccess": "Order cancelled successfully",
+    "cancelFailed": "Failed to cancel order",
+    "cancelConfirmation": "Are you sure you want to cancel this order? This action cannot be undone.",
+    "confirmCancel": "Yes, Cancel Order",
+    "keepOrder": "No, Keep Order"
+  },
+  "league": {
+    "upcomingMatches": "Upcoming Matches",
+    "noDataAvailable": "No data available",
+    "loadError": "Unable to load upcoming matches for this league. Please try again later or contact the administrator if the problem persists.",
+    "live": "LIVE",
+    "finished": "FINISHED",
+    "unknownRound": "Unknown Round"
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "processing": "Processing...",
+    "error": "Error",
+    "noData": "No data available"
+  },
+  "guarantees": {
+    "title": "Why Choose GoalMania",
+    "freeShipping": {
+      "title": "Free Shipping",
+      "description": "Always free on all orders"
+    },
+    "quality": {
+      "title": "Quality Guarantee",
+      "description": "100% authentic or refund"
+    },
+    "returns": {
+      "title": "Easy Returns",
+      "description": "7 days to change your mind"
+    },
+    "rating": {
+      "title": "4.8/5 Rating",
+      "description": "Over 1200 happy customers"
+    }
+  },
+  "footer": {
+    "description": "Goalmania is the reference point for those who live football. Every day we tell stories, news and curiosities from the world of football. Plus, we offer you the most loved jerseys — current and retro — starting from €30, with free shipping.",
+    "copyright": "© 2025 Goalmania. All rights reserved. Your daily dose of football ⚽ | Football jerseys from €30 with free shipping"
+  },
+  "admin": {
+    "dashboard": "Admin Dashboard",
+    "welcome": "Welcome to your admin dashboard. Here you can manage products, orders, users, and view analytics.",
+    "failedToLoad": "Failed to load analytics data. Please try again.",
+    "overview": "Overview",
+    "recentOrders": "Recent Orders",
+    "analytics": "Analytics",
+    "revenueTrend": "Revenue Trend (Last 7 Days)",
+    "dailyRevenueAndOrders": "Daily revenue and order count",
+    "orderStatusDistribution": "Order Status Distribution",
+    "currentOrderStatusBreakdown": "Current order status breakdown",
+    "noRecentData": "No recent data available",
+    "averageOrderValue": "Average Order Value",
+    "perOrder": "Per order",
+    "mysteryBoxOrders": "Mystery Box Orders",
+    "specialOrders": "Special orders",
+    "publishedArticles": "Published Articles",
+    "contentPieces": "Content pieces",
+    "latestOrdersFromStore": "Latest 5 orders from your store",
+    "noOrdersFound": "No orders found",
+    "productCategories": "Product Categories",
+    "distributionByCategory": "Distribution by category",
+    "quickActions": "Quick Actions",
+    "commonAdminTasks": "Common admin tasks",
+    "manageProducts": "Manage Products",
+    "viewAllOrders": "View All Orders",
+    "manageUsers": "Manage Users",
+    "createArticle": "Create Article",
+    "products": {
+      "confirmDelete": "Delete Product",
+      "confirmDeleteMessage": "Are you sure you want to delete this product? This action cannot be undone.",
+      "deleteButton": "Delete",
+      "cancelButton": "Cancel",
+      "deleteSuccess": "Product deleted successfully!",
+      "deleteFailed": "Failed to delete product",
+      "relatedProducts": "Related Products",
+      "discoverSimilarItems": "Discover similar items",
+      "featured": "Featured",
+      "retro": "Retro"
+    },
+    "patches": {
+      "management": "Patch Management",
+      "manage": "Manage Patches",
+      "create": "Create Patch",
+      "confirmDelete": "Are you sure you want to delete",
+      "actionCannotBeUndone": "This action cannot be undone.",
+      "deleteSuccess": "Patch deleted successfully!",
+      "deleteFailed": "Failed to delete patch",
+      "createSuccess": "Patch created successfully!",
+      "updateSuccess": "Patch updated successfully!"
+    },
+    "discountRules": {
+      "title": "Discount Rules",
+      "management": "Discount Rules Management",
+      "manage": "Manage Discount Rules",
+      "create": "Create Discount Rule",
+      "edit": "Edit Discount Rule",
+      "delete": "Delete Discount Rule",
+      "confirmDelete": "Are you sure you want to delete this discount rule?",
+      "actionCannotBeUndone": "This action cannot be undone.",
+      "deleteSuccess": "Discount rule deleted successfully!",
+      "deleteFailed": "Failed to delete discount rule",
+      "createSuccess": "Discount rule created successfully!",
+      "updateSuccess": "Discount rule updated successfully!",
+      "name": "Rule Name",
+      "description": "Description",
+      "type": "Rule Type",
+      "isActive": "Active",
+      "expiresAt": "Expires At",
+      "maxUses": "Max Uses",
+      "currentUses": "Current Uses",
+      "priority": "Priority",
+      "minQuantity": "Min Quantity",
+      "maxQuantity": "Max Quantity",
+      "discountPercentage": "Discount Percentage",
+      "discountAmount": "Discount Amount",
+      "buyQuantity": "Buy Quantity",
+      "getFreeQuantity": "Get Free Quantity",
+      "freeProductIds": "Free Product IDs",
+      "applicableCategories": "Applicable Categories",
+      "applicableProductIds": "Applicable Product IDs",
+      "excludedProductIds": "Excluded Product IDs",
+      "quantityBased": "Quantity Based",
+      "buyXGetY": "Buy X Get Y Free",
+      "percentageOff": "Percentage Off",
+      "fixedAmountOff": "Fixed Amount Off",
+      "noRules": "No discount rules found",
+      "createFirstRule": "Create your first discount rule to get started"
+    }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "questions": [
+      { "question": "How long does delivery take?", "answer": "Your wait will be short! It usually takes 10-14 days to arrive at your home. You can check your order status in the 'Track Your Order' section!" },
+      { "question": "Are payments secure?", "answer": "Absolutely. The security of your payments is our top priority. We use secure and reliable payment systems to ensure a worry-free transaction." },
+      { "question": "What payment methods do you accept?", "answer": "Purchases on our site can be made via: Visa, Mastercard, American Express, Maestro, and PayPal. We do not accept cash, check, cash on delivery, or bank transfer. Every purchase is made with maximum security to protect your personal and credit card information from unauthorized access." },
+      { "question": "How is the product quality?", "answer": "The quality of our product is excellent. We take great care in selecting materials and in the production process to ensure that every item meets the highest standards." },
+      { "question": "Is there a guarantee?", "answer": "Of course! If the product arrives damaged or different from what you expected, contact us at 'goalmaniaofficial@gmail.com'. We will reply as soon as possible!" },
+      { "question": "Do you accept returns?", "answer": "Certainly! We accept returns within a maximum period of 7 days from the date of purchase. Your satisfaction is our priority, and we want to ensure that every customer is happy with their purchase." }
+    ]
+  },
+  "banners": {
+    "cta": "Shop Now",
+    "alt": "Football jersey promotion banner"
+  }
 }

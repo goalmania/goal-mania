@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 interface Product {
@@ -35,10 +35,8 @@ export default function SearchClient({
   initialArticles,
   query: initialQuery,
 }: SearchClientProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const queryParam = searchParams?.get("q") || "";
-  const [searchQuery, setSearchQuery] = useState(queryParam || initialQuery);
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [articles, setArticles] = useState<Article[]>(initialArticles);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +45,6 @@ export default function SearchClient({
   useEffect(() => {
     async function fetchSearchResults() {
       if (!queryParam) return;
-
       setIsLoading(true);
       try {
         const response = await fetch(
@@ -64,19 +61,8 @@ export default function SearchClient({
         setIsLoading(false);
       }
     }
-
     fetchSearchResults();
   }, [queryParam]);
-
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-
-    // Update URL with search query
-    const params = new URLSearchParams(searchParams?.toString() || "");
-    params.set("q", searchQuery);
-    router.push(`/search?${params.toString()}`);
-  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -90,33 +76,7 @@ export default function SearchClient({
   return (
     <div className="bg-gray-50 min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Ricerca</h1>
-          <form onSubmit={handleSearch} className="max-w-3xl">
-            <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <MagnifyingGlassIcon
-                  className="h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-              </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cerca prodotti, articoli..."
-                className="block w-full rounded-md border-0 py-3 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-              <button
-                type="submit"
-                className="absolute inset-y-0 right-0 flex items-center px-4 py-2 bg-indigo-600 text-white rounded-r-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                Cerca
-              </button>
-            </div>
-          </form>
-        </div>
-
+        {/* Search bar removed, now handled by header for /shop */}
         {isLoading ? (
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>

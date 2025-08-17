@@ -1,29 +1,52 @@
+"use client";
 import Image from "next/image";
 import { getFixtures } from "@/lib/api/football";
-import type { League } from "@/lib/api/football";
+import type { League, FixtureResponse } from "@/lib/api/football";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { useI18n } from "@/lib/hooks/useI18n";
+import { useState, useEffect } from "react";
 
 interface LeagueCalendarProps {
   league: League;
 }
 
-export async function LeagueCalendar({ league }: LeagueCalendarProps) {
-  // Fetch data from API
-  const { fixtures, error } = await getFixtures(league);
+export function LeagueCalendar({ league }: LeagueCalendarProps) {
+  const { t } = useI18n();
+  const [fixtures, setFixtures] = useState<FixtureResponse[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Log any errors to help with debugging
-  if (error) {
-    console.error(`Error fetching fixtures for ${league}: ${error}`);
-  }
+  useEffect(() => {
+    async function fetchFixtures() {
+      try {
+        setIsLoading(true);
+        const { fixtures: fixturesData, error: fetchError } = await getFixtures(league);
+        
+        if (fetchError) {
+          console.error(`Error fetching fixtures for ${league}: ${fetchError}`);
+          setError(fetchError);
+        } else {
+          setFixtures(fixturesData || []);
+        }
+      } catch (err) {
+        console.error(`Error fetching fixtures for ${league}:`, err);
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchFixtures();
+  }, [league, t]);
 
   // Check if we have valid data
   const hasFixturesData = fixtures && fixtures.length > 0;
 
   // Group fixtures by round
   const fixturesByRound = fixtures.reduce(
-    (acc: Record<string, typeof fixtures>, fixture) => {
-      const round = fixture.league.round || "Unknown Round";
+    (acc: Record<string, FixtureResponse[]>, fixture) => {
+      const round = fixture.league.round || t('league.unknownRound');
       if (!acc[round]) {
         acc[round] = [];
       }
@@ -45,21 +68,35 @@ export async function LeagueCalendar({ league }: LeagueCalendarProps) {
     return a.localeCompare(b);
   });
 
+  if (isLoading) {
+    return (
+      <div className="bg-white rounded-md shadow">
+        <div className="p-4 border-b">
+          <h3 className="text-lg font-medium text-black">{t('league.upcomingMatches')}</h3>
+        </div>
+        <div className="p-4">
+          <div className="animate-pulse">
+            <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-md shadow">
       <div className="p-4 border-b">
-        <h3 className="text-lg font-medium text-black">Prossime Partite</h3>
+        <h3 className="text-lg font-medium text-black">{t('league.upcomingMatches')}</h3>
       </div>
 
       {!hasFixturesData ? (
         <div className="p-4 sm:p-8">
           <Alert variant="destructive" className="bg-amber-50 border-amber-200">
             <AlertCircle className="h-4 w-4 text-amber-600" />
-            <AlertTitle className="text-black">Dati non disponibili</AlertTitle>
+            <AlertTitle className="text-black">{t('league.noDataAvailable')}</AlertTitle>
             <AlertDescription className="text-black">
-              Non è stato possibile caricare le partite in programma per questa
-              lega. Riprova più tardi o contatta l'amministratore se il problema
-              persiste.
+              {t('league.loadError')}
             </AlertDescription>
           </Alert>
         </div>
@@ -90,11 +127,11 @@ export async function LeagueCalendar({ league }: LeagueCalendarProps) {
                           <span>
                             {isLive ? (
                               <span className="px-2 py-0.5 sm:py-1 text-xs font-medium rounded-full bg-red-100 text-red-800 whitespace-nowrap">
-                                IN DIRETTA
+                                {t('league.live')}
                               </span>
                             ) : isFinished ? (
                               <span className="px-2 py-0.5 sm:py-1 text-xs font-medium rounded-full bg-gray-100 text-black whitespace-nowrap">
-                                TERMINATA
+                                {t('league.finished')}
                               </span>
                             ) : (
                               fixtureDate.toLocaleTimeString("it-IT", {

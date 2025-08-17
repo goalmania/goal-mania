@@ -42,6 +42,11 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const role = (session.user as any)?.role as string | undefined;
+    if (role !== "admin" && role !== "journalist") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     await connectDB();
 
     const article = await Article.findById(articleId);
@@ -85,6 +90,11 @@ export async function DELETE(
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const role = (session.user as any)?.role as string | undefined;
+    if (role !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     await connectDB();

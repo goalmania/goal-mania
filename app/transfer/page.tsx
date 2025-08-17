@@ -4,8 +4,8 @@ import Link from "next/link";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 
-// Disable caching for this page
-export const dynamic = "force-dynamic";
+// Enable ISR for transfer listing page
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Transfer Market | Goal Mania",
