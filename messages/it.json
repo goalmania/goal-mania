@@ -38,6 +38,10 @@
       "cta": "Scopri le maglie"
     },
     "featuredProducts": "Prodotti in Evidenza",
+    "offers": {
+      "availableOffers": "Offerte Disponibili",
+      "automaticDiscounts": "Sconti automatici che si applicano a questo prodotto"
+    },
     "trust": {
       "title": "Oltre 1200 Clienti Felici ⭐️",
       "subtitle": "La nostra community di appassionati cresce ogni giorno. Unisciti a chi ha già scelto la qualità e l'autenticità."
@@ -127,6 +131,7 @@
     "orderSummaryDescription": "Rivedi i tuoi articoli e il totale",
     "items": "Articoli",
     "discounts": "Sconti",
+    "discountRules": "Regole di Sconto Disponibili",
     "priceBreakdown": "Dettaglio Prezzi",
     "subtotal": "Subtotale",
     "shipping": "Spedizione",
@@ -370,6 +375,44 @@
       "deleteFailed": "Impossibile eliminare la patch",
       "createSuccess": "Patch creata con successo!",
       "updateSuccess": "Patch aggiornata con successo!"
+    },
+    "discountRules": {
+      "title": "Regole di Sconto",
+      "management": "Gestione Regole di Sconto",
+      "manage": "Gestisci Regole di Sconto",
+      "create": "Crea Regola di Sconto",
+      "edit": "Modifica Regola di Sconto",
+      "delete": "Elimina Regola di Sconto",
+      "confirmDelete": "Sei sicuro di voler eliminare questa regola di sconto?",
+      "actionCannotBeUndone": "Questa azione non può essere annullata.",
+      "deleteSuccess": "Regola di sconto eliminata con successo!",
+      "deleteFailed": "Impossibile eliminare la regola di sconto",
+      "createSuccess": "Regola di sconto creata con successo!",
+      "updateSuccess": "Regola di sconto aggiornata con successo!",
+      "name": "Nome Regola",
+      "description": "Descrizione",
+      "type": "Tipo Regola",
+      "isActive": "Attiva",
+      "expiresAt": "Scade Il",
+      "maxUses": "Usi Massimi",
+      "currentUses": "Usi Attuali",
+      "priority": "Priorità",
+      "minQuantity": "Quantità Minima",
+      "maxQuantity": "Quantità Massima",
+      "discountPercentage": "Percentuale di Sconto",
+      "discountAmount": "Importo di Sconto",
+      "buyQuantity": "Quantità da Acquistare",
+      "getFreeQuantity": "Quantità Gratuita",
+      "freeProductIds": "ID Prodotti Gratuiti",
+      "applicableCategories": "Categorie Applicabili",
+      "applicableProductIds": "ID Prodotti Applicabili",
+      "excludedProductIds": "ID Prodotti Esclusi",
+      "quantityBased": "Basato su Quantità",
+      "buyXGetY": "Compra X Ottieni Y Gratis",
+      "percentageOff": "Percentuale di Sconto",
+      "fixedAmountOff": "Importo Fisso di Sconto",
+      "noRules": "Nessuna regola di sconto trovata",
+      "createFirstRule": "Crea la tua prima regola di sconto per iniziare"
     }
   },
   "faq": {

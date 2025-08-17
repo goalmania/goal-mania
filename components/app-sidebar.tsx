@@ -78,6 +78,11 @@ const data = {
       icon: IconTicket,
     },
     {
+      title: "Discount Rules",
+      url: "/admin/discount-rule",
+      icon: IconInnerShadowTop,
+    },
+    {
       title: "Analytics",
       url: "/admin/analytics",
       icon: IconChartBar,
