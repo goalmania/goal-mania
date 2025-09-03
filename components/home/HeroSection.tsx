@@ -12,9 +12,9 @@ export default function HeroSection() {
     subtitle:
       `${t('hero.subtitle')}`,
     buttons: [
-      { text: `${t('Latest News')}`, href: `news` },
-      { text: `${t('Results')}`, href: `/risultati`},
-      { text: "Shop Now", href: `/shop` },
+      { text: `${t('Ultime Notizie')}`, href: `news` },
+      { text: `${t('Maglie Attuali')}`, href: `/shop/2025/26`},
+      { text: `${t('Maglie Retro')}`, href: `/shop/retro` },
     ],
     imageUrl: `/images/recentUpdate/home-banner.jpg`, // This uses the uploaded image
   };

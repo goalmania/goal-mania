@@ -1,4 +1,5 @@
 import { useI18n } from "@/lib/hooks/useI18n";
+import { ArrowRight } from "lucide-react";
 import React from "react";
 
 // Define the type for the component props
@@ -72,11 +73,15 @@ export default function HeroBanner({
               <a
                 key={index}
                 href={button.href}
-                className="py-3 px-6 rounded-full text-[#0A1A2F] font-semibold transition-all duration-300 bg-[#FF7A00] ease-in-out transform hover:scale-105 hover:shadow-lg focus:outline-none whitespace-nowrap text-xs md:text-lg"
+                className="lg:py-3 lg:px-6 px-3 py-1.5   rounded-full text-[#0A1A2F] font-semibold transition-all duration-300 bg-[#FF7A00] ease-in-out transform hover:scale-105 hover:shadow-lg focus:outline-none whitespace-nowrap text-xs md:text-lg"
             
               >
                 {button.text}
+
+              <ArrowRight  className="text-[#0A1A2F]/70 text-sm lg:text-lg w-3 lg:w-5 ml-2 inline-flex lg:ml-4 " />
+
               </a>
+
             ))}
           </div>
         )}
