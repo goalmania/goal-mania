@@ -56,7 +56,7 @@ export default function HeroBanner({
       {/* Content Wrapper */}
       <div className="relative z-10  flex flex-col items-center   text-center  lg:items-start lg:text-left max-w-4xl w-full  ">
         {/* Title */}
-        <h1 className="text-white text-3xl max-w-md lg:max-w-xl  px-10 sm:px-0 md:text-5xl lg:text-6xl font-bold mb-4 font-sans">
+        <h1 className="text-white text-3xl max-w-md lg:max-w-xl  px-10 sm:px-0 md:text-5xl  font-bold mb-4 font-sans">
           {title}
         </h1>
 
