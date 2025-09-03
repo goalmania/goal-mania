@@ -24,7 +24,7 @@ export default function HeroSection() {
       <img
         src={`/images/recentUpdate/mobile-banner-logo.png`}
         alt="Banner Background"
-        className="w-10 h-10 absolute  top-10 right-3 "
+        className="w-15 h-15 absolute z-10  lg:hidden  top-10 right-3 "
       />
       <HeroBanner
         title={bannerData.title}
