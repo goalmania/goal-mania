@@ -17,7 +17,7 @@ export default function HeroBanner({
   imageUrl,
   className,
 }: HeroBannerProps) {
-  const containerClasses = `relative overflow-hidden w-full min-h-[510px] lg:min-h-[580px] flex items-end lg:items-center p-4 md:p-8 ${
+  const containerClasses = `relative overflow-hidden w-full min-h-[510px] lg:min-h-[580px] flex items-end lg:items-center p-4 md:p-8 lg:pl-14 ${
     className || ""
   }`;
 
