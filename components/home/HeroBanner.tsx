@@ -78,7 +78,7 @@ export default function HeroBanner({
               >
                 {button.text}
 
-              <ArrowRight  className="text-[#0A1A2F]/70 text-sm lg:text-lg w-3 lg:w-5 ml-2 inline-flex lg:ml-4 " />
+              <ArrowRight  className="text-[#0A1A2F] text-sm lg:text-lg w-3 lg:w-5 ml-2 inline-flex lg:ml-4 " />
 
               </a>
 
