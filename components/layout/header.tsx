@@ -16,7 +16,6 @@ import {
   Cog6ToothIcon,
   PencilIcon,
 } from "@heroicons/react/24/outline";
-import { BsCart } from "react-icons/bs";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
