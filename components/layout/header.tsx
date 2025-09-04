@@ -16,6 +16,7 @@ import {
   Cog6ToothIcon,
   PencilIcon,
 } from "@heroicons/react/24/outline";
+import { BsCart } from "react-icons/bs";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
@@ -47,6 +48,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { ArrowRight, UserRound } from "lucide-react";
 
 // Use this as a proper type
 export interface User {
@@ -148,22 +150,24 @@ export function Header() {
           <div className="flex h-14 sm:h-16 justify-between items-center">
             {/* Logo and Navigation */}
             <div className="flex items-center">
-              <div className="flex flex-shrink-0 items-center px-1">
+              <div className="flex flex-shrink-0 items-center px-1 ">
                 <Link href="/" className="flex items-center">
                   <Image
-                    src="/logos/brand_logo.png"
+                    src="/images/recentUpdate/desktop-logo.png"
+                    // src="/logos/brand_logo.png"
                     alt="Goal Mania Logo"
-                    width={32}
-                    height={32}
-                    className="mr-2 sm:w-8 sm:h-8"
+                    width={80}
+                    height={80}
+                    className="ml-3"
                     style={{ objectFit: "contain" }}
                   />
-                  <span className="goalmania-title text-base sm:text-xl font-bold text-white tracking-tight">
-                    GOALMANIA
+                  {/* goalmania-title */}
+                  <span className="goalmania-title -ml-4 md:hidden text-base sm:text-xl tracking-tight font-bold text-white ">
+                    GOAL <span className="text-[#FF7A00]">MANIA</span> 
                   </span>
                 </Link>
               </div>
-              
+
               {/* Desktop Navigation */}
               <div className="hidden sm:ml-6 sm:flex sm:space-x-2 md:space-x-4 items-center">
                 {navigation.map((item) => (
@@ -175,36 +179,6 @@ export function Header() {
                     {t(item.name)}
                   </Link>
                 ))}
-
-                {/* International Dropdown */}
-                <DropdownMenu open={internationalOpen} onOpenChange={setInternationalOpen}>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="inline-flex items-center justify-center border-b-2 border-transparent px-1 pt-1 text-xs md:text-sm font-medium text-white hover:border-white transition-colors duration-150 h-auto p-0 min-h-[32px] leading-none"
-                    >
-                      <span>{language === "en" ? "International" : "Camp. Esteri"}</span>
-                      <ChevronDownIcon
-                        className={`ml-1 h-3 w-3 transition-transform ${
-                          internationalOpen ? "rotate-180" : ""
-                        }`}
-                        aria-hidden="true"
-                      />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="w-40">
-                    {internationalNavItems.map((item) => (
-                      <DropdownMenuItem key={item.name} asChild>
-                        <Link
-                          href={item.href}
-                          onClick={() => setInternationalOpen(false)}
-                        >
-                          {item.name}
-                        </Link>
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
               </div>
             </div>
 
@@ -219,7 +193,6 @@ export function Header() {
                   className="text-white hover:text-gray-200 hover:bg-transparent"
                   aria-label="Toggle language"
                 >
-                  <LanguageIcon className="h-5 w-5 sm:h-4 sm:w-4 mr-0.5 sm:mr-1" />
                   <span className="text-xs font-medium">
                     {language.toUpperCase()}
                   </span>
@@ -230,18 +203,61 @@ export function Header() {
                   <SearchDropdown />
                 </div>
 
+                <div className="hidden lg:block">
+                  {/* International Dropdown */}
+                  <DropdownMenu
+                    open={internationalOpen}
+                    onOpenChange={setInternationalOpen}
+                  >
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="inline-flex items-center justify-center bg-white border-b-2 border-transparent px-1 pt-1 text-xs md:text-sm font-medium text-black hover:border-white transition-colors duration-150  h-auto p-0 min-h-[32px] leading-none"
+                      >
+                        <img
+                          src={"/images/recentUpdate/world.png"}
+                          className="w-4 h-4"
+                          alt=""
+                        />
+                        <span className="text-sm">
+                          {language === "en" ? "International" : "Camp. Esteri"}
+                        </span>
+                        <ChevronDownIcon
+                          className={`ml-1 h-3 w-3 transition-transform ${
+                            internationalOpen ? "rotate-180" : ""
+                          }`}
+                          aria-hidden="true"
+                        />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-40">
+                      {internationalNavItems.map((item) => (
+                        <DropdownMenuItem key={item.name} asChild>
+                          <Link
+                            href={item.href}
+                            onClick={() => setInternationalOpen(false)}
+                          >
+                            {item.name}
+                          </Link>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+
                 {/* Wishlist */}
                 <Link href="/wishlist" className="relative">
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-white hover:text-gray-200 hover:bg-transparent"
+                    className="text-white cursor-pointer hover:text-gray-200 hover:bg-transparent"
                     aria-label="Wishlist"
                   >
-                    <HeartIcon className="h-5 w-5 sm:h-6 sm:w-6" />
+                    <img src={"/images/recentUpdate/heart-store.png"} alt="" />
+                    {/* <HeartIcon className="h-5 w-5 sm:h-6 sm:w-6 md:w-14 md:h-14 lg:w-20  text-[#FF7A00]" /> */}
                     {session && wishlistItemCount > 0 && (
-                      <Badge 
-                        variant="destructive" 
+                      <Badge
+                        variant="destructive"
                         className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs"
                       >
                         {wishlistItemCount}
@@ -255,13 +271,19 @@ export function Header() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-white hover:text-gray-200 hover:bg-transparent"
+                    className="text-whit cursor-pointer hover:text-gray-200 hover:bg-transparent"
                     aria-label="Cart"
                   >
-                    <ShoppingCartIcon className="h-5 w-5 sm:h-6 sm:w-6" />
+                    <img
+                      src={"/images/recentUpdate/cart-basket.png"}
+                      className="w-6 h-6"
+                      alt=""
+                    />
+
+                    {/* <ShoppingCartIcon className="h-5 w-5 sm:h-6 sm:w-6" /> */}
                     {session && cartItemCount > 0 && (
-                      <Badge 
-                        variant="destructive" 
+                      <Badge
+                        variant="destructive"
                         className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs"
                       >
                         {cartItemCount}
@@ -275,7 +297,10 @@ export function Header() {
                   {session ? (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="relative h-8 w-8 rounded-full p-0">
+                        <Button
+                          variant="ghost"
+                          className="relative h-8 w-8 rounded-full p-0"
+                        >
                           <Avatar className="h-8 w-8">
                             <AvatarImage
                               src={getUserImage(session.user)}
@@ -306,7 +331,10 @@ export function Header() {
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href="/account/orders" className="flex items-center">
+                          <Link
+                            href="/account/orders"
+                            className="flex items-center"
+                          >
                             <ShoppingCartIcon className="mr-2 h-4 w-4" />
                             {t("auth.myOrders")}
                           </Link>
@@ -321,7 +349,10 @@ export function Header() {
                         )}
                         {session.user.role === "journalist" && (
                           <DropdownMenuItem asChild>
-                            <Link href="/admin/articles" className="flex items-center">
+                            <Link
+                              href="/admin/articles"
+                              className="flex items-center"
+                            >
                               <PencilIcon className="mr-2 h-4 w-4" />
                               {t("authorPanel")}
                             </Link>
@@ -335,36 +366,51 @@ export function Header() {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   ) : (
-                    <Button
-                      variant="orange"
-                      size="sm"
-                      asChild
-                    >
-                      <Link href="/auth/signin">
-                        {t("signIn")}
-                      </Link>
-                    </Button>
+                    <div className="bg-transparent border rounded-full flex gap-1 px-5 py-3 border-[#FF7A00]">
+                      <button>
+                        <Link href="/auth/signin">{t("Login")}</Link>
+                      </button>
+                      <button>
+                        <span className="mr-1">/</span>
+                        <Link href="/auth/signup">{t("Sign-up")}</Link>
+                      </button>
+
+                      <ArrowRight className="ml-2" />
+                    </div>
+
+                    //   <div className="bg-transparent flex gap-3 px-3 border-[#FF7A00]">
+                    //   <Button
+                    //   size="sm"
+                    //   asChild
+                    // >
+                    //   <Link href="/auth/signin">
+                    //     {t("signIn")}
+                    //   </Link>
+                    // </Button>
+                    //   <Button
+                    //   size="sm"
+                    //   asChild
+                    // >
+                    //   <Link href="/auth/signin">
+                    //     {t("signIn")}
+                    //   </Link>
+                    // </Button>
+                    //  </div>
                   )}
                 </div>
 
                 {/* Mobile sign in link */}
                 <div className="sm:hidden">
                   {!session && (
-                    <Button
-                      variant="orange"
-                      size="sm"
-                      asChild
-                    >
-                      <Link href="/auth/signin">
-                        {t("signIn")}
-                      </Link>
+                    <Button variant="orange" size="sm" asChild>
+                      <Link href="/auth/signin">{t("signIn")}</Link>
                     </Button>
                   )}
                 </div>
 
                 {/* Mobile menu button */}
                 <div className="sm:hidden -mr-1">
-                  <MobileMenu 
+                  <MobileMenu
                     session={session}
                     navigation={navigation}
                     internationalNavItems={internationalNavItems}
@@ -380,12 +426,12 @@ export function Header() {
           </div>
         </div>
       </nav>
-      
+
       {isShopPage ? (
         <>
           <ShopNav />
           <div className="accent-bg text-white text-center py-2 text-xs sm:text-sm font-medium">
-            {t('sale')}
+            {t("sale")}
           </div>
         </>
       ) : null}
@@ -394,38 +440,42 @@ export function Header() {
 }
 
 // Mobile Menu Component using Shadcn Sheet
-function MobileMenu({ 
-  session, 
-  navigation, 
-  internationalNavItems, 
-  mobileSearchQuery, 
-  setMobileSearchQuery, 
-  handleMobileSearch, 
-  t, 
-  getUserImage 
+function MobileMenu({
+  session,
+  navigation,
+  internationalNavItems,
+  mobileSearchQuery,
+  setMobileSearchQuery,
+  handleMobileSearch,
+  t,
+  getUserImage,
 }: any) {
   const [internationalOpen, setInternationalOpen] = useState(false);
 
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-white hover:text-gray-200 hover:bg-transparent"
-        >
-          {/* <Bars3Icon className="h-6 w-6" /> */}
-          <img src="/images/recentUpdate/harmburger.png" alt="" />
-          <span className="sr-only">Open main menu</span>
-        </Button>
-      </SheetTrigger>
+      <div className="absolute left-0 top-2 mr-10">
+        <SheetTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:text-gray-200 hover:bg-transparent"
+          >
+            {/* <Bars3Icon className="h-6 w-6" /> */}
+            <img src="/images/recentUpdate/harmburger.png" alt="" />
+            <span className="sr-only">Open main menu</span>
+          </Button>
+        </SheetTrigger>
+      </div>
 
-      
-      <SheetContent side="right" className="w-[300px] sm:w-[400px] bg-gray-900 text-white">
+      <SheetContent
+        side="right"
+        className="w-[300px] sm:w-[400px] bg-gray-900 text-white"
+      >
         <SheetHeader>
           <SheetTitle className="text-white">Menu</SheetTitle>
         </SheetHeader>
-        
+
         {/* Mobile search field */}
         <div className="px-2 pt-4 pb-2">
           <form onSubmit={handleMobileSearch} className="relative">
@@ -456,7 +506,10 @@ function MobileMenu({
           ))}
 
           {/* International submenu for mobile */}
-          <DropdownMenu open={internationalOpen} onOpenChange={setInternationalOpen}>
+          <DropdownMenu
+            open={internationalOpen}
+            onOpenChange={setInternationalOpen}
+          >
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
@@ -491,12 +544,10 @@ function MobileMenu({
           <div className="border-t border-gray-700 px-3 py-3 mt-4">
             <div className="flex items-center">
               <Avatar className="h-10 w-10">
-                <AvatarImage
-                  src={getUserImage(session.user)}
-                  alt="Profile"
-                />
+                <AvatarImage src={getUserImage(session.user)} alt="Profile" />
                 <AvatarFallback>
-                  <UserIcon className="h-4 w-4" />
+                  {/* <UserIcon className="h-4 w-4" /> */}
+                  <UserRound className="h-4 w-4" />
                 </AvatarFallback>
               </Avatar>
               <div className="ml-3">
