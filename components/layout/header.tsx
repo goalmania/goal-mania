@@ -145,7 +145,7 @@ export function Header() {
       } ${showBorder ? "border-b-5 border-orange-500" : ""}`}
     >
       <nav className="primary-bg text-white shadow">
-        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+        <div className="container px-2 sm:px-6 lg:px-8">
           <div className="flex h-14 sm:h-16 justify-between items-center">
             {/* Logo and Navigation */}
             <div className="flex items-center">
@@ -367,11 +367,11 @@ export function Header() {
                   ) : (
                     <div className="bg-transparent border rounded-full flex gap-1 px-5 py-3 border-[#FF7A00]">
                       <button>
-                        <Link href="/auth/signin">{t("Login")}</Link>
+                        <Link className="whitespace-nowrap" href="/auth/signin">{t("Login")}</Link>
                       </button>
                       <button>
                         <span className="mr-1">/</span>
-                        <Link href="/auth/signup">{t("Sign-up")}</Link>
+                        <Link className="whitespace-nowrap"  href="/auth/signup">{t("Sign-up")}</Link>
                       </button>
 
                       <ArrowRight className="ml-2" />
