@@ -4,11 +4,11 @@
 
 import { Fragment, useState, useEffect, useRef } from "react";
 import {
-  Bars3Icon,
-  XMarkIcon,
+  // Bars3Icon,
+  // XMarkIcon,
   ShoppingCartIcon,
-  HeartIcon,
-  LanguageIcon,
+  // HeartIcon,
+  // LanguageIcon,
   ChevronDownIcon,
   MagnifyingGlassIcon,
   UserIcon,
