@@ -38,7 +38,7 @@ export default function ShopSearchBar({ initialQuery = "" }: ShopSearchBarProps)
         />
         <button
           type="submit"
-          className="absolute hidden md:flex inset-y-0 right-0  items-center px-4 py-2 bg-transparent  text-[#0A1A2F] rounded-r-md hover:bg-[] focus:outline-none focus:ring-1"
+          className="absolute hidden md:flex inset-y-0 right-0 border rounded-full m-1.5 items-center px-4 py-2 bg-transparent  text-[#0A1A2F] rounded-r-md hover:bg-[] focus:outline-none focus:ring-1"
         >
           Cerca
 

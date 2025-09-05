@@ -52,7 +52,7 @@ export default function ShopClient({
   const ShopbannerData = {
     title: `${t("Trova la Maglia che Rispecchia il Tuo Tifo")}`,
     subtitle: `${t(
-      " Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style."
+      " Esplora la nostra vasta gamma di capi realizzati con cura, pensati per esaltare la tua individualità e soddisfare il tuo senso dello stile."
     )}`,
     buttons: [
       { text: `${t("Ultime Notizie")}`, href: `news` },
