@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { ArrowRight } from "lucide-react";
 
 interface ShopSearchBarProps {
   initialQuery?: string;
@@ -24,7 +25,7 @@ export default function ShopSearchBar({ initialQuery = "" }: ShopSearchBarProps)
 
   return (
     <form onSubmit={handleSearch} className="max-w-3xl mx-auto my-1">
-      <div className="relative">
+      <div className="relative mx-3">
         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
         </div>
@@ -33,13 +34,15 @@ export default function ShopSearchBar({ initialQuery = "" }: ShopSearchBarProps)
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Cerca prodotti, articoli..."
-          className="block w-full rounded-md border-0 py-3 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          className="block w-full rounded-full border-0 py-3 bg-[#F0F0F0] pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset sm:text-sm sm:leading-6"
         />
         <button
           type="submit"
-          className="absolute inset-y-0 right-0 flex items-center px-4 py-2 bg-indigo-600 text-white rounded-r-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="absolute hidden md:flex inset-y-0 right-0  items-center px-4 py-2 bg-transparent  text-[#0A1A2F] rounded-r-md hover:bg-[] focus:outline-none focus:ring-1"
         >
           Cerca
+
+          <ArrowRight className="inline-flex mr-1.5" />
         </button>
       </div>
     </form>
