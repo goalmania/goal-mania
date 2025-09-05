@@ -12,6 +12,7 @@ import { TeamCarousel } from "@/components/home/TeamCarousel";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/hooks/useI18n";
+import ShopBanner from "@/components/shop/ShopBanner";
 
 interface Review {
   id: string;
@@ -47,13 +48,27 @@ export default function ShopClient({
   const featuredProduct2 = featuredProducts[1] || null;
   const featuredProduct3 = featuredProducts[2] || null;
 
+  // SHOP BANNER CONTENT
+  const ShopbannerData = {
+    title: `${t("Trova la Maglia che Rispecchia il Tuo Tifo")}`,
+    subtitle: `${t(
+      " Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style."
+    )}`,
+    buttons: [
+      { text: `${t("Ultime Notizie")}`, href: `news` },
+      { text: `${t("Maglie Attuali")}`, href: `/shop/2025/26` },
+      { text: `${t("Maglie Retro")}`, href: `/shop/retro` },
+    ],
+    imageUrl: `/images/recentUpdate/product-banner.jpg`, // This uses the uploaded image
+  };
+
   return (
     <div className="bg-white pt-[112px]">
       <ShopSearchBar />
       {/* Hero section - adjust height to account for fixed header */}
-      <div className="relative px-0">
+      {/* <div className="relative px-0">
         <div className="mx-0 w-screen px-0 py-8">
-          {/* Image section - full width */}
+        
           <Card className="max-w-[80vw] bg-white h-screen flex flex-col justify-center items-center overflow-hidden rounded-2xl shadow-2xl p-0 mx-auto relative border-0">
             <Image
               src="/banners/banner_1.jpeg"
@@ -70,10 +85,23 @@ export default function ShopClient({
             </div>
           </Card>
         </div>
-      </div>
+      </div> */}
+
+      <section className="relative">
+        <img
+          src={`/images/recentUpdate/mobile-banner-logo.png`}
+          alt="Banner Background"
+          className="w-15 h-15 absolute z-10  lg:hidden  top-10 right-3 "
+        />
+        <ShopBanner
+          title={ShopbannerData.title}
+          subtitle={ShopbannerData.subtitle}
+          buttons={ShopbannerData.buttons}
+          imageUrl={ShopbannerData.imageUrl}
+        />
+      </section>
 
       <TeamCarousel />
-
 
       {/* Customer Satisfaction Message */}
       <div className="bg-gray-800 py-10 sm:py-16">
@@ -123,8 +151,14 @@ export default function ShopClient({
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
           <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-          <div className="absolute top-3/4 right-1/4 w-64 h-64 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse" style={{animationDelay: '4s'}}></div>
+          <div
+            className="absolute top-3/4 right-1/4 w-64 h-64 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"
+            style={{ animationDelay: "2s" }}
+          ></div>
+          <div
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"
+            style={{ animationDelay: "4s" }}
+          ></div>
         </div>
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
@@ -139,8 +173,9 @@ export default function ShopClient({
               Mystery Box
             </h2>
             <p className="text-lg sm:text-xl text-purple-100 max-w-2xl mx-auto">
-              Scatole misteriose piene di sorprese! Ogni box contiene maglie selezionate con cura, 
-              perfette per veri collezionisti che amano le sorprese.
+              Scatole misteriose piene di sorprese! Ogni box contiene maglie
+              selezionate con cura, perfette per veri collezionisti che amano le
+              sorprese.
             </p>
           </div>
 
@@ -151,22 +186,26 @@ export default function ShopClient({
                 <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-4xl">📦</span>
                 </div>
-                <p className="text-white/80 text-lg">I Mystery Box stanno arrivando presto!</p>
-                <p className="text-white/60 text-sm mt-2">Torna a controllare per le nostre sorprese speciali.</p>
+                <p className="text-white/80 text-lg">
+                  I Mystery Box stanno arrivando presto!
+                </p>
+                <p className="text-white/60 text-sm mt-2">
+                  Torna a controllare per le nostre sorprese speciali.
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {mysteryBoxProducts.map((product, index) => (
-                  <div 
-                    key={product.id} 
+                  <div
+                    key={product.id}
                     className="group relative bg-white/10 backdrop-blur-sm rounded-2xl border border-white/30 p-6 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl animate-fade-in"
-                    style={{animationDelay: `${index * 0.2}s`}}
+                    style={{ animationDelay: `${index * 0.2}s` }}
                   >
                     {/* Mystery Box Icon Overlay */}
                     <div className="absolute top-4 right-4 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-sm animate-pulse">
                       🎁
                     </div>
-                    
+
                     <div className="aspect-square bg-white/20 rounded-xl mb-4 relative overflow-hidden">
                       <Image
                         src={product.image}
@@ -177,12 +216,13 @@ export default function ShopClient({
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-purple-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
-                    
+
                     <h3 className="text-white font-bold text-lg mb-2 group-hover:text-yellow-300 transition-colors">
                       {product.name}
                     </h3>
                     <p className="text-purple-100 text-sm mb-4">
-                      Contenuto a sorpresa • Valore garantito superiore al prezzo
+                      Contenuto a sorpresa • Valore garantito superiore al
+                      prezzo
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-2xl font-bold text-white">
@@ -208,8 +248,12 @@ export default function ShopClient({
                 <span className="text-4xl">✨</span>
               </div>
               <div className="text-left">
-                <h3 className="text-white font-bold text-lg">Garanzia Soddisfazione 100%</h3>
-                <p className="text-purple-100 text-sm">Non sei soddisfatto? Rimborso completo entro 7 giorni!</p>
+                <h3 className="text-white font-bold text-lg">
+                  Garanzia Soddisfazione 100%
+                </h3>
+                <p className="text-purple-100 text-sm">
+                  Non sei soddisfatto? Rimborso completo entro 7 giorni!
+                </p>
               </div>
             </div>
           </div>
