@@ -157,11 +157,11 @@ export function Header() {
                     alt="Goal Mania Logo"
                     width={80}
                     height={80}
-                    className="ml-3"
+                    className="ml-3 w-[50px] h-[50px] sm:h-[70px] sm:w-[70px]"
                     style={{ objectFit: "contain" }}
                   />
                   {/* goalmania-title */}
-                  <span className="goalmania-title -ml-4 md:hidden text-base sm:text-xl tracking-tight font-bold text-white ">
+                  <span className="goalmania-title -ml-3 md:hidden text-xs sm:text-xl tracking-tight font-bold text-white ">
                     GOAL <span className="text-[#FF7A00]">MANIA</span> 
                   </span>
                 </Link>
