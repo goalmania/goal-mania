@@ -152,7 +152,7 @@ export default function ProductCard({
         {/* Info section */}
         <div className="p-2 sm:p-4 flex flex-col flex-grow">
           <div className="mb-2 flex-grow">
-            <h3 className="text-xs flex  justify-start text-left items-center sm:text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
+            <h3 className="text-xs flex  justify-start text-left items-center sm:text-lg md:text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
               {name}
             </h3>
 
@@ -175,7 +175,7 @@ export default function ProductCard({
 
             <div className=" flex items-center justify-start gap-1 sm:gap-2">
               {/* Wishlist button */}
-              {/* {showWishlistButton && onWishlistToggle && ( */}
+              {showWishlistButton && onWishlistToggle && (
                 <button
                   onClick={handleWishlistToggle}
                   className=" rounded-full bg-white/80 backdrop-blur-sm p-1.5 sm:p-2.5 shadow-md hover:bg-white transition-colors duration-200 "
@@ -191,11 +191,11 @@ export default function ProductCard({
                     <HeartIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
                   )}
                 </button>
-              {/* )} */}
+              )}
 
               {/* Wishlist button */}
               {/* Add to cart button */}
-              {/* {showAddToCartButton && onAddToCart && ( */}
+              {showAddToCartButton && onAddToCart && (
                 <button
                   onClick={handleAddToCart}
                   className=" rounded-full bg-[#f5963c]/80 backdrop-blur-sm p-1 shadow-sm hover:bg-[#f5963c] transition-colors duration-200  text-white"
@@ -215,7 +215,7 @@ export default function ProductCard({
                     />
                   </svg>
                 </button>
-              {/* )} */}
+              )}
             </div>
           </div>
 
