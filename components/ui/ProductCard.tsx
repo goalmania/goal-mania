@@ -121,7 +121,13 @@ export default function ProductCard({
             setShowVideo(false);
           }}
         >
-          <div className={`relative w-full bg-gray-200 overflow-hidden rounded-t-lg ${imageAspectRatio === 'square' ? 'aspect-square' : imageAspectClasses[imageAspectRatio]}`}>
+          <div
+            className={`relative w-full bg-gray-200 overflow-hidden rounded-t-lg ${
+              imageAspectRatio === "square"
+                ? "aspect-square"
+                : imageAspectClasses[imageAspectRatio]
+            }`}
+          >
             {/* Video overlay */}
             {videos.length > 0 && showVideo && isHovered ? (
               <video
@@ -140,52 +146,19 @@ export default function ProductCard({
                 sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
               />
             )}
-
-            {/* Wishlist button */}
-            {showWishlistButton && onWishlistToggle && (
-              <button
-                onClick={handleWishlistToggle}
-                className="absolute right-2 top-2 rounded-full bg-white/80 backdrop-blur-sm p-1.5 sm:p-2.5 shadow-md hover:bg-white transition-colors duration-200 z-10"
-                aria-label={
-                  isInWishlist && isInWishlist(id)
-                    ? t('product.removeFromWishlist')
-                    : t('product.addToWishlist')
-                }
-              >
-                {isInWishlist && isInWishlist(id) ? (
-                  <HeartIconSolid className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
-                ) : (
-                  <HeartIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
-                )}
-              </button>
-            )}
-
-            {/* Wishlist button */}
-            {/* Add to cart button */}
-            {showAddToCartButton && onAddToCart && (
-              <button
-                onClick={handleAddToCart}
-                className="absolute left-1.5 top-1.5 rounded-full bg-[#f5963c]/80 backdrop-blur-sm p-1 shadow-sm hover:bg-[#f5963c] transition-colors duration-200 z-10 text-white"
-                aria-label="Add to cart"
-              >
-                <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
-                </svg>
-              </button>
-            )}
           </div>
         </div>
 
         {/* Info section */}
         <div className="p-2 sm:p-4 flex flex-col flex-grow">
           <div className="mb-2 flex-grow">
-            <h3 className="text-xs flex justify-center text-center items-center sm:text-sm font-medium text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
+            <h3 className="text-xs flex  justify-start text-left items-center sm:text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
               {name}
             </h3>
-            
+
             {/* Category and team info */}
             {(category || team) && (
-              <div className="mt-1 flex items-center justify-center gap-1 sm:gap-2 flex-wrap">
+              <div className="mt-1 flex items-start justify-start gap-1 sm:gap-2 flex-wrap">
                 {category && (
                   <p className="text-[10px] sm:text-xs text-gray-500">
                     {category}
@@ -195,17 +168,62 @@ export default function ProductCard({
                   <span className="h-1 w-1 rounded-full bg-gray-300 hidden sm:block"></span>
                 )}
                 {team && (
-                  <p className="text-[10px] sm:text-xs text-gray-500">
-                    {team}
-                  </p>
+                  <p className="text-[10px] sm:text-xs text-gray-500">{team}</p>
                 )}
               </div>
             )}
+
+            <div className=" flex items-center justify-start gap-1 sm:gap-2">
+              {/* Wishlist button */}
+              {/* {showWishlistButton && onWishlistToggle && ( */}
+                <button
+                  onClick={handleWishlistToggle}
+                  className=" rounded-full bg-white/80 backdrop-blur-sm p-1.5 sm:p-2.5 shadow-md hover:bg-white transition-colors duration-200 "
+                  aria-label={
+                    isInWishlist && isInWishlist(id)
+                      ? t("product.removeFromWishlist")
+                      : t("product.addToWishlist")
+                  }
+                >
+                  {isInWishlist && isInWishlist(id) ? (
+                    <HeartIconSolid className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
+                  ) : (
+                    <HeartIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
+                  )}
+                </button>
+              {/* )} */}
+
+              {/* Wishlist button */}
+              {/* Add to cart button */}
+              {/* {showAddToCartButton && onAddToCart && ( */}
+                <button
+                  onClick={handleAddToCart}
+                  className=" rounded-full bg-[#f5963c]/80 backdrop-blur-sm p-1 shadow-sm hover:bg-[#f5963c] transition-colors duration-200  text-white"
+                  aria-label="Add to cart"
+                >
+                  <svg
+                    className="h-3 w-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"
+                    />
+                  </svg>
+                </button>
+              {/* )} */}
+            </div>
           </div>
 
           {/* Price */}
-          <div className="flex items-center justify-center mt-auto">
-            <p className="text-xs sm:text-base md:text-lg font-semibold text-[#F1803A]">€{Number(price).toFixed(2)}</p>
+          <div className="flex items-start justify-start mt-auto">
+            <p className="text-xs sm:text-base md:text-lg font-semibold text-[#F1803A]">
+              €{Number(price).toFixed(2)}
+            </p>
           </div>
 
           {/* Badges section */}
@@ -216,7 +234,7 @@ export default function ProductCard({
                 <span
                   key={patch}
                   className="bg-[#f5963c]/80 text-white text-[8px] sm:text-[10px] px-1 py-0.5 rounded-full shadow-sm font-medium border border-[#f5963c]/40 backdrop-blur-sm"
-                  style={{ minWidth: 'fit-content' }}
+                  style={{ minWidth: "fit-content" }}
                 >
                   {patch === "champions-league"
                     ? "Coppa Europea"
@@ -224,21 +242,22 @@ export default function ProductCard({
                     ? "Campionato Nazionale"
                     : patch
                         .split("-")
-                        .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+                        .map(
+                          (word: string) =>
+                            word.charAt(0).toUpperCase() + word.slice(1)
+                        )
                         .join(" ")}
                 </span>
               ))}
-              
+
               {/* Custom badges */}
               {badges.map((badge, index) => (
                 <span
                   key={index}
                   className={`text-[8px] sm:text-[10px] px-1 py-0.5 rounded-full shadow-sm font-medium backdrop-blur-sm ${
-                    badge.bgColor || 'bg-gray-500/80'
-                  } ${
-                    badge.color || 'text-white'
-                  }`}
-                  style={{ minWidth: 'fit-content' }}
+                    badge.bgColor || "bg-gray-500/80"
+                  } ${badge.color || "text-white"}`}
+                  style={{ minWidth: "fit-content" }}
                 >
                   {badge.text}
                 </span>
@@ -249,4 +268,4 @@ export default function ProductCard({
       </div>
     </Link>
   );
-} 
+}
