@@ -76,7 +76,7 @@ export default function NewsBanner({ imageUrl, className }: NewsBannerProps) {
             {/* Slide 2: Paragraph */}
             <SwiperSlide className="flex flex-col items-center text-center px-6">
               <h1 className="text-white text-xl font-bold mb-4 font-sans">
-                Serie A: Le Sorprese della Nuova Stagione
+                Come le Nuove Tattiche Stanno Cambiando il Gioco
               </h1>
               <p className="text-white text-sm font-light leading-relaxed">
                 Hai una domanda, un suggerimento o semplicemente vuoi salutarci?
@@ -114,7 +114,7 @@ export default function NewsBanner({ imageUrl, className }: NewsBannerProps) {
           {/* Right: Info Row */}
           <div>
             <h1 className="text-white text-2xl mb-2 font-bold font-sans max-w-xl">
-              Serie A: Le Sorprese della Nuova Stagione
+             Come le Nuove Tattiche Stanno Cambiando il Gioco
             </h1>
 
             <div className="flex items-center gap-6 text-gray-200 text-sm lg:text-base">

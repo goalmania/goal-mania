@@ -369,6 +369,13 @@
     @apply px-2 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm rounded-md font-medium;
   }
 
+  .swiper-pagination{
+    bottom:  -30px !important;
+  }
+    .swiper-pagination-bullet-active {
+    background-color: #FF7A00 !important;
+  }
+
   .thin-scrollbar {
     scrollbar-width: thin; /* Firefox */
     scrollbar-color: #bbb transparent; /* Firefox */
