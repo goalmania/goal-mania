@@ -100,166 +100,179 @@ export default function SignUp() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="text-center">
-          <Link href="/" className="inline-block">
-            <span className="text-3xl font-bold text-indigo-600">
-              Goal Mania
-            </span>
-          </Link>
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 p-6 lg:p-10 gap-10 lg:gap-0">
+      {/* Image Left */}
+      <div className="relative h-[60vh] lg:h-auto rounded-2xl">
+        <div className="absolute   inset-0">
+          <img
+            src={`/images/recentUpdate/login-bg.png`}
+            alt="Banner Background"
+            className="w-full h-full rounded-2xl  object-cover"
+          />
         </div>
-        <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-gray-900">
-          Create your account
-        </h2>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow-xl rounded-lg sm:px-10 border border-gray-100">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <Label
-                htmlFor="name"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Full name
-              </Label>
-              <div className="mt-2">
-                <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  placeholder="Enter your full name"
-                />
-              </div>
-              {validationErrors.name && (
-                <p className="mt-2 text-sm text-red-600">
-                  {validationErrors.name}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <Label
-                htmlFor="email"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Email address
-              </Label>
-              <div className="mt-2">
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  placeholder="Enter your email"
-                />
-              </div>
-              {validationErrors.email && (
-                <p className="mt-2 text-sm text-red-600">
-                  {validationErrors.email}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <Label
-                htmlFor="password"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Password
-              </Label>
-              <div className="mt-2">
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  placeholder="Create a password"
-                />
-              </div>
-              {validationErrors.password && (
-                <p className="mt-2 text-sm text-red-600">
-                  {validationErrors.password}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <Label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Confirm password
-              </Label>
-              <div className="mt-2">
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  placeholder="Confirm your password"
-                />
-              </div>
-              {validationErrors.confirmPassword && (
-                <p className="mt-2 text-sm text-red-600">
-                  {validationErrors.confirmPassword}
-                </p>
-              )}
-            </div>
-
-            {error && (
-              <div className="rounded-md bg-red-50 p-4 border border-red-100">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <svg
-                      className="h-5 w-5 text-red-400"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">
-                      {error}
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div>
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="flex w-full justify-center"
-                variant="default"
-              >
-                {isLoading ? "Creating account..." : "Sign up"}
-              </Button>
-            </div>
-          </form>
+      <div className=" flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <div className="text-center">
+            <Link href="/" className="inline-block">
+              <span className="text-3xl font-bold text-indigo-600">
+                Goal Mania
+              </span>
+            </Link>
+          </div>
+          <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-gray-900">
+            Create your account
+          </h2>
         </div>
 
-        <p className="mt-8 text-center text-sm text-gray-500">
-          Already have an account?{" "}
-          <Link
-            href="/auth/signin"
-            className="font-semibold text-indigo-600 hover:text-indigo-500 transition-colors"
-          >
-            Sign in
-          </Link>
-        </p>
+        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+          <div className="bg-white py-8 px-4 shadow-xl rounded-lg sm:px-10 border border-gray-100">
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <div>
+                <Label
+                  htmlFor="name"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Full name
+                </Label>
+                <div className="mt-2">
+                  <Input
+                    id="name"
+                    name="name"
+                    type="text"
+                    autoComplete="name"
+                    required
+                    placeholder="Enter your full name"
+                  />
+                </div>
+                {validationErrors.name && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.name}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Label
+                  htmlFor="email"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Email address
+                </Label>
+                <div className="mt-2">
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    placeholder="Enter your email"
+                  />
+                </div>
+                {validationErrors.email && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.email}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Label
+                  htmlFor="password"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Password
+                </Label>
+                <div className="mt-2">
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="new-password"
+                    required
+                    placeholder="Create a password"
+                  />
+                </div>
+                {validationErrors.password && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.password}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Confirm password
+                </Label>
+                <div className="mt-2">
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    autoComplete="new-password"
+                    required
+                    placeholder="Confirm your password"
+                  />
+                </div>
+                {validationErrors.confirmPassword && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.confirmPassword}
+                  </p>
+                )}
+              </div>
+
+              {error && (
+                <div className="rounded-md bg-red-50 p-4 border border-red-100">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg
+                        className="h-5 w-5 text-red-400"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-red-800">
+                        {error}
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="flex w-full justify-center"
+                  variant="default"
+                >
+                  {isLoading ? "Creating account..." : "Sign up"}
+                </Button>
+              </div>
+            </form>
+          </div>
+
+          <p className="mt-8 text-center text-sm text-gray-500">
+            Already have an account?{" "}
+            <Link
+              href="/auth/signin"
+              className="font-semibold text-indigo-600 hover:text-indigo-500 transition-colors"
+            >
+              Sign in
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

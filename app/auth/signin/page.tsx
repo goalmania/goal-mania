@@ -52,19 +52,19 @@ function SignInContent() {
   }
 
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 p-10">
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 p-10 gap-10 lg:gap-0">
       {/* Image Left */}
       <div className="relative h-[60vh] lg:h-auto rounded-2xl">
-        <div className="absolute hidden lg:block inset-0">
+        <div className="absolute   inset-0">
           <img
             src={`/images/recentUpdate/login-bg.png`}
             alt="Banner Background"
-            className="w-full h-full object-cover"
+            className="w-full h-full rounded-2xl  object-cover"
           />
         </div>
       </div>
 
-      <div className=" bg-gradient-to-br from-indigo-50 via-white to-indigo-50 flex flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
+      <div className="  flex flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
         {/* <div className="sm:mx-auto sm:w-full sm:max-w-md"> */}
           <div className="text-center">
