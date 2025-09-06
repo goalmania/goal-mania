@@ -630,7 +630,7 @@ export default function ProductDetailClient({
                   {!product.isMysteryBox &&
                     product.patches &&
                     product.patches.length > 0 && (
-                      <div className="space-y-3">
+                      <div className="space-y-3 mt-3 mx-3">
                         <Label className="text-sm font-medium">
                           Add Official Patches
                         </Label>
@@ -881,7 +881,7 @@ export default function ProductDetailClient({
                 </div>
             
                 <CardContent>
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-3 mt-3">
                     <Button
                       type="button"
                       variant="outline"
