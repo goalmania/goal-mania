@@ -52,9 +52,9 @@ function SignInContent() {
   }
 
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 p-10">
       {/* Image Left */}
-      <div className="relative h-[60vh] lg:h-auto">
+      <div className="relative h-[60vh] lg:h-auto rounded-2xl">
         <div className="absolute hidden lg:block inset-0">
           <img
             src={`/images/recentUpdate/login-bg.png`}
@@ -64,7 +64,7 @@ function SignInContent() {
         </div>
       </div>
 
-      <div className=" bg-gradient-to-br from-indigo-50 via-white to-indigo-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className=" bg-gradient-to-br from-indigo-50 via-white to-indigo-50 flex flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
         {/* <div className="sm:mx-auto sm:w-full sm:max-w-md"> */}
           <div className="text-center">
