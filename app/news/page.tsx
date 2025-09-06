@@ -89,16 +89,9 @@ export default async function NewsPage() {
             </Breadcrumb>
           </div>
 
-          {/* <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-10 text-left text-[#0e1924] leading-tight">
+          <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-10 p-10 text-left text-[#fff]  bg-[#0A1A2F] leading-tight">
             Latest News
-          </h1> */}
-
-          <div className="relative w-full h-48 overflow-hidden">
-            <div className="absolute inset-0 bg-gray-800 transform -skew-y-3"></div>
-            <h2 className="absolute inset-0 flex items-start justify-start text-white text-4xl font-bold">
-              Latest News
-            </h2>
-          </div>
+          </h1>
           {/* Render logic based on article count */}
           {allArticles.length === 1 && (
             <div className="w-full max-w-3xl mx-auto">
