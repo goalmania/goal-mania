@@ -370,7 +370,7 @@
   }
 
   .swiper-pagination{
-    bottom:  -10px !important;
+    bottom:  10px !important;
   }
     .swiper-pagination-bullet-active {
     background-color: #FF7A00 !important;

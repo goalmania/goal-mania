@@ -53,7 +53,7 @@ export default function NewsBanner({ imageUrl, className }: NewsBannerProps) {
       {/* Content */}
       <div className="relative  z-10 w-full">
         {/* Mobile: Swiper Carousel */}
-        <div className="block lg:hidden w-full max-w-md mx-auto">
+        <div className="block lg:hidden w-full pb-10 max-w-md mx-auto">
           <Swiper
             modules={[Pagination]}
             pagination={{ clickable: true }}

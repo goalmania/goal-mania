@@ -89,7 +89,7 @@ export default async function NewsPage() {
             </Breadcrumb>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-10 p-10 text-left text-[#fff]  bg-[#0A1A2F] leading-tight">
+          <h1 className="text-4xl sm:text-5xl max-w-md  font-serif font-bold mb-10 p-5 text-left text-[#fff]  bg-[#0A1A2F] leading-tight">
             Latest News
           </h1>
           {/* Render logic based on article count */}
