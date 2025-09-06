@@ -103,6 +103,7 @@
     "slugify": "^1.6.6",
     "sonner": "^2.0.6",
     "stripe": "^18.1.0",
+    "swiper": "^11.2.10",
     "swr": "^2.3.3",
     "tailwind-merge": "^3.2.0",
     "tailwindcss-animate": "^1.0.7",
