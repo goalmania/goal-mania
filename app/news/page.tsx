@@ -65,22 +65,14 @@ export default async function NewsPage() {
   const { featured, regular } = await getNewsArticles();
   const allArticles: NewsArticle[] = [...featured, ...regular];
 
- 
-  
-
-  const bannerData = {
-    title: `${"hero.title"}`,
-    subtitle: `${"hero.subtitle"}`,
-    
+  const MobilebannerData = {
     imageUrl: `/images/recentUpdate/mobile-news.jpg`, // This uses the uploaded image
   };
 
   return (
     <Suspense fallback={<LoadingFallback />}>
       <div className="bg-gradient-to-b  from-white to-[#e6f1ff] min-h-screen flex flex-col">
-         <NewsBanner
-            
-              />
+        <NewsBanner imageUrl={bannerData.imageUrl} />
         <div className="container mx-auto px-6 sm:px-10 lg:px-20 pt-12 pb-12 flex-1">
           {/* Breadcrumb */}
           <div className="mb-6">

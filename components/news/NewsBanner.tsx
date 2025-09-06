@@ -63,14 +63,22 @@ export default function NewsBanner({ imageUrl, className }: NewsBannerProps) {
           >
             {/* Slide 1: Heading */}
             <SwiperSlide className="flex flex-col items-center text-center px-6">
-              <h1 className="text-white text-3xl md:text-4xl font-bold mb-4 font-sans">
+              <h1 className="text-white text-xl font-bold mb-4 font-sans">
                 Serie A: Le Sorprese della Nuova Stagione
               </h1>
+              <p className="text-white text-sm font-light leading-relaxed">
+                Hai una domanda, un suggerimento o semplicemente vuoi salutarci?
+                Compila il modulo qui sotto e il nostro team ti risponderà al
+                più presto siamo qui per aiutarti!
+              </p>
             </SwiperSlide>
 
             {/* Slide 2: Paragraph */}
             <SwiperSlide className="flex flex-col items-center text-center px-6">
-              <p className="text-gray-200 text-base md:text-lg font-light leading-relaxed">
+              <h1 className="text-white text-xl font-bold mb-4 font-sans">
+                Serie A: Le Sorprese della Nuova Stagione
+              </h1>
+              <p className="text-white text-sm font-light leading-relaxed">
                 Hai una domanda, un suggerimento o semplicemente vuoi salutarci?
                 Compila il modulo qui sotto e il nostro team ti risponderà al
                 più presto siamo qui per aiutarti!
@@ -83,7 +91,7 @@ export default function NewsBanner({ imageUrl, className }: NewsBannerProps) {
         <div className="hidden lg:flex w-full   justify-between items-end absolute bottom-8 left-0 right-0 px-14">
           {/* Left: Heading */}
           <div>
-       <h1 className="text-white text-2xl mb-2 font-bold font-sans max-w-xl">
+            <h1 className="text-white text-2xl mb-2 font-bold font-sans max-w-xl">
               Serie A: Le Sorprese della Nuova Stagione
             </h1>
 
