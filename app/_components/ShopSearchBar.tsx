@@ -38,11 +38,11 @@ export default function ShopSearchBar({ initialQuery = "" }: ShopSearchBarProps)
         />
         <button
           type="submit"
-          className="absolute hidden md:flex inset-y-0 right-0 border rounded-full m-1.5 items-center px-4 py-2 bg-transparent  text-[#0A1A2F] rounded-r-md hover:bg-[] focus:outline-none focus:ring-1"
+          className="absolute border-black hidden md:flex inset-y-0 mr-4 right-0 border rounded-full m-1.5 items-center px-4 py-2 bg-transparent  text-[#0A1A2F]  hover:bg-[] focus:outline-none focus:ring-1"
         >
           Cerca
 
-          <ArrowRight className="inline-flex mr-1.5" />
+          <ArrowRight className="inline-flex mr-1.5 w-5 h-5" />
         </button>
       </div>
     </form>
