@@ -128,7 +128,6 @@ export default async function Home() {
     <div className="bg-white min-h-screen relative">
       <HeroSection />
       <ClientSlider />
-      {/* <TeamCarousel /> */}
       <FeaturedProducts products={featuredProducts} />
       <GuaranteesSection />
       <NewsSection articles={featuredArticles} />

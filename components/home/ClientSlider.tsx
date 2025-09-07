@@ -9,9 +9,17 @@ import { useTeams } from "@/hooks/useTeams";
 import { useI18n } from "@/lib/hooks/useI18n";
 import { Skeleton } from "@/components/ui/skeleton";
 
-function ClientSlider({ isInternational = false }: { isInternational?: boolean }) {
+function ClientSlider({
+  isInternational = false,
+}: {
+  isInternational?: boolean;
+}) {
   const { t } = useI18n();
-  const { teams: rawTeams, isLoading, error } = useTeams({
+  const {
+    teams: rawTeams,
+    isLoading,
+    error,
+  } = useTeams({
     initialLimit: 50,
     initialIsInternational: isInternational,
     initialIsActive: true,
@@ -32,7 +40,9 @@ function ClientSlider({ isInternational = false }: { isInternational?: boolean }
     }));
 
   const getTitle = () => {
-    return isInternational ? t("home.internationalTeams") : t("home.serieATeams");
+    return isInternational
+      ? t("home.internationalTeams")
+      : t("home.serieATeams");
   };
 
   if (error) {
@@ -42,7 +52,9 @@ function ClientSlider({ isInternational = false }: { isInternational?: boolean }
           <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
             {getTitle()}
           </h2>
-          <p className="text-red-600">{t("common.error")}: {error}</p>
+          <p className="text-red-600">
+            {t("common.error")}: {error}
+          </p>
         </div>
       </section>
     );
@@ -56,7 +68,9 @@ function ClientSlider({ isInternational = false }: { isInternational?: boolean }
           {getTitle()}
         </h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-12">
-        Explore all Serie A teams from legendary giants to rising challengers. Click a logo to see the latest news, matches, and updates for each club.
+          Explore all Serie A teams from legendary giants to rising challengers.
+          Click a logo to see the latest news, matches, and updates for each
+          club.
         </p>
 
         {/* Swiper */}
@@ -64,7 +78,10 @@ function ClientSlider({ isInternational = false }: { isInternational?: boolean }
           {isLoading ? (
             <div className="flex justify-center gap-6">
               {Array.from({ length: 6 }).map((_, idx) => (
-                <Skeleton key={idx} className="w-24 h-24 sm:w-28 sm:h-28 rounded-full" />
+                <Skeleton
+                  key={idx}
+                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full"
+                />
               ))}
             </div>
           ) : teams.length > 0 ? (
@@ -103,8 +120,13 @@ function ClientSlider({ isInternational = false }: { isInternational?: boolean }
           )}
 
           {/* Navigation Buttons */}
-          <button className="swiper-button-prev-custom absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10 hidden sm:block">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-10 h-10 text-gray-400 hover:text-gray-600 transition-colors">
+          {/* <button className="swiper-button-prev-custom absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10 hidden sm:block">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              className="w-10 h-10 text-gray-400 hover:text-gray-600 transition-colors"
+            >
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -120,7 +142,12 @@ function ClientSlider({ isInternational = false }: { isInternational?: boolean }
           </button>
 
           <button className="swiper-button-next-custom absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 cursor-pointer z-10 hidden sm:block">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-10 h-10 text-gray-400 hover:text-gray-600 transition-colors">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              className="w-10 h-10 text-gray-400 hover:text-gray-600 transition-colors"
+            >
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -133,7 +160,47 @@ function ClientSlider({ isInternational = false }: { isInternational?: boolean }
                 0 1 0 1.06 1.06l3.25-3.25Z"
               />
             </svg>
-          </button>
+          </button> */}
+
+          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4 mt-10">
+            <button
+              aria-label="Previous featured products"
+              className="swiper-button-prev-custom  flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md hover:bg-gray-100"
+            >
+              <svg
+                className="w-5 h-5 text-gray-700"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+
+            <button
+              aria-label="Next featured products"
+              className="swiper-button-next-custom  flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md hover:bg-gray-100"
+            >
+              <svg
+                className="w-5 h-5 text-gray-700"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </section>
