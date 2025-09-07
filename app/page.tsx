@@ -7,6 +7,7 @@ import FeaturedProducts from "@/components/home/FeaturedProducts";
 import GuaranteesSection from "@/components/home/GuaranteesSection";
 import BannerBlock from "@/components/home/BannerBlock";
 import { getBaseUrl } from "@/lib/utils/baseUrl";
+import { TeamCarousel } from "@/components/home/TeamCarousel";
 
 // Enable caching for better performance
 export const revalidate = 300; // Revalidate every 5 minutes
@@ -119,6 +120,7 @@ export default async function Home() {
   return (
     <div className="bg-white min-h-screen relative">
       <HeroSection />
+       <TeamCarousel />
       <FeaturedProducts products={featuredProducts} />
       <GuaranteesSection />
       <NewsSection articles={featuredArticles} />
