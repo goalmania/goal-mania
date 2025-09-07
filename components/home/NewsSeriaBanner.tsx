@@ -44,7 +44,7 @@ export default function NewsSeriaBanner({
       {/* DESKTOP */}
       <div className="absolute hidden lg:block inset-0">
         <img
-          src={`/images/recentUpdate/championsBanner.jpg`}
+          src={`/images/recentUpdate/desktop-news-serial.png`}
           alt="Banner Background"
           className="w-full h-full object-cover"
         />
