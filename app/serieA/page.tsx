@@ -20,15 +20,15 @@ const MobilebannerData = {
 export default async function SerieAPage() {
   return (
     <Suspense fallback={<LoadingFallback />}>
-      <section className="relative">
-        <img
-          src={`/images/recentUpdate/mobile-banner-logo.png`}
-          alt="Banner Background"
-          className="w-15 h-15 absolute z-10  lg:hidden  top-10 right-3 "
-        />
-        <NewsSeriaBanner imageUrl={MobilebannerData.imageUrl} />
-      </section>
       <div className="bg-[#f7f7f9] min-h-screen">
+        <section className="relative">
+          <img
+            src={`/images/recentUpdate/mobile-banner-logo.png`}
+            alt="Banner Background"
+            className="w-15 h-15 absolute z-10  lg:hidden  top-10 right-3 "
+          />
+          <NewsSeriaBanner imageUrl={MobilebannerData.imageUrl} />
+        </section>
         <div className="container mx-auto px-4 sm:px-6 py-8">
           <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-center text-[#0e1924] tracking-tight">
             Serie A News

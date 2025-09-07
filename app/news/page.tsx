@@ -31,7 +31,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import NewsBanner from "@/components/news/NewsBanner";
-import PopularNewsGrid from "./PopularNewsGrid";
 
 // Enable ISR for news listing
 export const revalidate = 300;
