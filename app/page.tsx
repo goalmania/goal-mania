@@ -8,25 +8,27 @@ import GuaranteesSection from "@/components/home/GuaranteesSection";
 import BannerBlock from "@/components/home/BannerBlock";
 import { getBaseUrl } from "@/lib/utils/baseUrl";
 import { TeamCarousel } from "@/components/home/TeamCarousel";
+import ClientSlider from "@/components/home/ClientSlider";
 
 // Enable caching for better performance
 export const revalidate = 300; // Revalidate every 5 minutes
-
-
 
 // Fetch featured products
 async function getFeaturedProducts(): Promise<Product[]> {
   try {
     const baseUrl = getBaseUrl();
-    const response = await fetch(`${baseUrl}/api/products?feature=true&limit=4`, {
-      next: { revalidate: 300 }
-    });
+    const response = await fetch(
+      `${baseUrl}/api/products?feature=true&limit=4`,
+      {
+        next: { revalidate: 300 },
+      }
+    );
 
     if (!response.ok) return [];
 
     const data = await response.json();
     const products = data.products || data || [];
-    
+
     return products.slice(0, 4).map((product: any) => ({
       id: product._id || "",
       name: product.title || "Featured Product",
@@ -47,9 +49,12 @@ async function getFeaturedProducts(): Promise<Product[]> {
 async function getMysteryBoxProducts(): Promise<Product[]> {
   try {
     const baseUrl = getBaseUrl();
-    const response = await fetch(`${baseUrl}/api/products?type=mysteryBox&limit=3&noPagination=true`, {
-      next: { revalidate: 0 } // Disable caching for debugging
-    });
+    const response = await fetch(
+      `${baseUrl}/api/products?type=mysteryBox&limit=3&noPagination=true`,
+      {
+        next: { revalidate: 0 }, // Disable caching for debugging
+      }
+    );
 
     if (!response.ok) {
       console.error("Mystery Box API response not ok:", response.status);
@@ -58,30 +63,32 @@ async function getMysteryBoxProducts(): Promise<Product[]> {
 
     const data = await response.json();
     const products = data.products || data || [];
-    
+
     console.log("Mystery Box API Response:", {
       totalProducts: products.length,
       products: products.map((p: any) => ({
         id: p._id,
         title: p.title,
         isMysteryBox: p.isMysteryBox,
-        category: p.category
-      }))
+        category: p.category,
+      })),
     });
-    
+
     // Only return actual mystery box products
-    const mysteryBoxProducts = products.filter((product: any) => product.isMysteryBox === true);
-    
+    const mysteryBoxProducts = products.filter(
+      (product: any) => product.isMysteryBox === true
+    );
+
     console.log("Filtered Mystery Box Products:", {
       count: mysteryBoxProducts.length,
       products: mysteryBoxProducts.map((p: any) => ({
         id: p._id,
         title: p.title,
         isMysteryBox: p.isMysteryBox,
-        category: p.category
-      }))
+        category: p.category,
+      })),
     });
-    
+
     return mysteryBoxProducts.slice(0, 3).map((product: any) => ({
       id: product._id || "",
       name: product.title || "Scatola Misteriosa",
@@ -120,7 +127,8 @@ export default async function Home() {
   return (
     <div className="bg-white min-h-screen relative">
       <HeroSection />
-       <TeamCarousel />
+      <ClientSlider />
+      {/* <TeamCarousel /> */}
       <FeaturedProducts products={featuredProducts} />
       <GuaranteesSection />
       <NewsSection articles={featuredArticles} />

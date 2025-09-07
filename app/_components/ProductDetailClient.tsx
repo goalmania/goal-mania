@@ -10,6 +10,11 @@ import { useWishlistStore } from "@/lib/store/wishlist";
 import { useCartStore } from "@/lib/store/cart";
 import { IProduct, Review, Patch } from "@/lib/types/product";
 
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/free-mode";
+
 // Define interface for actual patch objects
 interface PatchObject {
   _id: string;
@@ -474,28 +479,42 @@ export default function ProductDetailClient({
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Thumbnail images */}
                     {product.images.length > 1 && (
-                      <div className="flex lg:col-span-1 flex-wrap gap-3 justify-center p-4">
-                        {product.images.map((image, index) => (
-                          <Button
-                            key={index}
-                            onClick={() => setSelectedImage(index)}
-                            variant={
-                              index === selectedImage ? "default" : "outline"
-                            }
-                            size="icon"
-                            className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden"
-                          >
-                            <Image
-                              src={image}
-                              alt={`${product.title} thumbnail ${index + 1}`}
-                              fill
-                              className="object-cover object-center"
-                              sizes="80px"
-                            />
-                          </Button>
-                        ))}
+                      <div className="lg:col-span-1 w-full h-[200px] p-4">
+                        <Swiper
+                          direction="vertical"
+                          spaceBetween={12}
+                          slidesPerView="auto"
+                          freeMode
+                          className="h-auto"
+                        >
+                          {product.images.map((image, index) => (
+                            <SwiperSlide key={index} className="!w-auto">
+                              <Button
+                                onClick={() => setSelectedImage(index)}
+                                variant={
+                                  index === selectedImage
+                                    ? "default"
+                                    : "outline"
+                                }
+                                size="icon"
+                                className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden"
+                              >
+                                <Image
+                                  src={image}
+                                  alt={`${product.title} thumbnail ${
+                                    index + 1
+                                  }`}
+                                  fill
+                                  className="object-cover object-center"
+                                  sizes="80px"
+                                />
+                              </Button>
+                            </SwiperSlide>
+                          ))}
+                        </Swiper>
                       </div>
                     )}
+
                     {/* Main image */}
                     <div className="relative lg:col-span-2 aspect-square  overflow-hidden bg-gray-100 w-full">
                       <Image
@@ -543,17 +562,22 @@ export default function ProductDetailClient({
                           }))
                         }
                       >
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="fan" id="fan-edition" />
-                          <Label htmlFor="fan-edition" className="text-sm">
-                            Fan Edition
-                          </Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="player" id="player-edition" />
-                          <Label htmlFor="player-edition" className="text-sm">
-                            Player Edition (+€{EXTRAS_PRICES.player_edition})
-                          </Label>
+                        <div className="flex gap-3">
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="fan" id="fan-edition" />
+                            <Label htmlFor="fan-edition" className="text-sm">
+                              Fan Edition
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem
+                              value="player"
+                              id="player-edition"
+                            />
+                            <Label htmlFor="player-edition" className="text-sm">
+                              Player Edition (+€{EXTRAS_PRICES.player_edition})
+                            </Label>
+                          </div>
                         </div>
                       </RadioGroup>
                     </div>
@@ -582,7 +606,7 @@ export default function ProductDetailClient({
                                 }))
                               }
                               maxLength={20}
-                              placeholder="Enter name"
+                              placeholder="Type here your name on shirt..."
                               className="pr-10 w-full border-b focus:border-b outline-0 "
                             />
                             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
@@ -614,7 +638,7 @@ export default function ProductDetailClient({
                                 }))
                               }
                               maxLength={2}
-                              placeholder="Enter number"
+                              placeholder="Type here your number on shirt..."
                               className="pr-10 w-full border-b focus:border-b outline-0 "
                             />
                             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
@@ -795,8 +819,10 @@ export default function ProductDetailClient({
 
               {/* Quantity selector */}
               <div className="-ml-2">
-                  <CardHeader>
-                  <CardTitle className="text-base font-semibold">Choose Size & Quantity</CardTitle>
+                <CardHeader>
+                  <CardTitle className="text-base font-semibold">
+                    Choose Size & Quantity
+                  </CardTitle>
                 </CardHeader>
                 <div className="mt-3">
                   {/* Size Selection */}
@@ -879,7 +905,7 @@ export default function ProductDetailClient({
                     )}
                   </div>
                 </div>
-            
+
                 <CardContent>
                   <div className="flex items-center space-x-3 mt-3">
                     <Button
