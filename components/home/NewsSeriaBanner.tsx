@@ -1,3 +1,5 @@
+"use client"
+
 import { useI18n } from "@/lib/hooks/useI18n";
 import { ArrowRight } from "lucide-react";
 import React from "react";
