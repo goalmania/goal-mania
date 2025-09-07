@@ -68,9 +68,7 @@ function ClientSlider({
           {getTitle()}
         </h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-12">
-          Explore all Serie A teams from legendary giants to rising challengers.
-          Click a logo to see the latest news, matches, and updates for each
-          club.
+         LA TUA SQUADRA like title and Qui trovi tutte le informazioni aggiornate sulla squadra notizie approfondimenti e curiosità. Ma sopratutto potrai scegliere la maglia della tua squadra del cuore attuale o retro
         </p>
 
         {/* Swiper */}

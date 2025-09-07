@@ -13,6 +13,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/hooks/useI18n";
 import ShopBanner from "@/components/shop/ShopBanner";
+import ShopImageCard from "@/components/home/ShopImageCard";
 
 interface Review {
   id: string;
@@ -371,6 +372,11 @@ export default function ShopClient({
           </div>
         </div>
       )}
+
+      <ShopImageCard />
+
+
+
       {/* Customer Satisfaction Banner */}
       <div className="bg-gray-800 py-10 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
