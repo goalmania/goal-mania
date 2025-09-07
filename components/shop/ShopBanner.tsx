@@ -1,6 +1,7 @@
 import { useI18n } from "@/lib/hooks/useI18n";
 import { ArrowRight } from "lucide-react";
 import React from "react";
+import StatsSection from "./StatsSection";
 
 // Define the type for the component props
 interface ShopBannerProps {
@@ -18,7 +19,7 @@ export default function ShopBanner({
   imageUrl,
   className,
 }: ShopBannerProps) {
-  const containerClasses = `relative overflow-hidden w-full min-h-[510px] lg:min-h-[580px] flex items-end lg:items-center p-4 md:p-8 lg:pl-14 ${
+  const containerClasses = `relative overflow-hidden w-full min-h-[510px] lg:min-h-[600px] flex  items-end lg:items-center p-4 md:p-8 lg:pl-14 ${
     className || ""
   }`;
 
@@ -55,7 +56,7 @@ export default function ShopBanner({
       </div>
 
       {/* Content Wrapper */}
-      <div className="relative z-10  flex flex-col items-center   text-center  lg:items-start lg:text-left max-w-4xl w-full  ">
+      <div className="relative z-10 pb-10  flex flex-col items-center   text-center  lg:items-start lg:text-left max-w-4xl w-full  ">
         {/* Title */}
         <h1 className="text-white text-3xl max-w-md lg:max-w-xl  px-10 sm:px-0 md:text-5xl  font-bold mb-4 font-sans">
           {title}
@@ -86,6 +87,9 @@ export default function ShopBanner({
           </div>
         )}
       </div>
+
+
+      <StatsSection />
     </div>
   );
 }

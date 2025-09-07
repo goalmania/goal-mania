@@ -106,7 +106,7 @@ export function Footer() {
     <footer className="py-16 md:py-24 bg-gray-100 text-center">
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Title and Description */}
-        <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+        <h2 className="text-3xl font-bold text-gray-800 mb-4">
           Resta informato. Rimani un passo avanti.
         </h2>
         <p className="text-lg text-gray-600 mb-12 max-w-3xl mx-auto">
