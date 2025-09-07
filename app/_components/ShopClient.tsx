@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/hooks/useI18n";
 import ShopBanner from "@/components/shop/ShopBanner";
 import ShopImageCard from "@/components/home/ShopImageCard";
+import ProductShowCase from "@/components/shop/ProductShowcase";
 
 interface Review {
   id: string;
@@ -80,40 +81,63 @@ export default function ShopClient({
           imageUrl={ShopbannerData.imageUrl}
         />
       </section>
+      <div className="hidden">
+        <TeamCarousel />
 
-      <TeamCarousel />
-
-      {/* Customer Satisfaction Message */}
-      <div className="bg-gray-800 py-10 sm:py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white">
-              Oltre 1200 Clienti Felici ⭐️{" "}
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-sm sm:text-base md:text-lg text-white">
-              Oltre 1200 persone hanno scelto di fare parte della nostra
-              famiglia di clienti soddisfatti. La qualità dei nostri prodotti e
-              l&apos;attenzione che dedichiamo a ogni dettaglio hanno reso ogni
-              acquisto un&apos;esperienza positiva.
-            </p>
+        {/* Customer Satisfaction Message */}
+        <div className="bg-gray-800 py-10 sm:py-16 hidden">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white">
+                Oltre 1200 Clienti Felici ⭐️{" "}
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-sm sm:text-base md:text-lg text-white">
+                Oltre 1200 persone hanno scelto di fare parte della nostra
+                famiglia di clienti soddisfatti. La qualità dei nostri prodotti
+                e l&apos;attenzione che dedichiamo a ogni dettaglio hanno reso
+                ogni acquisto un&apos;esperienza positiva.
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Maglie 2025/26 Section */}
       <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col items-center">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-            Maglie 2025/26
+            Scelti per Te
           </h2>
-          <Link
-            href="/shop/2025/26"
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-          >
-            Vedi tutti
-          </Link>
+          <p className="text-sm  text-gray-600 text-center py-2 ">
+            Scopri la nostra selezione di maglie, accessori e articoli ufficiali
+            per vivere il calcio ogni giorno.
+          </p>
         </div>
-        <div className="mt-6">
+        <div className="my-6">
+          {season2025Products.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              <p>Nessun prodotto disponibile in questa categoria.</p>
+            </div>
+          ) : (
+            <Suspense fallback={<div>Loading...</div>}>
+              <ProductGridWrapper products={season2025Products} />
+            </Suspense>
+          )}
+        </div>
+      </div>
+
+      {/* Maglie 2025/26 Section */}
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center">
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+            Più venduti
+          </h2>
+          <p className="text-sm  text-gray-600 text-center py-2 ">
+            Il capo che unisce la comodità di un fit impeccabile alla
+            raffinatezza di un design curato nei dettagli.
+          </p>
+        </div>
+        <div className="my-6">
           {season2025Products.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <p>Nessun prodotto disponibile in questa categoria.</p>
@@ -127,7 +151,7 @@ export default function ShopClient({
       </div>
 
       {/* Mystery Box Section */}
-      <div className="bg-gradient-to-br from-purple-900 via-purple-800 to-pink-900 py-16 sm:py-24 relative overflow-hidden">
+      <div className="bg-gradient-to-br from-purple-900 via-purple-800 to-pink-900 py-16 sm:py-24 relative hidden overflow-hidden">
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
           <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
@@ -240,114 +264,30 @@ export default function ShopClient({
         </div>
       </div>
 
+      {/* Product ShowCase */}
+       <ProductShowCase
+        featuredProduct={featuredProduct}
+        featuredProduct2={featuredProduct2}
+        featuredProduct3={featuredProduct3}
+      />
+
+      
+      {/* Customer Reviews Section */}
+      <Suspense
+        fallback={<div className="h-64 bg-gray-100 animate-pulse"></div>}
+      >
+        <ReviewsSlider />
+      </Suspense>
+
       {/* Guarantees Section */}
-      <div className="bg-gray-50 py-16 sm:py-24">
+      <div className="bg-gray-50 py-16 sm:py-24 hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Guarantees />
         </div>
       </div>
 
-      {/* Product ShowCase */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Product 1 */}
-            {featuredProduct && (
-              <div className="relative bg-gray-200 rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row items-center p-6 md:p-0">
-                <div className="md:w-1/2 p-6 order-2 md:order-1 text-center md:text-left">
-                  <h3 className="text-3xl font-bold text-gray-800 mb-4">
-                    Qualità Super
-                  </h3>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
-                    Le nostre maglie sono capi curati nei minimi dettagli con
-                    materiali premium. Perfetta per i veri appassionati che
-                    vogliono collezionare emozioni, non solo tessuto.
-                  </p>
-                  <a
-                    href={`/products/${featuredProduct.id}`}
-                        className="inline-block bg-orange-500 rounded-full text-white px-6 py-3 font-semibold hover:bg-orange-600 transition-colors"
-                  >
-                    Buy Now →
-                  </a>
-                </div>
-                <div className="md:w-1/2 h-64 md:h-auto overflow-hidden order-1 md:order-2 flex items-center justify-center relative">
-                  <div className="absolute inset-0 bg-blue-900 clip-product-bg md:clip-product-bg-md"></div>
-                  <img
-                    src={featuredProduct.image}
-                    alt={featuredProduct.name}
-                    className="relative z-10 w-full h-full object-contain transform scale-110 md:scale-100"
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Product 2 */}
-            {featuredProduct2 && (
-              <div className="relative bg-gray-200 rounded-2xl shadow-xl  overflow-hidden flex flex-col md:flex-row items-center p-6 md:p-0">
-                <div className="md:w-1/2 p-6 order-2 md:order-1 text-center md:text-left">
-                  <h3 className="text-3xl font-bold text-[#0A1A2F] mb-4">
-                    Modelli introvabili
-                  </h3>
-                  <p className="text-[#0A1A2F] mb-6 leading-relaxed">
-                    Associa un testo o un'immagine per dare importanza al
-                    prodotto, alla collezione o all'articolo del blog di tua
-                    scelta. Aggiungi dettagli sulla disponibilità, sullo stile o
-                    fornisci una recensione.
-                  </p>
-                  <a
-                    href={`/products/${featuredProduct2.id}`}
-                    className="inline-block bg-orange-500 rounded-full text-white px-6 py-3 font-semibold hover:bg-orange-600 transition-colors"
-                  >
-                    Buy Now →
-                  </a>
-                </div>
-                <div className="md:w-1/2 h-64 md:h-auto overflow-hidden order-1 md:order-2 flex items-center justify-center relative">
-                  <div className="absolute inset-0 bg-blue-900 clip-product-bg md:clip-product-bg-md"></div>
-                  <img
-                    // src={"/images/recentUpdate/imageddesing-shop.png"}
-                     src={featuredProduct2.image}
-                    alt={featuredProduct2.name}
-                    className="relative z-10 w-full h-full object-contain transform scale-110 md:scale-100"
-                  />
-                </div>
-              </div>
-            )}
-
-            {featuredProduct3 && (
-              <div className="relative bg-gray-200 rounded-2xl shadow-xl  overflow-hidden flex flex-col md:flex-row items-center p-6 md:p-0">
-                <div className="md:w-1/2 p-6 order-2 md:order-1 text-center md:text-left">
-                  <h3 className="text-3xl font-bold text-gray-800 mb-4">
-                    Vestibilità perfetta
-                  </h3>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
-                    Associa un testo o un'immagine per dare importanza al
-                    prodotto, alla collezione o all'articolo del blog di tua
-                    scelta. Aggiungi dettagli sulla disponibilità, sullo stile o
-                    fornisci una recensione.
-                  </p>
-                  <Link
-                    href={`/products/${featuredProduct3.id}`}
-                        className="inline-block bg-orange-500 rounded-full text-white px-6 py-3 font-semibold hover:bg-orange-600 transition-colors"
-                  >
-                    Buy Now →
-                  </Link>
-                </div>
-                <div className="md:w-1/2 h-64 md:h-auto overflow-hidden order-1 md:order-2 flex items-center justify-center relative">
-                  <div className="absolute inset-0 bg-blue-900 clip-product-bg md:clip-product-bg-md"></div>
-                  <img
-                    src={featuredProduct3.image}
-                    alt={featuredProduct3.name}
-                    className="relative z-10 w-full h-full object-contain transform scale-110 md:scale-100"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
       {/* Customer Satisfaction Banner */}
-      <div className="bg-gray-800 py-10 sm:py-16">
+      <div className="bg-gray-800 py-10 sm:py-16 hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white">
@@ -364,12 +304,6 @@ export default function ShopClient({
         </div>
       </div>
 
-      {/* Customer Reviews Section */}
-      <Suspense
-        fallback={<div className="h-64 bg-gray-100 animate-pulse"></div>}
-      >
-        <ReviewsSlider />
-      </Suspense>
 
       {/* FAQ Section */}
       <div className="bg-white py-16 sm:py-24">

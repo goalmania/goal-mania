@@ -71,7 +71,7 @@ export default function ProductGrid({
   // If more than 3 products -> use Swiper
   if (products.length > 3) {
     return (
-      <div className="relative">
+      <div className="relative pb-20">
         <Swiper
           modules={[Navigation]}
           navigation={{
