@@ -247,135 +247,104 @@ export default function ShopClient({
         </div>
       </div>
 
-      {/* Featured Product Showcase 1 */}
-      {featuredProduct && (
-        <div className="bg-[#1e2937] py-10 sm:py-16 md:py-24">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8 lg:gap-16">
-              {/* Product Image - Left side */}
-              <div className="w-full md:w-1/2">
-                <div className="relative aspect-square bg-white rounded-lg overflow-hidden">
-                  <Image
+      {/* Product ShowCase */}
+      <section className="py-16 md:py-24 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Product 1 */}
+            {featuredProduct && (
+              <div className="relative bg-gray-200 rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row items-center p-6 md:p-0">
+                <div className="md:w-1/2 p-6 order-2 md:order-1 text-center md:text-left">
+                  <h3 className="text-3xl font-bold text-gray-800 mb-4">
+                    Qualità Super
+                  </h3>
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    Le nostre maglie sono capi curati nei minimi dettagli con
+                    materiali premium. Perfetta per i veri appassionati che
+                    vogliono collezionare emozioni, non solo tessuto.
+                  </p>
+                  <a
+                    href={`/products/${featuredProduct.id}`}
+                        className="inline-block bg-orange-500 rounded-full text-white px-6 py-3 font-semibold hover:bg-orange-600 transition-colors"
+                  >
+                    Buy Now →
+                  </a>
+                </div>
+                <div className="md:w-1/2 h-64 md:h-auto overflow-hidden order-1 md:order-2 flex items-center justify-center relative">
+                  <div className="absolute inset-0 bg-blue-900 clip-product-bg md:clip-product-bg-md"></div>
+                  <img
                     src={featuredProduct.image}
                     alt={featuredProduct.name}
-                    fill
-                    className="object-cover object-center"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    priority
+                    className="relative z-10 w-full h-full object-contain transform scale-110 md:scale-100"
                   />
                 </div>
               </div>
+            )}
 
-              {/* Product Description - Right side */}
-              <div className="w-full md:w-1/2 text-white">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">
-                  Qualità Super 🧵
-                </h2>
-                <p className="text-sm sm:text-base md:text-lg mb-6 sm:mb-8">
-                  Le nostre maglie sono capi curati nei minimi dettagli con
-                  <span className="font-semibold"> materiali premium</span>.
-                  Perfette per i veri appassionati che vogliono collezionare
-                  emozioni, non solo tessuto.
-                </p>
-                <Link
-                  href={`/products/${featuredProduct.id}`}
-                  className="inline-block bg-white text-[#1e2937] px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base font-semibold rounded-md hover:bg-gray-100 transition-colors"
-                >
-                  Acquista ora
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Featured Product Showcase 2 */}
-      {featuredProduct2 && (
-        <div className="bg-white py-10 sm:py-16 md:py-24">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row-reverse items-center gap-6 md:gap-8 lg:gap-16">
-              {/* Product Image - Right side (reversed) */}
-              <div className="w-full md:w-1/2">
-                <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                  <Image
-                    src={featuredProduct2.image}
+            {/* Product 2 */}
+            {featuredProduct2 && (
+              <div className="relative bg-gray-200 rounded-2xl shadow-xl  overflow-hidden flex flex-col md:flex-row items-center p-6 md:p-0">
+                <div className="md:w-1/2 p-6 order-2 md:order-1 text-center md:text-left">
+                  <h3 className="text-3xl font-bold text-[#0A1A2F] mb-4">
+                    Modelli introvabili
+                  </h3>
+                  <p className="text-[#0A1A2F] mb-6 leading-relaxed">
+                    Associa un testo o un'immagine per dare importanza al
+                    prodotto, alla collezione o all'articolo del blog di tua
+                    scelta. Aggiungi dettagli sulla disponibilità, sullo stile o
+                    fornisci una recensione.
+                  </p>
+                  <a
+                    href={`/products/${featuredProduct2.id}`}
+                    className="inline-block bg-orange-500 rounded-full text-white px-6 py-3 font-semibold hover:bg-orange-600 transition-colors"
+                  >
+                    Buy Now →
+                  </a>
+                </div>
+                <div className="md:w-1/2 h-64 md:h-auto overflow-hidden order-1 md:order-2 flex items-center justify-center relative">
+                  <div className="absolute inset-0 bg-blue-900 clip-product-bg md:clip-product-bg-md"></div>
+                  <img
+                    // src={"/images/recentUpdate/imageddesing-shop.png"}
+                     src={featuredProduct2.image}
                     alt={featuredProduct2.name}
-                    fill
-                    className="object-cover object-center"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    priority
+                    className="relative z-10 w-full h-full object-contain transform scale-110 md:scale-100"
                   />
                 </div>
               </div>
+            )}
 
-              {/* Product Description - Left side */}
-              <div className="w-full md:w-1/2 text-gray-900">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">
-                  Modelli introvabili 🔥
-                </h2>
-                <p className="text-sm sm:text-base md:text-lg mb-6 sm:mb-8">
-                  Associa un testo a un&apos;immagine per dare importanza al
-                  prodotto, alla collezione o all&apos;articolo del blog di tua
-                  scelta. Aggiungi dettagli sulla disponibilità, sullo stile o
-                  fornisci una recensione.
-                </p>
-                <Link
-                  href={`/products/${featuredProduct2.id}`}
-                  className="inline-block bg-[#1e2937] text-white px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base font-semibold rounded-md hover:bg-gray-800 transition-colors"
-                >
-                  Acquista ora
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Featured Product Showcase 3 */}
-      {featuredProduct3 && (
-        <div className="bg-gray-100 py-10 sm:py-16 md:py-24">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8 lg:gap-16">
-              {/* Product Image - Left side */}
-              <div className="w-full md:w-1/2">
-                <div className="relative aspect-square bg-white rounded-lg overflow-hidden">
-                  <Image
+            {featuredProduct3 && (
+              <div className="relative bg-gray-200 rounded-2xl shadow-xl  overflow-hidden flex flex-col md:flex-row items-center p-6 md:p-0">
+                <div className="md:w-1/2 p-6 order-2 md:order-1 text-center md:text-left">
+                  <h3 className="text-3xl font-bold text-gray-800 mb-4">
+                    Vestibilità perfetta
+                  </h3>
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    Associa un testo o un'immagine per dare importanza al
+                    prodotto, alla collezione o all'articolo del blog di tua
+                    scelta. Aggiungi dettagli sulla disponibilità, sullo stile o
+                    fornisci una recensione.
+                  </p>
+                  <Link
+                    href={`/products/${featuredProduct3.id}`}
+                        className="inline-block bg-orange-500 rounded-full text-white px-6 py-3 font-semibold hover:bg-orange-600 transition-colors"
+                  >
+                    Buy Now →
+                  </Link>
+                </div>
+                <div className="md:w-1/2 h-64 md:h-auto overflow-hidden order-1 md:order-2 flex items-center justify-center relative">
+                  <div className="absolute inset-0 bg-blue-900 clip-product-bg md:clip-product-bg-md"></div>
+                  <img
                     src={featuredProduct3.image}
                     alt={featuredProduct3.name}
-                    fill
-                    className="object-cover object-center"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    priority
+                    className="relative z-10 w-full h-full object-contain transform scale-110 md:scale-100"
                   />
                 </div>
               </div>
-
-              {/* Product Description - Right side */}
-              <div className="w-full md:w-1/2 text-gray-900">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">
-                  Vestibilità perfetta 🎯
-                </h2>
-                <p className="text-sm sm:text-base md:text-lg mb-6 sm:mb-8">
-                  Associa un testo a un&apos;immagine per dare importanza al
-                  prodotto, alla collezione o all&apos;articolo del blog di tua
-                  scelta. Aggiungi dettagli sulla disponibilità, sullo stile o
-                  fornisci una recensione.
-                </p>
-                <Link
-                  href={`/products/${featuredProduct3.id}`}
-                  className="inline-block bg-[#1e2937] text-white px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base font-semibold rounded-md hover:bg-gray-800 transition-colors"
-                >
-                  Acquista ora
-                </Link>
-              </div>
-            </div>
+            )}
           </div>
         </div>
-      )}
-
-      <ShopImageCard />
-
-
+      </section>
 
       {/* Customer Satisfaction Banner */}
       <div className="bg-gray-800 py-10 sm:py-16">

@@ -59,8 +59,11 @@ export default function FeaturedVideoProducts({ products }: FeaturedProductsProp
     <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-6 sm:mb-8 md:mb-10">
-          {t("home.featuredProducts")}
+   Ultime Notizie
         </h2>
+            <p className="text-lg text-gray-600 max-w-2xl text-center mx-auto mb-12">
+         Scopri le notizie più fresche e importanti dal mondo del calcio, aggiornate in tempo reale.
+        </p>
 
         {/* ===== Conditionally render Swiper when more than 3 products ===== */}
         {products.length > 3 ? (

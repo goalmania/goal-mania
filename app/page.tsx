@@ -10,6 +10,7 @@ import { getBaseUrl } from "@/lib/utils/baseUrl";
 import { TeamCarousel } from "@/components/home/TeamCarousel";
 import ClientSlider from "@/components/home/ClientSlider";
 import FeaturedVideoProducts from "@/components/home/FeaturedVideoProducts";
+import CallToAction from "@/components/home/CallToAction";
 
 // Enable caching for better performance
 export const revalidate = 300; // Revalidate every 5 minutes
@@ -132,7 +133,6 @@ export default async function Home() {
       <FeaturedProducts products={featuredProducts} />
       <GuaranteesSection />
       <FeaturedVideoProducts products={featuredProducts}/>
-
       <NewsSection articles={featuredArticles} />
     </div>
   );
