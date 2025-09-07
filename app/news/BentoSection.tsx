@@ -5,10 +5,15 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
+
 } from "@/components/ui/card";
+
+
+
 import Link from "next/link";
 import { NewsArticle } from "@/types/news";
 import { Calendar, Clock, User } from "lucide-react";
+
 
 interface BentoSectionProps {
   articles: NewsArticle[];
@@ -23,11 +28,9 @@ export default function BentoSection({
 
   const [main, ...grid] = articles;
 
-
-
   const mainArticle = (
     <Link href={`/news/${main.slug}`} className="block w-full h-full">
-      <div className="h-full flex flex-col  bg-white text-[#0A1A2F]">
+      <div className="h-full flex flex-col  bg-transparent text-[#0A1A2F]">
         <div className="relative w-full h-80 md:h-96 rounded-t-2xl overflow-hidden">
           <Image
             src={main.image}
@@ -36,15 +39,14 @@ export default function BentoSection({
             className="object-cover rounded-lg"
           />
         </div>
-        <div className="pb-2 pt-4 flex flex-col items-start ">
+        <div className="pb-2 pt-4 flex flex-col items-start max-w-lg ">
           <p className="px-5 py-2 border my-2 rounded-md">{main.category}</p>
 
           <CardTitle className="text-xl font-bold line-clamp-2 text-[#0A1A2F]">
             {main.title}
           </CardTitle>
-     
         </div>
-        <div className=" pb-4">
+        <div className=" pb-4 max-w-lg ">
           <CardDescription className="text-sm text-gray-700 line-clamp-3">
             {main.summary}
           </CardDescription>
@@ -69,31 +71,39 @@ export default function BentoSection({
   );
 
   const gridArticles = (
-    <div className="grid grid-cols-2 gap-4 w-full max-w-md lg:max-w-lg">
+    <div className="grid grid-cols-1 gap-4 w-full mt-10">
       {grid.map((news) => (
         <Link href={`/news/${news.slug}`} key={news.id} className="block">
-          <Card className="shadow-md border border-gray-200 bg-white text-black hover:shadow-lg transition-shadow duration-200">
-            <div className="relative w-full h-32 sm:h-36 rounded-t-xl overflow-hidden">
+          <div className=" text-black grid grid-cols-1 sm:grid-cols-2 gap-4 transition-shadow duration-200">
+            <div className="relative w-full h-32 sm:h-auto rounded-t-xl overflow-hidden order-2">
               <Image
                 src={news.image}
                 alt={news.title}
                 fill
-                className="object-cover"
+                className="object-cover rounded-lg"
               />
             </div>
-            <CardHeader className="pb-2 pt-3 px-4">
-              <CardTitle className="text-sm font-semibold line-clamp-2 text-black">
-                {news.title}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="px-4 pb-4 pt-0">
-              <div className="flex items-center text-xs text-gray-500 gap-2">
-                <span>{new Date(news.publishedAt).toLocaleDateString()}</span>
-                <span className="mx-1">•</span>
-                <span className="truncate">{news.author}</span>
+
+            <div>
+              <div className="pb-2 pt-4 flex flex-col items-start max-w-lg order-1 ">
+                <p className="px-5 py-2 border my-2 rounded-md">
+                  {news.category}
+                </p>
+
+                <CardTitle className="text-xl font-bold py-3   text-[#0A1A2F]">
+                  {news.title.length > 10
+                    ? `${news.title.slice(0, 20)}...`
+                    : news.title}
+                </CardTitle>
               </div>
-            </CardContent>
-          </Card>
+              <div className="flex items-start gap-6 text-[#6D757F] text-sm lg:text-base">
+                <div className="flex items-start gap-2">
+                  <Calendar className="w-4 h-4" />
+                  <span>{new Date(main.publishedAt).toLocaleDateString()}</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </Link>
       ))}
     </div>
@@ -101,12 +111,18 @@ export default function BentoSection({
 
   return (
     <div
-      className={`flex flex-col md:flex-row gap-8 md:gap-12 items-stretch ${
-        reverse ? "md:flex-row-reverse" : ""
-      }`}
+      className={`grid grid-cols-1 lg:grid-cols-6 gap-7 place-content-start `}
     >
-      <div className="flex-1 min-w-0">{mainArticle}</div>
-      {grid.length > 0 && <div className="flex-shrink-0">{gridArticles}</div>}
+      <div className={`col-span-4 `}>
+        {mainArticle}
+      </div>
+      {grid.length > 0 && (
+        <div className={`col-span-2 max-w-xl `}>
+          {gridArticles}
+        </div>
+      )}
+    
+
     </div>
   );
 }
