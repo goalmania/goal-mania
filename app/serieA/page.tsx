@@ -5,6 +5,7 @@ import { FeaturedArticles } from "@/components/serieA/featured-articles";
 import { RegularArticles } from "@/components/serieA/regular-articles";
 import { Suspense } from "react";
 import { LoadingFallback } from "@/components/shared/loading-fallback";
+import NewsSeriaBanner from "@/components/home/NewsSeriaBanner";
 
 export const metadata: Metadata = {
   title: "Serie A | Goal Mania",
@@ -12,11 +13,15 @@ export const metadata: Metadata = {
     "Latest Serie A news, match reports, and analysis from Goal Mania",
 };
 
+  const MobilebannerData = {
+    imageUrl: `/images/recentUpdate/championsBanner.jpg`, // This uses the uploaded image
+  };
+
 export default async function SerieAPage() {
 
   return (
     <Suspense fallback={<LoadingFallback />}>
-
+      <NewsSeriaBanner imageUrl={MobilebannerData.imageUrl} />
     <div className="bg-[#f7f7f9] min-h-screen">
       <div className="container mx-auto px-4 sm:px-6 py-8">
         <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-center text-[#0e1924] tracking-tight">

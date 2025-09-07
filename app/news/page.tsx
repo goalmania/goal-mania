@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import NewsBanner from "@/components/news/NewsBanner";
+import PopularNewsGrid from "./PopularNewsGrid";
 
 // Enable ISR for news listing
 export const revalidate = 300;
@@ -257,7 +258,8 @@ export default async function NewsPage() {
             </Alert>
           )}
         </div>
-        <div className="flex w-full h-[300px] bg-gray-900 rounded-xl overflow-hidden shadow-lg mx-auto max-w-4xl">
+
+        <div className="flex w-full h-[250px]  lg:h-[300px] bg-gray-900 rounded-xl overflow-hidden shadow-lg md:mx-auto max-w-4xl">
           {/* Image Section */}
           <div className="w-[30%] flex-shrink-0">
             <img
@@ -270,7 +272,7 @@ export default async function NewsPage() {
           {/* Content Section */}
           <div className="w-[70%] p-6 flex flex-col justify-center text-white">
             <p className="text-red-500 text-sm font-semibold mb-1">30% Off</p>
-            <h2 className="text-2xl font-bold leading-tight mb-4">
+            <h2 className="text-xl lg:text-2xl font-bold leading-tight mb-4">
               Compra la Nuova Maglia Ufficiale
             </h2>
             <button className="inline-flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-colors duration-200 self-start">
@@ -279,6 +281,10 @@ export default async function NewsPage() {
             </button>
           </div>
         </div>
+
+        {/* ✅ Add PopularNewsGrid here */}
+        {/* <PopularNewsGrid articles={allArticles} /> */}
+
         <NewsCarousel articles={allArticles} />
       </div>
     </Suspense>
