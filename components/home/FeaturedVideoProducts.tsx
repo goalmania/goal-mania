@@ -15,12 +15,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import ProductVideoCard from "./ProductVideoCard";
 
 interface FeaturedProductsProps {
   products: Product[];
 }
 
-export default function FeaturedProducts({ products }: FeaturedProductsProps) {
+export default function FeaturedVideoProducts({ products }: FeaturedProductsProps) {
   const router = useRouter();
   const wishlistStore = useWishlistStore();
   const cartStore = useCartStore();
@@ -64,7 +65,6 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
         {/* ===== Conditionally render Swiper when more than 3 products ===== */}
         {products.length > 3 ? (
           <div className="relative">
-            {/* Swiper: horizontal, responsive slidesPerView */}
             <Swiper
               modules={[Navigation]}
               spaceBetween={20}
@@ -82,11 +82,12 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
             >
               {products.map((product) => (
                 <SwiperSlide key={product.id} className="p-2">
-                  <ProductCard
+                  <ProductVideoCard
                     id={product.id}
                     name={product.name}
                     price={product.price}
                     image={product.image}
+                    videos={product.videos || []} 
                     category={product.category || ""}
                     team={product.team || ""}
                     availablePatches={product.availablePatches || []}
@@ -103,9 +104,8 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
               ))}
             </Swiper>
 
-            {/* Left / Right navigation - positioned vertically centered */}
             {/* Bottom Center Navigation */}
-            <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4 ">
+            <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4">
               <button
                 aria-label="Previous featured products"
                 className="featured-prev flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md hover:bg-gray-100"
@@ -144,19 +144,18 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                 </svg>
               </button>
             </div>
-
-           
           </div>
         ) : (
-          /* Original Grid for <= 3 products (kept intact) */
+          /* Grid for <= 3 products */
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {products.map((product) => (
-              <ProductCard
+              <ProductVideoCard
                 key={product.id}
                 id={product.id}
                 name={product.name}
                 price={product.price}
                 image={product.image}
+                videos={product.videos || []} 
                 category={product.category || ""}
                 team={product.team || ""}
                 availablePatches={product.availablePatches || []}
@@ -173,7 +172,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
           </div>
         )}
 
-        <div className="text-center mt-30 ">
+        <div className="text-center mt-30">
           <Button
             asChild
             variant="outline"
