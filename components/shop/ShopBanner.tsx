@@ -19,7 +19,8 @@ export default function ShopBanner({
   imageUrl,
   className,
 }: ShopBannerProps) {
-  const containerClasses = `relative overflow-hidden w-full min-h-[510px] lg:min-h-[600px] flex  items-end lg:items-center p-4 md:p-8 lg:pl-14 ${
+  const containerClasses = `relative overflow-hidden w-full min-h-screen flex  items-end lg:items-center  ${
+  // const containerClasses = `relative overflow-hidden w-full min-h-[580px] lg:min-h-[600px] flex  items-end lg:items-center  ${
     className || ""
   }`;
 
@@ -56,7 +57,7 @@ export default function ShopBanner({
       </div>
 
       {/* Content Wrapper */}
-      <div className="relative z-10 pb-10  flex flex-col items-center   text-center  lg:items-start lg:text-left max-w-4xl w-full  ">
+      <div className="relative z-10 pb-35 lg:pb-10 flex flex-col items-center   text-center  lg:items-start lg:text-left max-w-4xl w-full px-3 md:px-8 lg:px-20 ">
         {/* Title */}
         <h1 className="text-white text-3xl max-w-md lg:max-w-xl  px-10 sm:px-0 md:text-5xl  font-bold mb-4 font-sans">
           {title}
