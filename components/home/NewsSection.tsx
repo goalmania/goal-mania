@@ -162,7 +162,7 @@ export default function NewsSection({ articles }: NewsSectionProps) {
           </div>
         )}
 
-        <div className="text-center mt-16 sm:mt-20 md:mt-30">
+        <div className="text-center mt-16 sm:mt-20 md:mt-20">
           <Button
             asChild
             variant="outline"

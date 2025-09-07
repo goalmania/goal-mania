@@ -65,27 +65,6 @@ export default function ShopClient({
   return (
     <div className="bg-white pt-[112px]">
       <ShopSearchBar />
-      {/* Hero section - adjust height to account for fixed header */}
-      {/* <div className="relative px-0">
-        <div className="mx-0 w-screen px-0 py-8">
-        
-          <Card className="max-w-[80vw] bg-white h-screen flex flex-col justify-center items-center overflow-hidden rounded-2xl shadow-2xl p-0 mx-auto relative border-0">
-            <Image
-              src="/banners/banner_1.jpeg"
-              alt={t('shop.banner1.alt', 'Retro Collection')}
-              className="object-cover px-auto w-full"
-              fill
-              objectFit="cover"
-              priority
-            />
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
-              <Button asChild size="lg" className="bg-[#f5963c] hover:bg-[#e0852e] text-white font-semibold rounded-lg shadow-lg transition-transform duration-300 ease-in-out px-8 py-4 text-lg">
-                <Link href="/shop/retro">{t('shop.banner2.cta', 'Scopri ora')}</Link>
-              </Button>
-            </div>
-          </Card>
-        </div>
-      </div> */}
 
       <section className="relative">
         <img
