@@ -75,7 +75,7 @@ export default async function NewsPage() {
         <NewsBanner imageUrl={MobilebannerData.imageUrl} />
         <div className="container mx-auto px-6 sm:px-10 lg:px-20 pt-12 pb-12 flex-1">
           {/* Breadcrumb */}
-          <div className="mb-6">
+          <div className="mb-6 hidden">
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
@@ -89,12 +89,13 @@ export default async function NewsPage() {
             </Breadcrumb>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl max-w-md  font-serif font-bold mb-10 p-5 text-left text-[#fff]  bg-[#0A1A2F] leading-tight">
-            Latest News
+          <h1 className="text-4xl  text-center lg:max-w-md lg:mx-auto font-serif font-bold mb-10 py-3 px-5 lg:text-left text-[#0A1A2F] lg:text-[#fff] bg:transparent lg:bg-[#0A1A2F] leading-tight">
+           In Primo Piano
+            {/* Latest News */}
           </h1>
           {/* Render logic based on article count */}
           {allArticles.length === 1 && (
-            <div className="w-full max-w-3xl mx-auto">
+            <div className="w-full max-w-3xl mx-auto border">
               <BentoSection articles={allArticles} />
             </div>
           )}
