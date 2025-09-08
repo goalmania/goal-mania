@@ -38,9 +38,9 @@ const features: Feature[] = [
   },
 ];
 
-const FeatureCards: React.FC = () => {
+const FeaturesCardStats: React.FC = () => {
   return (
-    <section className="bg-white py-8 md:py-12">
+    <section className="bg-[#F5F5F5] text-black- py-8 md:py-12">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {features.map((feature) => (
@@ -67,4 +67,4 @@ const FeatureCards: React.FC = () => {
   );
 };
 
-export default FeatureCards;
+export default FeaturesCardStats;

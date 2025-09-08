@@ -15,6 +15,8 @@ import { useI18n } from "@/lib/hooks/useI18n";
 import ShopBanner from "@/components/shop/ShopBanner";
 import ShopImageCard from "@/components/home/ShopImageCard";
 import ProductShowCase from "@/components/shop/ProductShowcase";
+import FaqSection from "./FaqSection";
+import FeaturesCardStats from "@/components/shop/FeaturesCardStats";
 
 interface Review {
   id: string;
@@ -265,13 +267,12 @@ export default function ShopClient({
       </div>
 
       {/* Product ShowCase */}
-       <ProductShowCase
+      <ProductShowCase
         featuredProduct={featuredProduct}
         featuredProduct2={featuredProduct2}
         featuredProduct3={featuredProduct3}
       />
 
-      
       {/* Customer Reviews Section */}
       <Suspense
         fallback={<div className="h-64 bg-gray-100 animate-pulse"></div>}
@@ -304,11 +305,14 @@ export default function ShopClient({
         </div>
       </div>
 
+      <FeaturesCardStats />
 
       {/* FAQ Section */}
       <div className="bg-white py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <FAQ />
+          {/* <FAQ /> */}
+
+          <FaqSection />
         </div>
       </div>
     </div>
