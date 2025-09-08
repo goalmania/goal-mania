@@ -6,7 +6,10 @@ import { usePathname } from "next/navigation";
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+
+  // Conditions for hiding header/footer
   const isAdmin = pathname.startsWith("/admin");
+  const isShop = pathname.startsWith("/shop"); // hide footer on shop page
 
   return (
     <>
@@ -16,7 +19,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
         <>
           <Header />
           <main className="flex-grow pt-14 sm:pt-16">{children}</main>
-          <Footer />
+          {!isShop && <Footer />}
         </>
       )}
     </>
