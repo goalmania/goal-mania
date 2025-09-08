@@ -132,7 +132,7 @@ export default async function Home() {
       <ClientSlider />
       <FeaturedProducts products={featuredProducts} />
       <GuaranteesSection />
-      <FeaturedVideoProducts products={featuredProducts}/>
+      {/* <FeaturedVideoProducts products={featuredProducts}/> */}
       <NewsSection articles={featuredArticles} />
     </div>
   );

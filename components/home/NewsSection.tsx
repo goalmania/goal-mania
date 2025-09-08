@@ -2,9 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { Article } from "@/lib/types/home";
 import { useI18n } from "@/lib/hooks/useI18n";
 
@@ -24,11 +21,18 @@ export default function NewsSection({ articles }: NewsSectionProps) {
   if (!articles || articles.length === 0) return null;
 
   return (
-    <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-white">
+    <section className="py-20 sm:py-12 md:py-16 lg:py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-6 sm:mb-8 md:mb-10">
-          {t("home.latestNews")}
-        </h2>
+        <div className="max-w-2xl mx-auto text-center mb-8">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-4  ">
+            {t("home.latestNews")}
+          </h2>
+
+          <p className="pt-2 font-medium text-lg">
+            Scopri le notizie più fresche e importanti dal mondo del calcio,
+            aggiornate in tempo reale.
+          </p>
+        </div>
 
         {articles.length > 2 ? (
           <div className="relative">
@@ -48,51 +52,36 @@ export default function NewsSection({ articles }: NewsSectionProps) {
             >
               {articles.map((article: Article) => (
                 <SwiperSlide key={article._id}>
-                  <Card className="group overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col bg-white">
-                    <Link
-                      href={`/${
-                        article.category === "transferMarket"
-                          ? "transfer"
-                          : article.category
-                      }/${article.slug}`}
-                      className="h-full flex flex-col"
-                    >
-                      <div className="relative h-40 sm:h-48 md:h-56 w-full flex-shrink-0">
-                        <Image
-                          src={article.image}
-                          alt={article.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                        <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
-                          <span className="inline-block px-2 sm:px-3 py-1 text-xs font-semibold text-white bg-[#f5963c] rounded-full">
-                            {article.category === "news"
-                              ? t("home.news.news")
-                              : article.category === "transferMarket"
-                              ? t("home.news.transfer")
-                              : article.category === "serieA"
-                              ? t("home.news.serieA")
-                              : t("home.news.international")}
-                          </span>
-                        </div>
+                  <Link
+                    href={`/${
+                      article.category === "transferMarket"
+                        ? "transfer"
+                        : article.category
+                    }/${article.slug}`}
+                    className="relative block group h-48 sm:h-56 md:h-[500px] w-full overflow-hidden rounded-lg"
+                  >
+                    <Image
+                      src={article.image}
+                      alt={article.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors duration-300" />
+                    {/* Play Icon */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center bg-white/80 rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                          className="w-6 h-6 text-[#f5963c] ml-1"
+                        >
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
                       </div>
-                      <CardContent className="p-3 sm:p-4 md:p-6 flex-1 flex flex-col">
-                        <h2 className="text-sm sm:text-base md:text-lg font-bold text-[#0e1924] mb-2 line-clamp-2 flex-1">
-                          {article.title}
-                        </h2>
-                        <p className="text-xs sm:text-sm md:text-base text-gray-600 line-clamp-3 mb-3">
-                          {article.summary}
-                        </p>
-                        <div className="mt-auto">
-                          <span className="text-xs sm:text-sm text-[#f5963c] font-medium group-hover:underline">
-                            {t("home.readMore")}
-                          </span>
-                        </div>
-                      </CardContent>
-                    </Link>
-                  </Card>
+                    </div>
+                  </Link>
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -110,71 +99,40 @@ export default function NewsSection({ articles }: NewsSectionProps) {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {articles.map((article: Article) => (
-              <Card
+              <Link
                 key={article._id}
-                className="group overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col bg-white"
+                href={`/${
+                  article.category === "transferMarket"
+                    ? "transfer"
+                    : article.category
+                }/${article.slug}`}
+                className="relative block group h-48 sm:h-56 md:h-64 w-full overflow-hidden rounded-lg"
               >
-                <Link
-                  href={`/${
-                    article.category === "transferMarket"
-                      ? "transfer"
-                      : article.category
-                  }/${article.slug}`}
-                  className="h-full flex flex-col"
-                >
-                  <div className="relative h-40 sm:h-48 md:h-56 w-full flex-shrink-0">
-                    <Image
-                      src={article.image}
-                      alt={article.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
-                      <span className="inline-block px-2 sm:px-3 py-1 text-xs font-semibold text-white bg-[#f5963c] rounded-full">
-                        {article.category === "news"
-                          ? t("home.news.news")
-                          : article.category === "transferMarket"
-                          ? t("home.news.transfer")
-                          : article.category === "serieA"
-                          ? t("home.news.serieA")
-                          : t("home.news.international")}
-                      </span>
-                    </div>
+                <Image
+                  src={article.image}
+                  alt={article.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors duration-300" />
+                {/* Play Icon */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center bg-white/80 rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      className="w-6 h-6 text-[#f5963c] ml-1"
+                    >
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
                   </div>
-                  <CardContent className="p-3 sm:p-4 md:p-6 flex-1 flex flex-col">
-                    <h2 className="text-sm sm:text-base md:text-lg font-bold text-[#0e1924] mb-2 line-clamp-2 flex-1">
-                      {article.title}
-                    </h2>
-                    <p className="text-xs sm:text-sm md:text-base text-gray-600 line-clamp-3 mb-3">
-                      {article.summary}
-                    </p>
-                    <div className="mt-auto">
-                      <span className="text-xs sm:text-sm text-[#f5963c] font-medium group-hover:underline">
-                        {t("home.readMore")}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Link>
-              </Card>
+                </div>
+              </Link>
             ))}
           </div>
         )}
-
-        <div className="text-center mt-16 sm:mt-20 md:mt-20">
-          <Button
-            asChild
-            variant="outline"
-            size="lg"
-            className="border-[#f5963c] text-[#f5963c] hover:bg-[#f5963c] hover:text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg"
-          >
-            <Link href="/news">
-              {t("home.readAllNews")}
-              <ChevronRightIcon className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
       </div>
     </section>
   );

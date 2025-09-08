@@ -65,10 +65,14 @@ function ClientSlider({
       <div className="container mx-auto px-4 text-center">
         {/* Heading */}
         <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-          {getTitle()}
+          {/* {getTitle()} */}
+          La tua squadra
         </h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-12">
-         LA TUA SQUADRA like title and Qui trovi tutte le informazioni aggiornate sulla squadra notizie approfondimenti e curiosità. Ma sopratutto potrai scegliere la maglia della tua squadra del cuore attuale o retro
+          Qui trovi tutte le informazioni aggiornate,notizie e approfondimenti
+          sulla tua squadra del cuore. Potrai anche scegliere tra centinaia di
+          maglie, attuali e retro ed acquistare quella che preferisci a prezzi
+          bassissimi.
         </p>
 
         {/* Swiper */}
