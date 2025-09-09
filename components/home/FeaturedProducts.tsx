@@ -61,6 +61,10 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
           {t("home.featuredProducts")}
         </h2>
 
+            <p className="text-lg text-gray-600 max-w-2xl text-center mx-auto mb-12">
+   Scopri la nostra selezione di maglie, accessori e articoli ufficiali per vivere il calcio ogni giorno.
+        </p>
+
         {/* ===== Conditionally render Swiper when more than 3 products ===== */}
         {products.length > 3 ? (
           <div className="relative">
