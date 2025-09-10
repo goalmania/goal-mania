@@ -1,19 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
+// import Image from "next/image";
 import Link from "next/link";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import { PlayIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+// import {
+//   Tooltip,
+//   TooltipContent,
+//   TooltipProvider,
+//   TooltipTrigger,
+// } from "@/components/ui/tooltip";
 
 import { ArrowRight } from "lucide-react";
 import { Button } from "./button";
@@ -59,7 +59,7 @@ export default function ProductCard({
   isInWishlist,
   onAddToCart,
   showWishlistButton = true,
-  showAddToCartButton = false,
+  // showAddToCartButton = false,
   imageAspectRatio = "square",
   cardHeight = "lg",
   className = "",
