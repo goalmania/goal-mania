@@ -8,6 +8,16 @@ import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import { PlayIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+import { ArrowRight } from "lucide-react";
+import { Button } from "./button";
+
 interface ProductCardProps {
   id: string;
   name: string;
@@ -102,10 +112,12 @@ export default function ProductCard({
     }
   };
 
+  
+
   return (
-    <Link href={href} className="w-full">
+    <div className="w-full">
       <div
-        className={`group relative bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col ${className}`}
+        className={`group relative bg-white rounded-lg   duration-300 overflow-hidden flex flex-col ${className}`}
       >
         {/* Image section */}
         <div
@@ -121,38 +133,40 @@ export default function ProductCard({
             setShowVideo(false);
           }}
         >
-          <div
-            className={`relative w-full bg-gray-200 overflow-hidden rounded-t-lg ${
-              imageAspectRatio === "square"
-                ? "aspect-square"
-                : imageAspectClasses[imageAspectRatio]
-            }`}
-          >
-            {/* Video overlay */}
-            {videos.length > 0 && showVideo && isHovered ? (
-              <video
-                src={videos[0]}
-                autoPlay
-                loop
-                muted
-                className="object-cover object-center h-full w-full transition-opacity duration-300"
-                style={{ opacity: showVideo ? 1 : 0 }}
-              />
-            ) : (
-              <img
-                src={image || "/images/image.png"}
-                alt={name || "Product image"}
-                className="h-full w-full object-cover object-center transform group-hover:scale-105 transition-transform duration-300"
-                sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
-              />
-            )}
-          </div>
+          <Link href={href}>
+            <div
+              className={`relative w-full bg-transparent border-2 overflow-hidden rounded-2xl ${
+                imageAspectRatio === "square"
+                  ? "aspect-square"
+                  : imageAspectClasses[imageAspectRatio]
+              }`}
+            >
+              {/* Video overlay */}
+              {videos.length > 0 && showVideo && isHovered ? (
+                <video
+                  src={videos[0]}
+                  autoPlay
+                  loop
+                  muted
+                  className="object-cover object-center h-full w-full transition-opacity duration-300"
+                  style={{ opacity: showVideo ? 1 : 0 }}
+                />
+              ) : (
+                <img
+                  src={image || "/images/image.png"}
+                  alt={name || "Product image"}
+                  className="h-full w-full object-cover object-center transform group-hover:scale-105 transition-transform duration-300"
+                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                />
+              )}
+            </div>
+          </Link>
         </div>
 
         {/* Info section */}
-        <div className="p-2 sm:p-4 flex flex-col flex-grow">
+        <div className="p-2 flex flex-col flex-grow">
           <div className="mb-2 flex-grow">
-            <h3 className="text-xs flex  justify-start text-left items-center sm:text-lg md:text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
+            <h3 className="text-base flex   justify-start text-left items-center lg:text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
               {name}
             </h3>
 
@@ -173,57 +187,133 @@ export default function ProductCard({
               </div>
             )}
 
-            <div className=" flex items-center justify-start gap-1 sm:gap-2">
+            <div className=" flex flex-col items-start justify-start gap-1 sm:gap-2">
               {/* Wishlist button */}
-              {showWishlistButton && onWishlistToggle && (
-                <button
-                  onClick={handleWishlistToggle}
-                  className=" rounded-full bg-white/80 backdrop-blur-sm p-1.5 sm:p-2.5 shadow-md hover:bg-white transition-colors duration-200 "
-                  aria-label={
-                    isInWishlist && isInWishlist(id)
-                      ? t("product.removeFromWishlist")
-                      : t("product.addToWishlist")
-                  }
-                >
-                  {isInWishlist && isInWishlist(id) ? (
-                    <HeartIconSolid className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
-                  ) : (
-                    <HeartIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
-                  )}
-                </button>
-              )}
+
+              {/* Price */}
+              <div className="flex items-start justify-start mt-auto">
+                <p className="text-xs sm:text-base md:text-lg font-semibold text-[#F1803A]">
+                  €{Number(price).toFixed(2)}
+                </p>
+              </div>
 
               {/* Wishlist button */}
               {/* Add to cart button */}
-              {showAddToCartButton && onAddToCart && (
-                <button
-                  onClick={handleAddToCart}
-                  className=" rounded-full bg-[#f5963c]/80 backdrop-blur-sm p-1 shadow-sm hover:bg-[#f5963c] transition-colors duration-200  text-white"
-                  aria-label="Add to cart"
-                >
-                  <svg
-                    className="h-3 w-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"
-                    />
-                  </svg>
-                </button>
-              )}
-            </div>
-          </div>
 
-          {/* Price */}
-          <div className="flex items-start justify-start mt-auto">
-            <p className="text-xs sm:text-base md:text-lg font-semibold text-[#F1803A]">
-              €{Number(price).toFixed(2)}
-            </p>
+              <div className="flex gap-1">
+                {/* Add to Cart buttons */}
+                <div className="flex  gap-3">
+                  <button
+                    type="button"
+                    onClick={handleAddToCart}
+                    className="px-5 flex items-center  py-2 border text-xs text-black w-full rounded-full"
+                  >
+                    <span className="block whitespace-nowrap">
+                      {" "}
+                      Add to Cart
+                    </span>
+                    <ArrowRight className="ml-1  inline-flex" />
+                  </button>
+                  <button
+                    type="button"
+                    // onClick={handleBuyNow}
+                    className="px-5 py-2 border flex items-center  text-xs bg-[#FF7A00] text-black w-full rounded-full"
+                  >
+                    <span className="block whitespace-nowrap">Buy Now</span>
+                    <ArrowRight className="ml-1 inline-flex" />
+                  </button>
+                  {/* 
+                  <div>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            onClick={handleWishlistToggle}
+                            variant="secondary"
+                            size="icon"
+                            className="absolute top-3 right-3 h-8 w-8 bg-white/80 backdrop-blur-sm shadow-md hover:bg-white"
+                            aria-label={
+                              isInWishlist(product._id)
+                                ? "Remove from wishlist"
+                                : "Add to wishlist"
+                            }
+                          >
+                            {isInWishlist(product._id) ? (
+                              <HeartIconSolid className="h-4 w-4 text-red-500" />
+                            ) : (
+                              <HeartIcon className="h-4 w-4 text-black" />
+                            )}
+                          </Button>
+                          <Button
+                            onClick={handleWishlistToggle}
+                            variant="secondary"
+                            size="icon"
+                            className="absolute top-3 right-3 h-8 w-8 bg-white/80 backdrop-blur-sm shadow-md hover:bg-white"
+                            aria-label={
+                              isInWishlist(product._id)
+                                ? "Remove from wishlist"
+                                : "Add to wishlist"
+                            }
+                          >
+                            {isInWishlist(product._id) ? (
+                              <HeartIconSolid className="h-4 w-4 text-red-500" />
+                            ) : (
+                              <HeartIcon className="h-4 w-4 text-black" />
+                            )}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {isInWishlist(product._id)
+                            ? "Remove from wishlist"
+                            : "Add to wishlist"}
+                        </TooltipContent>
+                       
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div> */}
+                </div>
+
+                {showWishlistButton && onWishlistToggle && (
+                  <button
+                    onClick={handleWishlistToggle}
+                    className=" rounded-full bg-white/80 backdrop-blur-sm p-1.5 sm:p-2.5 shadow-md hover:bg-white transition-colors duration-200 "
+                    aria-label={
+                      isInWishlist && isInWishlist(id)
+                        ? t("product.removeFromWishlist")
+                        : t("product.addToWishlist")
+                    }
+                  >
+                    {isInWishlist && isInWishlist(id) ? (
+                      <HeartIconSolid className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
+                    ) : (
+                      <HeartIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
+                    )}
+                  </button>
+                )}
+
+                {/* {showAddToCartButton && onAddToCart && (
+                  <button
+                    onClick={handleAddToCart}
+                    className=" rounded-full bg-[#f5963c]/80 backdrop-blur-sm p-1 shadow-sm hover:bg-[#f5963c] transition-colors duration-200  text-white"
+                    aria-label="Add to cart"
+                  >
+                    <svg
+                      className="h-3 w-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"
+                      />
+                    </svg>
+                  </button>
+                )} */}
+              </div>
+            </div>
           </div>
 
           {/* Badges section */}
@@ -266,6 +356,6 @@ export default function ProductCard({
           )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
