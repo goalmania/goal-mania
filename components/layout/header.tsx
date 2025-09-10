@@ -198,7 +198,7 @@ export function Header() {
                 </Button>
 
                 {/* Search Button with Dropdown - Only visible on desktop */}
-                <div className="hidden sm:block relative">
+                <div className="block relative">
                   <SearchDropdown />
                 </div>
 
