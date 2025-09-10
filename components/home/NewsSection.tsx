@@ -30,7 +30,8 @@ export default function NewsSection({ articles }: NewsSectionProps) {
           </h2>
 
           <p className="pt-2 text-lg text-gray-600 font-medium ">
-           Scopri le notizie più fresche e importanti dal mondo del calcio, aggiornate in tempo reale..
+            Scopri le notizie più fresche e importanti dal mondo del calcio,
+            aggiornate in tempo reale..
           </p>
         </div>
 
@@ -39,7 +40,7 @@ export default function NewsSection({ articles }: NewsSectionProps) {
             <Swiper
               modules={[Navigation]}
               spaceBetween={20}
-              slidesPerView={1}
+              slidesPerView={2.5}
               navigation={{
                 nextEl: ".news-next",
                 prevEl: ".news-prev",
@@ -58,27 +59,23 @@ export default function NewsSection({ articles }: NewsSectionProps) {
                         ? "transfer"
                         : article.category
                     }/${article.slug}`}
-                    className="relative block group h-48 sm:h-56 md:h-[500px] w-full overflow-hidden rounded-lg"
+                    className="relative block group h-[400px] rounded-2xl  md:h-[500px] w-full overflow-hidden cursor-grab"
                   >
                     <Image
                       src={article.image}
                       alt={article.title}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="object-cover rounded-2xl group-hover:scale-105 transition-transform duration-300"
                       sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                     />
-                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors duration-300" />
+                    <div className="absolute inset-0  transition-colors duration-300" />
                     {/* Play Icon */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center bg-white/80 rounded-full shadow-lg group-hover:scale-110 transition-transform">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                          className="w-6 h-6 text-[#f5963c] ml-1"
-                        >
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center  rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                        <img
+                          className="w-20 h-20 "
+                          src="/images/recentUpdate/play-icon.png"
+                        />
                       </div>
                     </div>
                   </Link>
@@ -115,18 +112,13 @@ export default function NewsSection({ articles }: NewsSectionProps) {
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                 />
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors duration-300" />
-                {/* Play Icon */}
+                {/* play icon */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center bg-white/80 rounded-full shadow-lg group-hover:scale-110 transition-transform">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                      className="w-6 h-6 text-[#f5963c] ml-1"
-                    >
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center  rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                    <img
+                      className="w-6 h-6 "
+                      src="/images/recentUpdate/play-icon.png"
+                    />
                   </div>
                 </div>
               </Link>
