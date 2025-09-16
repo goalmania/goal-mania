@@ -27,7 +27,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Globe } from "lucide-react";
+import { ArrowRight, Globe, MenuIcon } from "lucide-react";
 
 export interface User {
   id: string;
@@ -105,7 +105,7 @@ export function Header() {
       <nav className="container mx-auto flex items-center justify-between px-4 py-2 ">
         {/* Logo */}
         <div className="flex items-center">
-          <div className="hidde">
+          <div className="hidden md:flex">
             <MenuIcon onClick={() => setOpenMenu(!openMenu)} />
           </div>
           <Link href="/" className="flex items-center">
