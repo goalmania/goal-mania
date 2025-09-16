@@ -1,14 +1,23 @@
 {
-  "navigation": {
+  "nav": {
     "home": "Home",
-    "news": "News",
-    "transfer": "Transfer",
+    "category": "Category",
+    "articles": "Articles",
+    "info": "Info",
+    "about": "About",
+    "contact": "Contact",
+    "shop": "Shop",
+    "laliga": "La Liga",
+    "premierLeague": "Premier League",
+    "bundesliga": "Bundesliga",
+    "ligue1": "Ligue 1",
     "serieA": "Serie A",
-    "results": "Results",
-    "fantasyFootball": "Fantasy Football",
-    "about": "About Us",
-    "shop": "Shop"
+    "leaguesOverview": "Leagues Overview",
+    "otherLeagues": "Other Leagues"
   },
+  "Login": "Login",
+  "Sign-up": "Sign Up",
+
   "auth": {
     "signIn": "Sign In",
     "signUp": "Sign Up",
@@ -30,22 +39,22 @@
     "switchToItalian": "Switch to Italian",
     "switchToEnglish": "Switch to English"
   },
-      "shop": {
-      "hero": {
-        "title": "Wear the passion, live football!",
-        "description": "Discover our exclusive collection of football jerseys with premium quality, unique designs, and unbeatable prices. Perfect for every football fan.",
-        "subtitle": "Discover our exclusive collection of football jerseys. Premium quality, unique designs, and unbeatable prices.",
-        "cta": "Discover jerseys"
-      },
-      "featuredProducts": "Featured Products",
-      "offers": {
-        "availableOffers": "Available Offers",
-        "automaticDiscounts": "Automatic discounts that apply to this product"
-      },
-      "trust": {
-        "title": "Over 1200 Happy Customers ⭐️",
-        "subtitle": "Our community of enthusiasts grows every day. Join those who have already chosen quality and authenticity."
-      },
+  "shop": {
+    "hero": {
+      "title": "Wear the passion, live football!",
+      "description": "Discover our exclusive collection of football jerseys with premium quality, unique designs, and unbeatable prices. Perfect for every football fan.",
+      "subtitle": "Discover our exclusive collection of football jerseys. Premium quality, unique designs, and unbeatable prices.",
+      "cta": "Discover jerseys"
+    },
+    "featuredProducts": "Featured Products",
+    "offers": {
+      "availableOffers": "Available Offers",
+      "automaticDiscounts": "Automatic discounts that apply to this product"
+    },
+    "trust": {
+      "title": "Over 1200 Happy Customers ⭐️",
+      "subtitle": "Our community of enthusiasts grows every day. Join those who have already chosen quality and authenticity."
+    },
     "highlights": {
       "quality": {
         "title": "Super Quality",
@@ -252,7 +261,7 @@
     }
   },
   "notFound": {
-    "title": "Page not found",
+    "title": "Ops!",
     "description": "Sorry, we couldn't find the page you're looking for.",
     "goHome": "Go back home",
     "contactSupport": "Contact support"
@@ -418,12 +427,30 @@
   "faq": {
     "title": "Frequently Asked Questions",
     "questions": [
-      { "question": "How long does delivery take?", "answer": "Your wait will be short! It usually takes 10-14 days to arrive at your home. You can check your order status in the 'Track Your Order' section!" },
-      { "question": "Are payments secure?", "answer": "Absolutely. The security of your payments is our top priority. We use secure and reliable payment systems to ensure a worry-free transaction." },
-      { "question": "What payment methods do you accept?", "answer": "Purchases on our site can be made via: Visa, Mastercard, American Express, Maestro, and PayPal. We do not accept cash, check, cash on delivery, or bank transfer. Every purchase is made with maximum security to protect your personal and credit card information from unauthorized access." },
-      { "question": "How is the product quality?", "answer": "The quality of our product is excellent. We take great care in selecting materials and in the production process to ensure that every item meets the highest standards." },
-      { "question": "Is there a guarantee?", "answer": "Of course! If the product arrives damaged or different from what you expected, contact us at 'goalmaniaofficial@gmail.com'. We will reply as soon as possible!" },
-      { "question": "Do you accept returns?", "answer": "Certainly! We accept returns within a maximum period of 7 days from the date of purchase. Your satisfaction is our priority, and we want to ensure that every customer is happy with their purchase." }
+      {
+        "question": "How long does delivery take?",
+        "answer": "Your wait will be short! It usually takes 10-14 days to arrive at your home. You can check your order status in the 'Track Your Order' section!"
+      },
+      {
+        "question": "Are payments secure?",
+        "answer": "Absolutely. The security of your payments is our top priority. We use secure and reliable payment systems to ensure a worry-free transaction."
+      },
+      {
+        "question": "What payment methods do you accept?",
+        "answer": "Purchases on our site can be made via: Visa, Mastercard, American Express, Maestro, and PayPal. We do not accept cash, check, cash on delivery, or bank transfer. Every purchase is made with maximum security to protect your personal and credit card information from unauthorized access."
+      },
+      {
+        "question": "How is the product quality?",
+        "answer": "The quality of our product is excellent. We take great care in selecting materials and in the production process to ensure that every item meets the highest standards."
+      },
+      {
+        "question": "Is there a guarantee?",
+        "answer": "Of course! If the product arrives damaged or different from what you expected, contact us at 'goalmaniaofficial@gmail.com'. We will reply as soon as possible!"
+      },
+      {
+        "question": "Do you accept returns?",
+        "answer": "Certainly! We accept returns within a maximum period of 7 days from the date of purchase. Your satisfaction is our priority, and we want to ensure that every customer is happy with their purchase."
+      }
     ]
   },
   "banners": {

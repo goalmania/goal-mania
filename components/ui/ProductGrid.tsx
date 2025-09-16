@@ -114,7 +114,7 @@ export default function ProductGrid({
         </Swiper>
 
         {/* Custom Bottom-Center Navigation */}
-        <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex gap-4 z-10">
+        <div className="absolute  left-1/2 -translate-x-1/2 flex gap-4 z-10">
           <button className="custom-prev bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full p-2 shadow">
             <svg
               className="w-5 h-5 text-gray-700"

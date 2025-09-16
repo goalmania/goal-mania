@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import Image from "next/image";
 import { useI18n } from "@/lib/hooks/useI18n";
+import { ArrowRight } from "lucide-react";
 
 function SignInContent() {
   const [error, setError] = useState("");
@@ -52,7 +53,7 @@ function SignInContent() {
   }
 
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 p-10 gap-10 lg:gap-0">
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 p-10 gap-10 lg:gap-0 font-munish">
       {/* Image Left */}
       <div className="relative h-[60vh] lg:h-auto rounded-2xl">
         <div className="absolute   inset-0">
@@ -66,21 +67,18 @@ function SignInContent() {
 
       <div className="  flex flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        {/* <div className="sm:mx-auto sm:w-full sm:max-w-md"> */}
-          <div className="text-center">
-            <Link href="/" className="inline-block">
-              <span className="text-3xl font-bold text-indigo-600">
-                Goal Mania
-              </span>
-            </Link>
-          </div>
-          <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-gray-900">
+          {/* <div className="sm:mx-auto sm:w-full sm:max-w-md"> */}
+
+          <h2 className=" text-start text-[57px] font-medium tracking-tight text-black">
             {t("auth.signIn")}
           </h2>
+          <p className=" text-[#131228] text-[22px] ">
+            Inserisci il numero di cellulare (most common)
+          </p>
         </div>
 
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-8 px-4 shadow-xl rounded-lg sm:px-10 border border-gray-100">
+        <div className=" sm:mx-auto sm:w-full sm:max-w-md">
+          <div className="bg-white py-8 px-4  sm:px-10">
             {/* Show alert if redirected for auth-required */}
             {showAuthRequired && (
               <div className="mb-4 rounded-md bg-yellow-50 p-4 border border-yellow-200">
@@ -108,12 +106,6 @@ function SignInContent() {
             )}
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  {t("auth.email")}
-                </label>
                 <div className="mt-2">
                   <input
                     id="email"
@@ -121,29 +113,13 @@ function SignInContent() {
                     type="email"
                     autoComplete="email"
                     required
-                    className="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 transition-colors"
+                    className="bg-white border-0 w-full py-2 border-b border-black  font-light rounded-none shadow-none pl-0 placeholder:text-[#333333] text-[#333333]"
                     placeholder={t("auth.emailPlaceholder")}
                   />
                 </div>
               </div>
 
               <div>
-                <div className="flex items-center justify-between">
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    {t("auth.password")}
-                  </label>
-                  <div className="text-sm">
-                    <Link
-                      href="/auth/forgot-password"
-                      className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
-                    >
-                      {t("auth.forgotPassword")}
-                    </Link>
-                  </div>
-                </div>
                 <div className="mt-2">
                   <input
                     id="password"
@@ -151,9 +127,17 @@ function SignInContent() {
                     type="password"
                     autoComplete="current-password"
                     required
-                    className="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 transition-colors"
+                    className="bg-white border-0 w-full border-b py-2 border-black  placeholder:text-[#333333] text-[#333333] font-light rounded-none shadow-none pl-0"
                     placeholder={t("auth.passwordPlaceholder")}
                   />
+                </div>
+                <div className="text-sm justify-end flex mt-1.5">
+                  <Link
+                    href="/auth/forgot-password"
+                    className="font-medium text-[#3182CE] transition-colors"
+                  >
+                    {t("auth.forgotPassword")}
+                  </Link>
                 </div>
               </div>
 
@@ -186,9 +170,10 @@ function SignInContent() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex w-full justify-center rounded-full bg-[#FF7A00] px-3 gap-1.5 py-2 text-sm font-medium  items-center text-[#0A1A2F] shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? t("common.processing") : t("auth.signIn")}
+                  <ArrowRight size={15} />
                 </button>
               </div>
             </form>

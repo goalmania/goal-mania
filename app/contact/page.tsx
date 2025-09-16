@@ -1,7 +1,16 @@
 "use client";
 
 import { Metadata } from "next";
-import { Mail, Instagram, Twitter, Phone, MapPin, Send } from "lucide-react";
+import {
+  Mail,
+  Instagram,
+  Twitter,
+  Phone,
+  MapPin,
+  Send,
+  ArrowRightFromLine,
+  ArrowRight,
+} from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -37,6 +46,9 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import ContactBanner from "@/components/contact/ContactBanner";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import FAQ from "../_components/FAQ";
 
 // Form validation schema
 const contactFormSchema = z.object({
@@ -148,12 +160,16 @@ function ContactForm() {
   const selectedLanguage = form.watch("language");
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full max-w-2xl mx-auto bg-white border-none shadow-none">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-[#0e1924]">
-          {t("contact.title")}
+          Scrivici
         </CardTitle>
-        <CardDescription>{t("contact.description")}</CardDescription>
+        <CardDescription>
+          Hai una domanda, un suggerimento o semplicemente vuoi salutarci?
+          Compila il modulo qui sotto e il nostro team ti risponderà al più
+          presto siamo qui per aiutarti!
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -164,11 +180,11 @@ function ContactForm() {
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("contact.firstName")}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder={t("contact.firstNamePlaceholder")}
+                        placeholder="Nome"
                         {...field}
+                        className="bg-white border-0 border-b border-black text-[#939393] font-light rounded-none shadow-none pl-0"
                       />
                     </FormControl>
                     <FormMessage />
@@ -180,11 +196,11 @@ function ContactForm() {
                 name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("contact.lastName")}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder={t("contact.lastNamePlaceholder")}
+                        placeholder="Cognome*"
                         {...field}
+                        className="bg-white border-0 border-b border-black text-[#939393] font-light rounded-none shadow-none pl-0"
                       />
                     </FormControl>
                     <FormMessage />
@@ -198,19 +214,19 @@ function ContactForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("contact.email")}</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder={t("contact.emailPlaceholder")}
+                      placeholder="Your Email*"
                       {...field}
+                      className="bg-white border-0 w-1/2 border-b border-black text-[#939393] font-light rounded-none shadow-none pl-0"
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
+            {/*
             <FormField
               control={form.control}
               name="subject"
@@ -278,40 +294,73 @@ function ContactForm() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            />*/}
 
             <FormField
               control={form.control}
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("contact.message")}</FormLabel>
                   <FormControl>
-                    <Textarea
-                      rows={5}
-                      placeholder={t("contact.messagePlaceholder")}
-                      {...field}
-                    />
+                    <div className="relative w-full">
+                      <Textarea
+                        rows={10}
+                        cols={50}
+                        {...field}
+                        className="bg-white resize-none border-0 border-b border-black text-[#939393] rounded-none shadow-none pl-0 w-full h-[190px]"
+                        placeholder=" "
+                      />
+                      <span className="absolute bottom-2 left-0 text-[#939393] font-light pointer-events-none">
+                        La tua email*
+                      </span>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <Button
-              type="submit"
-              className="w-full bg-[#f5963c] hover:bg-[#e0852e] text-white"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>{t("contact.sending")}</span>
+            <div className=" flex justify-between">
+              <div className=" space-y-2">
+                <Label className=" text-black font-light">Products*</Label>
+                <div className=" flex gap-4">
+                  <div className="flex items-center gap-1.5 text-[#131228] font-light text-[22px]">
+                    <Checkbox id="news" className=" bg-[#D9D9D9" />
+                    <Label
+                      htmlFor="news"
+                      className="text-[#131228] font-light text-[15px]"
+                    >
+                      News
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-1.5  text-[#131228] font-light text-[22px] ">
+                    <Checkbox id="product" className=" bg-[#D9D9D9" />
+                    <Label
+                      htmlFor="product"
+                      className="text-[#131228] font-light text-[15px]"
+                    >
+                      Product
+                    </Label>
+                  </div>
                 </div>
-              ) : (
-                <span>{t("contact.submit")}</span>
-              )}
-            </Button>
+              </div>
+              <Button
+                type="submit"
+                className="w-[264px] h-[50px] flex bg-[#FF7A00] hover:bg-[#e0852e] text-[#0A1A2F] rounded-full"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>{t("contact.sending")}</span>
+                  </div>
+                ) : (
+                  <span className=" flex items-center gap-1.5">
+                    Spedisci <ArrowRight />
+                  </span>
+                )}
+              </Button>
+            </div>
           </form>
         </Form>
       </CardContent>
@@ -385,24 +434,12 @@ export default function ContactPage() {
   const { t } = useI18n();
 
   return (
-    <div className="bg-gradient-to-b from-white to-blue-50 min-h-screen">
+    <div className="bg-white min-h-screen">
       <div className="lg:hidden">
         <ContactBanner />
       </div>
       <div className="container mx-auto px-6 sm:px-10 lg:px-20 pt-12 pb-12">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-3xl font-serif font-bold mb-6 text-black">
-            {t("contact.page.title")}
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            {t("contact.page.subtitle")}
-          </p>
-        </div>
-
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          {/* Contact Information */}
-
           <div className="w-full">
             <div className="relative h-[400px]  rounded-2xl hidden lg:block">
               <div className="absolute  inset-0">
@@ -414,23 +451,28 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div className="bg-[#0A1A2F] border w-full text-white/70 p-6 rounded-2xl mt-5 shadow-lg  ">
-              {/* Phone Number */}
+            <div className="bg-[#0A1A2F] border w-full text-[#FAFBFF] p-6 rounded-2xl mt-5 shadow-lg  ">
               <div className="flex items-center mb-4">
-                <Phone className="w-5 h-5 text-blue-400 mr-3" />
-                <span className="text-lg">+39 090 330 47732</span>
+                <Phone className="  mr-3" size={20} />
+                <span className="text-[16px] font-light text-[#FAFBFF]">
+                  +39 090 330 47732
+                </span>
               </div>
 
               {/* Email */}
               <div className="flex items-center mb-4">
-                <Mail className="w-5 h-5 text-blue-400 mr-3" />
-                <span className="text-lg">safe.support@goal-mania.it</span>
+                <Mail className=" mr-3" size={20} />
+                <span className="text-[16px] font-light">
+                  safe.support@goal-mania.it
+                </span>
               </div>
 
               {/* Address */}
               <div className="flex items-start mb-4">
-                <MapPin className="w-5 h-5 text-blue-400 mr-3 mt-1" />
-                <span className="text-lg">
+                <div className="">
+                  <MapPin className=" mr-3 mt-1" size={20} />
+                </div>
+                <span className="text-[16px] font-light">
                   3° Piano, Via Roma 245, Complesso i-Hub, di fronte a PRL,
                   Centro, Milano, Lombardia 20100
                 </span>
@@ -438,17 +480,17 @@ export default function ContactPage() {
 
               {/* Get Direction */}
               <div className="flex items-center">
-                <Send className="w-5 h-5 text-blue-400 mr-3" />
-                <a href="#" className="text-lg hover:underline text-blue-300">
-                  Get Direction
-                </a>
+                <Send className="mr-3" size={20} />
+                <span className="text-[16px] font-light">Get Direction</span>
               </div>
             </div>
           </div>
 
-          {/* Contact Form */}
           <ContactForm />
         </div>
+      </div>
+      <div className="">
+        <FAQ />
       </div>
     </div>
   );

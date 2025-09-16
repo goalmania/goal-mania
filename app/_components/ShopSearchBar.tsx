@@ -9,7 +9,9 @@ interface ShopSearchBarProps {
   initialQuery?: string;
 }
 
-export default function ShopSearchBar({ initialQuery = "" }: ShopSearchBarProps) {
+export default function ShopSearchBar({
+  initialQuery = "",
+}: ShopSearchBarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryParam = searchParams?.get("q") || "";
@@ -24,10 +26,16 @@ export default function ShopSearchBar({ initialQuery = "" }: ShopSearchBarProps)
   };
 
   return (
-    <form onSubmit={handleSearch} className="max-w-3xl mx-auto my-1">
+    <form
+      onSubmit={handleSearch}
+      className="max-w-3xl font-munish mx-auto my-4 pt-4"
+    >
       <div className="relative mx-3">
         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-          <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+          <MagnifyingGlassIcon
+            className="h-5 w-5 text-gray-400"
+            aria-hidden="true"
+          />
         </div>
         <input
           type="text"
@@ -38,13 +46,12 @@ export default function ShopSearchBar({ initialQuery = "" }: ShopSearchBarProps)
         />
         <button
           type="submit"
-          className="absolute border-black hidden md:flex inset-y-0 mr-4 right-0 border rounded-full m-1.5 items-center px-4 py-2 bg-transparent  text-[#0A1A2F]  hover:bg-[] focus:outline-none focus:ring-1"
+          className="absolute border-black hidden items-center md:flex inset-y-0 mr-4 right-0 border rounded-full m-1.5  px-4 py-2 bg-transparent  text-[#0A1A2F]  hover:bg-[] focus:outline-none focus:ring-1"
         >
           Cerca
-
-          <ArrowRight className="inline-flex mr-1.5 w-5 h-5" />
+          <ArrowRight className="inline-flex mr-1.5 w-4 items-center h-4" />
         </button>
       </div>
     </form>
   );
-} 
+}

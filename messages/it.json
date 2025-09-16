@@ -1,14 +1,23 @@
 {
-  "navigation": {
+  "nav": {
     "home": "Home",
-    "news": "News",
-    "transfer": "Calciomercato",
+    "category": "Categoria",
+    "articles": "Articoli",
+    "info": "Informazioni",
+    "about": "Chi siamo",
+    "contact": "Contatti",
+    "shop": "Negozio",
+    "laliga": "La Liga",
+    "premierLeague": "Premier League",
+    "bundesliga": "Bundesliga",
+    "ligue1": "Ligue 1",
     "serieA": "Serie A",
-    "results": "Risultati",
-    "fantasyFootball": "Fantacalcio",
-    "about": "Chi Siamo",
-    "shop": "Shop"
+    "leaguesOverview": "Panoramica Campionati",
+    "otherLeagues": "Altri campionati"
   },
+  "Login": "Accedi",
+  "Sign-up": "Registrati",
+
   "auth": {
     "signIn": "Accedi",
     "signUp": "Registrati",
@@ -37,7 +46,7 @@
       "subtitle": "Scopri la nostra collezione esclusiva di maglie da calcio. Qualità premium, design unici e prezzi imbattibili.",
       "cta": "Scopri le maglie"
     },
-    "featuredProducts": "Prodotti in Evidenza",
+    "featuredProducts": "Scelti per Te",
     "offers": {
       "availableOffers": "Offerte Disponibili",
       "automaticDiscounts": "Sconti automatici che si applicano a questo prodotto"
@@ -252,7 +261,7 @@
     }
   },
   "notFound": {
-    "title": "Pagina non trovata",
+    "title": "Ops!",
     "description": "Spiacenti, non riusciamo a trovare la pagina che stai cercando.",
     "goHome": "Torna alla home",
     "contactSupport": "Contatta il supporto"
@@ -418,12 +427,30 @@
   "faq": {
     "title": "Domande Frequenti",
     "questions": [
-      { "question": "Dopo Quanto Arriva?", "answer": "La tua attesa sarà breve! Solitamente impiega tra i 10-14 giorni per arrivare a casa tua. Puoi controllare lo stato del tuo ordine nella sezione 'Traccia il tuo ordine'!" },
-      { "question": "I Pagamenti Sono Sicuri?", "answer": "Assolutamente. La sicurezza dei tuoi pagamenti è la nostra massima priorità. Utilizziamo sistemi di pagamento sicuri e affidabili per garantire una transazione senza preoccupazioni." },
-      { "question": "Che Metodi di Pagamento Accettate?", "answer": "Gli acquisti sul nostro sito possono essere effettuati tramite: Visa, Mastercard, American Express, Maestro e PayPal. Non accettiamo pagamenti in contanti, tramite assegno, contrassegno o bonifico bancario. Ogni acquisto avviene nella massima sicurezza per proteggere i tuoi dati personali e le informazioni sulla tua carta di credito da accessi non autorizzati." },
-      { "question": "Come è la Qualità del Prodotto?", "answer": "La qualità del nostro prodotto è ottima. Mettiamo grande cura nella selezione dei materiali e nel processo di produzione per garantire che ogni articolo soddisfi gli standard più elevati." },
-      { "question": "C'è una Garanzia?", "answer": "Certo! Se il prodotto dovesse arrivare danneggiato o diverso da come te lo aspettavi, contattaci alla mail 'goalmaniaofficial@gmail.com'. Ti risponderemo al più presto!" },
-      { "question": "Accettate Resi?", "answer": "Certamente! Accettiamo resi entro un periodo massimo di 7 giorni dalla data di acquisto. La tua soddisfazione è la nostra priorità, e desideriamo garantire che ogni cliente sia felice con il proprio acquisto." }
+      {
+        "question": "Dopo Quanto Arriva?",
+        "answer": "La tua attesa sarà breve! Solitamente impiega tra i 10-14 giorni per arrivare a casa tua. Puoi controllare lo stato del tuo ordine nella sezione 'Traccia il tuo ordine'!"
+      },
+      {
+        "question": "I Pagamenti Sono Sicuri?",
+        "answer": "Assolutamente. La sicurezza dei tuoi pagamenti è la nostra massima priorità. Utilizziamo sistemi di pagamento sicuri e affidabili per garantire una transazione senza preoccupazioni."
+      },
+      {
+        "question": "Che Metodi di Pagamento Accettate?",
+        "answer": "Gli acquisti sul nostro sito possono essere effettuati tramite: Visa, Mastercard, American Express, Maestro e PayPal. Non accettiamo pagamenti in contanti, tramite assegno, contrassegno o bonifico bancario. Ogni acquisto avviene nella massima sicurezza per proteggere i tuoi dati personali e le informazioni sulla tua carta di credito da accessi non autorizzati."
+      },
+      {
+        "question": "Come è la Qualità del Prodotto?",
+        "answer": "La qualità del nostro prodotto è ottima. Mettiamo grande cura nella selezione dei materiali e nel processo di produzione per garantire che ogni articolo soddisfi gli standard più elevati."
+      },
+      {
+        "question": "C'è una Garanzia?",
+        "answer": "Certo! Se il prodotto dovesse arrivare danneggiato o diverso da come te lo aspettavi, contattaci alla mail 'goalmaniaofficial@gmail.com'. Ti risponderemo al più presto!"
+      },
+      {
+        "question": "Accettate Resi?",
+        "answer": "Certamente! Accettiamo resi entro un periodo massimo di 7 giorni dalla data di acquisto. La tua soddisfazione è la nostra priorità, e desideriamo garantire che ogni cliente sia felice con il proprio acquisto."
+      }
     ]
   },
   "banners": {

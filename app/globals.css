@@ -43,6 +43,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --font-munish: var(--font-mulish);
 }
 
 :root {
@@ -89,7 +90,9 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.13 0.02 248.5); /* Brand blue #0e1924 - keep consistent in dark mode */
+  --primary: oklch(
+    0.13 0.02 248.5
+  ); /* Brand blue #0e1924 - keep consistent in dark mode */
   --primary-foreground: oklch(0.985 0 0);
   --brand-orange: oklch(0.7 0.15 51.8); /* Brand orange #f5963c */
   --brand-orange-foreground: oklch(0.145 0 0);
@@ -369,11 +372,11 @@
     @apply px-2 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm rounded-md font-medium;
   }
 
-  .swiper-pagination{
-    bottom:  10px !important;
+  .swiper-pagination {
+    bottom: 10px !important;
   }
-    .swiper-pagination-bullet-active {
-    background-color: #FF7A00 !important;
+  .swiper-pagination-bullet-active {
+    background-color: #ff7a00 !important;
   }
 
   .thin-scrollbar {
@@ -572,4 +575,8 @@
 
 .ProseMirror ::-moz-selection {
   background: #c1d1ff;
+}
+
+.font-mulish {
+  font-family: var(--font-mulish);
 }

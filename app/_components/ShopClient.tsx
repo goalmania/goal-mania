@@ -17,6 +17,8 @@ import ShopImageCard from "@/components/home/ShopImageCard";
 import ProductShowCase from "@/components/shop/ProductShowcase";
 import FaqSection from "./FaqSection";
 import FeaturesCardStats from "@/components/shop/FeaturesCardStats";
+import { CheckCircle2, Star } from "lucide-react";
+import Testimonies from "@/components/shop/testimonies";
 
 interface Review {
   id: string;
@@ -67,7 +69,7 @@ export default function ShopClient({
   };
 
   return (
-    <div className="bg-white pt-[112px]">
+    <div className="bg-white font-munish  ">
       <ShopSearchBar />
 
       <section className="relative">
@@ -107,12 +109,11 @@ export default function ShopClient({
       {/* Maglie 2025/26 Section */}
       <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-            Scelti per Te
+          <h2 className="text-[47px] font-medium tracking-tight text-[#0A1A2F]">
+            Ultimi prodotti
           </h2>
-          <p className="text-sm  text-gray-600 text-center py-2 ">
-            Scopri la nostra selezione di maglie, accessori e articoli ufficiali
-            per vivere il calcio ogni giorno.
+          <p className="text-[18px]  text-[#333333] text-center ">
+            Comfort e stile in un solo capo.
           </p>
         </div>
         <div className="my-6">
@@ -129,12 +130,12 @@ export default function ShopClient({
       </div>
 
       {/* Maglie 2025/26 Section */}
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4  sm:px-6 lg:px-8">
         <div className="flex flex-col items-center">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+          <h2 className="text-[47px] font-medium tracking-tight text-[#0A1A2F]">
             Più venduti
           </h2>
-          <p className="text-sm  text-gray-600 text-center py-2 ">
+          <p className="text-[18px]  text-[#333333] text-center ">
             Il capo che unisce la comodità di un fit impeccabile alla
             raffinatezza di un design curato nei dettagli.
           </p>
@@ -185,7 +186,6 @@ export default function ShopClient({
             </p>
           </div>
 
-          {/* Products Grid */}
           <div className="mb-8">
             {mysteryBoxProducts.length === 0 ? (
               <div className="text-center py-12">
@@ -266,7 +266,6 @@ export default function ShopClient({
         </div>
       </div>
 
-      {/* Product ShowCase */}
       <ProductShowCase
         featuredProduct={featuredProduct}
         featuredProduct2={featuredProduct2}
@@ -277,7 +276,9 @@ export default function ShopClient({
       <Suspense
         fallback={<div className="h-64 bg-gray-100 animate-pulse"></div>}
       >
-        <ReviewsSlider />
+        <div className="hidden">
+          <ReviewsSlider />
+        </div>
       </Suspense>
 
       {/* Guarantees Section */}
@@ -288,32 +289,16 @@ export default function ShopClient({
       </div>
 
       {/* Customer Satisfaction Banner */}
-      <div className="bg-gray-800 py-10 sm:py-16 hidden">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white">
-              Valutazioni Stellari: 4.8⭐️ di Media!{" "}
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-sm sm:text-base md:text-lg text-white">
-              Oltre 1200 clienti felici e +40 recensioni tutte positive, che
-              trovi scorrendo in basso! Unisciti a noi nel creare esperienze
-              uniche e rendere ogni giorno migliore con le maglie che hanno
-              scritto la storia. La nostra famiglia è pronta ad accoglierti a
-              braccia aperte!
-            </p>
-          </div>
+      <div className=" p-6">
+        <div className=" ">
+          <Testimonies />
         </div>
       </div>
-
       <FeaturesCardStats />
 
       {/* FAQ Section */}
-      <div className="bg-white py-16 sm:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* <FAQ /> */}
-
-          <FaqSection />
-        </div>
+      <div className="">
+        <FAQ />
       </div>
     </div>
   );

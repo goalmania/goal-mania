@@ -57,12 +57,13 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
   return (
     <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-6 sm:mb-8 md:mb-10">
+        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-6 sm:mb-8 md:mb-10 font-munish">
           {t("home.featuredProducts")}
         </h2>
 
-            <p className="text-lg text-gray-600 max-w-2xl text-center mx-auto mb-12">
-   Scopri la nostra selezione di maglie, accessori e articoli ufficiali per vivere il calcio ogni giorno.
+        <p className="text-lg text-gray-600 max-w-2xl text-center mx-auto mb-12 font-munish">
+          Scopri la nostra selezione di maglie, accessori e articoli ufficiali
+          per vivere il calcio ogni giorno.
         </p>
 
         {/* ===== Conditionally render Swiper when more than 3 products ===== */}
@@ -148,8 +149,6 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                 </svg>
               </button>
             </div>
-
-           
           </div>
         ) : (
           /* Original Grid for <= 3 products (kept intact) */

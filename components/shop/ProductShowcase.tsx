@@ -1,163 +1,81 @@
 "use client";
-
 import Link from "next/link";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-
-export default function ProductShowCase({
+export default function ProductGrid({
   featuredProduct,
   featuredProduct2,
   featuredProduct3,
+  featuredProduct4,
 }: {
   featuredProduct?: any;
   featuredProduct2?: any;
   featuredProduct3?: any;
+  featuredProduct4?: any;
 }) {
-  const slides = [
-    featuredProduct && (
-      <div className="relative bg-gray-200 rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row items-center p-6 md:p-0">
-        <div className="md:w-1/2 p-6 order-2 md:order-1 text-center md:text-left">
-          <h3 className="text-3xl font-bold text-gray-800 mb-4">
-            Qualità Super
-          </h3>
-          <p className="text-gray-600 mb-6 leading-relaxed">
-            Le nostre maglie sono capi curati nei minimi dettagli con materiali
-            premium. Perfetta per i veri appassionati che vogliono collezionare
-            emozioni, non solo tessuto.
-          </p>
-          <a
-            href={`/products/${featuredProduct.id}`}
-            className="inline-block bg-orange-500 rounded-full text-white px-6 py-3 font-semibold hover:bg-orange-600 transition-colors"
-          >
-            Buy Now →
-          </a>
-        </div>
-        <div className="md:w-1/2 h-64 md:h-auto overflow-hidden order-1 md:order-2 flex items-center justify-center relative">
-          <div className="absolute inset-0 bg-blue-900 clip-product-bg md:clip-product-bg-md"></div>
-          <img
-            src={featuredProduct.image}
-            alt={featuredProduct.name}
-            className="relative z-10 w-full h-full object-contain transform scale-110 md:scale-100"
-          />
-        </div>
-      </div>
-    ),
-    featuredProduct2 && (
-      <div className="relative bg-gray-200 rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row items-center p-6 md:p-0">
-        <div className="md:w-1/2 p-6 order-2 md:order-1 text-center md:text-left">
-          <h3 className="text-3xl font-bold text-[#0A1A2F] mb-4">
-            Modelli introvabili
-          </h3>
-          <p className="text-[#0A1A2F] mb-6 leading-relaxed">
-            Associa un testo o un'immagine per dare importanza al prodotto, alla
-            collezione o all'articolo del blog di tua scelta. Aggiungi dettagli
-            sulla disponibilità, sullo stile o fornisci una recensione.
-          </p>
-          <a
-            href={`/products/${featuredProduct2.id}`}
-            className="inline-block bg-orange-500 rounded-full text-white px-6 py-3 font-semibold hover:bg-orange-600 transition-colors"
-          >
-            Buy Now →
-          </a>
-        </div>
-        <div className="md:w-1/2 h-64 md:h-auto overflow-hidden order-1 md:order-2 flex items-center justify-center relative">
-          <div className="absolute inset-0 bg-blue-900 clip-product-bg md:clip-product-bg-md"></div>
-          <img
-            src={featuredProduct2.image}
-            alt={featuredProduct2.name}
-            className="relative z-10 w-full h-full object-contain transform scale-110 md:scale-100"
-          />
-        </div>
-      </div>
-    ),
-    featuredProduct3 && (
-      <div className="relative bg-gray-200 rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row items-center p-6 md:p-0">
-        <div className="md:w-1/2 p-6 order-2 md:order-1 text-center md:text-left">
-          <h3 className="text-3xl font-bold text-gray-800 mb-4">
-            Vestibilità perfetta
-          </h3>
-          <p className="text-gray-600 mb-6 leading-relaxed">
-            Associa un testo o un'immagine per dare importanza al prodotto, alla
-            collezione o all'articolo del blog di tua scelta. Aggiungi dettagli
-            sulla disponibilità, sullo stile o fornisci una recensione.
-          </p>
-          <Link
-            href={`/products/${featuredProduct3.id}`}
-            className="inline-block bg-orange-500 rounded-full text-white px-6 py-3 font-semibold hover:bg-orange-600 transition-colors"
-          >
-            Buy Now →
-          </Link>
-        </div>
-        <div className="md:w-1/2 h-64 md:h-auto overflow-hidden order-1 md:order-2 flex items-center justify-center relative">
-          <div className="absolute inset-0 bg-blue-900 clip-product-bg md:clip-product-bg-md"></div>
-          <img
-            src={featuredProduct3.image}
-            alt={featuredProduct3.name}
-            className="relative z-10 w-full h-full object-contain transform scale-110 md:scale-100"
-          />
-        </div>
-      </div>
-    ),
-  ].filter(Boolean); // remove empty
-
+  const products = [
+    {
+      id: featuredProduct?.id,
+      title: "Qualità Super",
+      description:
+        "Le nostre maglie sono capi curati nei minimi dettagli con materiali premium. Perfette per i veri appassionati che vogliono collezionare emozioni, non solo tessuto.",
+      image: featuredProduct?.image,
+    },
+    {
+      id: featuredProduct2?.id,
+      title: "Modelli introvabili",
+      description:
+        "Associa un testo o un'immagine per dare importanza al prodotto, alla collezione o all'articolo del blog di tua scelta. Aggiungi dettagli sulla disponibilità, sullo stile o fornisci una recensione.",
+      image: featuredProduct2?.image,
+    },
+    {
+      id: featuredProduct3?.id,
+      title: "Vestibilità perfetta",
+      description:
+        "Associa un testo o un'immagine per dare importanza al prodotto, alla collezione o all'articolo del blog di tua scelta. Aggiungi dettagli sulla disponibilità, sullo stile o fornisci una recensione.",
+      image: featuredProduct3?.image,
+    },
+    {
+      id: featuredProduct4?.id,
+      title: "Qualità Super",
+      description:
+        "Le nostre maglie sono capi curati nei minimi dettagli con materiali premium. Perfette per i veri appassionati che vogliono collezionare emozioni, non solo tessuto.",
+      image: featuredProduct4?.image,
+    },
+  ].filter(Boolean);
   return (
     <section className="py-16 md:py-24 bg-white">
-      <div className="container  mx-auto px-4 lg:px-20 flex justify-start items-start relative">
-        <Swiper
-          modules={[Navigation, Pagination]}
-          navigation={{
-            nextEl: ".procustom-next",
-            prevEl: ".procustom-prev",
-          }}
-          spaceBetween={24}
-          pagination={{ clickable: true }}
-          slidesPerView={1}
-          breakpoints={{
-            640: { slidesPerView: 2 },
-            1028: { slidesPerView: 2 },
-          }}
-          className="!pb-12"
-        >
-          {slides.map((slide, i) => (
-            <SwiperSlide key={i}>{slide}</SwiperSlide>
-          ))}
-        </Swiper>
+      <div className="container mx-auto px-4 lg:px-20">
+        <div className="grid gap-8 md:grid-cols-2">
+          {products.map((product, i) => (
+            <div
+              key={i}
+              className="relative bg-[#F5F5F5] rounded-2xl shadow-md overflow-hidden flex flex-col md:flex-row items-center p-6 h-[360px]"
+            >
+              <div className="md:w-1/2 order-2 md:order-1 text-center md:text-left space-y-3">
+                <h3 className="text-[30px] font-bold text-[#0A1A2F]">
+                  {product.title}
+                </h3>
+                <p className="text-[#0A1A2F] text-[14px] leading-relaxed">
+                  {product.description}
+                </p>
+                <Link
+                  href={`/products/${product.id}`}
+                  className="inline-block bg-[#FF7A00] rounded-full text-[#0A1A2F] px-4 py-1.5 font-medium text-sm hover:bg-orange-600 transition-colors"
+                >
+                  Buy Now →
+                </Link>
+              </div>
+              <div className="md:w-1/2 flex items-center justify-center relative order-1 md:order-2 mt-6 md:mt-0">
+                {/* Blue circle positioned at top right with border */}
+                <div className="absolute -bottom-8 -top-8 w-56 h-56 md:w-72 md:h-72 bg-[#0A1A2F] rounded-full border-4 border-white z-10"></div>
 
-        {/* Custom Bottom-Center Navigation */}
-        <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex gap-4 z-10">
-          <button className="procustom-prev bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full p-2 shadow">
-            <svg
-              className="w-5 h-5 text-gray-700"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-          <button className="procustom-next bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full p-2 shadow">
-            <svg
-              className="w-5 h-5 text-gray-700"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
+                <img
+                  src={product.image || "/images/jersey1.jpeg"}
+                  alt={product.title}
+                  className="relative z-20 w-48 md:w-60 object-contain"
+                />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
