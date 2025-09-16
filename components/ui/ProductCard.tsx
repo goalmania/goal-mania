@@ -15,7 +15,7 @@ import { useTranslation } from "@/lib/hooks/useTranslation";
 //   TooltipTrigger,
 // } from "@/components/ui/tooltip";
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import { Button } from "./button";
 
 interface ProductCardProps {
@@ -112,12 +112,10 @@ export default function ProductCard({
     }
   };
 
-  
-
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <div
-        className={`group relative bg-white rounded-lg   duration-300 overflow-hidden flex flex-col ${className}`}
+        className={`group relative bg-white rounded-lg   duration-300 overflow-hidden h-[530px] flex flex-col ${className}`}
       >
         {/* Image section */}
         <div
@@ -191,10 +189,17 @@ export default function ProductCard({
               {/* Wishlist button */}
 
               {/* Price */}
-              <div className="flex items-start justify-start mt-auto">
-                <p className="text-xs sm:text-base md:text-lg font-semibold text-[#F1803A]">
+              <div className="flex items-center gap-2 justify-between mt-auto">
+                <p className="text-xs sm:text-base md:text-lg font-semibold text-[#0A1A2F]">
                   €{Number(price).toFixed(2)}
                 </p>
+                <div className=" flex justify-center items-center gap-1">
+                  <Star fill="#FF7A00" color="#FF7A00" size={12} />
+                  <Star fill="#FF7A00" color="#FF7A00" size={12} />
+                  <Star fill="#FF7A00" color="#FF7A00" size={12} />
+                  <Star fill="#FF7A00" color="#FF7A00" size={12} />
+                  <Star fill="#FF7A00" color="#FF7A00" size={12} />
+                </div>
               </div>
 
               {/* Wishlist button */}
@@ -206,21 +211,21 @@ export default function ProductCard({
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="px-5 flex items-center  py-2 border text-xs text-black w-full rounded-full"
+                    className="px-3 flex items-center  py-1.5 border border-[#0A1A2F] text-xs text-black w-full rounded-full"
                   >
                     <span className="block whitespace-nowrap">
                       {" "}
                       Add to Cart
                     </span>
-                    <ArrowRight className="ml-1  inline-flex" />
+                    <ArrowRight className="ml-1  inline-flex" size={14} />
                   </button>
                   <button
                     type="button"
                     // onClick={handleBuyNow}
-                    className="px-5 py-2 border flex items-center  text-xs bg-[#FF7A00] text-black w-full rounded-full"
+                    className="px-3 py-1.5 border flex items-center  text-xs bg-[#FF7A00] text-black w-full rounded-full"
                   >
                     <span className="block whitespace-nowrap">Buy Now</span>
-                    <ArrowRight className="ml-1 inline-flex" />
+                    <ArrowRight className="ml-1 inline-flex" size={14} />
                   </button>
                   {/* 
                   <div>
@@ -276,7 +281,7 @@ export default function ProductCard({
                 {showWishlistButton && onWishlistToggle && (
                   <button
                     onClick={handleWishlistToggle}
-                    className=" rounded-full bg-white/80 backdrop-blur-sm p-1.5 sm:p-2.5 shadow-md hover:bg-white transition-colors duration-200 "
+                    className=" p-1.5 sm:p-2.5  "
                     aria-label={
                       isInWishlist && isInWishlist(id)
                         ? t("product.removeFromWishlist")

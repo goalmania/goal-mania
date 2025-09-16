@@ -21,7 +21,9 @@ interface FeaturedProductsProps {
   products: Product[];
 }
 
-export default function FeaturedVideoProducts({ products }: FeaturedProductsProps) {
+export default function FeaturedVideoProducts({
+  products,
+}: FeaturedProductsProps) {
   const router = useRouter();
   const wishlistStore = useWishlistStore();
   const cartStore = useCartStore();
@@ -56,13 +58,14 @@ export default function FeaturedVideoProducts({ products }: FeaturedProductsProp
   if (products.length === 0) return null;
 
   return (
-    <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-white">
+    <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-white font-munish">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-6 ">
-  Storie in Primo Piano
+          Storie in Primo Piano
         </h2>
-            <p className="text-lg text-gray-600 max-w-2xl text-center mx-auto mb-12">
-      Approfondimenti, interviste e articoli esclusivi che raccontano il calcio oltre il risultato.
+        <p className="text-lg text-gray-600 max-w-2xl text-center mx-auto mb-12">
+          Approfondimenti, interviste e articoli esclusivi che raccontano il
+          calcio oltre il risultato.
         </p>
 
         {/* ===== Conditionally render Swiper when more than 3 products ===== */}
@@ -90,7 +93,7 @@ export default function FeaturedVideoProducts({ products }: FeaturedProductsProp
                     name={product.name}
                     price={product.price}
                     image={product.image}
-                    videos={product.videos || []} 
+                    videos={product.videos || []}
                     category={product.category || ""}
                     team={product.team || ""}
                     availablePatches={product.availablePatches || []}
@@ -158,7 +161,7 @@ export default function FeaturedVideoProducts({ products }: FeaturedProductsProp
                 name={product.name}
                 price={product.price}
                 image={product.image}
-                videos={product.videos || []} 
+                videos={product.videos || []}
                 category={product.category || ""}
                 team={product.team || ""}
                 availablePatches={product.availablePatches || []}

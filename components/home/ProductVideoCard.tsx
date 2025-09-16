@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { PlayIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@/lib/hooks/useTranslation";
+import { ArrowRight } from "lucide-react";
 
 interface ProductCardProps {
   id: string;
@@ -122,10 +123,11 @@ export default function ProductVideoCard({
 
         {/* Info Section */}
         <div className="p-2 sm:p-4 flex flex-col flex-grow">
-          <div className="mb-2 flex-grow">
-            <h3 className="text-xs flex justify-start text-left items-center sm:text-lg md:text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
+          <div className="mb-2 flex-grow ">
+            <h3 className="text-xs flex justify-start text-left  items-center sm:text-lg md:text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
               {name}
             </h3>
+            <div className="bg-black h-0.5 w-1/2"></div>
           </div>
 
           {/* Price */}
@@ -133,6 +135,11 @@ export default function ProductVideoCard({
             <p className="text-xs sm:text-base md:text-lg font-semibold text-[#F1803A]">
               €{Number(price).toFixed(2)}
             </p>
+          </div>
+          <div className="">
+            <button className="flex text-[14px] mt-3.5 items-center">
+              Leggi Ora <ArrowRight className="h-3 w-3 text-gray-900" />
+            </button>
           </div>
         </div>
       </div>
