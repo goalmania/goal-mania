@@ -65,9 +65,7 @@ export default function ProductGrid({
                 </Link>
               </div>
               <div className="md:w-1/2 flex items-center justify-center relative order-1 md:order-2 mt-6 md:mt-0">
-                {/* Blue circle positioned at top right with border */}
-                <div className="absolute -bottom-8 -top-8 w-56 h-56 md:w-72 md:h-72 bg-[#0A1A2F] rounded-full border-4 border-white z-10"></div>
-
+               
                 <img
                   src={product.image || "/images/jersey1.jpeg"}
                   alt={product.title}

@@ -27,7 +27,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Globe, MenuIcon } from "lucide-react";
+import { ArrowRight, Globe, MenuIcon, X } from "lucide-react";
 
 export interface User {
   id: string;
@@ -53,34 +53,6 @@ export function Header() {
   const pathname = usePathname();
   const [openMenu, setOpenMenu] = useState(false);
 
-  const isShopPage =
-    pathname?.includes("/shop") ||
-    pathname?.includes("/products") ||
-    pathname?.includes("/cart") ||
-    pathname?.includes("/checkout");
-
-  // Navigation (translated)
-  const navigation = [
-    { name: t("nav.home"), href: "/" },
-    { name: t("nav.category"), href: "/category", hasDropdown: true },
-    { name: t("nav.articles"), href: "/articles" },
-    { name: t("nav.info"), href: "/info" },
-    { name: t("nav.about"), href: "/about" },
-    { name: t("nav.contact"), href: "/contact" },
-    { name: t("nav.shop"), href: "/shop" },
-  ];
-
-  // Dropdown items (also translatable)
-  const internationalNavItems = [
-    { name: t("nav.laliga"), href: "/international/laliga" },
-    { name: t("nav.premierLeague"), href: "/international/premierLeague" },
-    { name: t("nav.bundesliga"), href: "/international/bundesliga" },
-    { name: t("nav.ligue1"), href: "/international/ligue1" },
-    { name: t("nav.serieA"), href: "/international/serieA" },
-    { name: t("nav.leaguesOverview"), href: "/leagues-overview" },
-    { name: t("nav.otherLeagues"), href: "/international/other" },
-  ];
-
   useEffect(() => {
     setMounted(true);
 
@@ -98,16 +70,49 @@ export function Header() {
     it: "Italiano",
   };
 
+  const navigation = [
+    { name: t("nav.home"), href: "/" },
+    {
+      name: t("nav.category"),
+      href: "/category",
+      hasDropdown: true,
+      subItems: [
+        { name: t("nav.laliga"), href: "/international/laliga" },
+        { name: t("nav.premierLeague"), href: "/international/premierLeague" },
+        { name: t("nav.bundesliga"), href: "/international/bundesliga" },
+        { name: t("nav.ligue1"), href: "/international/ligue1" },
+        { name: t("nav.serieA"), href: "/international/serieA" },
+        { name: t("nav.leaguesOverview"), href: "/leagues-overview" },
+        { name: t("nav.otherLeagues"), href: "/international/other" },
+      ],
+    },
+    { name: t("nav.articles"), href: "/articles" },
+    { name: t("nav.info"), href: "/info" },
+    { name: t("nav.about"), href: "/about" },
+    { name: t("nav.contact"), href: "/contact" },
+    { name: t("nav.shop"), href: "/shop" },
+  ];
+
   if (!mounted) return null;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0B1C2C] h-[90px] flex justify-center items-center font-mulish">
-      <nav className="container mx-auto flex items-center justify-between px-4 py-2 ">
-        {/* Logo */}
-        <div className="flex items-center">
-          <div className="hidden md:flex">
-            <MenuIcon onClick={() => setOpenMenu(!openMenu)} />
+      <nav className="container mx-auto flex items-center justify-between px-4 py-2">
+        {/* Logo & Mobile Menu Button */}
+        <div className="flex items-center gap-3">
+          {/* Mobile toggle button */}
+          <div className="md:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setOpenMenu(true)}
+              className="text-white"
+            >
+              <MenuIcon className="h-6 w-6" />
+            </Button>
           </div>
+
+          {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
               src="/images/recentUpdate/desktop-logo.png"
@@ -119,6 +124,7 @@ export function Header() {
           </Link>
         </div>
 
+        {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-6 text-base items-center">
           {navigation.map((item) =>
             item.hasDropdown ? (
@@ -126,18 +132,18 @@ export function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className={`flex items-center hover:bg-transparent cursor-pointer  ${
+                    className={`flex items-center hover:bg-transparent cursor-pointer ${
                       pathname === item.href
                         ? "text-[#FF7A00]"
                         : "text-white hover:text-[#FF7A00]"
                     }`}
                   >
                     {item.name}
-                    <ChevronDownIcon className=" h-4 w-4" />
+                    <ChevronDownIcon className="ml-1 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-white text-black">
-                  {internationalNavItems.map((sub) => (
+                  {item.subItems?.map((sub) => (
                     <DropdownMenuItem key={sub.name} asChild>
                       <Link href={sub.href}>{sub.name}</Link>
                     </DropdownMenuItem>
@@ -148,11 +154,11 @@ export function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`${
+                className={
                   pathname === item.href
                     ? "text-[#FF7A00]"
                     : "text-white hover:text-[#FF7A00]"
-                }`}
+                }
               >
                 {item.name}
               </Link>
@@ -160,7 +166,7 @@ export function Header() {
           )}
         </div>
 
-        {/* Right Section */}
+        {/* Right Section (Desktop + Mobile) */}
         <div className="flex items-center gap-1">
           {/* Language Switch */}
           <Button
@@ -169,9 +175,8 @@ export function Header() {
             onClick={toggleLanguage}
             className="bg-white text-[#0A1A2F] rounded-full cursor-pointer"
           >
-            <Globe />
+            <Globe className="w-4 h-4 mr-1" />
             {languageNames[language] || language}
-            <ChevronDownIcon />
           </Button>
 
           {/* Wishlist */}
@@ -271,7 +276,7 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="border-[1px] border-[#FF7A00] rounded-full px-4 py-1 flex items-center gap-1 text-white ">
+            <div className="border-[1px] border-[#FF7A00] rounded-full px-4 py-1 flex items-center gap-1 text-white">
               <Link href="/auth/signin" className="hover:text-[#FF7A00]">
                 {t("Login")}
               </Link>
@@ -284,6 +289,69 @@ export function Header() {
           )}
         </div>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      {openMenu && (
+        <div className="fixed inset-0 bg-black/60 z-40 md:hidden">
+          <div className="absolute top-0 left-0 w-3/4 max-w-sm h-full bg-[#0B1C2C] p-6 flex flex-col gap-6 text-white">
+            {/* Close Button */}
+            <div className="flex justify-between items-center">
+              <Image
+                src="/images/recentUpdate/desktop-logo.png"
+                alt="Logo"
+                width={50}
+                height={50}
+                className="object-contain"
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setOpenMenu(false)}
+                className="text-white"
+              >
+                <X className="h-6 w-6" />
+              </Button>
+            </div>
+
+            {/* Mobile Nav Links */}
+            <nav className="flex flex-col gap-4 text-lg">
+              {navigation.map((item) => (
+                <div key={item.name}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setOpenMenu(false)}
+                    className={
+                      pathname === item.href
+                        ? "text-[#FF7A00]"
+                        : "hover:text-[#FF7A00]"
+                    }
+                  >
+                    {item.name}
+                  </Link>
+                  {item.hasDropdown && (
+                    <div className="ml-4 mt-2 flex flex-col gap-2">
+                      {item.subItems?.map((sub) => (
+                        <Link
+                          key={sub.name}
+                          href={sub.href}
+                          onClick={() => setOpenMenu(false)}
+                          className={
+                            pathname === sub.href
+                              ? "text-[#FF7A00] text-sm"
+                              : "text-white hover:text-[#FF7A00] text-sm"
+                          }
+                        >
+                          {sub.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </nav>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
