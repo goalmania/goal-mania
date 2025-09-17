@@ -128,7 +128,7 @@ export function Header() {
                 className="w-[60px] h-[60px] object-contain"
               />
             </Link>
-            <div className=" text-white flex items-center">
+            <div className=" text-white flex items-center md:hidden">
               Goal<span className=" text-[#FF7A00]">Mania</span>
             </div>
           </div>
