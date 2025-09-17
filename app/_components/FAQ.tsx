@@ -24,7 +24,7 @@ export default function FAQ() {
   return (
     <div className="w-full bg-[#F5F5F5] pb-10 ">
       <CardHeader className="p-0 mb-8 text-center">
-        <CardTitle className="bg-[#0A1A2F] text-[38px] text-[#FFEFE5] font-medium h-[74px] font-munish">
+        <CardTitle className="bg-[#0A1A2F] md:text-[38px] flex items-center justify-center text-lg text-[#FFEFE5] font-medium md:h-[74px] h-[50px] font-munish">
           {t("faq.title")}
         </CardTitle>
       </CardHeader>
@@ -51,29 +51,29 @@ export default function FAQ() {
           </AccordionItem>
         ))}
       </Accordion>*/}
-      <Tabs defaultValue="generale" className="max-w-4xl mx-auto">
-        <TabsList className="bg-[#F5F5F5] mx-auto gap-10 font-munish text-[28px]">
+      <Tabs defaultValue="generale" className="md:max-w-4xl mx-auto">
+        <TabsList className="bg-[#F5F5F5] mx-auto md:gap-10 gap-0 font-munish md:text-[22px] text-base">
           <TabsTrigger
             value="generale"
-            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-[#333333] data-[state=active]:shadow-none data-[state=active]:rounded-none text-[22px]"
+            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-[#333333] data-[state=active]:shadow-none data-[state=active]:rounded-none md:text-[22px] text-base"
           >
             Generale
           </TabsTrigger>
           <TabsTrigger
             value="costruzione"
-            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-[#333333] data-[state=active]:shadow-none data-[state=active]:rounded-none text-[22px]"
+            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-[#333333] data-[state=active]:shadow-none data-[state=active]:rounded-none md:text-[22px] text-base"
           >
             Costruzione
           </TabsTrigger>
           <TabsTrigger
             value="assistenza"
-            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-[#333333] data-[state=active]:shadow-none data-[state=active]:rounded-none text-[22px]"
+            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-[#333333] data-[state=active]:shadow-none data-[state=active]:rounded-none md:text-[22px] text-base"
           >
             Assistenza
           </TabsTrigger>
           <TabsTrigger
             value="legale"
-            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-[#333333] data-[state=active]:shadow-none data-[state=active]:rounded-none text-[22px]"
+            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-[#333333] data-[state=active]:shadow-none data-[state=active]:rounded-none md:text-[22px] text-base"
           >
             Legale
           </TabsTrigger>
@@ -82,7 +82,7 @@ export default function FAQ() {
           <Accordion
             type="single"
             collapsible
-            className="data-[state=active]:border-b-2 data-[state=active]:border-b-black data-[state=active]:text-[#333333] data-[state=active]:shadow-none data-[state=active]:rounded-none text-[22px]"
+            className="data-[state=active]:border-b-2 data-[state=active]:border-b-black data-[state=active]:text-[#333333] data-[state=active]:shadow-none data-[state=active]:rounded-none md:text-[22px] text-base"
           >
             {questions.map((faq, index) => (
               <AccordionItem

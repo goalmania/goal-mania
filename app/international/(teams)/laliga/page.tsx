@@ -32,9 +32,9 @@ export default async function Ligue1Page() {
   })();
   return (
     <div className="min-h-screen">
-      <div className=" h-[90vh] bg-white flex flex-col py-20 gap-4 items-center">
-        <div className="space-y-4 flex flex-col  items-center">
-          <h2 className=" text-[47px] font-munish font-medium text-black">
+      <div className=" md:h-[90vh] h-[75vh] bg-white flex flex-col py-20 gap-4 items-center">
+        <div className="space-y-4 flex flex-col  items-center text-center">
+          <h2 className=" text-[47px] font-munish font-medium text-black leading-10">
             La Liga al momento
           </h2>
           <p className=" text-[18px] font-munish font-normal md:w-3/5 w-full text-center mx-auto text-black">

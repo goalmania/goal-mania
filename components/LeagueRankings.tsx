@@ -105,11 +105,11 @@ export function LeagueRankings({ league }: LeagueRankingsProps) {
   }
 
   return (
-    <div className="rounded-lg bg-[#F5F5F5] overflow-hidden  p-6 font-munish">
+    <div className="rounded-lg bg-[#F5F5F5] overflow-auto scrollbar-hide p-6 font-munish">
       <table className="w-full text-sm">
-        <thead className="bg-[#0A1A2F] text-white font-light">
+        <thead className="bg-[#0A1A2F] text-white font-light px-3">
           <tr>
-            <th className="p-2 text-left font-light rounded-tl-full">
+            <th className="p-2 text-left font-light rounded-l-full pl-3">
               <span className="rounded-tl-full">POC</span>
             </th>
             <th className="p-2 text-left font-light">Squad</th>
@@ -120,7 +120,9 @@ export function LeagueRankings({ league }: LeagueRankingsProps) {
             <th className="p-2 text-center font-light">GF</th>
             <th className="p-2 text-center font-light">GS</th>
             <th className="p-2 text-center font-light">DR</th>
-            <th className="p-2 text-center font-light rounded-tr-full">Pti</th>
+            <th className="p-2 text-center font-light rounded-r-full pr-3">
+              Pti
+            </th>
           </tr>
         </thead>
         <tbody>
