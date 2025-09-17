@@ -219,7 +219,7 @@ function ContactForm() {
                       type="email"
                       placeholder="Your Email*"
                       {...field}
-                      className="bg-white border-0 w-1/2 border-b border-black text-[#939393] font-light rounded-none shadow-none pl-0"
+                      className="bg-white border-0 md:w-1/2 w-full border-b border-black text-[#939393] font-light rounded-none shadow-none pl-0"
                     />
                   </FormControl>
                   <FormMessage />
@@ -320,7 +320,7 @@ function ContactForm() {
               )}
             />
 
-            <div className=" flex justify-between">
+            <div className=" flex justify-between flex-col md:flex-row">
               <div className=" space-y-2">
                 <Label className=" text-black font-light">Products*</Label>
                 <div className=" flex gap-4">
@@ -346,7 +346,7 @@ function ContactForm() {
               </div>
               <Button
                 type="submit"
-                className="w-[264px] h-[50px] flex bg-[#FF7A00] hover:bg-[#e0852e] text-[#0A1A2F] rounded-full"
+                className="w-[264px] h-[50px] mt-3 flex bg-[#FF7A00] hover:bg-[#e0852e] text-[#0A1A2F] rounded-full"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
@@ -439,7 +439,7 @@ export default function ContactPage() {
         <ContactBanner />
       </div>
       <div className="container mx-auto px-6 sm:px-10 lg:px-20 pt-12 pb-12">
-        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-12 max-w-6xl mx-auto">
           <div className="w-full">
             <div className="relative h-[400px]  rounded-2xl hidden lg:block">
               <div className="absolute  inset-0">
@@ -463,7 +463,7 @@ export default function ContactPage() {
               <div className="flex items-center mb-4">
                 <Mail className=" mr-3" size={20} />
                 <span className="text-[16px] font-light">
-                  safe.support@goal-mania.it
+                  goalmaniaofficial@gmail.com
                 </span>
               </div>
 

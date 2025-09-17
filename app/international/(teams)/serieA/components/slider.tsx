@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Slider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsPerView, setItemsPerView] = useState(3); // default for desktop
 
   const players = [
     {
@@ -53,7 +54,21 @@ const Slider = () => {
     },
   ];
 
-  const itemsPerView = 3;
+  // Handle responsive items per view
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setItemsPerView(1);
+      } else {
+        setItemsPerView(3);
+      }
+    };
+
+    handleResize(); // run once on mount
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const maxIndex = Math.max(0, players.length - itemsPerView);
 
   const nextSlide = () => {
@@ -72,16 +87,15 @@ const Slider = () => {
   return (
     <div className="w-full max-w-4xl mx-auto p-6 font-munish">
       <div className="relative">
-        {/* Player Cards Container */}
         <div className="flex gap-4 overflow-hidden">
-          {visiblePlayers.map((player, index) => (
+          {visiblePlayers.map((player) => (
             <div
               key={player.id}
-              className="flex-1 bg-[#0A1A2F] rounded-xl p-4 text-white relative overflow-hidden w-[555px] h-[140px]"
+              className="flex-1 bg-[#0A1A2F] rounded-xl p-4 text-white relative overflow-hidden min-w-[250px] h-[140px]"
             >
               <div className="flex items-start justify-between gap-3">
-                <div className=" space-y-2">
-                  <div className="w-10 h-10 rounded-full overflow-hidden ">
+                <div className="space-y-2">
+                  <div className="w-10 h-10 rounded-full overflow-hidden">
                     <img
                       src={player.avatar}
                       alt={player.name}
@@ -93,13 +107,13 @@ const Slider = () => {
                     <h3 className="font-semibold text-white text-sm mb-1 truncate">
                       {player.name}
                     </h3>
-                    <p className=" text-xs leading-tight">
+                    <p className="text-xs leading-tight">
                       {player.matches} Matches • {player.club}
                     </p>
                   </div>
                 </div>
-                <div className=" flex items-center gap-1 text-[14px]">
-                  <div className=" bg-orange-500 text-white  font-semibold h-3 w-3 rounded-full  text-center"></div>
+                <div className="flex items-center gap-1 text-[14px]">
+                  <div className="bg-orange-500 h-3 w-3 rounded-full"></div>
                   <span>{player.score}</span>
                 </div>
               </div>
@@ -107,6 +121,7 @@ const Slider = () => {
           ))}
         </div>
 
+        {/* Navigation */}
         <div className="flex justify-center gap-2 mt-6">
           <button
             onClick={prevSlide}

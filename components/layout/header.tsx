@@ -27,7 +27,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Globe, MenuIcon, X } from "lucide-react";
+import {
+  ArrowRight,
+  Globe,
+  Heart,
+  MenuIcon,
+  ShoppingBag,
+  X,
+} from "lucide-react";
 
 export interface User {
   id: string;
@@ -96,10 +103,10 @@ export function Header() {
   if (!mounted) return null;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0B1C2C] h-[90px] flex justify-center items-center font-mulish">
-      <nav className="container mx-auto flex items-center justify-between px-4 py-2">
+    <header className="fixed top-0 left-0 right-0 z-50 md:bg-[#0B1C2C] bg-[#000000] h-[90px] flex justify-center items-center font-mulish">
+      <nav className="container mx-auto flex items-center justify-between px-3 py-2">
         {/* Logo & Mobile Menu Button */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center ">
           {/* Mobile toggle button */}
           <div className="md:hidden">
             <Button
@@ -108,23 +115,25 @@ export function Header() {
               onClick={() => setOpenMenu(true)}
               className="text-white"
             >
-              <MenuIcon className="h-6 w-6" />
+              <MenuIcon className="h-7 w-7" />
             </Button>
           </div>
-
-          {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <Image
-              src="/images/recentUpdate/desktop-logo.png"
-              alt="Logo"
-              width={60}
-              height={60}
-              className="w-[60px] h-[60px] object-contain"
-            />
-          </Link>
+          <div className=" flex items-center">
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/images/recentUpdate/desktop-logo.png"
+                alt="Logo"
+                width={60}
+                height={60}
+                className="w-[60px] h-[60px] object-contain"
+              />
+            </Link>
+            <div className=" text-white flex items-center">
+              Goal<span className=" text-[#FF7A00]">Mania</span>
+            </div>
+          </div>
         </div>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-6 text-base items-center">
           {navigation.map((item) =>
             item.hasDropdown ? (
@@ -166,17 +175,25 @@ export function Header() {
           )}
         </div>
 
-        {/* Right Section (Desktop + Mobile) */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center ">
           {/* Language Switch */}
           <Button
             variant="ghost"
             size="sm"
             onClick={toggleLanguage}
-            className="bg-white text-[#0A1A2F] rounded-full cursor-pointer"
+            className="bg-white text-[#0A1A2F] rounded-full cursor-pointer hidden md:flex"
           >
             <Globe className="w-4 h-4 mr-1" />
             {languageNames[language] || language}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleLanguage}
+            className="bg-white text-[#0A1A2F] uppercase rounded-full cursor-pointer md:hidden flex"
+          >
+            <Globe className="w-4 h-4 mr-1" />
+            {language}
           </Button>
 
           {/* Wishlist */}
@@ -189,8 +206,10 @@ export function Header() {
               <img
                 src="/images/recentUpdate/heart-store.png"
                 alt="Wishlist"
-                className="w-6 h-5"
+                className="w-6 h-5 md:flex hidden"
               />
+              <Heart size={15} className="md:hidden flex" />
+
               {session && wishlistItemCount > 0 && (
                 <Badge
                   variant="destructive"
@@ -211,9 +230,10 @@ export function Header() {
             >
               <img
                 src="/images/recentUpdate/cart-basket.png"
-                className="w-5 h-5"
+                className="w-5 h-5 hidden md:flex"
                 alt="Cart"
               />
+              <ShoppingBag size={15} className="md:hidden flex" />
               {session && cartItemCount > 0 && (
                 <Badge
                   variant="destructive"
@@ -276,7 +296,7 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="border-[1px] border-[#FF7A00] rounded-full px-4 py-1 flex items-center gap-1 text-white">
+            <div className="border-[1px] border-[#FF7A00] rounded-full hidden md:px-4 px-2 md:text-base  py-1 md:flex items-center gap-1 text-white">
               <Link href="/auth/signin" className="hover:text-[#FF7A00]">
                 {t("Login")}
               </Link>
@@ -284,7 +304,7 @@ export function Header() {
               <Link href="/auth/signup" className="hover:text-[#FF7A00]">
                 {t("Sign-up")}
               </Link>
-              <ArrowRight className="ml-2 w-4 h-4" />
+              <ArrowRight className="ml-2 w-4 h-4 " />
             </div>
           )}
         </div>
@@ -349,6 +369,17 @@ export function Header() {
                 </div>
               ))}
             </nav>
+
+            <div className="border-[1px] border-[#FF7A00] rounded-full md:hidden md:px-4 px-2 md:text-base  py-1 justify-center flex items-center gap-1 text-white">
+              <Link href="/auth/signin" className="hover:text-[#FF7A00]">
+                {t("Login")}
+              </Link>
+              <span>/</span>
+              <Link href="/auth/signup" className="hover:text-[#FF7A00]">
+                {t("Sign-up")}
+              </Link>
+              <ArrowRight className="ml-2 w-4 h-4 " />
+            </div>
           </div>
         </div>
       )}
