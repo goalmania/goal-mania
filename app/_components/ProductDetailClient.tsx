@@ -10,7 +10,6 @@ import { useWishlistStore } from "@/lib/store/wishlist";
 import { useCartStore } from "@/lib/store/cart";
 import { IProduct, Review, Patch } from "@/lib/types/product";
 
-
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -75,7 +74,7 @@ import {
 import { ProductSizeChart } from "@/app/_components/ProductSizeChart";
 import ProductReviews from "@/app/_components/ProductReviews";
 import DiscountRulesDisplay from "@/app/_components/DiscountRulesDisplay";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, MinusIcon, PlusIcon } from "lucide-react";
 
 const PATCH_PRICES = {
   "europa-league": 3,
@@ -232,6 +231,15 @@ export default function ProductDetailClient({
       quantity,
     });
   };
+  const sizeLabels: Record<string, string> = {
+    XS: "Extra Small",
+    S: "Small",
+    M: "Medium",
+    L: "Large",
+    XL: "X-Large",
+    XXL: "XX-Large",
+    XXXL: "XXX-Large",
+  };
 
   const handleBuyNow = () => {
     // Reset previous errors
@@ -317,7 +325,7 @@ export default function ProductDetailClient({
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-white font-munish">
       {/* Product details section */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-24 pb-6 sm:pt-28 sm:pb-6">
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
@@ -453,16 +461,22 @@ export default function ProductDetailClient({
           <div className="lg:col-span-2 lg:pl-8 order-1 lg:order-2">
             <div className="space-y-4">
               <div>
-                <h1 className="text-2xl mb-2 sm:text-3xl font-bold tracking-tight text-black">
+                <h1 className="text-2xl mb-2 sm:text-[27px] font-bold tracking-tight text-black">
                   {product.title}
                 </h1>
-
+                <div className="mb-3">
+                  <h2 className="sr-only">Product information</h2>
+                  <p className="text-2xl sm:text-3xl tracking-tight text-black font-semibold">
+                    €{(calculateTotalPrice() * quantity).toFixed(2)}
+                  </p>
+                </div>
                 <div>
                   <h3 className="sr-only font-light mt-2">Description</h3>
                   <div className="prose font-light prose-sm sm:prose text-black">
                     {product.description}
                   </div>
                 </div>
+                <hr className="my-4" />
                 {product.isMysteryBox && (
                   <Badge
                     variant="secondary"
@@ -533,23 +547,18 @@ export default function ProductDetailClient({
                 </div>
               </div>
 
-              <div className="mb-3">
-                <h2 className="sr-only">Product information</h2>
-                <p className="text-2xl sm:text-3xl tracking-tight text-black font-semibold">
-                  €{(calculateTotalPrice() * quantity).toFixed(2)}
-                </p>
-              </div>
-
               {/* Customization options */}
               <div className="-ml-3">
-                <CardHeader>
-                  <CardTitle className="text-lg text-[#FF7A00]">
+                <CardHeader className="p-0">
+                  <CardTitle className="text-[18px] font-light p-0 text-[#FF7A00]">
                     Customize Your Jersey
                   </CardTitle>
                 </CardHeader>
 
-                <div className="px-3">
-                  <h3 className="text-lg font-semibold mb-3">Jersey Type</h3>
+                <div className="">
+                  <h3 className="text-[18px] font-medium mb-3 text-[#333333]">
+                    Jersey Type
+                  </h3>
                   {/* Jersey Type (Player or Fan Edition) - Hide for Mystery Box */}
                   {!product.isMysteryBox && (
                     <div className="space-y-3 flex ">
@@ -564,8 +573,17 @@ export default function ProductDetailClient({
                       >
                         <div className="flex gap-3">
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="fan" id="fan-edition" />
-                            <Label htmlFor="fan-edition" className="text-sm">
+                            <RadioGroupItem
+                              value="fan"
+                              id="fan-edition"
+                              className="text-[#D9D9D9] bg-[#0A1A2F] border-none 
+             data-[state=checked]:bg-[#D9D9D9] data-[state=checked]:text-[#0A1A2F]"
+                            />
+
+                            <Label
+                              htmlFor="fan-edition"
+                              className="text-[14px] font-light"
+                            >
                               Fan Edition
                             </Label>
                           </div>
@@ -573,8 +591,13 @@ export default function ProductDetailClient({
                             <RadioGroupItem
                               value="player"
                               id="player-edition"
+                              className="text-[#D9D9D9] bg-[#D9D9D9] border-none 
+             data-[state=checked]:bg-[#D9D9D9] data-[state=checked]:text-[#0A1A2F]"
                             />
-                            <Label htmlFor="player-edition" className="text-sm">
+                            <Label
+                              htmlFor="player-edition"
+                              className="text-[14px] font-light"
+                            >
                               Player Edition (+€{EXTRAS_PRICES.player_edition})
                             </Label>
                           </div>
@@ -582,19 +605,17 @@ export default function ProductDetailClient({
                       </RadioGroup>
                     </div>
                   )}
+                  <hr className="my-4 " />
                 </div>
 
                 {/* INPUTS JERSEY TYPES */}
                 <div>
                   {/* Name and Number - Hide for Mystery Box */}
                   {!product.isMysteryBox && (
-                    <div className="grid grid-cols-1 gap-4 px-3 pt-4">
+                    <div className="flex justify-between items-center gap-4 pt-4">
                       {product.allowsNameOnShirt && (
-                        <div className="space-y-2">
-                          <Label htmlFor="name" className="text-sm font-medium">
-                            Name on Shirt
-                          </Label>
-                          <div className="relative">
+                        <div className=" w-1/2">
+                          <div className="">
                             <input
                               type="text"
                               id="name"
@@ -607,24 +628,15 @@ export default function ProductDetailClient({
                               }
                               maxLength={20}
                               placeholder="Type here your name on shirt..."
-                              className="pr-10 w-full border-b focus:border-b outline-0 "
+                              className=" w-full  border-b focus:border-b outline-0 placeholder:text-[#333333] text-[#333333] text-[16px]"
                             />
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                              <span className="text-black sm:text-sm">ABC</span>
-                            </div>
                           </div>
                         </div>
                       )}
 
                       {product.allowsNumberOnShirt && (
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="number"
-                            className="text-sm font-medium"
-                          >
-                            Number on Shirt
-                          </Label>
-                          <div className="relative">
+                        <div className=" w-1/2">
+                          <div className="">
                             <input
                               type="text"
                               id="number"
@@ -639,11 +651,8 @@ export default function ProductDetailClient({
                               }
                               maxLength={2}
                               placeholder="Type here your number on shirt..."
-                              className="pr-10 w-full border-b focus:border-b outline-0 "
+                              className=" w-full border-b  focus:border-b outline-0 placeholder:text-[#333333] text-[#333333] text-[16px] "
                             />
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                              <span className="text-black sm:text-sm">00</span>
-                            </div>
                           </div>
                         </div>
                       )}
@@ -654,7 +663,7 @@ export default function ProductDetailClient({
                   {!product.isMysteryBox &&
                     product.patches &&
                     product.patches.length > 0 && (
-                      <div className="space-y-3 mt-3 mx-3">
+                      <div className="space-y-3 mt-3 ">
                         <Label className="text-sm font-medium">
                           Add Official Patches
                         </Label>
@@ -689,7 +698,7 @@ export default function ProductDetailClient({
                       </div>
                     )}
                 </div>
-                <CardContent className="space-y-6 mt-4">
+                <CardContent className="space-y-6 mt-4 p-0">
                   {/* Mystery Box Exclusion List - Only for Mystery Box products */}
                   {product.isMysteryBox && (
                     <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
@@ -771,11 +780,11 @@ export default function ProductDetailClient({
 
                   {/* Extras - Hide for Mystery Box */}
                   {!product.isMysteryBox && (
-                    <div className="space-y-3">
+                    <div className="space-y-3 ">
                       <Label className="text-sm font-medium">
                         Add Matching Items
                       </Label>
-                      <div className="space-y-4">
+                      <div className=" flex flex-row gap-4">
                         {product.hasShorts && (
                           <div className="flex items-center space-x-2">
                             <Checkbox
@@ -787,8 +796,12 @@ export default function ProductDetailClient({
                                   includeShorts: checked as boolean,
                                 }))
                               }
+                              className="data-[state=checked]:bg-[#0A1A2F] data-[state=checked]:text-[#D9D9D9] rounded-full border-2 border-[#D9D9D9] bg-[#D9D9D9] w-4 h-4 flex items-center justify-center"
                             />
-                            <Label htmlFor="shorts" className="text-sm">
+                            <Label
+                              htmlFor="shorts"
+                              className="text-[14px] whitespace-nowrap"
+                            >
                               Add Matching Shorts (+€{EXTRAS_PRICES.shorts})
                             </Label>
                           </div>
@@ -805,8 +818,12 @@ export default function ProductDetailClient({
                                   includeSocks: checked as boolean,
                                 }))
                               }
+                              className="data-[state=checked]:bg-[#0A1A2F] data-[state=checked]:text-[#D9D9D9] rounded-full border-2 border-[#D9D9D9] bg-[#D9D9D9] w-4 h-4 flex items-center justify-center"
                             />
-                            <Label htmlFor="socks" className="text-sm">
+                            <Label
+                              htmlFor="socks"
+                              className="text-[14px] whitespace-nowrap"
+                            >
                               Add Matching Socks (+€{EXTRAS_PRICES.socks})
                             </Label>
                           </div>
@@ -819,15 +836,15 @@ export default function ProductDetailClient({
 
               {/* Quantity selector */}
               <div className="-ml-2">
-                <CardHeader>
-                  <CardTitle className="text-base font-semibold">
-                    Choose Size & Quantity
+                <CardHeader className="p-0">
+                  <CardTitle className="text-sm font-medium">
+                    Choose Size
                   </CardTitle>
                 </CardHeader>
                 <div className="mt-3">
                   {/* Size Selection */}
-                  <div className="space-y-3 px-4 ">
-                    <div className="flex justify-between items-center mb-2">
+                  <div className="space-y-3  ">
+                    <div className=" justify-between items-center mb-2 hidden">
                       <Label className="text-sm sm:text-base font-medium">
                         Size
                       </Label>
@@ -884,17 +901,17 @@ export default function ProductDetailClient({
                             <Button
                               key={size}
                               type="button"
-                              variant={
-                                customization.size === size
-                                  ? "default"
-                                  : "outline"
-                              }
                               size="sm"
+                              className={` rounded-full text-[14px] ${
+                                customization.size === size
+                                  ? "bg-[#0A1A2F] text-[#FFFFFF]"
+                                  : "bg-[#F0F0F0] text-[#00000099]"
+                              }`}
                               onClick={() =>
                                 setCustomization({ ...customization, size })
                               }
                             >
-                              {size}
+                              {sizeLabels[size] ?? size}
                             </Button>
                           ))}
                     </div>
@@ -905,79 +922,50 @@ export default function ProductDetailClient({
                     )}
                   </div>
                 </div>
-
-                <CardContent>
-                  <div className="flex items-center space-x-3 mt-3">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="h-8 w-8"
-                    >
-                      <span className="sr-only">Decrease quantity</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-3 w-3 sm:h-4 sm:w-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M20 12H4"
-                        />
-                      </svg>
-                    </Button>
-                    <span className="text-sm sm:text-base font-medium text-black w-8 text-center">
-                      {quantity}
-                    </span>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      onClick={() => setQuantity(quantity + 1)}
-                      className="h-8 w-8"
-                    >
-                      <span className="sr-only">Increase quantity</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-3 w-3 sm:h-4 sm:w-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 4v16m8-8H4"
-                        />
-                      </svg>
-                    </Button>
-                  </div>
-                </CardContent>
               </div>
 
               {/* Add to Cart buttons */}
-              <div className="flex  gap-3">
+              <div className="flex  gap-4">
+                <div className="flex items-center  bg-[#F0F0F0] rounded-full w-fit">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="h-8 w-8 border-none shadow-none bg-[#F0F0F0] rounded-full"
+                  >
+                    <span className="sr-only">Decrease quantity</span>
+                    <MinusIcon className="h-3 w-3 sm:h-4 sm:w-4" />
+                  </Button>
+                  <span className="text-sm sm:text-base font-medium text-black w-8 text-center">
+                    {quantity}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="h-8 w-8 border-none shadow-none bg-[#F0F0F0] rounded-full"
+                  >
+                    <span className="sr-only">Increase quantity</span>
+                    <PlusIcon className="h-3 w-3 sm:h-4 sm:w-4" />
+                  </Button>
+                </div>
                 <button
                   type="button"
                   onClick={handleAddToCart}
-                  className="px-5 py-2 border text-black w-full rounded-full"
+                  className="px-2 py-2 border text-black  flex items-center whitespace-nowrap rounded-full text-[14px] w-fit h-fit"
                 >
                   Add to Cart
-                  <ArrowRight className="ml-1 inline-flex" />
+                  <ArrowRight className="ml-1 inline-flex" size={16} />
                 </button>
                 <button
                   type="button"
                   onClick={handleBuyNow}
-                  className="px-5 py-2 border bg-[#FF7A00] text-black w-full rounded-full"
+                  className="px-2 py-2 border bg-[#FF7A00] text-black flex items-center whitespace-nowrap rounded-full text-[14px] w-fit h-fit border-none"
                 >
                   Buy Now
-                  <ArrowRight className="ml-1 inline-flex" />
+                  <ArrowRight className="ml-1 inline-flex" size={16} />
                 </button>
 
                 <div>
@@ -988,7 +976,7 @@ export default function ProductDetailClient({
                           onClick={handleWishlistToggle}
                           variant="secondary"
                           size="icon"
-                          className="absolute top-3 right-3 h-8 w-8 bg-white/80 backdrop-blur-sm shadow-md hover:bg-white"
+                          className="  bg-white shadow-none"
                           aria-label={
                             isInWishlist(product._id)
                               ? "Remove from wishlist"
@@ -996,9 +984,9 @@ export default function ProductDetailClient({
                           }
                         >
                           {isInWishlist(product._id) ? (
-                            <HeartIconSolid className="h-4 w-4 text-red-500" />
+                            <HeartIconSolid className=" text-red-500" />
                           ) : (
-                            <HeartIcon className="h-4 w-4 text-black" />
+                            <HeartIcon className=" text-black" />
                           )}
                         </Button>
                       </TooltipTrigger>
