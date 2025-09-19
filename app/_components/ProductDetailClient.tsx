@@ -74,7 +74,18 @@ import {
 import { ProductSizeChart } from "@/app/_components/ProductSizeChart";
 import ProductReviews from "@/app/_components/ProductReviews";
 import DiscountRulesDisplay from "@/app/_components/DiscountRulesDisplay";
-import { ArrowRight, MinusIcon, PlusIcon } from "lucide-react";
+import {
+  ArrowRight,
+  Coins,
+  CreditCard,
+  MinusIcon,
+  PlusIcon,
+  ShieldCheck,
+  Truck,
+} from "lucide-react";
+import { getBaseUrl } from "@/lib/utils/baseUrl";
+import { Product } from "@/lib/types/home";
+import FeaturedProducts from "@/components/home/FeaturedProducts";
 
 const PATCH_PRICES = {
   "europa-league": 3,
@@ -327,12 +338,12 @@ export default function ProductDetailClient({
   return (
     <div className="bg-white font-munish">
       {/* Product details section */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-24 pb-6 sm:pt-28 sm:pb-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-18 pb-6 sm:pt-22 sm:pb-6">
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
           {/* Image gallery - takes 3 columns on large screens */}
           <div className="lg:col-span-3 order-2 lg:order-1">
             <div className="lg:sticky lg:top-24 self-start">
-              <Card className="overflow-hidden hidden lg:block">
+              <Card className="overflow-hidden hidden lg:block shadow-none border-none">
                 <CardContent className="p-0">
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Thumbnail images */}
@@ -346,7 +357,7 @@ export default function ProductDetailClient({
                               index === selectedImage ? "default" : "outline"
                             }
                             size="icon"
-                            className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden"
+                            className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden shadow-none border border-black"
                           >
                             <Image
                               src={image}
@@ -360,7 +371,7 @@ export default function ProductDetailClient({
                       </div>
                     )}
                     {/* Main image */}
-                    <div className="relative lg:col-span-2 aspect-square  overflow-hidden bg-gray-100 w-full">
+                    <div className="relative lg:col-span-2 aspect-square  overflow-hidden border-[1px] border-[#000000] w-full rounded-[20px]">
                       <Image
                         src={
                           product.images[selectedImage] ||
@@ -372,41 +383,13 @@ export default function ProductDetailClient({
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 66vw, 50vw"
                         priority
                       />
-
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              onClick={handleWishlistToggle}
-                              variant="secondary"
-                              size="icon"
-                              className="absolute top-3 right-3 h-8 w-8 bg-white/80 backdrop-blur-sm shadow-md hover:bg-white"
-                              aria-label={
-                                isInWishlist(product._id)
-                                  ? "Remove from wishlist"
-                                  : "Add to wishlist"
-                              }
-                            >
-                              {isInWishlist(product._id) ? (
-                                <HeartIconSolid className="h-4 w-4 text-red-500" />
-                              ) : (
-                                <HeartIcon className="h-4 w-4 text-black" />
-                              )}
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {isInWishlist(product._id)
-                              ? "Remove from wishlist"
-                              : "Add to wishlist"}
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
                     </div>
                   </div>
                 </CardContent>
               </Card>
-              {/* Size Chart below images */}
-              <ProductSizeChart />
+              <div className="hidden">
+                <ProductSizeChart />
+              </div>
 
               {/* Product Videos */}
               {product.videos && product.videos.length > 0 && (
@@ -612,7 +595,7 @@ export default function ProductDetailClient({
                 <div>
                   {/* Name and Number - Hide for Mystery Box */}
                   {!product.isMysteryBox && (
-                    <div className="flex justify-between items-center gap-4 pt-4">
+                    <div className="flex justify-between items-center gap-4 ">
                       {product.allowsNameOnShirt && (
                         <div className=" w-1/2">
                           <div className="">
@@ -664,7 +647,7 @@ export default function ProductDetailClient({
                     product.patches &&
                     product.patches.length > 0 && (
                       <div className="space-y-3 mt-3 ">
-                        <Label className="text-sm font-medium">
+                        <Label className="text-[16px] font-medium">
                           Add Official Patches
                         </Label>
                         <div className="grid grid-cols-2 gap-4">
@@ -689,7 +672,10 @@ export default function ProductDetailClient({
                                   }));
                                 }}
                               />
-                              <Label htmlFor={patch._id} className="text-sm">
+                              <Label
+                                htmlFor={patch._id}
+                                className="text-[14px]"
+                              >
                                 {patch.title} (+€{patch.price})
                               </Label>
                             </div>
@@ -780,7 +766,7 @@ export default function ProductDetailClient({
 
                   {/* Extras - Hide for Mystery Box */}
                   {!product.isMysteryBox && (
-                    <div className="space-y-3 ">
+                    <div className="space-y-2 ">
                       <Label className="text-sm font-medium">
                         Add Matching Items
                       </Label>
@@ -841,7 +827,7 @@ export default function ProductDetailClient({
                     Choose Size
                   </CardTitle>
                 </CardHeader>
-                <div className="mt-3">
+                <div className="mt-2">
                   {/* Size Selection */}
                   <div className="space-y-3  ">
                     <div className=" justify-between items-center mb-2 hidden">
@@ -902,7 +888,7 @@ export default function ProductDetailClient({
                               key={size}
                               type="button"
                               size="sm"
-                              className={` rounded-full text-[14px] ${
+                              className={` rounded-full text-[14px] hover:text-white ${
                                 customization.size === size
                                   ? "bg-[#0A1A2F] text-[#FFFFFF]"
                                   : "bg-[#F0F0F0] text-[#00000099]"
@@ -925,7 +911,7 @@ export default function ProductDetailClient({
               </div>
 
               {/* Add to Cart buttons */}
-              <div className="flex  gap-4">
+              <div className="flex  gap-4 mt-2.5">
                 <div className="flex items-center  bg-[#F0F0F0] rounded-full w-fit">
                   <Button
                     type="button"
@@ -1001,165 +987,121 @@ export default function ProductDetailClient({
               </div>
 
               {/* Available Discount Rules */}
-              <DiscountRulesDisplay
-                productId={product._id}
-                productCategory={product.category}
-                onApplyDiscount={(rule: any) => {
-                  // Handle discount rule application
-                  console.log("Applied discount rule:", rule);
-                }}
-                showToAllUsers={true}
-                autoApply={true}
-              />
-
-              {/* Trust Badges */}
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                    <div className="flex flex-col items-center text-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-8 w-8 text-primary"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                      <span className="mt-2 text-xs font-medium text-black">
-                        Free Shipping
-                      </span>
-                    </div>
-                    <div className="flex flex-col items-center text-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-8 w-8 text-primary"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                        />
-                      </svg>
-                      <span className="mt-2 text-xs font-medium text-black">
-                        Secure Checkout
-                      </span>
-                    </div>
-                    <div className="flex flex-col items-center text-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-8 w-8 text-primary"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                        />
-                      </svg>
-                      <span className="mt-2 text-xs font-medium text-black">
-                        100% Money-Back Guarantee
-                      </span>
-                    </div>
-                    <div className="flex flex-col items-center text-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-8 w-8 text-primary"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      <span className="mt-2 text-xs font-medium text-black">
-                        24/7 Customer Support
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Product Information */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Product Information</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {/* Quality and Materials */}
-                  <div>
-                    <h4 className="font-medium text-black">
-                      Premium Quality Materials
-                    </h4>
-                    <p className="mt-2 text-black">
-                      Our jerseys are crafted from high-quality, breathable
-                      materials that ensure comfort during wear. Each jersey is
-                      made with attention to detail, featuring:
-                    </p>
-                    <ul className="mt-2 list-disc pl-5 text-black">
-                      <li>
-                        Premium polyester fabric with moisture-wicking
-                        technology
-                      </li>
-                      <li>Durable stitching for long-lasting wear</li>
-                      <li>Official team and sponsor logos</li>
-                      <li>Authentic design and colors</li>
-                    </ul>
-                  </div>
-
-                  {/* Delivery Information */}
-                  <div>
-                    <h4 className="font-medium text-black">
-                      Delivery Information
-                    </h4>
-                    <div className="mt-2 space-y-2 text-black">
-                      <p>• Shipping: 7–14 days</p>
-                      <p>• Refund: max within 7 days</p>
-                    </div>
-                  </div>
-
-                  {/* Secure Shopping */}
-                  <div>
-                    <h4 className="font-medium text-black">
-                      Secure Shopping Guarantee
-                    </h4>
-                    <div className="mt-2 space-y-2 text-black">
-                      <p>• 100% Authentic Product Guarantee</p>
-                      <p>• Secure Payment Processing</p>
-                      <p>• Money-Back Guarantee</p>
-                      <p>• Customer Support 7 Days a Week</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="hidden">
+                <DiscountRulesDisplay
+                  productId={product._id}
+                  productCategory={product.category}
+                  onApplyDiscount={(rule: any) => {
+                    // Handle discount rule application
+                    console.log("Applied discount rule:", rule);
+                  }}
+                  showToAllUsers={true}
+                  autoApply={true}
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Reviews section */}
-      <ProductReviews
-        product={product}
-        reviews={reviews}
-        onReviewSubmit={handleReviewSubmit}
-        onReviewDelete={handleReviewDelete}
-      />
+      <div className="">
+        {/* Trust Badges */}
+        <Card className="bg-[#0A1A2F] text-white font-light flex justify-center rounded-none border-none shadow-none">
+          <CardContent className="p-4 bg-[#0A1A2F] text-white font-light">
+            <div className="flex justify-around gap-4 items-center">
+              <div className="flex flex-row gap-1 items-center text-white font-light text-center">
+                <ShieldCheck strokeWidth={1} className="h-8 w-8 text-white" />
+                <div className=" flex flex-col text-start">
+                  <span className="mt-2 text-sm font-medium text-white">
+                    1 Year
+                  </span>
+                  <span className="mt-2 text-sm font-medium text-white">
+                    Warranty
+                  </span>
+                </div>
+              </div>
+              <div className="flex flex-row gap-1 items-center text-white font-light text-center">
+                <Truck strokeWidth={1} className="h-8 w-8 text-white" />
+                <div className=" flex flex-col text-start">
+                  <span className="mt-2 text-sm font-medium text-white">
+                    Free Express
+                  </span>
+                  <span className="mt-2 text-sm font-medium text-white">
+                    Delivery
+                  </span>
+                </div>
+              </div>
+              <div className="flex flex-row gap-1 items-center text-white font-light text-center">
+                <Coins strokeWidth={1} className="h-8 w-8 text-white" />
+                <div className=" flex flex-col text-start">
+                  <span className="mt-2 text-sm font-medium text-white">
+                    7-Days
+                  </span>
+                  <span className="mt-2 text-sm font-medium text-white">
+                    Replacement
+                  </span>
+                </div>
+              </div>
+              <div className="flex flex-row gap-1 items-center text-white font-light text-center">
+                <CreditCard strokeWidth={1} className="h-8 w-8 text-white" />
+                <div className=" flex flex-col text-start">
+                  <span className="mt-2 text-sm font-medium text-white">
+                    100% Secure
+                  </span>
+                  <span className="mt-2 text-sm font-medium text-white">
+                    Payments
+                  </span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      <Tabs defaultValue="ratings" className="w-full max-w-5xl mx-auto">
+        <TabsList className="w-full justify-between bg-white border-b h-14 rounded-none shadow-none pb-0 ">
+          <TabsTrigger
+            value="details"
+            className="flex-1  shadow-none rounded-none 
+             data-[state=active]:border-2
+             data-[state=active]:border-b-black 
+             data-[state=active]:bg-transparent 
+             data-[state=active]:shadow-none"
+          >
+            Dettagli prodotto
+          </TabsTrigger>
+          <TabsTrigger
+            value="ratings"
+            className="flex-1  shadow-none rounded-none 
+             data-[state=active]:border-2
+             data-[state=active]:border-b-black 
+             data-[state=active]:bg-transparent 
+             data-[state=active]:shadow-none"
+          >
+            Valutazioni e recensioni
+          </TabsTrigger>
+          <TabsTrigger
+            value="faq"
+            className="flex-1  shadow-none rounded-none 
+             data-[state=active]:border-2
+             data-[state=active]:border-b-black 
+             data-[state=active]:bg-transparent 
+             data-[state=active]:shadow-none"
+          >
+            Domande frequenti
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="details">
+          Make changes to your Dettagli prodotto here.
+        </TabsContent>
+        <TabsContent value="ratings">
+          <ProductReviews
+            product={product}
+            reviews={reviews}
+            onReviewSubmit={handleReviewSubmit}
+            onReviewDelete={handleReviewDelete}
+          />
+        </TabsContent>
+        <TabsContent value="faq"> Domande frequenti</TabsContent>
+      </Tabs>
     </div>
   );
 }
