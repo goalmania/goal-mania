@@ -888,7 +888,7 @@ export default function ProductDetailClient({
                               key={size}
                               type="button"
                               size="sm"
-                              className={` rounded-full text-[14px] ${
+                              className={` rounded-full text-[14px] hover:text-white ${
                                 customization.size === size
                                   ? "bg-[#0A1A2F] text-[#FFFFFF]"
                                   : "bg-[#F0F0F0] text-[#00000099]"
