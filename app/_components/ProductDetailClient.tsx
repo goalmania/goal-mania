@@ -83,6 +83,9 @@ import {
   ShieldCheck,
   Truck,
 } from "lucide-react";
+import { getBaseUrl } from "@/lib/utils/baseUrl";
+import { Product } from "@/lib/types/home";
+import FeaturedProducts from "@/components/home/FeaturedProducts";
 
 const PATCH_PRICES = {
   "europa-league": 3,
@@ -1053,12 +1056,52 @@ export default function ProductDetailClient({
           </CardContent>
         </Card>
       </div>
-      <ProductReviews
-        product={product}
-        reviews={reviews}
-        onReviewSubmit={handleReviewSubmit}
-        onReviewDelete={handleReviewDelete}
-      />
+      <Tabs defaultValue="ratings" className="w-full max-w-5xl mx-auto">
+        <TabsList className="w-full justify-between bg-white border-b h-14 rounded-none shadow-none pb-0 ">
+          <TabsTrigger
+            value="details"
+            className="flex-1  shadow-none rounded-none 
+             data-[state=active]:border-2
+             data-[state=active]:border-b-black 
+             data-[state=active]:bg-transparent 
+             data-[state=active]:shadow-none"
+          >
+            Dettagli prodotto
+          </TabsTrigger>
+          <TabsTrigger
+            value="ratings"
+            className="flex-1  shadow-none rounded-none 
+             data-[state=active]:border-2
+             data-[state=active]:border-b-black 
+             data-[state=active]:bg-transparent 
+             data-[state=active]:shadow-none"
+          >
+            Valutazioni e recensioni
+          </TabsTrigger>
+          <TabsTrigger
+            value="faq"
+            className="flex-1  shadow-none rounded-none 
+             data-[state=active]:border-2
+             data-[state=active]:border-b-black 
+             data-[state=active]:bg-transparent 
+             data-[state=active]:shadow-none"
+          >
+            Domande frequenti
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="details">
+          Make changes to your Dettagli prodotto here.
+        </TabsContent>
+        <TabsContent value="ratings">
+          <ProductReviews
+            product={product}
+            reviews={reviews}
+            onReviewSubmit={handleReviewSubmit}
+            onReviewDelete={handleReviewDelete}
+          />
+        </TabsContent>
+        <TabsContent value="faq"> Domande frequenti</TabsContent>
+      </Tabs>
     </div>
   );
 }
