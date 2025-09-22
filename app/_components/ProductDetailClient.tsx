@@ -339,7 +339,7 @@ export default function ProductDetailClient({
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Thumbnail images */}
                     {product.images.length > 1 && (
-                      <div className="hidden lg:flex lg:col-span-1 flex-wrap gap-3 justify-center p-4">
+                      <div className="hidden lg:flex lg:col-span-1 flex-col gap-3 justify-center p-4">
                         {product.images.map((image, index) => (
                           <Button
                             key={index}
