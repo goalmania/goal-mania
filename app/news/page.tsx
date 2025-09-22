@@ -261,7 +261,7 @@ export default async function NewsPage() {
         <div className=" py-4">
           <PopularNewsGrid />
         </div>
-        <div className="flex w-full h-[250px]  lg:h-[300px] bg-gray-900 rounded-xl overflow-hidden shadow-lg md:mx-auto max-w-4xl">
+        <div className="flex w-full h-[230px]  lg:h-[250px] bg-gray-900 rounded-2xl overflow-hidden shadow-lg md:mx-auto max-w-4xl">
           {/* Image Section */}
           <div className="w-[30%] flex-shrink-0">
             <img
@@ -272,15 +272,23 @@ export default async function NewsPage() {
           </div>
 
           {/* Content Section */}
-          <div className="w-[70%] p-6 flex flex-col justify-center text-white">
-            <p className="text-red-500 text-sm font-semibold mb-1">30% Off</p>
-            <h2 className="text-xl lg:text-2xl font-bold leading-tight mb-4">
-              Compra la Nuova Maglia Ufficiale
-            </h2>
-            <button className="inline-flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-colors duration-200 self-start">
-              Buy Now
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </button>
+          <div className="w-[70%] m-4 p-6 flex flex-col md:flex-row justify-center text-white items-center">
+            <div className="">
+              <p className="text-[#E53E3E] text-sm font-semibold mb-1">
+                30% Off
+              </p>
+              <h2 className="text-xl lg:text-2xl font-bold leading-tight mb-4 w-3/4">
+                Compra la Nuova Maglia Ufficiale
+              </h2>
+            </div>
+            <div className="">
+              <Link href={"/shop"}>
+                <button className="inline-flex items-center justify-center bg-[#FF7A00] hover:bg-orange-600 text-[#0A1A2F] font-light py-2 px-4 rounded-xl shadow-md transition-colors duration-200 self-start">
+                  Buy Now
+                  <ArrowRight className="w-3 h-3 ml-2" />
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
         <NewsCarousel articles={allArticles} />

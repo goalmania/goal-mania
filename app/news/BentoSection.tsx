@@ -51,15 +51,15 @@ export default function BentoSection({
         </div>
 
         <div className="flex items-center gap-6 text-[#6D757F] text-sm lg:text-base">
-          <div className="flex items-center gap-2 text-[16px] uppercase">
+          <div className="flex items-center gap-2 md:text-[16px] text-[14px] whitespace-nowrap uppercase">
             <UserCircle className="w-4 h-4" />
             <span>B {main.author}</span>
           </div>
-          <div className="flex items-center gap-2 text-[16px] uppercase">
+          <div className="flex items-center gap-2 md:text-[16px] text-[14px] whitespace-nowrap uppercase">
             <Calendar className="w-4 h-4" />
             <span>{new Date(main.publishedAt).toLocaleDateString()}</span>
           </div>
-          <div className="flex items-center gap-2 text-[16px] uppercase">
+          <div className="flex items-center gap-2 md:text-[16px] text-[14px] whitespace-nowrap uppercase">
             <History className="w-4 h-4" />
             <span>20 Mins</span>
           </div>
@@ -72,8 +72,8 @@ export default function BentoSection({
     <div className="grid grid-cols-1  gap-4 w-full mt-10">
       {grid.map((news) => (
         <Link href={`/news/${news.slug}`} key={news.id} className="block">
-          <div className=" text-black grid grid-cols-1 sm:grid-cols-2 gap-4 transition-shadow duration-200">
-            <div className="relative w-full h-32 sm:h-auto  rounded-t-xl overflow-hidden order-2">
+          <div className=" text-black grid grid-cols-1 w-[350px] sm:w-full sm:grid-cols-2 gap-4 transition-shadow duration-200">
+            <div className="relative w-full h-32 sm:h-auto  rounded-t-xl overflow-hidden md:order-2 order-1">
               <Image
                 src={news.image}
                 alt={news.title}
@@ -83,14 +83,14 @@ export default function BentoSection({
             </div>
 
             <div>
-              <div className="pb-2 pt-4 flex flex-col items-start max-w-lg order-1 ">
+              <div className="pb-2 pt-4 flex flex-col items-start max-w-lg order-1 md:order-2 ">
                 <p className="px-5 py-2 border-[1.33px] h-[29px] flex items-center w-[90px] border-[#B8C1CD] text-[#6D757F] my-2 rounded-[3.99px] uppercase text-[13px]">
                   {main.category}
                 </p>
 
                 <CardTitle className="text-[22px] font-bold line-clamp-2 text-[#0A1A2F]">
                   {news.title.length > 10
-                    ? `${news.title.slice(0, 20)}...`
+                    ? `${news.title.slice(0, 25)}...`
                     : news.title}
                 </CardTitle>
               </div>
