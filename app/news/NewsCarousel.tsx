@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useRef } from "react";
 import Link from "next/link";
@@ -21,7 +21,10 @@ const NewsCarousel: React.FC<NewsCarouselProps> = ({ articles }) => {
       const { scrollLeft, clientWidth } = scrollRef.current;
       const scrollAmount = clientWidth * 0.8; // Scroll by 80% of visible area
       scrollRef.current.scrollTo({
-        left: direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
+        left:
+          direction === "left"
+            ? scrollLeft - scrollAmount
+            : scrollLeft + scrollAmount,
         behavior: "smooth",
       });
     }
@@ -29,12 +32,14 @@ const NewsCarousel: React.FC<NewsCarouselProps> = ({ articles }) => {
 
   return (
     <div className="mt-16 flex flex-col items-center w-full">
-      <h2 className="text-3xl font-bold mb-6 text-[#0e1924] text-center w-full">Latest News</h2>
+      <h2 className="text-3xl font-bold mb-6 text-[#0e1924] text-center w-full">
+        Ultime notizie
+      </h2>
       <div className="relative w-full flex items-center justify-center max-w-6xl">
         {/* Left Arrow */}
         <Button
-          variant={'ghost'}
-          size={'icon'}
+          variant={"ghost"}
+          size={"icon"}
           onClick={() => scroll("left")}
           className="rounded-full bg-white cursor-pointer"
         >
@@ -68,23 +73,25 @@ const NewsCarousel: React.FC<NewsCarouselProps> = ({ articles }) => {
                 <h3 className="text-lg font-semibold text-[#0e1924] mb-2 line-clamp-2">
                   {article.title}
                 </h3>
-                <span className="text-sm text-[#f5963c] font-medium">Read more →</span>
+                <span className="text-sm text-[#f5963c] font-medium">
+                  Read more →
+                </span>
               </div>
             </Link>
           ))}
         </div>
         {/* Right Arrow */}
         <Button
-          variant={'ghost'}
-          size={'icon'}
+          variant={"ghost"}
+          size={"icon"}
           onClick={() => scroll("right")}
           className="rounded-full bg-white cursor-pointer"
         >
-            <ChevronRightIcon className="w-4 h-4 text-black" />
+          <ChevronRightIcon className="w-4 h-4 text-black" />
         </Button>
       </div>
     </div>
   );
 };
 
-export default NewsCarousel; 
+export default NewsCarousel;
