@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import NewsBanner from "@/components/news/NewsBanner";
+import PopularNewsGrid from "@/components/news/PopularNewsGrid";
 
 // Enable ISR for news listing
 export const revalidate = 300;
@@ -45,6 +46,7 @@ async function getNewsArticles() {
     await connectDB();
 
     // Get featured articles
+    console.log(Article);
     const featuredArticles = await Article.find({
       category: "news",
       status: "published",
@@ -83,7 +85,7 @@ export default async function NewsPage() {
 
   return (
     <Suspense fallback={<LoadingFallback />}>
-      <div className=" min-h-screen flex flex-col">
+      <div className=" min-h-screen flex flex-col font-munish">
         <NewsBanner imageUrl={MobilebannerData.imageUrl} />
         <div className="container mx-auto px-6 sm:px-10 lg:px-15 pt-12 pb-12 flex-1">
           {/* Breadcrumb */}
@@ -102,10 +104,10 @@ export default async function NewsPage() {
           </div>
 
           <div className="relative max-w-lg">
-            <div className="absolute -top-6 left-0 bg-gray-900 text-white font-semibold py-2 px-6 rounded-r-lg shadow-md z-10">
+            <div className="absolute -top-6 left-0 bg-gray-900 rounded-[6px] text-white font-semibold py-2 px-6  slanted-card  shadow-md z-10">
               In Primo Piano
             </div>
-            <div className="pt-8 border-t-2 border-gray-200"></div>{" "}
+            <div className="pt-8 border-t-2  border-[#DFDFDF]"></div>{" "}
           </div>
 
           {/* Render logic based on article count */}
@@ -162,7 +164,7 @@ export default async function NewsPage() {
               <div className="hidden lg:block w-full lg:max-w-md  lg:col-span-2 bg-white p-4 space-y-8">
                 {/* Follow Us Section */}
                 <div className="relative">
-                  <div className="absolute -top-6 left-0 bg-gray-900 text-white font-semibold py-2 px-6 rounded-r-lg shadow-md z-10">
+                  <div className="absolute -top-6 left-0 bg-gray-900 rounded-[6px] text-white font-semibold py-2 px-6  slanted-card  shadow-md z-10">
                     Follow Us
                   </div>
                   <div className="pt-8 border-t-2 border-gray-200"></div>{" "}
@@ -227,22 +229,21 @@ export default async function NewsPage() {
                 {/* Newsletter Section */}
                 <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg text-center">
                   <div className="relative inline-block mb-4">
-                    <Mail className="w-16 h-16 text-blue-500 opacity-20" />{" "}
+                    <Mail className="w-16 h-16 text-[#7B96B7] opacity-20" />{" "}
                     {/* Large, faded icon */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <Mail className="w-8 h-8 text-blue-400" />{" "}
-                      {/* Smaller, vibrant icon */}
+                      <h3 className="text-xl font-semibold mb-2 whitespace-nowrap">
+                        Newsletter Giornaliera
+                      </h3>
                     </div>
                   </div>
-                  <h3 className="text-2xl font-bold mb-2">
-                    Newsletter Giornaliera
-                  </h3>
+
                   <p className="text-gray-300 mb-6 text-sm">
                     Ricevi tutte le notizie più importanti dal mondo del
                   </p>
-                  <button className="flex items-center justify-center w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md transition-colors duration-200">
+                  <button className="flex items-center justify-center w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-lg shadow-md transition-colors duration-200">
                     Inserisci la tua e-mail
-                    <Send className="w-5 h-5 ml-2" />
+                    <ArrowRight className="w-5 h-5 ml-2" />
                   </button>
                 </div>
               </div>
@@ -257,7 +258,9 @@ export default async function NewsPage() {
             </Alert>
           )}
         </div>
-
+        <div className=" py-4">
+          <PopularNewsGrid />
+        </div>
         <div className="flex w-full h-[250px]  lg:h-[300px] bg-gray-900 rounded-xl overflow-hidden shadow-lg md:mx-auto max-w-4xl">
           {/* Image Section */}
           <div className="w-[30%] flex-shrink-0">
@@ -280,10 +283,6 @@ export default async function NewsPage() {
             </button>
           </div>
         </div>
-
-        {/* ✅ Add PopularNewsGrid here */}
-        {/* <PopularNewsGrid articles={allArticles} /> */}
-
         <NewsCarousel articles={allArticles} />
       </div>
     </Suspense>

@@ -93,7 +93,7 @@ export function Header() {
         { name: t("nav.otherLeagues"), href: "/international/other" },
       ],
     },
-    { name: t("nav.articles"), href: "/articles" },
+    { name: t("nav.articles"), href: "/news" },
     { name: t("nav.info"), href: "/info" },
     { name: t("nav.about"), href: "/about" },
     { name: t("nav.contact"), href: "/contact" },
@@ -134,7 +134,7 @@ export function Header() {
           </div>
         </div>
 
-        <div className="hidden md:flex space-x-6 text-base items-center">
+        <div className="hidden md:flex space-x-3 lg:text-base md:text-sm items-center">
           {navigation.map((item) =>
             item.hasDropdown ? (
               <DropdownMenu key={item.name}>
@@ -181,7 +181,7 @@ export function Header() {
             variant="ghost"
             size="sm"
             onClick={toggleLanguage}
-            className="bg-white text-[#0A1A2F] rounded-full cursor-pointer hidden md:flex"
+            className="bg-white text-[#0A1A2F] rounded-full cursor-pointer hidden lg:flex"
           >
             <Globe className="w-4 h-4 mr-1" />
             {languageNames[language] || language}
@@ -190,9 +190,9 @@ export function Header() {
             variant="ghost"
             size="sm"
             onClick={toggleLanguage}
-            className="bg-white text-[#0A1A2F] uppercase rounded-full cursor-pointer md:hidden flex"
+            className="bg-white text-[#0A1A2F] text-sm uppercase rounded-full cursor-pointer lg:hidden flex"
           >
-            <Globe className="w-4 h-4 mr-1" />
+            <Globe className="w-3 h-3 " />
             {language}
           </Button>
 
@@ -296,12 +296,15 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="border-[1px] border-[#FF7A00] rounded-full hidden md:px-4 px-2 md:text-base  py-1 md:flex items-center gap-1 text-white">
+            <div className="border-[1px] border-[#FF7A00] rounded-full hidden md:px-4 px-2 lg:text-base text-[14px]  py-1 md:flex items-center gap-1 text-white">
               <Link href="/auth/signin" className="hover:text-[#FF7A00]">
                 {t("Login")}
               </Link>
               <span>/</span>
-              <Link href="/auth/signup" className="hover:text-[#FF7A00]">
+              <Link
+                href="/auth/signup"
+                className="hover:text-[#FF7A00] whitespace-nowrap"
+              >
                 {t("Sign-up")}
               </Link>
               <ArrowRight className="ml-2 w-4 h-4 " />
