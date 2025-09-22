@@ -21,7 +21,7 @@ export default function NewsSection({ articles }: NewsSectionProps) {
   if (!articles || articles.length === 0) return null;
 
   return (
-    <section className="py-20 sm:py-12 md:py-16 lg:py-20 bg-white font-munish">
+    <section className="py-20 md:py-12 bg-white font-munish">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto text-center mb-8">
           <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924]   ">

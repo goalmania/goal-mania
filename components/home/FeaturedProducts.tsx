@@ -176,7 +176,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
           </div>
         )}
 
-        <div className="text-center mt-30 ">
+        <div className="text-center mt-30 hidden">
           <Button
             asChild
             variant="outline"

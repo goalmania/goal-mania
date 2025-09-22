@@ -58,7 +58,7 @@ export default function FeaturedVideoProducts({
   if (products.length === 0) return null;
 
   return (
-    <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-white font-munish">
+    <section className="py-8 md:py-12  bg-white font-munish">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-6 ">
           Storie in Primo Piano
