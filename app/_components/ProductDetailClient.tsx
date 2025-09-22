@@ -242,15 +242,6 @@ export default function ProductDetailClient({
       quantity,
     });
   };
-  const sizeLabels: Record<string, string> = {
-    XS: "Extra Small",
-    S: "Small",
-    M: "Medium",
-    L: "Large",
-    XL: "X-Large",
-    XXL: "XX-Large",
-    XXXL: "XXX-Large",
-  };
 
   const handleBuyNow = () => {
     // Reset previous errors
@@ -348,7 +339,7 @@ export default function ProductDetailClient({
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Thumbnail images */}
                     {product.images.length > 1 && (
-                      <div className="flex lg:col-span-1 flex-wrap gap-3 justify-center p-4">
+                      <div className="hidden lg:flex lg:col-span-1 flex-wrap gap-3 justify-center p-4">
                         {product.images.map((image, index) => (
                           <Button
                             key={index}
@@ -357,7 +348,7 @@ export default function ProductDetailClient({
                               index === selectedImage ? "default" : "outline"
                             }
                             size="icon"
-                            className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden shadow-none border border-black"
+                            className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden hidden md:flex shadow-none border border-black"
                           >
                             <Image
                               src={image}
@@ -770,7 +761,7 @@ export default function ProductDetailClient({
                       <Label className="text-sm font-medium">
                         Add Matching Items
                       </Label>
-                      <div className=" flex flex-row gap-4">
+                      <div className=" flex md:flex-row flex-col gap-4">
                         {product.hasShorts && (
                           <div className="flex items-center space-x-2">
                             <Checkbox
@@ -897,7 +888,7 @@ export default function ProductDetailClient({
                                 setCustomization({ ...customization, size })
                               }
                             >
-                              {sizeLabels[size] ?? size}
+                              {size}
                             </Button>
                           ))}
                     </div>
@@ -911,7 +902,7 @@ export default function ProductDetailClient({
               </div>
 
               {/* Add to Cart buttons */}
-              <div className="flex  gap-4 mt-2.5">
+              <div className="flex  gap-1.5 gap-4 mt-2.5">
                 <div className="flex items-center  bg-[#F0F0F0] rounded-full w-fit">
                   <Button
                     type="button"
@@ -1007,7 +998,7 @@ export default function ProductDetailClient({
         {/* Trust Badges */}
         <Card className="bg-[#0A1A2F] text-white font-light flex justify-center rounded-none border-none shadow-none">
           <CardContent className="p-4 bg-[#0A1A2F] text-white font-light">
-            <div className="flex justify-around gap-4 items-center">
+            <div className="flex justify-around flex-col md:flex-row gap-4 items-center">
               <div className="flex flex-row gap-1 items-center text-white font-light text-center">
                 <ShieldCheck strokeWidth={1} className="h-8 w-8 text-white" />
                 <div className=" flex flex-col text-start">
@@ -1056,11 +1047,14 @@ export default function ProductDetailClient({
           </CardContent>
         </Card>
       </div>
-      <Tabs defaultValue="ratings" className="w-full max-w-5xl mx-auto">
-        <TabsList className="w-full justify-between bg-white border-b h-14 rounded-none shadow-none pb-0 ">
+      <Tabs
+        defaultValue="ratings"
+        className="md:w-full  px-0  md:max-w-5xl mx-auto"
+      >
+        <TabsList className="md:w-full w-[400px] gap-0 px-0 justify-between bg-white border-b  h-14 rounded-none shadow-none pb-0 ">
           <TabsTrigger
             value="details"
-            className="flex-1  shadow-none rounded-none 
+            className="flex-1  shadow-none rounded-none px-0
              data-[state=active]:border-2
              data-[state=active]:border-b-black 
              data-[state=active]:bg-transparent 
@@ -1070,7 +1064,7 @@ export default function ProductDetailClient({
           </TabsTrigger>
           <TabsTrigger
             value="ratings"
-            className="flex-1  shadow-none rounded-none 
+            className="flex-1  shadow-none rounded-none px-0 pl-1
              data-[state=active]:border-2
              data-[state=active]:border-b-black 
              data-[state=active]:bg-transparent 
@@ -1080,7 +1074,7 @@ export default function ProductDetailClient({
           </TabsTrigger>
           <TabsTrigger
             value="faq"
-            className="flex-1  shadow-none rounded-none 
+            className="flex-1  shadow-none rounded-none px-0 pl-1
              data-[state=active]:border-2
              data-[state=active]:border-b-black 
              data-[state=active]:bg-transparent 

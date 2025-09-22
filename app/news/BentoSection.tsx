@@ -5,15 +5,11 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-
 } from "@/components/ui/card";
-
-
 
 import Link from "next/link";
 import { NewsArticle } from "@/types/news";
-import { Calendar, Clock, User } from "lucide-react";
-
+import { Calendar, Clock, History, User, UserCircle } from "lucide-react";
 
 interface BentoSectionProps {
   articles: NewsArticle[];
@@ -30,19 +26,21 @@ export default function BentoSection({
 
   const mainArticle = (
     <Link href={`/news/${main.slug}`} className="block w-full h-full">
-      <div className="h-full flex flex-col  bg-transparent text-[#0A1A2F]">
-        <div className="relative w-full h-80 md:h-96 rounded-t-2xl overflow-hidden">
+      <div className="h-fit flex flex-col  bg-transparent text-[#0A1A2F]">
+        <div className="relative w-full h-80 md:h-96 rounded-t-xl overflow-hidden">
           <Image
             src={main.image}
             alt={main.title}
             fill
-            className="object-cover rounded-lg"
+            className="object-cover rounded-md"
           />
         </div>
         <div className="pb-2 pt-4 flex flex-col items-start max-w-lg ">
-          <p className="px-5 py-2 border my-2 rounded-md">{main.category}</p>
+          <p className="px-5 py-2 border-[1.33px] h-[31px] flex items-center w-[96px] border-[#B8C1CD] text-[#6D757F] my-2 rounded-[3.99px] uppercase text-[16px]">
+            {main.category}
+          </p>
 
-          <CardTitle className="text-xl font-bold line-clamp-2 text-[#0A1A2F]">
+          <CardTitle className="text-[26px] font-bold line-clamp-2 text-[#0A1A2F]">
             {main.title}
           </CardTitle>
         </div>
@@ -53,16 +51,16 @@ export default function BentoSection({
         </div>
 
         <div className="flex items-center gap-6 text-[#6D757F] text-sm lg:text-base">
-          <div className="flex items-center gap-2">
-            <User className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-[16px] uppercase">
+            <UserCircle className="w-4 h-4" />
             <span>B {main.author}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 text-[16px] uppercase">
             <Calendar className="w-4 h-4" />
             <span>{new Date(main.publishedAt).toLocaleDateString()}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-[16px] uppercase">
+            <History className="w-4 h-4" />
             <span>20 Mins</span>
           </div>
         </div>
@@ -71,11 +69,11 @@ export default function BentoSection({
   );
 
   const gridArticles = (
-    <div className="grid grid-cols-1 gap-4 w-full mt-10">
+    <div className="grid grid-cols-1  gap-4 w-full mt-10">
       {grid.map((news) => (
         <Link href={`/news/${news.slug}`} key={news.id} className="block">
           <div className=" text-black grid grid-cols-1 sm:grid-cols-2 gap-4 transition-shadow duration-200">
-            <div className="relative w-full h-32 sm:h-auto rounded-t-xl overflow-hidden order-2">
+            <div className="relative w-full h-32 sm:h-auto  rounded-t-xl overflow-hidden order-2">
               <Image
                 src={news.image}
                 alt={news.title}
@@ -86,18 +84,18 @@ export default function BentoSection({
 
             <div>
               <div className="pb-2 pt-4 flex flex-col items-start max-w-lg order-1 ">
-                <p className="px-5 py-2 border my-2 rounded-md">
-                  {news.category}
+                <p className="px-5 py-2 border-[1.33px] h-[29px] flex items-center w-[90px] border-[#B8C1CD] text-[#6D757F] my-2 rounded-[3.99px] uppercase text-[13px]">
+                  {main.category}
                 </p>
 
-                <CardTitle className="text-xl font-bold py-3   text-[#0A1A2F]">
+                <CardTitle className="text-[22px] font-bold line-clamp-2 text-[#0A1A2F]">
                   {news.title.length > 10
                     ? `${news.title.slice(0, 20)}...`
                     : news.title}
                 </CardTitle>
               </div>
-              <div className="flex items-start gap-6 text-[#6D757F] text-sm lg:text-base">
-                <div className="flex items-start gap-2">
+              <div className="flex items-start gap-6 text-[#6D757F] text-sm lg:text-[14px]">
+                <div className="flex items-center gap-2 text-[16px] uppercase">
                   <Calendar className="w-4 h-4" />
                   <span>{new Date(main.publishedAt).toLocaleDateString()}</span>
                 </div>
@@ -113,16 +111,10 @@ export default function BentoSection({
     <div
       className={`grid grid-cols-1 lg:grid-cols-6 gap-7 place-content-start `}
     >
-      <div className={`col-span-4 `}>
-        {mainArticle}
-      </div>
+      <div className={`col-span-4 `}>{mainArticle}</div>
       {grid.length > 0 && (
-        <div className={`col-span-2 max-w-xl `}>
-          {gridArticles}
-        </div>
+        <div className={`col-span-2 max-w-xl `}>{gridArticles}</div>
       )}
-    
-
     </div>
   );
 }

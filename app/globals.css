@@ -589,3 +589,9 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+.slanted-card {
+  display: inline-block;
+  background-color: #0a1a2f;
+  color: white;
+  clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
+}
