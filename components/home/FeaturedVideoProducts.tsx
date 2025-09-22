@@ -178,7 +178,7 @@ export default function FeaturedVideoProducts({
           </div>
         )}
 
-        <div className="text-center mt-30">
+        <div className="text-center mt-30 hidden">
           <Button
             asChild
             variant="outline"
