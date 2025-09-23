@@ -23,10 +23,10 @@ export default function NewsSection({ articles }: NewsSectionProps) {
     <section className="py-12 md:py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 font-munish">
             {t("home.latestNews") || "Ultime Notizie"}
           </h2>
-          <p className="pt-2 text-gray-600">
+          <p className="pt-2 text-gray-600 font-munish">
             Scopri le notizie più fresche dal mondo del calcio.
           </p>
         </div>

@@ -134,8 +134,8 @@ export default async function Home() {
       {/*
       <GuaranteesSection />
        */}
-      <FeaturedVideoProducts products={featuredProducts} />
       <NewsSection articles={featuredArticles} />
+      <FeaturedVideoProducts products={featuredProducts} />
     </div>
   );
 }

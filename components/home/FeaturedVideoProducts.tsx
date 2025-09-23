@@ -114,7 +114,7 @@ export default function FeaturedVideoProducts({
             <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4">
               <button
                 aria-label="Previous featured products"
-                className="featured-prev flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md hover:bg-gray-100"
+                className="featured-prev flex items-center justify-center w-10 h-10 rounded-full bg-[#D9D9D9] shadow-md hover:bg-gray-100"
               >
                 <svg
                   className="w-5 h-5 text-gray-700"
@@ -133,7 +133,7 @@ export default function FeaturedVideoProducts({
 
               <button
                 aria-label="Next featured products"
-                className="featured-next flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md hover:bg-gray-100"
+                className="featured-next flex items-center justify-center w-10 h-10 rounded-full bg-[#D9D9D9] shadow-md hover:bg-gray-100"
               >
                 <svg
                   className="w-5 h-5 text-gray-700"

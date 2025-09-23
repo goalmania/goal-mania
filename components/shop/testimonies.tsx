@@ -26,8 +26,12 @@ const Testimonies = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isReviewsEnabled, setIsReviewsEnabled] = useState(true);
+  // Add state for touch events
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
 
   const visibleCards = 4;
+  const swipeThreshold = 50; // Minimum distance for a swipe to be registered
 
   useEffect(() => {
     console.log("Component mounted, starting to fetch reviews");
@@ -57,7 +61,6 @@ const Testimonies = () => {
           console.log(`Successfully fetched ${data.length} reviews`);
           setReviews(data);
 
-          // Transform API data to testimonies format
           const transformedTestimonies: Testimony[] = data.map((review) => ({
             id: review.id,
             name: review.userName || "Anonymous",
@@ -88,7 +91,6 @@ const Testimonies = () => {
     fetchReviews();
   }, [isReviewsEnabled]);
 
-  // Log state changes
   useEffect(() => {
     console.log("Reviews state updated:", reviews);
   }, [reviews]);
@@ -127,7 +129,35 @@ const Testimonies = () => {
     }
   };
 
-  // Show loading state
+  // Handle touch start
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.targetTouches[0].clientX);
+    setTouchEndX(null);
+  };
+
+  // Handle touch move
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+  };
+
+  // Handle touch end
+  const handleTouchEnd = () => {
+    if (touchStartX !== null && touchEndX !== null) {
+      const distance = touchStartX - touchEndX;
+      if (Math.abs(distance) > swipeThreshold) {
+        if (distance > 0) {
+          // Swiped left
+          nextSlide();
+        } else {
+          // Swiped right
+          prevSlide();
+        }
+      }
+    }
+    setTouchStartX(null);
+    setTouchEndX(null);
+  };
+
   if (isLoading) {
     return (
       <div className="relative w-full max-w-7xl mx-auto p-6">
@@ -162,7 +192,6 @@ const Testimonies = () => {
     );
   }
 
-  // Show error state
   if (error) {
     return (
       <div className="relative w-full max-w-7xl mx-auto p-6">
@@ -182,7 +211,6 @@ const Testimonies = () => {
     );
   }
 
-  // Show empty state
   if (testimonies.length === 0) {
     return (
       <div className="relative w-full max-w-7xl mx-auto p-6">
@@ -203,7 +231,7 @@ const Testimonies = () => {
           I nostri clienti felici
         </h2>
 
-        <div className=" gap-2 hidden lg:flex">
+        <div className="gap-2 hidden lg:flex">
           <button
             onClick={prevSlide}
             disabled={current === 0}
@@ -214,16 +242,21 @@ const Testimonies = () => {
           <button
             onClick={nextSlide}
             disabled={current >= testimonies.length - visibleCards}
-            className="p-2 border-none shadow-none rounded-none  cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="p-2 border-none shadow-none rounded-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <ArrowRight className="h-5 w-5" />
           </button>
         </div>
       </div>
 
-      <div className="relative">
+      <div
+        className="relative"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         <div
-          className="flex transition-transform duration-500 ease-in-out"
+          className="flex transition-transform duration-500 ease-in-out overflow-x-auto scrollbar-hide"
           style={{
             transform: `translateX(-${current * (100 / visibleCards)}%)`,
           }}
@@ -235,7 +268,6 @@ const Testimonies = () => {
             >
               <div className="h-64 border border-black/10 rounded-2xl shadow-sm bg-white">
                 <div className="p-4 text-start space-y-2 h-full flex flex-col">
-                  {/* Stars */}
                   <div className="flex">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star
@@ -246,8 +278,6 @@ const Testimonies = () => {
                       />
                     ))}
                   </div>
-
-                  {/* Name */}
                   <h3 className="text-base flex items-center font-bold tracking-tight text-gray-800">
                     {item.name}
                     <CheckCircle2
@@ -257,8 +287,6 @@ const Testimonies = () => {
                       size={16}
                     />
                   </h3>
-
-                  {/* Text */}
                   <p className="text-sm text-gray-800 flex-1 overflow-hidden leading-relaxed">
                     {item.text}
                   </p>

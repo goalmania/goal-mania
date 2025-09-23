@@ -58,7 +58,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
     <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-6 sm:mb-8 md:mb-10 font-munish">
-          {t("home.featuredProducts")}
+          Scelti per Te
         </h2>
 
         <p className="text-lg text-gray-600 max-w-2xl text-center mx-auto mb-12 font-munish">
@@ -113,7 +113,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
             <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4 ">
               <button
                 aria-label="Previous featured products"
-                className="featured-prev flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md hover:bg-gray-100"
+                className="featured-prev flex items-center justify-center w-10 h-10 rounded-full bg-[#D9D9D9] shadow-md hover:bg-gray-100"
               >
                 <svg
                   className="w-5 h-5 text-gray-700"
@@ -132,7 +132,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
 
               <button
                 aria-label="Next featured products"
-                className="featured-next flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md hover:bg-gray-100"
+                className="featured-next flex items-center justify-center w-10 h-10 rounded-full bg-[#D9D9D9] shadow-md hover:bg-gray-100"
               >
                 <svg
                   className="w-5 h-5 text-gray-700"
