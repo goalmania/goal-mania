@@ -10,12 +10,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface NewsSectionProps {
   articles: Article[];
 }
 
 export default function NewsSection({ articles }: NewsSectionProps) {
+  console.log(articles);
   const { t } = useI18n();
 
   if (!articles || articles.length === 0) return null;
@@ -59,23 +61,23 @@ export default function NewsSection({ articles }: NewsSectionProps) {
                         ? "transfer"
                         : article.category
                     }/${article.slug}`}
-                    className="relative block group h-[400px] rounded-2xl  md:h-[500px] w-full overflow-hidden cursor-grab"
+                    className=" block group h-[400px] rounded-2xl  md:h-[500px] w-full overflow-hidden cursor-grab"
                   >
-                    <Image
-                      src={article.image}
-                      alt={article.title}
-                      fill
-                      className="object-cover rounded-2xl group-hover:scale-105 transition-transform duration-300"
-                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                    />
-                    <div className="absolute inset-0  transition-colors duration-300" />
-                    {/* Play Icon */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center  rounded-full shadow-lg group-hover:scale-110 transition-transform">
-                        <img
-                          className="w-20 h-20 "
-                          src="/images/recentUpdate/play-icon.png"
-                        />
+                    <div className="">
+                      <Image
+                        src={article.image}
+                        alt={article.title}
+                        fill
+                        className="object-cover rounded-2xl group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="">
+                        <h2 className=" text-[28px] font-bold border-b pb-4">
+                          {article.title}
+                        </h2>
+                        <p className="text-[18px]">{article.content}</p>
+                      </div>
+                      <div className=" text-xs flex items-center">
+                        Leggi Ora <ArrowRight />
                       </div>
                     </div>
                   </Link>
@@ -86,10 +88,10 @@ export default function NewsSection({ articles }: NewsSectionProps) {
             {/* ✅ Navigation buttons at bottom center */}
             <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4 mt-5">
               <button className="news-prev w-10 h-10 flex items-center justify-center rounded-full bg-white shadow hover:bg-gray-100">
-                ◀
+                <ChevronLeft />
               </button>
               <button className="news-next w-10 h-10 flex items-center justify-center rounded-full bg-white shadow hover:bg-gray-100">
-                ▶
+                <ChevronRight />
               </button>
             </div>
           </div>
@@ -103,22 +105,23 @@ export default function NewsSection({ articles }: NewsSectionProps) {
                     ? "transfer"
                     : article.category
                 }/${article.slug}`}
-                className="relative block group h-48 sm:h-56 md:h-64 w-full overflow-hidden rounded-lg"
+                className=" block group h-48 sm:h-56 md:h-64 w-full overflow-hidden rounded-lg"
               >
-                <Image
-                  src={article.image}
-                  alt={article.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                />
-                {/* play icon */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center  rounded-full shadow-lg group-hover:scale-110 transition-transform">
-                    <img
-                      className="w-6 h-6 "
-                      src="/images/recentUpdate/play-icon.png"
-                    />
+                <div className="">
+                  <Image
+                    src={article.image}
+                    alt={article.title}
+                    fill
+                    className="object-cover rounded-2xl group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="">
+                    <h2 className=" text-[28px] font-bold border-b pb-4">
+                      {article.title.charAt(14)}
+                    </h2>
+                    <p className="text-[18px]">{article?.content.charAt(40)}</p>
+                  </div>
+                  <div className=" text-xs flex items-center">
+                    Leggi Ora <ArrowRight />
                   </div>
                 </div>
               </Link>
