@@ -20,7 +20,7 @@ export default function ShopBanner({
   className,
 }: ShopBannerProps) {
   const containerClasses = `relative overflow-hidden w-full min-h-screen flex  items-end lg:items-center  ${
-  // const containerClasses = `relative overflow-hidden w-full min-h-[580px] lg:min-h-[600px] flex  items-end lg:items-center  ${
+    // const containerClasses = `relative overflow-hidden w-full min-h-[580px] lg:min-h-[600px] flex  items-end lg:items-center  ${
     className || ""
   }`;
 
@@ -34,7 +34,7 @@ export default function ShopBanner({
       <div className="absolute lg:hidden inset-0">
         <img
           src={imageUrl}
-           alt={t('shop.banner1.alt', 'Retro Collection')}
+          alt={t("shop.banner1.alt", "Retro Collection")}
           className="w-full h-full object-cover"
         />
       </div>
@@ -51,7 +51,7 @@ export default function ShopBanner({
       <div className="absolute hidden lg:block inset-0">
         <img
           src={`/images/recentUpdate/shop-desktop-overlay.png`}
-         alt={t('shop.banner1.alt', 'Retro Collection')}
+          alt={t("shop.banner1.alt", "Retro Collection")}
           className="w-full h-full object-cover"
         />
       </div>
@@ -70,25 +70,21 @@ export default function ShopBanner({
 
         {/* Buttons */}
         {buttons && buttons.length > 0 && (
-          <div className="flex  items-start space-y-4 gap-2 lg:max-w-md  sm:space-y-0 sm:space-x-4">
+          <div className="flex  items-start space-y-4 pb-3.5 gap-2 lg:max-w-md  sm:space-y-0 sm:space-x-4">
             {buttons.map((button, index) => (
               <a
                 key={index}
                 href={button.href}
                 className="lg:py-3 lg:px-6 px-3 py-1.5   rounded-full text-[#0A1A2F] font-semibold transition-all duration-300 bg-[#FF7A00] ease-in-out transform hover:scale-105 hover:shadow-lg focus:outline-none whitespace-nowrap text-xs md:text-base"
-            
               >
                 {button.text}
 
-              <ArrowRight  className="text-[#0A1A2F] text-sm lg:text-lg w-3 lg:w-5 ml-2 inline-flex lg:ml-4 " />
-
+                <ArrowRight className="text-[#0A1A2F] text-sm lg:text-lg w-3 lg:w-5 ml-2 inline-flex lg:ml-4 " />
               </a>
-
             ))}
           </div>
         )}
       </div>
-
 
       <StatsSection />
     </div>

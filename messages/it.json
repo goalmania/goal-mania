@@ -456,5 +456,23 @@
   "banners": {
     "cta": "Acquista ora",
     "alt": "Banner promozionale maglie calcio"
+  },
+  "keyFeatures": {
+    "warranty": {
+      "title": "1 Anno",
+      "subtitle": "Garanzia"
+    },
+    "delivery": {
+      "title": "Consegna",
+      "subtitle": "Espressa Gratuita"
+    },
+    "replacement": {
+      "title": "7 Giorni",
+      "subtitle": "Sostituzione"
+    },
+    "payments": {
+      "title": "100% Sicuri",
+      "subtitle": "Pagamenti"
+    }
   }
 }

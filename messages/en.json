@@ -456,5 +456,23 @@
   "banners": {
     "cta": "Shop Now",
     "alt": "Football jersey promotion banner"
+  },
+  "keyFeatures": {
+    "warranty": {
+      "title": "1 Year",
+      "subtitle": "Warranty"
+    },
+    "delivery": {
+      "title": "Free Express",
+      "subtitle": "Delivery"
+    },
+    "replacement": {
+      "title": "7-Day",
+      "subtitle": "Replacement"
+    },
+    "payments": {
+      "title": "100% Secure",
+      "subtitle": "Payments"
+    }
   }
 }

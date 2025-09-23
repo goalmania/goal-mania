@@ -198,10 +198,12 @@ const Testimonies = () => {
 
   return (
     <div className="relative w-full max-w-7xl mx-auto p-6 overflow-hidden">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-5xl font-bold">I nostri clienti felici</h2>
+      <div className="mb-4 flex items-center md:justify-between justify-center">
+        <h2 className="md:text-5xl text-[37px] font-bold md:text-left text-center">
+          I nostri clienti felici
+        </h2>
 
-        <div className="flex gap-2">
+        <div className=" gap-2 hidden lg:flex">
           <button
             onClick={prevSlide}
             disabled={current === 0}

@@ -69,10 +69,10 @@ export default function BentoSection({
   );
 
   const gridArticles = (
-    <div className="grid grid-cols-1  gap-4 w-full mt-10">
+    <div className="grid grid-cols-1  gap-4 w-full mt-10 mx-auto">
       {grid.map((news) => (
         <Link href={`/news/${news.slug}`} key={news.id} className="block">
-          <div className=" text-black grid grid-cols-1 w-[350px] sm:w-full sm:grid-cols-2 gap-4 transition-shadow duration-200">
+          <div className=" text-black grid grid-cols-2 w-full mx-auto  gap-4 transition-shadow duration-200">
             <div className="relative w-full h-32 sm:h-auto  rounded-t-xl overflow-hidden md:order-2 order-1">
               <Image
                 src={news.image}
@@ -88,9 +88,9 @@ export default function BentoSection({
                   {main.category}
                 </p>
 
-                <CardTitle className="text-[22px] font-bold line-clamp-2 text-[#0A1A2F]">
+                <CardTitle className="md:text-[22px] text-[18px] font-bold line-clamp-2 text-[#0A1A2F]">
                   {news.title.length > 10
-                    ? `${news.title.slice(0, 25)}...`
+                    ? `${news.title.slice(0, 55)}...`
                     : news.title}
                 </CardTitle>
               </div>

@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+
 export default function ProductGrid({
   featuredProduct,
   featuredProduct2,
@@ -41,20 +42,26 @@ export default function ProductGrid({
       image: featuredProduct4?.image,
     },
   ].filter(Boolean);
+
   return (
     <section className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4 lg:px-20">
-        <div className="grid gap-8 md:grid-cols-2">
+        {/* 
+          Mobile → flex with overflow-x-scroll
+          Desktop → grid layout
+        */}
+        <div className="flex gap-6 overflow-x-auto md:grid md:grid-cols-2  scrollbar-hide">
           {products.map((product, i) => (
             <div
               key={i}
-              className="relative bg-[#F5F5F5] rounded-2xl shadow-md overflow-hidden flex flex-col md:flex-row items-center p-6 h-[360px]"
+              className="relative bg-[#F5F5F5] rounded-2xl shadow-md overflow-hidden flex-shrink-0 flex flex-row items-center p-6 h-[360px] w-[400px] md:w-auto"
             >
+              {/* Text Section */}
               <div className="md:w-1/2 order-2 md:order-1 text-center md:text-left space-y-3">
-                <h3 className="text-[30px] font-bold text-[#0A1A2F]">
+                <h3 className="md:text-[30px] text-[25px] font-bold text-[#0A1A2F]">
                   {product.title}
                 </h3>
-                <p className="text-[#0A1A2F] text-[14px] leading-relaxed">
+                <p className="text-[#0A1A2F] md:text-[14px] text-[12px] leading-relaxed">
                   {product.description}
                 </p>
                 <Link
@@ -64,8 +71,9 @@ export default function ProductGrid({
                   Buy Now →
                 </Link>
               </div>
+
+              {/* Image Section */}
               <div className="md:w-1/2 flex items-center justify-center relative order-1 md:order-2 mt-6 md:mt-0">
-               
                 <img
                   src={product.image || "/images/jersey1.jpeg"}
                   alt={product.title}
