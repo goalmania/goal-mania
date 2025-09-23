@@ -26,10 +26,11 @@ export interface Article {
   image: string;
   slug: string;
   category: string;
+  content: string;
 }
 
 export interface Guarantee {
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   title: string;
   description: string;
-} 
+}
