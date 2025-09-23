@@ -15,7 +15,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import ProductVideoCard from "./ProductVideoCard";
 
 interface FeaturedProductsProps {
   products: Product[];
@@ -68,9 +67,9 @@ export default function FeaturedVideoProducts({
           calcio oltre il risultato.
         </p>
 
-        {/* ===== Conditionally render Swiper when more than 3 products ===== */}
         {products.length > 3 ? (
           <div className="relative">
+            {/* Swiper: horizontal, responsive slidesPerView */}
             <Swiper
               modules={[Navigation]}
               spaceBetween={20}
@@ -88,12 +87,11 @@ export default function FeaturedVideoProducts({
             >
               {products.map((product) => (
                 <SwiperSlide key={product.id} className="p-2">
-                  <ProductVideoCard
+                  <ProductCard
                     id={product.id}
                     name={product.name}
                     price={product.price}
                     image={product.image}
-                    videos={product.videos || []}
                     category={product.category || ""}
                     team={product.team || ""}
                     availablePatches={product.availablePatches || []}
@@ -110,8 +108,9 @@ export default function FeaturedVideoProducts({
               ))}
             </Swiper>
 
+            {/* Left / Right navigation - positioned vertically centered */}
             {/* Bottom Center Navigation */}
-            <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4">
+            <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4 ">
               <button
                 aria-label="Previous featured products"
                 className="featured-prev flex items-center justify-center w-10 h-10 rounded-full bg-[#D9D9D9] shadow-md hover:bg-gray-100"
@@ -152,16 +151,15 @@ export default function FeaturedVideoProducts({
             </div>
           </div>
         ) : (
-          /* Grid for <= 3 products */
+          /* Original Grid for <= 3 products (kept intact) */
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {products.map((product) => (
-              <ProductVideoCard
+              <ProductCard
                 key={product.id}
                 id={product.id}
                 name={product.name}
                 price={product.price}
                 image={product.image}
-                videos={product.videos || []}
                 category={product.category || ""}
                 team={product.team || ""}
                 availablePatches={product.availablePatches || []}
