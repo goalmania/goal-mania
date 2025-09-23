@@ -303,16 +303,18 @@ export default function ReviewsSlider() {
                   <p className="text-xs sm:text-sm md:text-base text-gray-600 flex-grow line-clamp-4 sm:line-clamp-6">
                     {extractComment(review)}
                   </p>
-                  
+
                   {/* Display review media if available */}
-                  {review.media && (review.media.images?.length > 0 || review.media.videos?.length > 0) && (
-                    <div className="mt-3">
-                      <ReviewMediaDisplay 
-                        media={review.media} 
-                        className="mt-2"
-                      />
-                    </div>
-                  )}
+                  {review.media &&
+                    (review.media.images?.length > 0 ||
+                      review.media.videos?.length > 0) && (
+                      <div className="mt-3">
+                        <ReviewMediaDisplay
+                          media={review.media}
+                          className="mt-2"
+                        />
+                      </div>
+                    )}
                 </div>
               </div>
             ))}

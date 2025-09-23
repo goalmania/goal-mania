@@ -78,7 +78,7 @@ export default function FAQ() {
             Legale
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="generale">
+        <TabsContent value="generale" className=" px-4">
           <Accordion
             type="single"
             collapsible
