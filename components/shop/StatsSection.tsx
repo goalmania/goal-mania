@@ -60,10 +60,14 @@ const StatsSection: React.FC = () => {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:divide-x md:divide-white divide-x-[0.5px] divide-[#000000]">
         {visibleStats.map((stat) => (
           <div key={stat.id} className="text-left px-4 ">
-            <p className="md:text-[47px] text-[37px] font-bold ">
-              {stat.number}{" "}
-              <span className="text-sm font-normal ml-2">{stat.label}</span>
-            </p>
+            <div className=" flex whitespace-nowrap">
+              <p className="md:text-[47px] text-[27px] font-bold ">
+                {stat.number}{" "}
+                <span className="md:text-sm text-[12px] whitespace-nowrap font-normal ml-2">
+                  {stat.label}
+                </span>
+              </p>
+            </div>
             <p className="md:text-[18px] text-[15px] lg:text-[#FFFFFF] text-[#0A1A2F] font-extralight ">
               {stat.description}
             </p>

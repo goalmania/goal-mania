@@ -114,8 +114,8 @@ export default function ProductVideoCard({
                 </div>
               )
             ) : (
-              <div className="flex items-center justify-center h-full w-full bg-gray-300">
-                <PlayIcon className="h-10 w-10 text-gray-600" />
+              <div className="">
+                <img src={image} />
               </div>
             )}
           </div>
@@ -124,7 +124,7 @@ export default function ProductVideoCard({
         {/* Info Section */}
         <div className="p-2 sm:p-4 flex flex-col flex-grow">
           <div className="mb-2 flex-grow ">
-            <h3 className="text-xs flex justify-start text-left  items-center sm:text-lg md:text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
+            <h3 className="text-xs flex justify-start text-left  items-center sm:text-lg md:text-xl font-bold text-gray-900  transition-colors duration-200 line-clamp-2">
               {name}
             </h3>
             <div className="bg-black h-0.5 w-1/2"></div>
