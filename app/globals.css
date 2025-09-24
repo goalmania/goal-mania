@@ -595,3 +595,12 @@
   color: white;
   clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
 }
+
+.gradient {
+  background: #845224;
+  background: radial-gradient(
+    circle,
+    rgba(132, 82, 36, 1) 0%,
+    rgba(10, 26, 47, 1) 73%
+  );
+}
