@@ -132,7 +132,7 @@ export default function MysteryBoxPageClient({
               {products.map((product) => (
                 <div
                   key={product.id}
-                  className="bg-transparent   flex flex-col h-full"
+                  className="bg-transparent   flex flex-col justify-center items-center h-full"
                   tabIndex={0}
                   aria-label={product.name}
                 >
@@ -269,7 +269,7 @@ export default function MysteryBoxPageClient({
                     <button
                       onClick={() => handleAddToCart(product)}
                       disabled={loadingStates[product.id]}
-                      className="w-fit bg-[#FF7A00] text-[#0A1A2F] py-3  rounded-full font-medium text-base  flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed "
+                      className="w-fit bg-[#FF7A00] text-[#0A1A2F] py-2 px-3 rounded-full font-medium text-sm  flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed "
                       aria-label={t("mysteryBox.product.addToCart")}
                     >
                       {loadingStates[product.id] ? (
