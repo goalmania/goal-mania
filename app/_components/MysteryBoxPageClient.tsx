@@ -3,23 +3,33 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingCartIcon, SparklesIcon, GiftIcon } from "@heroicons/react/24/outline";
+import {
+  ShoppingCartIcon,
+  SparklesIcon,
+  GiftIcon,
+} from "@heroicons/react/24/outline";
 import { useCartStore } from "@/lib/store/cart";
 import { Product } from "@/lib/types/home";
 import { useI18n } from "@/lib/hooks/useI18n";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, MoveRight } from "lucide-react";
 
 interface MysteryBoxPageClientProps {
   products: Product[];
 }
 
-export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientProps) {
+export default function MysteryBoxPageClient({
+  products,
+}: MysteryBoxPageClientProps) {
   const { addItem } = useCartStore();
-  const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({});
+  const [loadingStates, setLoadingStates] = useState<{
+    [key: string]: boolean;
+  }>({});
   const { t } = useI18n();
 
   const handleAddToCart = async (product: Product) => {
-    setLoadingStates(prev => ({ ...prev, [product.id]: true }));
-    
+    setLoadingStates((prev) => ({ ...prev, [product.id]: true }));
+
     try {
       addItem({
         id: product.id,
@@ -41,50 +51,54 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
     } catch (error) {
       console.error("Error adding to cart:", error);
     } finally {
-      setLoadingStates(prev => ({ ...prev, [product.id]: false }));
+      setLoadingStates((prev) => ({ ...prev, [product.id]: false }));
     }
   };
 
   return (
-    <div className="bg-white mt-[112px] h-max">
-      {/* Hero Section with Purple/Pink Gradient */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-purple-900 via-purple-800 to-pink-900">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-32 h-32 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
-          <div className="absolute top-40 right-20 w-24 h-24 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse delay-1000"></div>
-          <div className="absolute bottom-20 left-1/4 w-40 h-40 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-pulse delay-2000"></div>
-        </div>
-
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
-          <div className="text-center">
-            <div className="flex justify-center mb-6">
-              <div className="relative">
-                <GiftIcon className="h-16 w-16 text-white" />
-                <SparklesIcon className="absolute -top-2 -right-2 h-6 w-6 text-yellow-300 animate-ping" />
-              </div>
-            </div>
-            
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-6">
-              {t('mysteryBox.title')}
+    <div className="bg-white h-max font-munish">
+      <div className=" h-[90px] flex gap-2 items-center justify-center">
+        <Link href={"/leagues-overview"}>
+          <Button className=" bg-[#FF7A00] text-[#0A1A2F] rounded-full   ">
+            Squadre Top del Momento
+          </Button>
+        </Link>
+        <span className="text-[20px] text-black">per le prossime 24 ore</span>
+      </div>
+      <div className="overflow-hidden gradient">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-22 sm:py-24">
+          <div className="text-center flex justify-center flex-col">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-6 flex text-center justify-center">
+              {t("mysteryBox.title")}
+              <SparklesIcon className=" h-6 w-6 text-yellow-300 " />
             </h1>
-            
+
             <p className="mx-auto max-w-3xl text-xl sm:text-2xl text-purple-100 mb-8">
-              {t('mysteryBox.description')}
+              {t("mysteryBox.description")}
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
-                <div className="text-2xl font-bold">🎁</div>
-                <div className="text-sm">{t('mysteryBox.features.surprise')}</div>
+              <div className=" p-4 text-white">
+                <div className="text-2xl font-bold">
+                  <img src={"/box.png"} className="h-35 w-35" />
+                </div>
+                <div className="text-sm font-bold text-[18px]">
+                  {t("mysteryBox.features.surprise")}
+                </div>
               </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
-                <div className="text-2xl font-bold">⚽</div>
-                <div className="text-sm">{t('mysteryBox.features.teams')}</div>
+              <div className=" p-4 text-white">
+                <img src={"/ball.png"} className="h-30 w-30" />
+
+                <div className="text-sm font-bold text-[18px]">
+                  {t("mysteryBox.features.teams")}
+                </div>
               </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-white">
-                <div className="text-2xl font-bold">🚚</div>
-                <div className="text-sm">{t('mysteryBox.features.shipping')}</div>
+              <div className=" p-4 text-white">
+                <img src={"/delivery.png"} className="h-35 w-35" />
+
+                <div className="text-sm font-bold text-[18px]">
+                  {t("mysteryBox.features.shipping")}
+                </div>
               </div>
             </div>
           </div>
@@ -92,25 +106,25 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
       </div>
 
       {/* Products Section */}
-      <div className="bg-gray-50 py-16 sm:py-24">
+      <div className="bg-[#0A1A2F] opacity-85 text-white py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              {t('mysteryBox.subtitle')}
+            <h2 className="text-3xl sm:text-4xl font-bold  mb-4">
+              {t("mysteryBox.subtitle")}
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {t('mysteryBox.subtitle')}
+            <p className="text-lg text-white max-w-2xl mx-auto">
+              {t("mysteryBox.subtitle")}
             </p>
           </div>
 
           {products.length === 0 ? (
             <div className="text-center py-12">
-              <GiftIcon className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                {t('mysteryBox.empty')}
+              <GiftIcon className="mx-auto h-16 w-16  mb-4" />
+              <h3 className="text-lg font-medium  mb-2">
+                {t("mysteryBox.empty")}
               </h3>
               <p className="text-gray-600">
-                {t('mysteryBox.emptyDescription')}
+                {t("mysteryBox.emptyDescription")}
               </p>
             </div>
           ) : (
@@ -137,7 +151,7 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
                     {/* Mystery Box Badge */}
                     <div className="absolute top-4 left-4 bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1 shadow-md">
                       <GiftIcon className="h-4 w-4" />
-                      {t('mysteryBox.title')}
+                      {t("mysteryBox.title")}
                     </div>
                   </div>
 
@@ -147,7 +161,7 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
                       {product.name}
                     </h3>
                     <p className="text-gray-600 mb-4 text-sm">
-                      {t('mysteryBox.product.description')}
+                      {t("mysteryBox.product.description")}
                     </p>
 
                     <div className="flex items-center justify-between mb-3">
@@ -155,8 +169,20 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
                         €{product.price.toFixed(2)}
                       </div>
                       <div className="flex items-center gap-1 text-xs text-purple-700 bg-purple-50 rounded-full px-2 py-1 font-medium">
-                        <svg className="h-4 w-4 text-purple-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                        {t('mysteryBox.product.trust.freeShipping')}
+                        <svg
+                          className="h-4 w-4 text-purple-400"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        {t("mysteryBox.product.trust.freeShipping")}
                       </div>
                     </div>
 
@@ -188,14 +214,25 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
 
                     {/* Trust/Info Row */}
                     <div className="flex flex-wrap gap-3 mb-5 mt-auto">
-                     
                       <div className="flex items-center gap-1 text-xs text-orange-700 bg-orange-50 rounded-full px-2 py-1 font-medium">
-                        <svg className="h-4 w-4 text-orange-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                        {t('mysteryBox.product.trust.secure')}
+                        <svg
+                          className="h-4 w-4 text-orange-400"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                          />
+                        </svg>
+                        {t("mysteryBox.product.trust.secure")}
                       </div>
                       <div className="flex items-center gap-1 text-xs text-pink-700 bg-pink-50 rounded-full px-2 py-1 font-medium">
                         <SparklesIcon className="h-4 w-4 text-pink-400" />
-                        {t('mysteryBox.product.trust.premium')}
+                        {t("mysteryBox.product.trust.premium")}
                       </div>
                     </div>
 
@@ -205,23 +242,23 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
                         onClick={() => handleAddToCart(product)}
                         disabled={loadingStates[product.id]}
                         className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-lg font-bold text-base hover:from-purple-700 hover:to-pink-700 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md focus:outline-none focus:ring-2 focus:ring-purple-400"
-                        aria-label={t('mysteryBox.product.addToCart')}
+                        aria-label={t("mysteryBox.product.addToCart")}
                       >
                         {loadingStates[product.id] ? (
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                         ) : (
                           <>
                             <ShoppingCartIcon className="h-5 w-5" />
-                            {t('mysteryBox.product.addToCart')}
+                            {t("mysteryBox.product.addToCart")}
                           </>
                         )}
                       </button>
                       <Link
                         href={`/products/${product.id}`}
                         className="block w-full text-center text-purple-600 hover:text-purple-700 font-medium py-2 px-4 border border-purple-600 rounded-lg hover:bg-purple-50 transition-colors duration-200"
-                        aria-label={t('mysteryBox.product.learnMore')}
+                        aria-label={t("mysteryBox.product.learnMore")}
                       >
-                        {t('mysteryBox.product.learnMore')}
+                        {t("mysteryBox.product.learnMore")}
                       </Link>
                     </div>
                   </div>
@@ -233,45 +270,52 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
       </div>
 
       {/* How It Works Section */}
-      <div className="bg-white py-16 sm:py-24">
+      <div className="bg-[#0A1A2F] md:py-14 py-6 text-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              {t('mysteryBox.process.title')}
+          <div className="text-center mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold  mb-2">
+              {t("mysteryBox.process.title")}
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {t('mysteryBox.process.description')}
+            <p className="text-base  max-w-2xl mx-auto">
+              {t("mysteryBox.process.description")}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="flex  flex-col md:flex-row gap-8">
             <div className="text-center">
-              <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-purple-600">1</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{t('mysteryBox.steps.step1.title')}</h3>
-              <p className="text-gray-600">
-                {t('mysteryBox.steps.step1.description')}
+              <h3 className="text-xl font-extrabold mb-2 text-[#FF7A00]">
+                {t("mysteryBox.steps.step1.title")}
+              </h3>
+              <p className="text-white w-[80%] mx-auto">
+                {t("mysteryBox.steps.step1.description")}
               </p>
             </div>
-
+            <div className="hidden md:flex items-center justify-center">
+              <MoveRight
+                className="h-6 w-6 text-white mx-auto md:mx-0"
+                strokeWidth={1}
+              />
+            </div>
             <div className="text-center">
-              <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-purple-600">2</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{t('mysteryBox.steps.step2.title')}</h3>
-              <p className="text-gray-600">
-                {t('mysteryBox.steps.step2.description')}
+              <h3 className="text-xl font-extrabold  mb-2 text-[#FF7A00]">
+                {t("mysteryBox.steps.step2.title")}
+              </h3>
+              <p className="text-white w-[80%] mx-auto">
+                {t("mysteryBox.steps.step2.description")}
               </p>
             </div>
-
+            <div className="hidden md:flex items-center justify-center">
+              <MoveRight
+                className="h-6 w-6 text-white mx-auto md:mx-0"
+                strokeWidth={1}
+              />
+            </div>
             <div className="text-center">
-              <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-purple-600">3</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{t('mysteryBox.steps.step3.title')}</h3>
-              <p className="text-gray-600">
-                {t('mysteryBox.steps.step3.description')}
+              <h3 className="text-xl font-extrabold  mb-2 text-[#FF7A00]">
+                {t("mysteryBox.steps.step3.title")}
+              </h3>
+              <p className="text-white w-[80%] mx-auto">
+                {t("mysteryBox.steps.step3.description")}
               </p>
             </div>
           </div>
@@ -279,22 +323,23 @@ export default function MysteryBoxPageClient({ products }: MysteryBoxPageClientP
       </div>
 
       {/* CTA Section */}
-      <div className="bg-gradient-to-r from-purple-600 to-pink-600 py-16">
+      <div className="bg-white text-[#0A1A2F] pt-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            {t('mysteryBox.cta.title')}
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+            {t("mysteryBox.cta.title")}
           </h2>
-          <p className="text-xl text-purple-100 mb-8 max-w-2xl mx-auto">
-            {t('mysteryBox.cta.description')}
+          <p className="text-lg  mb-8 max-w-2xl mx-auto">
+            {t("mysteryBox.cta.description")}
           </p>
           <Link
             href="/shop"
-            className="inline-flex items-center bg-white text-purple-600 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors duration-200"
+            className="inline-flex items-center bg-[#FF7A00] px-5 py-2 gap-1.5 rounded-full text-[#0A1A2F] font-medium hover:bg-[#FF7A00]/80 transition-colors duration-200"
           >
-            {t('mysteryBox.cta.button')}
+            {t("mysteryBox.cta.button")}{" "}
+            <MoveRight className="h-6 w-6    mx-auto md:mx-0" strokeWidth={1} />
           </Link>
         </div>
       </div>
     </div>
   );
-} 
+}
