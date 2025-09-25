@@ -12,6 +12,7 @@ import { useCartStore } from "@/lib/store/cart";
 import { Product } from "@/lib/types/home";
 import { useI18n } from "@/lib/hooks/useI18n";
 import { Button } from "@/components/ui/button";
+import { ArrowRight, MoveRight } from "lucide-react";
 
 interface MysteryBoxPageClientProps {
   products: Product[];
@@ -105,21 +106,21 @@ export default function MysteryBoxPageClient({
       </div>
 
       {/* Products Section */}
-      <div className="bg-gray-50 py-16 sm:py-24">
+      <div className="bg-[#0A1A2F] opacity-85 text-white py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold  mb-4">
               {t("mysteryBox.subtitle")}
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-white max-w-2xl mx-auto">
               {t("mysteryBox.subtitle")}
             </p>
           </div>
 
           {products.length === 0 ? (
             <div className="text-center py-12">
-              <GiftIcon className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <GiftIcon className="mx-auto h-16 w-16  mb-4" />
+              <h3 className="text-lg font-medium  mb-2">
                 {t("mysteryBox.empty")}
               </h3>
               <p className="text-gray-600">
@@ -269,50 +270,51 @@ export default function MysteryBoxPageClient({
       </div>
 
       {/* How It Works Section */}
-      <div className="bg-white py-16 sm:py-24">
+      <div className="bg-[#0A1A2F] md:py-14 py-6 text-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold  mb-2">
               {t("mysteryBox.process.title")}
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base  max-w-2xl mx-auto">
               {t("mysteryBox.process.description")}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="flex  flex-col md:flex-row gap-8">
             <div className="text-center">
-              <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-purple-600">1</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+              <h3 className="text-xl font-extrabold mb-2 text-[#FF7A00]">
                 {t("mysteryBox.steps.step1.title")}
               </h3>
-              <p className="text-gray-600">
+              <p className="text-white w-[80%] mx-auto">
                 {t("mysteryBox.steps.step1.description")}
               </p>
             </div>
-
+            <div className="hidden md:flex items-center justify-center">
+              <MoveRight
+                className="h-6 w-6 text-white mx-auto md:mx-0"
+                strokeWidth={1}
+              />
+            </div>
             <div className="text-center">
-              <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-purple-600">2</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+              <h3 className="text-xl font-extrabold  mb-2 text-[#FF7A00]">
                 {t("mysteryBox.steps.step2.title")}
               </h3>
-              <p className="text-gray-600">
+              <p className="text-white w-[80%] mx-auto">
                 {t("mysteryBox.steps.step2.description")}
               </p>
             </div>
-
+            <div className="hidden md:flex items-center justify-center">
+              <MoveRight
+                className="h-6 w-6 text-white mx-auto md:mx-0"
+                strokeWidth={1}
+              />
+            </div>
             <div className="text-center">
-              <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-purple-600">3</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+              <h3 className="text-xl font-extrabold  mb-2 text-[#FF7A00]">
                 {t("mysteryBox.steps.step3.title")}
               </h3>
-              <p className="text-gray-600">
+              <p className="text-white w-[80%] mx-auto">
                 {t("mysteryBox.steps.step3.description")}
               </p>
             </div>
@@ -321,19 +323,20 @@ export default function MysteryBoxPageClient({
       </div>
 
       {/* CTA Section */}
-      <div className="bg-gradient-to-r from-purple-600 to-pink-600 py-16">
+      <div className="bg-white text-[#0A1A2F] pt-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">
             {t("mysteryBox.cta.title")}
           </h2>
-          <p className="text-xl text-purple-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg  mb-8 max-w-2xl mx-auto">
             {t("mysteryBox.cta.description")}
           </p>
           <Link
             href="/shop"
-            className="inline-flex items-center bg-white text-purple-600 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors duration-200"
+            className="inline-flex items-center bg-[#FF7A00] px-5 py-2 gap-1.5 rounded-full text-[#0A1A2F] font-medium hover:bg-[#FF7A00]/80 transition-colors duration-200"
           >
-            {t("mysteryBox.cta.button")}
+            {t("mysteryBox.cta.button")}{" "}
+            <MoveRight className="h-6 w-6    mx-auto md:mx-0" strokeWidth={1} />
           </Link>
         </div>
       </div>
