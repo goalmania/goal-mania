@@ -18,7 +18,7 @@ async function fetchSeason2025Products(): Promise<Product[]> {
     const response = await fetch(
       `${baseUrl}/api/products?category=2025%2F26&limit=8&noPagination=true`,
       {
-        next: { revalidate: 300 }, // Cache for 5 minutes
+        cache: "no-store",
       }
     );
     if (!response.ok) {
@@ -92,7 +92,7 @@ async function fetchMysteryBoxProducts(): Promise<Product[]> {
     const response = await fetch(
       `${baseUrl}/api/products?type=mysteryBox&limit=6&noPagination=true`,
       {
-        next: { revalidate: 300 }, // Cache for 5 minutes
+        cache: "no-store",
       }
     );
     if (!response.ok) {
