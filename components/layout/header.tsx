@@ -98,6 +98,7 @@ export function Header() {
     { name: t("nav.about"), href: "/about" },
     { name: t("nav.contact"), href: "/contact" },
     { name: t("nav.shop"), href: "/shop" },
+    { name: "MysteryBox", href: "/shop/mystery-box" },
   ];
 
   if (!mounted) return null;

@@ -59,7 +59,7 @@ export default function MysteryBoxPageClient({
     <div className="bg-white h-max font-munish">
       <div className=" h-[90px] flex gap-2 items-center justify-center">
         <Link href={"/leagues-overview"}>
-          <Button className=" bg-[#FF7A00] text-[#0A1A2F] rounded-full   ">
+          <Button className=" bg-[#FF7A00] text-[#0A1A2F] hover:text-white rounded-full   ">
             Squadre Top del Momento
           </Button>
         </Link>
