@@ -23,7 +23,7 @@ async function getFeaturedProducts(): Promise<Product[]> {
     const response = await fetch(
       `${baseUrl}/api/products?feature=true&limit=4`,
       {
-        next: { revalidate: 300 },
+        cache: "no-store",
       }
     );
 
@@ -55,7 +55,7 @@ async function getMysteryBoxProducts(): Promise<Product[]> {
     const response = await fetch(
       `${baseUrl}/api/products?type=mysteryBox&limit=3&noPagination=true`,
       {
-        next: { revalidate: 0 }, // Disable caching for debugging
+        cache: "no-store",
       }
     );
 
