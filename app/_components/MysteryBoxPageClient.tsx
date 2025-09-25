@@ -128,7 +128,7 @@ export default function MysteryBoxPageClient({
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
               {products.map((product) => (
                 <div
                   key={product.id}
@@ -262,20 +262,26 @@ export default function MysteryBoxPageClient({
                       </Link>
                     </div>
                   </div>
-                  <div className="text-2xl font-bold">
-                    <img src={"/gift.png"} className="h-35 w-35" />
+                  <div className=" flex justify-center p-4">
+                    <img src={"/gift.png"} className="h-45 w-45" />
                   </div>
                   <div className="">
                     <button
                       onClick={() => handleAddToCart(product)}
                       disabled={loadingStates[product.id]}
-                      className="w-full bg-[#FF7A00] text-[#0A1A2F] py-3 px-4 rounded-full font-bold text-base  flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md focus:outline-none focus:ring-2 focus:ring-purple-400"
+                      className="w-fit bg-[#FF7A00] text-[#0A1A2F] py-3  rounded-full font-medium text-base  flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed "
                       aria-label={t("mysteryBox.product.addToCart")}
                     >
                       {loadingStates[product.id] ? (
                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                       ) : (
-                        <>{t("mysteryBox.product.addToCart")}</>
+                        <>
+                          {t("mysteryBox.product.addToCart")}
+                          <MoveRight
+                            className="h-6 w-6    mx-auto md:mx-0"
+                            strokeWidth={1}
+                          />
+                        </>
                       )}
                     </button>
                   </div>
