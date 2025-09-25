@@ -106,7 +106,7 @@ export default function MysteryBoxPageClient({
       </div>
 
       {/* Products Section */}
-      <div className="bg-[#0A1A2F] opacity-85 text-white py-16 sm:py-24">
+      <div className="bg-[#0A1A2F] opacity-85 text-white sm:py-16 py-8 ">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold  mb-4">
@@ -132,12 +132,12 @@ export default function MysteryBoxPageClient({
               {products.map((product) => (
                 <div
                   key={product.id}
-                  className="bg-white rounded-2xl border border-gray-200 shadow-md overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:border-purple-400 hover:scale-[1.035] flex flex-col h-full"
+                  className="bg-transparent   flex flex-col h-full"
                   tabIndex={0}
                   aria-label={product.name}
                 >
                   {/* Product Image */}
-                  <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100 border-b border-gray-100 group-hover:scale-105 transition-transform duration-300 will-change-transform">
+                  <div className="relative hidden aspect-square overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100 border-b border-gray-100 group-hover:scale-105 transition-transform duration-300 will-change-transform">
                     <Image
                       src={product.image}
                       alt={product.name}
@@ -156,7 +156,7 @@ export default function MysteryBoxPageClient({
                   </div>
 
                   {/* Product Info */}
-                  <div className="p-6 flex flex-col flex-1">
+                  <div className="p-6 flex-col flex-1 hidden">
                     <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-700 transition-colors">
                       {product.name}
                     </h3>
@@ -255,12 +255,29 @@ export default function MysteryBoxPageClient({
                       </button>
                       <Link
                         href={`/products/${product.id}`}
-                        className="block w-full text-center text-purple-600 hover:text-purple-700 font-medium py-2 px-4 border border-purple-600 rounded-lg hover:bg-purple-50 transition-colors duration-200"
+                        className=" w-full text-center hidden text-purple-600 hover:text-purple-700 font-medium py-2 px-4 border border-purple-600 rounded-lg hover:bg-purple-50 transition-colors duration-200"
                         aria-label={t("mysteryBox.product.learnMore")}
                       >
                         {t("mysteryBox.product.learnMore")}
                       </Link>
                     </div>
+                  </div>
+                  <div className="text-2xl font-bold">
+                    <img src={"/gift.png"} className="h-35 w-35" />
+                  </div>
+                  <div className="">
+                    <button
+                      onClick={() => handleAddToCart(product)}
+                      disabled={loadingStates[product.id]}
+                      className="w-full bg-[#FF7A00] text-[#0A1A2F] py-3 px-4 rounded-full font-bold text-base  flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md focus:outline-none focus:ring-2 focus:ring-purple-400"
+                      aria-label={t("mysteryBox.product.addToCart")}
+                    >
+                      {loadingStates[product.id] ? (
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                      ) : (
+                        <>{t("mysteryBox.product.addToCart")}</>
+                      )}
+                    </button>
                   </div>
                 </div>
               ))}
