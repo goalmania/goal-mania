@@ -15,9 +15,12 @@ interface Product {
 async function fetchSeason2025Products(): Promise<Product[]> {
   try {
     const baseUrl = getBaseUrl();
-    const response = await fetch(`${baseUrl}/api/products?category=2025%2F26&limit=8&noPagination=true`, {
-      next: { revalidate: 300 }, // Cache for 5 minutes
-    });
+    const response = await fetch(
+      `${baseUrl}/api/products?category=2025%2F26&limit=8&noPagination=true`,
+      {
+        cache: "no-store",
+      }
+    );
     if (!response.ok) {
       throw new Error(`Error fetching products: ${response.status}`);
     }
@@ -49,9 +52,12 @@ async function fetchSeason2025Products(): Promise<Product[]> {
 async function fetchFeaturedProducts(): Promise<Product[]> {
   try {
     const baseUrl = getBaseUrl();
-    const response = await fetch(`${baseUrl}/api/products?feature=true&limit=3`, {
-      next: { revalidate: 300 }, // Cache for 5 minutes
-    });
+    const response = await fetch(
+      `${baseUrl}/api/products?feature=true&limit=3`,
+      {
+        cache: "no-store",
+      }
+    );
     if (!response.ok) {
       throw new Error(`Error fetching featured products: ${response.status}`);
     }
@@ -83,11 +89,16 @@ async function fetchFeaturedProducts(): Promise<Product[]> {
 async function fetchMysteryBoxProducts(): Promise<Product[]> {
   try {
     const baseUrl = getBaseUrl();
-    const response = await fetch(`${baseUrl}/api/products?type=mysteryBox&limit=6&noPagination=true`, {
-      next: { revalidate: 300 }, // Cache for 5 minutes
-    });
+    const response = await fetch(
+      `${baseUrl}/api/products?type=mysteryBox&limit=6&noPagination=true`,
+      {
+        cache: "no-store",
+      }
+    );
     if (!response.ok) {
-      throw new Error(`Error fetching Mystery Box products: ${response.status}`);
+      throw new Error(
+        `Error fetching Mystery Box products: ${response.status}`
+      );
     }
     const data = await response.json();
     let productsData = [];
@@ -115,11 +126,12 @@ async function fetchMysteryBoxProducts(): Promise<Product[]> {
 }
 
 export default async function ShopClientWrapper() {
-  const [season2025Products, featuredProducts, mysteryBoxProducts] = await Promise.all([
-    fetchSeason2025Products(),
-    fetchFeaturedProducts(),
-    fetchMysteryBoxProducts(),
-  ]);
+  const [season2025Products, featuredProducts, mysteryBoxProducts] =
+    await Promise.all([
+      fetchSeason2025Products(),
+      fetchFeaturedProducts(),
+      fetchMysteryBoxProducts(),
+    ]);
   return (
     <ShopClient
       season2025Products={season2025Products}
@@ -127,4 +139,4 @@ export default async function ShopClientWrapper() {
       mysteryBoxProducts={mysteryBoxProducts}
     />
   );
-} 
+}
