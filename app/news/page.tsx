@@ -18,7 +18,7 @@ import {
   ArrowRight,
   MoveRight,
 } from "lucide-react";
-import { IconBrandPinterest } from "@tabler/icons-react";
+import { IconBrandPinterest, IconBrandTiktok } from "@tabler/icons-react";
 
 import { LoadingFallback } from "@/components/shared/loading-fallback";
 import {
@@ -41,7 +41,10 @@ export const metadata: Metadata = {
   description: "Latest football news and updates from Goal Mania",
 };
 
-async function getNewsArticles() {
+async function getNewsArticles(): Promise<{
+  featured: NewsArticle[];
+  regular: NewsArticle[];
+}> {
   try {
     await connectDB();
 
@@ -53,7 +56,7 @@ async function getNewsArticles() {
     })
       .sort({ publishedAt: -1 })
       .limit(10)
-      .lean(); // Use lean() for better performance
+      .lean();
 
     // Fetch regular articles
     const regularArticles = await Article.find({
@@ -65,9 +68,15 @@ async function getNewsArticles() {
       .limit(12)
       .lean();
 
+    // ✅ Normalize to match NewsArticle (ensure `tags` exists)
+    const normalize = (a: any): NewsArticle => ({
+      ...a,
+      tags: a.tags ?? [], // fallback if tags missing
+    });
+
     return {
-      featured: featuredArticles,
-      regular: regularArticles,
+      featured: featuredArticles.map(normalize),
+      regular: regularArticles.map(normalize),
     };
   } catch (error) {
     console.error("Failed to fetch news articles:", {
@@ -169,18 +178,18 @@ export default async function NewsPage() {
                         <span className="font-medium">Twitter</span>
                       </a>
                       <a
-                        href="https://instagram.com/goalmania"
+                        href="https://www.instagram.com/goalmania.it"
                         className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
                       >
                         <Instagram className="w-5 h-5 mr-2" />
                         <span className="font-medium">Instagram</span>
                       </a>
                       <a
-                        href="https://youtube.com/goalmania"
+                        href=":https://www.tiktok.com/@goalmania.it"
                         className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
                       >
-                        <Youtube className="w-5 h-5 mr-2" />
-                        <span className="font-medium">Youtube</span>
+                        <IconBrandTiktok className="w-5 h-5 mr-2" />
+                        <span className="font-medium">Tiktok</span>
                       </a>
                       <a
                         href="https://linkedin.com/company/goalmania"
