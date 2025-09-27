@@ -114,7 +114,7 @@ export default async function Home() {
         featured: true,
       })
         .sort({ publishedAt: -1 })
-        .limit(5)
+        .limit(10)
         .lean();
     } catch (error) {
       console.error("Error fetching articles:", error);
