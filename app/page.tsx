@@ -32,7 +32,7 @@ async function getFeaturedProducts(): Promise<Product[]> {
     const data = await response.json();
     const products = data.products || data || [];
 
-    return products.slice(0, 4).map((product: any) => ({
+    return products.map((product: any) => ({
       id: product._id || "",
       name: product.title || "Featured Product",
       price: product.basePrice || 0,
@@ -117,7 +117,7 @@ export default async function Home() {
         featured: true,
       })
         .sort({ publishedAt: -1 })
-        .limit(3)
+        .limit(5)
         .lean();
     } catch (error) {
       console.error("Error fetching articles:", error);
