@@ -18,6 +18,9 @@ export default function NewsSection({ articles }: NewsSectionProps) {
   const { t } = useI18n();
 
   if (!articles || articles.length === 0) return null;
+  function stripHtml(html: string) {
+    return html.replace(/<[^>]*>/g, "");
+  }
 
   return (
     <section className="py-12 md:py-20 bg-white">
@@ -70,7 +73,7 @@ export default function NewsSection({ articles }: NewsSectionProps) {
                     </h3>
                     <div className="bg-black h-[2px] w-1/2"></div>
                     <p className="text-sm text-black line-clamp-2 mt-2">
-                      {article.content}
+                      {stripHtml(article.content)}
                     </p>
                     <div className="text-xs text-black mt-2 flex items-center">
                       Leggi Ora <ArrowRight size={16} />
