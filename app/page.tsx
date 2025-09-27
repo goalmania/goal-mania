@@ -20,12 +20,9 @@ export const revalidate = 300; // Revalidate every 5 minutes
 async function getFeaturedProducts(): Promise<Product[]> {
   try {
     const baseUrl = getBaseUrl();
-    const response = await fetch(
-      `${baseUrl}/api/products?feature=true&limit=4`,
-      {
-        cache: "no-store",
-      }
-    );
+    const response = await fetch(`${baseUrl}/api/products?feature=true`, {
+      cache: "no-store",
+    });
 
     if (!response.ok) return [];
 

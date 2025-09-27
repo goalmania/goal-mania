@@ -16,7 +16,7 @@ async function fetchSeason2025Products(): Promise<Product[]> {
   try {
     const baseUrl = getBaseUrl();
     const response = await fetch(
-      `${baseUrl}/api/products?category=2025%2F26&limit=8&noPagination=true`,
+      `${baseUrl}/api/products?category=2025%2F26&noPagination=true`,
       {
         cache: "no-store",
       }
@@ -52,12 +52,9 @@ async function fetchSeason2025Products(): Promise<Product[]> {
 async function fetchFeaturedProducts(): Promise<Product[]> {
   try {
     const baseUrl = getBaseUrl();
-    const response = await fetch(
-      `${baseUrl}/api/products?feature=true&limit=3`,
-      {
-        cache: "no-store",
-      }
-    );
+    const response = await fetch(`${baseUrl}/api/products?feature=true`, {
+      cache: "no-store",
+    });
     if (!response.ok) {
       throw new Error(`Error fetching featured products: ${response.status}`);
     }
@@ -90,7 +87,7 @@ async function fetchMysteryBoxProducts(): Promise<Product[]> {
   try {
     const baseUrl = getBaseUrl();
     const response = await fetch(
-      `${baseUrl}/api/products?type=mysteryBox&limit=6&noPagination=true`,
+      `${baseUrl}/api/products?type=mysteryBox&noPagination=true`,
       {
         cache: "no-store",
       }
