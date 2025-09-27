@@ -17,7 +17,7 @@ import ShopImageCard from "@/components/home/ShopImageCard";
 import ProductShowCase from "@/components/shop/ProductShowcase";
 import FaqSection from "./FaqSection";
 import FeaturesCardStats from "@/components/shop/FeaturesCardStats";
-import { CheckCircle2, Star } from "lucide-react";
+import { CheckCircle2, SparklesIcon, Star } from "lucide-react";
 import Testimonies from "@/components/shop/testimonies";
 
 interface Review {
@@ -154,6 +154,45 @@ export default function ShopClient({
       </div>
 
       {/* Mystery Box Section */}
+      <div className="overflow-hidden gradient">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-22 sm:py-24">
+          <div className="text-center flex justify-center flex-col">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-6 flex text-center justify-center">
+              {t("mysteryBox.title")}
+              <SparklesIcon className=" h-6 w-6 text-yellow-300 " />
+            </h1>
+
+            <p className="mx-auto max-w-3xl text-xl sm:text-2xl text-purple-100 mb-8">
+              {t("mysteryBox.description")}
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <div className=" p-4 text-white">
+                <div className="text-2xl font-bold">
+                  <img src={"/box.png"} className="h-35 w-35" />
+                </div>
+                <div className="text-sm font-bold text-[18px]">
+                  {t("mysteryBox.features.surprise")}
+                </div>
+              </div>
+              <div className=" p-4 text-white">
+                <img src={"/ball.png"} className="h-30 w-30" />
+
+                <div className="text-sm font-bold text-[18px]">
+                  {t("mysteryBox.features.teams")}
+                </div>
+              </div>
+              <div className=" p-4 text-white">
+                <img src={"/delivery.png"} className="h-35 w-35" />
+
+                <div className="text-sm font-bold text-[18px]">
+                  {t("mysteryBox.features.shipping")}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="bg-gradient-to-br from-purple-900 via-purple-800 to-pink-900 py-16 sm:py-24 relative hidden overflow-hidden">
         {/* Animated Background Elements */}
         <div className="absolute inset-0">

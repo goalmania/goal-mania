@@ -15,10 +15,10 @@ import {
   Youtube,
   Linkedin,
   Mail,
-  Send,
   ArrowRight,
+  MoveRight,
 } from "lucide-react";
-import { IconBrandPinterest } from "@tabler/icons-react";
+import { IconBrandPinterest, IconBrandTiktok } from "@tabler/icons-react";
 
 import { LoadingFallback } from "@/components/shared/loading-fallback";
 import {
@@ -41,53 +41,72 @@ export const metadata: Metadata = {
   description: "Latest football news and updates from Goal Mania",
 };
 
-async function getNewsArticles() {
+async function getNewsArticles(): Promise<{
+  featured: NewsArticle[];
+  regular: NewsArticle[];
+}> {
   try {
     await connectDB();
 
-    // Get featured articles
-    console.log(Article);
+    // Fetch featured articles
     const featuredArticles = await Article.find({
       category: "news",
       status: "published",
       featured: true,
     })
       .sort({ publishedAt: -1 })
-      .limit(3);
+      .limit(10)
+      .lean();
 
-    // Get regular articles
+    // Fetch regular articles
     const regularArticles = await Article.find({
       category: "news",
       status: "published",
       featured: { $ne: true },
     })
       .sort({ publishedAt: -1 })
-      .limit(12);
+      .limit(12)
+      .lean();
+
+    // ✅ Normalize to match NewsArticle (ensure `tags` exists)
+    const normalize = (a: any): NewsArticle => ({
+      ...a,
+      tags: a.tags ?? [], // fallback if tags missing
+    });
 
     return {
-      featured: JSON.parse(JSON.stringify(featuredArticles)),
-      regular: JSON.parse(JSON.stringify(regularArticles)),
+      featured: featuredArticles.map(normalize),
+      regular: regularArticles.map(normalize),
     };
   } catch (error) {
-    console.error("Failed to fetch news articles:", error);
-    return { featured: [], regular: [] };
+    console.error("Failed to fetch news articles:", {
+      error: (error as Error).message,
+      stack: (error as Error).stack,
+    });
+    throw new Error("Unable to fetch news articles. Please try again later.");
   }
 }
 
 export default async function NewsPage() {
-  // Fetch real articles
-  const { featured, regular } = await getNewsArticles();
-  const allArticles: NewsArticle[] = [...featured, ...regular];
+  let allArticles: NewsArticle[] = [];
+  let errorMessage: string | null = null;
+
+  try {
+    const { featured, regular } = await getNewsArticles();
+    allArticles = [...featured, ...regular];
+  } catch (error) {
+    errorMessage = (error as Error).message;
+  }
 
   const MobilebannerData = {
-    imageUrl: `/images/recentUpdate/mobile-news.jpg`, // This uses the uploaded image
+    imageUrl: `/images/recentUpdate/mobile-news.jpg`,
   };
 
   return (
     <Suspense fallback={<LoadingFallback />}>
-      <div className=" min-h-screen flex flex-col font-munish">
+      <div className="min-h-screen flex flex-col font-munish bg-gray-50">
         <NewsBanner imageUrl={MobilebannerData.imageUrl} />
-        <div className="container mx-auto px-6 sm:px-10 lg:px-15 pt-12 pb-12 flex-1">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 flex-1 items-start">
           {/* Breadcrumb */}
           <div className="mb-6 hidden">
             <Breadcrumb>
@@ -103,194 +122,194 @@ export default async function NewsPage() {
             </Breadcrumb>
           </div>
 
-          <div className="relative max-w-lg">
-            <div className="absolute -top-6 left-0 bg-gray-900 rounded-[6px] text-white font-semibold py-2 px-6  slanted-card  shadow-md z-10">
+          <div className="relative max-w-lg mb-8">
+            <div className="absolute slanted-card -top-6 left-0 bg-gray-900 rounded-md text-white font-semibold py-2 px-6  z-10">
               In Primo Piano
             </div>
-            <div className="pt-8 border-t-2  border-[#DFDFDF]"></div>{" "}
+            <div className="pt-8 border-t-2 border-gray-200"></div>
           </div>
 
           {/* Render logic based on article count */}
-          {allArticles.length === 1 && (
-            <div className="w-full max-w-3xl mx-auto border">
-              <BentoSection articles={allArticles} />
-            </div>
-          )}
-          {allArticles.length > 1 && (
-            <div className="grid grid-cols-1 lg:grid-cols-6">
-              <div className="flex flex-col lg:col-span-4 gap-16">
-                {Array.from({ length: Math.ceil(allArticles.length / 5) }).map(
-                  (_, i) => {
-                    const start = i * 4;
-                    const end = start + 4;
-                    const sectionArticles = allArticles.slice(start, end);
-                    // If only 1 article in this section, render full width
-                    if (sectionArticles.length === 1) {
-                      return (
-                        <div key={i} className="w-full max-w-3xl mx-auto">
-                          <BentoSection articles={sectionArticles} />
-                          <div className="mt-3 text-right">
-                            <Link
-                              href="/news"
-                              className="text-xs font-semibold tracking-wide text-[#0e1924] hover:text-[#f5963c] uppercase"
-                            >
-                              See all
-                            </Link>
-                          </div>
-                        </div>
-                      );
-                    }
-                    // Alternate reverse for every other section
-                    return (
-                      <div key={i}>
-                        <BentoSection
-                          articles={sectionArticles}
-                          reverse={i % 2 === 1}
-                        />
-                        <div className="mt-3 text-right">
-                          <Link
-                            href="/news"
-                            className="text-xs font-semibold tracking-wide text-[#0e1924] hover:text-[#f5963c] uppercase"
-                          >
-                            See all
-                          </Link>
-                        </div>
-                      </div>
-                    );
-                  }
-                )}
-              </div>
-
-              <div className="hidden lg:block w-full lg:max-w-md  lg:col-span-2 bg-white p-4 space-y-8">
-                {/* Follow Us Section */}
-                <div className="relative">
-                  <div className="absolute -top-6 left-0 bg-gray-900 rounded-[6px] text-white font-semibold py-2 px-6  slanted-card  shadow-md z-10">
-                    Follow Us
-                  </div>
-                  <div className="pt-8 border-t-2 border-gray-200"></div>{" "}
-                  {/* Line separator */}
-                  <div className="grid grid-cols-2 gap-3 mt-4">
-                    {/* Facebook */}
-                    <a
-                      href="#"
-                      className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+          {errorMessage ? (
+            <Alert variant="destructive" className="max-w-2xl mx-auto">
+              <AlertDescription className="text-center">
+                {errorMessage}
+              </AlertDescription>
+            </Alert>
+          ) : allArticles.length > 0 ? (
+            <>
+              {/* First Section with Sidebar */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+                <div className="lg:col-span-2">
+                  <BentoSection articles={allArticles.slice(0, 4)} />
+                  <div className="mt-4 text-right">
+                    <Link
+                      href="/news"
+                      className="text-sm font-semibold tracking-wide text-gray-900 hover:text-orange-500 uppercase transition-colors duration-200"
                     >
-                      <Facebook className="w-5 h-5 mr-2" />
-                      <span className="font-medium">Facebook</span>
-                    </a>
-
-                    {/* Twitter */}
-                    <a
-                      href="#"
-                      className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
-                    >
-                      <Twitter className="w-5 h-5 mr-2" />
-                      <span className="font-medium">Twitter</span>
-                    </a>
-
-                    {/* Instagram */}
-                    <a
-                      href="#"
-                      className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
-                    >
-                      <Instagram className="w-5 h-5 mr-2" />
-                      <span className="font-medium">Instagram</span>
-                    </a>
-
-                    {/* YouTube */}
-                    <a
-                      href="#"
-                      className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
-                    >
-                      <Youtube className="w-5 h-5 mr-2" />
-                      <span className="font-medium">Youtube</span>
-                    </a>
-
-                    {/* LinkedIn */}
-                    <a
-                      href="#"
-                      className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
-                    >
-                      <Linkedin className="w-5 h-5 mr-2" />
-                      <span className="font-medium">LinkedIn</span>
-                    </a>
-
-                    {/* Pinterest */}
-                    <a
-                      href="#"
-                      className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
-                    >
-                      <IconBrandPinterest className="w-5 h-5 mr-2" />
-                      <span className="font-medium">Pinterest</span>
-                    </a>
+                      See all
+                    </Link>
                   </div>
                 </div>
 
-                {/* Newsletter Section */}
-                <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg text-center">
-                  <div className="relative inline-block mb-4">
-                    <Mail className="w-16 h-16 text-[#7B96B7] opacity-20" />{" "}
-                    {/* Large, faded icon */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <h3 className="text-xl font-semibold mb-2 whitespace-nowrap">
-                        Newsletter Giornaliera
-                      </h3>
+                {/* Sidebar */}
+                <div className="lg:col-span-1 space-y-8">
+                  {/* Follow Us Section */}
+                  <div className="p-6 ">
+                    <div className="relative mb-6">
+                      <div className="absolute slanted-card -top-6 left-0 bg-gray-900 rounded-md text-white font-semibold py-2 px-6">
+                        Follow Us
+                      </div>
+                      <div className="pt-8 border-t-2 border-gray-200"></div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <a
+                        href="https://facebook.com/goalmania"
+                        className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                      >
+                        <Facebook className="w-5 h-5 mr-2" />
+                        <span className="font-medium">Facebook</span>
+                      </a>
+                      <a
+                        href="https://twitter.com/goalmania"
+                        className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                      >
+                        <Twitter className="w-5 h-5 mr-2" />
+                        <span className="font-medium">Twitter</span>
+                      </a>
+                      <a
+                        href="https://www.instagram.com/goalmania.it"
+                        className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                      >
+                        <Instagram className="w-5 h-5 mr-2" />
+                        <span className="font-medium">Instagram</span>
+                      </a>
+                      <a
+                        href=":https://www.tiktok.com/@goalmania.it"
+                        className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                      >
+                        <IconBrandTiktok className="w-5 h-5 mr-2" />
+                        <span className="font-medium">Tiktok</span>
+                      </a>
+                      <a
+                        href="https://linkedin.com/company/goalmania"
+                        className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                      >
+                        <Linkedin className="w-5 h-5 mr-2" />
+                        <span className="font-medium">LinkedIn</span>
+                      </a>
+                      <a
+                        href="https://pinterest.com/goalmania"
+                        className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                      >
+                        <IconBrandPinterest className="w-5 h-5 mr-2" />
+                        <span className="font-medium">Pinterest</span>
+                      </a>
                     </div>
                   </div>
 
-                  <p className="text-gray-300 mb-6 text-sm">
-                    Ricevi tutte le notizie più importanti dal mondo del
-                  </p>
-                  <button className="flex items-center justify-center w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-lg shadow-md transition-colors duration-200">
-                    Inserisci la tua e-mail
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </button>
+                  {/* Newsletter Section */}
+                  <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg text-center">
+                    <div className="relative inline-block mb-4">
+                      <Mail className="w-16 h-16 text-gray-400 opacity-20" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <h3 className="text-xl font-semibold whitespace-nowrap">
+                          Newsletter Giornaliera
+                        </h3>
+                      </div>
+                    </div>
+                    <p className="text-gray-300 mb-6 text-sm">
+                      Ricevi tutte le notizie più importanti dal mondo del
+                      calcio
+                    </p>
+                    <form
+                      action="/api/newsletter"
+                      method="POST"
+                      className="flex w-full"
+                    >
+                      <button
+                        type="submit"
+                        className="flex items-center mx-auto justify-center bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-lg shadow-md transition-colors duration-200"
+                      >
+                        Inserisci la tua e-mail
+                        <MoveRight className="w-5 h-5" />
+                      </button>
+                    </form>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
 
-          {allArticles.length === 0 && (
-            <Alert className="max-w-2xl mx-auto">
+              {/* Remaining Sections */}
+              <div className="flex flex-col gap-16">
+                {Array.from({
+                  length: Math.ceil((allArticles.length - 4) / 4),
+                }).map((_, i) => {
+                  const start = 4 + i * 4;
+                  const end = start + 4;
+                  const sectionArticles = allArticles.slice(start, end);
+
+                  return (
+                    <div key={i}>
+                      <BentoSection
+                        articles={sectionArticles}
+                        reverse={i % 2 === 1}
+                      />
+                      <div className="mt-4 text-right">
+                        <Link
+                          href="/news"
+                          className="text-sm font-semibold tracking-wide text-gray-900 hover:text-orange-500 uppercase transition-colors duration-200"
+                        >
+                          See all
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          ) : (
+            <Alert variant="destructive" className="max-w-2xl mx-auto">
               <AlertDescription className="text-center">
                 No news articles found.
               </AlertDescription>
             </Alert>
           )}
         </div>
-        <div className=" py-4">
+
+        <div className="py-8 bg-white">
           <PopularNewsGrid />
         </div>
-        <div className="flex w-full h-[230px]  lg:h-[250px] bg-gray-900 rounded-2xl overflow-hidden shadow-lg md:mx-auto max-w-4xl">
-          {/* Image Section */}
-          <div className="w-[30%] flex-shrink-0">
-            <img
-              src={`/images/recentUpdate/banner-ads.png`}
-              alt="Promotional product"
-              className="w-full h-full object-cover"
-            />
-          </div>
 
-          {/* Content Section */}
-          <div className="w-[70%] m-4 p-6 flex flex-col md:flex-row justify-center text-white items-center">
-            <div className="">
-              <p className="text-[#E53E3E] text-sm font-semibold mb-1">
-                30% Off
-              </p>
-              <h2 className="text-xl lg:text-2xl font-bold leading-tight mb-4 w-3/4">
-                Compra la Nuova Maglia Ufficiale
-              </h2>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex w-full max-w-4xl mx-auto h-[230px] lg:h-[250px] bg-gray-900 rounded-2xl overflow-hidden shadow-lg">
+            <div className="w-[30%] flex-shrink-0">
+              <Image
+                src="/images/recentUpdate/banner-ads.png"
+                alt="Promotional product"
+                width={300}
+                height={250}
+                className="w-full h-full object-cover"
+              />
             </div>
-            <div className="">
-              <Link href={"/shop"}>
-                <button className="inline-flex items-center justify-center bg-[#FF7A00] hover:bg-orange-600 text-[#0A1A2F] font-light py-2 px-4 rounded-xl shadow-md transition-colors duration-200 self-start">
+            <div className="w-[70%] p-6 flex flex-col md:flex-row justify-between items-center text-white">
+              <div>
+                <p className="text-red-500 text-sm font-semibold mb-1">
+                  30% Off
+                </p>
+                <h2 className="text-xl lg:text-2xl font-bold leading-tight mb-4">
+                  Compra la Nuova Maglia Ufficiale
+                </h2>
+              </div>
+              <Link href="/shop">
+                <button className="inline-flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-xl shadow-md transition-colors duration-200">
                   Buy Now
-                  <ArrowRight className="w-3 h-3 ml-2" />
+                  <ArrowRight className="w-4 h-4 ml-2" />
                 </button>
               </Link>
             </div>
           </div>
         </div>
+
         <NewsCarousel articles={allArticles} />
       </div>
     </Suspense>

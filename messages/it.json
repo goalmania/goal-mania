@@ -2,7 +2,7 @@
   "nav": {
     "home": "Home",
     "category": "Categoria",
-    "articles": "Articoli",
+    "articles": "Notizie",
     "info": "Informazioni",
     "about": "Chi siamo",
     "contact": "Contatti",
@@ -38,6 +38,25 @@
   "language": {
     "switchToItalian": "Passa all'Italiano",
     "switchToEnglish": "Passa all'Inglese"
+  },
+  "products": {
+    "customizeYourJersey": "Personalizza la tua maglia",
+    "jerseyType": "Tipo di maglia",
+    "fanEdition": "Edizione tifoso",
+    "playerEdition": "Edizione giocatore",
+    "addOfficialPatches": "Aggiungi patch ufficiali",
+    "addMatchingItems": "Aggiungi articoli abbinati",
+    "addShorts": "Aggiungi pantaloncini abbinati",
+    "addSocks": "Aggiungi calze abbinate",
+    "chooseSize": "Scegli la taglia",
+    "pleaseSelectSizeBeforeCart": "Seleziona una taglia prima di aggiungere al carrello",
+    "pleaseSelectSizeBeforeProceeding": "Seleziona una taglia prima di procedere",
+    "productVideos": "Video del prodotto",
+    "watchProductPreviews": "Guarda le anteprime e le dimostrazioni del prodotto",
+    "mysteryBoxPreferences": "Preferenze Mystery Box",
+    "helpPersonalizeMysteryBox": "Aiutaci a personalizzare la tua mystery box! Elenca eventuali squadre o maglie specifiche che preferisci evitare.",
+    "shirtsToAvoid": "Maglie che preferisci NON ricevere (Opzionale - massimo 5):",
+    "weWillDoOurBest": "Faremo del nostro meglio per evitare questi articoli"
   },
   "shop": {
     "hero": {
