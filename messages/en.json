@@ -2,7 +2,7 @@
   "nav": {
     "home": "Home",
     "category": "Category",
-    "articles": "Articles",
+    "articles": "News",
     "info": "Info",
     "about": "About",
     "contact": "Contact",
@@ -17,6 +17,26 @@
   },
   "Login": "Login",
   "Sign-up": "Sign Up",
+
+  "products": {
+    "customizeYourJersey": "Customize Your Jersey",
+    "jerseyType": "Jersey Type",
+    "fanEdition": "Fan Edition",
+    "playerEdition": "Player Edition",
+    "addOfficialPatches": "Add Official Patches",
+    "addMatchingItems": "Add Matching Items",
+    "addShorts": "Add Matching Shorts",
+    "addSocks": "Add Matching Socks",
+    "chooseSize": "Choose Size",
+    "pleaseSelectSizeBeforeCart": "Please select a size before adding to cart",
+    "pleaseSelectSizeBeforeProceeding": "Please select a size before proceeding",
+    "productVideos": "Product Videos",
+    "watchProductPreviews": "Watch product previews and demonstrations",
+    "mysteryBoxPreferences": "Mystery Box Preferences",
+    "helpPersonalizeMysteryBox": "Help us personalize your mystery box! List any teams or specific shirts you'd prefer to avoid.",
+    "shirtsToAvoid": "Shirts you'd prefer NOT to receive (Optional - up to 5):",
+    "weWillDoOurBest": "We'll do our best to avoid these items"
+  },
 
   "auth": {
     "signIn": "Sign In",

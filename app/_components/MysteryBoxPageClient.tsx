@@ -265,6 +265,9 @@ export default function MysteryBoxPageClient({
                   <div className=" flex justify-center p-4">
                     <img src={"/gift.png"} className="h-45 w-45" />
                   </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-700 transition-colors">
+                    {product.name}
+                  </h3>
                   <div className="">
                     <button
                       onClick={() => handleAddToCart(product)}

@@ -86,6 +86,8 @@ import {
 import { getBaseUrl } from "@/lib/utils/baseUrl";
 import { Product } from "@/lib/types/home";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
+import { useI18n } from "@/lib/hooks/useI18n";
+import FaqSection from "./FaqSection";
 
 const PATCH_PRICES = {
   "europa-league": 3,
@@ -126,7 +128,7 @@ export default function ProductDetailClient({
   const [errors, setErrors] = useState<{
     size?: string;
   }>({});
-
+  const { t } = useI18n();
   const {
     addItem: addToWishlist,
     removeItem: removeFromWishlist,
@@ -525,13 +527,13 @@ export default function ProductDetailClient({
               <div className="-ml-3">
                 <CardHeader className="p-0">
                   <CardTitle className="text-[18px] font-light p-0 text-[#FF7A00]">
-                    Customize Your Jersey
+                    {t("products.customizeYourJersey")}
                   </CardTitle>
                 </CardHeader>
 
                 <div className="">
                   <h3 className="text-[18px] font-medium mb-3 text-[#333333]">
-                    Jersey Type
+                    {t("products.jerseyType")}
                   </h3>
                   {/* Jersey Type (Player or Fan Edition) - Hide for Mystery Box */}
                   {!product.isMysteryBox && (
@@ -558,7 +560,7 @@ export default function ProductDetailClient({
                               htmlFor="fan-edition"
                               className="text-[14px] font-light"
                             >
-                              Fan Edition
+                              {t("products.fanEdition")}
                             </Label>
                           </div>
                           <div className="flex items-center space-x-2">
@@ -572,7 +574,8 @@ export default function ProductDetailClient({
                               htmlFor="player-edition"
                               className="text-[14px] font-light"
                             >
-                              Player Edition (+€{EXTRAS_PRICES.player_edition})
+                              {t("products.playerEdition")} (+€
+                              {EXTRAS_PRICES.player_edition})
                             </Label>
                           </div>
                         </div>
@@ -640,6 +643,7 @@ export default function ProductDetailClient({
                       <div className="space-y-3 mt-3 ">
                         <Label className="text-[16px] font-medium">
                           Add Official Patches
+                          {t("products.addOfficialPatches")}
                         </Label>
                         <div className="grid grid-cols-2 gap-4">
                           {product.patches.map((patch) => (
@@ -759,7 +763,7 @@ export default function ProductDetailClient({
                   {!product.isMysteryBox && (
                     <div className="space-y-2 ">
                       <Label className="text-sm font-medium">
-                        Add Matching Items
+                        {t("products.addMatchingItems")}
                       </Label>
                       <div className=" flex md:flex-row flex-col gap-4">
                         {product.hasShorts && (
@@ -779,7 +783,8 @@ export default function ProductDetailClient({
                               htmlFor="shorts"
                               className="text-[14px] whitespace-nowrap"
                             >
-                              Add Matching Shorts (+€{EXTRAS_PRICES.shorts})
+                              {t("products.addShorts")}
+                              (+€{EXTRAS_PRICES.shorts})
                             </Label>
                           </div>
                         )}
@@ -801,7 +806,8 @@ export default function ProductDetailClient({
                               htmlFor="socks"
                               className="text-[14px] whitespace-nowrap"
                             >
-                              Add Matching Socks (+€{EXTRAS_PRICES.socks})
+                              {t("products.addSocks")}
+                              (+€{EXTRAS_PRICES.socks})
                             </Label>
                           </div>
                         )}
@@ -815,7 +821,7 @@ export default function ProductDetailClient({
               <div className="-ml-2">
                 <CardHeader className="p-0">
                   <CardTitle className="text-sm font-medium">
-                    Choose Size
+                    {t("products.chooseSize")}
                   </CardTitle>
                 </CardHeader>
                 <div className="mt-2">
@@ -902,7 +908,7 @@ export default function ProductDetailClient({
               </div>
 
               {/* Add to Cart buttons */}
-              <div className="flex  gap-1.5 gap-4 mt-2.5">
+              <div className="flex  gap-1.5  mt-2.5">
                 <div className="flex items-center  bg-[#F0F0F0] rounded-full w-fit">
                   <Button
                     type="button"
@@ -1094,7 +1100,9 @@ export default function ProductDetailClient({
             onReviewDelete={handleReviewDelete}
           />
         </TabsContent>
-        <TabsContent value="faq"> Domande frequenti</TabsContent>
+        <TabsContent value="faq">
+          <FaqSection />
+        </TabsContent>
       </Tabs>
     </div>
   );
