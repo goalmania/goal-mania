@@ -26,6 +26,7 @@ interface PatchObject {
   isFeatured: boolean;
   sortOrder: number;
 }
+
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
@@ -604,7 +605,7 @@ export default function ProductDetailClient({
                                 }))
                               }
                               maxLength={20}
-                              placeholder="Type here your name on shirt..."
+                              placeholder="Inserisci qui il tuo nome sulla maglia..."
                               className=" w-full  border-b focus:border-b outline-0 placeholder:text-[#333333] text-[#333333] text-[16px]"
                             />
                           </div>
@@ -627,7 +628,7 @@ export default function ProductDetailClient({
                                 }))
                               }
                               maxLength={2}
-                              placeholder="Type here your number on shirt..."
+                              placeholder="Inserisci qui il tuo numero sulla maglia..."
                               className=" w-full border-b  focus:border-b outline-0 placeholder:text-[#333333] text-[#333333] text-[16px] "
                             />
                           </div>
@@ -701,18 +702,17 @@ export default function ProductDetailClient({
                             </svg>
                           </div>
                           <CardTitle className="text-sm text-purple-800">
-                            🎁 Mystery Box Preferences
+                            🎁 Preferenze Scatola Misteriosa
                           </CardTitle>
                         </div>
                         <CardDescription className="text-purple-700">
-                          Help us personalize your mystery box! List any teams
-                          or specific shirts you'd prefer to avoid.
+                          Aiutaci a personalizzare la tua scatola misteriosa! Elenca le squadre
+                          o le maglie specifiche che preferiresti evitare.
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
                         <Label className="block text-sm font-medium text-purple-700 mb-2">
-                          Shirts you'd prefer NOT to receive (Optional - up to
-                          5):
+                          Maglie che preferiresti NON ricevere (Opzionale - fino a 5):
                         </Label>
                         <Textarea
                           value={
@@ -729,7 +729,7 @@ export default function ProductDetailClient({
                               excludedShirts: lines,
                             }));
                           }}
-                          placeholder="Example:&#10;AC Milan Home&#10;Juventus Away&#10;Inter Milan&#10;Roma&#10;Napoli"
+                          placeholder="Esempio:&#10;AC Milan Casa&#10;Juventus Trasferta&#10;Inter Milano&#10;Roma&#10;Napoli"
                           rows={5}
                           className="border-purple-300 focus:border-purple-500 focus:ring-purple-500"
                         />
@@ -752,7 +752,7 @@ export default function ProductDetailClient({
                                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                               />
                             </svg>
-                            We'll do our best to avoid these items
+                            Faremo del nostro meglio per evitare questi articoli
                           </div>
                         </div>
                       </CardContent>
@@ -939,7 +939,7 @@ export default function ProductDetailClient({
                   onClick={handleAddToCart}
                   className="px-2 py-2 border text-black  flex items-center whitespace-nowrap rounded-full text-[14px] w-fit h-fit"
                 >
-                  Add to Cart
+                  Aggiungi al Carrello
                   <ArrowRight className="ml-1 inline-flex" size={16} />
                 </button>
                 <button
@@ -947,7 +947,7 @@ export default function ProductDetailClient({
                   onClick={handleBuyNow}
                   className="px-2 py-2 border bg-[#FF7A00] text-black flex items-center whitespace-nowrap rounded-full text-[14px] w-fit h-fit border-none"
                 >
-                  Buy Now
+                  Compra Ora
                   <ArrowRight className="ml-1 inline-flex" size={16} />
                 </button>
 
@@ -1009,10 +1009,10 @@ export default function ProductDetailClient({
                 <ShieldCheck strokeWidth={1} className="h-8 w-8 text-white" />
                 <div className=" flex flex-col text-start">
                   <span className="mt-2 text-sm font-medium text-white">
-                    1 Year
+                    1 Anno
                   </span>
                   <span className="mt-2 text-sm font-medium text-white">
-                    Warranty
+                    Garanzia
                   </span>
                 </div>
               </div>
@@ -1020,10 +1020,10 @@ export default function ProductDetailClient({
                 <Truck strokeWidth={1} className="h-8 w-8 text-white" />
                 <div className=" flex flex-col text-start">
                   <span className="mt-2 text-sm font-medium text-white">
-                    Free Express
+                    Spedizione Gratuita
                   </span>
                   <span className="mt-2 text-sm font-medium text-white">
-                    Delivery
+                    Express
                   </span>
                 </div>
               </div>
@@ -1031,10 +1031,10 @@ export default function ProductDetailClient({
                 <Coins strokeWidth={1} className="h-8 w-8 text-white" />
                 <div className=" flex flex-col text-start">
                   <span className="mt-2 text-sm font-medium text-white">
-                    7-Days
+                    7 Giorni
                   </span>
                   <span className="mt-2 text-sm font-medium text-white">
-                    Replacement
+                    Sostituzione
                   </span>
                 </div>
               </div>
@@ -1042,10 +1042,10 @@ export default function ProductDetailClient({
                 <CreditCard strokeWidth={1} className="h-8 w-8 text-white" />
                 <div className=" flex flex-col text-start">
                   <span className="mt-2 text-sm font-medium text-white">
-                    100% Secure
+                    100% Sicuri
                   </span>
                   <span className="mt-2 text-sm font-medium text-white">
-                    Payments
+                    Pagamenti
                   </span>
                 </div>
               </div>
@@ -1090,7 +1090,7 @@ export default function ProductDetailClient({
           </TabsTrigger>
         </TabsList>
         <TabsContent value="details">
-          Make changes to your Dettagli prodotto here.
+          Apporta modifiche ai dettagli del tuo prodotto qui.
         </TabsContent>
         <TabsContent value="ratings">
           <ProductReviews

@@ -1,44 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db";
-import mongoose from "mongoose";
+import Product from "@/lib/models/Product";
 
-export async function GET(req: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const searchParams = req.nextUrl.searchParams;
-    const category = searchParams.get("category");
-    const limit = parseInt(searchParams.get("limit") || "3", 10);
-
     await connectDB();
 
-    // Get the Product model
-    const Product = mongoose.models.Product;
+    const { searchParams } = new URL(request.url);
+    const category = searchParams.get("category") || "all";
+    const limit = parseInt(searchParams.get("limit") || "4");
 
-    if (!Product) {
-      return NextResponse.json(
-        { error: "Product model not found" },
-        { status: 500 }
-      );
-    }
+    console.log("🔍 Fetching featured products:", { category, limit });
 
     // Build query
-    const query: any = { isActive: true };
+    const query: any = {
+      isActive: true,
+      stock: { $gt: 0 },
+    };
 
-    // Add category filter if provided and not 'all'
-    if (category && category !== "all") {
+    if (category !== "all") {
       query.category = category;
     }
 
-    // Get featured products first, then other products if needed to fill the limit
-    const featuredProducts = await Product.find({
-      ...query,
-      feature: true,
-    })
+    // Fetch products
+    const products = await Product.find(query)
       .sort({ createdAt: -1 })
-      .limit(limit);
+      .limit(limit)
+      .lean();
 
-    // If we have enough featured products, return them
-    if (featuredProducts.length >= limit) {
-      return NextResponse.json(featuredProducts);
+    console.log("✅ Found products:", products.length);
+
+    return NextResponse.json(products, { status: 200 });
+  } catch (error: any) {
+    console.error("❌ Error fetching featured products:", error);
+    return NextResponse.json(
+      { message: error.message || "Failed to fetch featured products" },
+      { status: 500 }
+    );
+  }
+}
     }
 
     // Otherwise, get additional non-featured products to fill the limit

@@ -263,7 +263,11 @@ export default function MysteryBoxPageClient({
                     </div>
                   </div>
                   <div className=" flex justify-center p-4">
-                    <img src={"/gift.png"} className="h-45 w-45" />
+                    <img 
+                      src={product.image || "/gift.png"} 
+                      alt={product.name}
+                      className="h-45 w-45 object-contain" 
+                    />
                   </div>
                   <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-700 transition-colors">
                     {product.name}
