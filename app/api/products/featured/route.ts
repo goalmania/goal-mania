@@ -6,58 +6,59 @@ export async function GET(request: NextRequest) {
   try {
     await connectDB();
 
-    const { searchParams } = new URL(request.url);
-    const category = searchParams.get("category") || "all";
-    const limit = parseInt(searchParams.get("limit") || "4");
+    const searchParams = request.nextUrl.searchParams;
+    const limit = parseInt(searchParams.get("limit") || "8");
 
-    console.log("🔍 Fetching featured products:", { category, limit });
-
-    // Build query
-    const query: any = {
+    // First, try to get featured products
+    const featuredProducts = await Product.find({
+      isFeatured: true,
       isActive: true,
-      stock: { $gt: 0 },
-    };
-
-    if (category !== "all") {
-      query.category = category;
-    }
-
-    // Fetch products
-    const products = await Product.find(query)
-      .sort({ createdAt: -1 })
+    })
       .limit(limit)
       .lean();
 
-    console.log("✅ Found products:", products.length);
-
-    return NextResponse.json(products, { status: 200 });
-  } catch (error: any) {
-    console.error("❌ Error fetching featured products:", error);
-    return NextResponse.json(
-      { message: error.message || "Failed to fetch featured products" },
-      { status: 500 }
-    );
-  }
-}
+    // If we have enough featured products, return them
+    if (featuredProducts.length >= limit) {
+      return NextResponse.json(
+        {
+          success: true,
+          products: featuredProducts,
+          count: featuredProducts.length,
+        },
+        { status: 200 }
+      );
     }
 
     // Otherwise, get additional non-featured products to fill the limit
     const nonFeaturedLimit = limit - featuredProducts.length;
     const nonFeaturedProducts = await Product.find({
-      ...query,
-      feature: false,
-      _id: { $nin: featuredProducts.map((p: any) => p._id) },
+      isFeatured: { $ne: true },
+      isActive: true,
     })
-      .sort({ createdAt: -1 })
-      .limit(nonFeaturedLimit);
+      .limit(nonFeaturedLimit)
+      .lean();
 
-    // Combine and return
-    const products = [...featuredProducts, ...nonFeaturedProducts];
-    return NextResponse.json(products);
-  } catch (error) {
-    console.error("[FEATURED_PRODUCTS_GET]", error);
+    // Combine featured and non-featured products
+    const allProducts = [...featuredProducts, ...nonFeaturedProducts];
+
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      {
+        success: true,
+        products: allProducts,
+        count: allProducts.length,
+        featuredCount: featuredProducts.length,
+        nonFeaturedCount: nonFeaturedProducts.length,
+      },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error("Error fetching featured products:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Failed to fetch featured products",
+        error: error.message,
+      },
       { status: 500 }
     );
   }
