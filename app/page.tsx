@@ -124,6 +124,9 @@ export default async function Home() {
 
   const featuredProducts = await getFeaturedProducts();
 
+  // Convert MongoDB documents to plain objects for Client Components
+  const articles = JSON.parse(JSON.stringify(featuredArticles));
+
   return (
     <div className="bg-white min-h-screen relative font-munish">
       <HeroSection />
@@ -132,7 +135,7 @@ export default async function Home() {
       {/*
       <GuaranteesSection />
        */}
-      <NewsSection articles={featuredArticles} />
+      <NewsSection articles={articles} />
       <FeaturedVideoProducts products={featuredProducts} />
       <VideoComp />
     </div>
