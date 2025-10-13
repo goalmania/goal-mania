@@ -72,7 +72,7 @@ export default function BentoSection({
     <div className="grid grid-cols-1 gap-4 w-full mt-10 mx-auto">
       {grid.map((news) => (
         <Link
-          key={news._id || news.id}
+          key={news.slug}
           href={`/news/${news.slug}`}
           className="block"
         >

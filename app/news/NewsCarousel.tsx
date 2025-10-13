@@ -7,6 +7,7 @@ import { NewsArticle } from "@/types/news";
 import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperType } from "swiper";
 import "swiper/swiper-bundle.css";
 
 interface NewsCarouselProps {
@@ -14,21 +15,18 @@ interface NewsCarouselProps {
 }
 
 const NewsCarousel: React.FC<NewsCarouselProps> = ({ articles }) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const swiperRef = useRef<SwiperType | null>(null);
+
   if (!articles || articles.length === 0) return null;
 
   // Scroll handler
   const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
-      const scrollAmount = clientWidth * 0.8; // Scroll by 80% of visible area
-      scrollRef.current.scrollTo({
-        left:
-          direction === "left"
-            ? scrollLeft - scrollAmount
-            : scrollLeft + scrollAmount,
-        behavior: "smooth",
-      });
+    if (swiperRef.current) {
+      if (direction === "left") {
+        swiperRef.current.slidePrev();
+      } else {
+        swiperRef.current.slideNext();
+      }
     }
   };
 
@@ -49,14 +47,14 @@ const NewsCarousel: React.FC<NewsCarouselProps> = ({ articles }) => {
         </Button>
         {/* Carousel */}
         <Swiper
-          ref={scrollRef}
+          onSwiper={(swiper) => (swiperRef.current = swiper)}
           spaceBetween={20}
           slidesPerView="auto"
           className="w-full px-12"
         >
           {articles.map((article) => (
             <SwiperSlide
-              key={article._id || article.id}
+              key={article.slug}
               className="min-w-[280px] max-w-xs bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out flex-shrink-0 border border-gray-100 hover:border-[#f5963c]"
             >
               <Link href={`/news/${article.slug}`} className="block">

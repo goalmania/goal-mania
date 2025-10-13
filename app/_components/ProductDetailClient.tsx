@@ -643,7 +643,7 @@ export default function ProductDetailClient({
                     product.patches.length > 0 && (
                       <div className="space-y-3 mt-3 ">
                         <Label className="text-[16px] font-medium">
-                          Add Official Patches
+                        
                           {t("products.addOfficialPatches")}
                         </Label>
                         <div className="grid grid-cols-2 gap-4">

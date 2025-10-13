@@ -13,7 +13,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 interface Article {
-  _id: string;
+  _id?: string;
   title: string;
   summary: string;
   image: string;
