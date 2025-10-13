@@ -147,7 +147,7 @@ export async function GET(req: NextRequest) {
         .skip((validatedPage - 1) * validatedLimit)
         .limit(validatedLimit)
         .lean()
-        .select('_id title description basePrice retroPrice shippingPrice stockQuantity images isRetro hasShorts hasSocks category allowsNumberOnShirt allowsNameOnShirt isActive feature slug isMysteryBox createdAt')
+        .select('_id title description basePrice retroPrice shippingPrice stockQuantity images isRetro hasShorts hasSocks category allowsNumberOnShirt allowsNameOnShirt isActive feature slug isMysteryBox createdAt videos')
     ]);
 
     console.log(`Found ${products.length} products matching the criteria`);

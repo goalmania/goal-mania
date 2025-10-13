@@ -5,7 +5,9 @@ export interface Product {
   image: string;
   category: string;
   team: string;
+  availablePatches?: any[];
   isMysteryBox?: boolean;
+  videos?: string[]; // ✅ Add videos field
 }
 
 export interface Team {
