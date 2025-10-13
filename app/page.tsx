@@ -109,13 +109,16 @@ export default async function Home() {
   const featuredArticles = await (async () => {
     try {
       await connectDB();
-      return await Article.find({
+      const articles = await Article.find({
         status: "published",
         featured: true,
       })
         .sort({ publishedAt: -1 })
         .limit(20)
-        .lean();
+        .lean(); // This returns plain objects
+
+      // Convert to plain JSON to remove any Mongoose-specific properties
+      return JSON.parse(JSON.stringify(articles));
     } catch (error) {
       console.error("Error fetching articles:", error);
       return [];
@@ -124,18 +127,12 @@ export default async function Home() {
 
   const featuredProducts = await getFeaturedProducts();
 
-  // Convert MongoDB documents to plain objects for Client Components
-  const articles = JSON.parse(JSON.stringify(featuredArticles));
-
   return (
     <div className="bg-white min-h-screen relative font-munish">
       <HeroSection />
       <ClientSlider />
       <FeaturedProducts products={featuredProducts} />
-      {/*
-      <GuaranteesSection />
-       */}
-      <NewsSection articles={articles} />
+      <NewsSection articles={featuredArticles} />
       <FeaturedVideoProducts products={featuredProducts} />
       <VideoComp />
     </div>

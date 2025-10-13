@@ -193,69 +193,87 @@ export default function EditArticlePage() {
     if (!files || files.length === 0) return;
 
     setIsUploading(true);
+    const uploadedImages: ArticleImage[] = [];
 
     try {
-      const uploadPromises = Array.from(files).map(async (file) => {
+      for (const file of Array.from(files)) {
         // Validate file type
-        const validTypes = ["image/jpeg", "image/png", "image/webp"];
-        if (!validTypes.includes(file.type)) {
-          throw new Error(`Invalid file type: ${file.name}`);
+        const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif", "image/svg+xml"];
+        if (!allowedTypes.includes(file.type)) {
+          toast.error(`Invalid file type for ${file.name}. Allowed: JPG, PNG, WEBP, GIF, SVG`);
+          continue;
         }
 
-        // Validate file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-          throw new Error(`File too large: ${file.name}`);
+        // Check file size (5MB max)
+        const maxSize = 5 * 1024 * 1024;
+        if (file.size > maxSize) {
+          toast.error(`File ${file.name} is too large. Maximum size: 5MB`);
+          continue;
         }
 
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append(
-          "upload_preset",
-          process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
-        );
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", file);
 
-        const response = await fetch(getCloudinaryUrl(), {
+        console.log(`Uploading ${file.name}...`, {
+          name: file.name,
+          type: file.type,
+          size: `${(file.size / 1024).toFixed(2)} KB`
+        });
+
+        const response = await fetch("/api/upload", {
           method: "POST",
-          body: formData,
+          body: uploadFormData,
         });
 
         if (!response.ok) {
-          throw new Error(`Upload failed for ${file.name}: ${response.status}`);
+          const errorData = await response.json().catch(() => ({ error: "Upload failed" }));
+          console.error(`Upload failed for ${file.name}:`, {
+            status: response.status,
+            statusText: response.statusText,
+            errorData
+          });
+          toast.error(`Upload failed for ${file.name}: ${errorData.error || `Status ${response.status}`}`);
+          continue;
         }
 
-        const result = await response.json();
-        return {
-          id: `img-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          url: result.secure_url,
-          alt: file.name,
-          isMain: false // Will be set to true if it's the first image
-        };
-      });
-
-      const newImages = await Promise.all(uploadPromises);
-      
-      setFormData((prev) => {
-        const allImages = [...prev.images, ...newImages];
+        const data = await response.json();
+        console.log(`Upload successful for ${file.name}:`, data);
         
-        // Set the first image as main if no main image exists
-        if (allImages.length > 0 && !allImages.some(img => img.isMain)) {
-          allImages[0].isMain = true;
+        if (data.url) {
+          uploadedImages.push({
+            id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            url: data.url,
+            isMain: formData.images.length === 0 && uploadedImages.length === 0
+          });
+          toast.success(`Uploaded: ${file.name}`);
         }
-        
-        return {
-          ...prev,
-          images: allImages,
-          // Set main image for backward compatibility
-          image: allImages.find(img => img.isMain)?.url || prev.image
-        };
-      });
+      }
 
-      toast.success(`${newImages.length} image(s) uploaded successfully`);
+      if (uploadedImages.length > 0) {
+        setFormData((prev) => {
+          const newImages = [...prev.images, ...uploadedImages];
+          const mainImage = newImages.find(img => img.isMain) || newImages[0];
+          
+          if (mainImage && !mainImage.isMain) {
+            mainImage.isMain = true;
+          }
+          
+          return {
+            ...prev,
+            images: newImages,
+            image: mainImage?.url || prev.image
+          };
+        });
+        toast.success(`${uploadedImages.length} image(s) uploaded successfully!`);
+      }
     } catch (error) {
-      console.error("Upload failed:", error);
-      toast.error(`Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error("Error uploading images:", error);
+      toast.error(`Error uploading images: ${error instanceof Error ? error.message : "Unknown error"}`);
     } finally {
       setIsUploading(false);
+      if (e.target) {
+        e.target.value = "";
+      }
     }
   };
 
@@ -728,4 +746,4 @@ export default function EditArticlePage() {
       </form>
     </div>
   );
-} 
+}

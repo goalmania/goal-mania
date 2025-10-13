@@ -69,9 +69,13 @@ export default function BentoSection({
   );
 
   const gridArticles = (
-    <div className="grid grid-cols-1  gap-4 w-full mt-10 mx-auto">
+    <div className="grid grid-cols-1 gap-4 w-full mt-10 mx-auto">
       {grid.map((news) => (
-        <Link href={`/news/${news.slug}`} key={news.id} className="block">
+        <Link
+          key={news._id || news.id}
+          href={`/news/${news.slug}`}
+          className="block"
+        >
           <div className=" text-black grid grid-cols-2 w-full mx-auto  gap-4 transition-shadow duration-200">
             <div className="relative w-full h-32 sm:h-auto  rounded-t-xl overflow-hidden md:order-2 order-1">
               <Image
