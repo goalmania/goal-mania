@@ -10,41 +10,27 @@ import mongoose from "mongoose";
 export const revalidate = 600;
 
 async function getProduct(id: string) {
-  if (!id || typeof id !== "string") {
-    return null;
-  }
-
   try {
     await connectDB();
-
-    let product;
-
-    // Check if the ID is a valid MongoDB ObjectId
-    const isValidObjectId = mongoose.Types.ObjectId.isValid(id);
-
-    if (isValidObjectId) {
-      // If it's a valid ObjectId, search by _id
-      product = await Product.findById(id);
-    } else {
-      // If not a valid ObjectId, try looking up by slug
-      product = await Product.findOne({ slug: id });
-    }
+    
+    const product = await Product.findById(id)
+      .populate("patchIds")
+      .lean();
 
     if (!product) {
-      return null;
+      notFound();
     }
 
-    // Serialize the product
+    // ✅ Serialize the product and patches to plain objects
     const serializedProduct = JSON.parse(JSON.stringify(product));
-    
-    // Fetch ALL active patches (global for all products)
-    const patches = await Patch.find({ isActive: true }).lean();
-    serializedProduct.patches = patches;
 
-    return serializedProduct;
+    return {
+      ...serializedProduct,
+      patches: serializedProduct.patchIds || [],
+    };
   } catch (error) {
     console.error("Error fetching product:", error);
-    return null;
+    notFound();
   }
 }
 

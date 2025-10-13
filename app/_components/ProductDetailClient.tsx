@@ -443,13 +443,13 @@ export default function ProductDetailClient({
                 </h1>
                 <div className="mb-3">
                   <h2 className="sr-only">Product information</h2>
-                  <p className="text-2xl sm:text-3xl tracking-tight text-black font-semibold">
+                  <p className="text-2xl sm:text-3xl tracking-tight text-black font-bold">
                     €{(calculateTotalPrice() * quantity).toFixed(2)}
                   </p>
                 </div>
                 <div>
                   <h3 className="sr-only font-light mt-2">Description</h3>
-                  <div className="prose font-light prose-sm sm:prose text-black">
+                  <div className="prose font-normal prose-sm sm:prose text-gray-700 leading-relaxed">
                     {product.description}
                   </div>
                 </div>
@@ -457,7 +457,7 @@ export default function ProductDetailClient({
                 {product.isMysteryBox && (
                   <Badge
                     variant="secondary"
-                    className="mt-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white"
+                    className="mt-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold"
                   >
                     🎁 Mystery Box
                   </Badge>
@@ -527,13 +527,13 @@ export default function ProductDetailClient({
               {/* Customization options */}
               <div className="-ml-3">
                 <CardHeader className="p-0">
-                  <CardTitle className="text-[18px] font-light p-0 text-[#FF7A00]">
+                  <CardTitle className="text-[18px] font-semibold p-0 text-[#FF7A00]">
                     {t("products.customizeYourJersey")}
                   </CardTitle>
                 </CardHeader>
 
                 <div className="">
-                  <h3 className="text-[18px] font-medium mb-3 text-[#333333]">
+                  <h3 className="text-[18px] font-bold mb-3 text-[#333333]">
                     {t("products.jerseyType")}
                   </h3>
                   {/* Jersey Type (Player or Fan Edition) - Hide for Mystery Box */}
@@ -559,7 +559,7 @@ export default function ProductDetailClient({
 
                             <Label
                               htmlFor="fan-edition"
-                              className="text-[14px] font-light"
+                              className="text-[14px] font-medium"
                             >
                               {t("products.fanEdition")}
                             </Label>
@@ -573,10 +573,10 @@ export default function ProductDetailClient({
                             />
                             <Label
                               htmlFor="player-edition"
-                              className="text-[14px] font-light"
+                              className="text-[14px] font-medium"
                             >
-                              {t("products.playerEdition")} (+€
-                              {EXTRAS_PRICES.player_edition})
+                              {t("products.playerEdition")} <span className="font-bold">(+€
+                              {EXTRAS_PRICES.player_edition})</span>
                             </Label>
                           </div>
                         </div>
@@ -606,7 +606,7 @@ export default function ProductDetailClient({
                               }
                               maxLength={20}
                               placeholder="Inserisci qui il tuo nome sulla maglia..."
-                              className=" w-full  border-b focus:border-b outline-0 placeholder:text-[#333333] text-[#333333] text-[16px]"
+                              className=" w-full  border-b focus:border-b outline-0 placeholder:text-[#333333] placeholder:font-normal text-[#333333] text-[16px] font-semibold"
                             />
                           </div>
                         </div>
@@ -629,7 +629,7 @@ export default function ProductDetailClient({
                               }
                               maxLength={2}
                               placeholder="Inserisci qui il tuo numero sulla maglia..."
-                              className=" w-full border-b  focus:border-b outline-0 placeholder:text-[#333333] text-[#333333] text-[16px] "
+                              className=" w-full border-b  focus:border-b outline-0 placeholder:text-[#333333] placeholder:font-normal text-[#333333] text-[16px] font-semibold"
                             />
                           </div>
                         </div>
@@ -642,8 +642,7 @@ export default function ProductDetailClient({
                     product.patches &&
                     product.patches.length > 0 && (
                       <div className="space-y-3 mt-3 ">
-                        <Label className="text-[16px] font-medium">
-                        
+                        <Label className="text-[16px] font-bold">
                           {t("products.addOfficialPatches")}
                         </Label>
                         <div className="grid grid-cols-2 gap-4">
@@ -670,9 +669,9 @@ export default function ProductDetailClient({
                               />
                               <Label
                                 htmlFor={patch._id}
-                                className="text-[14px]"
+                                className="text-[14px] font-medium"
                               >
-                                {patch.title} (+€{patch.price})
+                                {patch.title} <span className="font-bold">(+€{patch.price})</span>
                               </Label>
                             </div>
                           ))}
@@ -701,17 +700,17 @@ export default function ProductDetailClient({
                               />
                             </svg>
                           </div>
-                          <CardTitle className="text-sm text-purple-800">
+                          <CardTitle className="text-sm text-purple-800 font-bold">
                             🎁 Preferenze Scatola Misteriosa
                           </CardTitle>
                         </div>
-                        <CardDescription className="text-purple-700">
+                        <CardDescription className="text-purple-700 font-medium">
                           Aiutaci a personalizzare la tua scatola misteriosa! Elenca le squadre
                           o le maglie specifiche che preferiresti evitare.
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <Label className="block text-sm font-medium text-purple-700 mb-2">
+                        <Label className="block text-sm font-bold text-purple-700 mb-2">
                           Maglie che preferiresti NON ricevere (Opzionale - fino a 5):
                         </Label>
                         <Textarea
@@ -731,14 +730,14 @@ export default function ProductDetailClient({
                           }}
                           placeholder="Esempio:&#10;AC Milan Casa&#10;Juventus Trasferta&#10;Inter Milano&#10;Roma&#10;Napoli"
                           rows={5}
-                          className="border-purple-300 focus:border-purple-500 focus:ring-purple-500"
+                          className="border-purple-300 focus:border-purple-500 focus:ring-purple-500 font-medium"
                         />
                         <div className="flex justify-between items-center mt-2">
-                          <p className="text-xs text-purple-600">
+                          <p className="text-xs text-purple-600 font-bold">
                             {(customization as any).excludedShirts?.length || 0}
                             /5 exclusions
                           </p>
-                          <div className="flex items-center text-xs text-purple-600">
+                          <div className="flex items-center text-xs text-purple-600 font-medium">
                             <svg
                               className="w-4 h-4 mr-1"
                               fill="none"
@@ -762,7 +761,7 @@ export default function ProductDetailClient({
                   {/* Extras - Hide for Mystery Box */}
                   {!product.isMysteryBox && (
                     <div className="space-y-2 ">
-                      <Label className="text-sm font-medium">
+                      <Label className="text-sm font-bold">
                         {t("products.addMatchingItems")}
                       </Label>
                       <div className=" flex md:flex-row flex-col gap-4">
@@ -781,10 +780,10 @@ export default function ProductDetailClient({
                             />
                             <Label
                               htmlFor="shorts"
-                              className="text-[14px] whitespace-nowrap"
+                              className="text-[14px] whitespace-nowrap font-medium"
                             >
                               {t("products.addShorts")}
-                              (+€{EXTRAS_PRICES.shorts})
+                              <span className="font-bold"> (+€{EXTRAS_PRICES.shorts})</span>
                             </Label>
                           </div>
                         )}
@@ -804,10 +803,10 @@ export default function ProductDetailClient({
                             />
                             <Label
                               htmlFor="socks"
-                              className="text-[14px] whitespace-nowrap"
+                              className="text-[14px] whitespace-nowrap font-medium"
                             >
                               {t("products.addSocks")}
-                              (+€{EXTRAS_PRICES.socks})
+                              <span className="font-bold"> (+€{EXTRAS_PRICES.socks})</span>
                             </Label>
                           </div>
                         )}
@@ -820,7 +819,7 @@ export default function ProductDetailClient({
               {/* Quantity selector */}
               <div className="-ml-2">
                 <CardHeader className="p-0">
-                  <CardTitle className="text-sm font-medium">
+                  <CardTitle className="text-sm font-bold">
                     {t("products.chooseSize")}
                   </CardTitle>
                 </CardHeader>
@@ -920,7 +919,7 @@ export default function ProductDetailClient({
                     <span className="sr-only">Decrease quantity</span>
                     <MinusIcon className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
-                  <span className="text-sm sm:text-base font-medium text-black w-8 text-center">
+                  <span className="text-sm sm:text-base font-bold text-black w-8 text-center">
                     {quantity}
                   </span>
                   <Button
@@ -937,7 +936,7 @@ export default function ProductDetailClient({
                 <button
                   type="button"
                   onClick={handleAddToCart}
-                  className="px-2 py-2 border text-black  flex items-center whitespace-nowrap rounded-full text-[14px] w-fit h-fit"
+                  className="px-2 py-2 border text-black  flex items-center whitespace-nowrap rounded-full text-[14px] w-fit h-fit font-semibold"
                 >
                   Aggiungi al Carrello
                   <ArrowRight className="ml-1 inline-flex" size={16} />
@@ -945,7 +944,7 @@ export default function ProductDetailClient({
                 <button
                   type="button"
                   onClick={handleBuyNow}
-                  className="px-2 py-2 border bg-[#FF7A00] text-black flex items-center whitespace-nowrap rounded-full text-[14px] w-fit h-fit border-none"
+                  className="px-2 py-2 border bg-[#FF7A00] text-black flex items-center whitespace-nowrap rounded-full text-[14px] w-fit h-fit border-none font-bold"
                 >
                   Compra Ora
                   <ArrowRight className="ml-1 inline-flex" size={16} />
@@ -1060,7 +1059,7 @@ export default function ProductDetailClient({
         <TabsList className="md:w-full w-[400px] gap-0 px-0 justify-between bg-white border-b  h-14 rounded-none shadow-none pb-0 ">
           <TabsTrigger
             value="details"
-            className="flex-1  shadow-none rounded-none px-0
+            className="flex-1  shadow-none rounded-none px-0 font-semibold
              data-[state=active]:border-2
              data-[state=active]:border-b-black 
              data-[state=active]:bg-transparent 
@@ -1070,7 +1069,7 @@ export default function ProductDetailClient({
           </TabsTrigger>
           <TabsTrigger
             value="ratings"
-            className="flex-1  shadow-none rounded-none px-0 pl-1
+            className="flex-1  shadow-none rounded-none px-0 pl-1 font-semibold
              data-[state=active]:border-2
              data-[state=active]:border-b-black 
              data-[state=active]:bg-transparent 
@@ -1080,7 +1079,7 @@ export default function ProductDetailClient({
           </TabsTrigger>
           <TabsTrigger
             value="faq"
-            className="flex-1  shadow-none rounded-none px-0 pl-1
+            className="flex-1  shadow-none rounded-none px-0 pl-1 font-semibold
              data-[state=active]:border-2
              data-[state=active]:border-b-black 
              data-[state=active]:bg-transparent 
