@@ -154,62 +154,67 @@ export default function ShopClient({
       </div>
 
       {/* Mystery Box Section */}
+      <div className="overflow-hidden gradient">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+          <div className="text-center flex justify-center flex-col">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-6 flex text-center justify-center items-center gap-2">
+              {t("mysteryBox.title")}
+              <SparklesIcon className="h-6 w-6 text-yellow-300" />
+            </h1>
 
-      
-      <div className="bg-gradient-to-br from-purple-900 via-purple-800 to-pink-900 py-16 sm:py-24 relative hidden overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-          <div
-            className="absolute top-3/4 right-1/4 w-64 h-64 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"
-            style={{ animationDelay: "2s" }}
-          ></div>
-          <div
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"
-            style={{ animationDelay: "4s" }}
-          ></div>
-        </div>
-
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center mb-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center animate-bounce">
-                <span className="text-3xl">🎁</span>
-              </div>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
-              Mystery Box
-            </h2>
-            <p className="text-lg sm:text-xl text-purple-100 max-w-2xl mx-auto">
-              Scatole misteriose piene di sorprese! Ogni box contiene maglie
-              selezionate con cura, perfette per veri collezionisti che amano le
-              sorprese.
+            <p className="mx-auto max-w-3xl text-xl sm:text-2xl text-purple-100 mb-8">
+              {t("mysteryBox.description")}
             </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              {mysteryBoxProducts.length > 0 ? (
+                <>
+                  <Link href="/shop/mystery-box">
+                    <Button
+                      size="lg"
+                      className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 hover:from-yellow-300 hover:to-orange-400 font-bold px-8 py-6 text-lg rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300"
+                    >
+                      🎁 Scopri i Mystery Box
+                    </Button>
+                  </Link>
+                  <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30">
+                    <CheckCircle2 className="w-5 h-5 text-green-300" />
+                    <span className="text-white font-medium">
+                      {mysteryBoxProducts.length} Box Disponibili
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <Button
+                  size="lg"
+                  disabled
+                  className="bg-white/20 text-white/60 px-8 py-6 text-lg rounded-full cursor-not-allowed"
+                >
+                  Disponibile Presto
+                </Button>
+              )}
+            </div>
           </div>
 
-          <div className="mb-8">
-            {mysteryBoxProducts.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-4xl">📦</span>
-                </div>
-                <p className="text-white/80 text-lg">
-                  I Mystery Box stanno arrivando presto!
-                </p>
-                <p className="text-white/60 text-sm mt-2">
-                  Torna a controllare per le nostre sorprese speciali.
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Mystery Box Products Grid - Centered for 1-2 items */}
+          {mysteryBoxProducts.length > 0 && (
+            <div className="mt-12 flex justify-center">
+              <div
+                className={`grid gap-6 ${
+                  mysteryBoxProducts.length === 1
+                    ? "grid-cols-1 max-w-md"
+                    : mysteryBoxProducts.length === 2
+                    ? "grid-cols-1 sm:grid-cols-2 max-w-3xl"
+                    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full"
+                }`}
+              >
                 {mysteryBoxProducts.map((product, index) => (
-                  <div
+                  <Link
                     key={product.id}
-                    className="group relative bg-white/10 backdrop-blur-sm rounded-2xl border border-white/30 p-6 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl animate-fade-in"
-                    style={{ animationDelay: `${index * 0.2}s` }}
+                    href={`/products/${product.id}`}
+                    className="group relative bg-white/10 backdrop-blur-sm rounded-2xl border border-white/30 p-6 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                   >
-                    {/* Mystery Box Icon Overlay */}
+                    {/* Mystery Box Icon */}
                     <div className="absolute top-4 right-4 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-sm animate-pulse">
                       🎁
                     </div>
@@ -222,49 +227,27 @@ export default function ShopClient({
                         className="object-cover object-center group-hover:scale-110 transition-transform duration-300"
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-purple-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
 
                     <h3 className="text-white font-bold text-lg mb-2 group-hover:text-yellow-300 transition-colors">
                       {product.name}
                     </h3>
                     <p className="text-purple-100 text-sm mb-4">
-                      Contenuto a sorpresa • Valore garantito superiore al
-                      prezzo
+                      Contenuto a sorpresa • Valore garantito
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-2xl font-bold text-white">
                         €{product.price.toFixed(2)}
                       </span>
-                      <Link
-                        href={`/products/${product.id}`}
-                        className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-4 py-2 rounded-full font-semibold hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 transform hover:scale-105"
-                      >
+                      <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-4 py-2 rounded-full font-semibold">
                         Scopri →
-                      </Link>
+                      </span>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
-            )}
-          </div>
-
-          {/* Call to Action */}
-          <div className="text-center">
-            <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/30">
-              <div className="mr-4">
-                <span className="text-4xl">✨</span>
-              </div>
-              <div className="text-left">
-                <h3 className="text-white font-bold text-lg">
-                  Garanzia Soddisfazione 100%
-                </h3>
-                <p className="text-purple-100 text-sm">
-                  Non sei soddisfatto? Rimborso completo entro 7 giorni!
-                </p>
-              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
