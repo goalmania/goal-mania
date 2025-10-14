@@ -261,12 +261,12 @@ export default async function NewsPage() {
                         reverse={i % 2 === 1}
                       />
                       <div className="mt-4 text-right">
-                        <Link
+                        {/* <Link
                           href="/news"
                           className="text-sm font-semibold tracking-wide text-gray-900 hover:text-orange-500 uppercase transition-colors duration-200"
                         >
                           See all
-                        </Link>
+                        </Link> */}
                       </div>
                     </div>
                   );

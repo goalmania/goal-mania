@@ -1,84 +1,36 @@
 import React from "react";
-import { Calendar, Clock, Eye } from "lucide-react";
+import { Calendar, Clock } from "lucide-react";
+import connectDB from "@/lib/db";
+import Article from "@/lib/models/Article";
+import Link from "next/link";
 
-// Mock data structure based on your NewsArticle type
-const mockArticles = [
-  {
-    id: 1,
-    slug: "gol-spettacolo-prima-giornata",
-    title: "Gol e Spettacolo nella Prima Giornata di Campionato",
-    summary:
-      "Una giornata ricca di emozioni e gol spettacolari che ha dato il via alla nuova stagione calcistica",
-    image:
-      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=600&fit=crop",
-    category: "Serie A",
-    publishedAt: "2024-08-27T10:00:00Z",
-    readTime: "5 mins",
-    views: 1250,
-  },
-  {
-    id: 2,
-    slug: "juventus-prepara-fase-gironi",
-    title: "La Juventus si Prepara alla Fase a Gironi",
-    summary:
-      "I bianconeri si preparano per la fase a gironi della Champions League con nuovi acquisti",
-    image:
-      "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=800&h=600&fit=crop",
-    category: "Champions League",
-    publishedAt: "2024-08-27T09:30:00Z",
-    readTime: "4 mins",
-    views: 980,
-  },
-  {
-    id: 3,
-    slug: "stadio-piu-bello-europa-secondo",
-    title: "Lo Stadio Più Bello d'Europa Secondo",
-    summary: "Classifica degli stadi più belli e moderni del calcio europeo",
-    image:
-      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&h=600&fit=crop",
-    category: "Serie A",
-    publishedAt: "2024-08-27T08:45:00Z",
-    readTime: "6 mins",
-    views: 756,
-  },
-  {
-    id: 4,
-    slug: "attori-last-minute-colpi-mercato",
-    title: "Attori Last Minute: I Colpi di Fine Mercato",
-    summary:
-      "Gli ultimi movimenti di mercato prima della chiusura della sessione estiva",
-    image:
-      "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&h=600&fit=crop",
-    category: "Serie A",
-    publishedAt: "2024-08-27T07:15:00Z",
-    readTime: "7 mins",
-    views: 892,
-  },
-  {
-    id: 5,
-    slug: "migliori-prestazioni-settimana",
-    title: "Le Migliori Prestazioni della Settimana",
-    summary: "I giocatori che si sono distinti maggiormente negli ultimi match",
-    image:
-      "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=800&h=600&fit=crop",
-    category: "Serie A",
-    publishedAt: "2024-08-26T18:20:00Z",
-    readTime: "5 mins",
-    views: 634,
-  },
-  {
-    id: 6,
-    slug: "derby-milano-tutti-numeri",
-    title: "Derby di Milano: Tutti i Numeri e le Curiosità",
-    summary: "Statistiche e curiosità sul derby più atteso della stagione",
-    image:
-      "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&h=600&fit=crop",
-    category: "Serie A",
-    publishedAt: "2024-08-26T16:30:00Z",
-    readTime: "8 mins",
-    views: 1456,
-  },
-];
+// Helper function to fetch articles
+async function getPopularArticles() {
+  try {
+    await connectDB();
+
+    // Fetch popular articles (featured or most recent)
+    const articles = await Article.find({
+      status: "published",
+      category: "news",
+    })
+      .sort({ publishedAt: -1 })
+      .limit(10)
+      .lean();
+
+    return JSON.parse(JSON.stringify(articles));
+  } catch (error) {
+    console.error("Error fetching popular articles:", error);
+    return [];
+  }
+}
+
+// Helper function to calculate read time
+function calculateReadTime(content: string): number {
+  const wordsPerMinute = 200;
+  const wordCount = content.split(/\s+/).length;
+  return Math.ceil(wordCount / wordsPerMinute);
+}
 
 interface NewsCardProps {
   article: any;
@@ -97,8 +49,10 @@ const NewsCard = ({
         return "SERIE A";
       case "champions league":
         return "CHAMPIONS LEAGUE";
+      case "news":
+        return "NOTIZIE";
       default:
-        return "SERIE A";
+        return category?.toUpperCase() || "SERIE A";
     }
   };
 
@@ -111,16 +65,14 @@ const NewsCard = ({
       .toUpperCase()}, ${d.getFullYear()}`;
   };
 
-  const formatViews = (views: number) => {
-    if (views >= 1000) {
-      return `${(views / 1000).toFixed(1)}k`;
-    }
-    return views.toString();
-  };
+  const readTime = calculateReadTime(article.content || "");
 
   if (isLarge) {
     return (
-      <div className={`group cursor-pointer ${className}`}>
+      <Link
+        href={`/news/${article.slug}`}
+        className={`group cursor-pointer ${className}`}
+      >
         <div className="relative overflow-hidden rounded-lg bg-gray-900 shadow-xl">
           {/* Background Image */}
           <div className="relative h-64 sm:h-80">
@@ -150,19 +102,22 @@ const NewsCard = ({
                   </span>
                   <span className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    {article.readTime}
+                    {readTime} min
                   </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </Link>
     );
   }
 
   return (
-    <div className={`group cursor-pointer ${className}`}>
+    <Link
+      href={`/news/${article.slug}`}
+      className={`group cursor-pointer ${className}`}
+    >
       <div className="relative overflow-hidden rounded-lg bg-gray-900 shadow-lg hover:shadow-xl transition-shadow duration-300">
         {/* Background Image */}
         <div className="relative h-48">
@@ -190,19 +145,25 @@ const NewsCard = ({
               </span>
               <span className="flex items-center gap-1">
                 <Clock className="w-3 h-3" />
-                {article.readTime}
+                {readTime} min
               </span>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
-const NewsCardsGrid = () => {
-  const popularArticles = mockArticles.slice(0, 4);
-  const recentArticles = mockArticles;
+export default async function PopularNewsGrid() {
+  const articles = await getPopularArticles();
+
+  if (!articles || articles.length === 0) {
+    return null;
+  }
+
+  const popularArticles = articles.slice(0, 4);
+  const recentArticles = articles.slice(0, 6);
 
   return (
     <div className="min-h-screen py-8">
@@ -215,20 +176,22 @@ const NewsCardsGrid = () => {
               <div className="absolute -top-6 left-0 bg-gray-900 rounded-[6px] text-white font-semibold py-2 px-6  slanted-card  shadow-md z-10">
                 Notizie Più Popolari
               </div>
-              <div className="pt-8 border-t-2  border-[#DFDFDF]"></div>{" "}
+              <div className="pt-8 border-t-2  border-[#DFDFDF]"></div>
             </div>
 
             {/* Featured Article */}
-            <NewsCard
-              article={popularArticles[0]}
-              isLarge={true}
-              className="mb-8"
-            />
+            {popularArticles[0] && (
+              <NewsCard
+                article={popularArticles[0]}
+                isLarge={true}
+                className="mb-8"
+              />
+            )}
 
             {/* Grid of smaller articles */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {popularArticles.slice(1).map((article, index) => (
-                <NewsCard key={article.id} article={article} />
+              {popularArticles.slice(1).map((article) => (
+                <NewsCard key={article._id} article={article} />
               ))}
             </div>
           </div>
@@ -236,18 +199,21 @@ const NewsCardsGrid = () => {
           {/* Right Column - Recent Posts */}
           <div className="lg:col-span-2 space-y-6">
             {/* Header */}
-
             <div className="relative max-w-lg">
               <div className="absolute -top-6 left-0 bg-gray-900 rounded-[6px] text-white font-semibold py-2 px-6  slanted-card  shadow-md z-10">
                 Post Recenti
               </div>
-              <div className="pt-8 border-t-2  border-[#DFDFDF]"></div>{" "}
+              <div className="pt-8 border-t-2  border-[#DFDFDF]"></div>
             </div>
 
             {/* Recent Posts List */}
             <div className="space-y-4">
-              {recentArticles.map((article, index) => (
-                <div key={article.id} className="group cursor-pointer">
+              {recentArticles.map((article) => (
+                <Link
+                  key={article._id}
+                  href={`/news/${article.slug}`}
+                  className="group cursor-pointer"
+                >
                   <div className="flex gap-3 p-3 bg-white  transition-shadow duration-200 ">
                     {/* Small Image */}
                     <div className="flex-shrink-0">
@@ -264,7 +230,7 @@ const NewsCardsGrid = () => {
                     <div className="flex-1 min-w-0">
                       <div className="mb-1">
                         <p className="px-5 py-2 whitespace-nowrap border-[1.33px] h-[29px] flex items-center w-[90px] border-[#B8C1CD] text-[#6D757F] my-2 rounded-[3.99px] uppercase text-[13px]">
-                          SERIE A
+                          {article.category?.toUpperCase() || "NOTIZIE"}
                         </p>
                       </div>
 
@@ -275,11 +241,13 @@ const NewsCardsGrid = () => {
 
                       {/* Meta */}
                       <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <span>{article.publishedAt}</span>
+                        <span>
+                          {new Date(article.publishedAt).toLocaleDateString("it-IT")}
+                        </span>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -287,6 +255,5 @@ const NewsCardsGrid = () => {
       </div>
     </div>
   );
-};
+}
 
-export default NewsCardsGrid;
