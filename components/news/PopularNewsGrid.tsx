@@ -4,6 +4,17 @@ import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import Link from "next/link";
 
+// Define Article interface
+interface ArticleType {
+  _id: string;
+  slug: string;
+  title: string;
+  image: string;
+  content: string;
+  category?: string;
+  publishedAt: string | Date;
+}
+
 // Helper function to fetch articles
 async function getPopularArticles() {
   try {
@@ -190,7 +201,7 @@ export default async function PopularNewsGrid() {
 
             {/* Grid of smaller articles */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {popularArticles.slice(1).map((article) => (
+              {popularArticles.slice(1).map((article: ArticleType) => (
                 <NewsCard key={article._id} article={article} />
               ))}
             </div>
@@ -208,7 +219,7 @@ export default async function PopularNewsGrid() {
 
             {/* Recent Posts List */}
             <div className="space-y-4">
-              {recentArticles.map((article) => (
+              {recentArticles.map((article: ArticleType) => (
                 <Link
                   key={article._id}
                   href={`/news/${article.slug}`}
