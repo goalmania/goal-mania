@@ -8,6 +8,7 @@ import { ToastProvider } from "@/components/ToastProvider";
 import "./globals.css";
 import Container from "./_sections/container";
 import Script from "next/script";
+import PromoToast from "@/components/PromoToast";
 
 const PIXEL_ID = "1059199992701994";
 
@@ -161,6 +162,7 @@ export default function RootLayout({
         <Providers>
           <div className="min-h-screen flex flex-col">
             {children}
+            {/* <PromoToast /> */}
             <ToastProvider />
           </div>
         </Providers>

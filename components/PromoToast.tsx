@@ -3,11 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 export default function PromoToast() {
   const [isVisible, setIsVisible] = useState(false);
@@ -15,14 +13,25 @@ export default function PromoToast() {
     "/images/jersey1.webp"
   );
   const [altText, setAltText] = useState<string>("Prodotto in offerta");
+  const [productTitle, setProductTitle] = useState<string>(
+    "Maglie da Calcio - Offerta valida 24/7"
+  );
+  const [reviewCount, setReviewCount] = useState<number>(2500);
+  const [averageRating, setAverageRating] = useState<number>(4.9);
 
-  // Fetch all featured products and select a random one
+  useEffect(() => {
+    console.log("🎯 PromoToast component mounted");
+  }, []);
+
   useEffect(() => {
     async function fetchFeaturedProducts() {
       try {
+        console.log("🔍 Fetching featured products...");
         const response = await fetch("/api/products?feature=true");
         if (!response.ok) throw new Error("Failed to fetch");
         const data = await response.json();
+        console.log("📦 Products data:", data);
+
         let products = [];
         if (
           data.products &&
@@ -33,163 +42,216 @@ export default function PromoToast() {
         } else if (Array.isArray(data) && data.length > 0) {
           products = data;
         }
+
         let productData = null;
         if (products.length > 0) {
           productData = products[Math.floor(Math.random() * products.length)];
+          console.log("✅ Selected product:", productData?.title);
         }
+
         if (productData) {
           setFeaturedProductImage(
             productData.images?.[0] || "/images/jersey1.webp"
           );
           setAltText(productData.title || "Prodotto in offerta");
-        } else {
-          setFeaturedProductImage("/images/jersey1.webp");
-          setAltText("Prodotto in offerta");
+          setProductTitle(
+            productData.title || "Maglie da Calcio - Offerta valida 24/7"
+          );
+
+          // Set review data
+          const reviews = productData.reviews || [];
+          setReviewCount(reviews.length || 2500);
+
+          // Calculate average rating
+          if (reviews.length > 0) {
+            const totalRating = reviews.reduce(
+              (sum: number, review: any) => sum + (review.rating || 0),
+              0
+            );
+            const avgRating = totalRating / reviews.length;
+            setAverageRating(Number(avgRating.toFixed(1)));
+          } else {
+            setAverageRating(4.9);
+          }
         }
-      } catch {
+      } catch (error) {
+        console.error("❌ Error fetching products:", error);
         setFeaturedProductImage("/images/jersey1.webp");
         setAltText("Prodotto in offerta");
+        setProductTitle("Maglie da Calcio - Offerta valida 24/7");
+        setReviewCount(2500);
+        setAverageRating(4.9);
       }
     }
     fetchFeaturedProducts();
   }, []);
 
-  // Check if toast has been dismissed before
   useEffect(() => {
-    const toastDismissed = localStorage.getItem("promoToastDismissed");
+    console.log("🚀 Setting up toast visibility...");
 
-    if (!toastDismissed) {
-      // Show toast after a 5 second delay
-      const timer = setTimeout(() => {
-        setIsVisible(true);
-      }, 5000);
+    const timer = setTimeout(() => {
+      console.log("✨ Showing toast NOW");
+      setIsVisible(true);
+    }, 2000);
 
-      return () => clearTimeout(timer);
-    }
+    return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    console.log("👁️ Toast visibility:", isVisible);
+  }, [isVisible]);
+
   const handleDismiss = () => {
+    console.log("❌ Toast dismissed");
     setIsVisible(false);
-    // Set a flag in localStorage to remember that the user dismissed the toast
     localStorage.setItem("promoToastDismissed", "true");
 
-    // Clear the flag after 12 hours to show the toast again
     setTimeout(() => {
       localStorage.removeItem("promoToastDismissed");
-    }, 12 * 60 * 60 * 1000); // 12 hours in milliseconds
+    }, 12 * 60 * 60 * 1000);
   };
 
-  if (!isVisible) return null;
+  // Helper function to format review count
+  const formatReviewCount = (count: number) => {
+    if (count >= 1000) {
+      return `${(count / 1000).toFixed(1)}k`;
+    }
+    return count.toString();
+  };
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50 flex justify-center items-center">
-      <motion.div
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{
-          type: "spring",
-          stiffness: 300,
-          damping: 15,
-        }}
-        className="max-w-md w-full"
-      >
-        <Card className="relative overflow-hidden border-2 border-[#f5963c] bg-white shadow-2xl">
-          {/* Animated background elements */}
-          <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-            <motion.div
-              animate={{
-                scale: [1, 1.1, 1],
-                opacity: [0.05, 0.1, 0.05],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                repeatType: "reverse",
-              }}
-              className="absolute h-32 w-32 rounded-full bg-[#f5963c]"
-            />
-          </div>
-
-          {/* Corner decorations */}
-          <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-[#f5963c] rounded-tl-lg" />
-          <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-[#f5963c] rounded-tr-lg" />
-          <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-[#f5963c] rounded-bl-lg" />
-          <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-[#f5963c] rounded-br-lg" />
-
-          {/* Close button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleDismiss}
-            className="absolute top-2 right-2 h-6 w-6 text-gray-700 hover:bg-gray-100 z-20"
-            aria-label="Close toast"
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0, y: 50, scale: 0.3 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999]"
+          style={{ width: "700px", maxWidth: "92vw" }}
+        >
+          <div
+            className="relative bg-white overflow-hidden"
+            style={{
+              height: "320px",
+              borderRadius: "20px",
+              borderWidth: "1.47px",
+              borderColor: "#F1F2F9",
+              padding: "20px 25px",
+              boxShadow:
+                "0px 24px 48px rgba(107, 108, 126, 0.08), 0px 12px 24px rgba(107, 108, 126, 0.12)",
+              opacity: 1,
+            }}
           >
-            <X className="h-3 w-3" />
-          </Button>
+            {/* Close button */}
+            <button
+              onClick={handleDismiss}
+              className="absolute top-3 left-3 z-10 w-7 h-7 rounded-full bg-[#0A1A2F] hover:bg-[#0A1A2F]/90 flex items-center justify-center transition-colors"
+              aria-label="Chiudi"
+            >
+              <X className="h-3.5 w-3.5 text-white" />
+            </button>
 
-          <CardContent className="relative z-10 p-4">
-            <div className="flex items-center gap-3">
-              {/* Product image */}
-              <div className="flex-shrink-0">
-                <motion.div
-                  animate={{
-                    y: [0, -2, 0],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                  }}
-                  className="relative w-16 h-16"
-                >
-                  <div className="absolute inset-0 rounded-md bg-[#f5963c]/20 animate-pulse" />
-                  <div className="relative h-full w-full overflow-hidden rounded-md border border-[#f5963c]/30">
-                    <Image
-                      src={featuredProductImage || "/images/jersey1.webp"}
-                      alt={altText}
-                      width={64}
-                      height={64}
-                      className="object-cover h-full w-full transition-transform hover:scale-110"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = "/images/jersey1.jpeg";
-                      }}
-                      unoptimized
-                    />
+            <div className="flex items-center justify-center h-full" style={{ gap: "30px" }}>
+              {/* Left Side Content */}
+              <div
+                className="flex flex-col justify-center items-center text-center"
+                style={{
+                  width: "280px",
+                  height: "100%",
+                  opacity: 1,
+                }}
+              >
+                {/* Logo */}
+                <div className="w-[80px] h-[85px] relative mb-4">
+                  <Image
+                    src="/logos/pop_up_logo.svg"
+                    alt="Logo Goal Mania"
+                    fill
+                    className="object-contain"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = "/logos/pop_up_logo.svg";
+                    }}
+                    unoptimized
+                  />
+                </div>
+
+                {/* Text Content */}
+                <div className="space-y-2 mb-4">
+                  <h2 className="text-[22px] font-bold text-[#170F49] leading-tight">
+                    Offerta a Tempo
+                    <br />
+                    Limitato
+                  </h2>
+                  <p className="text-[14px] text-[#6F6C8F] line-clamp-2">
+                    {productTitle}
+                  </p>
+                </div>
+
+                {/* Price + Button */}
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-[20px] font-bold text-[#170F49]">a soli 30€</span>
+                  <Link href="/shop">
+                    <button
+                      onClick={handleDismiss}
+                      className="bg-[#FF7A00] hover:bg-[#FF7A00]/90 text-white text-[14px] font-semibold px-7 py-2.5 rounded-full shadow-lg hover:shadow-xl transition-all whitespace-nowrap"
+                    >
+                      Compra Ora →
+                    </button>
+                  </Link>
+                </div>
+
+                {/* Review Content - Dynamic */}
+                <div className="flex flex-col items-center gap-1.5">
+                  <span className="text-[12px] font-medium text-[#6F6C8F]">
+                    {formatReviewCount(reviewCount)} recensioni {averageRating}
+                  </span>
+                  <div className="flex items-center gap-0.5">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg
+                        key={star}
+                        className="fill-[#FFD700]"
+                        style={{ width: "14px", height: "14px" }}
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                      </svg>
+                    ))}
                   </div>
-                </motion.div>
+                </div>
               </div>
 
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                <Badge 
-                  variant="secondary" 
-                  className="bg-[#f5963c] text-white font-bold text-xs px-2 py-1 mb-1"
-                >
-                  OFFERTA LIMITATA
-                </Badge>
-                <h3 className="text-sm font-bold text-gray-900 mb-1">
-                  MAGLIE DA CALCIO
-                </h3>
-                <p className="text-xs text-[#f5963c] font-semibold mb-2">
-                  A SOLI 30€
-                </p>
-                
-                {/* Action button */}
-                <Button
-                  asChild
-                  size="sm"
-                  className="w-full bg-[#f5963c] hover:bg-[#f5963c]/90 text-white font-medium text-xs py-1"
-                >
-                  <Link href="/shop">
-                    Acquista Ora
-                  </Link>
-                </Button>
+              {/* Right Side - Product Image */}
+              <div
+                className="relative flex-shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 p-4 shadow-inner"
+                style={{
+                  width: "280px",
+                  height: "280px",
+                  opacity: 1,
+                }}
+              >
+                <div className="relative w-full h-full">
+                  <Image
+                    src={featuredProductImage}
+                    alt={altText}
+                    fill
+                    className="object-contain hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = "/images/jersey1.webp";
+                    }}
+                    unoptimized
+                    priority
+                  />
+                </div>
+                {/* Decorative corner accent */}
+                {/* <div className="absolute top-2 right-2 w-8 h-8 bg-[#FF7A00] rounded-full opacity-20"></div> */}
+                {/* <div className="absolute bottom-2 left-2 w-6 h-6 bg-[#0A1A2F] rounded-full opacity-15"></div> */}
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
