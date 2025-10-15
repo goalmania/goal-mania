@@ -13,7 +13,7 @@ import { useCartStore } from "@/lib/store/cart";
 import { useWishlistStore } from "@/lib/store/wishlist";
 import { useLanguage } from "@/lib/utils/language";
 import { useI18n } from "@/lib/hooks/useI18n";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 // Shadcn components
 import {
@@ -34,6 +34,7 @@ import {
   MenuIcon,
   ShoppingBag,
   X,
+  Search,
 } from "lucide-react";
 
 export interface User {
@@ -58,7 +59,10 @@ export function Header() {
   const { language, toggleLanguage } = useLanguage();
   const { t } = useI18n();
   const pathname = usePathname();
+  const router = useRouter();
   const [openMenu, setOpenMenu] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     setMounted(true);
@@ -98,8 +102,18 @@ export function Header() {
     { name: t("nav.info"), href: "/info" },
     { name: t("nav.about"), href: "/about" },
     { name: t("nav.contact"), href: "/contact" },
-    { name: "MysteryBox", href: "/shop/mystery-box" },
+    // { name: "MysteryBox", href: "/shop/mystery-box" },
   ];
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Use router.push instead of window.location.href
+      router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
+      setSearchQuery("");
+    }
+  };
 
   if (!mounted) return null;
 
@@ -135,6 +149,7 @@ export function Header() {
           </div>
         </div>
 
+        {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-3 lg:text-base md:text-sm items-center">
           {navigation.map((item) =>
             item.hasDropdown ? (
@@ -176,7 +191,19 @@ export function Header() {
           )}
         </div>
 
-        <div className="flex items-center ">
+        <div className="flex items-center gap-1">
+          {/* Search Icon - Mobile Only */}
+          <div className="md:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSearchOpen(true)}
+              className="text-white hover:text-[#FF7A00]"
+            >
+              <Search className="h-5 w-5" />
+            </Button>
+          </div>
+
           {/* Language Switch */}
           <Button
             variant="ghost"
@@ -313,6 +340,40 @@ export function Header() {
           )}
         </div>
       </nav>
+
+      {/* Mobile Search Overlay */}
+      {searchOpen && (
+        <div className="fixed inset-0 bg-black/80 z-50 md:hidden">
+          <div className="bg-[#0B1C2C] p-4">
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSearchOpen(false)}
+                className="text-white"
+              >
+                <X className="h-6 w-6" />
+              </Button>
+              <form onSubmit={handleSearch} className="flex-1 flex gap-2">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Cerca prodotti..."
+                  className="flex-1 px-4 py-2 rounded-full bg-white text-black focus:outline-none focus:ring-2 focus:ring-[#FF7A00]"
+                  autoFocus
+                />
+                <Button
+                  type="submit"
+                  className="bg-[#FF7A00] hover:bg-[#FF7A00]/90 text-white rounded-full px-6"
+                >
+                  <Search className="h-5 w-5" />
+                </Button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Mobile Menu Overlay */}
       {openMenu && (
