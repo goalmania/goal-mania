@@ -11,8 +11,9 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Check if running in production (Vercel)
-const isProduction = process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production";
+// Check if running locally (localhost)
+const isLocal = process.env.NEXT_PUBLIC_APP_URL?.includes("localhost") || 
+                process.env.NEXTAUTH_URL?.includes("localhost");
 
 export async function POST(request: NextRequest) {
   try {
@@ -55,51 +56,51 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // PRODUCTION: Upload to Cloudinary
-    if (isProduction) {
-      const base64 = buffer.toString("base64");
-      const dataUri = `data:${file.type};base64,${base64}`;
+    // LOCAL: Upload to local filesystem
+    if (isLocal) {
+      const uploadDir = path.join(process.cwd(), "public", "uploads");
+      if (!existsSync(uploadDir)) {
+        await mkdir(uploadDir, { recursive: true });
+      }
 
-      const result = await cloudinary.uploader.upload(dataUri, {
-        folder: "goal-mania",
-        resource_type: "auto",
-      });
+      // Generate unique filename
+      const timestamp = Date.now();
+      const randomStr = Math.random().toString(36).substring(2, 9);
+      const ext = path.extname(file.name);
+      const baseName = path.basename(file.name, ext).replace(/[^a-zA-Z0-9-_]/g, "_");
+      const filename = `${timestamp}-${randomStr}-${baseName}${ext}`;
+      const filepath = path.join(uploadDir, filename);
 
-      console.log("File uploaded to Cloudinary:", result.secure_url);
+      await writeFile(filepath, buffer);
+      console.log("✅ File uploaded locally:", filename);
 
       return NextResponse.json({
         success: true,
-        url: result.secure_url,
-        publicId: result.public_id,
-        source: "cloudinary",
+        url: `/uploads/${filename}`,
+        filename,
+        source: "local",
       });
     }
 
-    // DEVELOPMENT: Upload to local filesystem
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
-    }
+    // NON-LOCAL (Production/Staging/Preview): Upload to Cloudinary
+    const base64 = buffer.toString("base64");
+    const dataUri = `data:${file.type};base64,${base64}`;
 
-    // Generate unique filename
-    const timestamp = Date.now();
-    const randomStr = Math.random().toString(36).substring(2, 9);
-    const ext = path.extname(file.name);
-    const baseName = path.basename(file.name, ext).replace(/[^a-zA-Z0-9-_]/g, "_");
-    const filename = `${timestamp}-${randomStr}-${baseName}${ext}`;
-    const filepath = path.join(uploadDir, filename);
+    const result = await cloudinary.uploader.upload(dataUri, {
+      folder: "goal-mania",
+      resource_type: "auto",
+    });
 
-    await writeFile(filepath, buffer);
-    console.log("File uploaded locally:", filename);
+    console.log("☁️ File uploaded to Cloudinary:", result.secure_url);
 
     return NextResponse.json({
       success: true,
-      url: `/uploads/${filename}`,
-      filename,
-      source: "local",
+      url: result.secure_url,
+      publicId: result.public_id,
+      source: "cloudinary",
     });
   } catch (error) {
-    console.error("Upload error:", error);
+    console.error("❌ Upload error:", error);
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : "Upload failed",
