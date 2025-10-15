@@ -162,7 +162,6 @@ export default function RootLayout({
         <Providers>
           <div className="min-h-screen flex flex-col">
             {children}
-            {/* <PromoToast /> */}
             <ToastProvider />
           </div>
         </Providers>
