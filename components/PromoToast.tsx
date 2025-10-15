@@ -126,22 +126,9 @@ export default function PromoToast() {
           initial={{ opacity: 0, y: 50, scale: 0.3 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999]"
-          style={{ width: "700px", maxWidth: "92vw" }}
+          className="fixed bottom-6 sm:bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-[9999] w-[92%] sm:w-[85%] md:w-[600px] lg:w-[700px] max-w-[95vw]"
         >
-          <div
-            className="relative bg-white overflow-hidden"
-            style={{
-              height: "320px",
-              borderRadius: "20px",
-              borderWidth: "1.47px",
-              borderColor: "#F1F2F9",
-              padding: "20px 25px",
-              boxShadow:
-                "0px 24px 48px rgba(107, 108, 126, 0.08), 0px 12px 24px rgba(107, 108, 126, 0.12)",
-              opacity: 1,
-            }}
-          >
+          <div className="relative bg-white overflow-hidden rounded-[20px] border border-[#F1F2F9] px-[20px] py-[10px] sm:p-[20px_25px] shadow-[0px_24px_48px_rgba(107,108,126,0.08),0px_12px_24px_rgba(107,108,126,0.12)]">
             {/* Close button */}
             <button
               onClick={handleDismiss}
@@ -151,18 +138,12 @@ export default function PromoToast() {
               <X className="h-3.5 w-3.5 text-white" />
             </button>
 
-            <div className="flex items-center justify-center h-full" style={{ gap: "30px" }}>
+            {/* Rectangle-shaped horizontal layout - reduced vertical padding on mobile */}
+            <div className="flex flex-row items-center justify-center gap-[15px] sm:gap-[20px] md:gap-[25px] lg:gap-[30px] py-0 sm:py-4 min-h-[180px] sm:min-h-[200px] md:min-h-[220px] lg:h-[240px]">
               {/* Left Side Content */}
-              <div
-                className="flex flex-col justify-center items-center text-center"
-                style={{
-                  width: "280px",
-                  height: "100%",
-                  opacity: 1,
-                }}
-              >
-                {/* Logo */}
-                <div className="w-[80px] h-[85px] relative mb-4">
+              <div className="flex flex-col justify-center items-center text-center w-[50%] sm:w-[48%] md:w-[240px] lg:w-[280px]">
+                {/* Logo - proportional sizing */}
+                <div className="w-[50px] h-[55px] sm:w-[55px] sm:h-[60px] md:w-[60px] md:h-[65px] lg:w-[65px] lg:h-[70px] relative mb-3 sm:mb-3 md:mb-3.5 lg:mb-4">
                   <Image
                     src="/logos/pop_up_logo.svg"
                     alt="Logo Goal Mania"
@@ -176,42 +157,43 @@ export default function PromoToast() {
                   />
                 </div>
 
-                {/* Text Content */}
-                <div className="space-y-2 mb-4">
-                  <h2 className="text-[22px] font-bold text-[#170F49] leading-tight">
+                {/* Text Content - consistent spacing */}
+                <div className="space-y-1.5 mb-3 sm:mb-3 md:mb-3.5 lg:mb-4">
+                  <h2 className="text-[16px] sm:text-[17px] md:text-[19px] lg:text-[20px] font-bold text-[#170F49] leading-tight">
                     Offerta a Tempo
                     <br />
                     Limitato
                   </h2>
-                  <p className="text-[14px] text-[#6F6C8F] line-clamp-2">
+                  <p className="text-[11px] sm:text-[11.5px] md:text-[12.5px] lg:text-[13px] text-[#6F6C8F] line-clamp-1 px-1 sm:px-0">
                     {productTitle}
                   </p>
                 </div>
 
-                {/* Price + Button */}
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="text-[20px] font-bold text-[#170F49]">a soli 30€</span>
-                  <Link href="/shop">
+                {/* Price + Button - vertical on mobile, horizontal on desktop */}
+                <div className="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2.5 md:gap-3 lg:gap-3 mb-3 sm:mb-3 md:mb-3.5 lg:mb-4 w-full">
+                  <span className="text-[14px] sm:text-[16px] md:text-[17px] lg:text-[18px] font-bold text-[#170F49] whitespace-nowrap">
+                    a soli 30€
+                  </span>
+                  <Link href="/shop" className="w-full sm:w-auto">
                     <button
                       onClick={handleDismiss}
-                      className="bg-[#FF7A00] hover:bg-[#FF7A00]/90 text-white text-[14px] font-semibold px-7 py-2.5 rounded-full shadow-lg hover:shadow-xl transition-all whitespace-nowrap"
+                      className="bg-[#FF7A00] hover:bg-[#FF7A00]/90 text-white text-[10px] sm:text-[11.5px] md:text-[12.5px] lg:text-[13px] font-semibold px-3 py-1.5 sm:px-4.5 sm:py-1.5 md:px-5 md:py-1.5 lg:px-6 lg:py-2 rounded-full shadow-lg hover:shadow-xl transition-all whitespace-nowrap w-full sm:w-auto"
                     >
                       Compra Ora →
                     </button>
                   </Link>
                 </div>
 
-                {/* Review Content - Dynamic */}
-                <div className="flex flex-col items-center gap-1.5">
-                  <span className="text-[12px] font-medium text-[#6F6C8F]">
+                {/* Review Content - consistent spacing */}
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-[10px] sm:text-[10.5px] md:text-[11px] font-medium text-[#6F6C8F]">
                     {formatReviewCount(reviewCount)} recensioni {averageRating}
                   </span>
                   <div className="flex items-center gap-0.5">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <svg
                         key={star}
-                        className="fill-[#FFD700]"
-                        style={{ width: "14px", height: "14px" }}
+                        className="fill-[#FFD700] w-[10px] h-[10px] sm:w-[10.5px] sm:h-[10.5px] md:w-[11px] md:h-[11px] lg:w-[12px] lg:h-[12px]"
                         viewBox="0 0 24 24"
                       >
                         <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
@@ -222,14 +204,7 @@ export default function PromoToast() {
               </div>
 
               {/* Right Side - Product Image */}
-              <div
-                className="relative flex-shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 p-4 shadow-inner"
-                style={{
-                  width: "280px",
-                  height: "280px",
-                  opacity: 1,
-                }}
-              >
+              <div className="relative flex-shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-3 md:p-3.5 lg:p-4 shadow-inner w-[48%] sm:w-[150px] md:w-[175px] lg:w-[200px] h-[150px] sm:h-[165px] md:h-[180px] lg:h-[200px]">
                 <div className="relative w-full h-full">
                   <Image
                     src={featuredProductImage}
@@ -244,9 +219,6 @@ export default function PromoToast() {
                     priority
                   />
                 </div>
-                {/* Decorative corner accent */}
-                {/* <div className="absolute top-2 right-2 w-8 h-8 bg-[#FF7A00] rounded-full opacity-20"></div> */}
-                {/* <div className="absolute bottom-2 left-2 w-6 h-6 bg-[#0A1A2F] rounded-full opacity-15"></div> */}
               </div>
             </div>
           </div>
