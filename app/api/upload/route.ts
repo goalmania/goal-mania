@@ -2,6 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { existsSync } from "fs";
+import { v2 as cloudinary } from "cloudinary";
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Check if running in production (Vercel)
+const isProduction = process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production";
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,7 +20,6 @@ export async function POST(request: NextRequest) {
     const file = formData.get("file") as File;
 
     if (!file) {
-      console.error("Upload error: No file provided");
       return NextResponse.json(
         { error: "No file provided" },
         { status: 400 }
@@ -27,7 +37,6 @@ export async function POST(request: NextRequest) {
     ];
 
     if (!allowedTypes.includes(file.type)) {
-      console.error(`Upload error: Invalid file type ${file.type}`);
       return NextResponse.json(
         { error: `Invalid file type: ${file.type}. Allowed: JPG, PNG, WEBP, GIF, SVG` },
         { status: 400 }
@@ -37,9 +46,8 @@ export async function POST(request: NextRequest) {
     // Validate file size (max 5MB)
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
-      console.error(`Upload error: File too large ${file.size} bytes`);
       return NextResponse.json(
-        { error: `File too large. Maximum size: 5MB, your file: ${(file.size / 1024 / 1024).toFixed(2)}MB` },
+        { error: `File too large. Maximum size: 5MB` },
         { status: 400 }
       );
     }
@@ -47,11 +55,30 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Create uploads directory if it doesn't exist
+    // PRODUCTION: Upload to Cloudinary
+    if (isProduction) {
+      const base64 = buffer.toString("base64");
+      const dataUri = `data:${file.type};base64,${base64}`;
+
+      const result = await cloudinary.uploader.upload(dataUri, {
+        folder: "goal-mania",
+        resource_type: "auto",
+      });
+
+      console.log("File uploaded to Cloudinary:", result.secure_url);
+
+      return NextResponse.json({
+        success: true,
+        url: result.secure_url,
+        publicId: result.public_id,
+        source: "cloudinary",
+      });
+    }
+
+    // DEVELOPMENT: Upload to local filesystem
     const uploadDir = path.join(process.cwd(), "public", "uploads");
     if (!existsSync(uploadDir)) {
       await mkdir(uploadDir, { recursive: true });
-      console.log("Created uploads directory:", uploadDir);
     }
 
     // Generate unique filename
@@ -62,27 +89,21 @@ export async function POST(request: NextRequest) {
     const filename = `${timestamp}-${randomStr}-${baseName}${ext}`;
     const filepath = path.join(uploadDir, filename);
 
-    // Write file
     await writeFile(filepath, buffer);
-    console.log("File uploaded successfully:", filename);
+    console.log("File uploaded locally:", filename);
 
-    // Return public URL
-    const url = `/uploads/${filename}`;
-
-    return NextResponse.json(
-      {
-        success: true,
-        url,
-        filename,
-      },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      success: true,
+      url: `/uploads/${filename}`,
+      filename,
+      source: "local",
+    });
   } catch (error) {
     console.error("Upload error:", error);
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : "Upload failed",
-        details: error instanceof Error ? error.stack : "Unknown error"
+        details: error instanceof Error ? error.stack : "Unknown error",
       },
       { status: 500 }
     );
