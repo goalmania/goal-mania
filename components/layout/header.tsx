@@ -79,6 +79,8 @@ export function Header() {
 
   const navigation = [
     { name: t("nav.home"), href: "/" },
+    { name: t("nav.articles"), href: "/news" },
+    { name: t("nav.shop"), href: "/shop" },
     {
       name: t("nav.category"),
       href: "/category",
@@ -93,11 +95,9 @@ export function Header() {
         { name: t("nav.otherLeagues"), href: "/international/other" },
       ],
     },
-    { name: t("nav.articles"), href: "/news" },
     { name: t("nav.info"), href: "/info" },
     { name: t("nav.about"), href: "/about" },
     { name: t("nav.contact"), href: "/contact" },
-    { name: t("nav.shop"), href: "/shop" },
     { name: "MysteryBox", href: "/shop/mystery-box" },
   ];
 
