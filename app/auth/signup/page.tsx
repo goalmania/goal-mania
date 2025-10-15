@@ -12,38 +12,56 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 const signUpSchema = z
   .object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.string().email("Invalid email address"),
+    name: z.string().min(2, "Il nome deve contenere almeno 2 caratteri"),
+    email: z.string().email("Indirizzo email non valido"),
 
+    phonePrefix: z.string().min(1, "Seleziona un prefisso"),
     phone: z
       .string()
-      .min(7, "Phone number must be at least 7 digits")
-      .max(15, "Phone number must be at most 15 digits")
-      .regex(/^[0-9]+$/, "Phone number must contain only numbers"),
+      .min(7, "Il numero di telefono deve contenere almeno 7 cifre")
+      .max(15, "Il numero di telefono deve contenere al massimo 15 cifre")
+      .regex(/^[0-9]+$/, "Il numero di telefono deve contenere solo numeri"),
 
-    country: z.string().min(1, "Country is required"),
-    pincode: z
-      .string()
-      .min(4, "Pin Code must be at least 4 characters")
-      .max(10, "Pin Code must be at most 10 characters"),
+    country: z.string().min(1, "Il paese è obbligatorio"),
 
     marketing: z.boolean().optional(),
 
     password: z
       .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-      .regex(/[0-9]/, "Password must contain at least one number"),
+      .min(8, "La password deve contenere almeno 8 caratteri")
+      .regex(/[A-Z]/, "La password deve contenere almeno una lettera maiuscola")
+      .regex(/[a-z]/, "La password deve contenere almeno una lettera minuscola")
+      .regex(/[0-9]/, "La password deve contenere almeno un numero"),
 
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    message: "Le password non coincidono",
     path: ["confirmPassword"],
   });
 
 type SignUpForm = z.infer<typeof signUpSchema>;
+
+// Phone prefixes for different countries
+const phonePrefix = [
+  { code: "+39", country: "Italia", flag: "🇮🇹" },
+  { code: "+1", country: "USA/Canada", flag: "🇺🇸" },
+  { code: "+44", country: "Regno Unito", flag: "🇬🇧" },
+  { code: "+49", country: "Germania", flag: "🇩🇪" },
+  { code: "+33", country: "Francia", flag: "🇫🇷" },
+  { code: "+34", country: "Spagna", flag: "🇪🇸" },
+  { code: "+351", country: "Portogallo", flag: "🇵🇹" },
+  { code: "+31", country: "Paesi Bassi", flag: "🇳🇱" },
+  { code: "+32", country: "Belgio", flag: "🇧🇪" },
+  { code: "+41", country: "Svizzera", flag: "🇨🇭" },
+  { code: "+43", country: "Austria", flag: "🇦🇹" },
+  { code: "+234", country: "Nigeria", flag: "🇳🇬" },
+  { code: "+91", country: "India", flag: "🇮🇳" },
+  { code: "+86", country: "Cina", flag: "🇨🇳" },
+  { code: "+81", country: "Giappone", flag: "🇯🇵" },
+  { code: "+82", country: "Corea del Sud", flag: "🇰🇷" },
+  { code: "+971", country: "Emirati Arabi", flag: "🇦🇪" },
+];
 
 export default function SignUp() {
   const router = useRouter();
@@ -63,9 +81,9 @@ export default function SignUp() {
     const data: SignUpForm = {
       name: formData.get("name") as string,
       email: formData.get("email") as string,
+      phonePrefix: formData.get("phonePrefix") as string,
       phone: formData.get("phone") as string,
       country: formData.get("country") as string,
-      pincode: formData.get("pincode") as string,
       marketing: formData.get("marketing") === "on",
       password: formData.get("password") as string,
       confirmPassword: formData.get("confirmPassword") as string,
@@ -75,16 +93,22 @@ export default function SignUp() {
       // Validate form data
       signUpSchema.parse(data);
 
+      // Combine phone prefix and number
+      const fullPhone = `${data.phonePrefix}${data.phone}`;
+
       // Send registration request
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          phone: fullPhone,
+        }),
       });
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Something went wrong");
+        throw new Error(error.message || "Qualcosa è andato storto");
       }
 
       // Sign in the user automatically
@@ -95,7 +119,7 @@ export default function SignUp() {
       });
 
       if (result?.error) {
-        throw new Error("Failed to sign in");
+        throw new Error("Impossibile effettuare l'accesso");
       }
 
       router.push("/");
@@ -112,7 +136,7 @@ export default function SignUp() {
       } else if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError("Something went wrong");
+        setError("Qualcosa è andato storto");
       }
     } finally {
       setIsLoading(false);
@@ -141,44 +165,68 @@ export default function SignUp() {
         </div>
 
         <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white px-4   ">
+          <div className="bg-white px-4">
             <form className="space-y-6 font-munish" onSubmit={handleSubmit}>
-              {/* Phone Number */}
-              <div className="flex items-center gap-2">
-                <span className="text-[#333333] font-medium">+39</span>
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  required
-                  className="bg-white border-0 flex-1 border-b py-2 border-black placeholder:text-[#333333] text-[#333333] font-light rounded-none shadow-none pl-0"
-                  placeholder="xxxxxxxxxx"
-                />
+              {/* Phone Number with Prefix Selector */}
+              <div>
+                <Label
+                  htmlFor="phone"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Numero di telefono
+                </Label>
+                <div className="flex items-center gap-2 mt-1">
+                  <select
+                    id="phonePrefix"
+                    name="phonePrefix"
+                    className="bg-white border text-sm rounded-lg py-2.5 font-munish border-gray-300 text-[#333333] font-light px-3 shadow-none focus:ring-1 focus:ring-[#FF7A00] focus:border-[#FF7A00]"
+                    defaultValue="+39"
+                  >
+                    {phonePrefix.map((prefix) => (
+                      <option key={prefix.code} value={prefix.code}>
+                        {prefix.flag} {prefix.code}
+                      </option>
+                    ))}
+                  </select>
+                  <Input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    required
+                    className="bg-white border-0 flex-1 border-b py-2 border-black placeholder:text-[#333333] text-[#333333] font-light rounded-none shadow-none pl-0"
+                    placeholder="xxxxxxxxxx"
+                  />
+                </div>
+                {validationErrors.phone && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.phone}
+                  </p>
+                )}
               </div>
-              {validationErrors.phone && (
-                <p className="mt-2 text-sm text-red-600">
-                  {validationErrors.phone}
-                </p>
-              )}
 
               {/* Marketing Checkbox */}
               <div className="flex items-center gap-2">
-                <Checkbox className=" bg-[#D9D9D9] rounded-full" />
+                <Checkbox
+                  id="marketing"
+                  name="marketing"
+                  className=" bg-[#D9D9D9] rounded-full"
+                />
                 <Label
                   htmlFor="marketing"
-                  className="text-sm text-gray-600] select-none cursor-pointer"
+                  className="text-sm text-gray-600 select-none cursor-pointer"
                 >
                   Avvisami su ordini, offerte e aggiornamenti
                 </Label>
               </div>
 
+              {/* Full Name */}
               <Input
                 id="name"
                 name="name"
                 type="text"
                 required
                 className="bg-white border-0 w-full border-b py-2 border-black placeholder:text-[#333333] text-[#333333] font-light rounded-none shadow-none pl-0"
-                placeholder="Full name"
+                placeholder="Nome completo"
               />
               {validationErrors.name && (
                 <p className="mt-2 text-sm text-red-600">
@@ -186,33 +234,54 @@ export default function SignUp() {
                 </p>
               )}
 
-              {/* Country + Pin Code */}
-              <div className="flex gap-3">
+              {/* Email */}
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                required
+                className="bg-white border-0 w-full border-b py-2 border-black placeholder:text-[#333333] text-[#333333] font-light rounded-none shadow-none pl-0"
+                placeholder="Indirizzo email"
+              />
+              {validationErrors.email && (
+                <p className="mt-2 text-sm text-red-600">
+                  {validationErrors.email}
+                </p>
+              )}
+
+              {/* Country Only */}
+              <div>
+                <Label
+                  htmlFor="country"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Paese
+                </Label>
                 <select
                   id="country"
                   name="country"
-                  className="bg-white border text-sm rounded-full py-2 font-munish border-black text-[#333333] font-light px-2 shadow-none  focus:ring-0"
+                  className="bg-white border text-sm rounded-lg py-2.5 mt-1 w-full font-munish border-gray-300 text-[#333333] font-light px-3 shadow-none focus:ring-1 focus:ring-[#FF7A00] focus:border-[#FF7A00]"
                   defaultValue="Italy"
                 >
-                  <option value="Italy">Italy</option>
+                  <option value="Italy">Italia</option>
+                  <option value="USA">Stati Uniti</option>
+                  <option value="UK">Regno Unito</option>
+                  <option value="Germany">Germania</option>
+                  <option value="France">Francia</option>
+                  <option value="Spain">Spagna</option>
+                  <option value="Portugal">Portogallo</option>
+                  <option value="Netherlands">Paesi Bassi</option>
+                  <option value="Belgium">Belgio</option>
+                  <option value="Switzerland">Svizzera</option>
+                  <option value="Austria">Austria</option>
                   <option value="Nigeria">Nigeria</option>
-                  <option value="USA">USA</option>
-                  <option value="UK">UK</option>
                 </select>
-                <Input
-                  id="pincode"
-                  name="pincode"
-                  type="text"
-                  required
-                  className="bg-white border-0 flex-1 border-b py-2 border-black placeholder:text-[#333333] text-[#333333] font-light rounded-none shadow-none pl-0"
-                  placeholder="Pin Code"
-                />
+                {validationErrors.country && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.country}
+                  </p>
+                )}
               </div>
-              {validationErrors.pincode && (
-                <p className="mt-2 text-sm text-red-600">
-                  {validationErrors.pincode}
-                </p>
-              )}
 
               {/* Password */}
               <Input
@@ -221,7 +290,7 @@ export default function SignUp() {
                 type="password"
                 required
                 className="bg-white border-0 w-full border-b py-2 border-black placeholder:text-[#333333] text-[#333333] font-light rounded-none shadow-none pl-0"
-                placeholder="Create a password"
+                placeholder="Crea una password"
               />
               {validationErrors.password && (
                 <p className="mt-2 text-sm text-red-600">
@@ -236,7 +305,7 @@ export default function SignUp() {
                 type="password"
                 required
                 className="bg-white border-0 w-full border-b py-2 border-black placeholder:text-[#333333] text-[#333333] font-light rounded-none shadow-none pl-0"
-                placeholder="Confirm your password"
+                placeholder="Conferma la password"
               />
               {validationErrors.confirmPassword && (
                 <p className="mt-2 text-sm text-red-600">
@@ -255,29 +324,28 @@ export default function SignUp() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="flex w-full justify-center rounded-full bg-[#FF7A00] px-3 gap-1.5 py-2 text-sm font-medium items-center text-[#0A1A2F] shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex w-full justify-center rounded-full bg-[#FF7A00] px-3 gap-1.5 py-2 text-sm font-medium items-center text-[#0A1A2F] shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#FF7A00]/90"
                 >
-                  {isLoading ? "Creating account..." : "Crea account →"}
+                  {isLoading ? "Creazione account..." : "Crea account →"}
                 </Button>
 
                 <div className=" text-[#888888] text-[14px] text-center">
-                  Leggi l’informativa sulla{" "}
-                  <span className=" text-[#3182CE]">privacy </span>e i termini{" "}
-                  <span className=" text-[#3182CE]">econdizioni </span>
+                  Leggi l'informativa sulla{" "}
+                  <span className=" text-[#3182CE]">privacy </span>e i{" "}
+                  <span className=" text-[#3182CE]">termini e condizioni</span>
                 </div>
               </div>
-              <Button
-                type="button"
-                variant="outline"
-                className="flex w-full justify-center rounded-full px-3 gap-1.5 py-2 text-sm font-medium items-center text-[#0A1A2F] border border-gray-300"
-              >
-                Spedisci →
-              </Button>
             </form>
           </div>
 
-          <p className=" font-munish text-center text-[14px] text-[#888888]">
-            Leggi l’informativa sulla privacy e i Termini e Condizioni.
+          <p className=" font-munish text-center text-[14px] text-[#888888] mt-4">
+            Hai già un account?{" "}
+            <Link
+              href="/auth/login"
+              className="text-[#3182CE] hover:underline"
+            >
+              Accedi
+            </Link>
           </p>
         </div>
       </div>

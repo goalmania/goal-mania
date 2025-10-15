@@ -48,7 +48,7 @@ async function getNewsArticles(): Promise<{
   try {
     await connectDB();
 
-    // Fetch featured articles
+    // Fetch featured articles - sorted by publishedAt DESC (newest first)
     const featuredArticles = await Article.find({
       category: "news",
       status: "published",
@@ -58,7 +58,7 @@ async function getNewsArticles(): Promise<{
       .limit(10)
       .lean();
 
-    // Fetch regular articles
+    // Fetch regular articles - sorted by publishedAt DESC (newest first)
     const regularArticles = await Article.find({
       category: "news",
       status: "published",
@@ -68,15 +68,19 @@ async function getNewsArticles(): Promise<{
       .limit(12)
       .lean();
 
+    // ✅ Serialize MongoDB documents to plain objects
+    const serialize = (articles: any[]) =>
+      JSON.parse(JSON.stringify(articles));
+
     // ✅ Normalize to match NewsArticle (ensure `tags` exists)
     const normalize = (a: any): NewsArticle => ({
       ...a,
-      tags: a.tags ?? [], // fallback if tags missing
+      tags: a.tags ?? [],
     });
 
     return {
-      featured: featuredArticles.map(normalize),
-      regular: regularArticles.map(normalize),
+      featured: serialize(featuredArticles).map(normalize),
+      regular: serialize(regularArticles).map(normalize),
     };
   } catch (error) {
     console.error("Failed to fetch news articles:", {
@@ -93,6 +97,7 @@ export default async function NewsPage() {
 
   try {
     const { featured, regular } = await getNewsArticles();
+    // ✅ Articles are already serialized, just combine them
     allArticles = [...featured, ...regular];
   } catch (error) {
     errorMessage = (error as Error).message;
@@ -105,7 +110,8 @@ export default async function NewsPage() {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <div className="min-h-screen flex flex-col font-munish bg-gray-50">
-        <NewsBanner imageUrl={MobilebannerData.imageUrl} />
+        {/* ✅ Pass serialized articles to Client Component */}
+        <NewsBanner articles={allArticles} imageUrl={MobilebannerData.imageUrl} />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 flex-1 items-start">
           {/* Breadcrumb */}
           <div className="mb-6 hidden">
@@ -255,12 +261,12 @@ export default async function NewsPage() {
                         reverse={i % 2 === 1}
                       />
                       <div className="mt-4 text-right">
-                        <Link
+                        {/* <Link
                           href="/news"
                           className="text-sm font-semibold tracking-wide text-gray-900 hover:text-orange-500 uppercase transition-colors duration-200"
                         >
                           See all
-                        </Link>
+                        </Link> */}
                       </div>
                     </div>
                   );

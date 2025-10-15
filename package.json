@@ -9,11 +9,16 @@
     "lint": "next lint",
     "seed:reviews": "ts-node --project tsconfig.json scripts/seed-reviews.ts",
     "seed:products": "node scripts/seed-products.mjs",
+    "add:admin": "node scripts/add-admin-user.mjs",
     "import:products": "node scripts/import-products.mjs",
     "manual:seed": "node scripts/manual-seed.mjs",
     "seed:all": "node scripts/seed-all-products.mjs",
     "revalidate": "node scripts/revalidate-cache.js",
-    "optimize-db": "node scripts/optimize-db-indexes.js"
+    "optimize-db": "node scripts/optimize-db-indexes.js",
+    "seed:feature-products": "node scripts/seed-feature-products.mjs",
+    "seed:articles": "node scripts/seed-articles.mjs",
+    "seed:mystery-box": "node scripts/seed-mystery-box.mjs",
+    "create:user": "node scripts/create-user.mjs"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.9.0",
@@ -89,7 +94,7 @@
     "next-auth": "^4.24.11",
     "next-i18next": "^15.4.2",
     "next-themes": "^0.2.1",
-    "nodemailer": "^7.0.5",
+    "nodemailer": "^6.9.15",
     "react": "^19.0.0",
     "react-colorful": "^5.6.1",
     "react-day-picker": "^9.8.0",

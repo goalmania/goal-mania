@@ -22,33 +22,68 @@ export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
     const loadJersey = async () => {
       try {
         setIsLoading(true);
+        
         // If a specific jerseyId is provided, fetch that jersey
         // Otherwise fetch a featured jersey
         const endpoint = jerseyId
           ? `/api/products/${jerseyId}`
-          : `/api/products/featured?category=all&limit=1`;
+          : `/api/products?limit=1&noPagination=true`;
 
-        const response = await fetch(endpoint);
+        console.log("🔍 Fetching jersey from:", endpoint);
+
+        const response = await fetch(endpoint, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          cache: 'no-store',
+        });
+
+        console.log("📡 Response status:", response.status);
 
         if (!response.ok) {
-          throw new Error("Failed to fetch jersey");
+          const contentType = response.headers.get('content-type');
+          console.log("📄 Content-Type:", contentType);
+          
+          let errorText = '';
+          try {
+            errorText = await response.text();
+            console.error("❌ Error response:", errorText);
+          } catch (e) {
+            console.error("❌ Could not read error response");
+          }
+          
+          setIsLoading(false);
+          return;
         }
 
-        const data = jerseyId
-          ? await response.json()
-          : (await response.json())[0];
+        const data = await response.json();
+        console.log("📦 Received data:", data);
+        
+        // Handle different response formats
+        let jerseyData;
+        if (jerseyId) {
+          jerseyData = data;
+        } else {
+          // For products API, extract from products array
+          jerseyData = data.products?.[0] || data[0];
+        }
 
-        if (data) {
+        console.log("👕 Jersey data:", jerseyData);
+
+        if (jerseyData && jerseyData.title) {
           setJersey({
-            id: data._id,
-            title: data.title,
-            image: data.images[0],
-            slug: data.slug,
-            basePrice: data.basePrice,
+            id: jerseyData._id || jerseyData.id || 'unknown',
+            title: jerseyData.title,
+            image: jerseyData.images?.[0] || jerseyData.image || '/images/placeholder.png',
+            slug: jerseyData.slug || jerseyData._id || 'product',
+            basePrice: jerseyData.basePrice || 30,
           });
+        } else {
+          console.warn("⚠️ No valid jersey data found");
         }
       } catch (error) {
-        console.error("Error loading jersey:", error);
+        console.error("❌ Error loading jersey:", error);
       } finally {
         setIsLoading(false);
       }
@@ -60,7 +95,7 @@ export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
   if (isLoading) {
     return (
       <div className="w-full bg-white rounded-lg shadow-md p-6 my-8 text-center">
-        <p className="text-black">Loading jersey...</p>
+        <p className="text-black">Caricamento maglia...</p>
       </div>
     );
   }
@@ -89,7 +124,7 @@ export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
           </div>
           {/* "Featured" badge */}
           <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">
-            FEATURED
+            IN EVIDENZA
           </div>
         </div>
         
@@ -97,7 +132,7 @@ export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
           {/* Enhanced title with orange accent */}
           <div className="mb-3">
             <span className="text-orange-500 text-sm font-semibold uppercase tracking-wide">
-              Exclusive Offer
+              Offerta Esclusiva
             </span>
             <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 leading-tight">
               {jersey.title}
@@ -106,7 +141,7 @@ export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
           
           {/* Enhanced description */}
           <p className="text-gray-700 mb-3 font-medium">
-            🔥 Get the latest jersey and show your passion for the game!
+            🔥 Acquista la maglia più recente e mostra la tua passione per il calcio!
           </p>
           
           {/* Enhanced price with orange styling */}
@@ -124,7 +159,7 @@ export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
             href={`/products/${jersey.slug}`}
             className="mt-auto bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 text-center shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105 flex items-center justify-center gap-2"
           >
-            <span>🛒 Shop Now</span>
+            <span>🛒 Acquista Ora</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
@@ -132,7 +167,7 @@ export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
           
           {/* Additional incentive text */}
           <p className="text-xs text-orange-600 mt-2 text-center font-medium">
-            ⚡ Limited time offer • Free shipping on orders over €50
+            ⚡ Offerta a tempo limitato • Spedizione gratuita
           </p>
         </div>
       </div>

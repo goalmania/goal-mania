@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "20", 10);
     const search = searchParams.get("search") || "";
-    const featured = searchParams.get("feature") === "true";
+    const feature = searchParams.get("feature") === "true";
     const includeInactive = searchParams.get("includeInactive") === "true";
     const sortBy = searchParams.get("sortBy") || "createdAt";
     const sortOrder = searchParams.get("sortOrder") || "desc";
@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
       category, 
       validatedPage, 
       validatedLimit, 
-      `${search}-${featured}-${includeInactive}-${sortBy}-${sortOrder}`
+      `${search}-${feature}-${includeInactive}-${sortBy}-${sortOrder}`
     );
     
     // Check cache first (but skip cache for search queries and admin queries)
@@ -122,7 +122,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Add featured filter if requested
-    if (featured) {
+    if (feature) {
       query.feature = true;
     }
 
@@ -147,7 +147,7 @@ export async function GET(req: NextRequest) {
         .skip((validatedPage - 1) * validatedLimit)
         .limit(validatedLimit)
         .lean()
-        .select('_id title description basePrice retroPrice shippingPrice stockQuantity images isRetro hasShorts hasSocks category allowsNumberOnShirt allowsNameOnShirt isActive feature slug isMysteryBox createdAt')
+        .select('_id title description basePrice retroPrice shippingPrice stockQuantity images isRetro hasShorts hasSocks category allowsNumberOnShirt allowsNameOnShirt isActive feature slug isMysteryBox createdAt videos')
     ]);
 
     console.log(`Found ${products.length} products matching the criteria`);

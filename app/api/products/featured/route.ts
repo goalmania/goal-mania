@@ -1,63 +1,64 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db";
-import mongoose from "mongoose";
+import Product from "@/lib/models/Product";
 
-export async function GET(req: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const searchParams = req.nextUrl.searchParams;
-    const category = searchParams.get("category");
-    const limit = parseInt(searchParams.get("limit") || "3", 10);
-
     await connectDB();
 
-    // Get the Product model
-    const Product = mongoose.models.Product;
+    const searchParams = request.nextUrl.searchParams;
+    const limit = parseInt(searchParams.get("limit") || "8");
 
-    if (!Product) {
-      return NextResponse.json(
-        { error: "Product model not found" },
-        { status: 500 }
-      );
-    }
-
-    // Build query
-    const query: any = { isActive: true };
-
-    // Add category filter if provided and not 'all'
-    if (category && category !== "all") {
-      query.category = category;
-    }
-
-    // Get featured products first, then other products if needed to fill the limit
+    // First, try to get featured products
     const featuredProducts = await Product.find({
-      ...query,
-      feature: true,
+      isFeatured: true,
+      isActive: true,
     })
-      .sort({ createdAt: -1 })
-      .limit(limit);
+      .limit(limit)
+      .lean();
 
     // If we have enough featured products, return them
     if (featuredProducts.length >= limit) {
-      return NextResponse.json(featuredProducts);
+      return NextResponse.json(
+        {
+          success: true,
+          products: featuredProducts,
+          count: featuredProducts.length,
+        },
+        { status: 200 }
+      );
     }
 
     // Otherwise, get additional non-featured products to fill the limit
     const nonFeaturedLimit = limit - featuredProducts.length;
     const nonFeaturedProducts = await Product.find({
-      ...query,
-      feature: false,
-      _id: { $nin: featuredProducts.map((p: any) => p._id) },
+      isFeatured: { $ne: true },
+      isActive: true,
     })
-      .sort({ createdAt: -1 })
-      .limit(nonFeaturedLimit);
+      .limit(nonFeaturedLimit)
+      .lean();
 
-    // Combine and return
-    const products = [...featuredProducts, ...nonFeaturedProducts];
-    return NextResponse.json(products);
-  } catch (error) {
-    console.error("[FEATURED_PRODUCTS_GET]", error);
+    // Combine featured and non-featured products
+    const allProducts = [...featuredProducts, ...nonFeaturedProducts];
+
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      {
+        success: true,
+        products: allProducts,
+        count: allProducts.length,
+        featuredCount: featuredProducts.length,
+        nonFeaturedCount: nonFeaturedProducts.length,
+      },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error("Error fetching featured products:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Failed to fetch featured products",
+        error: error.message,
+      },
       { status: 500 }
     );
   }

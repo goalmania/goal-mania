@@ -61,13 +61,7 @@ const productSchema = new mongoose.Schema(
     },
     images: {
       type: [String],
-      required: [true, "At least one image is required"],
-      validate: {
-        validator: function (v: string[]) {
-          return v.length > 0;
-        },
-        message: "At least one image is required",
-      },
+      required: true,
     },
     videos: {
       type: [String],
