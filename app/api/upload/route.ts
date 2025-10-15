@@ -4,16 +4,31 @@ import path from "path";
 import { existsSync } from "fs";
 import { v2 as cloudinary } from "cloudinary";
 
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
 // Check if running locally (localhost)
 const isLocal = process.env.NEXT_PUBLIC_APP_URL?.includes("localhost") || 
                 process.env.NEXTAUTH_URL?.includes("localhost");
+
+// Configure Cloudinary only if not local
+if (!isLocal) {
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+  if (!cloudName || !apiKey || !apiSecret) {
+    console.error("❌ Cloudinary credentials missing:", {
+      cloudName: cloudName ? "✅" : "❌",
+      apiKey: apiKey ? "✅" : "❌",
+      apiSecret: apiSecret ? "✅" : "❌",
+    });
+  } else {
+    cloudinary.config({
+      cloud_name: cloudName,
+      api_key: apiKey,
+      api_secret: apiSecret,
+    });
+    console.log("✅ Cloudinary configured successfully");
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -63,7 +78,6 @@ export async function POST(request: NextRequest) {
         await mkdir(uploadDir, { recursive: true });
       }
 
-      // Generate unique filename
       const timestamp = Date.now();
       const randomStr = Math.random().toString(36).substring(2, 9);
       const ext = path.extname(file.name);
@@ -82,7 +96,21 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // NON-LOCAL (Production/Staging/Preview): Upload to Cloudinary
+    // NON-LOCAL: Upload to Cloudinary
+    // Check if Cloudinary is configured
+    if (!process.env.CLOUDINARY_CLOUD_NAME || 
+        !process.env.CLOUDINARY_API_KEY || 
+        !process.env.CLOUDINARY_API_SECRET) {
+      console.error("❌ Cloudinary credentials not configured");
+      return NextResponse.json(
+        { 
+          error: "Cloudinary not configured. Please set environment variables.",
+          details: "CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET are required"
+        },
+        { status: 500 }
+      );
+    }
+
     const base64 = buffer.toString("base64");
     const dataUri = `data:${file.type};base64,${base64}`;
 
