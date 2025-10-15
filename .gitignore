@@ -42,3 +42,6 @@ next-env.d.ts
 # Uploaded files
 /public/uploads/*
 !public/uploads/.gitkeep
+
+# Local uploads
+/public/uploads
