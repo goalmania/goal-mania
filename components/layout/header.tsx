@@ -192,8 +192,8 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-1">
-          {/* Search Icon - Mobile Only */}
-          <div className="md:hidden">
+          {/* Search Icon - Mobile Only - HIDDEN */}
+          <div className="hidden md:hidden">
             <Button
               variant="ghost"
               size="icon"
