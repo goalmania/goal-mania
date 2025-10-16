@@ -1,34 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
-import { existsSync } from "fs";
 import { v2 as cloudinary } from "cloudinary";
 
-// Check if running locally (localhost)
-const isLocal = process.env.NEXT_PUBLIC_APP_URL?.includes("localhost") || 
-                process.env.NEXTAUTH_URL?.includes("localhost");
-
-// Configure Cloudinary only if not local
-if (!isLocal) {
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-  const apiKey = process.env.CLOUDINARY_API_KEY;
-  const apiSecret = process.env.CLOUDINARY_API_SECRET;
-
-  if (!cloudName || !apiKey || !apiSecret) {
-    console.error("❌ Cloudinary credentials missing:", {
-      cloudName: cloudName ? "✅" : "❌",
-      apiKey: apiKey ? "✅" : "❌",
-      apiSecret: apiSecret ? "✅" : "❌",
-    });
-  } else {
-    cloudinary.config({
-      cloud_name: cloudName,
-      api_key: apiKey,
-      api_secret: apiSecret,
-    });
-    console.log("✅ Cloudinary configured successfully");
-  }
-}
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -68,35 +46,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // LOCAL: Upload to local filesystem
-    if (isLocal) {
-      const uploadDir = path.join(process.cwd(), "public", "uploads");
-      if (!existsSync(uploadDir)) {
-        await mkdir(uploadDir, { recursive: true });
-      }
-
-      const timestamp = Date.now();
-      const randomStr = Math.random().toString(36).substring(2, 9);
-      const ext = path.extname(file.name);
-      const baseName = path.basename(file.name, ext).replace(/[^a-zA-Z0-9-_]/g, "_");
-      const filename = `${timestamp}-${randomStr}-${baseName}${ext}`;
-      const filepath = path.join(uploadDir, filename);
-
-      await writeFile(filepath, buffer);
-      console.log("✅ File uploaded locally:", filename);
-
-      return NextResponse.json({
-        success: true,
-        url: `/uploads/${filename}`,
-        filename,
-        source: "local",
-      });
-    }
-
-    // NON-LOCAL: Upload to Cloudinary
     // Check if Cloudinary is configured
     if (!process.env.CLOUDINARY_CLOUD_NAME || 
         !process.env.CLOUDINARY_API_KEY || 
@@ -111,6 +60,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    // Upload to Cloudinary
     const base64 = buffer.toString("base64");
     const dataUri = `data:${file.type};base64,${base64}`;
 
@@ -144,3 +97,4 @@ export const config = {
     bodyParser: false,
   },
 };
+
