@@ -22,68 +22,33 @@ export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
     const loadJersey = async () => {
       try {
         setIsLoading(true);
-        
         // If a specific jerseyId is provided, fetch that jersey
         // Otherwise fetch a featured jersey
         const endpoint = jerseyId
           ? `/api/products/${jerseyId}`
-          : `/api/products?limit=1&noPagination=true`;
+          : `/api/products/featured?category=all&limit=1`;
 
-        console.log("🔍 Fetching jersey from:", endpoint);
-
-        const response = await fetch(endpoint, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          cache: 'no-store',
-        });
-
-        console.log("📡 Response status:", response.status);
+        const response = await fetch(endpoint);
 
         if (!response.ok) {
-          const contentType = response.headers.get('content-type');
-          console.log("📄 Content-Type:", contentType);
-          
-          let errorText = '';
-          try {
-            errorText = await response.text();
-            console.error("❌ Error response:", errorText);
-          } catch (e) {
-            console.error("❌ Could not read error response");
-          }
-          
-          setIsLoading(false);
-          return;
+          throw new Error("Failed to fetch jersey");
         }
 
-        const data = await response.json();
-        console.log("📦 Received data:", data);
-        
-        // Handle different response formats
-        let jerseyData;
-        if (jerseyId) {
-          jerseyData = data;
-        } else {
-          // For products API, extract from products array
-          jerseyData = data.products?.[0] || data[0];
-        }
+        const data = jerseyId
+          ? await response.json()
+          : (await response.json())[0];
 
-        console.log("👕 Jersey data:", jerseyData);
-
-        if (jerseyData && jerseyData.title) {
+        if (data) {
           setJersey({
-            id: jerseyData._id || jerseyData.id || 'unknown',
-            title: jerseyData.title,
-            image: jerseyData.images?.[0] || jerseyData.image || '/images/placeholder.png',
-            slug: jerseyData.slug || jerseyData._id || 'product',
-            basePrice: jerseyData.basePrice || 30,
+            id: data._id,
+            title: data.title,
+            image: data.images[0],
+            slug: data.slug,
+            basePrice: data.basePrice,
           });
-        } else {
-          console.warn("⚠️ No valid jersey data found");
         }
       } catch (error) {
-        console.error("❌ Error loading jersey:", error);
+        console.error("Error loading jersey:", error);
       } finally {
         setIsLoading(false);
       }

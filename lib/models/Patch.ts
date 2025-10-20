@@ -64,40 +64,19 @@ const patchSchema = new mongoose.Schema(
   }
 );
 
-// Indexes
+// Index for better query performance
 patchSchema.index({ category: 1, isActive: 1 });
 patchSchema.index({ isFeatured: 1, isActive: 1 });
 patchSchema.index({ sortOrder: 1 });
 
 // Virtual for formatted price
-patchSchema.virtual('formattedPrice').get(function(this: any) {
-  return `€${(this.price || 0).toFixed(2)}`;
+patchSchema.virtual('formattedPrice').get(function() {
+  return `€${this.price.toFixed(2)}`;
 });
 
 // Ensure virtuals are included in JSON output
 patchSchema.set('toJSON', { virtuals: true });
 
-// Use a global cache to avoid re-compiling model in serverless/hot-reload environments
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  var __MONGOOSE_MODEL_CACHE__: { [key: string]: any } | undefined;
-}
+const Patch = mongoose.models.Patch || mongoose.model("Patch", patchSchema);
 
-function getModel<T extends mongoose.Document = mongoose.Document>() {
-  const g = globalThis as any;
-  if (!g.__MONGOOSE_MODEL_CACHE__) g.__MONGOOSE_MODEL_CACHE__ = {};
-
-  if (g.__MONGOOSE_MODEL_CACHE__.Patch) {
-    return g.__MONGOOSE_MODEL_CACHE__.Patch as mongoose.Model<T>;
-  }
-
-  const existing = mongoose.models && (mongoose.models.Patch as mongoose.Model<T> | undefined);
-  const Model = existing ? existing : mongoose.model<T>("Patch", patchSchema);
-
-  g.__MONGOOSE_MODEL_CACHE__.Patch = Model;
-  return Model;
-}
-
-const Patch = getModel();
-
-export default Patch;
+export default Patch; 
