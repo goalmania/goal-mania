@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
-import Patch from "@/lib/models/Patch";
 import { z } from "zod";
 import mongoose from "mongoose";
 
@@ -55,6 +54,9 @@ export async function GET(
     const { id } = await params;
 
     await connectDB();
+
+    // Ensure Patch model is registered in this runtime before population
+    await import("@/lib/models/Patch");
 
     let product;
 
@@ -345,15 +347,16 @@ export async function PUT(
 
       await connectDB();
 
+      // Dynamically import Patch model and use it for validation
+      const PatchModel = (await import("@/lib/models/Patch")).default;
+
       // Handle patch relationships
       if (validatedData.patchIds) {
-        // Validate that all patchIds exist
-        const Patch = require('@/lib/models/Patch').default;
-        const existingPatches = await Patch.find({ 
+        const existingPatches = await PatchModel.find({
           _id: { $in: validatedData.patchIds },
-          isActive: true 
+          isActive: true,
         });
-        
+
         if (existingPatches.length !== validatedData.patchIds.length) {
           return NextResponse.json(
             { error: "One or more patches not found or inactive" },
