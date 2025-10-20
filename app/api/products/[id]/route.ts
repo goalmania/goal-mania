@@ -55,26 +55,21 @@ export async function GET(
 
     await connectDB();
 
-    // Ensure Patch model is registered in this runtime before population
-    await import("@/lib/models/Patch");
+    // --- REPLACED fetch/populate block: use manual patch lookup to avoid populate timing issues ---
+    let productDoc;
 
-    let product;
-
-    // Check if the ID is a valid MongoDB ObjectId
     if (mongoose.Types.ObjectId.isValid(id)) {
-      // If it's a valid ObjectId, search by _id
-      product = await Product.findById(id).populate('patchIds');
+      productDoc = await Product.findById(id); // no populate here
     } else {
-      // If not a valid ObjectId, try looking up by slug
-      product = await Product.findOne({ slug: id }).populate('patchIds');
+      productDoc = await Product.findOne({ slug: id }); // no populate here
     }
 
-    if (!product) {
+    if (!productDoc) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
     // Convert Mongoose document to plain object
-    const productObj = product.toObject();
+    const productObj: any = productDoc.toObject();
 
     // Ensure shippingPrice exists with a default value of 0
     if (productObj.shippingPrice === undefined) {
@@ -86,6 +81,30 @@ export async function GET(
     if (!productObj.videos) {
       productObj.videos = [];
       console.log("Setting default videos array for product:", id);
+    }
+
+    // Safely populate patches by querying Patch model directly
+    try {
+      if (Array.isArray(productObj.patchIds) && productObj.patchIds.length > 0) {
+        const PatchModel = (await import("@/lib/models/Patch")).default;
+        const patches = await PatchModel.find({
+          _id: { $in: productObj.patchIds },
+          isActive: true,
+        })
+          .sort({ sortOrder: 1 })
+          .lean();
+        productObj.patches = patches;
+      } else {
+        productObj.patches = [];
+      }
+    } catch (patchErr) {
+      console.error("Error loading patches for product:", {
+        productId: id,
+        patchError: patchErr instanceof Error ? patchErr.message : patchErr,
+        stack: patchErr instanceof Error ? patchErr.stack : undefined,
+      });
+      // Don't fail the whole request if patches can't be loaded; continue with product data
+      productObj.patches = [];
     }
 
     // Handle migration from old schema to new schema if necessary
@@ -172,7 +191,10 @@ export async function GET(
 
     return NextResponse.json(productObj);
   } catch (error) {
-    console.error("Error fetching product:", error);
+    console.error("Error fetching product:", {
+      error: error instanceof Error ? error.message : error,
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return NextResponse.json(
       { error: "Failed to fetch product" },
       { status: 500 }

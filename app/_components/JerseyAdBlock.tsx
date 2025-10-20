@@ -19,42 +19,110 @@ export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+    const controller = new AbortController();
+
+    const safeJson = async (res: Response) => {
+      const contentType = res.headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
+        return res.json();
+      }
+      // Try to parse text and fallback to empty
+      const text = await res.text();
+      try {
+        return JSON.parse(text);
+      } catch {
+        return null;
+      }
+    };
+
     const loadJersey = async () => {
       try {
         setIsLoading(true);
-        // If a specific jerseyId is provided, fetch that jersey
-        // Otherwise fetch a featured jersey
+
         const endpoint = jerseyId
-          ? `/api/products/${jerseyId}`
+          ? `/api/products/${encodeURIComponent(jerseyId)}`
           : `/api/products/featured?category=all&limit=1`;
 
-        const response = await fetch(endpoint);
+        // timeout for fetch
+        const timeout = 10000;
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+        const response = await fetch(endpoint, { signal: controller.signal });
+
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
-          throw new Error("Failed to fetch jersey");
+          console.warn("JerseyAdBlock: non-ok response", response.status, response.statusText);
+          // fallback to placeholder
+          if (!mounted) return;
+          setJersey({
+            id: "placeholder",
+            title: "Offerta Goal Mania",
+            image: "/images/placeholder.png",
+            slug: "/shop",
+            basePrice: 30,
+          });
+          return;
         }
 
-        const data = jerseyId
-          ? await response.json()
-          : (await response.json())[0];
+        const data = await safeJson(response);
 
-        if (data) {
+        if (!mounted) return;
+
+        // data shape may be single object (when jerseyId) or array (featured)
+        const item = jerseyId ? data : Array.isArray(data) ? data[0] : null;
+
+        // Validate data before setting
+        if (
+          item &&
+          (item._id || item.id) &&
+          (item.images && item.images.length > 0 || item.image)
+        ) {
+          const imageUrl = item.images?.[0] || item.image || "/images/placeholder.png";
           setJersey({
-            id: data._id,
-            title: data.title,
-            image: data.images[0],
-            slug: data.slug,
-            basePrice: data.basePrice,
+            id: item._id || item.id,
+            title: item.title || "Offerta Goal Mania",
+            image: imageUrl,
+            slug: item.slug || item._id || "/shop",
+            basePrice: item.basePrice || item.price || 30,
+          });
+        } else {
+          // fallback to placeholder when data not usable
+          setJersey({
+            id: "placeholder",
+            title: "Offerta Goal Mania",
+            image: "/images/placeholder.png",
+            slug: "/shop",
+            basePrice: 30,
           });
         }
-      } catch (error) {
-        console.error("Error loading jersey:", error);
+      } catch (err: any) {
+        if (err.name === "AbortError") {
+          console.warn("JerseyAdBlock fetch aborted (timeout).");
+        } else {
+          console.error("Error loading jersey:", err);
+        }
+        if (!mounted) return;
+        // Fallback so UI doesn't break
+        setJersey({
+          id: "placeholder",
+          title: "Offerta Goal Mania",
+          image: "/images/placeholder.png",
+          slug: "/shop",
+          basePrice: 30,
+        });
       } finally {
-        setIsLoading(false);
+        if (mounted) setIsLoading(false);
       }
     };
 
     loadJersey();
+
+    return () => {
+      mounted = false;
+      controller.abort();
+    };
   }, [jerseyId]);
 
   if (isLoading) {
