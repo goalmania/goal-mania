@@ -122,8 +122,7 @@ const productSchema = new mongoose.Schema(
       required: true,
       unique: true,
       lowercase: true,
-      trim: true,
-      index: true, // This creates the index automatically
+      trim: true
     },
     isActive: {
       type: Boolean,
