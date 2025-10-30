@@ -6,11 +6,11 @@ import { authOptions } from "@/lib/auth";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Extract ID from URL
-    const id = params?.id;
+    // Extract ID from URL (Next.js 15: params is a Promise)
+    const { id } = await context.params;
     if (!id) {
       return NextResponse.json({ error: "Category ID is required" }, { status: 400 });
     }
@@ -31,11 +31,11 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Extract ID from URL
-    const id = params?.id;
+    // Extract ID from URL (Next.js 15: params is a Promise)
+    const { id } = await context.params;
     if (!id) {
       return NextResponse.json({ error: "Category ID is required" }, { status: 400 });
     }
@@ -69,11 +69,11 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Extract ID from URL
-    const id = params?.id;
+    // Extract ID from URL (Next.js 15: params is a Promise)
+    const { id } = await context.params;
     if (!id) {
       return NextResponse.json({ error: "Category ID is required" }, { status: 400 });
     }
@@ -86,22 +86,29 @@ export async function DELETE(
 
     await connectToDatabase();
 
-    // Check if category has children
-    const hasChildren = await Category.exists({ parentId: id });
-    if (hasChildren) {
-      return NextResponse.json(
-        { error: "Cannot delete category with subcategories" },
-        { status: 400 }
-      );
-    }
-
-    const category = await Category.findByIdAndDelete(id);
+    // Validate if category exists first
+    const category = await Category.findById(id);
     if (!category) {
       return NextResponse.json({ error: "Category not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ message: "Category deleted successfully" });
+    // Check if category has children
+    const childrenCount = await Category.countDocuments({ parentId: id });
+    if (childrenCount > 0) {
+      return NextResponse.json(
+        { error: `Cannot delete category with ${childrenCount} subcategories` },
+        { status: 400 }
+      );
+    }
+
+    await Category.findByIdAndDelete(id);
+
+    return NextResponse.json({ 
+      message: "Category deleted successfully",
+      deletedId: id 
+    });
   } catch (error: any) {
+    console.error("Error deleting category:", error);
     return NextResponse.json(
       { error: error.message || "Something went wrong" },
       { status: 500 }

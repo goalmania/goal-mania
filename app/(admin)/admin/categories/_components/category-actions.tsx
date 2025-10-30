@@ -40,14 +40,18 @@ export function CategoryActions({ data }: CategoryActionsProps) {
         method: "DELETE",
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to delete category");
+        // Show the error message from the API
+        toast.error(result.error || "Failed to delete category");
+        return;
       }
 
       toast.success("Category deleted successfully");
       router.refresh();
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message || "Failed to delete category");
     } finally {
       setLoading(false);
     }

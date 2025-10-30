@@ -37,14 +37,6 @@ export const metadata: Metadata = {
     template: "%s | Goal Mania",
   },
   manifest: "/site.webmanifest",
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" }
-    ],
-    apple: [
-      { url: "/favicon-for-public/web-app-manifest-192x192.png", sizes: "192x192", type: "image/png" }
-    ]
-  },
   description: "Negozio ufficiale di maglie da calcio. Trova le migliori maglie delle tue squadre preferite.",
   keywords: ["maglie calcio", "jersey", "football shirts", "Goal Mania", "maglie ufficiali", "calcio"],
   authors: [{ name: "Goal Mania" }],
@@ -93,6 +85,7 @@ export const metadata: Metadata = {
     apple: [
       { url: "/images/image.png", sizes: "180x180", type: "image/png" },
       { url: "/favicon-for-app/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/favicon-for-public/web-app-manifest-192x192.png", sizes: "192x192", type: "image/png" }
     ],
     other: [
       {
@@ -107,7 +100,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({

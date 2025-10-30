@@ -4,12 +4,12 @@ import { connectToDatabase } from "@/lib/db";
 
 async function getParentCategories() {
   await connectToDatabase();
-  const categories = await Category.find({ parentId: null })
+  const categories = (await Category.find({ parentId: null })
     .sort({ order: 1, name: 1 })
-    .lean();
+    .lean()) as any[];
     
-  return categories.map(cat => ({
-    id: cat._id.toString(),
+  return categories.map((cat: any) => ({
+    id: cat._id?.toString?.() ?? "",
     name: cat.name,
     type: cat.type,
     slug: cat.slug,

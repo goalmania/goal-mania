@@ -35,8 +35,8 @@ const categorySchema = z.object({
   type: z.enum(["league", "product-type", "special"]),
   description: z.string().optional(),
   parentId: z.string().optional(),
-  isActive: z.boolean().default(true),
-  order: z.number().default(0),
+  isActive: z.boolean(),
+  order: z.number(),
 });
 
 type CategoryFormData = z.infer<typeof categorySchema>;

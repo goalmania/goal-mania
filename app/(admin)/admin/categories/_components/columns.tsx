@@ -37,7 +37,7 @@ export const columns: ColumnDef<CategoryColumn>[] = [
     cell: ({ row }) => {
       const isActive = row.getValue("isActive") as boolean;
       return (
-        <Badge variant={isActive ? "success" : "destructive"}>
+        <Badge variant={isActive ? "default" : "destructive"}>
           {isActive ? "Active" : "Inactive"}
         </Badge>
       );
