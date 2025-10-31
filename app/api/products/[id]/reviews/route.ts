@@ -72,10 +72,9 @@ export async function POST(request: Request) {
     };
 
     // Add the review to the product's reviews array
-    if (!Array.isArray(product.reviews)) {
-      product.reviews = [];
+    if (Array.isArray(product.reviews)) {
+      product.reviews.push(newReview);
     }
-    product.reviews.push(newReview);
 
     // Save the product with the new review
     await product.save();

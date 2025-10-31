@@ -7,12 +7,12 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 
-// Load environment variables
-dotenv.config();
-
 // Get current file directory
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Load environment variables from .env.local
+dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 
 // Import mongoose model dynamically
 const connectToDB = async () => {
@@ -139,27 +139,37 @@ const productSchema = new mongoose.Schema(
 
 // Helper functions
 const parseBoolean = (value) => {
+  if (!value || typeof value !== 'string') return false;
   return value.toLowerCase() === "true";
 };
 
-const parseArray = (value) => {
-  try {
-    // Handle empty arrays
-    if (value === "[]") return [];
+  const parseArray = (value) => {
+    try {
+      if (!value || typeof value !== "string") {
+        return [];
+      }
 
-    // Remove brackets and parse JSON
-    const cleanValue = value.replace(/^\[|\]$/g, "");
-
-    // If empty after cleaning, return empty array
-    if (!cleanValue.trim()) return [];
-
-    // Parse the array string
-    return JSON.parse(`[${cleanValue}]`);
-  } catch (error) {
-    console.error(`Error parsing array: ${value}`, error);
-    return [];
-  }
-};
+      // Fix the dot issue in kids sizes
+      const fixedValue = value.replace(/"\."/, '","');
+      
+      // Clean the string and parse as JSON
+      const cleanValue = fixedValue.replace(/^\[|\]$/g, "");
+      if (!cleanValue.trim()) return [];
+      
+      try {
+        return JSON.parse(`[${cleanValue}]`);
+      } catch {
+        // If parsing fails, try to split by comma and clean up
+        return cleanValue
+          .split(",")
+          .map(item => item.trim().replace(/^["']+|["']+$/g, ""))
+          .filter(Boolean);
+      }
+    } catch (error) {
+      console.error(`Error parsing array: ${value}`, error);
+      return [];
+    }
+  };
 
 const generateSlug = (title) => {
   // Check if title is defined and is a string
@@ -185,13 +195,33 @@ const seedProducts = async () => {
   const filePath = path.join(process.cwd(), "prod.csv");
   const fileContent = fs.readFileSync(filePath, { encoding: "utf-8" });
 
-  console.log("Parsing CSV file...");
+  // Print raw file content for debugging
+  console.log("Raw CSV content (first 5 lines):");
+  console.log(fileContent.split('\n').slice(0, 5).join('\n'));
+
+  // Debug CSV header row
+  const csvLines = fileContent.split('\n');
+  console.log("\nCSV Header row:", csvLines[0]);
+
+  console.log("\nParsing CSV file...");
   const records = parse(fileContent, {
-    columns: true,
+    columns: (header) => header.map(column => column.trim().toLowerCase()),
     skip_empty_lines: true,
+    trim: true,
+    relaxColumnCount: true,
+    bom: true,
   });
 
-  console.log(`Found ${records.length} products to import`);
+  // Print parsed record for debugging
+  console.log("\nSample record (raw):", JSON.stringify(records[0], null, 2));
+
+  // Check if title exists in the first record
+  if (records[0]) {
+    console.log("\nTitle from first record:", records[0].title);
+    console.log("Keys in first record:", Object.keys(records[0]));
+  }
+
+  console.log(`\nFound ${records.length} products to import`);
 
   // Count for tracking progress
   let processedCount = 0;
@@ -217,11 +247,11 @@ const seedProducts = async () => {
         continue;
       }
 
-      // Parse arrays properly
-      const adultSizes = parseArray(record.adultSizes);
-      const kidsSizes = parseArray(record.KidsSizes);
-      const availablePatches = parseArray(record.avaialbePatches);
-      const images = parseArray(record.Images);
+      // Parse arrays properly (handle both cases)
+      const adultSizes = parseArray(record.adultSizes || record.AdultSizes);
+      const kidsSizes = parseArray(record.kidsSizes || record.KidsSizes);
+      const availablePatches = parseArray(record.availablePatches || record.AvailablePatches || record.avaialbePatches);
+      const images = parseArray(record.images || record.Images);
 
       // If images array is empty, add placeholder
       if (images.length === 0) {
@@ -241,27 +271,40 @@ const seedProducts = async () => {
         }
       }
 
+      // Map the category from year format to proper category
+      const mapCategory = (cat) => {
+        if (!cat) return 'current';
+        if (cat.includes('2025/26')) return 'next-season';
+        if (cat.includes('2024/25')) return 'current';
+        if (cat.includes('2023/24')) return 'last-season';
+        return cat.toLowerCase(); // For other categories like 'retro'
+      };
+
+      // Debug the record
+      console.log("\nProcessing record:", record.title);
+      console.log("Record data:", JSON.stringify(record, null, 2));
+
       // Create product object
       const productData = {
-        title: record.title,
-        description: record.description,
-        basePrice: parseFloat(record.basePrice),
-        retroPrice: parseFloat(record.retroPrice),
-        stockQuantity: parseInt(record.stockQuantity),
-        images: images,
-        isRetro: parseBoolean(record.isRetro),
-        hasShorts: parseBoolean(record.hasShorts),
-        hasSocks: parseBoolean(record.hasScoks), // Note: fixing typo from CSV
-        hasPlayerEdition: parseBoolean(record.hasPlayerEdtition), // Note: fixing typo from CSV
-        adultSizes: adultSizes,
-        kidsSizes: kidsSizes,
-        category: record.category,
+        title: record.title?.trim() || record.Title?.trim(),
+        description: record.description?.trim() || record.Description?.trim(),
+        basePrice: parseFloat(record.basePrice || record.BasePrice) || 30,
+        retroPrice: parseFloat(record.retroPrice || record.RetroPrice) || 35,
+        stockQuantity: parseInt(record.stockQuantity || record.StockQuantity) || 0,
+        images: images.length > 0 ? images : ["https://res.cloudinary.com/goal-mania/image/upload/v1717608995/jersey-placeholder_qclytm.jpg"],
+        isRetro: parseBoolean(record.isRetro || record.IsRetro),
+        hasShorts: parseBoolean(record.hasShorts || record.HasShorts),
+        hasSocks: parseBoolean(record.hasScoks || record.HasScoks), // Note: fixing typo from CSV
+        hasPlayerEdition: parseBoolean(record.hasPlayerEdtition || record.HasPlayerEdition), // Note: fixing typo from CSV
+        adultSizes: adultSizes.length > 0 ? adultSizes : ["S", "M", "L", "XL", "XXL"],
+        kidsSizes: kidsSizes.length > 0 ? kidsSizes : [],
+        category: mapCategory(record.category || record.Category),
         availablePatches: availablePatches, // Note: fixing typo from CSV
-        allowsNumberOnShirt: parseBoolean(record.allowsNumberOnShirt),
-        allowsNameOnShirt: parseBoolean(record.allowsNameOnShirt),
+        allowsNumberOnShirt: parseBoolean(record.allowsNumberOnShirt || record.AllowsNumberOnShirt),
+        allowsNameOnShirt: parseBoolean(record.allowsNameOnShirt || record.AllowsNameOnShirt),
         slug: productSlug,
-        isActive: parseBoolean(record.isActive),
-        feature: parseBoolean(record.feature),
+        isActive: parseBoolean(record.isActive || record.IsActive),
+        feature: parseBoolean(record.feature || record.Feature),
         reviews: [], // Initialize with empty reviews
       };
 

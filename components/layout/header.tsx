@@ -63,6 +63,7 @@ export function Header() {
   const [openMenu, setOpenMenu] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [dynamicCategories, setDynamicCategories] = useState<Array<{ name: string; href: string }>>([]);
 
   useEffect(() => {
     setMounted(true);
@@ -76,10 +77,47 @@ export function Header() {
     }
   }, [cart, wishlist, session]);
 
+  // Fetch dynamic categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/admin/categories');
+        if (response.ok) {
+          const data = await response.json();
+          // Filter active categories and map to navigation format
+          const categories = data
+            .filter((cat: any) => cat.isActive)
+            .map((cat: any) => ({
+              name: cat.name,
+              href: `/category/${cat.slug}`,
+            }));
+          setDynamicCategories(categories);
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    if (mounted) {
+      fetchCategories();
+    }
+  }, [mounted]);
+
   const languageNames: Record<string, string> = {
     en: "English",
     it: "Italiano",
   };
+
+  // Static sub-items that should always appear first
+  const staticSubItems = [
+    { name: t("nav.laliga"), href: "/international/laliga" },
+    { name: t("nav.premierLeague"), href: "/international/premierLeague" },
+    { name: t("nav.bundesliga"), href: "/international/bundesliga" },
+    { name: t("nav.ligue1"), href: "/international/ligue1" },
+    { name: t("nav.serieA"), href: "/international/serieA" },
+    { name: t("nav.leaguesOverview"), href: "/leagues-overview" },
+    { name: t("nav.otherLeagues"), href: "/international/other" },
+  ];
 
   const navigation = [
     { name: t("nav.home"), href: "/" },
@@ -89,15 +127,7 @@ export function Header() {
       name: t("nav.category"),
       href: "/category",
       hasDropdown: true,
-      subItems: [
-        { name: t("nav.laliga"), href: "/international/laliga" },
-        { name: t("nav.premierLeague"), href: "/international/premierLeague" },
-        { name: t("nav.bundesliga"), href: "/international/bundesliga" },
-        { name: t("nav.ligue1"), href: "/international/ligue1" },
-        { name: t("nav.serieA"), href: "/international/serieA" },
-        { name: t("nav.leaguesOverview"), href: "/leagues-overview" },
-        { name: t("nav.otherLeagues"), href: "/international/other" },
-      ],
+      subItems: [...staticSubItems, ...dynamicCategories],
     },
     { name: t("nav.info"), href: "/info" },
     { name: t("nav.about"), href: "/about" },
@@ -108,8 +138,8 @@ export function Header() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Use router.push instead of window.location.href
-      router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+      // Redirect to /search page with query param (same as ShopSearchBar)
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
       setSearchOpen(false);
       setSearchQuery("");
     }
@@ -147,6 +177,18 @@ export function Header() {
               Goal<span className=" text-[#FF7A00]">Mania</span>
             </div>
           </div>
+        </div>
+
+        {/* Search Icon - Mobile Only (between logo and language) */}
+        <div className="md:hidden">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSearchOpen(true)}
+            className="text-white hover:text-[#FF7A00]"
+          >
+            <Search className="h-5 w-5" />
+          </Button>
         </div>
 
         {/* Desktop Navigation */}
@@ -192,18 +234,6 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-1">
-          {/* Search Icon - Mobile Only - HIDDEN */}
-          <div className="hidden md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setSearchOpen(true)}
-              className="text-white hover:text-[#FF7A00]"
-            >
-              <Search className="h-5 w-5" />
-            </Button>
-          </div>
-
           {/* Language Switch */}
           <Button
             variant="ghost"
@@ -395,6 +425,33 @@ export function Header() {
                 className="text-white"
               >
                 <X className="h-6 w-6" />
+              </Button>
+            </div>
+
+            {/* Search Bar in Mobile Menu */}
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSearch(e as any);
+                    setOpenMenu(false);
+                  }
+                }}
+                placeholder={t("Search products...")}
+                className="flex-1 px-4 py-2 rounded-full bg-white text-black focus:outline-none focus:ring-2 focus:ring-[#FF7A00]"
+              />
+              <Button
+                onClick={(e) => {
+                  handleSearch(e as any);
+                  setOpenMenu(false);
+                }}
+                className="bg-[#FF7A00] hover:bg-[#FF7A00]/90 text-white rounded-full px-4"
+              >
+                <Search className="h-5 w-5" />
               </Button>
             </div>
 

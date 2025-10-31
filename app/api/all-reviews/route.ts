@@ -42,14 +42,24 @@ export async function GET() {
             userName: review.userName || "Anonymous",
             rating: review.rating,
             comment: review.comment || "",
-            createdAt: review.createdAt || new Date().toISOString(),
-            updatedAt: review.updatedAt || new Date().toISOString(),
+            createdAt:
+              review.createdAt
+                ? (typeof review.createdAt === "string"
+                    ? review.createdAt
+                    : (review.createdAt as Date).toISOString())
+                : new Date().toISOString(),
+            updatedAt:
+              review.updatedAt
+                ? (typeof review.updatedAt === "string"
+                    ? review.updatedAt
+                    : (review.updatedAt as Date).toISOString())
+                : new Date().toISOString(),
             productId: product._id ? product._id.toString() : "",
             productName: product.title || "Unknown Product",
             productImage:
               product.images && product.images.length > 0
                 ? product.images[0]
-                : null,
+                : "",
             source: "product" as const,
           });
         }
@@ -87,7 +97,7 @@ export async function GET() {
         productImage:
           product && product.images && product.images.length > 0
             ? product.images[0]
-            : null,
+            : "",
         source: "standalone" as const,
       });
     }

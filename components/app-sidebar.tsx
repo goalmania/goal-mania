@@ -53,6 +53,11 @@ const data = {
       icon: IconBrandProducthunt,
     },
     {
+      title: "Categories",
+      url: "/admin/categories",
+      icon: IconFolder,
+    },
+    {
       title: "Articles",
       url: "/admin/articles",
       icon: IconArticle

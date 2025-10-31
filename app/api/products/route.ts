@@ -40,7 +40,11 @@ const productSchema = z.object({
     .array(z.enum(["S", "M", "L", "XL", "XXL", "3XL"]))
     .default(["S", "M", "L", "XL", "XXL"]),
   kidsSizes: z.array(z.enum(["XS", "S", "M", "L", "XL"])).default([]),
-  category: z.enum(PRODUCT_CATEGORIES),
+  // Accept static categories and also dynamic string values created via admin
+  // category management. Using a permissive string validator here keeps
+  // backward compatibility with the hardcoded PRODUCT_CATEGORIES while
+  // allowing new categories.
+  category: z.string().min(1, "Category must be a non-empty string"),
   allowsNumberOnShirt: z.boolean().default(true),
   allowsNameOnShirt: z.boolean().default(true),
   isActive: z.boolean().default(true),

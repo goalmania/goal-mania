@@ -42,4 +42,6 @@ const connectDB = async () => {
   return cached.conn;
 };
 
+// Export both names for backward compatibility
+export const connectToDatabase = connectDB;
 export default connectDB;

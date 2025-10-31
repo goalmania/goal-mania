@@ -1,4 +1,5 @@
 import { NextAuthOptions } from "next-auth";
+import { getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import connectDB from "@/lib/db";
@@ -22,6 +23,12 @@ declare module "next-auth" {
     image?: string | null;
     role?: string;
   }
+}
+
+// Admin role check
+export async function isAdmin() {
+  const session = await getServerSession(authOptions);
+  return session?.user?.role === 'admin';
 }
 
 export const authOptions: NextAuthOptions = {
