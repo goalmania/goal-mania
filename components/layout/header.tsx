@@ -108,8 +108,8 @@ export function Header() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Use router.push instead of window.location.href
-      router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+      // Redirect to /search page with query param (same as ShopSearchBar)
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
       setSearchOpen(false);
       setSearchQuery("");
     }
@@ -147,6 +147,18 @@ export function Header() {
               Goal<span className=" text-[#FF7A00]">Mania</span>
             </div>
           </div>
+        </div>
+
+        {/* Search Icon - Mobile Only (between logo and language) */}
+        <div className="md:hidden">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSearchOpen(true)}
+            className="text-white hover:text-[#FF7A00]"
+          >
+            <Search className="h-5 w-5" />
+          </Button>
         </div>
 
         {/* Desktop Navigation */}
@@ -192,18 +204,6 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-1">
-          {/* Search Icon - Mobile Only - HIDDEN */}
-          <div className="hidden md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setSearchOpen(true)}
-              className="text-white hover:text-[#FF7A00]"
-            >
-              <Search className="h-5 w-5" />
-            </Button>
-          </div>
-
           {/* Language Switch */}
           <Button
             variant="ghost"
@@ -395,6 +395,33 @@ export function Header() {
                 className="text-white"
               >
                 <X className="h-6 w-6" />
+              </Button>
+            </div>
+
+            {/* Search Bar in Mobile Menu */}
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSearch(e as any);
+                    setOpenMenu(false);
+                  }
+                }}
+                placeholder={t("Search products...")}
+                className="flex-1 px-4 py-2 rounded-full bg-white text-black focus:outline-none focus:ring-2 focus:ring-[#FF7A00]"
+              />
+              <Button
+                onClick={(e) => {
+                  handleSearch(e as any);
+                  setOpenMenu(false);
+                }}
+                className="bg-[#FF7A00] hover:bg-[#FF7A00]/90 text-white rounded-full px-4"
+              >
+                <Search className="h-5 w-5" />
               </Button>
             </div>
 
