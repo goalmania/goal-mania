@@ -102,7 +102,9 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: PRODUCT_CATEGORIES,
+      // Remove enum constraint to allow dynamic categories from admin panel
+      // The static PRODUCT_CATEGORIES are still available in the UI dropdown
+      // but we no longer enforce them at the database level
     },
     // Reference to actual Patch documents
     patchIds: [{
@@ -168,7 +170,12 @@ productSchema.index({ category: 1 });
 productSchema.index({ isActive: 1 });
 productSchema.index({ feature: -1, createdAt: -1 });
 
-const Product =
-  mongoose.models.Product || mongoose.model("Product", productSchema);
+// Delete cached model to ensure schema changes are applied
+// This is necessary when removing enum constraints
+if (mongoose.models.Product) {
+  delete mongoose.models.Product;
+}
+
+const Product = mongoose.model("Product", productSchema);
 
 export default Product;

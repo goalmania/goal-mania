@@ -12,13 +12,21 @@ export const PatchSchema = z.enum([
 ]);
 
 // Category enum
-export const CategorySchema = z.enum([
-  "2024/25",
-  "2025/26", 
-  "SerieA",
-  "International",
-  "Retro",
-  "Mystery Box"
+// Keep the hardcoded static categories for UI/typing elsewhere, but allow
+// any non-empty string for the product schema so admins can create dynamic
+// categories that are not part of the hardcoded enum. We still preserve the
+// previous enum intent by accepting those values as well, but the runtime
+// validation accepts any non-empty string.
+export const CategorySchema = z.union([
+  z.enum([
+    "2024/25",
+    "2025/26",
+    "SerieA",
+    "International",
+    "Retro",
+    "Mystery Box",
+  ]),
+  z.string().min(1, "Category must be a non-empty string"),
 ]);
 
 // Product form schema

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-// import Image from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
@@ -113,9 +113,9 @@ export default function ProductCard({
   };
 
   return (
-    <div className="w-full ">
+    <div className="w-full">
       <div
-        className={`group relative bg-white rounded-lg   duration-300 overflow-hidden h-[530px] flex flex-col ${className}`}
+        className={`group relative bg-white rounded-lg duration-300 overflow-hidden h-[530px] flex flex-col ${className}`}
       >
         {/* Image section */}
         <div
@@ -150,10 +150,11 @@ export default function ProductCard({
                   style={{ opacity: showVideo ? 1 : 0 }}
                 />
               ) : (
-                <img
+                <Image
                   src={image || "/images/image.png"}
                   alt={name || "Product image"}
-                  className="h-full w-full object-cover object-center transform group-hover:scale-105 transition-transform duration-300"
+                  fill
+                  className="object-cover object-center transform group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
                 />
               )}
@@ -185,103 +186,63 @@ export default function ProductCard({
               </div>
             )}
 
-            <div className=" flex flex-col items-start justify-start gap-1 sm:gap-2">
-              {/* Wishlist button */}
-
-              {/* Price */}
-              <div className="flex items-center gap-2 justify-between mt-auto">
-                <p className="text-xs sm:text-base md:text-lg font-semibold text-[#0A1A2F]">
-                  €{Number(price).toFixed(2)}
-                </p>
-                <div className=" flex justify-center items-center gap-1">
-                  <Star fill="#FF7A00" color="#FF7A00" size={12} />
-                  <Star fill="#FF7A00" color="#FF7A00" size={12} />
-                  <Star fill="#FF7A00" color="#FF7A00" size={12} />
-                  <Star fill="#FF7A00" color="#FF7A00" size={12} />
-                  <Star fill="#FF7A00" color="#FF7A00" size={12} />
+            {/* Price and Rating Section */}
+            <div className="mt-2">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <p className="text-sm sm:text-base md:text-lg font-semibold text-[#0A1A2F]">
+                    €{Number(price || 0).toFixed(2)}
+                  </p>
+                  {/* Star Rating */}
+                  {(() => {
+                    const avgRating = (product as any)?.averageRating || 0;
+                    const reviewCount = (product as any)?.reviewCount || (product as any)?.reviews?.length || 0;
+                    const rating = Math.round(avgRating);
+                    return (
+                      <div className="flex items-center gap-0.5">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            fill={star <= rating ? "#FF7A00" : "none"}
+                            color={star <= rating ? "#FF7A00" : "#D1D5DB"}
+                            size={12}
+                          />
+                        ))}
+                        {reviewCount > 0 && (
+                          <span className="text-[10px] text-gray-500 ml-1">({reviewCount})</span>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
-              </div>
-
-              {/* Wishlist button */}
-              {/* Add to cart button */}
-
-              <div className="flex gap-1">
-                {/* Add to Cart buttons */}
-                <div className="flex  gap-3">
+                {/* Buttons - always visible, side by side on desktop */}
+                <div className="flex gap-2 w-full sm:w-auto">
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="px-3 flex items-center  py-1.5 border border-[#0A1A2F] text-xs text-black w-full rounded-full"
+                    className="flex-1 min-w-0 px-2 sm:px-3 flex items-center justify-center py-1.5 border border-[#0A1A2F] text-xs text-black rounded-full hover:bg-gray-50 transition-colors"
                   >
-                    <span className="block whitespace-nowrap">
-                      {" "}
-                      Add to Cart
-                    </span>
-                    <ArrowRight className="ml-1  inline-flex" size={14} />
+                    <span className="whitespace-nowrap truncate">Add to Cart</span>
+                    <ArrowRight className="ml-1 inline-flex" size={14} />
                   </button>
                   <button
                     type="button"
                     // onClick={handleBuyNow}
-                    className="px-3 py-1.5 border flex items-center  text-xs bg-[#FF7A00] text-black w-full rounded-full"
+                    className="flex-1 min-w-0 px-2 sm:px-3 py-1.5 border flex items-center justify-center text-xs bg-[#FF7A00] text-black rounded-full hover:bg-[#FF8A10] transition-colors"
                   >
-                    <span className="block whitespace-nowrap">Buy Now</span>
+                    <span className="whitespace-nowrap truncate">Buy Now</span>
                     <ArrowRight className="ml-1 inline-flex" size={14} />
                   </button>
-                  {/* 
-                  <div>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            onClick={handleWishlistToggle}
-                            variant="secondary"
-                            size="icon"
-                            className="absolute top-3 right-3 h-8 w-8 bg-white/80 backdrop-blur-sm shadow-md hover:bg-white"
-                            aria-label={
-                              isInWishlist(product._id)
-                                ? "Remove from wishlist"
-                                : "Add to wishlist"
-                            }
-                          >
-                            {isInWishlist(product._id) ? (
-                              <HeartIconSolid className="h-4 w-4 text-red-500" />
-                            ) : (
-                              <HeartIcon className="h-4 w-4 text-black" />
-                            )}
-                          </Button>
-                          <Button
-                            onClick={handleWishlistToggle}
-                            variant="secondary"
-                            size="icon"
-                            className="absolute top-3 right-3 h-8 w-8 bg-white/80 backdrop-blur-sm shadow-md hover:bg-white"
-                            aria-label={
-                              isInWishlist(product._id)
-                                ? "Remove from wishlist"
-                                : "Add to wishlist"
-                            }
-                          >
-                            {isInWishlist(product._id) ? (
-                              <HeartIconSolid className="h-4 w-4 text-red-500" />
-                            ) : (
-                              <HeartIcon className="h-4 w-4 text-black" />
-                            )}
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          {isInWishlist(product._id)
-                            ? "Remove from wishlist"
-                            : "Add to wishlist"}
-                        </TooltipContent>
-                       
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div> */}
                 </div>
+              </div>
+            </div>
 
-                {showWishlistButton && onWishlistToggle && (
+            <div className="mt-2 flex flex-col items-start justify-start gap-1 sm:gap-2">
+              {showWishlistButton && onWishlistToggle && (
+                <div className="flex justify-end w-full mt-2">
                   <button
                     onClick={handleWishlistToggle}
-                    className=" p-1.5 sm:p-2.5  "
+                    className="p-1.5 sm:p-2.5"
                     aria-label={
                       isInWishlist && isInWishlist(id)
                         ? t("product.removeFromWishlist")
@@ -294,33 +255,33 @@ export default function ProductCard({
                       <HeartIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
                     )}
                   </button>
-                )}
-
-                {/* {showAddToCartButton && onAddToCart && (
-                  <button
-                    onClick={handleAddToCart}
-                    className=" rounded-full bg-[#f5963c]/80 backdrop-blur-sm p-1 shadow-sm hover:bg-[#f5963c] transition-colors duration-200  text-white"
-                    aria-label="Add to cart"
-                  >
-                    <svg
-                      className="h-3 w-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"
-                      />
-                    </svg>
-                  </button>
-                )} */}
-              </div>
+                </div>
+              )}
             </div>
-          </div>
 
+            {/* {showAddToCartButton && onAddToCart && (
+              <button
+                onClick={handleAddToCart}
+                className=" rounded-full bg-[#f5963c]/80 backdrop-blur-sm p-1 shadow-sm hover:bg-[#f5963c] transition-colors duration-200  text-white"
+                aria-label="Add to cart"
+              >
+                <svg
+                  className="h-3 w-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"
+                  />
+                </svg>
+              </button>
+            )} */}
+          </div>
+  
           {/* Badges section */}
           {(availablePatches.length > 0 || badges.length > 0) && (
             <div className="flex flex-wrap gap-0.5 z-10 mt-1">

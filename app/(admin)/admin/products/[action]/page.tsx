@@ -82,6 +82,25 @@ export default function ProductForm() {
   const [uploadProgress, setUploadProgress] = useState<{[key: string]: number}>({});
   const [deleteVideoDialogOpen, setDeleteVideoDialogOpen] = useState(false);
   const [videoToDelete, setVideoToDelete] = useState<string>("");
+  const [dynamicCategories, setDynamicCategories] = useState<Array<{ _id: string; name: string; slug: string }>>([]);
+
+  // Fetch dynamic categories on mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/admin/categories');
+        if (response.ok) {
+          const data = await response.json();
+          // Filter active categories
+          const activeCategories = data.filter((cat: any) => cat.isActive);
+          setDynamicCategories(activeCategories);
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   // Initialize form with React Hook Form
   const form = useForm<ProductFormData>({
@@ -150,36 +169,59 @@ export default function ProductForm() {
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
 
+    // Validate Cloudinary configuration before starting upload
+    const cloudinaryUrl = getCloudinaryUrl();
+    const uploadPreset = getCloudinaryUploadPreset();
+    
+    if (!uploadPreset) {
+      toast.error("Cloudinary upload preset is not configured. Please set NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET in your environment variables.");
+      console.error("Missing NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET environment variable");
+      return;
+    }
+
     setUploadingImages(true);
     const files = Array.from(e.target.files);
     const uploadPromises = files.map(async (file) => {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append(
-        "upload_preset",
-        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
-      );
+      formData.append("upload_preset", uploadPreset);
 
       try {
-        const response = await fetch(getCloudinaryUrl(), {
+        const response = await fetch(cloudinaryUrl, {
           method: "POST",
           body: formData,
         });
 
-        if (!response.ok) throw new Error("Upload failed");
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.error("Upload failed:", {
+            status: response.status,
+            statusText: response.statusText,
+            error: errorData,
+            file: file.name,
+            cloudinaryUrl: cloudinaryUrl,
+            uploadPreset: uploadPreset
+          });
+          throw new Error(`Upload failed: ${errorData.error?.message || response.statusText}`);
+        }
         const data = await response.json();
         return data.secure_url;
       } catch (error) {
         console.error("Upload error:", error);
+        toast.error(`Failed to upload ${file.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
         return null;
       }
     });
 
     try {
       const urls = (await Promise.all(uploadPromises)).filter(Boolean);
-      const currentImages = getValues("images") || [];
-      setValue("images", [...currentImages, ...urls]);
-      toast.success(`${urls.length} image(s) uploaded successfully`);
+      if (urls.length > 0) {
+        const currentImages = getValues("images") || [];
+        setValue("images", [...currentImages, ...urls]);
+        toast.success(`${urls.length} image(s) uploaded successfully`);
+      } else {
+        toast.error("No images were uploaded successfully");
+      }
     } catch (error) {
       console.error("Error uploading images:", error);
       toast.error("Failed to upload images");
@@ -746,9 +788,16 @@ export default function ProductForm() {
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
+                          {/* Static categories */}
                           {PRODUCT_CATEGORIES.map((category) => (
                             <SelectItem key={category} value={category}>
                               {category}
+                            </SelectItem>
+                          ))}
+                          {/* Dynamic categories from database */}
+                          {dynamicCategories.map((category) => (
+                            <SelectItem key={category._id} value={category.name}>
+                              {category.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
