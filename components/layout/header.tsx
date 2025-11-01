@@ -203,6 +203,15 @@ export function Header() {
               </Link>
             )
           )}
+          {/* Search Icon - Desktop */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSearchOpen(true)}
+            className="text-white hover:text-[#FF7A00]"
+          >
+            <Search className="h-5 w-5" />
+          </Button>
         </div>
 
         <div className="flex items-center gap-1">
@@ -343,35 +352,37 @@ export function Header() {
         </div>
       </nav>
 
-      {/* Mobile Search Overlay */}
+      {/* Search Overlay - Mobile & Desktop */}
       {searchOpen && (
-        <div className="fixed inset-0 bg-black/80 z-50 md:hidden">
-          <div className="bg-[#0B1C2C] p-4">
-            <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setSearchOpen(false)}
-                className="text-white"
-              >
-                <X className="h-6 w-6" />
-              </Button>
-              <form onSubmit={handleSearch} className="flex-1 flex gap-2">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Cerca prodotti..."
-                  className="flex-1 px-4 py-2 rounded-full bg-white text-black focus:outline-none focus:ring-2 focus:ring-[#FF7A00]"
-                  autoFocus
-                />
+        <div className="fixed inset-0 bg-black/80 z-50">
+          <div className="bg-[#0B1C2C] p-4 md:p-6">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-center gap-3">
                 <Button
-                  type="submit"
-                  className="bg-[#FF7A00] hover:bg-[#FF7A00]/90 text-white rounded-full px-6"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setSearchOpen(false)}
+                  className="text-white hover:text-[#FF7A00]"
                 >
-                  <Search className="h-5 w-5" />
+                  <X className="h-6 w-6" />
                 </Button>
-              </form>
+                <form onSubmit={handleSearch} className="flex-1 flex gap-2">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Cerca prodotti e articoli..."
+                    className="flex-1 px-4 py-2 md:py-3 rounded-full bg-white text-black focus:outline-none focus:ring-2 focus:ring-[#FF7A00]"
+                    autoFocus
+                  />
+                  <Button
+                    type="submit"
+                    className="bg-[#FF7A00] hover:bg-[#FF7A00]/90 text-white rounded-full px-6 md:px-8"
+                  >
+                    <Search className="h-5 w-5" />
+                  </Button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
