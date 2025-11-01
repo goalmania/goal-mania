@@ -788,16 +788,10 @@ export default function ProductForm() {
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
-                          {/* Static categories */}
+                          {/* Static categories only */}
                           {PRODUCT_CATEGORIES.map((category) => (
                             <SelectItem key={category} value={category}>
                               {category}
-                            </SelectItem>
-                          ))}
-                          {/* Dynamic categories from database */}
-                          {dynamicCategories.map((category) => (
-                            <SelectItem key={category._id} value={category.name}>
-                              {category.name}
                             </SelectItem>
                           ))}
                         </SelectContent>

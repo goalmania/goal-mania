@@ -12,7 +12,10 @@ export const PRODUCT_CATEGORIES = [
   "2024/25",
   "2025/26",
   "Retro",
-  "SerieA",
+  "Serie A",
+  "Premier League",
+  "Resto del Mondo",
+  "Edizioni Limitate",
   "International",
   "Mystery Box",
 ] as const;

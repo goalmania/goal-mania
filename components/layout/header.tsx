@@ -63,11 +63,8 @@ export function Header() {
   const [openMenu, setOpenMenu] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [dynamicCategories, setDynamicCategories] = useState<Array<{ name: string; href: string }>>([]);
-
   useEffect(() => {
     setMounted(true);
-
     if (typeof window !== "undefined" && session) {
       setCartItemCount(cart.getItemCount());
       setWishlistItemCount(wishlist.items.length);
@@ -77,47 +74,22 @@ export function Header() {
     }
   }, [cart, wishlist, session]);
 
-  // Fetch dynamic categories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch('/api/admin/categories');
-        if (response.ok) {
-          const data = await response.json();
-          // Filter active categories and map to navigation format
-          const categories = data
-            .filter((cat: any) => cat.isActive)
-            .map((cat: any) => ({
-              name: cat.name,
-              href: `/category/${cat.slug}`,
-            }));
-          setDynamicCategories(categories);
-        }
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
-
-    if (mounted) {
-      fetchCategories();
-    }
-  }, [mounted]);
-
   const languageNames: Record<string, string> = {
     en: "English",
     it: "Italiano",
   };
 
   // Static sub-items that should always appear first
-  const staticSubItems = [
-    { name: t("nav.laliga"), href: "/international/laliga" },
-    { name: t("nav.premierLeague"), href: "/international/premierLeague" },
-    { name: t("nav.bundesliga"), href: "/international/bundesliga" },
-    { name: t("nav.ligue1"), href: "/international/ligue1" },
-    { name: t("nav.serieA"), href: "/international/serieA" },
-    { name: t("nav.leaguesOverview"), href: "/leagues-overview" },
-    { name: t("nav.otherLeagues"), href: "/international/other" },
-  ];
+    // Static sub-items that should always appear first
+    const staticSubItems = [
+      { name: t("nav.laliga"), href: "/international/laliga" },
+      { name: t("nav.premierLeague"), href: "/international/premierLeague" },
+      { name: t("nav.bundesliga"), href: "/international/bundesliga" },
+      { name: t("nav.ligue1"), href: "/international/ligue1" },
+      { name: t("nav.serieA"), href: "/international/serieA" },
+      { name: t("nav.leaguesOverview"), href: "/leagues-overview" },
+      { name: t("nav.otherLeagues"), href: "/international/other" },
+    ];
 
   const navigation = [
     { name: t("nav.home"), href: "/" },
@@ -127,7 +99,7 @@ export function Header() {
       name: t("nav.category"),
       href: "/category",
       hasDropdown: true,
-      subItems: [...staticSubItems, ...dynamicCategories],
+    subItems: staticSubItems,
     },
     { name: t("nav.info"), href: "/info" },
     { name: t("nav.about"), href: "/about" },
@@ -211,7 +183,7 @@ export function Header() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-white text-black">
                   {item.subItems?.map((sub) => (
-                    <DropdownMenuItem key={sub.name} asChild>
+                    <DropdownMenuItem key={sub.href} asChild>
                       <Link href={sub.href}>{sub.name}</Link>
                     </DropdownMenuItem>
                   ))}

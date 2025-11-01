@@ -12,6 +12,7 @@ import ClientSlider from "@/components/home/ClientSlider";
 import FeaturedVideoProducts from "@/components/home/FeaturedVideoProducts";
 import CallToAction from "@/components/home/CallToAction";
 import VideoComp from "@/components/home/VideoComp";
+import LandingCategorySection from "@/app/_components/LandingCategorySection";
 
 // Enable caching for better performance
 export const revalidate = 300; // Revalidate every 5 minutes
@@ -209,6 +210,11 @@ export default async function Home() {
       <NewsSection articles={featuredArticles} />
       <FeaturedVideoProducts products={featuredProducts} />
       <VideoComp products={videoProducts} />
+      {/* Custom category sections */}
+      <LandingCategorySection title="Serie A" category="Serie A" />
+      <LandingCategorySection title="Premier League" category="Premier League" />
+      <LandingCategorySection title="Resto del Mondo" category="Resto del Mondo" />
+      <LandingCategorySection title="Edizioni Limitate" category="Edizioni Limitate" />
     </div>
   );
 }
