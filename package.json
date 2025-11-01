@@ -16,7 +16,9 @@
     "revalidate": "node scripts/revalidate-cache.js",
     "optimize-db": "node scripts/optimize-db-indexes.mjs",
     "create:user": "node scripts/create-user.mjs",
-    "mark:featured": "node scripts/mark-featured-products.mjs"
+  "mark:featured": "node scripts/mark-featured-products.mjs",
+  "update:categories": "node scripts/update-product-categories.mjs",
+    "seed:landing-categories": "node scripts/seed-landing-categories.mjs"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.9.0",
