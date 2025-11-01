@@ -7,21 +7,27 @@ import { PRODUCT_CATEGORIES } from "@/lib/types/product";
 import { useState } from "react";
 import { ChevronDownIcon, CubeIcon } from "@heroicons/react/24/outline";
 
-const categoryToPath = {
+const categoryToPath: Record<string, string> = {
   "2024/25": "/shop/2024/25",
   "2025/26": "/shop/2025/26",
-  SerieA: "/shop/serieA",
-  International: "/shop/international",
-  Retro: "/shop/retro",
+  "Retro": "/shop/retro",
+  "Serie A": "/serieA",
+  "Premier League": "/international/premierLeague",
+  "Resto del Mondo": "/international",
+  "Edizioni Limitate": "/products?category=limited",
+  "International": "/shop/international",
   "Mystery Box": "/shop/mystery-box",
 };
 
-const categoryToLabel = {
+const categoryToLabel: Record<string, string> = {
   "2024/25": "2024/25 Collection",
   "2025/26": "2025/26 Collection",
-  SerieA: "Serie A",
-  International: "International",
-  Retro: "Retro Collection",
+  "Retro": "Retro Collection",
+  "Serie A": "Serie A",
+  "Premier League": "Premier League",
+  "Resto del Mondo": "Resto del Mondo",
+  "Edizioni Limitate": "Edizioni Limitate",
+  "International": "International",
   "Mystery Box": "Mystery Box",
 };
 

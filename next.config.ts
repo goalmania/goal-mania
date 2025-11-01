@@ -17,6 +17,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  output: 'standalone',
   experimental: {
     optimizePackageImports: [
       "recharts",
