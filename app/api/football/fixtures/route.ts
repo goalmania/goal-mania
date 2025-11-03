@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// Map frontend league names to API league IDs
-const leagueIdMap: Record<string, number> = {
-  premierLeague: 39, // Premier League
-  laliga: 140, // La Liga
-  bundesliga: 78, // Bundesliga
-  ligue1: 61, // Ligue 1
-  serieA: 135, // Serie A
-};
+import { FootballCache } from "@/lib/cache";
+import {
+  fetchFootballData,
+  validateLeague,
+  getCurrentSeason,
+  getUpcomingFixturesDateRange,
+  FALLBACK_FIXTURES,
+  createSuccessHeaders,
+  createErrorResponse,
+} from "@/lib/utils/footballApi";
 
 // Define types for the football API response
 interface FootballFixture {
@@ -86,60 +87,40 @@ interface TransformedFixture {
   };
 }
 
+interface FixturesResponse {
+  response: FootballFixture[];
+}
+
 export async function GET(request: NextRequest) {
-  const API_KEY = process.env.FOOTBALL_API;
-
-  if (!API_KEY) {
-    return NextResponse.json(
-      { error: "API key not configured" },
-      { status: 500 }
-    );
-  }
-
-  // Get league from query params
   const searchParams = request.nextUrl.searchParams;
   const league = searchParams.get("league");
 
-  if (!league || !leagueIdMap[league]) {
+  // Validate league parameter
+  const validation = validateLeague(league);
+  if (!validation.valid) {
     return NextResponse.json(
-      { error: "Invalid or missing league parameter" },
+      createErrorResponse(validation.error!, 400),
       { status: 400 }
     );
   }
 
-  const leagueId = leagueIdMap[league];
+  const leagueId = validation.leagueId!;
+  const season = getCurrentSeason();
+  const { from, to } = getUpcomingFixturesDateRange(14);
 
-  // Calculate current season
-  const today = new Date();
-  const currentYear = today.getFullYear();
-  const currentMonth = today.getMonth() + 1; // JavaScript months are 0-indexed
-  const season = currentMonth < 8 ? currentYear - 1 : currentYear;
+  // Create cache key
+  const cacheKey = FootballCache.createKey("fixtures", league!, season.toString(), from, to);
 
   try {
-    // Calculate date range for upcoming matches
-    const twoWeeksAhead = new Date();
-    twoWeeksAhead.setDate(today.getDate() + 14); // Look ahead 14 days
-
-    const fromDate = today.toISOString().split("T")[0];
-    const toDate = twoWeeksAhead.toISOString().split("T")[0];
-
-    // Fetch upcoming fixtures within the date range
-    const url = `https://v3.football.api-sports.io/fixtures?league=${leagueId}&season=${season}&from=${fromDate}&to=${toDate}&status=NS-TBD-CANC-PST-SUSP`;
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "x-apisports-key": API_KEY,
-        "Content-Type": "application/json",
-      },
-    });
-
-    const data = await response.json();
-
-    // Check if the API response is valid
-    if (!response.ok) {
-      throw new Error(`API responded with status: ${response.status}`);
-    }
+    // Fetch fixtures with caching and error handling
+    const endpoint = `/fixtures?league=${leagueId}&season=${season}&from=${from}&to=${to}&status=NS-TBD-CANC-PST-SUSP`;
+    const { data, cached, error } = await fetchFootballData<FixturesResponse>(
+      endpoint,
+      cacheKey,
+      3600000, // 1 hour cache
+      { response: FALLBACK_FIXTURES },
+      { apiType: "apiSports" }
+    );
 
     // Transform API response
     const fixtures = data.response.map(
@@ -189,12 +170,29 @@ export async function GET(request: NextRequest) {
       );
     });
 
-    return NextResponse.json({ fixtures });
+    const response = {
+      fixtures,
+      ...(error && { warning: error, fallbackUsed: true }),
+    };
+
+    return NextResponse.json(response, {
+      headers: createSuccessHeaders(cached, 3600),
+    });
   } catch (error) {
-    console.error(`Error fetching fixtures for ${league}:`, error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error(`❌ Error in fixtures endpoint for ${league}:`, errorMessage);
+    
+    // Return fallback data with 200 status so frontend doesn't break
     return NextResponse.json(
-      { error: `Failed to fetch fixtures for ${league}` },
-      { status: 500 }
+      {
+        fixtures: FALLBACK_FIXTURES,
+        warning: `Failed to fetch fixtures: ${errorMessage}`,
+        fallbackUsed: true,
+      },
+      { 
+        status: 200,
+        headers: createSuccessHeaders(false, 300), // Short cache for errors
+      }
     );
   }
 }
