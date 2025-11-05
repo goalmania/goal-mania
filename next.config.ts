@@ -18,6 +18,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: 'standalone',
+  compress: true, // Enable gzip compression for better performance
   experimental: {
     optimizePackageImports: [
       "recharts",
@@ -26,15 +27,20 @@ const nextConfig: NextConfig = {
       "@radix-ui/react-icons",
     ],
   },
-  i18n: {
-    defaultLocale: 'it',
-    locales: ['en', 'it'],
-    localeDetection: false,
-  },
+  // i18n config is not supported in App Router - use middleware instead
+  // i18n: {
+  //   defaultLocale: 'it',
+  //   locales: ['en', 'it'],
+  //   localeDetection: false,
+  // },
   eslint: {
     ignoreDuringBuilds: true,
   },
   images: {
+    formats: ['image/avif', 'image/webp'], // Modern formats for better compression
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60, // Cache images for at least 60 seconds
     remotePatterns: [
       {
         protocol: "https",
