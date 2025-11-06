@@ -13,18 +13,44 @@ interface Product {
   videos?: string[];
 }
 
+interface Video {
+  _id: string;
+  title: string;
+  videoUrl: string;
+  thumbnail: string;
+  category: string;
+  order: number;
+  isActive: boolean;
+}
+
 interface VideoCompProps {
   products?: Product[];
 }
 
 const VideoComp = ({ products = [] }: VideoCompProps) => {
   const [playingVideo, setPlayingVideo] = useState<string | number | null>(null);
+  const [adminVideos, setAdminVideos] = useState<Video[]>([]);
+  const [loadingVideos, setLoadingVideos] = useState(true);
 
-  // Debug: Check if products have videos
+  // Fetch videos from admin panel
   useEffect(() => {
-    console.log("🎬 VideoComp received products:", products);
-    console.log("🎬 Products with videos:", products.filter(p => p.videos && p.videos.length > 0));
-  }, [products]);
+    const fetchVideos = async () => {
+      try {
+        const response = await fetch('/api/videos?activeOnly=true');
+        const data = await response.json();
+        
+        if (data.success) {
+          setAdminVideos(data.videos.slice(0, 4)); // Get max 4 videos
+        }
+      } catch (error) {
+        console.error('Error fetching videos:', error);
+      } finally {
+        setLoadingVideos(false);
+      }
+    };
+
+    fetchVideos();
+  }, []);
 
   // Demo videos as fallback
   const demoVideos = [
@@ -62,11 +88,20 @@ const VideoComp = ({ products = [] }: VideoCompProps) => {
     },
   ];
 
+  // Convert admin videos to display format
+  const adminVideosList = adminVideos.map((video) => ({
+    id: video._id,
+    videoUrl: video.videoUrl,
+    thumbnail: video.thumbnail,
+    alt: video.title,
+    title: video.title,
+    isDemo: false,
+  }));
+
   // Filter products with videos (EXACT same logic as ProductDetailClient)
   const productVideos = products
     .filter((product) => {
       const hasVideos = product.videos && Array.isArray(product.videos) && product.videos.length > 0;
-      console.log(`Product "${product.name}" has videos:`, hasVideos, product.videos);
       return hasVideos;
     })
     .slice(-4)
@@ -79,9 +114,12 @@ const VideoComp = ({ products = [] }: VideoCompProps) => {
       isDemo: false,
     }));
 
-  console.log("🎥 Product videos to display:", productVideos);
-
-  const displayVideos = productVideos.length > 0 ? productVideos : demoVideos;
+  // Priority: Admin videos > Product videos > Demo videos
+  const displayVideos = adminVideosList.length > 0 
+    ? adminVideosList 
+    : productVideos.length > 0 
+    ? productVideos 
+    : demoVideos;
 
   const toggleVideo = (id: string | number) => {
     setPlayingVideo(playingVideo === id ? null : id);
@@ -100,8 +138,14 @@ const VideoComp = ({ products = [] }: VideoCompProps) => {
         </p>
       </div>
 
-      {/* Show demo badge if using demo videos */}
-      {productVideos.length === 0 && (
+      {/* Show loading or demo badge */}
+      {loadingVideos ? (
+        <div className="text-center mb-4">
+          <span className="inline-block bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium">
+            Caricamento video...
+          </span>
+        </div>
+      ) : adminVideosList.length === 0 && productVideos.length === 0 && (
         <div className="text-center mb-4">
           <span className="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium">
             🎬 Video Demo - I prodotti con video saranno disponibili presto

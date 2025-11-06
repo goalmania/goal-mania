@@ -73,6 +73,11 @@ const data = {
       icon: IconShirt,
     },
     {
+      title: "Videos",
+      url: "/admin/videos",
+      icon: IconCamera,
+    },
+    {
       title: "Coupons",
       url: "/admin/coupons",
       icon: IconTicket,

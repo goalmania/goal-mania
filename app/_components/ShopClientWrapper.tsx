@@ -122,18 +122,59 @@ async function fetchMysteryBoxProducts(): Promise<Product[]> {
   }
 }
 
+async function fetchVideoProducts(): Promise<Product[]> {
+  try {
+    const baseUrl = getBaseUrl();
+    const response = await fetch(
+      `${baseUrl}/api/products?limit=100&noPagination=true`,
+      {
+        next: { revalidate: 300 }, // Cache for 5 minutes
+        cache: 'no-store', // Don't cache during build
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const data = await response.json();
+    const products = data.products || data || [];
+    
+    // Filter products with videos
+    const productsWithVideos = products
+      .filter((product: any) => product.videos && Array.isArray(product.videos) && product.videos.length > 0)
+      .map((product: any) => ({
+        id: product._id || "",
+        name: product.title || "Product",
+        price: product.basePrice || 0,
+        image: product.images?.[0] || "/images/image.png",
+        category: product.category || "Uncategorized",
+        team: product.title ? product.title.split(" ")[0] : "Unknown",
+        availablePatches: product.availablePatches || [],
+        videos: product.videos || [],
+      }));
+    
+    return productsWithVideos;
+  } catch (error) {
+    // Silently fail during build
+    return [];
+  }
+}
+
 export default async function ShopClientWrapper() {
-  const [season2025Products, featuredProducts, mysteryBoxProducts] =
+  const [season2025Products, featuredProducts, mysteryBoxProducts, videoProducts] =
     await Promise.all([
       fetchSeason2025Products(),
       fetchFeaturedProducts(),
       fetchMysteryBoxProducts(),
+      fetchVideoProducts(),
     ]);
   return (
     <ShopClient
       season2025Products={season2025Products}
       featuredProducts={featuredProducts}
       mysteryBoxProducts={mysteryBoxProducts}
+      videoProducts={videoProducts}
     />
   );
 }
