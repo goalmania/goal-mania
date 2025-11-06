@@ -52,6 +52,8 @@ export async function PUT(
     const body = await request.json();
     const { title, videoUrl, thumbnail, category, order, isActive } = body;
     
+    console.log("📹 Updating video", id, "with data:", { title, category });
+    
     const video = await Video.findByIdAndUpdate(
       id,
       {
@@ -64,6 +66,8 @@ export async function PUT(
       },
       { new: true, runValidators: true }
     );
+    
+    console.log("✅ Video updated:", video?._id, "Category:", video?.category);
     
     if (!video) {
       return NextResponse.json(

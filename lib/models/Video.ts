@@ -1,12 +1,10 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export type VideoDisplayPage = 'shop' | 'home';
-
 export interface IVideo extends Document {
   title: string;
   videoUrl: string;
   thumbnail: string;
-  displayPage: VideoDisplayPage;
+  category: string;
   order: number;
   isActive: boolean;
   createdAt: Date;
@@ -30,11 +28,10 @@ const VideoSchema = new Schema<IVideo>(
       required: [true, 'Thumbnail is required'],
       trim: true,
     },
-    displayPage: {
+    category: {
       type: String,
-      enum: ['shop', 'home'],
-      default: 'home',
-      required: [true, 'Display page is required'],
+      default: 'general',
+      trim: true,
     },
     order: {
       type: Number,

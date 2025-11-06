@@ -41,6 +41,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { title, videoUrl, thumbnail, category, order, isActive } = body;
     
+    console.log("📹 Creating video with data:", { title, category, videoUrl, thumbnail });
+    
     if (!title || !videoUrl || !thumbnail) {
       return NextResponse.json(
         { success: false, message: 'Title, video URL, and thumbnail are required' },
@@ -56,6 +58,8 @@ export async function POST(request: NextRequest) {
       order: order || 0,
       isActive: isActive !== undefined ? isActive : true,
     });
+    
+    console.log("✅ Video created:", video._id, "Category:", video.category);
     
     return NextResponse.json(
       { success: true, message: 'Video created successfully', video },

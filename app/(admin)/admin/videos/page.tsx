@@ -319,14 +319,18 @@ export default function AdminVideosPage() {
       const url = editingVideo ? `/api/videos/${editingVideo._id}` : "/api/videos";
       const method = editingVideo ? "PUT" : "POST";
 
+      const videoData = {
+        ...formData,
+        videoUrl,
+        thumbnail: thumbnailUrl,
+      };
+
+      console.log("Submitting video data:", videoData);
+
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          videoUrl,
-          thumbnail: thumbnailUrl,
-        }),
+        body: JSON.stringify(videoData),
       });
 
       const data = await response.json();
@@ -656,7 +660,7 @@ export default function AdminVideosPage() {
                 id="category"
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                placeholder="general"
+                placeholder="e.g., general, home, shop, news"
               />
             </div>
 
