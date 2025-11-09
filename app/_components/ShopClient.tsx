@@ -19,6 +19,7 @@ import FaqSection from "./FaqSection";
 import FeaturesCardStats from "@/components/shop/FeaturesCardStats";
 import { CheckCircle2, SparklesIcon, Star } from "lucide-react";
 import Testimonies from "@/components/shop/testimonies";
+import VideoComp from "@/components/home/VideoComp";
 
 interface Review {
   id: string;
@@ -36,16 +37,19 @@ interface Product {
   category: string;
   team: string;
   availablePatches?: string[];
+  videos?: string[];
 }
 
 export default function ShopClient({
   season2025Products = [],
   featuredProducts = [],
   mysteryBoxProducts = [],
+  videoProducts = [],
 }: {
   season2025Products: Product[];
   featuredProducts: Product[];
   mysteryBoxProducts: Product[];
+  videoProducts?: Product[];
 }) {
   const { t } = useI18n();
 
@@ -250,6 +254,9 @@ export default function ShopClient({
           )}
         </div>
       </div>
+
+      {/* Video Section - Always render, VideoComp will show admin videos or demo videos as fallback */}
+      <VideoComp products={videoProducts || []} />
 
       <ProductShowCase
         featuredProduct={featuredProduct}

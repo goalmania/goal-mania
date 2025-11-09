@@ -1,34 +1,29 @@
 import { NextResponse } from "next/server";
+import { FootballCache } from "@/lib/cache";
+import {
+  fetchFootballData,
+  FALLBACK_LIVE_MATCHES,
+  createSuccessHeaders,
+} from "@/lib/utils/footballApi";
+
+interface LiveMatchesResponse {
+  response: any[];
+}
 
 export async function GET() {
-  const API_KEY = process.env.FOOTBALL_API;
-
-  if (!API_KEY) {
-    return NextResponse.json(
-      { error: "API key not configured" },
-      { status: 500 }
-    );
-  }
+  // Create cache key (short TTL since live data changes quickly)
+  const cacheKey = FootballCache.createKey("live-matches", "all");
 
   try {
-    // Fetch live matches from the API
-    const response = await fetch(
-      "https://v3.football.api-sports.io/fixtures?live=all",
-      {
-        method: "GET",
-        headers: {
-          "x-apisports-key": API_KEY,
-          "Content-Type": "application/json",
-        },
-      }
+    // Fetch live matches with caching (5 minute cache for live data)
+    const endpoint = `/fixtures?live=all`;
+    const { data, cached, error } = await fetchFootballData<LiveMatchesResponse>(
+      endpoint,
+      cacheKey,
+      300000, // 5 minutes cache (live data needs to be fresh)
+      { response: FALLBACK_LIVE_MATCHES },
+      { apiType: "apiSports" }
     );
-
-    const data = await response.json();
-
-    // Check if the API response is valid
-    if (!response.ok) {
-      throw new Error(`API responded with status: ${response.status}`);
-    }
 
     // Transform API response to match our interface
     const matches = data.response.map((fixture: any) => ({
@@ -59,18 +54,35 @@ export async function GET() {
           long: fixture.fixture.status.long,
         },
         venue: {
-          name: fixture.fixture.venue.name || "Unknown Venue",
-          city: fixture.fixture.venue.city || "Unknown City",
+          name: fixture.fixture.venue?.name || "Unknown Venue",
+          city: fixture.fixture.venue?.city || "Unknown City",
         },
       },
     }));
 
-    return NextResponse.json({ matches });
+    const response = {
+      matches,
+      ...(error && { warning: error, fallbackUsed: true }),
+    };
+
+    return NextResponse.json(response, {
+      headers: createSuccessHeaders(cached, 300), // 5 minute cache
+    });
   } catch (error) {
-    console.error("Error fetching live matches:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("❌ Error in live-matches endpoint:", errorMessage);
+
+    // Return empty array with 200 status (no matches is valid state)
     return NextResponse.json(
-      { error: "Failed to fetch live matches" },
-      { status: 500 }
+      {
+        matches: FALLBACK_LIVE_MATCHES,
+        warning: `Failed to fetch live matches: ${errorMessage}`,
+        fallbackUsed: true,
+      },
+      {
+        status: 200,
+        headers: createSuccessHeaders(false, 60), // Very short cache for errors
+      }
     );
   }
 }

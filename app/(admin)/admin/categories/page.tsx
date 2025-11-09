@@ -9,6 +9,9 @@ import Link from "next/link";
 import { Category } from "@/lib/models/Category";
 import { connectToDatabase } from "@/lib/db";
 
+// Force dynamic rendering for admin pages
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Categories - Admin",
   description: "Manage shop categories",

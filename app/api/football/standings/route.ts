@@ -1,20 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { FootballCache } from "@/lib/cache";
-
-// Try different environment variable names for the API key
-const API_KEY =
-  process.env.NEXT_PUBLIC_FOOTBALL_API_KEY ||
-  process.env.FOOTBALL_API ||
-  process.env.NEXT_FOOTBALL_API ||
-  "YOUR_API_KEY";
+import {
+  fetchFootballData,
+  FALLBACK_STANDINGS,
+  createSuccessHeaders,
+  createErrorResponse,
+} from "@/lib/utils/footballApi";
 
 const API_BASE_URL = "https://api.football-data.org/v4";
 
-// Retry configuration
-const MAX_RETRIES = 3;
-const RETRY_DELAY = 1000; // Initial delay in ms
+// Map league codes to competition codes for football-data.org
+const leagueCodeMap: Record<string, string> = {
+  PL: "PL", // Premier League
+  PD: "PD", // La Liga
+  BL1: "BL1", // Bundesliga
+  FL1: "FL1", // Ligue 1
+  SA: "SA", // Serie A
+};
 
-// Mock data for fallback
+// Legacy mock data (kept for reference but not used)
 const mockStandings = {
   premierLeague: [
     {
@@ -328,140 +332,104 @@ const mockStandings = {
   ],
 };
 
-// Map our league IDs to football-data.org competition codes and mock data keys
-const leagueMapping: Record<string, { code: string; mockKey: string }> = {
-  "39": { code: "PL", mockKey: "premierLeague" }, // Premier League
-  "140": { code: "PD", mockKey: "laliga" }, // La Liga
-  "78": { code: "BL1", mockKey: "bundesliga" }, // Bundesliga
-  "61": { code: "FL1", mockKey: "ligue1" }, // Ligue 1
-  "135": { code: "SA", mockKey: "serieA" }, // Serie A
-};
-
-async function fetchWithRetry(
-  url: string,
-  options: RequestInit,
-  retries = MAX_RETRIES,
-  delay = RETRY_DELAY
-) {
-  try {
-    const response = await fetch(url, options);
-
-    if (response.status === 429 && retries > 0) {
-      console.log(
-        `Rate limited (429), retrying in ${delay}ms... (${retries} retries left)`
-      );
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      return fetchWithRetry(url, options, retries - 1, delay * 2); // Exponential backoff
-    }
-
-    return response;
-  } catch (error) {
-    if (retries > 0) {
-      console.log(
-        `Fetch error, retrying in ${delay}ms... (${retries} retries left)`
-      );
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      return fetchWithRetry(url, options, retries - 1, delay * 2);
-    }
-    throw error;
-  }
-}
-
-function getMockResponse(leagueId: string) {
-  const mockKey = leagueMapping[leagueId]?.mockKey || "premierLeague";
-  const standings =
-    mockStandings[mockKey as keyof typeof mockStandings] ||
-    mockStandings.premierLeague;
-
-  return {
-    response: [
-      {
-        league: {
-          standings: [
-            standings.map((item) => ({
-              rank: item.position,
-              team: {
-                id: item.position * 100, // Generate a fake ID
-                name: item.team,
-                logo: null,
-              },
-              all: {
-                played: item.played,
-                win: item.won,
-                draw: item.drawn,
-                lose: item.lost,
-                goals: {
-                  for: item.goalsFor,
-                  against: item.goalsAgainst,
-                },
-              },
-              goalsDiff: item.goalDifference,
-              points: item.points,
-            })),
-          ],
-        },
-      },
-    ],
-  };
-}
-
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const leagueId = searchParams.get("league");
+  const leagueCode = searchParams.get("league"); // e.g., "PL", "SA"
   const season = searchParams.get("season");
 
-  if (!leagueId || !season) {
+  if (!leagueCode || !season) {
     return NextResponse.json(
-      { error: "Missing required parameters" },
+      createErrorResponse("Missing required parameters: league and season", 400),
+      { status: 400 }
+    );
+  }
+
+  // Validate league code
+  if (!leagueCodeMap[leagueCode]) {
+    return NextResponse.json(
+      createErrorResponse(
+        `Invalid league code: ${leagueCode}. Valid codes: ${Object.keys(leagueCodeMap).join(", ")}`,
+        400
+      ),
       { status: 400 }
     );
   }
 
   // Create cache key
-  const cacheKey = FootballCache.createKey('standings', leagueId, season);
-  
+  const cacheKey = FootballCache.createKey("standings", leagueCode, season);
+
   // Check cache first
   const cachedData = FootballCache.get(cacheKey);
   if (cachedData) {
+    console.log(`✅ Standings cache HIT: ${cacheKey}`);
     return NextResponse.json(cachedData, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
-        'X-Cache': 'HIT'
-      }
+      headers: createSuccessHeaders(true, 3600),
     });
   }
 
-  try {
-    const response = await fetch(
-      `https://api.football-data.org/v4/competitions/${leagueId}/standings?season=${season}`,
+  const API_KEY = process.env.NEXT_FOOTBALL_API;
+
+  // Return fallback if no API key
+  if (!API_KEY) {
+    console.warn("⚠️  NEXT_FOOTBALL_API not configured, using fallback data");
+    return NextResponse.json(
       {
-        headers: {
-          "X-Auth-Token": process.env.NEXT_FOOTBALL_API || "",
-        },
-        // Remove next.revalidate as we're handling caching manually
+        ...FALLBACK_STANDINGS,
+        warning: "API key not configured, using fallback data",
+        fallbackUsed: true,
+      },
+      {
+        headers: createSuccessHeaders(false, 300),
       }
     );
+  }
+
+  try {
+    // Use football-data.org API
+    const url = `${API_BASE_URL}/competitions/${leagueCode}/standings?season=${season}`;
+    
+    console.log(`🔄 Fetching standings: ${url}`);
+    const response = await fetch(url, {
+      headers: {
+        "X-Auth-Token": API_KEY,
+      },
+      next: { revalidate: 3600 }, // Revalidate every hour
+    });
 
     if (!response.ok) {
+      if (response.status === 429) {
+        throw new Error("Rate limit exceeded");
+      }
+      if (response.status === 403) {
+        throw new Error("Invalid API key or access forbidden");
+      }
       throw new Error(`API responded with status: ${response.status}`);
     }
 
     const data = await response.json();
-    
-    // Cache the response for 1 hour
-    FootballCache.set(cacheKey, data);
-    
+
+    // Cache the successful response for 1 hour
+    FootballCache.set(cacheKey, data, 3600000);
+    console.log(`✅ Standings cache SET: ${cacheKey}`);
+
     return NextResponse.json(data, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
-        'X-Cache': 'MISS'
-      }
+      headers: createSuccessHeaders(false, 3600),
     });
   } catch (error) {
-    console.error("Error fetching standings:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error(`❌ Error fetching standings for ${leagueCode}:`, errorMessage);
+
+    // Return fallback data with 200 status so frontend doesn't break
     return NextResponse.json(
-      { error: "Failed to fetch standings" },
-      { status: 500 }
+      {
+        ...FALLBACK_STANDINGS,
+        warning: `Failed to fetch standings: ${errorMessage}`,
+        fallbackUsed: true,
+      },
+      {
+        status: 200,
+        headers: createSuccessHeaders(false, 300), // Short cache for errors
+      }
     );
   }
 }

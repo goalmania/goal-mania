@@ -1,18 +1,39 @@
+import dynamic from "next/dynamic";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import HeroSection from "@/components/home/HeroSection";
-import NewsSection from "@/components/home/NewsSection";
 import { Product } from "@/lib/types/home";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
-import GuaranteesSection from "@/components/home/GuaranteesSection";
-import BannerBlock from "@/components/home/BannerBlock";
 import { getBaseUrl } from "@/lib/utils/baseUrl";
-import { TeamCarousel } from "@/components/home/TeamCarousel";
-import ClientSlider from "@/components/home/ClientSlider";
-import FeaturedVideoProducts from "@/components/home/FeaturedVideoProducts";
-import CallToAction from "@/components/home/CallToAction";
-import VideoComp from "@/components/home/VideoComp";
-import LandingCategorySection from "@/app/_components/LandingCategorySection";
+
+// Dynamic imports for below-the-fold components (better performance)
+const NewsSection = dynamic(() => import("@/components/home/NewsSection"), {
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+});
+
+const GuaranteesSection = dynamic(() => import("@/components/home/GuaranteesSection"), {
+  loading: () => <div className="h-64 bg-gray-50 animate-pulse" />,
+});
+
+const BannerBlock = dynamic(() => import("@/components/home/BannerBlock"));
+
+const TeamCarousel = dynamic(() => import("@/components/home/TeamCarousel").then(mod => mod.TeamCarousel));
+
+const ClientSlider = dynamic(() => import("@/components/home/ClientSlider"));
+
+const FeaturedVideoProducts = dynamic(() => import("@/components/home/FeaturedVideoProducts"), {
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+});
+
+const CallToAction = dynamic(() => import("@/components/home/CallToAction"));
+
+const VideoComp = dynamic(() => import("@/components/home/VideoComp"), {
+  loading: () => <div className="h-96 bg-gray-900 animate-pulse" />,
+});
+
+const LandingCategorySection = dynamic(() => import("@/app/_components/LandingCategorySection"), {
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+});
 
 // Enable caching for better performance
 export const revalidate = 300; // Revalidate every 5 minutes
@@ -22,7 +43,7 @@ async function getFeaturedProducts(): Promise<Product[]> {
   try {
     const baseUrl = getBaseUrl();
     const response = await fetch(`${baseUrl}/api/products?feature=true`, {
-      cache: "no-store",
+      next: { revalidate: 300 }, // Cache for 5 minutes instead of no-store
     });
 
     if (!response.ok) return [];
@@ -53,7 +74,7 @@ async function getMysteryBoxProducts(): Promise<Product[]> {
     const response = await fetch(
       `${baseUrl}/api/products?type=mysteryBox&limit=3&noPagination=true`,
       {
-        cache: "no-store",
+        next: { revalidate: 300 }, // Cache for 5 minutes instead of no-store
       }
     );
 
@@ -114,7 +135,7 @@ async function getVideoProducts(): Promise<Product[]> {
     const response = await fetch(
       `${baseUrl}/api/products?limit=100&noPagination=true`,
       {
-        cache: "no-store",
+        next: { revalidate: 300 }, // Cache for 5 minutes
       }
     );
 

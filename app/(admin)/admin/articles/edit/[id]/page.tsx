@@ -1,5 +1,8 @@
 "use client";
 
+// Force dynamic rendering for admin pages
+export const dynamic = 'force-dynamic';
+
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { ArrowLeftIcon, PhotoIcon } from "@heroicons/react/24/outline";

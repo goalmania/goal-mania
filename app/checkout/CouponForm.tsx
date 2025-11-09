@@ -73,12 +73,12 @@ export function CouponForm({
     e.preventDefault();
 
     if (!isPremiumUser) {
-      toast.error("Only premium users can apply coupons");
+      toast.error("Solo gli utenti premium possono applicare coupon");
       return;
     }
 
     if (!couponCode.trim()) {
-      setError("Please enter a coupon code");
+      setError("Per favore inserisci un codice coupon");
       return;
     }
 
@@ -97,7 +97,7 @@ export function CouponForm({
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Failed to validate coupon");
+        setError(data.error || "Impossibile validare il coupon");
         return;
       }
 
@@ -105,7 +105,7 @@ export function CouponForm({
       onApplyCoupon(data.discountPercentage, data.couponId, couponCode);
       setCouponCode(""); // Clear input after successful application
     } catch (err) {
-      setError("An error occurred while validating the coupon");
+      setError("Si è verificato un errore durante la validazione del coupon");
       console.error("Coupon validation error:", err);
     } finally {
       setIsLoading(false);
@@ -148,12 +148,12 @@ export function CouponForm({
           </div>
           <div>
             <h3 className="text-sm font-semibold text-[#0e1924] flex items-center gap-1">
-              Have a coupon?
+              Hai un coupon?
               <Badge variant="secondary" className="text-xs bg-gradient-to-r from-purple-500 to-pink-500 text-white">
                 Premium
               </Badge>
             </h3>
-            <p className="text-xs text-gray-600">Enter your discount code</p>
+            <p className="text-xs text-gray-600">Inserisci il tuo codice sconto</p>
           </div>
         </div>
 
@@ -164,7 +164,7 @@ export function CouponForm({
                 type="text"
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                placeholder="Enter coupon code"
+                placeholder="Inserisci codice coupon"
                 className="pr-10 h-10 border-2 border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c]/20 transition-all duration-200"
                 disabled={isDisabled || isLoading}
               />
@@ -186,12 +186,12 @@ export function CouponForm({
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Applying...
+                  Applicando...
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
                   <SparklesIcon className="h-4 w-4" />
-                  Apply
+                  Applica
                 </div>
               )}
             </Button>
@@ -218,7 +218,7 @@ export function CouponForm({
         <div className="mt-3 pt-3 border-t border-gray-200">
           <div className="flex items-center gap-2 text-xs text-gray-600">
             <CheckCircleIcon className="h-3 w-3 text-green-500" />
-            <span>Premium users get exclusive access to discount codes</span>
+            <span>Gli utenti premium hanno accesso esclusivo ai codici sconto</span>
           </div>
         </div>
       </CardContent>

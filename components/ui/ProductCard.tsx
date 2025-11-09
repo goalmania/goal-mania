@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { HeartIcon } from "@heroicons/react/24/outline";
@@ -44,7 +44,7 @@ interface ProductCardProps {
   product?: any; // Full product object for callbacks
 }
 
-export default function ProductCard({
+function ProductCard({
   id,
   name,
   price,
@@ -325,3 +325,6 @@ export default function ProductCard({
     </div>
   );
 }
+
+// Memoize ProductCard to prevent unnecessary re-renders
+export default memo(ProductCard);
