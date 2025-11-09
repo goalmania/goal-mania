@@ -50,9 +50,9 @@ export const metadata: Metadata = {
     description: "Negozio ufficiale di maglie da calcio",
     images: [
       {
-        url: "/images/recentUpdate/desktop-logo.png",
-        width: 1200,
-        height: 630,
+        url: "/favicon-for-public/web-app-manifest-512x512.png",
+        width: 512,
+        height: 512,
         alt: "Goal Mania Logo",
       },
     ],
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Goal Mania - Maglie Calcio Ufficiali",
     description: "Negozio ufficiale di maglie da calcio",
-    images: ["/images/recentUpdate/desktop-logo.png"],
+    images: ["/favicon-for-public/web-app-manifest-512x512.png"],
   },
   robots: {
     index: true,
@@ -76,22 +76,20 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any", type: "image/x-icon" },
-      { url: "/images/image.png", sizes: "16x16", type: "image/png" },
+      { url: "/icon.png", sizes: "192x192", type: "image/png" },
       { url: "/favicon-for-public/web-app-manifest-192x192.png", sizes: "192x192", type: "image/png" },
       { url: "/favicon-for-public/web-app-manifest-512x512.png", sizes: "512x512", type: "image/png" },
     ],
-    shortcut: [{ url: "/favicon.ico", type: "image/x-icon" }],
+    shortcut: [{ url: "/icon.png", type: "image/png" }],
     apple: [
-      { url: "/images/image.png", sizes: "180x180", type: "image/png" },
-      { url: "/favicon-for-app/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-      { url: "/favicon-for-public/web-app-manifest-192x192.png", sizes: "192x192", type: "image/png" }
+      { url: "/apple-icon.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon-for-public/web-app-manifest-192x192.png", sizes: "180x180", type: "image/png" },
     ],
     other: [
       {
         rel: "apple-touch-icon-precomposed",
-        url: "/images/image.png",
-        sizes: "180x180",
+        url: "/apple-icon.png",
+        sizes: "192x192",
       },
       {
         rel: "mask-icon",
@@ -123,7 +121,7 @@ export default function RootLayout({
               "@type": "Organization",
               name: "Goal Mania",
               url: process.env.NEXT_PUBLIC_APP_URL || "https://goalmania.com",
-              logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://goalmania.com"}/images/recentUpdate/desktop-logo.png`,
+              logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://goalmania.com"}/favicon-for-public/web-app-manifest-512x512.png`,
               description: "Negozio ufficiale di maglie da calcio",
               sameAs: [
                 "https://www.facebook.com/goalmania",
@@ -133,8 +131,10 @@ export default function RootLayout({
             }),
           }}
         />
-        <link rel="icon" href="/favicon.ico" sizes="any" type="image/x-icon" />
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        {/* Favicon with cache busting */}
+        <link rel="icon" type="image/png" sizes="192x192" href="/icon.png?v=2" />
+        <link rel="shortcut icon" href="/icon.png?v=2" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/apple-icon.png?v=2" />
         {/* Resource hints to improve LCP/FCP */}
         {/* Facebook Pixel */}
         <link rel="preconnect" href="https://connect.facebook.net" />
