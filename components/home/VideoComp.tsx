@@ -130,12 +130,8 @@ const VideoComp = ({ products = [] }: VideoCompProps) => {
       {/* Header */}
       <div className="text-center py-12 px-4">
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-4">
-          Ultime Notizie
+          La qualità migliore per te! Guarda qui:
         </h1>
-        <p className="text-base md:text-lg text-black max-w-2xl mx-auto leading-relaxed">
-          Scopri le notizie più fresche e importanti dal mondo del calcio,
-          aggiornate in tempo reale
-        </p>
       </div>
 
       {/* Show loading or demo badge */}
