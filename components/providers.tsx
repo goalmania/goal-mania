@@ -55,7 +55,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <Toaster
             position="top-right"
             toastOptions={{
-              duration: 3000,
+              duration: 1000, // Reduced from 3000ms to 2000ms (2 seconds)
               style: {
                 background: "#fff",
                 color: "#333",

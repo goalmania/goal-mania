@@ -68,7 +68,7 @@ export const useCartStore = create<CartStore>()(
         set((state) => {
           const existingItem = state.items.find((i) => i.id === safeItem.id);
           if (existingItem) {
-            toast.success(`${safeItem.name} quantity increased`);
+            toast.success(`${safeItem.name} quantità aumentata`);
             return {
               items: state.items.map((i) =>
                 i.id === safeItem.id
@@ -78,7 +78,7 @@ export const useCartStore = create<CartStore>()(
             };
           }
 
-          toast.success(`${safeItem.name} added to your cart`);
+          toast.success(`${safeItem.name} aggiunto al carrello`);
           return {
             items: [
               ...state.items,
@@ -93,7 +93,7 @@ export const useCartStore = create<CartStore>()(
           items: state.items.filter((item) => item.id !== id),
         }));
         if (itemName) {
-          toast.success(`${itemName} removed from your cart`);
+          toast.success(`${itemName} rimosso dal carrello`);
         }
       },
       updateQuantity: (id, quantity) => {
