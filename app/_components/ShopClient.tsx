@@ -20,6 +20,7 @@ import FeaturesCardStats from "@/components/shop/FeaturesCardStats";
 import { CheckCircle2, SparklesIcon, Star } from "lucide-react";
 import Testimonies from "@/components/shop/testimonies";
 import VideoComp from "@/components/home/VideoComp";
+import LandingCategorySection from "@/app/_components/LandingCategorySection";
 
 interface Review {
   id: string;
@@ -257,6 +258,12 @@ export default function ShopClient({
 
       {/* Video Section - Always render, VideoComp will show admin videos or demo videos as fallback */}
       <VideoComp products={videoProducts || []} />
+
+      {/* Category Sections */}
+      <LandingCategorySection title="Serie A" category="Serie A" />
+      <LandingCategorySection title="Premier League" category="Premier League" />
+      <LandingCategorySection title="Resto del Mondo" category="Resto del Mondo" />
+      <LandingCategorySection title="Edizioni Limitate" category="Edizioni Limitate" />
 
       <ProductShowCase
         featuredProduct={featuredProduct}

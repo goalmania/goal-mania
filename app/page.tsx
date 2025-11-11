@@ -231,11 +231,11 @@ export default async function Home() {
       <NewsSection articles={featuredArticles} />
       <FeaturedVideoProducts products={featuredProducts} />
       <VideoComp products={videoProducts} />
-      {/* Custom category sections */}
-      <LandingCategorySection title="Serie A" category="Serie A" />
-      <LandingCategorySection title="Premier League" category="Premier League" />
-      <LandingCategorySection title="Resto del Mondo" category="Resto del Mondo" />
-      <LandingCategorySection title="Edizioni Limitate" category="Edizioni Limitate" />
+      {/* Custom category sections - Hidden per user request */}
+      {/* <LandingCategorySection title="Serie A" category="Serie A" /> */}
+      {/* <LandingCategorySection title="Premier League" category="Premier League" /> */}
+      {/* <LandingCategorySection title="Resto del Mondo" category="Resto del Mondo" /> */}
+      {/* <LandingCategorySection title="Edizioni Limitate" category="Edizioni Limitate" /> */}
     </div>
   );
 }
