@@ -20,38 +20,15 @@ async function getCategory(id: string) {
     type: category.type,
     slug: category.slug,
     description: category.description,
+    customHref: category.customHref,
     order: category.order,
     isActive: category.isActive,
-    parentId: category.parentId ? category.parentId.toString() : undefined,
   };
-}
-
-async function getParentCategories(id: string) {
-  await connectToDatabase();
-  const categories = (await Category.find({
-    _id: { $ne: id },
-    parentId: null,
-  })
-    .sort({ order: 1, name: 1 })
-    .lean()) as any[];
-    
-  return categories.map((cat: any) => ({
-    id: cat._id?.toString?.() ?? "",
-    name: cat.name,
-    type: cat.type,
-    slug: cat.slug,
-    description: cat.description,
-    order: cat.order,
-    isActive: cat.isActive,
-  }));
 }
 
 export default async function EditCategoryPage({ params }: EditCategoryPageProps) {
   const { id } = await params;
-  const [category, parentCategories] = await Promise.all([
-    getCategory(id),
-    getParentCategories(id)
-  ]);
+  const category = await getCategory(id);
 
   if (!category) {
     notFound();
@@ -61,7 +38,6 @@ export default async function EditCategoryPage({ params }: EditCategoryPageProps
     <div className="container mx-auto py-10">
       <CategoryForm 
         initialData={JSON.parse(JSON.stringify(category))}
-        categories={JSON.parse(JSON.stringify(parentCategories))}
       />
     </div>
   );

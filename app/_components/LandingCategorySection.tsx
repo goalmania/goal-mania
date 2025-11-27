@@ -19,18 +19,19 @@ import "swiper/css/navigation";
 interface LandingCategorySectionProps {
   title: string;
   category: string;
+  limit?: number;
 }
 
-async function getCategoryProducts(category: string): Promise<Product[]> {
+async function getCategoryProducts(category: string, limit: number = 8): Promise<Product[]> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/products?category=${encodeURIComponent(category)}&noPagination=true`, {
+    const res = await fetch(`${baseUrl}/api/products?category=${encodeURIComponent(category)}&limit=${limit}&noPagination=true`, {
       cache: 'no-store',
     });
     if (!res.ok) return [];
     const products = await res.json();
     const rawList = Array.isArray(products) ? products : products.products || [];
-    return rawList.map((product: any) => ({
+    return rawList.slice(0, limit).map((product: any) => ({
       id: product._id || "",
       name: product.title || "Product",
       price: product.basePrice || 0,
@@ -48,7 +49,7 @@ async function getCategoryProducts(category: string): Promise<Product[]> {
   }
 }
 
-export default function LandingCategorySection({ title, category }: LandingCategorySectionProps) {
+export default function LandingCategorySection({ title, category, limit = 8 }: LandingCategorySectionProps) {
   const [products, setProducts] = React.useState<Product[]>([]);
   const router = useRouter();
   const wishlistStore = useWishlistStore();
@@ -63,8 +64,8 @@ export default function LandingCategorySection({ title, category }: LandingCateg
   const { addItem: addToCart } = cartStore;
 
   React.useEffect(() => {
-    getCategoryProducts(category).then(setProducts);
-  }, [category]);
+    getCategoryProducts(category, limit).then(setProducts);
+  }, [category, limit]);
 
   const handleWishlistToggle = (product: Product) => {
     const productId = product.id.toString();

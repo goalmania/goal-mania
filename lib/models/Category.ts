@@ -6,6 +6,7 @@ export interface ICategory {
   type: 'league' | 'product-type' | 'special';
   description?: string;
   parentId?: mongoose.Types.ObjectId;
+  customHref?: string; // Custom URL for navigation (e.g., /international/laliga)
   isActive: boolean;
   order: number;
   createdAt: Date;
@@ -37,6 +38,10 @@ const categorySchema = new mongoose.Schema<ICategory>(
     parentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Category',
+    },
+    customHref: {
+      type: String,
+      trim: true,
     },
     isActive: {
       type: Boolean,

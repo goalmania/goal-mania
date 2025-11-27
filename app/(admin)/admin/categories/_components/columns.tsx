@@ -8,6 +8,7 @@ import { capitalize } from "lodash";
 export type CategoryColumn = {
   id: string;
   name: string;
+  slug: string;
   type: "league" | "product-type" | "special";
   order: number;
   isActive: boolean;
@@ -18,6 +19,14 @@ export const columns: ColumnDef<CategoryColumn>[] = [
   {
     accessorKey: "name",
     header: "Name",
+  },
+  {
+    accessorKey: "slug",
+    header: "Slug",
+    cell: ({ row }) => {
+      const slug = row.getValue("slug") as string;
+      return <code className="text-xs bg-muted px-2 py-1 rounded">{slug}</code>;
+    },
   },
   {
     accessorKey: "type",

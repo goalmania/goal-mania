@@ -14,6 +14,7 @@ import {
   IconFolder,
   IconHelp,
   IconInnerShadowTop,
+  IconLayoutColumns,
   IconListDetails,
   IconLogout,
   IconReport,
@@ -53,6 +54,11 @@ const data = {
       icon: IconBrandProducthunt,
     },
     {
+      title: "Categories",
+      url: "/admin/categories",
+      icon: IconListDetails,
+    },
+    {
       title: "Articles",
       url: "/admin/articles",
       icon: IconArticle
@@ -87,6 +93,11 @@ const data = {
       url: "/admin/discount-rule",
       icon: IconInnerShadowTop,
     },
+    // {
+    //   title: "Homepage Categories",
+    //   url: "/admin/homepage-categories",
+    //   icon: IconLayoutColumns,
+    // },
     {
       title: "Analytics",
       url: "/admin/analytics",

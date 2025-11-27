@@ -137,6 +137,33 @@ export async function GET(req: NextRequest) {
       console.log("Mystery Box filter applied - query.isMysteryBox = true");
     }
 
+    // Ensure products have valid images (unless admin is viewing inactive)
+    if (!includeInactive) {
+      query.images = { $exists: true, $ne: [], $not: { $size: 0 } };
+      // Additional validation: ensure at least one image is a non-empty string
+      // Using $expr to check that at least one image is a non-empty string
+      // Type checking is done client-side for better compatibility
+      query.$expr = {
+        $gt: [
+          {
+            $size: {
+              $filter: {
+                input: "$images",
+                as: "img",
+                cond: {
+                  $and: [
+                    { $ne: ["$$img", null] },
+                    { $ne: ["$$img", ""] },
+                  ],
+                },
+              },
+            },
+          },
+          0,
+        ],
+      };
+    }
+
     console.log("Products API Query:", JSON.stringify(query, null, 2));
 
     // Build sort object
@@ -144,7 +171,7 @@ export async function GET(req: NextRequest) {
     sortObject[sortBy] = sortOrder === "asc" ? 1 : -1;
 
     // Use Promise.all for parallel execution of count and find operations
-    const [totalProducts, products] = await Promise.all([
+    const [totalProducts, productsRaw] = await Promise.all([
       Product.countDocuments(query),
       Product.find(query)
         .sort(sortObject)
@@ -154,7 +181,27 @@ export async function GET(req: NextRequest) {
         .select('_id title description basePrice retroPrice shippingPrice stockQuantity images isRetro hasShorts hasSocks category allowsNumberOnShirt allowsNameOnShirt isActive feature slug isMysteryBox createdAt videos')
     ]);
 
-    console.log(`Found ${products.length} products matching the criteria`);
+    // Additional client-side filtering to ensure images are valid and not placeholders
+    const products = productsRaw.filter((product: any) => {
+      if (!product.images || !Array.isArray(product.images) || product.images.length === 0) {
+        return false;
+      }
+      // Ensure at least one image is a valid non-empty string AND not a placeholder
+      return product.images.some((img: string) => {
+        if (!img || typeof img !== 'string') return false;
+        const trimmed = img.trim();
+        if (trimmed.length === 0) return false;
+        // Reject placeholder images
+        if (trimmed === '/images/image.png') return false;
+        if (trimmed === '/images/placeholder.png') return false;
+        if (trimmed.includes('/images/image.png')) return false;
+        if (trimmed.includes('/images/placeholder.png')) return false;
+        // Accept any other URL (real images)
+        return true;
+      });
+    });
+
+    console.log(`Found ${products.length} products matching the criteria (filtered from ${productsRaw.length} raw results)`);
 
     // Calculate pagination info
     const totalPages = Math.ceil(totalProducts / validatedLimit);

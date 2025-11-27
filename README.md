@@ -17,6 +17,8 @@ A modern e-commerce platform built with Next.js, TypeScript, and MongoDB.
 - 📝 Rich text editor for content management
 - 🎯 Fantasy football features
 - 📰 News and articles system
+- ⚽ Football API integration (live matches, fixtures, standings)
+- 🏠 Dynamic homepage category management
 
 ## Tech Stack
 
@@ -66,8 +68,18 @@ STRIPE_PUBLIC_KEY=your_stripe_public_key
 STRIPE_SECRET_KEY=your_stripe_secret_key
 STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
 
+# Football API
+# API-Sports.io (v3) - Primary API for fixtures and live matches
+# Get your API key from: https://dashboard.api-sports.io/
+FOOTBALL_API=your_api_sports_api_key
+
+# Football-data.org (v4) - Secondary API for standings
+# Get your API key from: https://www.football-data.org/
+NEXT_FOOTBALL_API=your_football_data_api_key
+
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
 
 # Email (for notifications)
 EMAIL_SERVER_HOST=your_smtp_host
@@ -75,6 +87,11 @@ EMAIL_SERVER_PORT=587
 EMAIL_SERVER_USER=your_email
 EMAIL_SERVER_PASSWORD=your_email_password
 EMAIL_FROM=noreply@yourdomain.com
+
+# Cloudinary (for image uploads)
+CLOUDINARY_URL=cloudinary://your_api_key:your_api_secret@your_cloud_name
+NEXT_PUBLIC_CLOUDINARY_URL=https://api.cloudinary.com/v1_1/your_cloud_name/image/upload
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
 ```
 
 ### Installation
@@ -122,6 +139,11 @@ EMAIL_FROM=noreply@yourdomain.com
 - `pnpm build` - Build for production
 - `pnpm start` - Start production server
 - `pnpm lint` - Run ESLint
+
+### Testing
+- `pnpm test` - Run unit tests
+- `pnpm test:watch` - Run tests in watch mode
+- `pnpm test:coverage` - Generate test coverage report
 
 ### Database & Data Management
 - `pnpm seed:all` - Seed all initial data
@@ -205,6 +227,46 @@ goal-mania/
 5. **Styling**: Use Tailwind CSS classes and shadcn/ui components
 6. **Testing**: Run `pnpm lint` before committing
 
+## Football API Integration
+
+The platform integrates with two Football APIs:
+
+### API-Sports.io (v3)
+- **Purpose**: Fixtures and live matches
+- **Rate Limits**: 10 calls/minute, 100 calls/day (free tier)
+- **Endpoints Used**:
+  - `/fixtures` - Upcoming fixtures
+  - `/fixtures?live=all` - Live matches
+
+### Football-data.org (v4)
+- **Purpose**: League standings
+- **Rate Limits**: 10 calls/minute, 100 calls/day (free tier)
+- **Endpoints Used**:
+  - `/competitions/{code}/standings` - League standings
+
+### Features
+- ✅ Automatic caching (1 hour for standings/fixtures, 5 minutes for live matches)
+- ✅ Graceful fallback to cached data when API fails
+- ✅ Retry logic with exponential backoff
+- ✅ Network timeout protection (10 seconds)
+- ✅ Rate limit handling
+
+### Configuration
+See `env.example` for required API keys. The system will use fallback data if API keys are not configured.
+
+## Homepage Category Management
+
+Admins can manage homepage category sections through the admin panel:
+
+1. Navigate to `/admin/homepage-categories`
+2. Create categories with:
+   - Display title
+   - Product category filter
+   - Display order
+   - Product limit (1-50)
+   - Active/inactive status
+3. Categories are automatically rendered on the homepage
+
 ## Deployment
 
 ### Build for Production
@@ -218,6 +280,7 @@ pnpm start
 
 Make sure to set all required environment variables in your production environment:
 
+**Required:**
 - `MONGODB_URI`
 - `NEXTAUTH_URL`
 - `NEXTAUTH_SECRET`
@@ -227,7 +290,18 @@ Make sure to set all required environment variables in your production environme
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
 - `NEXT_PUBLIC_APP_URL`
-- Email configuration variables
+- `NEXT_PUBLIC_BASE_URL`
+
+**Optional (for Football API):**
+- `FOOTBALL_API` - API-Sports.io key
+- `NEXT_FOOTBALL_API` - Football-data.org key
+
+**Optional (for image uploads):**
+- `CLOUDINARY_URL`
+- `NEXT_PUBLIC_CLOUDINARY_URL`
+- `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET`
+
+**Email configuration variables**
 
 ## Contributing
 

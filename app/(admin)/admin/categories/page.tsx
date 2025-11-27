@@ -23,6 +23,7 @@ async function getCategories() {
   return categories.map((cat) => ({
     id: cat._id.toString(),
     name: cat.name,
+    slug: cat.slug,
     type: cat.type,
     order: cat.order,
     isActive: cat.isActive,

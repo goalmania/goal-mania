@@ -13,6 +13,7 @@ import {
   CheckCircleIcon,
   TruckIcon,
   XCircleIcon,
+  Squares2X2Icon,
 } from "@heroicons/react/24/outline";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -495,6 +496,14 @@ export default function AdminDashboard() {
                  >
                    <NewspaperIcon className="h-4 w-4 mr-2" />
                    Create Article
+                 </Button>
+                 <Button 
+                   className="w-full justify-start" 
+                   variant="outline"
+                   onClick={() => router.push("/admin/categories")}
+                 >
+                   <Squares2X2Icon className="h-4 w-4 mr-2" />
+                   Manage Categories
                  </Button>
                </CardContent>
             </Card>

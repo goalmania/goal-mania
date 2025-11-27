@@ -63,6 +63,7 @@ export function Header() {
   const [openMenu, setOpenMenu] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
     setMounted(true);
     if (typeof window !== "undefined" && session) {
@@ -79,17 +80,14 @@ export function Header() {
     it: "Italiano",
   };
 
-  // Static sub-items that should always appear first
-    // Static sub-items that should always appear first
-    const staticSubItems = [
-      { name: t("nav.laliga"), href: "/international/laliga" },
-      { name: t("nav.premierLeague"), href: "/international/premierLeague" },
-      { name: t("nav.bundesliga"), href: "/international/bundesliga" },
-      { name: t("nav.ligue1"), href: "/international/ligue1" },
-      { name: t("nav.serieA"), href: "/international/serieA" },
-      { name: t("nav.leaguesOverview"), href: "/leagues-overview" },
-      { name: t("nav.otherLeagues"), href: "/international/other" },
-    ];
+  // Static category sub-items (matching category-form.tsx static league options)
+  const categorySubItems = [
+    { name: t("nav.laliga"), href: "/international/laliga" },
+    { name: t("nav.premierLeague"), href: "/international/premierLeague" },
+    { name: t("nav.bundesliga"), href: "/international/bundesliga" },
+    { name: t("nav.ligue1"), href: "/international/ligue1" },
+    { name: t("nav.serieA"), href: "/international/serieA" },
+  ];
 
   const navigation = [
     { name: t("nav.home"), href: "/" },
@@ -97,9 +95,9 @@ export function Header() {
     { name: t("nav.shop"), href: "/shop" },
     {
       name: t("nav.category"),
-      href: "/category",
+      href: "/leagues-overview",
       hasDropdown: true,
-    subItems: staticSubItems,
+      subItems: categorySubItems,
     },
     { name: t("nav.info"), href: "/info" },
     { name: t("nav.about"), href: "/about" },

@@ -41,6 +41,10 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60, // Cache images for at least 60 seconds
+    // Disable strict SSL checking in development for expired certificates
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {
         protocol: "https",
@@ -61,6 +65,8 @@ const nextConfig: NextConfig = {
         hostname: "media.api-sports.io",
       },
     ],
+    // Add unoptimized option for development to bypass certificate issues
+    unoptimized: process.env.NODE_ENV === 'development' && process.env.DISABLE_IMAGE_OPTIMIZATION === 'true',
   },
   // Add Next.js headers for better security and cookie handling
   // headers: async () => {

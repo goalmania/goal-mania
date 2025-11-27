@@ -91,12 +91,22 @@ export default function EditProductPage() {
         const response = await fetch('/api/admin/categories');
         if (response.ok) {
           const data = await response.json();
-          // Filter active categories
-          const activeCategories = data.filter((cat: any) => cat.isActive);
+          console.log('[Product Edit] Fetched categories:', data);
+          // Filter active categories and map to expected format
+          const activeCategories = data
+            .filter((cat: any) => cat.isActive)
+            .map((cat: any) => ({
+              _id: cat._id || cat.id,
+              name: cat.name,
+              slug: cat.slug,
+            }));
+          console.log('[Product Edit] Active categories:', activeCategories);
           setDynamicCategories(activeCategories);
+        } else {
+          console.error('[Product Edit] Failed to fetch categories:', response.status, response.statusText);
         }
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error('[Product Edit] Error fetching categories:', error);
       }
     };
     fetchCategories();
@@ -873,7 +883,22 @@ export default function EditProductPage() {
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
-                          {/* Static categories only */}
+                          {/* Dynamic categories from database (shown first) */}
+                          {dynamicCategories.length > 0 && (
+                            <>
+                              {dynamicCategories.map((category) => (
+                                <SelectItem key={category._id} value={category.name}>
+                                  {category.name}
+                                </SelectItem>
+                              ))}
+                              {PRODUCT_CATEGORIES.length > 0 && (
+                                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+                                  ────────────
+                                </div>
+                              )}
+                            </>
+                          )}
+                          {/* Static categories (for backward compatibility) */}
                           {PRODUCT_CATEGORIES.map((category) => (
                             <SelectItem key={category} value={category}>
                               {category}

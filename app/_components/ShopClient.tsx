@@ -21,6 +21,7 @@ import { CheckCircle2, SparklesIcon, Star } from "lucide-react";
 import Testimonies from "@/components/shop/testimonies";
 import VideoComp from "@/components/home/VideoComp";
 import LandingCategorySection from "@/app/_components/LandingCategorySection";
+import AllCategoriesSection from "@/app/_components/AllCategoriesSection";
 
 interface Review {
   id: string;
@@ -41,16 +42,26 @@ interface Product {
   videos?: string[];
 }
 
+interface Category {
+  _id: string;
+  name: string;
+  slug: string;
+  order?: number;
+  isActive?: boolean;
+}
+
 export default function ShopClient({
   season2025Products = [],
   featuredProducts = [],
   mysteryBoxProducts = [],
   videoProducts = [],
+  categories = [],
 }: {
   season2025Products: Product[];
   featuredProducts: Product[];
   mysteryBoxProducts: Product[];
   videoProducts?: Product[];
+  categories?: Category[];
 }) {
   const { t } = useI18n();
 
@@ -133,6 +144,11 @@ export default function ShopClient({
           )}
         </div>
       </div>
+
+      {/* All Categories Section - Shows all categories with all their products - AFTER Latest Products */}
+      {categories && categories.length > 0 && (
+        <AllCategoriesSection categories={categories} />
+      )}
 
       {/* Maglie 2025/26 Section */}
       <div className="mx-auto max-w-7xl px-4  sm:px-6 lg:px-8">

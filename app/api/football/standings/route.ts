@@ -385,36 +385,29 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Use football-data.org API
-    const url = `${API_BASE_URL}/competitions/${leagueCode}/standings?season=${season}`;
-    
-    console.log(`🔄 Fetching standings: ${url}`);
-    const response = await fetch(url, {
-      headers: {
-        "X-Auth-Token": API_KEY,
-      },
-      next: { revalidate: 3600 }, // Revalidate every hour
-    });
+    // Use unified fetchFootballData utility for better error handling
+    const endpoint = `/competitions/${leagueCode}/standings?season=${season}`;
+    const { data, cached, error } = await fetchFootballData(
+      endpoint,
+      cacheKey,
+      3600000, // 1 hour cache
+      FALLBACK_STANDINGS,
+      { apiType: "footballData" }
+    );
 
-    if (!response.ok) {
-      if (response.status === 429) {
-        throw new Error("Rate limit exceeded");
-      }
-      if (response.status === 403) {
-        throw new Error("Invalid API key or access forbidden");
-      }
-      throw new Error(`API responded with status: ${response.status}`);
+    if (error) {
+      console.warn(`⚠️  Standings fetch warning for ${leagueCode}:`, error);
     }
 
-    const data = await response.json();
-
-    // Cache the successful response for 1 hour
-    FootballCache.set(cacheKey, data, 3600000);
-    console.log(`✅ Standings cache SET: ${cacheKey}`);
-
-    return NextResponse.json(data, {
-      headers: createSuccessHeaders(false, 3600),
-    });
+    return NextResponse.json(
+      {
+        ...data,
+        ...(error && { warning: error, fallbackUsed: true }),
+      },
+      {
+        headers: createSuccessHeaders(cached, 3600),
+      }
+    );
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     console.error(`❌ Error fetching standings for ${leagueCode}:`, errorMessage);

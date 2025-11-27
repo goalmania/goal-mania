@@ -1,5 +1,7 @@
 import ShopClient from "./ShopClient";
 import { getBaseUrl } from "@/lib/utils/baseUrl";
+import connectDB from "@/lib/db";
+import { Category } from "@/lib/models/Category";
 
 interface Product {
   id: string;
@@ -161,13 +163,27 @@ async function fetchVideoProducts(): Promise<Product[]> {
   }
 }
 
+async function getAllActiveCategories() {
+  try {
+    await connectDB();
+    const categories = await Category.find({ isActive: true })
+      .sort({ order: 1, name: 1 })
+      .lean();
+    return JSON.parse(JSON.stringify(categories));
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return [];
+  }
+}
+
 export default async function ShopClientWrapper() {
-  const [season2025Products, featuredProducts, mysteryBoxProducts, videoProducts] =
+  const [season2025Products, featuredProducts, mysteryBoxProducts, videoProducts, categories] =
     await Promise.all([
       fetchSeason2025Products(),
       fetchFeaturedProducts(),
       fetchMysteryBoxProducts(),
       fetchVideoProducts(),
+      getAllActiveCategories(),
     ]);
   return (
     <ShopClient
@@ -175,6 +191,7 @@ export default async function ShopClientWrapper() {
       featuredProducts={featuredProducts}
       mysteryBoxProducts={mysteryBoxProducts}
       videoProducts={videoProducts}
+      categories={categories}
     />
   );
 }

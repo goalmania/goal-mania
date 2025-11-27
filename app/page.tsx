@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
+import HomepageCategory from "@/lib/models/HomepageCategory";
 import HeroSection from "@/components/home/HeroSection";
 import { Product } from "@/lib/types/home";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
@@ -32,6 +33,10 @@ const VideoComp = dynamic(() => import("@/components/home/VideoComp"), {
 });
 
 const LandingCategorySection = dynamic(() => import("@/app/_components/LandingCategorySection"), {
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+});
+
+const AllCategoriesSectionWrapper = dynamic(() => import("@/app/_components/AllCategoriesSectionWrapper"), {
   loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
 });
 
@@ -223,19 +228,39 @@ export default async function Home() {
   const featuredProducts = await getFeaturedProducts();
   const videoProducts = await getVideoProducts();
 
+  // Fetch active homepage categories
+  const homepageCategories = await (async () => {
+    try {
+      await connectDB();
+      const categories = await HomepageCategory.find({ isActive: true })
+        .sort({ displayOrder: 1, createdAt: -1 })
+        .lean();
+      return JSON.parse(JSON.stringify(categories));
+    } catch (error) {
+      console.error("Error fetching homepage categories:", error);
+      return [];
+    }
+  })();
+
   return (
     <div className="bg-white min-h-screen relative font-munish">
       <HeroSection />
       <ClientSlider />
       <FeaturedProducts products={featuredProducts} />
+      {/* All Categories Section - Shows all categories with all their products - ABOVE Latest News */}
+      <AllCategoriesSectionWrapper />
       <NewsSection articles={featuredArticles} />
       <FeaturedVideoProducts products={featuredProducts} />
       <VideoComp products={videoProducts} />
-      {/* Custom category sections - Hidden per user request */}
-      {/* <LandingCategorySection title="Serie A" category="Serie A" /> */}
-      {/* <LandingCategorySection title="Premier League" category="Premier League" /> */}
-      {/* <LandingCategorySection title="Resto del Mondo" category="Resto del Mondo" /> */}
-      {/* <LandingCategorySection title="Edizioni Limitate" category="Edizioni Limitate" /> */}
+      {/* Dynamic homepage category sections */}
+      {homepageCategories.map((category: any) => (
+        <LandingCategorySection
+          key={category._id}
+          title={category.title}
+          category={category.category}
+          limit={category.limit || 8}
+        />
+      ))}
     </div>
   );
 }
