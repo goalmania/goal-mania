@@ -57,7 +57,7 @@ interface CategoryFormProps {
   initialData?: Category;
 }
 
-export function CategoryForm({ initialData, categories }: CategoryFormProps) {
+export function CategoryForm({ initialData }: CategoryFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { t } = useI18n();
