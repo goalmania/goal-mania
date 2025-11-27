@@ -7,12 +7,13 @@ import { authOptions } from "@/lib/auth";
 // GET - Fetch a single homepage category
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
+    const { id } = await params;
 
-    const category = await HomepageCategory.findById(params.id).lean();
+    const category = await HomepageCategory.findById(id).lean();
 
     if (!category) {
       return NextResponse.json(
@@ -36,7 +37,7 @@ export async function GET(
 // PUT - Update a homepage category
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -49,11 +50,12 @@ export async function PUT(
     }
 
     await connectDB();
+    const { id } = await params;
 
     const body = await request.json();
     const { title, category, displayOrder, isActive, limit } = body;
 
-    const homepageCategory = await HomepageCategory.findById(params.id);
+    const homepageCategory = await HomepageCategory.findById(id);
 
     if (!homepageCategory) {
       return NextResponse.json(
@@ -87,7 +89,7 @@ export async function PUT(
 // DELETE - Delete a homepage category
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -100,8 +102,9 @@ export async function DELETE(
     }
 
     await connectDB();
+    const { id } = await params;
 
-    const homepageCategory = await HomepageCategory.findByIdAndDelete(params.id);
+    const homepageCategory = await HomepageCategory.findByIdAndDelete(id);
 
     if (!homepageCategory) {
       return NextResponse.json(
