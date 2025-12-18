@@ -12,17 +12,17 @@ interface Product {
   videos?: string[];
 }
 
-async function fetchSeason2025Products(): Promise<Product[]> {
+async function fetchLatestProducts(): Promise<Product[]> {
   try {
     const baseUrl = getBaseUrl();
     const response = await fetch(
-      `${baseUrl}/api/products?category=2025%2F26&noPagination=true`,
+      `${baseUrl}/api/products?sortBy=createdAt&sortOrder=desc&limit=8&noPagination=true`,
       {
         next: { revalidate: 300 }, // Cache for 5 minutes
       }
     );
     if (!response.ok) {
-      throw new Error(`Error fetching products: ${response.status}`);
+      throw new Error(`Error fetching latest products: ${response.status}`);
     }
     const data = await response.json();
     let productsData = [];
@@ -44,7 +44,45 @@ async function fetchSeason2025Products(): Promise<Product[]> {
       videos: product.videos || [], // Include videos for showcase
     }));
   } catch (error) {
-    console.error("Error fetching 2025/26 products:", error);
+    console.error("Error fetching latest products:", error);
+    return [];
+  }
+}
+
+async function fetchBestSellingProducts(): Promise<Product[]> {
+  try {
+    const baseUrl = getBaseUrl();
+    // Temporary: Fetch latest products as best sellers until real sales data is available
+    const response = await fetch(
+      `${baseUrl}/api/products?sortBy=createdAt&sortOrder=desc&limit=8&noPagination=true`,
+      {
+        next: { revalidate: 300 }, // Cache for 5 minutes
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`Error fetching best selling products: ${response.status}`);
+    }
+    const data = await response.json();
+    let productsData = [];
+    if (data.products && Array.isArray(data.products)) {
+      productsData = data.products;
+    } else if (Array.isArray(data)) {
+      productsData = data;
+    } else {
+      throw new Error("Invalid data format received from API");
+    }
+    return productsData.map((product: any) => ({
+      id: product._id || "",
+      name: product.title || "Best Seller",
+      price: product.basePrice || 0,
+      image: product.images?.[0] || "/images/image.png",
+      category: product.category || "Uncategorized",
+      team: product.title ? product.title.split(" ")[0] : "Unknown",
+      availablePatches: product.availablePatches || [],
+      videos: product.videos || [], // Include videos for showcase
+    }));
+  } catch (error) {
+    console.error("Error fetching best selling products:", error);
     return [];
   }
 }
@@ -162,16 +200,18 @@ async function fetchVideoProducts(): Promise<Product[]> {
 }
 
 export default async function ShopClientWrapper() {
-  const [season2025Products, featuredProducts, mysteryBoxProducts, videoProducts] =
+  const [latestProducts, bestSellingProducts, featuredProducts, mysteryBoxProducts, videoProducts] =
     await Promise.all([
-      fetchSeason2025Products(),
+      fetchLatestProducts(),
+      fetchBestSellingProducts(),
       fetchFeaturedProducts(),
       fetchMysteryBoxProducts(),
       fetchVideoProducts(),
     ]);
   return (
     <ShopClient
-      season2025Products={season2025Products}
+      latestProducts={latestProducts}
+      bestSellingProducts={bestSellingProducts}
       featuredProducts={featuredProducts}
       mysteryBoxProducts={mysteryBoxProducts}
       videoProducts={videoProducts}

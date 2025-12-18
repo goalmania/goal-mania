@@ -15,6 +15,7 @@ export default function HeroSection() {
       { text: `${t('Ultime Notizie')}`, href: `news` },
       { text: `${t('Maglie Attuali')}`, href: `/shop/2025/26`},
       { text: `${t('Maglie Retro')}`, href: `/shop/retro` },
+      { text: `${t('Premier League')}`, href: `/shop/premier-league` },
     ],
     imageUrl: `/images/recentUpdate/home-banner.jpg`, // This uses the uploaded image
   };

@@ -16,8 +16,8 @@
     "revalidate": "node scripts/revalidate-cache.js",
     "optimize-db": "node scripts/optimize-db-indexes.mjs",
     "create:user": "node scripts/create-user.mjs",
-  "mark:featured": "node scripts/mark-featured-products.mjs",
-  "update:categories": "node scripts/update-product-categories.mjs",
+    "mark:featured": "node scripts/mark-featured-products.mjs",
+    "update:categories": "node scripts/update-product-categories.mjs",
     "seed:landing-categories": "node scripts/seed-landing-categories.mjs"
   },
   "dependencies": {
@@ -89,7 +89,7 @@
     "i18next-resources-to-backend": "^1.2.1",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.509.0",
-    "mongodb": "^6.16.0",
+    "mongodb": "^6.21.0",
     "mongoose": "^8.14.2",
     "next": "^15.5.2",
     "next-auth": "^4.24.11",

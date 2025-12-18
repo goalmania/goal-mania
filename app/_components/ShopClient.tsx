@@ -42,12 +42,14 @@ interface Product {
 }
 
 export default function ShopClient({
-  season2025Products = [],
+  latestProducts = [],
+  bestSellingProducts = [],
   featuredProducts = [],
   mysteryBoxProducts = [],
   videoProducts = [],
 }: {
-  season2025Products: Product[];
+  latestProducts: Product[];
+  bestSellingProducts: Product[];
   featuredProducts: Product[];
   mysteryBoxProducts: Product[];
   videoProducts?: Product[];
@@ -69,6 +71,7 @@ export default function ShopClient({
       { text: `${t("Ultime Notizie")}`, href: `news` },
       { text: `${t("Maglie Attuali")}`, href: `/shop/2025/26` },
       { text: `${t("Maglie Retro")}`, href: `/shop/retro` },
+      { text: `${t("Premier League")}`, href: `/shop/premier-league` },
     ],
     imageUrl: `/images/recentUpdate/product-banner.jpg`, // This uses the uploaded image
   };
@@ -111,7 +114,7 @@ export default function ShopClient({
         </div>
       </div>
 
-      {/* Maglie 2025/26 Section */}
+      {/* Latest Products Section */}
       <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center">
           <h2 className="text-[47px] font-medium tracking-tight text-[#0A1A2F]">
@@ -122,19 +125,19 @@ export default function ShopClient({
           </p>
         </div>
         <div className="my-6">
-          {season2025Products.length === 0 ? (
+          {latestProducts.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <p>Nessun prodotto disponibile in questa categoria.</p>
             </div>
           ) : (
             <Suspense fallback={<div>Loading...</div>}>
-              <ProductGridWrapper products={season2025Products} />
+              <ProductGridWrapper products={latestProducts} />
             </Suspense>
           )}
         </div>
       </div>
 
-      {/* Maglie 2025/26 Section */}
+      {/* Best Selling Products Section */}
       <div className="mx-auto max-w-7xl px-4  sm:px-6 lg:px-8">
         <div className="flex flex-col items-center">
           <h2 className="text-[47px] font-medium tracking-tight text-[#0A1A2F]">
@@ -146,13 +149,13 @@ export default function ShopClient({
           </p>
         </div>
         <div className="my-6">
-          {season2025Products.length === 0 ? (
+          {bestSellingProducts.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <p>Nessun prodotto disponibile in questa categoria.</p>
             </div>
           ) : (
             <Suspense fallback={<div>Loading...</div>}>
-              <ProductGridWrapper products={season2025Products} />
+              <ProductGridWrapper products={bestSellingProducts} />
             </Suspense>
           )}
         </div>

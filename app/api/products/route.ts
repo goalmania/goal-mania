@@ -138,6 +138,7 @@ export async function GET(req: NextRequest) {
     }
 
     console.log("Products API Query:", JSON.stringify(query, null, 2));
+    console.log("Sort:", JSON.stringify({ sortBy, sortOrder, sortObject: { [sortBy]: sortOrder === "asc" ? 1 : -1 } }));
 
     // Build sort object
     const sortObject: any = {};
@@ -155,6 +156,9 @@ export async function GET(req: NextRequest) {
     ]);
 
     console.log(`Found ${products.length} products matching the criteria`);
+    if (products.length > 0 && sortBy === 'createdAt') {
+      console.log(`First product createdAt: ${products[0].createdAt}, Last product createdAt: ${products[products.length - 1].createdAt}`);
+    }
 
     // Calculate pagination info
     const totalPages = Math.ceil(totalProducts / validatedLimit);
