@@ -5,118 +5,78 @@ import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { z } from "zod";
 import { ProductCache } from "@/lib/cache";
-import {
-  VALID_ADULT_SIZES,
-  VALID_KID_SIZES,
-  PRODUCT_CATEGORIES,
-} from "@/lib/types/product";
 import mongoose from "mongoose";
 import { NextRequest } from "next/server";
 
 // Enable ISR caching for this route handler
 export const revalidate = 600;
 
-// Schema for input validation
+// Input validation schema
 const productSchema = z.object({
-  title: z.string().min(2, "Title must be at least 2 characters"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  basePrice: z.number().min(0, "Base price cannot be negative").default(30),
-  retroPrice: z.number().min(0, "Retro price cannot be negative").default(35),
-  shippingPrice: z
-    .number()
-    .min(0, "Shipping price cannot be negative")
-    .default(0),
-  stockQuantity: z
-    .number()
-    .min(0, "Stock quantity cannot be negative")
-    .default(0),
-  images: z.array(z.string()).min(1, "At least one image is required"),
+  title: z.string().min(2),
+  description: z.string().min(10),
+  basePrice: z.number().min(0).default(30),
+  retroPrice: z.number().min(0).default(35),
+  shippingPrice: z.number().min(0).default(0),
+  stockQuantity: z.number().min(0).default(0),
+  images: z.array(z.string()).min(1),
   videos: z.array(z.string()).optional(),
   hasShorts: z.boolean().default(true),
   hasSocks: z.boolean().default(true),
   hasPlayerEdition: z.boolean().default(true),
   isMysteryBox: z.boolean().default(false),
-  adultSizes: z
-    .array(z.enum(["S", "M", "L", "XL", "XXL", "3XL"]))
-    .default(["S", "M", "L", "XL", "XXL"]),
-  kidsSizes: z.array(z.enum(["XS", "S", "M", "L", "XL"])).default([]),
-  // Accept static categories and also dynamic string values created via admin
-  // category management. Using a permissive string validator here keeps
-  // backward compatibility with the hardcoded PRODUCT_CATEGORIES while
-  // allowing new categories.
-  category: z.string().min(1, "Category must be a non-empty string"),
+  adultSizes: z.array(z.enum(["S", "M", "L", "XL", "XXL", "3XL"])).default(["S","M","L","XL","XXL"]),
+  kidsSizes: z.array(z.enum(["XS","S","M","L","XL"])).default([]),
+  category: z.string().min(1),
   allowsNumberOnShirt: z.boolean().default(true),
   allowsNameOnShirt: z.boolean().default(true),
   isActive: z.boolean().default(true),
   feature: z.boolean().default(true),
   slug: z.string().optional(),
-  // Patch relationships
   patchIds: z.array(z.string()).optional().default([]),
 });
 
+// === GET handler ===
 export async function GET(req: NextRequest) {
   try {
+    await connectDB();
+
+    const ProductModel = mongoose.models.Product || Product;
+
+    // Test DB route
+    if (req.nextUrl.searchParams.get("testDb") === "true") {
+      return NextResponse.json({
+        message: "MongoDB connection successful!",
+        readyState: mongoose.connection.readyState,
+      });
+    }
+
     const searchParams = req.nextUrl.searchParams;
     const category = searchParams.get("category") || "all";
-    const page = parseInt(searchParams.get("page") || "1", 10);
-    const limit = parseInt(searchParams.get("limit") || "20", 10);
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "20", 10)));
     const search = searchParams.get("search") || "";
     const feature = searchParams.get("feature") === "true";
     const includeInactive = searchParams.get("includeInactive") === "true";
     const sortBy = searchParams.get("sortBy") || "createdAt";
     const sortOrder = searchParams.get("sortOrder") || "desc";
 
-    // Validate pagination parameters
-    const validatedPage = Math.max(1, page);
-    const validatedLimit = Math.min(100, Math.max(1, limit)); // Cap at 100 items per page
-
-    // Create cache key for this specific query
+    // Caching
     const cacheKey = ProductCache.createKey(
-      category, 
-      validatedPage, 
-      validatedLimit, 
+      category, page, limit,
       `${search}-${feature}-${includeInactive}-${sortBy}-${sortOrder}`
     );
-    
-    // Check cache first (but skip cache for search queries and admin queries)
     if (!search && !includeInactive) {
-      const cachedData = ProductCache.get(cacheKey);
-      if (cachedData) {
-        return NextResponse.json(cachedData, {
-          headers: {
-            'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1200',
-            'X-Cache': 'HIT'
-          }
-        });
+      const cached = ProductCache.get(cacheKey);
+      if (cached) {
+        return NextResponse.json(cached, { headers: { "X-Cache": "HIT" } });
       }
-    }
-
-    await connectDB();
-
-    // Get the Product model
-    const Product = mongoose.models.Product;
-
-    if (!Product) {
-      return NextResponse.json(
-        { error: "Product model not found" },
-        { status: 500 }
-      );
     }
 
     // Build query
     const query: any = {};
-
-    // Only filter by active status if includeInactive is false
-    if (!includeInactive) {
-      query.isActive = true;
-    }
-
-    // Add category filter if not 'all'
-    if (category !== "all") {
-      query.category = category;
-    }
-
-    // Add search filter if provided - search in title, description, and category
+    if (!includeInactive) query.isActive = true;
+    if (category !== "all") query.category = category;
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: "i" } },
@@ -124,282 +84,104 @@ export async function GET(req: NextRequest) {
         { category: { $regex: search, $options: "i" } },
       ];
     }
+    if (feature) query.feature = true;
+    if (searchParams.get("type") === "mysteryBox") query.isMysteryBox = true;
 
-    // Add featured filter if requested
-    if (feature) {
-      query.feature = true;
-    }
-
-    // Add mystery box filter if requested
-    const type = searchParams.get("type");
-    if (type === "mysteryBox") {
-      query.isMysteryBox = true;
-      console.log("Mystery Box filter applied - query.isMysteryBox = true");
-    }
-
-    console.log("Products API Query:", JSON.stringify(query, null, 2));
-    console.log("Sort:", JSON.stringify({ sortBy, sortOrder, sortObject: { [sortBy]: sortOrder === "asc" ? 1 : -1 } }));
-
-    // Build sort object
     const sortObject: any = {};
     sortObject[sortBy] = sortOrder === "asc" ? 1 : -1;
 
-    // Use Promise.all for parallel execution of count and find operations
     const [totalProducts, products] = await Promise.all([
-      Product.countDocuments(query),
-      Product.find(query)
+      ProductModel.countDocuments(query),
+      ProductModel.find(query)
         .sort(sortObject)
-        .skip((validatedPage - 1) * validatedLimit)
-        .limit(validatedLimit)
-        .lean()
-        .select('_id title description basePrice retroPrice shippingPrice stockQuantity images isRetro hasShorts hasSocks category allowsNumberOnShirt allowsNameOnShirt isActive feature slug isMysteryBox createdAt videos')
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean(),
     ]);
 
-    console.log(`Found ${products.length} products matching the criteria`);
-    if (products.length > 0 && sortBy === 'createdAt') {
-      console.log(`First product createdAt: ${products[0].createdAt}, Last product createdAt: ${products[products.length - 1].createdAt}`);
-    }
-
-    // Calculate pagination info
-    const totalPages = Math.ceil(totalProducts / validatedLimit);
-    const hasNextPage = validatedPage < totalPages;
-    const hasPreviousPage = validatedPage > 1;
-
-    // For backward compatibility, return just the products array if not requesting pagination info
-    if (req.nextUrl.searchParams.has("noPagination")) {
-      return NextResponse.json(products, {
-        headers: {
-          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
-        },
-      });
-    }
+    const totalPages = Math.ceil(totalProducts / limit);
 
     const response = {
       products,
       pagination: {
         total: totalProducts,
-        page: validatedPage,
-        limit: validatedLimit,
+        page,
+        limit,
         totalPages,
-        hasNextPage,
-        hasPreviousPage,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
       },
     };
 
-    // Cache the response for non-search, non-admin queries
-    if (!search && !includeInactive) {
-      ProductCache.set(cacheKey, response);
-    }
+    if (!search && !includeInactive) ProductCache.set(cacheKey, response);
 
-    // Add appropriate cache headers based on the request type
-    const cacheHeaders = {
-      'Cache-Control': (search || includeInactive)
-        ? 'no-cache, no-store, must-revalidate' // Don't cache search results or admin-filtered results
-        : 'public, s-maxage=600, stale-while-revalidate=1200', // Cache regular product lists for 10 minutes
-      'X-Cache': 'MISS'
-    };
-
-    return NextResponse.json(response, {
-      headers: cacheHeaders,
-    });
-  } catch (error) {
-    console.error("[PRODUCTS_GET]", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return NextResponse.json(response, { headers: { "X-Cache": "MISS" } });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error("[PRODUCTS_GET]", err);
+    return NextResponse.json({ error: "Internal Server Error", details: message }, { status: 500 });
   }
 }
 
+// === POST handler ===
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const role = (session.user as any)?.role as string | undefined;
-    if (role !== "admin") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const role = (session.user as any)?.role;
+    if (role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
     await connectDB();
+
     const body = await request.json();
-
-    console.log("Received product data:", JSON.stringify(body, null, 2));
-
-    // Ensure basePrice and retroPrice are numeric
     const processedBody = {
       ...body,
-      basePrice:
-        typeof body.basePrice === "string"
-          ? parseFloat(body.basePrice)
-          : body.basePrice,
-      retroPrice:
-        typeof body.retroPrice === "string"
-          ? parseFloat(body.retroPrice)
-          : body.retroPrice,
-      shippingPrice:
-        typeof body.shippingPrice === "string"
-          ? parseFloat(body.shippingPrice)
-          : body.shippingPrice ?? 0,
-      stockQuantity:
-        typeof body.stockQuantity === "string"
-          ? parseInt(body.stockQuantity)
-          : body.stockQuantity,
+      basePrice: Number(body.basePrice || 0),
+      retroPrice: Number(body.retroPrice || 0),
+      shippingPrice: Number(body.shippingPrice || 0),
+      stockQuantity: Number(body.stockQuantity || 0),
     };
 
-    // Handle migration from old schema to new schema if necessary
-    if (
-      processedBody.sizes &&
-      (!processedBody.adultSizes || processedBody.adultSizes.length === 0)
-    ) {
-      // Convert all old sizes to upper case and consider them adult sizes
-      processedBody.adultSizes = processedBody.sizes
-        .map((size: string) => {
-          // Handle case variations and normalize
-          const normalizedSize = size.trim().toUpperCase();
-
-          // Map common size variations to standard format
-          if (normalizedSize === "XXS") return null; // XXS is not in adult sizes
-          if (normalizedSize === "S" || normalizedSize === "SMALL") return "S";
-          if (normalizedSize === "M" || normalizedSize === "MEDIUM") return "M";
-          if (normalizedSize === "L" || normalizedSize === "LARGE") return "L";
-          if (
-            normalizedSize === "XL" ||
-            normalizedSize === "XLARGE" ||
-            normalizedSize === "X-LARGE"
-          )
-            return "XL";
-          if (
-            normalizedSize === "XXL" ||
-            normalizedSize === "XXLARGE" ||
-            normalizedSize === "XX-LARGE" ||
-            normalizedSize === "2XL"
-          )
-            return "XXL";
-          if (
-            normalizedSize === "XXXL" ||
-            normalizedSize === "3XL" ||
-            normalizedSize === "XXX-LARGE"
-          )
-            return "3XL";
-
-          // If it's already a valid size, return it
-          if (["S", "M", "L", "XL", "XXL", "3XL"].includes(normalizedSize))
-            return normalizedSize;
-
-          // If it's not a recognized size format, return null to be filtered out
-          return null;
-        })
-        .filter(Boolean) as string[]; // Filter out null values
-
-      // Initialize kidsSizes if it doesn't exist
-      if (!processedBody.kidsSizes) {
-        processedBody.kidsSizes = [];
-
-        // Check if any of the original sizes might be kid sizes
-        processedBody.sizes.forEach((size: string) => {
-          const normalizedSize = size.trim().toUpperCase();
-          // Check for kid-specific sizes
-          if (
-            normalizedSize === "XXS" ||
-            normalizedSize === "XS" ||
-            normalizedSize.includes("KID") ||
-            normalizedSize.includes("CHILD")
-          ) {
-            // Map to appropriate kid size
-            if (normalizedSize === "XXS" || normalizedSize === "XS") {
-              processedBody.kidsSizes.push("XS");
-            } else if (normalizedSize.includes("S")) {
-              processedBody.kidsSizes.push("S");
-            } else if (normalizedSize.includes("M")) {
-              processedBody.kidsSizes.push("M");
-            } else if (normalizedSize.includes("L")) {
-              processedBody.kidsSizes.push("L");
-            } else if (normalizedSize.includes("XL")) {
-              processedBody.kidsSizes.push("XL");
-            }
-          }
-        });
-      }
-
-      console.log("Migrated product sizes for POST request:", {
-        oldSizes: processedBody.sizes,
-        newAdultSizes: processedBody.adultSizes,
-        newKidSizes: processedBody.kidsSizes,
-      });
+    // Size migration
+    if (processedBody.sizes && (!processedBody.adultSizes || processedBody.adultSizes.length === 0)) {
+      processedBody.adultSizes = processedBody.sizes.map((size: string) => {
+        const s = size.trim().toUpperCase();
+        if (["S", "SMALL"].includes(s)) return "S";
+        if (["M", "MEDIUM"].includes(s)) return "M";
+        if (["L", "LARGE"].includes(s)) return "L";
+        if (["XL", "XLARGE", "X-LARGE"].includes(s)) return "XL";
+        if (["XXL", "XXLARGE", "XX-LARGE", "2XL"].includes(s)) return "XXL";
+        if (["XXXL", "3XL", "XXX-LARGE"].includes(s)) return "3XL";
+        return null;
+      }).filter(Boolean);
+      if (!processedBody.kidsSizes) processedBody.kidsSizes = [];
     }
 
-    // Validate input
-    try {
-      const validatedData = productSchema.parse(processedBody);
+    const validatedData = productSchema.parse(processedBody);
 
-      // Handle patch relationships
-      if (validatedData.patchIds && validatedData.patchIds.length > 0) {
-        // Validate that all patchIds exist
-        const Patch = require('@/lib/models/Patch').default;
-        const existingPatches = await Patch.find({ 
-          _id: { $in: validatedData.patchIds },
-          isActive: true 
-        });
-        
-        if (existingPatches.length !== validatedData.patchIds.length) {
-          return NextResponse.json(
-            { error: "One or more patches not found or inactive" },
-            { status: 400 }
-          );
-        }
+    // Handle patchIds
+    if (validatedData.patchIds.length > 0) {
+      const Patch = require("@/lib/models/Patch").default;
+      const existingPatches = await Patch.find({ _id: { $in: validatedData.patchIds }, isActive: true });
+      if (existingPatches.length !== validatedData.patchIds.length) {
+        return NextResponse.json({ error: "One or more patches not found or inactive" }, { status: 400 });
       }
-
-      // Generate slug from title if not provided
-      if (!validatedData.slug) {
-        validatedData.slug = validatedData.title
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/(^-|-$)/g, "");
-      }
-
-      // Check for duplicate slug
-      const existingProduct = await Product.findOne({
-        slug: validatedData.slug,
-      });
-      if (existingProduct) {
-        // Add timestamp to make slug unique
-        validatedData.slug = `${validatedData.slug}-${Date.now()}`;
-      }
-
-      const product = await Product.create(validatedData);
-      return NextResponse.json(product);
-    } catch (validationError) {
-      console.error("Validation error:", validationError);
-      if (validationError instanceof z.ZodError) {
-        return NextResponse.json(
-          { error: "Validation error", details: validationError.errors },
-          { status: 400 }
-        );
-      }
-      throw validationError; // Re-throw if not a Zod error
     }
-  } catch (error) {
-    console.error("Error creating product:", error);
-    // Get detailed error information
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error occurred";
 
-    const errorStack = error instanceof Error ? error.stack : undefined;
+    // Generate slug if missing
+    if (!validatedData.slug) {
+      validatedData.slug = validatedData.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    }
 
-    console.error("Error details:", {
-      message: errorMessage,
-      stack: errorStack,
-    });
+    const existingProduct = await Product.findOne({ slug: validatedData.slug });
+    if (existingProduct) validatedData.slug += `-${Date.now()}`;
 
-    return NextResponse.json(
-      {
-        error: "Failed to create product",
-        message: errorMessage,
-        ...(process.env.NODE_ENV !== "production" && { stack: errorStack }),
-      },
-      { status: 500 }
-    );
+    const product = await Product.create(validatedData);
+    return NextResponse.json(product);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error("[PRODUCTS_POST]", err);
+    return NextResponse.json({ error: "Failed to create product", details: message }, { status: 500 });
   }
 }

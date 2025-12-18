@@ -52,18 +52,33 @@ async function fetchLatestProducts(): Promise<Product[]> {
 async function fetchBestSellingProducts(): Promise<Product[]> {
   try {
     const baseUrl = getBaseUrl();
-    // Temporary: Fetch latest products as best sellers until real sales data is available
+    
+    // Specific product titles for Best Sellers - exact match with database
+    const bestSellerTitles = [
+      "Maglia Away FC Barcelona x Travis Scott - Edizione Speciale",
+      "Maglia Napoli Halloween 2025/26",
+      "Maglia Juventus 25/26 Casa",
+      "Maglia Inter 25/26 Casa",
+      "Maglia Juventus 2019/20 Quarta",
+      "Maglia Barcellona 2014/15 Home",
+      "Maglia Barcellona 2010/11 Home"
+    ];
+    
+    // Fetch all products
     const response = await fetch(
-      `${baseUrl}/api/products?sortBy=createdAt&sortOrder=desc&limit=8&noPagination=true`,
+      `${baseUrl}/api/products?limit=200&noPagination=true`,
       {
         next: { revalidate: 300 }, // Cache for 5 minutes
       }
     );
+    
     if (!response.ok) {
       throw new Error(`Error fetching best selling products: ${response.status}`);
     }
+    
     const data = await response.json();
     let productsData = [];
+    
     if (data.products && Array.isArray(data.products)) {
       productsData = data.products;
     } else if (Array.isArray(data)) {
@@ -71,7 +86,14 @@ async function fetchBestSellingProducts(): Promise<Product[]> {
     } else {
       throw new Error("Invalid data format received from API");
     }
-    return productsData.map((product: any) => ({
+    
+    // Filter products that match the best seller titles (exact match)
+    const bestSellers = productsData.filter((product: any) => {
+      const title = product.title || "";
+      return bestSellerTitles.includes(title);
+    });
+    
+    return bestSellers.map((product: any) => ({
       id: product._id || "",
       name: product.title || "Best Seller",
       price: product.basePrice || 0,
