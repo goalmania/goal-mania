@@ -267,22 +267,43 @@ export default function AdminVideosPage() {
   };
 
   const uploadFile = async (file: File, type: 'video' | 'image') => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('type', type);
+    try {
+      console.log(`Uploading ${type} file:`, file.name, 'Size:', file.size, 'Type:', file.type);
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', type);
 
-    const response = await fetch('/api/upload-video', {
-      method: 'POST',
-      body: formData,
-    });
+      const response = await fetch('/api/upload-video', {
+        method: 'POST',
+        body: formData,
+      });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Upload failed');
+      console.log(`Upload response status:`, response.status);
+
+      if (!response.ok) {
+        // Handle non-JSON responses (like middleware errors)
+        let errorMessage = 'Upload failed';
+        try {
+          const error = await response.json();
+          console.error('Upload error response:', error);
+          errorMessage = error.error || errorMessage;
+        } catch (e) {
+          // If response is not JSON (e.g., "Forbidden" text)
+          const text = await response.text();
+          console.error('Upload error text:', text);
+          errorMessage = text || `Upload failed with status ${response.status}`;
+        }
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+      console.log('Upload successful:', data);
+      return data.url;
+    } catch (error: any) {
+      console.error(`Error uploading ${type}:`, error);
+      throw error; // Re-throw to be caught by handleSubmit
     }
-
-    const data = await response.json();
-    return data.url;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -296,18 +317,32 @@ export default function AdminVideosPage() {
       if (videoFile) {
         setUploadingVideo(true);
         toast.loading("Uploading video...");
-        videoUrl = await uploadFile(videoFile, 'video');
-        toast.dismiss();
-        toast.success("Video uploaded successfully");
+        try {
+          videoUrl = await uploadFile(videoFile, 'video');
+          toast.dismiss();
+          toast.success("Video uploaded successfully");
+        } catch (error: any) {
+          toast.dismiss();
+          toast.error(`Video upload failed: ${error.message}`);
+          setUploadingVideo(false);
+          return; // Stop here if video upload fails
+        }
       }
 
       // Upload thumbnail if selected
       if (thumbnailFile) {
         setUploadingThumbnail(true);
         toast.loading("Uploading thumbnail...");
-        thumbnailUrl = await uploadFile(thumbnailFile, 'image');
-        toast.dismiss();
-        toast.success("Thumbnail uploaded successfully");
+        try {
+          thumbnailUrl = await uploadFile(thumbnailFile, 'image');
+          toast.dismiss();
+          toast.success("Thumbnail uploaded successfully");
+        } catch (error: any) {
+          toast.dismiss();
+          toast.error(`Thumbnail upload failed: ${error.message}`);
+          setUploadingThumbnail(false);
+          return; // Stop here if thumbnail upload fails
+        }
       }
 
       // Validate URLs

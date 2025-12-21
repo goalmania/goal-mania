@@ -40,5 +40,12 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/wishlist/:path*", "/cart/:path*", "/profile/:path*", "/admin/:path*"],
+  matcher: [
+    "/wishlist/:path*", 
+    "/cart/:path*", 
+    "/profile/:path*", 
+    "/admin/:path*",
+    // Exclude API routes from middleware
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
 };
