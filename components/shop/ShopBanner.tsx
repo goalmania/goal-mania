@@ -57,7 +57,7 @@ export default function ShopBanner({
       </div>
 
       {/* Content Wrapper */}
-      <div className="relative z-10 pb-35 lg:pb-10 flex flex-col items-center   text-center  lg:items-start lg:text-left max-w-4xl w-full px-3 md:px-8 lg:px-20 ">
+      <div className="relative z-10 pb-20 sm:pb-24 md:pb-28 lg:pb-16 flex flex-col items-center text-center lg:items-start lg:text-left max-w-4xl w-full px-3 md:px-8 lg:px-20 mb-8">
         {/* Title */}
         <h1 className="text-white text-3xl max-w-md lg:max-w-xl  px-10 sm:px-0 md:text-5xl  font-bold mb-4 font-sans">
           {title}
@@ -70,12 +70,12 @@ export default function ShopBanner({
 
         {/* Buttons */}
         {buttons && buttons.length > 0 && (
-          <div className="flex  items-start space-y-4 pb-3.5 gap-2 lg:max-w-md  sm:space-y-0 sm:space-x-4">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4 w-full max-w-5xl pb-8">
             {buttons.map((button, index) => (
               <a
                 key={index}
                 href={button.href}
-                className="lg:py-3 lg:px-6 px-3 py-1.5   rounded-full text-[#0A1A2F] font-semibold transition-all duration-300 bg-[#FF7A00] ease-in-out transform hover:scale-105 hover:shadow-lg focus:outline-none whitespace-nowrap text-xs md:text-base"
+                className="lg:py-3 lg:px-6 px-3 py-1.5 rounded-full text-[#0A1A2F] font-semibold transition-all duration-300 bg-[#FF7A00] ease-in-out transform hover:scale-105 hover:shadow-lg focus:outline-none whitespace-nowrap text-xs md:text-base flex items-center"
               >
                 {button.text}
 

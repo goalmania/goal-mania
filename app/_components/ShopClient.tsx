@@ -69,9 +69,14 @@ export default function ShopClient({
     )}`,
     buttons: [
       { text: `${t("Ultime Notizie")}`, href: `news` },
+      { text: `${t("Resto del Mondo")}`, href: `/shop/rest-of-world` },
       { text: `${t("Maglie Attuali")}`, href: `/shop/2025/26` },
       { text: `${t("Maglie Retro")}`, href: `/shop/retro` },
       { text: `${t("Premier League")}`, href: `/shop/premier-league` },
+      { text: `${t("Serie A")}`, href: `/shop/serie-a` },
+      { text: `${t("Edizioni Limitate")}`, href: `/shop/limited-edition` },
+      { text: `${t("Mystery Box")}`, href: `/shop/mystery-box` },
+      { text: `${t("Jackets")}`, href: `/shop/jackets` },
     ],
     imageUrl: `/images/recentUpdate/product-banner.jpg`, // This uses the uploaded image
   };
