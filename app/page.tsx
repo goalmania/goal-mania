@@ -35,6 +35,14 @@ const LandingCategorySection = dynamic(() => import("@/app/_components/LandingCa
   loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
 });
 
+const PremierLeagueClient = dynamic(() => import("@/app/_components/PremierLeagueClient"), {
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+});
+
+const SerieATeamsClient = dynamic(() => import("@/app/_components/SerieATeamsClient"), {
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+});
+
 // Enable caching for better performance
 export const revalidate = 300; // Revalidate every 5 minutes
 
@@ -227,15 +235,17 @@ export default async function Home() {
     <div className="bg-white min-h-screen relative font-munish">
       <HeroSection />
       <ClientSlider />
+      <PremierLeagueClient />
+      <SerieATeamsClient />
       <FeaturedProducts products={featuredProducts} />
       <NewsSection articles={featuredArticles} />
       <FeaturedVideoProducts products={featuredProducts} />
       <VideoComp products={videoProducts} />
-      {/* Custom category sections - Hidden per user request */}
-      {/* <LandingCategorySection title="Serie A" category="Serie A" /> */}
-      {/* <LandingCategorySection title="Premier League" category="Premier League" /> */}
-      {/* <LandingCategorySection title="Resto del Mondo" category="Resto del Mondo" /> */}
-      {/* <LandingCategorySection title="Edizioni Limitate" category="Edizioni Limitate" /> */}
+      <LandingCategorySection title="Serie A" category="Serie A" />
+      <LandingCategorySection title="Resto del Mondo" category="Resto del Mondo" />
+      <LandingCategorySection title="Edizioni Limitate" category="Edizioni Limitate" />
+      <LandingCategorySection title="Jackets" category="Jackets" />
+      <LandingCategorySection title="Maglie Retro" category="Retro" />
     </div>
   );
 }

@@ -7,15 +7,15 @@ import {
   createErrorResponse,
 } from "@/lib/utils/footballApi";
 
-const API_BASE_URL = "https://api.football-data.org/v4";
+const API_BASE_URL = "https://v3.football.api-sports.io";
 
-// Map league codes to competition codes for football-data.org
-const leagueCodeMap: Record<string, string> = {
-  PL: "PL", // Premier League
-  PD: "PD", // La Liga
-  BL1: "BL1", // Bundesliga
-  FL1: "FL1", // Ligue 1
-  SA: "SA", // Serie A
+// Map league codes to API-Sports league IDs
+const leagueCodeMap: Record<string, number> = {
+  PL: 39, // Premier League
+  PD: 140, // La Liga
+  BL1: 78, // Bundesliga
+  FL1: 61, // Ligue 1
+  SA: 135, // Serie A
 };
 
 // Legacy mock data (kept for reference but not used)
@@ -367,11 +367,11 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const API_KEY = process.env.NEXT_FOOTBALL_API;
+  const API_KEY = process.env.FOOTBALL_API;
 
   // Return fallback if no API key
   if (!API_KEY) {
-    console.warn("⚠️  NEXT_FOOTBALL_API not configured, using fallback data");
+    console.warn("⚠️  FOOTBALL_API not configured, using fallback data");
     return NextResponse.json(
       {
         ...FALLBACK_STANDINGS,
@@ -385,13 +385,14 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Use football-data.org API
-    const url = `${API_BASE_URL}/competitions/${leagueCode}/standings?season=${season}`;
+    // Use API-Sports v3
+    const leagueId = leagueCodeMap[leagueCode];
+    const url = `${API_BASE_URL}/standings?league=${leagueId}&season=${season}`;
     
     console.log(`🔄 Fetching standings: ${url}`);
     const response = await fetch(url, {
       headers: {
-        "X-Auth-Token": API_KEY,
+        "x-apisports-key": API_KEY,
       },
       next: { revalidate: 3600 }, // Revalidate every hour
     });
@@ -408,11 +409,33 @@ export async function GET(request: NextRequest) {
 
     const data = await response.json();
 
+    // Transform API-Sports response to match expected format
+    const transformedData = {
+      standings: data.response?.map((item: any) => ({
+        table: item.league?.standings?.[0]?.map((team: any) => ({
+          position: team.rank,
+          team: {
+            name: team.team?.name,
+            id: team.team?.id,
+            crest: team.team?.logo,
+          },
+          playedGames: team.all?.played || 0,
+          won: team.all?.win || 0,
+          draw: team.all?.draw || 0,
+          lost: team.all?.lose || 0,
+          goalsFor: team.all?.goals?.for || 0,
+          goalsAgainst: team.all?.goals?.against || 0,
+          goalDifference: team.goalsDiff || 0,
+          points: team.points || 0,
+        })),
+      })) || [],
+    };
+
     // Cache the successful response for 1 hour
-    FootballCache.set(cacheKey, data, 3600000);
+    FootballCache.set(cacheKey, transformedData, 3600000);
     console.log(`✅ Standings cache SET: ${cacheKey}`);
 
-    return NextResponse.json(data, {
+    return NextResponse.json(transformedData, {
       headers: createSuccessHeaders(false, 3600),
     });
   } catch (error) {

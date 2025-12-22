@@ -21,6 +21,8 @@ import { CheckCircle2, SparklesIcon, Star } from "lucide-react";
 import Testimonies from "@/components/shop/testimonies";
 import VideoComp from "@/components/home/VideoComp";
 import LandingCategorySection from "@/app/_components/LandingCategorySection";
+import PremierLeagueClient from "@/app/_components/PremierLeagueClient";
+import SerieATeamsClient from "@/app/_components/SerieATeamsClient";
 
 interface Review {
   id: string;
@@ -69,14 +71,8 @@ export default function ShopClient({
     )}`,
     buttons: [
       { text: `${t("Ultime Notizie")}`, href: `news` },
-      { text: `${t("Resto del Mondo")}`, href: `/shop/rest-of-world` },
       { text: `${t("Maglie Attuali")}`, href: `/shop/2025/26` },
       { text: `${t("Maglie Retro")}`, href: `/shop/retro` },
-      { text: `${t("Premier League")}`, href: `/shop/premier-league` },
-      { text: `${t("Serie A")}`, href: `/shop/serie-a` },
-      { text: `${t("Edizioni Limitate")}`, href: `/shop/limited-edition` },
-      { text: `${t("Mystery Box")}`, href: `/shop/mystery-box` },
-      { text: `${t("Jackets")}`, href: `/shop/jackets` },
     ],
     imageUrl: `/images/recentUpdate/product-banner.jpg`, // This uses the uploaded image
   };
@@ -118,6 +114,12 @@ export default function ShopClient({
           </div>
         </div>
       </div>
+
+      {/* Premier League Teams Section */}
+      <PremierLeagueClient />
+
+      {/* Serie A Teams Section */}
+      <SerieATeamsClient />
 
       {/* Latest Products Section */}
       <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
@@ -269,9 +271,10 @@ export default function ShopClient({
 
       {/* Category Sections */}
       <LandingCategorySection title="Serie A" category="Serie A" />
-      <LandingCategorySection title="Premier League" category="Premier League" />
       <LandingCategorySection title="Resto del Mondo" category="Resto del Mondo" />
       <LandingCategorySection title="Edizioni Limitate" category="Edizioni Limitate" />
+      <LandingCategorySection title="Jackets" category="Jackets" />
+      <LandingCategorySection title="Maglie Retro" category="Retro" />
 
       <ProductShowCase
         featuredProduct={featuredProduct}

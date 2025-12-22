@@ -6,7 +6,6 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 // @ts-ignore
 import "swiper/css/navigation";
-import ShopNav from "@/app/_components/ShopNav";
 
 // Serie A teams with API-Football IDs
 const serieATeams = [
@@ -54,10 +53,10 @@ export default function SerieATeamsClient() {
         <div className="container mx-auto px-4 text-center">
           {/* Heading */}
           <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            Serie A Teams
+            Squadre della Serie A
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-12">
-            Select your favorite Serie A team to explore their jerseys and kits
+            Seleziona la tua squadra preferita della Serie A per esplorare le loro maglie
           </p>
 
           {/* Teams Swiper */}
@@ -95,7 +94,6 @@ export default function SerieATeamsClient() {
           </div>
         </div>
       </section>
-      <ShopNav />
     </div>
   );
 }
