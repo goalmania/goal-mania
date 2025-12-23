@@ -113,13 +113,13 @@ function ProductCard({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       <div
-        className={`group relative bg-white rounded-lg duration-300 overflow-hidden h-[530px] flex flex-col ${className}`}
+        className={`group relative bg-white rounded-lg duration-300 h-full flex flex-col ${className}`}
       >
         {/* Image section */}
         <div
-          className="flex-shrink-0 relative"
+          className="flex-shrink-0 relative overflow-hidden rounded-t-lg"
           onMouseEnter={() => {
             setIsHovered(true);
             if (videos.length > 0) {
@@ -163,7 +163,7 @@ function ProductCard({
         </div>
 
         {/* Info section */}
-        <div className="p-2 flex flex-col flex-grow">
+        <div className="p-3 pb-4 flex flex-col flex-grow">
           <div className="mb-2 flex-grow">
             <h3 className="text-base flex   justify-start text-left items-center lg:text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
               {name}
@@ -215,22 +215,22 @@ function ProductCard({
                     );
                   })()}
                 </div>
-                {/* Buttons - always visible, side by side on desktop */}
-                <div className="flex gap-2 w-full sm:w-auto">
+                {/* Buttons - always visible, stacked vertically */}
+                <div className="flex flex-col gap-2 w-full">
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="flex-1 min-w-0 px-2 sm:px-3 flex items-center justify-center py-1.5 border border-[#0A1A2F] text-xs text-black rounded-full hover:bg-gray-50 transition-colors"
+                    className="w-full px-3 py-2 flex items-center justify-center border border-[#0A1A2F] text-xs text-black rounded-full hover:bg-gray-50 transition-colors"
                   >
-                    <span className="whitespace-nowrap truncate">Add to Cart</span>
+                    <span className="whitespace-nowrap">Add to Cart</span>
                     <ArrowRight className="ml-1 inline-flex" size={14} />
                   </button>
                   <button
                     type="button"
                     // onClick={handleBuyNow}
-                    className="flex-1 min-w-0 px-2 sm:px-3 py-1.5 border flex items-center justify-center text-xs bg-[#FF7A00] text-black rounded-full hover:bg-[#FF8A10] transition-colors"
+                    className="w-full px-3 py-2 border flex items-center justify-center text-xs bg-[#FF7A00] text-black rounded-full hover:bg-[#FF8A10] transition-colors"
                   >
-                    <span className="whitespace-nowrap truncate">Buy Now</span>
+                    <span className="whitespace-nowrap">Buy Now</span>
                     <ArrowRight className="ml-1 inline-flex" size={14} />
                   </button>
                 </div>

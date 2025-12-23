@@ -86,7 +86,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
               className="py-2"
             >
               {products.map((product) => (
-                <SwiperSlide key={product.id} className="p-2">
+                <SwiperSlide key={product.id} className="h-auto flex items-stretch">
                   <ProductCard
                     id={product.id}
                     name={product.name}
