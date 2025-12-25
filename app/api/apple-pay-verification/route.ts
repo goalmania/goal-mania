@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-// Initialize Stripe with the secret key - using latest stable API version
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-04-30.basil",
-});
-
 export async function GET(req: NextRequest) {
+  // Initialize Stripe inside the route handler to avoid build-time errors
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return NextResponse.json(
+      { error: "Stripe is not configured" },
+      { status: 500 }
+    );
+  }
+
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: "2025-04-30.basil",
+  });
   try {
     // Create Apple Pay domain first
     const domain = req.headers.get("host") || "localhost:3000";

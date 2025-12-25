@@ -6,16 +6,23 @@ import Order from "@/models/Order";
 import Stripe from "stripe";
 import mongoose from "mongoose";
 
-// Initialize Stripe with the secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-04-30.basil",
-});
-
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Initialize Stripe inside handler to avoid build-time errors
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return NextResponse.json(
+        { error: "Stripe is not configured" },
+        { status: 500 }
+      );
+    }
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2025-04-30.basil",
+    });
+
     const session = await getServerSession(authOptions);
 
     // Authentication check - only admins can process refunds
