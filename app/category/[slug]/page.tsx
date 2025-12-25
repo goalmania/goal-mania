@@ -17,12 +17,10 @@ export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
   
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    
     // First, try to fetch the category from the database to get its name
     let categoryName = slug;
     try {
-      const categoryRes = await fetch(`${baseUrl}/api/admin/categories`, {
+      const categoryRes = await fetch(`/api/admin/categories`, {
         cache: 'no-store',
       });
       if (categoryRes.ok) {
@@ -37,7 +35,7 @@ export default async function CategoryPage({ params }: Props) {
     }
 
     // Fetch products using the category name (products store category by name, not slug)
-    const res = await fetch(`${baseUrl}/api/products?category=${encodeURIComponent(categoryName)}&noPagination=true`, {
+    const res = await fetch(`/api/products?category=${encodeURIComponent(categoryName)}&noPagination=true`, {
       cache: 'no-store',
     });
 

@@ -27,7 +27,6 @@ interface Product {
 
 export default function RestOfWorldClient() {
   const [products, setProducts] = React.useState<Product[]>([]);
-  const [loading, setLoading] = React.useState(true);
   const router = useRouter();
   const wishlistStore = useWishlistStore();
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = wishlistStore;
@@ -35,24 +34,26 @@ export default function RestOfWorldClient() {
   React.useEffect(() => {
     async function fetchProducts() {
       try {
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-        const res = await fetch(`${baseUrl}/api/products?noPagination=true&limit=500`);
-        if (!res.ok) {
-          console.error('Failed to fetch products:', res.status);
-          setLoading(false);
-          return;
-        }
+        const res = await fetch('/api/products?noPagination=true&limit=500');
+        if (!res.ok) return;
         const data = await res.json();
         const allProducts = Array.isArray(data) ? data : data.products || [];
         
-        // Filter products by team names (Spanish, German, French teams)
-        const teamNames = ["Real Madrid", "Barcelona", "Atletico", "Valencia", "Sevilla", "Villarreal",
-                          "Bayern", "Dortmund", "Leipzig", "Leverkusen", "Frankfurt",
-                          "PSG", "Lyon", "Marseille", "Monaco", "Lille"];
+        // Filter products by team names and country names (Spanish, German, French teams)
+        const spanishTeams = ["Real Madrid", "Barcelona", "Atletico", "Valencia", "Sevilla", "Villarreal", 
+                             "Athletic Bilbao", "Real Betis", "Real Sociedad", "Getafe", "Osasuna"];
+        const germanTeams = ["Bayern", "Dortmund", "Leipzig", "Leverkusen", "Frankfurt", "Schalke", 
+                            "Wolfsburg", "Stuttgart", "Hoffenheim", "Monchengladbach"];
+        const frenchTeams = ["PSG", "Lyon", "Marseille", "Monaco", "Lille", "Rennes", "Nice", "Lens"];
+        
+        const allTeams = [...spanishTeams, ...germanTeams, ...frenchTeams];
         
         const filtered = allProducts.filter((product: any) => {
-          const title = product.title || "";
-          return teamNames.some(team => title.includes(team));
+          const title = (product.title || "").toLowerCase();
+          return allTeams.some(team => title.toLowerCase().includes(team.toLowerCase())) ||
+                 title.includes("spain") || title.includes("spagna") ||
+                 title.includes("german") || title.includes("germania") ||
+                 title.includes("france") || title.includes("francia");
         });
 
         const mappedProducts = filtered.map((product: any) => ({
@@ -69,10 +70,8 @@ export default function RestOfWorldClient() {
           product,
         }));
         setProducts(mappedProducts);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error);
-        setLoading(false);
       }
     }
     fetchProducts();
@@ -97,15 +96,14 @@ export default function RestOfWorldClient() {
     router.push(`/products/${product.id}`);
   };
 
+  if (products.length === 0) return null;
+
   return (
     <section className="py-6 sm:py-8 md:py-10 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-4 sm:mb-6 md:mb-8 font-munish">
           Resto del Mondo
         </h2>
-        {loading && <div className="text-center py-8">Loading...</div>}
-        {!loading && products.length === 0 && <div className="text-center py-8 text-gray-500">No products found</div>}
-        {!loading && products.length > 0 && (
         <p className="text-lg text-gray-600 max-w-2xl text-center mx-auto mb-8 font-munish">
           Scopri la nostra selezione di maglie, accessori e articoli ufficiali per vivere il calcio ogni giorno.
         </p>
@@ -165,7 +163,8 @@ export default function RestOfWorldClient() {
               </svg>
             </button>
           </div>
-        </div>        )}      </div>
+        </div>
+      </div>
     </section>
   );
 }

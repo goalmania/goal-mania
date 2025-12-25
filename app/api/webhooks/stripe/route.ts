@@ -12,9 +12,11 @@ import mongoose from "mongoose";
 import { sendEmail } from "@/lib/utils/email";
 import { orderConfirmationTemplate, invoiceTemplate } from "@/lib/utils/email-templates";
 
-// Mark this route as runtime-only (not for build time)
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2025-04-30.basil",
+});
+
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 interface AddressType {
   _id: mongoose.Types.ObjectId;
@@ -50,20 +52,6 @@ interface OrderItem {
 
 export async function POST(req: NextRequest) {
   try {
-    // Initialize Stripe inside handler to avoid build-time errors
-    if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
-      return NextResponse.json(
-        { error: "Stripe is not configured" },
-        { status: 500 }
-      );
-    }
-
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: "2025-04-30.basil",
-    });
-
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
     const body = await req.text();
     const signature = req.headers.get("stripe-signature")!;
 

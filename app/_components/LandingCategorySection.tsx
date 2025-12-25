@@ -23,8 +23,7 @@ interface LandingCategorySectionProps {
 
 async function getCategoryProducts(category: string): Promise<Product[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/products?category=${encodeURIComponent(category)}&noPagination=true`, {
+    const res = await fetch(`/api/products?category=${encodeURIComponent(category)}&noPagination=true`, {
       cache: 'no-store',
     });
     if (!res.ok) return [];

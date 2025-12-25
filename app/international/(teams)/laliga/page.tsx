@@ -18,13 +18,14 @@ export default async function Ligue1Page() {
   const featuredArticles = await (async () => {
     try {
       await connectDB();
-      return await Article.find({
+      const articles = await Article.find({
         status: "published",
         featured: true,
       })
         .sort({ publishedAt: -1 })
         .limit(3)
         .lean();
+      return JSON.parse(JSON.stringify(articles));
     } catch (error) {
       console.error("Error fetching articles:", error);
       return [];

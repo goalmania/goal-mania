@@ -5,6 +5,11 @@ import Stripe from "stripe";
 import connectDB from "@/lib/db";
 import OrderDetails from "@/lib/models/OrderDetails";
 
+// Initialize Stripe with the secret key from environment variables
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+  apiVersion: "2025-04-30.basil",
+});
+
 interface CartItem {
   id: string;
   name: string;
@@ -32,18 +37,6 @@ interface CartItem {
 // In a real application, you would use the Stripe SDK to create a payment intent
 export async function POST(req: NextRequest) {
   try {
-    // Initialize Stripe inside handler to avoid build-time errors
-    if (!process.env.STRIPE_SECRET_KEY) {
-      return NextResponse.json(
-        { error: "Stripe is not configured" },
-        { status: 500 }
-      );
-    }
-
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: "2025-04-30.basil",
-    });
-
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {

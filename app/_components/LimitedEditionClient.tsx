@@ -27,7 +27,6 @@ interface Product {
 
 export default function LimitedEditionClient() {
   const [products, setProducts] = React.useState<Product[]>([]);
-  const [loading, setLoading] = React.useState(true);
   const router = useRouter();
   const wishlistStore = useWishlistStore();
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = wishlistStore;
@@ -35,13 +34,8 @@ export default function LimitedEditionClient() {
   React.useEffect(() => {
     async function fetchProducts() {
       try {
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-        const res = await fetch(`${baseUrl}/api/products?noPagination=true&limit=500`);
-        if (!res.ok) {
-          console.error('Failed to fetch products:', res.status);
-          setLoading(false);
-          return;
-        }
+        const res = await fetch('/api/products?noPagination=true&limit=500');
+        if (!res.ok) return;
         const data = await res.json();
         const allProducts = Array.isArray(data) ? data : data.products || [];
         
@@ -71,10 +65,8 @@ export default function LimitedEditionClient() {
           product,
         }));
         setProducts(mappedProducts);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error);
-        setLoading(false);
       }
     }
     fetchProducts();
@@ -99,15 +91,14 @@ export default function LimitedEditionClient() {
     router.push(`/products/${product.id}`);
   };
 
+  if (products.length === 0) return null;
+
   return (
-    <section className="py-6 sm:py-8 md:py-10 bg-gray-50">
+    <section className="py-6 sm:py-8 md:py-10 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-4 sm:mb-6 md:mb-8 font-munish">
           Edizioni Limitate
         </h2>
-        {loading && <div className="text-center py-8">Loading...</div>}
-        {!loading && products.length === 0 && <div className="text-center py-8 text-gray-500">No products found</div>}
-        {!loading && products.length > 0 && (
         <p className="text-lg text-gray-600 max-w-2xl text-center mx-auto mb-8 font-munish">
           Scopri le nostre maglie esclusive e in edizione limitata.
         </p>
@@ -167,7 +158,8 @@ export default function LimitedEditionClient() {
               </svg>
             </button>
           </div>
-        </div>        )}      </div>
+        </div>
+      </div>
     </section>
   );
 }
