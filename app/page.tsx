@@ -43,6 +43,14 @@ const SerieATeamsClient = dynamic(() => import("@/app/_components/SerieATeamsCli
   loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
 });
 
+const RestOfWorldClient = dynamic(() => import("@/app/_components/RestOfWorldClient"), {
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+});
+
+const LimitedEditionClient = dynamic(() => import("@/app/_components/LimitedEditionClient"), {
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+});
+
 // Enable caching for better performance
 export const revalidate = 300; // Revalidate every 5 minutes
 
@@ -242,8 +250,8 @@ export default async function Home() {
       <FeaturedVideoProducts products={featuredProducts} />
       <VideoComp products={videoProducts} />
       <LandingCategorySection title="Serie A" category="Serie A" />
-      <LandingCategorySection title="Resto del Mondo" category="Resto del Mondo" />
-      <LandingCategorySection title="Edizioni Limitate" category="Edizioni Limitate" />
+      <RestOfWorldClient />
+      <LimitedEditionClient />
       <LandingCategorySection title="Jackets" category="Jackets" />
       <LandingCategorySection title="Maglie Retro" category="Retro" />
     </div>

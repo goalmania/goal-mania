@@ -21,6 +21,8 @@ import { CheckCircle2, SparklesIcon, Star } from "lucide-react";
 import Testimonies from "@/components/shop/testimonies";
 import VideoComp from "@/components/home/VideoComp";
 import LandingCategorySection from "@/app/_components/LandingCategorySection";
+import RestOfWorldClient from "@/app/_components/RestOfWorldClient";
+import LimitedEditionClient from "@/app/_components/LimitedEditionClient";
 import PremierLeagueClient from "@/app/_components/PremierLeagueClient";
 import SerieATeamsClient from "@/app/_components/SerieATeamsClient";
 
@@ -271,8 +273,8 @@ export default function ShopClient({
 
       {/* Category Sections */}
       <LandingCategorySection title="Serie A" category="Serie A" />
-      <LandingCategorySection title="Resto del Mondo" category="Resto del Mondo" />
-      <LandingCategorySection title="Edizioni Limitate" category="Edizioni Limitate" />
+      <RestOfWorldClient />
+      <LimitedEditionClient />
       <LandingCategorySection title="Jackets" category="Jackets" />
       <LandingCategorySection title="Maglie Retro" category="Retro" />
 
