@@ -283,7 +283,7 @@ export default function AdminVideosPage() {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('upload_preset', uploadPreset);
-      formData.append('folder', type === 'video' ? 'goal-mania/videos' : 'goal-mania/video-thumbnails');
+      formData.append('folder', type === 'video' ? 'Assets/videos' : 'Assets/video-thumbnails');
       
       // Add transformations for images
       if (type === 'image') {
