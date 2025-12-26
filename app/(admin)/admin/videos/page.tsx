@@ -270,11 +270,21 @@ export default function AdminVideosPage() {
     try {
       console.log(`Uploading ${type} file:`, file.name, 'Size:', file.size, 'Type:', file.type);
       
+      // Upload directly to Cloudinary to avoid Vercel's payload size limits
+      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'your-cloud-name'}/${type}/upload`;
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'your-preset';
+      
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('type', type);
+      formData.append('upload_preset', uploadPreset);
+      formData.append('folder', type === 'video' ? 'goal-mania/videos' : 'goal-mania/video-thumbnails');
+      
+      // Add transformations for images
+      if (type === 'image') {
+        formData.append('transformation', 'w_1920,h_1080,c_limit,q_auto:good,f_auto');
+      }
 
-      const response = await fetch('/api/upload-video', {
+      const response = await fetch(cloudinaryUrl, {
         method: 'POST',
         body: formData,
       });
@@ -282,36 +292,16 @@ export default function AdminVideosPage() {
       console.log(`Upload response status:`, response.status);
 
       if (!response.ok) {
-        // Handle non-JSON responses (like middleware errors)
-        let errorMessage = 'Upload failed';
-        const contentType = response.headers.get('content-type');
-        
-        if (contentType && contentType.includes('application/json')) {
-          try {
-            const error = await response.json();
-            console.error('Upload error response:', error);
-            errorMessage = error.error || errorMessage;
-          } catch (e) {
-            console.error('Failed to parse error JSON:', e);
-            errorMessage = `Upload failed with status ${response.status}`;
-          }
-        } else {
-          // Non-JSON response (like plain text error)
-          try {
-            const text = await response.text();
-            console.error('Upload error text:', text);
-            errorMessage = text || `Upload failed with status ${response.status}`;
-          } catch (e) {
-            console.error('Failed to read error text:', e);
-            errorMessage = `Upload failed with status ${response.status}`;
-          }
-        }
+        const errorData = await response.json().catch(() => ({ error: { message: 'Upload failed' } }));
+        const errorMessage = errorData.error?.message || errorData.message || 'Upload failed';
         throw new Error(errorMessage);
       }
 
       const data = await response.json();
       console.log('Upload successful:', data);
-      return data.url;
+      
+      // Return the secure URL from Cloudinary
+      return data.secure_url;
     } catch (error: any) {
       console.error(`Error uploading ${type}:`, error);
       throw error; // Re-throw to be caught by handleSubmit
