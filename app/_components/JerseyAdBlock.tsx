@@ -21,6 +21,7 @@ export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
   useEffect(() => {
     let mounted = true;
     const controller = new AbortController();
+    let timeoutId: NodeJS.Timeout | null = null;
 
     const safeJson = async (res: Response) => {
       const contentType = res.headers.get("content-type") || "";
@@ -46,11 +47,11 @@ export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
 
         // timeout for fetch
         const timeout = 10000;
-        const timeoutId = setTimeout(() => controller.abort(), timeout);
+        timeoutId = setTimeout(() => controller.abort(), timeout);
 
         const response = await fetch(endpoint, { signal: controller.signal });
 
-        clearTimeout(timeoutId);
+        if (timeoutId) clearTimeout(timeoutId);
 
         if (!response.ok) {
           console.warn("JerseyAdBlock: non-ok response", response.status, response.statusText);
@@ -98,8 +99,13 @@ export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
           });
         }
       } catch (err: any) {
+        // Silently ignore abort errors from cleanup or timeout
         if (err.name === "AbortError") {
-          console.warn("JerseyAdBlock fetch aborted (timeout).");
+          if (mounted) {
+            console.warn("JerseyAdBlock fetch aborted (timeout).");
+          }
+          // Don't set fallback on unmount abort
+          if (!mounted) return;
         } else {
           console.error("Error loading jersey:", err);
         }
@@ -121,6 +127,7 @@ export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
 
     return () => {
       mounted = false;
+      if (timeoutId) clearTimeout(timeoutId);
       controller.abort();
     };
   }, [jerseyId]);
