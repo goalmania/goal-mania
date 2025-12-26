@@ -284,15 +284,27 @@ export default function AdminVideosPage() {
       if (!response.ok) {
         // Handle non-JSON responses (like middleware errors)
         let errorMessage = 'Upload failed';
-        try {
-          const error = await response.json();
-          console.error('Upload error response:', error);
-          errorMessage = error.error || errorMessage;
-        } catch (e) {
-          // If response is not JSON (e.g., "Forbidden" text)
-          const text = await response.text();
-          console.error('Upload error text:', text);
-          errorMessage = text || `Upload failed with status ${response.status}`;
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('application/json')) {
+          try {
+            const error = await response.json();
+            console.error('Upload error response:', error);
+            errorMessage = error.error || errorMessage;
+          } catch (e) {
+            console.error('Failed to parse error JSON:', e);
+            errorMessage = `Upload failed with status ${response.status}`;
+          }
+        } else {
+          // Non-JSON response (like plain text error)
+          try {
+            const text = await response.text();
+            console.error('Upload error text:', text);
+            errorMessage = text || `Upload failed with status ${response.status}`;
+          } catch (e) {
+            console.error('Failed to read error text:', e);
+            errorMessage = `Upload failed with status ${response.status}`;
+          }
         }
         throw new Error(errorMessage);
       }
