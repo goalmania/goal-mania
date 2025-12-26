@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   description: "Notizie, statistiche e consigli per il fantacalcio",
 };
 
+// Enable ISR with 5-minute revalidation
+export const revalidate = 300;
+
 const leagues = [
   { id: "serieA", name: "Serie A" },
   { id: "premierLeague", name: "Premier League" },

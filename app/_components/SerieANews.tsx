@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getBaseUrl } from "@/lib/utils/baseUrl";
+import connectDB from "@/lib/db";
+import Article from "@/lib/models/Article";
 
 interface NewsItem {
   _id: string;
@@ -58,19 +59,27 @@ const mockNews: NewsItem[] = [
 
 async function fetchNews(): Promise<NewsItem[]> {
   try {
-    const baseUrl = getBaseUrl();
-    const response = await fetch(`${baseUrl}/api/news/serie-a?limit=4`, {
-      next: { revalidate: 300 }, // Cache for 5 minutes
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch news');
-    }
-
-    const data = await response.json();
+    await connectDB();
     
-    if (data && data.articles && data.articles.length > 0) {
-      return data.articles;
+    const articles = await Article.find({
+      category: "serieA",
+      status: "published",
+    })
+      .sort({ publishedAt: -1 })
+      .limit(4)
+      .select("title summary image publishedAt slug featured")
+      .lean();
+
+    if (articles && articles.length > 0) {
+      return articles.map((article: any) => ({
+        _id: article._id?.toString() || "",
+        title: article.title || "",
+        summary: article.summary || "",
+        image: article.image || "https://placehold.co/600x400/indigo/white?text=Serie+A+News",
+        publishedAt: article.publishedAt || new Date().toISOString(),
+        slug: article.slug || "",
+        featured: article.featured || false,
+      }));
     }
     
     return mockNews;
