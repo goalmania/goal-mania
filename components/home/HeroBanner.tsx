@@ -68,12 +68,12 @@ export default function HeroBanner({
 
         {/* Buttons */}
         {buttons && buttons.length > 0 && (
-          <div className="flex flex-wrap items-center gap-3 lg:gap-4 max-w-4xl">
+          <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 max-w-4xl overflow-x-auto">
             {buttons.map((button, index) => (
               <a
                 key={index}
                 href={button.href}
-                className="lg:py-3 lg:px-6 px-3 py-1.5 rounded-full text-[#0A1A2F] font-semibold transition-all duration-300 bg-[#FF7A00] ease-in-out transform hover:scale-105 hover:shadow-lg focus:outline-none whitespace-nowrap text-xs md:text-base flex items-center"
+                className="lg:py-3 lg:px-6 px-2.5 py-1.5 rounded-full text-[#0A1A2F] font-semibold transition-all duration-300 bg-[#FF7A00] ease-in-out transform hover:scale-105 hover:shadow-lg focus:outline-none whitespace-nowrap text-xs md:text-base flex items-center flex-shrink-0"
             
               >
                 {button.text}
