@@ -270,27 +270,11 @@ export default function AdminVideosPage() {
     try {
       console.log(`Uploading ${type} file:`, file.name, 'Size:', file.size, 'Type:', file.type);
       
-      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-      
-      if (!cloudName || !uploadPreset) {
-        throw new Error('Cloudinary configuration missing. Please set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET in your environment variables.');
-      }
-      
-      // Upload directly to Cloudinary to avoid Vercel's payload size limits
-      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/${type}/upload`;
-      
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('upload_preset', uploadPreset);
-      formData.append('folder', type === 'video' ? 'Assets/videos' : 'Assets/video-thumbnails');
-      
-      // Add transformations for images
-      if (type === 'image') {
-        formData.append('transformation', 'w_1920,h_1080,c_limit,q_auto:good,f_auto');
-      }
+      formData.append('type', type);
 
-      const response = await fetch(cloudinaryUrl, {
+      const response = await fetch('/api/upload-video', {
         method: 'POST',
         body: formData,
       });
@@ -298,19 +282,17 @@ export default function AdminVideosPage() {
       console.log(`Upload response status:`, response.status);
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: { message: 'Upload failed' } }));
-        const errorMessage = errorData.error?.message || errorData.message || 'Upload failed';
+        const errorData = await response.json().catch(() => ({ error: 'Upload failed' }));
+        const errorMessage = errorData.error || 'Upload failed';
         throw new Error(errorMessage);
       }
 
       const data = await response.json();
       console.log('Upload successful:', data);
-      
-      // Return the secure URL from Cloudinary
-      return data.secure_url;
+      return data.url;
     } catch (error: any) {
       console.error(`Error uploading ${type}:`, error);
-      throw error; // Re-throw to be caught by handleSubmit
+      throw error;
     }
   };
 
