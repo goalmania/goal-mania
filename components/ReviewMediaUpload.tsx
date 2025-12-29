@@ -55,18 +55,30 @@ const ReviewMediaUpload = forwardRef<ReviewMediaUploadRef, ReviewMediaUploadProp
       const cloudinaryUrl = process.env.NEXT_PUBLIC_CLOUDINARY_URL;
       const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
+      console.log('Environment check:');
+      console.log('NEXT_PUBLIC_CLOUDINARY_URL:', cloudinaryUrl || 'MISSING');
+      console.log('NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET:', uploadPreset || 'MISSING');
+
       if (!cloudinaryUrl || !uploadPreset) {
-        throw new Error("Cloudinary configuration is missing");
+        const missing = [];
+        if (!cloudinaryUrl) missing.push('NEXT_PUBLIC_CLOUDINARY_URL');
+        if (!uploadPreset) missing.push('NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET');
+        throw new Error(`Cloudinary configuration is missing: ${missing.join(', ')}`);
       }
 
       const uploadPromises = acceptedFiles.map(async (file) => {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("upload_preset", uploadPreset);
-        formData.append("folder", "reviews");
+        // Folder is configured in the upload preset
 
         const isVideo = file.type.startsWith("video/");
         const endpoint = `${cloudinaryUrl}/${isVideo ? 'video' : 'image'}/upload`;
+
+        console.log('Uploading to:', endpoint);
+        console.log('Upload preset:', uploadPreset);
+        console.log('File type:', file.type);
+        console.log('File size:', file.size);
 
         const response = await fetch(endpoint, {
           method: "POST",
@@ -75,11 +87,25 @@ const ReviewMediaUpload = forwardRef<ReviewMediaUploadRef, ReviewMediaUploadProp
 
         if (!response.ok) {
           const errorText = await response.text();
-          console.error(`Upload response status: ${response.status}`, errorText);
-          throw new Error(`Upload failed for ${file.name}`);
+          console.error(`Upload failed - Status: ${response.status}`);
+          console.error('Error details:', errorText);
+          
+          let errorMessage = `Upload failed for ${file.name}`;
+          try {
+            const errorJson = JSON.parse(errorText);
+            if (errorJson.error && errorJson.error.message) {
+              errorMessage = errorJson.error.message;
+            }
+          } catch (e) {
+            // If not JSON, use the status code
+            errorMessage = `Upload failed: ${response.status} - ${errorText}`;
+          }
+          
+          throw new Error(errorMessage);
         }
 
         const result = await response.json();
+        console.log('Upload successful:', result.secure_url);
         return {
           url: result.secure_url,
           type: isVideo ? "video" as const : "image" as const,

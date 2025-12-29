@@ -55,8 +55,7 @@ export async function POST(request: Request) {
         process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
       );
 
-      // Add folder for reviews
-      formData.append("folder", "reviews");
+      // Folder is configured in the upload preset
 
       const cloudinaryUrl = getCloudinaryUrl(isValidVideo ? 'video' : 'image');
       const response = await fetch(cloudinaryUrl, {
