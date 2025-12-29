@@ -270,11 +270,25 @@ export default function AdminVideosPage() {
     try {
       console.log(`Uploading ${type} file:`, file.name, 'Size:', file.size, 'Type:', file.type);
       
+      // Upload directly to Cloudinary (bypasses Vercel 4.5MB limit)
+      const cloudinaryUrl = process.env.NEXT_PUBLIC_CLOUDINARY_URL;
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+      if (!cloudinaryUrl || !uploadPreset) {
+        throw new Error('Cloudinary configuration is missing');
+      }
+
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('type', type);
+      formData.append('upload_preset', uploadPreset);
+      
+      // Set folder based on type
+      formData.append('folder', type === 'video' ? 'videos' : 'video-thumbnails');
 
-      const response = await fetch('/api/upload-video', {
+      const endpoint = `${cloudinaryUrl}/${type}/upload`;
+      console.log('Uploading to:', endpoint);
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         body: formData,
       });
@@ -282,14 +296,14 @@ export default function AdminVideosPage() {
       console.log(`Upload response status:`, response.status);
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Upload failed' }));
-        const errorMessage = errorData.error || 'Upload failed';
-        throw new Error(errorMessage);
+        const errorText = await response.text();
+        console.error('Upload error:', errorText);
+        throw new Error(`Upload failed: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('Upload successful:', data);
-      return data.url;
+      console.log('Upload successful:', data.secure_url);
+      return data.secure_url;
     } catch (error: any) {
       console.error(`Error uploading ${type}:`, error);
       throw error;
