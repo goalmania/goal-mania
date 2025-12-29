@@ -51,23 +51,43 @@ const ReviewMediaUpload = forwardRef<ReviewMediaUploadRef, ReviewMediaUploadProp
     setError(null);
 
     try {
-      const formData = new FormData();
-      acceptedFiles.forEach(file => {
-        formData.append("files", file);
-      });
+      // Upload directly to Cloudinary (bypasses Vercel 4.5MB limit)
+      const cloudinaryUrl = process.env.NEXT_PUBLIC_CLOUDINARY_URL;
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
-      const response = await fetch("/api/reviews/upload-media", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Upload failed");
+      if (!cloudinaryUrl || !uploadPreset) {
+        throw new Error("Cloudinary configuration is missing");
       }
 
-      const result = await response.json();
-      const newFiles = result.files;
+      const uploadPromises = acceptedFiles.map(async (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", uploadPreset);
+        formData.append("folder", "reviews");
+
+        const isVideo = file.type.startsWith("video/");
+        const endpoint = `${cloudinaryUrl}/${isVideo ? 'video' : 'image'}/upload`;
+
+        const response = await fetch(endpoint, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(`Upload response status: ${response.status}`, errorText);
+          throw new Error(`Upload failed for ${file.name}`);
+        }
+
+        const result = await response.json();
+        return {
+          url: result.secure_url,
+          type: isVideo ? "video" as const : "image" as const,
+          filename: file.name,
+        };
+      });
+
+      const newFiles = await Promise.all(uploadPromises);
 
       setUploadedFiles(prev => {
         const updated = [...prev, ...newFiles];
@@ -91,7 +111,7 @@ const ReviewMediaUpload = forwardRef<ReviewMediaUploadRef, ReviewMediaUploadProp
       'image/*': ['.jpeg', '.jpg', '.png', '.webp', '.gif'],
       'video/*': ['.mp4', '.webm', '.ogg']
     },
-    maxSize: 10 * 1024 * 1024, // 10MB
+    maxSize: 50 * 1024 * 1024, // 50MB for videos
     disabled: isUploading
   });
 
@@ -134,7 +154,7 @@ const ReviewMediaUpload = forwardRef<ReviewMediaUploadRef, ReviewMediaUploadProp
               }
             </p>
             <p className="text-xs text-gray-500">
-              Supports: JPG, PNG, WebP, GIF, MP4, WebM, OGG (max 10MB each)
+              Supports: JPG, PNG, WebP, GIF, MP4, WebM, OGG (max 50MB each)
             </p>
             <p className="text-xs text-gray-500">
               Maximum {maxFiles} files

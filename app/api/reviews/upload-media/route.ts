@@ -3,6 +3,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getCloudinaryUrl } from "@/lib/constants";
 
+// Configure API route to accept larger files (50MB for videos)
+export const runtime = 'nodejs';
+export const maxDuration = 60; // 60 seconds timeout
+
 export async function POST(request: Request) {
   try {
     // Check authentication
