@@ -34,6 +34,10 @@ const VideoComp = dynamic(() => import("@/components/home/VideoComp"), {
 const LandingCategorySection = dynamic(() => import("@/app/_components/LandingCategorySection"), {
   loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
 });
+// components\home\WorldCupShowCase.tsx
+const WorldCupShowcase = dynamic(() => import("@/components/home/WorldCupShowCase"), {
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+});
 
 const PremierLeagueClient = dynamic(() => import("@/app/_components/PremierLeagueClient"), {
   loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
@@ -54,31 +58,30 @@ const LimitedEditionClient = dynamic(() => import("@/app/_components/LimitedEdit
 // Enable caching for better performance
 export const revalidate = 300; // Revalidate every 5 minutes
 
-// Fetch featured products
+import ProductModel from "@/lib/models/Product"; // Adjust path to your actual model file
+
 async function getFeaturedProducts(): Promise<Product[]> {
   try {
-    const baseUrl = getBaseUrl();
-    const response = await fetch(`${baseUrl}/api/products?feature=true`, {
-      next: { revalidate: 300 }, // Cache for 5 minutes instead of no-store
-    });
+    await connectDB(); // Ensure connection is active
+    
+    // Query MongoDB directly
+    const products = await ProductModel.find({ isActive: true, feature: true })
+      .limit(10)
+      .lean();
 
-    if (!response.ok) return [];
-
-    const data = await response.json();
-    const products = data.products || data || [];
-
-    return products.map((product: any) => ({
-      id: product._id || "",
+    // Use JSON.parse/stringify to strip Mongoose-specific metadata
+    return JSON.parse(JSON.stringify(products)).map((product: any) => ({
+      id: product._id.toString(),
       name: product.title || "Featured Product",
       price: product.basePrice || 0,
-      image: product.images?.[0] || "/images/image.png",
+      image: product.images?.[0] || "/images/placeholder.png",
       category: product.category || "Uncategorized",
       team: product.title ? product.title.split(" ")[0] : "Unknown",
       availablePatches: product.availablePatches || [],
       isMysteryBox: product.isMysteryBox || false,
     }));
   } catch (error) {
-    console.error("Error fetching featured products:", error);
+    console.error("Error fetching products directly:", error);
     return [];
   }
 }
@@ -243,6 +246,7 @@ export default async function Home() {
     <div className="bg-white min-h-screen relative font-munish">
       <HeroSection />
       <ClientSlider />
+      <WorldCupShowcase />
       <PremierLeagueClient />
       <SerieATeamsClient />
       <FeaturedProducts products={featuredProducts} />

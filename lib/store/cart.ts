@@ -37,6 +37,8 @@ interface CartStore {
   items: CartItem[];
   appliedDiscountRules: AppliedDiscountRule[];
   addItem: (item: Omit<CartItem, "quantity"> & { quantity?: number }) => void;
+  
+buyItem: (item: Omit<CartItem, "quantity"> & { quantity?: number }) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -87,6 +89,29 @@ export const useCartStore = create<CartStore>()(
           };
         });
       },
+      
+
+// In the implementation (persist function)
+buyItem: (item) => {
+  set((state) => {
+    const existingItem = state.items.find((i) => i.id === item.id);
+    
+    // If it exists, we just ensure it's in the cart with quantity 1
+    if (existingItem) {
+      return {
+        items: state.items.map((i) =>
+          i.id === item.id ? { ...i, quantity: item.quantity || 1 } : i
+        ),
+      };
+    }
+
+    // If it doesn't exist, add it fresh
+    return {
+      items: [...state.items, { ...item, quantity: item.quantity || 1 }],
+    };
+  });
+},
+
       removeItem: (id) => {
         const itemName = get().items.find((item) => item.id === id)?.name;
         set((state) => ({

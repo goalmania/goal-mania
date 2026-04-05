@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import {
   VALID_ADULT_SIZES,
   VALID_KID_SIZES,
-  PRODUCT_CATEGORIES,
 } from "@/lib/types/product";
 
 const reviewSchema = new mongoose.Schema(
@@ -15,8 +14,6 @@ const reviewSchema = new mongoose.Schema(
       images: [{ type: String }],
       videos: [{ type: String }]
     },
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );
@@ -47,6 +44,17 @@ const productSchema = new mongoose.Schema(
       min: [0, "Retro price cannot be negative"],
       default: 35,
     },
+    /** * NEW: Long Sleeve Logic
+     * Allows adding €10 globally or per-product if toggled
+     */
+    hasLongSleeveOption: {
+      type: Boolean,
+      default: false,
+    },
+    longSleevePriceAddon: {
+      type: Number,
+      default: 10,
+    },
     shippingPrice: {
       type: Number,
       required: true,
@@ -66,6 +74,19 @@ const productSchema = new mongoose.Schema(
     videos: {
       type: [String],
       default: [],
+    },
+    /**
+     * NEW: World Cup 2026 Logic
+     * Separates national teams for the new dedicated section
+     */
+    isWorldCup: {
+      type: Boolean,
+      default: false,
+    },
+    nationalTeam: {
+      type: String,
+      trim: true,
+      default: null, // e.g., "Italy", "Nigeria", "Brazil"
     },
     isRetro: {
       type: Boolean,
@@ -102,11 +123,8 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      // Remove enum constraint to allow dynamic categories from admin panel
-      // The static PRODUCT_CATEGORIES are still available in the UI dropdown
-      // but we no longer enforce them at the database level
+      index: true,
     },
-    // Reference to actual Patch documents
     patchIds: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Patch',
@@ -146,7 +164,7 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-// Middleware to generate slug if not provided
+// Middleware to generate slug
 productSchema.pre("validate", function (next) {
   if (!this.slug && this.title) {
     this.slug = this.title
@@ -164,14 +182,13 @@ productSchema.virtual("averageRating").get(function () {
   return sum / this.reviews.length;
 });
 
-// Create indexes (email and slug indexes are created automatically by schema definition)
+// Optimization Indexes
 productSchema.index({ title: "text", description: "text" });
-productSchema.index({ category: 1 });
-productSchema.index({ isActive: 1 });
+productSchema.index({ category: 1, isActive: 1 });
+productSchema.index({ isWorldCup: 1, nationalTeam: 1 }); // New index for WC filtering
 productSchema.index({ feature: -1, createdAt: -1 });
 
-// Delete cached model to ensure schema changes are applied
-// This is necessary when removing enum constraints
+// Ensure clean model re-registration
 if (mongoose.models.Product) {
   delete mongoose.models.Product;
 }

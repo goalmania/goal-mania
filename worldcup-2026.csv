@@ -1,0 +1,21 @@
+title,description,basePrice,retroPrice,stockQuantity,Images,isRetro,nationalTeam,category,isWorldCup,hasLongSleeve,adultSizes,KidsSizes,isActive,feature
+Nigeria Home 2026,Official Super Eagles home kit with cultural patterns,85,40,100,https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1000,FALSE,nigeria,World Cup 2026,TRUE,TRUE,"S,M,L,XL","M,L",TRUE,TRUE
+Nigeria Away 2026,Official Super Eagles away kit sleek forest green,85,40,100,https://images.unsplash.com/photo-1518091043644-c1d445bb5120?q=80&w=1000,FALSE,nigeria,World Cup 2026,TRUE,TRUE,"S,M,L,XL","M,L",TRUE,FALSE
+Italy Home 2026,Azzurri classic blue with gold trim,90,45,50,https://images.unsplash.com/photo-1552318975-6732c0f57951?q=80&w=1000,FALSE,italy,World Cup 2026,TRUE,TRUE,"S,M,L,XL","S,M",TRUE,TRUE
+Italy Away 2026,Azzurri minimalist white and gold edition,90,45,50,https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=1000,FALSE,italy,World Cup 2026,TRUE,FALSE,"S,M,L","M",TRUE,FALSE
+Argentina Home 2026,Albiceleste traditional stripes with 3 stars,95,50,120,https://images.unsplash.com/photo-1551958219-acbc608c6377?q=80&w=1000,FALSE,argentina,World Cup 2026,TRUE,TRUE,"S,M,L,XL,XXL","S,M,L",TRUE,TRUE
+Argentina Away 2026,Modern purple and blue sun-inspired design,95,50,80,https://images.unsplash.com/photo-1614632537190-23e4141777db?q=80&w=1000,FALSE,argentina,World Cup 2026,TRUE,FALSE,"S,M,L","M",TRUE,FALSE
+Brazil Home 2026,Canarinho yellow with embossed jaguar patterns,90,45,150,https://images.unsplash.com/photo-1560272564-c83d66b1ad12?q=80&w=1000,FALSE,brazil,World Cup 2026,TRUE,TRUE,"S,M,L,XL","M,L",TRUE,TRUE
+Brazil Away 2026,Deep ocean blue with neon green accents,90,45,100,https://images.unsplash.com/photo-1556056504-517cf0121f3c?q=80&w=1000,FALSE,brazil,World Cup 2026,TRUE,FALSE,"S,M,L","S",TRUE,FALSE
+France Home 2026,Les Bleus elegant navy with tricolor details,90,45,90,https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1000,FALSE,france,World Cup 2026,TRUE,TRUE,"S,M,L,XL","M,L",TRUE,TRUE
+France Away 2026,White with subtle pinstripe heritage design,90,45,70,https://images.unsplash.com/photo-1510567153271-99ce184c1d28?q=80&w=1000,FALSE,france,World Cup 2026,TRUE,FALSE,"S,M,L","M",TRUE,FALSE
+England Home 2026,Three Lions classic white with gradient sleeves,85,40,110,https://images.unsplash.com/photo-1516567727245-ad8c68f3ec93?q=80&w=1000,FALSE,england,World Cup 2026,TRUE,TRUE,"S,M,L,XL","S,M",TRUE,TRUE
+England Away 2026,Bold red return with heritage crest,85,40,60,https://images.unsplash.com/photo-1575361204480-aadea2d30e68?q=80&w=1000,FALSE,england,World Cup 2026,TRUE,FALSE,"S,M,L","M",TRUE,FALSE
+Germany Home 2026,Classic white with flame-inspired shoulders,90,45,85,https://images.unsplash.com/photo-1541534741688-6078c64b5913?q=80&w=1000,FALSE,germany,World Cup 2026,TRUE,TRUE,"S,M,L,XL","M",TRUE,TRUE
+Germany Away 2026,Vibrant pink and purple geometric pattern,90,45,55,https://images.unsplash.com/photo-1553125281-700684a00900?q=80&w=1000,FALSE,germany,World Cup 2026,TRUE,FALSE,"S,M,L","S,M",TRUE,FALSE
+Spain Home 2026,La Roja vibrant red with yellow piping,85,40,95,https://images.unsplash.com/photo-1579952318543-7bb54c66b681?q=80&w=1000,FALSE,spain,World Cup 2026,TRUE,TRUE,"S,M,L,XL","M",TRUE,TRUE
+Spain Away 2026,Pale yellow with red and blue accents,85,40,40,https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=1000,FALSE,spain,World Cup 2026,TRUE,FALSE,"S,M,L","S",TRUE,FALSE
+Portugal Home 2026,Deep maroon with heritage green collar,90,45,75,https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?q=80&w=1000,FALSE,portugal,World Cup 2026,TRUE,TRUE,"S,M,L,XL","M,L",TRUE,TRUE
+Portugal Away 2026,White with traditional tile patterns,90,45,50,https://images.unsplash.com/photo-1529900748604-07564a03e7a6?q=80&w=1000,FALSE,portugal,World Cup 2026,TRUE,FALSE,"S,M,L","S",TRUE,FALSE
+USA Home 2026,Co-host special white with stars and stripes ribbing,85,40,200,https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?q=80&w=1000,FALSE,usa,World Cup 2026,TRUE,TRUE,"S,M,L,XL","S,M,L",TRUE,TRUE
+USA Away 2026,Navy blue with gradient red and white sash,85,40,150,https://images.unsplash.com/photo-1550193291-d9c026d3f2ec?q=80&w=1000,FALSE,usa,World Cup 2026,TRUE,FALSE,"S,M,L","M",TRUE,FALSE

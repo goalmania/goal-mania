@@ -8,9 +8,13 @@ export const VALID_PATCHES = [
   "coppa-italia",
 ] as const;
 
+/**
+ * Added "World Cup 2026" to the categories for UI consistency
+ */
 export const PRODUCT_CATEGORIES = [
   "2024/25",
   "2025/26",
+  "World Cup 2026",
   "Retro",
   "Serie A",
   "Premier League",
@@ -35,6 +39,7 @@ export interface Product {
   team?: string;
   availablePatches?: string[];
   videos?: string[];
+  isWorldCup?: boolean;
 }
 
 export interface Review {
@@ -63,11 +68,24 @@ export interface IProduct {
   videos?: string[];
   adultSizes: AdultSize[];
   kidsSizes: KidSize[];
-  category: Category;
+  category: string; // Changed to string for dynamic admin categories
   availablePatches: Patch[];
   hasShorts: boolean;
   hasSocks: boolean;
   hasPlayerEdition: boolean;
+  
+  /**
+   * NEW: Long Sleeve Logic
+   */
+  hasLongSleeveOption: boolean;
+  longSleevePriceAddon: number;
+
+  /**
+   * NEW: World Cup Logic
+   */
+  isWorldCup: boolean;
+  nationalTeam?: string;
+
   allowsNameOnShirt: boolean;
   allowsNumberOnShirt: boolean;
   isActive: boolean;
@@ -94,6 +112,12 @@ export interface CartItem {
     includeSocks: boolean;
     includeShortsSocks: boolean;
     isPlayerEdition: boolean;
+    
+    /**
+     * NEW: Track if the user selected Long Sleeve in cart
+     */
+    isLongSleeve: boolean; 
+
     size: string;
     isKidSize: boolean;
     hasCustomization: boolean;

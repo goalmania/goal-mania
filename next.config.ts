@@ -60,8 +60,20 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "media.api-sports.io",
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
+      // Keep Cloudinary here too just in case
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**',
+      },
     ],
   },
+
   // Add Next.js headers for better security and cookie handling
   // headers: async () => {
   //   return [

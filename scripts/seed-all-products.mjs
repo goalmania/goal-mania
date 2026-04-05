@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 // Load environment variables
-dotenv.config();
+dotenv.config({ path: ".env.local" });
 
 // Get current file directory
 const __filename = fileURLToPath(import.meta.url);

@@ -15,7 +15,6 @@ import { useLanguage } from "@/lib/utils/language";
 import { useI18n } from "@/lib/hooks/useI18n";
 import { usePathname, useRouter } from "next/navigation";
 
-// Shadcn components
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,6 +34,7 @@ import {
   ShoppingBag,
   X,
   Search,
+  Trophy,
 } from "lucide-react";
 
 export interface User {
@@ -63,6 +63,7 @@ export function Header() {
   const [openMenu, setOpenMenu] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
     setMounted(true);
     if (typeof window !== "undefined" && session) {
@@ -79,38 +80,38 @@ export function Header() {
     it: "Italiano",
   };
 
-  // Static sub-items that should always appear first
-    // Static sub-items that should always appear first
-    const staticSubItems = [
-      { name: t("nav.laliga"), href: "/international/laliga" },
-      { name: t("nav.premierLeague"), href: "/international/premierLeague" },
-      { name: t("nav.bundesliga"), href: "/international/bundesliga" },
-      { name: t("nav.ligue1"), href: "/international/ligue1" },
-      { name: t("nav.serieA"), href: "/international/serieA" },
-      { name: t("nav.leaguesOverview"), href: "/leagues-overview" },
-      { name: t("nav.otherLeagues"), href: "/international/other" },
-    ];
+  const staticSubItems = [
+    { name: t("nav.laliga"), href: "/international/laliga" },
+    { name: t("nav.premierLeague"), href: "/international/premierLeague" },
+    { name: t("nav.bundesliga"), href: "/international/bundesliga" },
+    { name: t("nav.ligue1"), href: "/international/ligue1" },
+    { name: t("nav.serieA"), href: "/international/serieA" },
+    { name: t("nav.leaguesOverview"), href: "/leagues-overview" },
+    { name: t("nav.otherLeagues"), href: "/international/other" },
+  ];
 
   const navigation = [
     { name: t("nav.home"), href: "/" },
+    { 
+      name: "World Cup 2026", 
+      href: "/worldcup",
+      isSpecial: true 
+    },
     { name: t("nav.articles"), href: "/news" },
     { name: t("nav.shop"), href: "/shop" },
     {
       name: t("nav.category"),
       href: "/category",
       hasDropdown: true,
-    subItems: staticSubItems,
+      subItems: staticSubItems,
     },
-    { name: t("nav.info"), href: "/info" },
     { name: t("nav.about"), href: "/about" },
     { name: t("nav.contact"), href: "/contact" },
-    // { name: "MysteryBox", href: "/shop/mystery-box" },
   ];
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Redirect to /search page with query param (same as ShopSearchBar)
       router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
       setSearchOpen(false);
       setSearchQuery("");
@@ -122,9 +123,7 @@ export function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 md:bg-[#0B1C2C] bg-[#000000] h-[90px] flex justify-center items-center font-mulish">
       <nav className="container mx-auto flex items-center justify-between px-3 py-2">
-        {/* Logo & Mobile Menu Button */}
         <div className="flex items-center ">
-          {/* Mobile toggle button */}
           <div className="md:hidden">
             <Button
               variant="ghost"
@@ -151,7 +150,6 @@ export function Header() {
           </div>
         </div>
 
-        {/* Search Icon - Mobile Only (between logo and language) */}
         <div className="md:hidden">
           <Button
             variant="ghost"
@@ -163,7 +161,6 @@ export function Header() {
           </Button>
         </div>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-3 lg:text-base md:text-sm items-center">
           {navigation.map((item) =>
             item.hasDropdown ? (
@@ -193,17 +190,19 @@ export function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={
+                className={`transition-colors flex items-center gap-1 ${
                   pathname === item.href
                     ? "text-[#FF7A00]"
-                    : "text-white hover:text-[#FF7A00]"
-                }
+                    : item.isSpecial 
+                      ? "text-[#FF7A00] font-bold hover:text-white" 
+                      : "text-white hover:text-[#FF7A00]"
+                }`}
               >
+                {item.isSpecial && <Trophy size={14} className="animate-pulse" />}
                 {item.name}
               </Link>
             )
           )}
-          {/* Search Icon - Desktop */}
           <Button
             variant="ghost"
             size="icon"
@@ -215,7 +214,6 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-1">
-          {/* Language Switch */}
           <Button
             variant="ghost"
             size="sm"
@@ -235,7 +233,6 @@ export function Header() {
             {language}
           </Button>
 
-          {/* Wishlist */}
           <Link href="/wishlist" className="relative">
             <Button
               variant="ghost"
@@ -260,7 +257,6 @@ export function Header() {
             </Button>
           </Link>
 
-          {/* Cart */}
           <Link href="/cart" className="relative">
             <Button
               variant="ghost"
@@ -284,7 +280,6 @@ export function Header() {
             </Button>
           </Link>
 
-          {/* Profile / Login */}
           {session ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -352,7 +347,6 @@ export function Header() {
         </div>
       </nav>
 
-      {/* Search Overlay - Mobile & Desktop */}
       {searchOpen && (
         <div className="fixed inset-0 bg-black/80 z-50">
           <div className="bg-[#0B1C2C] p-4 md:p-6">
@@ -388,11 +382,9 @@ export function Header() {
         </div>
       )}
 
-      {/* Mobile Menu Overlay */}
       {openMenu && (
         <div className="fixed inset-0 bg-black/60 z-40 md:hidden">
           <div className="absolute top-0 left-0 w-3/4 max-w-sm h-full bg-[#0B1C2C] p-6 flex flex-col gap-6 text-white">
-            {/* Close Button */}
             <div className="flex justify-between items-center">
               <Image
                 src="/images/recentUpdate/desktop-logo.png"
@@ -411,7 +403,6 @@ export function Header() {
               </Button>
             </div>
 
-            {/* Search Bar in Mobile Menu */}
             <div className="flex gap-2">
               <input
                 type="text"
@@ -438,19 +429,21 @@ export function Header() {
               </Button>
             </div>
 
-            {/* Mobile Nav Links */}
             <nav className="flex flex-col gap-4 text-lg">
               {navigation.map((item) => (
                 <div key={item.name}>
                   <Link
                     href={item.href}
                     onClick={() => setOpenMenu(false)}
-                    className={
+                    className={`flex items-center gap-2 ${
                       pathname === item.href
                         ? "text-[#FF7A00]"
-                        : "hover:text-[#FF7A00]"
-                    }
+                        : item.isSpecial 
+                          ? "text-[#FF7A00] font-bold" 
+                          : "hover:text-[#FF7A00]"
+                    }`}
                   >
+                    {item.isSpecial && <Trophy size={18} />}
                     {item.name}
                   </Link>
                   {item.hasDropdown && (

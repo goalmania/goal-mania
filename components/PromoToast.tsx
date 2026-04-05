@@ -19,18 +19,14 @@ export default function PromoToast() {
   const [reviewCount, setReviewCount] = useState<number>(2500);
   const [averageRating, setAverageRating] = useState<number>(4.9);
 
-  useEffect(() => {
-    console.log("🎯 PromoToast component mounted");
-  }, []);
+  
 
   useEffect(() => {
     async function fetchFeaturedProducts() {
       try {
-        console.log("🔍 Fetching featured products...");
         const response = await fetch("/api/products?feature=true");
         if (!response.ok) throw new Error("Failed to fetch");
         const data = await response.json();
-        console.log("📦 Products data:", data);
 
         let products = [];
         if (
@@ -46,7 +42,6 @@ export default function PromoToast() {
         let productData = null;
         if (products.length > 0) {
           productData = products[Math.floor(Math.random() * products.length)];
-          console.log("✅ Selected product:", productData?.title);
         }
 
         if (productData) {
@@ -87,10 +82,8 @@ export default function PromoToast() {
   }, []);
 
   useEffect(() => {
-    console.log("🚀 Setting up toast visibility...");
 
     const timer = setTimeout(() => {
-      console.log("✨ Showing toast NOW");
       setIsVisible(true);
     }, 2000);
 
@@ -98,11 +91,9 @@ export default function PromoToast() {
   }, []);
 
   useEffect(() => {
-    console.log("👁️ Toast visibility:", isVisible);
   }, [isVisible]);
 
   const handleDismiss = () => {
-    console.log("❌ Toast dismissed");
     setIsVisible(false);
     localStorage.setItem("promoToastDismissed", "true");
 

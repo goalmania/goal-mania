@@ -3,20 +3,14 @@
 import { useState, useEffect, memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
-import { PlayIcon } from "@heroicons/react/24/solid";
-import { useTranslation } from "@/lib/hooks/useTranslation";
+import { ArrowRight, Star, Layers } from "lucide-react";
 
-// import {
-//   Tooltip,
-//   TooltipContent,
-//   TooltipProvider,
-//   TooltipTrigger,
-// } from "@/components/ui/tooltip";
-
-import { ArrowRight, Star } from "lucide-react";
-import { Button } from "./button";
+// Store Imports
+import { useCartStore } from "@/lib/store/cart"; // Adjust path as needed
+import { useWishlistStore } from "@/lib/store/wishlist"; // Adjust path as needed
 
 interface ProductCardProps {
   id: string;
@@ -26,22 +20,11 @@ interface ProductCardProps {
   href?: string;
   category?: string;
   team?: string;
-  availablePatches?: string[];
-  videos?: string[];
-  badges?: Array<{
-    text: string;
-    color?: string;
-    bgColor?: string;
-  }>;
-  onWishlistToggle?: (product: any) => void;
-  isInWishlist?: (id: string) => boolean;
-  onAddToCart?: (product: any) => void;
-  showWishlistButton?: boolean;
-  showAddToCartButton?: boolean;
-  imageAspectRatio?: "square" | "portrait" | "landscape";
-  cardHeight?: "sm" | "lg";
+  isWorldCup?: boolean;
+  hasLongSleeve?: boolean;
+  product: any; // Full product object from DB
+  imageAspectRatio?: "square" | "portrait";
   className?: string;
-  product?: any; // Full product object for callbacks
 }
 
 function ProductCard({
@@ -52,279 +35,187 @@ function ProductCard({
   href = `/products/${id}`,
   category,
   team,
-  availablePatches = [],
-  videos = [],
-  badges = [],
-  onWishlistToggle,
-  isInWishlist,
-  onAddToCart,
-  showWishlistButton = true,
-  // showAddToCartButton = false,
-  imageAspectRatio = "square",
-  cardHeight = "lg",
-  className = "",
+  isWorldCup,
+  hasLongSleeve,
   product,
+  imageAspectRatio = "square",
+  className = "",
 }: ProductCardProps) {
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const { t } = useTranslation();
+
+  // Zustand Actions & State
+  const addItemToCart = useCartStore((state) => state.addItem);
+  const addToWishlist = useWishlistStore((state) => state.addItem);
+  const removeFromWishlist = useWishlistStore((state) => state.removeItem);
+  const isInWishlist = useWishlistStore((state) => state.isInWishlist(id));
+const buyItem = useCartStore((state) => state.buyItem);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Height classes based on cardHeight prop
-  const heightClasses = {
-    sm: "h-[20rem] md:h-[25rem]",
-    lg: "h-[25rem] md:h-[30rem]",
-  };
-
-  // Image aspect ratio classes
-  const imageAspectClasses = {
-    square: "aspect-square",
-    portrait: "aspect-[4/4]",
-    landscape: "aspect-[4/3]",
-  };
-
-  // Avoid rendering until mounted to prevent hydration mismatch
   if (!mounted) {
     return (
-      <div
-        className={`bg-gray-200 rounded-2xl animate-pulse ${heightClasses[cardHeight]} ${className}`}
-      />
+      <div className={`bg-gray-100 rounded-2xl animate-pulse w-full h-[28rem] ${className}`} />
     );
   }
+
+  // --- Handlers ---
 
   const handleWishlistToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (onWishlistToggle && product) {
-      onWishlistToggle(product);
+    if (isInWishlist) {
+      removeFromWishlist(id);
+    } else {
+      addToWishlist({
+        id,
+        name,
+        price,
+        image,
+        team,
+      });
     }
   };
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (onAddToCart && product) {
-      onAddToCart(product);
-    }
+    addItemToCart({
+      id,
+      name,
+      price,
+      image,
+      quantity: 1,
+    });
   };
+
+const handleBuyNow = (e: React.MouseEvent) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  // 1. Use the specialized buyItem action that resets/sets quantity to 1
+  buyItem({
+    id,
+    name,
+    price,
+    image,
+    quantity: 1, // Explicitly set to 1
+  });
+
+  // 2. Short delay to allow middleware to sync to localStorage
+  setTimeout(() => {
+    router.push("/checkout");
+  }, 100);
+};
 
   return (
     <div className="w-full h-full">
-      <div
-        className={`group relative bg-white rounded-lg duration-300 h-full flex flex-col ${className}`}
-      >
-        {/* Image section */}
-        <div
-          className="flex-shrink-0 relative overflow-hidden rounded-t-lg"
+      <div className={`group relative bg-white rounded-xl duration-300 h-full flex flex-col border border-gray-100 hover:shadow-2xl ${className}`}>
+        
+        {/* Image Section */}
+        <div 
+          className="relative overflow-hidden rounded-t-xl bg-gray-50"
           onMouseEnter={() => {
             setIsHovered(true);
-            if (videos.length > 0) {
-              setTimeout(() => setShowVideo(true), 500);
-            }
+            if (product.videos?.length > 0) setTimeout(() => setShowVideo(true), 500);
           }}
           onMouseLeave={() => {
             setIsHovered(false);
             setShowVideo(false);
           }}
         >
+          {/* Status Badges */}
+          <div className="absolute top-3 left-3 z-20 flex flex-col gap-2">
+            {isWorldCup && (
+              <span className="bg-indigo-600 text-white text-[9px] font-black uppercase italic tracking-tighter px-2 py-1 rounded-sm shadow-lg">
+                World Cup 26
+              </span>
+            )}
+            {hasLongSleeve && (
+              <div className="bg-white/90 backdrop-blur-md border border-gray-200 p-1.5 rounded-full shadow-sm flex items-center gap-1">
+                <Layers size={10} className="text-gray-900" />
+                <span className="text-[8px] font-bold text-gray-900 pr-1">LS Available</span>
+              </div>
+            )}
+          </div>
+
           <Link href={href}>
-            <div
-              className={`relative w-full bg-transparent border-2 overflow-hidden rounded-2xl ${
-                imageAspectRatio === "square"
-                  ? "aspect-square"
-                  : imageAspectClasses[imageAspectRatio]
-              }`}
-            >
-              {/* Video overlay */}
-              {videos.length > 0 && showVideo && isHovered ? (
-                <video
-                  src={videos[0]}
-                  autoPlay
-                  loop
-                  muted
-                  className="object-cover object-center h-full w-full transition-opacity duration-300"
-                  style={{ opacity: showVideo ? 1 : 0 }}
-                />
+            <div className={`relative w-full ${imageAspectRatio === "square" ? "aspect-square" : "aspect-[4/5]"} overflow-hidden`}>
+              {product.videos?.length > 0 && showVideo ? (
+                <video src={product.videos[0]} autoPlay loop muted className="object-cover w-full h-full" />
               ) : (
                 <Image
-                  src={image || "/images/image.png"}
-                  alt={name || "Product image"}
+                  src={image || "/images/placeholder.png"}
+                  alt={name}
                   fill
-                  className="object-cover object-center transform group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                  className="object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                  sizes="(max-width: 768px) 50vw, 25vw"
                 />
               )}
             </div>
           </Link>
+
+          {/* Wishlist Toggle */}
+          <button 
+            onClick={handleWishlistToggle}
+            className="absolute top-3 right-3 z-20 p-2.5 bg-white/80 backdrop-blur-md rounded-full shadow-sm hover:bg-white transition-all active:scale-90"
+          >
+            {isInWishlist ? (
+              <HeartIconSolid className="h-5 w-5 text-red-500" />
+            ) : (
+              <HeartIcon className="h-5 w-5 text-gray-600" />
+            )}
+          </button>
         </div>
 
-        {/* Info section */}
-        <div className="p-3 pb-4 flex flex-col flex-grow">
-          <div className="mb-2 flex-grow">
-            <h3 className="text-base flex   justify-start text-left items-center lg:text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
+        {/* Content Section */}
+        <div className="p-4 flex flex-col flex-grow">
+          <div className="flex-grow">
+            <h3 className="text-sm md:text-base font-bold text-gray-900 line-clamp-2 leading-tight group-hover:text-indigo-600 transition-colors">
               {name}
             </h3>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-bold mt-1">
+              {team || category || "Jersey"}
+            </p>
 
-            {/* Category and team info */}
-            {(category || team) && (
-              <div className="mt-1 flex items-start justify-start gap-1 sm:gap-2 flex-wrap">
-                {category && (
-                  <p className="text-[10px] sm:text-xs text-gray-500">
-                    {category}
-                  </p>
-                )}
-                {category && team && (
-                  <span className="h-1 w-1 rounded-full bg-gray-300 hidden sm:block"></span>
-                )}
-                {team && (
-                  <p className="text-[10px] sm:text-xs text-gray-500">{team}</p>
-                )}
-              </div>
-            )}
-
-            {/* Price and Rating Section */}
-            <div className="mt-2">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <p className="text-sm sm:text-base md:text-lg font-semibold text-[#0A1A2F]">
-                    €{Number(price || 0).toFixed(2)}
-                  </p>
-                  {/* Star Rating */}
-                  {(() => {
-                    const avgRating = (product as any)?.averageRating || 0;
-                    const reviewCount = (product as any)?.reviewCount || (product as any)?.reviews?.length || 0;
-                    const rating = Math.round(avgRating);
-                    return (
-                      <div className="flex items-center gap-0.5">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            fill={star <= rating ? "#FF7A00" : "none"}
-                            color={star <= rating ? "#FF7A00" : "#D1D5DB"}
-                            size={12}
-                          />
-                        ))}
-                        {reviewCount > 0 && (
-                          <span className="text-[10px] text-gray-500 ml-1">({reviewCount})</span>
-                        )}
-                      </div>
-                    );
-                  })()}
-                </div>
-                {/* Buttons - always visible, stacked vertically */}
-                <div className="flex flex-col gap-2 w-full">
-                  <button
-                    type="button"
-                    onClick={handleAddToCart}
-                    className="w-full px-3 py-2 flex items-center justify-center border border-[#0A1A2F] text-xs text-black rounded-full hover:bg-gray-50 transition-colors"
-                  >
-                    <span className="whitespace-nowrap">Add to Cart</span>
-                    <ArrowRight className="ml-1 inline-flex" size={14} />
-                  </button>
-                  <button
-                    type="button"
-                    // onClick={handleBuyNow}
-                    className="w-full px-3 py-2 border flex items-center justify-center text-xs bg-[#FF7A00] text-black rounded-full hover:bg-[#FF8A10] transition-colors"
-                  >
-                    <span className="whitespace-nowrap">Buy Now</span>
-                    <ArrowRight className="ml-1 inline-flex" size={14} />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-2 flex flex-col items-start justify-start gap-1 sm:gap-2">
-              {showWishlistButton && onWishlistToggle && (
-                <div className="flex justify-end w-full mt-2">
-                  <button
-                    onClick={handleWishlistToggle}
-                    className="p-1.5 sm:p-2.5"
-                    aria-label={
-                      isInWishlist && isInWishlist(id)
-                        ? t("product.removeFromWishlist")
-                        : t("product.addToWishlist")
-                    }
-                  >
-                    {isInWishlist && isInWishlist(id) ? (
-                      <HeartIconSolid className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
-                    ) : (
-                      <HeartIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
-                    )}
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* {showAddToCartButton && onAddToCart && (
-              <button
-                onClick={handleAddToCart}
-                className=" rounded-full bg-[#f5963c]/80 backdrop-blur-sm p-1 shadow-sm hover:bg-[#f5963c] transition-colors duration-200  text-white"
-                aria-label="Add to cart"
-              >
-                <svg
-                  className="h-3 w-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"
+            <div className="mt-3 flex items-center justify-between">
+              <span className="text-lg font-black text-[#0A1A2F]">€{Number(price).toFixed(2)}</span>
+              <div className="flex items-center gap-0.5">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star 
+                    key={star} 
+                    size={10} 
+                    fill={star <= Math.round(product.averageRating || 5) ? "#FF7A00" : "none"} 
+                    color={star <= Math.round(product.averageRating || 5) ? "#FF7A00" : "#D1D5DB"} 
                   />
-                </svg>
-              </button>
-            )} */}
-          </div>
-  
-          {/* Badges section */}
-          {(availablePatches.length > 0 || badges.length > 0) && (
-            <div className="flex flex-wrap gap-0.5 z-10 mt-1">
-              {/* Available patches */}
-              {availablePatches.map((patch) => (
-                <span
-                  key={patch}
-                  className="bg-[#f5963c]/80 text-white text-[8px] sm:text-[10px] px-1 py-0.5 rounded-full shadow-sm font-medium border border-[#f5963c]/40 backdrop-blur-sm"
-                  style={{ minWidth: "fit-content" }}
-                >
-                  {patch === "champions-league"
-                    ? "Coppa Europea"
-                    : patch === "serie-a"
-                    ? "Campionato Nazionale"
-                    : patch
-                        .split("-")
-                        .map(
-                          (word: string) =>
-                            word.charAt(0).toUpperCase() + word.slice(1)
-                        )
-                        .join(" ")}
-                </span>
-              ))}
-
-              {/* Custom badges */}
-              {badges.map((badge, index) => (
-                <span
-                  key={index}
-                  className={`text-[8px] sm:text-[10px] px-1 py-0.5 rounded-full shadow-sm font-medium backdrop-blur-sm ${
-                    badge.bgColor || "bg-gray-500/80"
-                  } ${badge.color || "text-white"}`}
-                  style={{ minWidth: "fit-content" }}
-                >
-                  {badge.text}
-                </span>
-              ))}
+                ))}
+              </div>
             </div>
-          )}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="mt-5 flex flex-col gap-2">
+            <button
+              onClick={handleAddToCart}
+              className="w-full py-3 rounded-lg border-2 border-[#0A1A2F] text-[10px] font-black uppercase tracking-widest hover:bg-[#0A1A2F] hover:text-white transition-all flex items-center justify-center gap-2"
+            >
+              Add to Cart <ArrowRight size={14} />
+            </button>
+            <button
+              onClick={handleBuyNow}
+              className="w-full py-3 rounded-lg bg-[#FF7A00] text-black text-[10px] font-black uppercase tracking-widest hover:bg-[#e66e00] transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-100"
+            >
+              Buy Now <ArrowRight size={14} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-// Memoize ProductCard to prevent unnecessary re-renders
 export default memo(ProductCard);
