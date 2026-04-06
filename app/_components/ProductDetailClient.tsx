@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { HeartIcon } from "@heroicons/react/24/outline";
+
+import { Layers } from "lucide-react";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
-import { StarIcon } from "@heroicons/react/20/solid";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { useWishlistStore } from "@/lib/store/wishlist";
 import { useCartStore } from "@/lib/store/cart";
 import { IProduct, Review, Patch } from "@/lib/types/product";
@@ -31,16 +31,8 @@ import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -48,30 +40,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-  TableCaption,
-} from "@/components/ui/table";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ProductSizeChart } from "@/app/_components/ProductSizeChart";
 import ProductReviews from "@/app/_components/ProductReviews";
 import DiscountRulesDisplay from "@/app/_components/DiscountRulesDisplay";
@@ -84,9 +53,6 @@ import {
   ShieldCheck,
   Truck,
 } from "lucide-react";
-import { getBaseUrl } from "@/lib/utils/baseUrl";
-import { Product } from "@/lib/types/home";
-import FeaturedProducts from "@/components/home/FeaturedProducts";
 import { useI18n } from "@/lib/hooks/useI18n";
 import FaqSection from "./FaqSection";
 
@@ -101,6 +67,7 @@ const EXTRAS_PRICES = {
   shorts: 11,
   socks: 17,
   player_edition: 5,
+  long_sleeve: 10,
   shorts_socks: 13,
 };
 
@@ -123,6 +90,7 @@ export default function ProductDetailClient({
     size: "",
     isPlayerEdition: false,
     isKidSize: false,
+    hasLongSleeve: false,
     excludedShirts: [] as string[],
   });
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -135,10 +103,24 @@ export default function ProductDetailClient({
     removeItem: removeFromWishlist,
     isInWishlist,
   } = useWishlistStore();
-  const { addItem: addToCart } = useCartStore();
+  const { addItem: addToCart, buyItem } = useCartStore();
 
   // Helper function to check if status is loading
   const isStatusLoading = () => status === "loading";
+
+  const unitPrice = useMemo(() => {
+    const base = Number(product.basePrice) || 0;
+    const patchTotal = customization.selectedPatches.reduce((acc, p) => acc + p.price, 0);
+    const extras =
+      (customization.isPlayerEdition ? EXTRAS_PRICES.player_edition : 0) +
+      (customization.hasLongSleeve ? EXTRAS_PRICES.long_sleeve : 0) +
+      (customization.includeShorts ? EXTRAS_PRICES.shorts : 0) +
+      (customization.includeSocks ? EXTRAS_PRICES.socks : 0);
+
+    return base + patchTotal + extras;
+  }, [product.basePrice, customization]);
+
+  const calculateTotalPrice = () => unitPrice * quantity;
 
   useEffect(() => {
     setMounted(true);
@@ -147,37 +129,10 @@ export default function ProductDetailClient({
       setReviews(product.reviews);
     }
   }, [product.reviews]);
-
   // Don't render anything until mounted to prevent hydration mismatch
   if (!mounted) {
     return null;
   }
-
-  const calculateTotalPrice = () => {
-    let total = Number(product.basePrice);
-
-    // Add patches price
-    customization.selectedPatches.forEach((patch) => {
-      total += patch.price;
-    });
-
-    // Add player edition price
-    if (customization.isPlayerEdition) {
-      total += EXTRAS_PRICES.player_edition;
-    }
-
-    // Add shorts price
-    if (customization.includeShorts) {
-      total += EXTRAS_PRICES.shorts;
-    }
-
-    // Add socks price
-    if (customization.includeSocks) {
-      total += EXTRAS_PRICES.socks;
-    }
-
-    return total;
-  };
 
   const handleAddToCart = () => {
     // Reset previous errors
@@ -203,6 +158,7 @@ export default function ProductDetailClient({
       socks: customization.includeSocks,
       playerEdition: customization.isPlayerEdition,
       size: customization.size,
+      longSleeve: customization.hasLongSleeve,
       isKidSize: customization.isKidSize,
     });
 
@@ -212,6 +168,7 @@ export default function ProductDetailClient({
       customization.isPlayerEdition ||
       customization.size ||
       customization.includeShorts ||
+      customization.hasLongSleeve ||
       customization.includeSocks ||
       customization.selectedPatches.length > 0
     );
@@ -231,10 +188,9 @@ export default function ProductDetailClient({
       customization: {
         name: customization.name,
         number: customization.number,
-        selectedPatches: customization.selectedPatches.map(
-          (p) => p.category as Patch
-        ),
+        selectedPatches: customization.selectedPatches.map((p) => p.category as Patch),
         includeShorts: customization.includeShorts,
+        hasLongSleeve: customization.hasLongSleeve,
         includeSocks: customization.includeSocks,
         isPlayerEdition: customization.isPlayerEdition,
         size: customization.size,
@@ -298,9 +254,7 @@ export default function ProductDetailClient({
     }
 
     // Fetch updated reviews
-    const updatedReviewsResponse = await fetch(
-      `/api/products/${product._id}/reviews`
-    );
+    const updatedReviewsResponse = await fetch(`/api/products/${product._id}/reviews`);
     if (!updatedReviewsResponse.ok) {
       throw new Error("Failed to fetch updated reviews");
     }
@@ -311,15 +265,11 @@ export default function ProductDetailClient({
 
   const handleReviewDelete = async (reviewId: string) => {
     // Remove the review from local state immediately for optimistic update
-    setReviews((prevReviews) =>
-      prevReviews.filter((review) => review._id !== reviewId)
-    );
+    setReviews((prevReviews) => prevReviews.filter((review) => review._id !== reviewId));
 
     // Fetch updated reviews to ensure consistency
     try {
-      const updatedReviewsResponse = await fetch(
-        `/api/products/${product._id}/reviews`
-      );
+      const updatedReviewsResponse = await fetch(`/api/products/${product._id}/reviews`);
       if (updatedReviewsResponse.ok) {
         const updatedReviews = await updatedReviewsResponse.json();
         setReviews(updatedReviews);
@@ -333,270 +283,196 @@ export default function ProductDetailClient({
     <div className="bg-white font-munish">
       {/* Product details section */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-18 pb-6 sm:pt-22 sm:pb-6">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
-          {/* Image gallery - takes 3 columns on large screens */}
-          <div className="lg:col-span-3 order-2 lg:order-1">
-            <div className="lg:sticky lg:top-24 self-start">
-              <Card className="overflow-hidden hidden lg:block shadow-none border-none">
-                <CardContent className="p-0">
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Thumbnail images */}
-                    {product.images.length > 1 && (
-                      <div className="hidden lg:flex lg:col-span-1 flex-col gap-3 justify-center p-4">
-                        {product.images.map((image, index) => (
-                          <Button
-                            key={index}
-                            onClick={() => setSelectedImage(index)}
-                            variant={
-                              index === selectedImage ? "default" : "outline"
-                            }
-                            size="icon"
-                            className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden hidden md:flex shadow-none border border-black"
-                          >
-                            <Image
-                              src={image}
-                              alt={`${product.title} thumbnail ${index + 1}`}
-                              fill
-                              className="object-cover object-center"
-                              sizes="80px"
-                            />
-                          </Button>
-                        ))}
-                      </div>
-                    )}
-                    {/* Main image */}
-                    <div className="relative lg:col-span-2 aspect-square  overflow-hidden border-[1px] border-[#000000] w-full rounded-[20px]">
-                      <Image
-                        src={
-                          product.images[selectedImage] ||
-                          "/images/placeholder.png"
-                        }
-                        alt={product.title || "Product image"}
-                        fill
-                        className="object-contain object-center hover:scale-[1.02] transition-transform duration-300"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 66vw, 50vw"
-                        priority
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <div className="hidden">
-                <ProductSizeChart />
+        {/* Image gallery - takes 3 columns on large screens */}
+        <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 lg:gap-12 space-evenly">
+          {/* Left Column (Desktop) / Top Section (Mobile): Media Gallery */}
+          <div className="w-full lg:sticky lg:top-8 order-2 lg:order-1">
+            <div className="flex flex-col items-center lg:items-start space-y-4">
+              {/* Main Image Stage - Capped for normal sizing */}
+              <div className="relative aspect-[1/1] w-full max-w-[380px] mx-auto sm:max-w-[420px] overflow-hidden rounded-[24px] bg-[#FBFBFB] border border-gray-100 shadow-sm">
+                <Image
+                  src={product.images[selectedImage] || "/images/placeholder.png"}
+                  alt={product.title}
+                  fill
+                  className="object-contain p-4 transition-transform duration-500 hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 400px"
+                  priority
+                />
+
+                {/* Subtle Counter */}
+                <div className="absolute bottom-4 right-4 bg-white/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-black/5">
+                  <p className="text-[10px] font-bold tracking-tight text-black">
+                    {selectedImage + 1} / {product.images.length}
+                  </p>
+                </div>
               </div>
 
-              {/* Product Videos */}
+              {/* Thumbnails Scroller - More compact */}
+              {product.images.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide w-full max-w-[380px] sm:max-w-[420px]">
+                  {product.images.map((image, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedImage(index)}
+                      className={`relative w-14 h-18 sm:w-16 sm:h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${
+                        index === selectedImage
+                          ? "border-black scale-105 shadow-sm"
+                          : "border-transparent opacity-60"
+                      }`}
+                    >
+                      <Image
+                        src={image}
+                        alt="thumbnail"
+                        fill
+                        className="object-cover"
+                        sizes="64px"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Videos - More compact preview */}
               {product.videos && product.videos.length > 0 && (
-                <Card className="mt-6">
-                  <CardHeader>
-                    <CardTitle className="text-lg flex items-center space-x-2">
-                      <svg
-                        className="h-5 w-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                <div className="w-full max-w-[380px] sm:max-w-[420px] pt-1">
+                  <h3 className="text-[9px] font-black uppercase tracking-[0.15em] text-gray-400 mb-2">
+                    Video Preview
+                  </h3>
+                  <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                    {product.videos.map((videoUrl, index) => (
+                      <div
+                        key={index}
+                        className="relative w-[180px] aspect-video flex-shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-black"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                        <video
+                          src={videoUrl}
+                          className="w-full h-full object-cover"
+                          preload="metadata"
                         />
-                      </svg>
-                      <span>Product Videos</span>
-                    </CardTitle>
-                    <CardDescription>
-                      Watch product previews and demonstrations
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 gap-4">
-                      {product.videos.map((videoUrl, index) => (
-                        <div
-                          key={index}
-                          className="relative aspect-video overflow-hidden rounded-lg border border-gray-200"
-                        >
-                          <video
-                            src={videoUrl}
-                            controls
-                            className="w-full h-full object-cover"
-                            preload="metadata"
-                            poster={product.images[0]}
-                          >
-                            Your browser does not support the video tag.
-                          </video>
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                          <div className="w-6 h-6 bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center">
+                            <div className="w-0 h-0 border-t-[4px] border-t-transparent border-l-[7px] border-l-white border-b-[4px] border-b-transparent ml-0.5" />
+                          </div>
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
           </div>
 
-          {/* Product info - takes 2 columns on large screens */}
-          <div className="lg:col-span-2 lg:pl-8 order-1 lg:order-2">
+          {/* Right Column (Desktop) / Header Section (Mobile): Product Info */}
+          <div className="w-full space-y-6 order-1 lg:order-2">
             <div className="space-y-4">
-              <div>
-                <h1 className="text-2xl mb-2 sm:text-[27px] font-bold tracking-tight text-black">
-                  {product.title}
-                </h1>
-                <div className="mb-3">
-                  <h2 className="sr-only">Product information</h2>
-                  <p className="text-2xl sm:text-3xl tracking-tight text-black font-bold">
-                    €{(calculateTotalPrice() * quantity).toFixed(2)}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="sr-only font-light mt-2">Description</h3>
-                  <div className="prose font-normal prose-sm sm:prose text-gray-700 leading-relaxed">
-                    {product.description}
-                  </div>
-                </div>
-                <hr className="my-4" />
+              {/* Badge & Title */}
+              <div className="space-y-2">
                 {product.isMysteryBox && (
-                  <Badge
-                    variant="secondary"
-                    className="mt-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold"
-                  >
+                  <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-none px-3 py-1 text-[10px] font-black uppercase tracking-wider">
                     🎁 Mystery Box
                   </Badge>
                 )}
+                <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-black leading-tight">
+                  {product.title}
+                </h1>
               </div>
 
-              {/* Image gallery - takes 1 columns on mobile screens */}
-              <div className="overflow-hidden lg:hidden border rounded-2xl">
-                <div className="p-0">
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Thumbnail images */}
-                    {product.images.length > 1 && (
-                      <div className="lg:col-span-1 w-full h-[200px] p-4">
-                        <Swiper
-                          direction="vertical"
-                          spaceBetween={12}
-                          slidesPerView="auto"
-                          freeMode
-                          className="h-auto"
+              {/* Pricing */}
+              <div className="flex items-baseline gap-3">
+                <p className="text-3xl font-bold text-black">
+                  €{(calculateTotalPrice() * quantity).toFixed(2)}
+                </p>
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                  Vat Included
+                </span>
+              </div>
+
+              <hr className="border-gray-100" />
+
+              {/* Description */}
+              <div className="space-y-2">
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+                  Description
+                </h3>
+                <div className="prose prose-sm text-gray-600 leading-relaxed max-w-none">
+                  {product.description}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 px-4 space-evenly gap-x-8 gap-y-10 lg:col-span-3 order-2 lg:order-2">
+                <div>
+                  {/* Customization options */}
+                  <div className="space-y-8">
+                    {/* Section Header */}
+                    <div className="space-y-1">
+                      <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#FF7A00]">
+                        {t("products.customizeYourJersey")}
+                      </h2>
+                      <div className="h-1 w-10 bg-[#FF7A00] rounded-full" />
+                    </div>
+
+                    {/* Jersey Edition Selection */}
+                    {!product.isMysteryBox && (
+                      <div className="space-y-4">
+                        <h3 className="text-sm font-bold text-gray-900">
+                          {t("products.jerseyType")}
+                        </h3>
+                        <RadioGroup
+                          value={customization.isPlayerEdition ? "player" : "fan"}
+                          onValueChange={(val) =>
+                            setCustomization((prev) => ({
+                              ...prev,
+                              isPlayerEdition: val === "player",
+                            }))
+                          }
+                          className="grid grid-cols-2 gap-4"
                         >
-                          {product.images.map((image, index) => (
-                            <SwiperSlide key={index} className="!w-auto">
-                              <Button
-                                onClick={() => setSelectedImage(index)}
-                                variant={
-                                  index === selectedImage
-                                    ? "default"
-                                    : "outline"
-                                }
-                                size="icon"
-                                className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden"
+                          {[
+                            { id: "fan", label: t("products.fanEdition"), price: 0 },
+                            {
+                              id: "player",
+                              label: t("products.playerEdition"),
+                              price: EXTRAS_PRICES.player_edition,
+                            },
+                          ].map((edition) => (
+                            <div key={edition.id}>
+                              <RadioGroupItem
+                                value={edition.id}
+                                id={edition.id}
+                                className="sr-only"
+                              />
+                              <Label
+                                htmlFor={edition.id}
+                                className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all cursor-pointer ${
+                                  (edition.id === "player" && customization.isPlayerEdition) ||
+                                  (edition.id === "fan" && !customization.isPlayerEdition)
+                                    ? "border-black bg-black text-white shadow-md"
+                                    : "border-gray-100 bg-gray-50 text-gray-600 hover:border-gray-200"
+                                }`}
                               >
-                                <Image
-                                  src={image}
-                                  alt={`${product.title} thumbnail ${
-                                    index + 1
-                                  }`}
-                                  fill
-                                  className="object-cover object-center"
-                                  sizes="80px"
-                                />
-                              </Button>
-                            </SwiperSlide>
+                                <span className="text-[13px] font-bold">{edition.label}</span>
+                                {edition.price > 0 && (
+                                  <span className="text-[10px] mt-1 opacity-80">
+                                    +€{edition.price}
+                                  </span>
+                                )}
+                              </Label>
+                            </div>
                           ))}
-                        </Swiper>
+                        </RadioGroup>
                       </div>
                     )}
 
-                    {/* Main image */}
-                    <div className="relative lg:col-span-2 aspect-square  overflow-hidden bg-gray-100 w-full">
-                      <Image
-                        src={
-                          product.images[selectedImage] ||
-                          "/images/placeholder.png"
-                        }
-                        alt={product.title || "Product image"}
-                        fill
-                        className="object-contain object-center hover:scale-[1.02] transition-transform duration-300"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 66vw, 50vw"
-                        priority
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Customization options */}
-              <div className="-ml-3">
-                <CardHeader className="p-0">
-                  <CardTitle className="text-[18px] font-semibold p-0 text-[#FF7A00]">
-                    {t("products.customizeYourJersey")}
-                  </CardTitle>
-                </CardHeader>
-
-                <div className="">
-                  <h3 className="text-[18px] font-bold mb-3 text-[#333333]">
-                    {t("products.jerseyType")}
-                  </h3>
-                  {/* Jersey Type (Player or Fan Edition) - Hide for Mystery Box */}
-                  {!product.isMysteryBox && (
-                    <div className="space-y-3 flex ">
-                      <RadioGroup
-                        value={customization.isPlayerEdition ? "player" : "fan"}
-                        onValueChange={(value) =>
-                          setCustomization((prev) => ({
-                            ...prev,
-                            isPlayerEdition: value === "player",
-                          }))
-                        }
-                      >
-                        <div className="flex gap-3">
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                              value="fan"
-                              id="fan-edition"
-                              className="text-[#D9D9D9] bg-[#0A1A2F] border-none 
-             data-[state=checked]:bg-[#D9D9D9] data-[state=checked]:text-[#0A1A2F]"
-                            />
-
-                            <Label
-                              htmlFor="fan-edition"
-                              className="text-[14px] font-medium"
-                            >
-                              {t("products.fanEdition")}
+                    {/* Name & Number Inputs */}
+                    {!product.isMysteryBox && (
+                      <div className="grid grid-cols-12 gap-4">
+                        {product.allowsNameOnShirt && (
+                          <div className="col-span-8 space-y-2">
+                            <Label className="text-[11px] font-black uppercase tracking-wider text-gray-400">
+                              Name on Jersey
                             </Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                              value="player"
-                              id="player-edition"
-                              className="text-[#D9D9D9] bg-[#D9D9D9] border-none 
-             data-[state=checked]:bg-[#D9D9D9] data-[state=checked]:text-[#0A1A2F]"
-                            />
-                            <Label
-                              htmlFor="player-edition"
-                              className="text-[14px] font-medium"
-                            >
-                              {t("products.playerEdition")} <span className="font-bold">(+€
-                              {EXTRAS_PRICES.player_edition})</span>
-                            </Label>
-                          </div>
-                        </div>
-                      </RadioGroup>
-                    </div>
-                  )}
-                  <hr className="my-4 " />
-                </div>
-
-                {/* INPUTS JERSEY TYPES */}
-                <div>
-                  {/* Name and Number - Hide for Mystery Box */}
-                  {!product.isMysteryBox && (
-                    <div className="flex justify-between items-center gap-4 ">
-                      {product.allowsNameOnShirt && (
-                        <div className=" w-1/2">
-                          <div className="">
                             <input
                               type="text"
-                              id="name"
                               value={customization.name}
                               onChange={(e) =>
                                 setCustomization((prev) => ({
@@ -605,399 +481,356 @@ export default function ProductDetailClient({
                                 }))
                               }
                               maxLength={20}
-                              placeholder="Inserisci qui il tuo nome sulla maglia..."
-                              className=" w-full  border-b focus:border-b outline-0 placeholder:text-[#333333] placeholder:font-normal text-[#333333] text-[16px] font-semibold"
+                              placeholder="MARADONA"
+                              className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-black transition-all placeholder:text-gray-300"
                             />
                           </div>
-                        </div>
-                      )}
-
-                      {product.allowsNumberOnShirt && (
-                        <div className=" w-1/2">
-                          <div className="">
+                        )}
+                        {product.allowsNumberOnShirt && (
+                          <div className="col-span-4 space-y-2">
+                            <Label className="text-[11px] font-black uppercase tracking-wider text-gray-400">
+                              Number
+                            </Label>
                             <input
                               type="text"
-                              id="number"
                               value={customization.number}
                               onChange={(e) =>
                                 setCustomization((prev) => ({
                                   ...prev,
-                                  number: e.target.value
-                                    .replace(/[^0-9]/g, "")
-                                    .slice(0, 2),
+                                  number: e.target.value.replace(/[^0-9]/g, "").slice(0, 2),
                                 }))
                               }
                               maxLength={2}
-                              placeholder="Inserisci qui il tuo numero sulla maglia..."
-                              className=" w-full border-b  focus:border-b outline-0 placeholder:text-[#333333] placeholder:font-normal text-[#333333] text-[16px] font-semibold"
+                              placeholder="10"
+                              className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-sm font-bold text-center focus:ring-2 focus:ring-black transition-all placeholder:text-gray-300"
                             />
                           </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
+                        )}
+                      </div>
+                    )}
 
-                  {/* Patches - Hide for Mystery Box */}
-                  {!product.isMysteryBox &&
-                    product.patches &&
-                    product.patches.length > 0 && (
-                      <div className="space-y-3 mt-3 ">
-                        <Label className="text-[16px] font-bold">
+                    {/* Patches Grid */}
+                    {!product.isMysteryBox && (product.patches?.length ?? 0) > 0 && (
+                      <div className="space-y-4">
+                        <Label className="text-sm font-bold">
                           {t("products.addOfficialPatches")}
                         </Label>
-                        <div className="grid grid-cols-2 gap-4">
-                          {product.patches.map((patch) => (
-                            <div
-                              key={patch._id}
-                              className="flex items-center space-x-2"
-                            >
-                              <Checkbox
-                                id={patch._id}
-                                checked={customization.selectedPatches.some(
-                                  (p) => p._id === patch._id
-                                )}
-                                onCheckedChange={(checked) => {
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          {product.patches?.map((patch) => {
+                            const isSelected = customization.selectedPatches.some(
+                              (p) => p._id === patch._id
+                            );
+                            return (
+                              <button
+                                key={patch._id}
+                                onClick={() => {
                                   setCustomization((prev) => ({
                                     ...prev,
-                                    selectedPatches: checked
-                                      ? [...prev.selectedPatches, patch]
-                                      : prev.selectedPatches.filter(
-                                          (p) => p._id !== patch._id
-                                        ),
+                                    selectedPatches: isSelected
+                                      ? prev.selectedPatches.filter((p) => p._id !== patch._id)
+                                      : [...prev.selectedPatches, patch],
                                   }));
                                 }}
-                              />
-                              <Label
-                                htmlFor={patch._id}
-                                className="text-[14px] font-medium"
+                                className={`flex items-center justify-between px-4 py-3 rounded-xl border-2 transition-all ${
+                                  isSelected
+                                    ? "border-black bg-white shadow-sm"
+                                    : "border-gray-50 bg-gray-50 hover:border-gray-200"
+                                }`}
                               >
-                                {patch.title} <span className="font-bold">(+€{patch.price})</span>
-                              </Label>
-                            </div>
-                          ))}
+                                <div className="flex items-center gap-3">
+                                  <div
+                                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? "border-black bg-black" : "border-gray-300"}`}
+                                  >
+                                    {isSelected && (
+                                      <div className="w-1.5 h-1.5 bg-white rounded-full" />
+                                    )}
+                                  </div>
+                                  <span
+                                    className={`text-xs font-bold ${isSelected ? "text-black" : "text-gray-500"}`}
+                                  >
+                                    {patch.title}
+                                  </span>
+                                </div>
+                                <span className="text-[10px] font-black text-[#FF7A00]">
+                                  +€{patch.price}
+                                </span>
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
                     )}
-                </div>
-                <CardContent className="space-y-6 mt-4 p-0">
-                  {/* Mystery Box Exclusion List - Only for Mystery Box products */}
-                  {product.isMysteryBox && (
-                    <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
-                      <CardHeader>
-                        <div className="flex items-center">
-                          <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center mr-3">
-                            <svg
-                              className="w-5 h-5 text-white"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
+
+                    {/* Mystery Box Card - Premium Upgrade */}
+                    {product.isMysteryBox && (
+                      <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-purple-600 to-indigo-700 p-6 text-white shadow-xl shadow-purple-200">
+                        <div className="relative z-10 space-y-4">
+                          <div className="flex items-center gap-3">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-md">
+                              🎁
+                            </span>
+                            <h3 className="font-black text-sm uppercase tracking-widest">
+                              Exclusion List
+                            </h3>
                           </div>
-                          <CardTitle className="text-sm text-purple-800 font-bold">
-                            🎁 Preferenze Scatola Misteriosa
-                          </CardTitle>
-                        </div>
-                        <CardDescription className="text-purple-700 font-medium">
-                          Aiutaci a personalizzare la tua scatola misteriosa! Elenca le squadre
-                          o le maglie specifiche che preferiresti evitare.
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <Label className="block text-sm font-bold text-purple-700 mb-2">
-                          Maglie che preferiresti NON ricevere (Opzionale - fino a 5):
-                        </Label>
-                        <Textarea
-                          value={
-                            (customization as any).excludedShirts?.join("\n") ||
-                            ""
-                          }
-                          onChange={(e) => {
-                            const lines = e.target.value
-                              .split("\n")
-                              .slice(0, 5)
-                              .filter((line) => line.trim() !== "");
-                            setCustomization((prev) => ({
-                              ...prev,
-                              excludedShirts: lines,
-                            }));
-                          }}
-                          placeholder="Esempio:&#10;AC Milan Casa&#10;Juventus Trasferta&#10;Inter Milano&#10;Roma&#10;Napoli"
-                          rows={5}
-                          className="border-purple-300 focus:border-purple-500 focus:ring-purple-500 font-medium"
-                        />
-                        <div className="flex justify-between items-center mt-2">
-                          <p className="text-xs text-purple-600 font-bold">
-                            {(customization as any).excludedShirts?.length || 0}
-                            /5 exclusions
+                          <p className="text-xs text-purple-100 leading-relaxed">
+                            Tell us which teams or specific colors you want to avoid. We’ll curate
+                            your box accordingly.
                           </p>
-                          <div className="flex items-center text-xs text-purple-600 font-medium">
-                            <svg
-                              className="w-4 h-4 mr-1"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
-                            Faremo del nostro meglio per evitare questi articoli
+                          <textarea
+                            rows={4}
+                            value={(customization as any).excludedShirts?.join("\n") || ""}
+                            onChange={(e) => {
+                              const lines = e.target.value
+                                .split("\n")
+                                .slice(0, 5)
+                                .filter((l) => l.trim() !== "");
+                              setCustomization((prev) => ({ ...prev, excludedShirts: lines }));
+                            }}
+                            className="w-full rounded-xl border-none bg-white/10 p-4 text-sm font-medium placeholder:text-purple-300 focus:bg-white/20 focus:ring-0 transition-all"
+                            placeholder="E.g. No AC Milan, No yellow jerseys..."
+                          />
+                          <div className="flex justify-between items-center text-[10px] font-bold text-purple-200 uppercase tracking-tighter">
+                            <span>
+                              {(customization as any).excludedShirts?.length || 0} / 5 Teams
+                            </span>
+                            <span>Personalization Guaranteed</span>
                           </div>
                         </div>
-                      </CardContent>
-                    </Card>
-                  )}
+                        {/* Decorative background element */}
+                        <div className="absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
+                      </div>
+                    )}
 
-                  {/* Extras - Hide for Mystery Box */}
-                  {!product.isMysteryBox && (
-                    <div className="space-y-2 ">
-                      <Label className="text-sm font-bold">
-                        {t("products.addMatchingItems")}
-                      </Label>
-                      <div className=" flex md:flex-row flex-col gap-4">
-                        {product.hasShorts && (
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="shorts"
-                              checked={customization.includeShorts}
-                              onCheckedChange={(checked) =>
-                                setCustomization((prev) => ({
-                                  ...prev,
-                                  includeShorts: checked as boolean,
-                                }))
-                              }
-                              className="data-[state=checked]:bg-[#0A1A2F] data-[state=checked]:text-[#D9D9D9] rounded-full border-2 border-[#D9D9D9] bg-[#D9D9D9] w-4 h-4 flex items-center justify-center"
-                            />
-                            <Label
-                              htmlFor="shorts"
-                              className="text-[14px] whitespace-nowrap font-medium"
-                            >
-                              {t("products.addShorts")}
-                              <span className="font-bold"> (+€{EXTRAS_PRICES.shorts})</span>
-                            </Label>
-                          </div>
-                        )}
+                    {/* Matching Items / Extras */}
+                    {!product.isMysteryBox && (product.hasShorts || product.hasSocks) && (
+                      <div className="space-y-4">
+                        <Label className="text-sm font-bold">
+                          {t("products.addMatchingItems")}
+                        </Label>
+                        <div className="flex flex-wrap gap-3">
+                          {[
+                            {
+                              id: "shorts",
+                              active: product.hasShorts,
+                              current: customization.includeShorts,
+                              label: t("products.addShorts"),
+                              price: EXTRAS_PRICES.shorts,
+                            },
+                            {
+                              id: "socks",
+                              active: product.hasSocks,
+                              current: customization.includeSocks,
+                              label: t("products.addSocks"),
+                              price: EXTRAS_PRICES.socks,
+                            },
+                          ]
+                            .filter((item) => item.active)
+                            .map((extra) => (
+                              <button
+                                key={extra.id}
+                                onClick={() =>
+                                  setCustomization((prev) => ({
+                                    ...prev,
+                                    [extra.id === "shorts" ? "includeShorts" : "includeSocks"]:
+                                      !extra.current,
+                                  }))
+                                }
+                                className={`flex items-center gap-3 px-5 py-3 rounded-full border-2 transition-all ${
+                                  extra.current
+                                    ? "border-black bg-black text-white shadow-md"
+                                    : "border-gray-100 bg-gray-50 text-gray-500 hover:border-gray-200"
+                                }`}
+                              >
+                                <span className="text-xs font-bold">{extra.label}</span>
+                                <span
+                                  className={`text-[10px] font-black ${extra.current ? "text-[#FF7A00]" : "text-gray-400"}`}
+                                >
+                                  +€{extra.price}
+                                </span>
+                              </button>
+                            ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
-                        {product.hasSocks && (
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="socks"
-                              checked={customization.includeSocks}
-                              onCheckedChange={(checked) =>
-                                setCustomization((prev) => ({
-                                  ...prev,
-                                  includeSocks: checked as boolean,
-                                }))
+                  {/* Quantity selector */}
+                  <div>
+                    {/* Size Selection Section */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-1">
+                          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400">
+                            {t("products.chooseSize")}
+                          </h3>
+                          <div className="h-0.5 w-8 bg-black rounded-full" />
+                        </div>
+
+                        {/* Adult/Kid Toggle (Only if kids sizes exist) */}
+                        {product.kidsSizes && product.kidsSizes.length > 0 && (
+                          <div className="flex items-center gap-2 bg-gray-100 p-1 rounded-full">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setCustomization({ ...customization, isKidSize: false, size: "" })
                               }
-                              className="data-[state=checked]:bg-[#0A1A2F] data-[state=checked]:text-[#D9D9D9] rounded-full border-2 border-[#D9D9D9] bg-[#D9D9D9] w-4 h-4 flex items-center justify-center"
-                            />
-                            <Label
-                              htmlFor="socks"
-                              className="text-[14px] whitespace-nowrap font-medium"
+                              className={`px-3 py-1 text-[10px] font-bold rounded-full transition-all ${!customization.isKidSize ? "bg-white text-black shadow-sm" : "text-gray-400"}`}
                             >
-                              {t("products.addSocks")}
-                              <span className="font-bold"> (+€{EXTRAS_PRICES.socks})</span>
-                            </Label>
+                              ADULT
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setCustomization({ ...customization, isKidSize: true, size: "" })
+                              }
+                              className={`px-3 py-1 text-[10px] font-bold rounded-full transition-all ${customization.isKidSize ? "bg-white text-black shadow-sm" : "text-gray-400"}`}
+                            >
+                              KIDS
+                            </button>
                           </div>
                         )}
                       </div>
-                    </div>
-                  )}
-                </CardContent>
-              </div>
 
-              {/* Quantity selector */}
-              <div className="-ml-2">
-                <CardHeader className="p-0">
-                  <CardTitle className="text-sm font-bold">
-                    {t("products.chooseSize")}
-                  </CardTitle>
-                </CardHeader>
-                <div className="mt-2">
-                  {/* Size Selection */}
-                  <div className="space-y-3  ">
-                    <div className=" justify-between items-center mb-2 hidden">
-                      <Label className="text-sm sm:text-base font-medium">
-                        Size
-                      </Label>
-                      {product.kidsSizes && product.kidsSizes.length > 0 && (
-                        <div className="flex items-center space-x-2">
-                          <Label
-                            htmlFor="kid-size"
-                            className="text-xs sm:text-sm"
-                          >
-                            Kid Size
-                          </Label>
-                          <Switch
-                            id="kid-size"
-                            checked={customization.isKidSize}
-                            onCheckedChange={(checked) =>
-                              setCustomization({
-                                ...customization,
-                                isKidSize: checked,
-                                // Clear existing size if switching between adult/kid
-                                size: "",
-                              })
-                            }
-                          />
+                      {/* Long Sleeve Toggle Card */}
+                      <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100 transition-all hover:border-gray-200">
+                        <div className="flex items-center gap-3">
+                          <div className="bg-white p-2 rounded-lg shadow-sm">
+                            <Layers size={18} className="text-black" />
+                          </div>
+                          <div>
+                            <Label
+                              htmlFor="long-sleeve"
+                              className="font-bold block text-xs uppercase tracking-tight"
+                            >
+                              Manica Lunga
+                            </Label>
+                            <span className="text-[10px] text-[#FF7A00] font-black">+€10.00</span>
+                          </div>
                         </div>
+                        <Switch
+                          id="long-sleeve"
+                          checked={customization.hasLongSleeve}
+                          onCheckedChange={(val) =>
+                            setCustomization((p) => ({ ...p, hasLongSleeve: val }))
+                          }
+                        />
+                      </div>
+
+                      {/* Sizes Grid */}
+                      <div className="flex flex-wrap gap-2">
+                        {(customization.isKidSize ? product.kidsSizes : product.adultSizes)?.map(
+                          (size) => {
+                            const isSelected = customization.size === size;
+                            return (
+                              <button
+                                key={size}
+                                type="button"
+                                onClick={() => setCustomization({ ...customization, size })}
+                                className={`min-w-[50px] h-12 rounded-xl text-sm font-bold border-2 transition-all ${
+                                  isSelected
+                                    ? "border-black bg-black text-white shadow-lg scale-105"
+                                    : "border-gray-100 bg-gray-50 text-gray-500 hover:border-gray-300"
+                                }`}
+                              >
+                                {size}
+                              </button>
+                            );
+                          }
+                        )}
+                      </div>
+
+                      {errors.size && (
+                        <p className="text-[10px] font-bold text-red-500 uppercase tracking-tighter">
+                          ⚠️ {errors.size}
+                        </p>
                       )}
                     </div>
 
-                    <div className="flex flex-wrap gap-2 sm:gap-3 mt-3">
-                      {customization.isKidSize
-                        ? (product.kidsSizes && product.kidsSizes.length > 0
-                            ? product.kidsSizes
-                            : []
-                          ).map((size) => (
-                            <Button
-                              key={size}
-                              type="button"
-                              variant={
-                                customization.size === size
-                                  ? "default"
-                                  : "outline"
-                              }
-                              size="sm"
-                              onClick={() =>
-                                setCustomization({ ...customization, size })
-                              }
-                            >
-                              {size}
-                            </Button>
-                          ))
-                        : (product.adultSizes && product.adultSizes.length > 0
-                            ? product.adultSizes
-                            : []
-                          ).map((size) => (
-                            <Button
-                              key={size}
-                              type="button"
-                              size="sm"
-                              className={` rounded-full text-[14px] hover:text-white ${
-                                customization.size === size
-                                  ? "bg-[#0A1A2F] text-[#FFFFFF]"
-                                  : "bg-[#F0F0F0] text-[#00000099]"
-                              }`}
-                              onClick={() =>
-                                setCustomization({ ...customization, size })
-                              }
-                            >
-                              {size}
-                            </Button>
-                          ))}
-                    </div>
-                    {errors.size && (
-                      <Alert variant="destructive">
-                        <AlertDescription>{errors.size}</AlertDescription>
-                      </Alert>
-                    )}
-                  </div>
-                </div>
-              </div>
+                    {/* Action Bar */}
+                    <div className="flex flex-col gap-4 pt-4 border-t border-gray-100">
+                      <div className="flex items-center gap-3">
+                        {/* Quantity Selector */}
+                        <div className="flex items-center bg-gray-100 rounded-2xl p-1 shrink-0">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                            className="h-9 w-9 rounded-xl hover:bg-white transition-all"
+                          >
+                            <MinusIcon className="h-4 w-4" />
+                          </Button>
+                          <span className="text-sm font-black text-black w-10 text-center">
+                            {quantity}
+                          </span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setQuantity(quantity + 1)}
+                            className="h-9 w-9 rounded-xl hover:bg-white transition-all"
+                          >
+                            <PlusIcon className="h-4 w-4" />
+                          </Button>
+                        </div>
 
-              {/* Add to Cart buttons */}
-              <div className="flex  gap-1.5  mt-2.5">
-                <div className="flex items-center  bg-[#F0F0F0] rounded-full w-fit">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="h-8 w-8 border-none shadow-none bg-[#F0F0F0] rounded-full"
-                  >
-                    <span className="sr-only">Decrease quantity</span>
-                    <MinusIcon className="h-3 w-3 sm:h-4 sm:w-4" />
-                  </Button>
-                  <span className="text-sm sm:text-base font-bold text-black w-8 text-center">
-                    {quantity}
-                  </span>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="h-8 w-8 border-none shadow-none bg-[#F0F0F0] rounded-full"
-                  >
-                    <span className="sr-only">Increase quantity</span>
-                    <PlusIcon className="h-3 w-3 sm:h-4 sm:w-4" />
-                  </Button>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleAddToCart}
-                  className="px-2 py-2 border text-black  flex items-center whitespace-nowrap rounded-full text-[14px] w-fit h-fit font-semibold"
-                >
-                  Aggiungi al Carrello
-                  <ArrowRight className="ml-1 inline-flex" size={16} />
-                </button>
-                <button
-                  type="button"
-                  onClick={handleBuyNow}
-                  className="px-2 py-2 border bg-[#FF7A00] text-black flex items-center whitespace-nowrap rounded-full text-[14px] w-fit h-fit border-none font-bold"
-                >
-                  Compra Ora
-                  <ArrowRight className="ml-1 inline-flex" size={16} />
-                </button>
+                        {/* Add to Cart */}
+                        <button
+                          type="button"
+                          onClick={handleAddToCart}
+                          className="flex-1 h-11 bg-black text-white flex items-center justify-center gap-2 rounded-2xl text-[13px] font-black uppercase tracking-tight hover:bg-gray-800 transition-all active:scale-95"
+                        >
+                          Aggiungi
+                          <ArrowRight size={16} />
+                        </button>
 
-                <div>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
+                        {/* Wishlist Button */}
                         <Button
                           onClick={handleWishlistToggle}
-                          variant="secondary"
+                          variant="outline"
                           size="icon"
-                          className="  bg-white shadow-none"
-                          aria-label={
-                            isInWishlist(product._id)
-                              ? "Remove from wishlist"
-                              : "Add to wishlist"
-                          }
+                          className="h-11 w-11 rounded-2xl border-gray-100 hover:bg-red-50 hover:border-red-100 group transition-all"
                         >
                           {isInWishlist(product._id) ? (
-                            <HeartIconSolid className=" text-red-500" />
+                            <HeartIconSolid className="h-5 w-5 text-red-500" />
                           ) : (
-                            <HeartIcon className=" text-black" />
+                            <HeartIcon className="h-5 w-5 text-gray-400 group-hover:text-red-400" />
                           )}
                         </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        {isInWishlist(product._id)
-                          ? "Remove from wishlist"
-                          : "Add to wishlist"}
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-              </div>
+                      </div>
 
-              {/* Available Discount Rules */}
-              <div className="hidden">
-                <DiscountRulesDisplay
-                  productId={product._id}
-                  productCategory={product.category}
-                  onApplyDiscount={(rule: any) => {
-                    // Handle discount rule application
-                    console.log("Applied discount rule:", rule);
-                  }}
-                  showToAllUsers={true}
-                  autoApply={true}
-                />
+                      {/* Buy Now - Primary Action */}
+                      <button
+                        type="button"
+                        onClick={handleBuyNow}
+                        className="w-full h-14 bg-[#FF7A00] text-white flex items-center justify-center rounded-[20px] text-sm font-black uppercase tracking-[0.1em] shadow-xl shadow-orange-100 hover:opacity-90 transition-all active:scale-[0.98]"
+                      >
+                        Compra Ora
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Available Discount Rules */}
+                  <div className="hidden">
+                    <DiscountRulesDisplay
+                      productId={product._id}
+                      productCategory={product.category}
+                      onApplyDiscount={(rule: any) => {
+                        // Handle discount rule application
+                        console.log("Applied discount rule:", rule);
+                      }}
+                      showToAllUsers={true}
+                      autoApply={true}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* </div> */}
       </div>
       <div className="">
         {/* Trust Badges */}
@@ -1007,55 +840,36 @@ export default function ProductDetailClient({
               <div className="flex flex-row gap-1 items-center text-white font-light text-center">
                 <ShieldCheck strokeWidth={1} className="h-8 w-8 text-white" />
                 <div className=" flex flex-col text-start">
-                  <span className="mt-2 text-sm font-medium text-white">
-                    1 Anno
-                  </span>
-                  <span className="mt-2 text-sm font-medium text-white">
-                    Garanzia
-                  </span>
+                  <span className="mt-2 text-sm font-medium text-white">1 Anno</span>
+                  <span className="mt-2 text-sm font-medium text-white">Garanzia</span>
                 </div>
               </div>
               <div className="flex flex-row gap-1 items-center text-white font-light text-center">
                 <Truck strokeWidth={1} className="h-8 w-8 text-white" />
                 <div className=" flex flex-col text-start">
-                  <span className="mt-2 text-sm font-medium text-white">
-                    Spedizione Gratuita
-                  </span>
-                  <span className="mt-2 text-sm font-medium text-white">
-                    Express
-                  </span>
+                  <span className="mt-2 text-sm font-medium text-white">Spedizione Gratuita</span>
+                  <span className="mt-2 text-sm font-medium text-white">Express</span>
                 </div>
               </div>
               <div className="flex flex-row gap-1 items-center text-white font-light text-center">
                 <Coins strokeWidth={1} className="h-8 w-8 text-white" />
                 <div className=" flex flex-col text-start">
-                  <span className="mt-2 text-sm font-medium text-white">
-                    7 Giorni
-                  </span>
-                  <span className="mt-2 text-sm font-medium text-white">
-                    Sostituzione
-                  </span>
+                  <span className="mt-2 text-sm font-medium text-white">7 Giorni</span>
+                  <span className="mt-2 text-sm font-medium text-white">Sostituzione</span>
                 </div>
               </div>
               <div className="flex flex-row gap-1 items-center text-white font-light text-center">
                 <CreditCard strokeWidth={1} className="h-8 w-8 text-white" />
                 <div className=" flex flex-col text-start">
-                  <span className="mt-2 text-sm font-medium text-white">
-                    100% Sicuri
-                  </span>
-                  <span className="mt-2 text-sm font-medium text-white">
-                    Pagamenti
-                  </span>
+                  <span className="mt-2 text-sm font-medium text-white">100% Sicuri</span>
+                  <span className="mt-2 text-sm font-medium text-white">Pagamenti</span>
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
-      <Tabs
-        defaultValue="ratings"
-        className="md:w-full  px-0  md:max-w-5xl mx-auto"
-      >
+      <Tabs defaultValue="ratings" className="md:w-full  px-0  md:max-w-5xl mx-auto">
         <TabsList className="md:w-full w-[400px] gap-0 px-0 justify-between bg-white border-b  h-14 rounded-none shadow-none pb-0 ">
           <TabsTrigger
             value="details"

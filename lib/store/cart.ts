@@ -15,6 +15,7 @@ export interface CartItem {
     selectedPatches: Patch[];
     includeShorts: boolean;
     includeSocks: boolean;
+    hasLongSleeve: boolean;
     isPlayerEdition: boolean;
     size: string;
     isKidSize: boolean;
