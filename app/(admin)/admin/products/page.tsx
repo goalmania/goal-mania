@@ -95,6 +95,7 @@ interface IProduct {
   isRetro?: boolean;
   hasShorts?: boolean;
   hasSocks?: boolean;
+  hasLongSleeve?: boolean;
   sizes?: string[];
   category?: string;
   availablePatches?: string[];
@@ -103,10 +104,12 @@ interface IProduct {
   isActive: boolean;
   feature?: boolean;
   slug?: string;
+  isWorldCup?: boolean; 
   categories?: string[];
   isMysteryBox?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  country?: string;
 }
 
 // Create a separate component for the drag handle
@@ -262,7 +265,7 @@ function ProductDataTable({
       ),
       enableSorting: false,
     },
-    {
+    {id: "product-details",
       accessorKey: "title",
       header: "Product Details",
       cell: ({ row }) => (
@@ -354,6 +357,37 @@ function ProductDataTable({
               <EyeIcon className="h-3 w-3" />
             )}
           </Button>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "title",
+      header: "Product Details",
+      cell: ({ row }) => (
+        <div className="space-y-1">
+          <div className="font-medium text-sm">
+            {row.original.title}
+          </div>
+          <div className="text-xs text-muted-foreground line-clamp-2 max-w-[200px]">
+            {row.original.description}
+          </div>
+          <div className="flex flex-wrap gap-1 pt-1">
+            {row.original.isMysteryBox && (
+              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                Mystery Box
+              </Badge>
+            )}
+            {row.original.hasLongSleeve && (
+              <Badge variant="outline" className="text-[10px] px-1.5 py-0 bg-slate-50">
+                Long Sleeve
+              </Badge>
+            )}
+            {row.original.isWorldCup && (
+              <Badge variant="outline" className="text-[10px] px-1.5 py-0 bg-blue-50 text-blue-700 border-blue-200">
+                World Cup
+              </Badge>
+            )}
+          </div>
         </div>
       ),
     },
@@ -837,16 +871,20 @@ export default function ProductsPage() {
   }, [searchTerm, showInactive, fetchProducts, pagination.limit]);
 
   // Memoized stats to prevent unnecessary recalculations
-  const stats = useMemo(() => {
+const stats = useMemo(() => {
     const activeProducts = products.filter(p => p.isActive).length;
     const lowStockProducts = products.filter(p => p.stockQuantity <= 10 && p.stockQuantity > 0).length;
     const outOfStockProducts = products.filter(p => p.stockQuantity === 0).length;
+    const longSleeveProducts = products.filter(p => p.hasLongSleeve).length;
+    const worldCupProducts = products.filter(p => p.isWorldCup).length;
     
     return {
       total: pagination.total,
       active: activeProducts,
       lowStock: lowStockProducts,
       outOfStock: outOfStockProducts,
+      longSleeve: longSleeveProducts,
+      worldCup: worldCupProducts,
     };
   }, [products, pagination.total]);
 
@@ -863,21 +901,41 @@ export default function ProductsPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">{stats.total}</div>
             <p className="text-xs text-muted-foreground">Total Products</p>
           </CardContent>
         </Card>
+        
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-green-600">
               {stats.active}
             </div>
-            <p className="text-xs text-muted-foreground">Active Products</p>
+            <p className="text-xs text-muted-foreground">Active</p>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold text-blue-600">
+              {stats.worldCup}
+            </div>
+            <p className="text-xs text-muted-foreground">World Cup</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold text-slate-600">
+              {stats.longSleeve}
+            </div>
+            <p className="text-xs text-muted-foreground">Long Sleeve</p>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-orange-600">
@@ -886,6 +944,7 @@ export default function ProductsPage() {
             <p className="text-xs text-muted-foreground">Low Stock</p>
           </CardContent>
         </Card>
+        
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-red-600">

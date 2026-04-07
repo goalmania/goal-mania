@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 export type FormStep = "basic" | "pricing" | "options" | "images";
 
@@ -11,7 +11,10 @@ interface Product {
   shippingPrice?: number;
   stockQuantity: number;
   images: string[];
+  country: string;
   isRetro?: boolean;
+  hasLongSleeve?: boolean;
+  isWorldCup?: boolean;
   hasShorts?: boolean;
   hasSocks?: boolean;
   sizes?: string[];
@@ -43,31 +46,34 @@ interface UseProductsOptions {
   cacheTimeout?: number;
 }
 
+interface FetchParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  includeInactive?: boolean;
+  category?: string;
+  featured?: boolean;
+  isWorldCup?: boolean;
+  hasLongSleeve?: boolean;
+}
+
 interface UseProductsReturn {
   products: Product[];
   pagination: PaginationInfo;
   isLoading: boolean;
   error: string | null;
-  fetchProducts: (params: {
-    page?: number;
-    limit?: number;
-    search?: string;
-    includeInactive?: boolean;
-    category?: string;
-    featured?: boolean;
-  }) => Promise<void>;
+  fetchProducts: (params: FetchParams) => Promise<void>;
   refreshProducts: () => Promise<void>;
   clearError: () => void;
 }
 
-// Simple in-memory cache for product data
 const productCache = new Map<string, { data: any; timestamp: number }>();
 
 export function useProducts(options: UseProductsOptions = {}): UseProductsReturn {
   const {
     initialLimit = 20,
     enableCache = true,
-    cacheTimeout = 5 * 60 * 1000, // 5 minutes
+    cacheTimeout = 5 * 60 * 1000,
   } = options;
 
   const [products, setProducts] = useState<Product[]>([]);
@@ -92,20 +98,11 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
     return Date.now() - timestamp < cacheTimeout;
   }, [cacheTimeout]);
 
-  const fetchProducts = useCallback(async (params: {
-    page?: number;
-    limit?: number;
-    search?: string;
-    includeInactive?: boolean;
-    category?: string;
-    featured?: boolean;
-  }) => {
-    // Cancel previous request if it's still pending
+  const fetchProducts = useCallback(async (params: FetchParams) => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
 
-    // Create new abort controller for this request
     abortControllerRef.current = new AbortController();
 
     const {
@@ -115,12 +112,12 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
       includeInactive = true,
       category = "all",
       featured = false,
+      isWorldCup,
+      hasLongSleeve,
     } = params;
 
-    // Generate cache key
-    const cacheKey = generateCacheKey({ page, limit, search, includeInactive, category, featured });
+    const cacheKey = generateCacheKey({ page, limit, search, includeInactive, category, featured, isWorldCup, hasLongSleeve });
 
-    // Check cache first
     if (enableCache && productCache.has(cacheKey)) {
       const cached = productCache.get(cacheKey)!;
       if (isCacheValid(cached.timestamp)) {
@@ -129,7 +126,6 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
         setError(null);
         return;
       } else {
-        // Remove expired cache entry
         productCache.delete(cacheKey);
       }
     }
@@ -145,6 +141,8 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
         ...(search && { search }),
         ...(category !== "all" && { category }),
         ...(featured && { feature: "true" }),
+        ...(isWorldCup !== undefined && { isWorldCup: isWorldCup.toString() }),
+        ...(hasLongSleeve !== undefined && { hasLongSleeve: hasLongSleeve.toString() }),
       });
 
       const response = await fetch(`/api/products?${urlParams}`, {
@@ -170,7 +168,6 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
         setProducts(data.products);
         setPagination(paginationData);
 
-        // Cache the result
         if (enableCache) {
           productCache.set(cacheKey, {
             data: { products: data.products, pagination: paginationData },
@@ -178,7 +175,6 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
           });
         }
       } else {
-        // Fallback for backward compatibility
         setProducts(Array.isArray(data) ? data : []);
         setPagination(prev => ({
           ...prev,
@@ -188,11 +184,9 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
       }
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
-        // Request was cancelled, don't set error
         return;
       }
       
-      console.error("Error fetching products:", error);
       setError("Failed to load products");
       setProducts([]);
     } finally {
@@ -202,7 +196,6 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
   }, [enableCache, generateCacheKey, isCacheValid, initialLimit]);
 
   const refreshProducts = useCallback(async () => {
-    // Clear cache and refetch current data
     productCache.clear();
     await fetchProducts({
       page: pagination.page,
@@ -215,17 +208,13 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
     setError(null);
   }, []);
 
-  // Cleanup function to abort pending requests
-  const cleanup = useCallback(() => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
   }, []);
-
-  // Cleanup on unmount
-  React.useEffect(() => {
-    return cleanup;
-  }, [cleanup]);
 
   return {
     products,
@@ -238,5 +227,4 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
   };
 }
 
-// Export the cache for external management if needed
-export { productCache }; 
+export { productCache };

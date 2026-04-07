@@ -40,14 +40,12 @@ const productSchema = new mongoose.Schema(
     },
     retroPrice: {
       type: Number,
-      required: [true, "Retro price is required"],
       min: [0, "Retro price cannot be negative"],
       default: 35,
     },
-    /** * NEW: Long Sleeve Logic
-     * Allows adding €10 globally or per-product if toggled
+    /** * Renamed to hasLongSleeve to match Frontend Zod Schema
      */
-    hasLongSleeveOption: {
+    hasLongSleeve: {
       type: Boolean,
       default: false,
     },
@@ -69,24 +67,23 @@ const productSchema = new mongoose.Schema(
     },
     images: {
       type: [String],
-      required: true,
+      required: [true, "At least one image is required"],
     },
     videos: {
       type: [String],
       default: [],
     },
-    /**
-     * NEW: World Cup 2026 Logic
-     * Separates national teams for the new dedicated section
-     */
     isWorldCup: {
       type: Boolean,
       default: false,
     },
-    nationalTeam: {
+    /**
+     * Renamed to country to match Frontend Zod Schema
+     */
+    country: {
       type: String,
       trim: true,
-      default: null, // e.g., "Italy", "Nigeria", "Brazil"
+      default: "", 
     },
     isRetro: {
       type: Boolean,
@@ -139,7 +136,6 @@ const productSchema = new mongoose.Schema(
     },
     slug: {
       type: String,
-      required: true,
       unique: true,
       lowercase: true,
       trim: true
@@ -164,8 +160,15 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-// Middleware to generate slug
+/**
+ * Validation to ensure country is provided if isWorldCup is true
+ */
 productSchema.pre("validate", function (next) {
+  if (this.isWorldCup && (!this.country || this.country.trim() === "")) {
+    return next(new Error("Country is required for World Cup products"));
+  }
+
+  // Auto-generate slug if missing
   if (!this.slug && this.title) {
     this.slug = this.title
       .toLowerCase()
@@ -175,20 +178,17 @@ productSchema.pre("validate", function (next) {
   next();
 });
 
-// Virtual for average rating
 productSchema.virtual("averageRating").get(function () {
   if (!this.reviews || this.reviews.length === 0) return 0;
   const sum = this.reviews.reduce((acc, review) => acc + review.rating, 0);
   return sum / this.reviews.length;
 });
 
-// Optimization Indexes
 productSchema.index({ title: "text", description: "text" });
 productSchema.index({ category: 1, isActive: 1 });
-productSchema.index({ isWorldCup: 1, nationalTeam: 1 }); // New index for WC filtering
+productSchema.index({ isWorldCup: 1, country: 1 }); 
 productSchema.index({ feature: -1, createdAt: -1 });
 
-// Ensure clean model re-registration
 if (mongoose.models.Product) {
   delete mongoose.models.Product;
 }

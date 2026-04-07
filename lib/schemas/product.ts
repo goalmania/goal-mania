@@ -1,22 +1,14 @@
 import { z } from "zod";
 
-// Size enums
 export const AdultSizeSchema = z.enum(["S", "M", "L", "XL", "XXL", "3XL"]);
 export const KidSizeSchema = z.enum(["XS", "S", "M", "L", "XL"]);
 
-// Patch enum
 export const PatchSchema = z.enum([
   "champions-league",
   "serie-a", 
   "coppa-italia"
 ]);
 
-// Category enum
-// Keep the hardcoded static categories for UI/typing elsewhere, but allow
-// any non-empty string for the product schema so admins can create dynamic
-// categories that are not part of the hardcoded enum. We still preserve the
-// previous enum intent by accepting those values as well, but the runtime
-// validation accepts any non-empty string.
 export const CategorySchema = z.union([
   z.enum([
     "2024/25",
@@ -29,8 +21,7 @@ export const CategorySchema = z.union([
   z.string().min(1, "Category must be a non-empty string"),
 ]);
 
-// Product form schema
-export const ProductFormSchema = z.object({
+export const ProductFormBaseSchema = z.object({
   title: z.string()
     .min(2, "Title must be at least 2 characters")
     .max(100, "Title must be less than 100 characters"),
@@ -59,86 +50,101 @@ export const ProductFormSchema = z.object({
   
   category: CategorySchema,
   
-  // Product options
   hasShorts: z.boolean(),
   hasSocks: z.boolean(),
   hasPlayerEdition: z.boolean(),
+  hasLongSleeve: z.boolean(), // Added
   isRetro: z.boolean(),
+  isWorldCup: z.boolean(), // Added
   isMysteryBox: z.boolean(),
   allowsNameOnShirt: z.boolean(),
   allowsNumberOnShirt: z.boolean(),
   
-  // Status
+  country: z.string().optional().or(z.literal("")), // Added
+  
   isActive: z.boolean(),
   feature: z.boolean(),
   
-  // Sizes
   adultSizes: z.array(AdultSizeSchema)
     .min(1, "At least one adult size must be selected"),
   
   kidsSizes: z.array(KidSizeSchema),
   
-  // Patches - link to global patches
   patchIds: z.array(z.string())
     .optional()
     .default([]),
   
-  // Images
   images: z.array(z.string().url("Invalid image URL"))
     .min(1, "At least one image is required")
     .max(10, "Maximum 10 images allowed"),
   
-  // Videos
   videos: z.array(z.string().url("Invalid video URL"))
     .max(5, "Maximum 5 videos allowed")
     .optional(),
   
-  // Optional fields
   slug: z.string().optional(),
   categories: z.array(z.string()).optional(),
 });
 
-// Type for the form data
+export const ProductFormSchema = ProductFormBaseSchema.refine((data) => {
+  // Logic: If it's a World Cup item, country must be provided
+  if (data.isWorldCup && (!data.country || data.country.trim() === "")) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Country is required for World Cup products",
+  path: ["country"],
+});
+
 export type ProductFormData = z.infer<typeof ProductFormSchema>;
 
-// Partial schema for editing (all fields optional)
-export const ProductEditSchema = ProductFormSchema.partial();
+export const ProductEditSchema = ProductFormBaseSchema.partial();
 
-// Validation schema for specific steps
 export const BasicInfoSchema = z.object({
-  title: ProductFormSchema.shape.title,
-  description: ProductFormSchema.shape.description,
-  stockQuantity: ProductFormSchema.shape.stockQuantity,
-  category: ProductFormSchema.shape.category,
-  isMysteryBox: ProductFormSchema.shape.isMysteryBox,
+  title: ProductFormBaseSchema.shape.title,
+  description: ProductFormBaseSchema.shape.description,
+  stockQuantity: ProductFormBaseSchema.shape.stockQuantity,
+  category: ProductFormBaseSchema.shape.category,
+  isMysteryBox: ProductFormBaseSchema.shape.isMysteryBox,
 });
 
 export const PricingSchema = z.object({
-  basePrice: ProductFormSchema.shape.basePrice,
-  retroPrice: ProductFormSchema.shape.retroPrice,
-  shippingPrice: ProductFormSchema.shape.shippingPrice,
+  basePrice: ProductFormBaseSchema.shape.basePrice,
+  retroPrice: ProductFormBaseSchema.shape.retroPrice,
+  shippingPrice: ProductFormBaseSchema.shape.shippingPrice,
 });
 
 export const OptionsSchema = z.object({
-  hasShorts: ProductFormSchema.shape.hasShorts,
-  hasSocks: ProductFormSchema.shape.hasSocks,
-  hasPlayerEdition: ProductFormSchema.shape.hasPlayerEdition,
-  isRetro: ProductFormSchema.shape.isRetro,
-  allowsNameOnShirt: ProductFormSchema.shape.allowsNameOnShirt,
-  allowsNumberOnShirt: ProductFormSchema.shape.allowsNumberOnShirt,
-  adultSizes: ProductFormSchema.shape.adultSizes,
-  kidsSizes: ProductFormSchema.shape.kidsSizes,
-  isActive: ProductFormSchema.shape.isActive,
-  feature: ProductFormSchema.shape.feature,
-  patchIds: ProductFormSchema.shape.patchIds,
+  hasShorts: ProductFormBaseSchema.shape.hasShorts,
+  hasSocks: ProductFormBaseSchema.shape.hasSocks,
+  hasPlayerEdition: ProductFormBaseSchema.shape.hasPlayerEdition,
+  hasLongSleeve: ProductFormBaseSchema.shape.hasLongSleeve, // Added
+  isRetro: ProductFormBaseSchema.shape.isRetro,
+  isWorldCup: ProductFormBaseSchema.shape.isWorldCup, // Added
+  country: ProductFormBaseSchema.shape.country, // Added
+  allowsNameOnShirt: ProductFormBaseSchema.shape.allowsNameOnShirt,
+  allowsNumberOnShirt: ProductFormBaseSchema.shape.allowsNumberOnShirt,
+  adultSizes: ProductFormBaseSchema.shape.adultSizes,
+  kidsSizes: ProductFormBaseSchema.shape.kidsSizes,
+  isActive: ProductFormBaseSchema.shape.isActive,
+  feature: ProductFormBaseSchema.shape.feature,
+  patchIds: ProductFormBaseSchema.shape.patchIds,
+}).refine((data) => {
+  if (data.isWorldCup && (!data.country || data.country.trim() === "")) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Country is required for World Cup products",
+  path: ["country"],
 });
 
 export const ImagesSchema = z.object({
-  images: ProductFormSchema.shape.images,
-  videos: ProductFormSchema.shape.videos,
+  images: ProductFormBaseSchema.shape.images,
+  videos: ProductFormBaseSchema.shape.videos,
 });
 
-// Step form schema for multi-step validation
 export const ProductStepSchema = z.object({
   basic: BasicInfoSchema,
   pricing: PricingSchema,
@@ -148,17 +154,15 @@ export const ProductStepSchema = z.object({
 
 export type ProductStepData = z.infer<typeof ProductStepSchema>;
 
-// Helper function to validate individual steps
 export const validateStep = (step: keyof ProductStepData, data: any) => {
   const stepSchema = ProductStepSchema.shape[step];
   return stepSchema.safeParse(data);
 };
 
-// Helper function to get step validation errors
 export const getStepErrors = (step: keyof ProductStepData, data: any) => {
   const result = validateStep(step, data);
   if (!result.success) {
     return result.error.flatten().fieldErrors;
   }
   return {};
-}; 
+};
