@@ -35,7 +35,7 @@ async function getRankedDbTeams() {
     // Clean up strings to match API (lowercase)
     const availableTeamIds = activeWorldCupTeams
       .filter(Boolean)
-      .map((name: string) => name.toLowerCase());
+      .map((name: any) => String(name).toLowerCase());
 
     // 2. Fetch live standings
     const response = await fetch("https://api.football-data.org/v4/competitions/WC/standings", {

@@ -1,24 +1,21 @@
 import connectDB from "@/lib/db";
-import Product from "@/lib/models/Product"; // Assuming your model is here
+import Product from "@/lib/models/Product";
 import ProductCard from "@/components/ui/ProductCard";
 import Link from "next/link";
 
 interface PageProps {
-  params: { team: string };
+  params: Promise<{ team: string }>;
 }
 
 export default async function NationalTeamPage({ params }: PageProps) {
-  const { team } = params;
+  const { team } = await params;
   await connectDB();
 
-  // Use the Mongoose Model directly
   const products = await Product.find({
     isWorldCup: true,
     nationalTeam: { $regex: new RegExp(`^${team}$`, "i") },
     isActive: true
   }).lean();
-
-  console.log(products[0]); // Log the first product to check the structure
 
   return (
     <main className="min-h-screen pb-20 bg-white">

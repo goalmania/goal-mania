@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from "react";
@@ -23,9 +22,12 @@ interface LandingCategorySectionProps {
 
 async function getCategoryProducts(category: string): Promise<Product[]> {
   try {
-    const res = await fetch(`/api/products?category=${encodeURIComponent(category)}&noPagination=true`, {
-      cache: 'no-store',
-    });
+    const res = await fetch(
+      `/api/products?category=${encodeURIComponent(category)}&noPagination=true`,
+      {
+        cache: "no-store",
+      }
+    );
     if (!res.ok) return [];
     const products = await res.json();
     const rawList = Array.isArray(products) ? products : products.products || [];
@@ -54,11 +56,7 @@ export default function LandingCategorySection({ title, category }: LandingCateg
   const cartStore = useCartStore();
   const { t } = useI18n();
 
-  const {
-    addItem: addToWishlist,
-    removeItem: removeFromWishlist,
-    isInWishlist,
-  } = wishlistStore;
+  const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = wishlistStore;
   const { addItem: addToCart } = cartStore;
 
   React.useEffect(() => {
@@ -93,7 +91,8 @@ export default function LandingCategorySection({ title, category }: LandingCateg
           {title}
         </h2>
         <p className="text-lg text-gray-600 max-w-2xl text-center mx-auto mb-12 font-munish">
-          Scopri la nostra selezione di maglie, accessori e articoli ufficiali per vivere il calcio ogni giorno.
+          Scopri la nostra selezione di maglie, accessori e articoli ufficiali per vivere il calcio
+          ogni giorno.
         </p>
         {products.length > 3 ? (
           <div className="relative">
@@ -121,7 +120,6 @@ export default function LandingCategorySection({ title, category }: LandingCateg
                     image={product.image}
                     category={product.category || ""}
                     team={product.team || ""}
-                    availablePatches={product.availablePatches || []}
                     href={`/products/${product.id}`}
                     cardHeight="lg"
                     imageAspectRatio="portrait"
@@ -134,21 +132,43 @@ export default function LandingCategorySection({ title, category }: LandingCateg
                 </SwiperSlide>
               ))}
             </Swiper>
-            <div className={`absolute -bottom-20 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4`}>
+            <div
+              className={`absolute -bottom-20 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4`}
+            >
               <button
                 aria-label="Previous products"
                 className={`cat-prev-${category.replace(/\s/g, "-")} flex items-center justify-center w-10 h-10 rounded-full bg-[#D9D9D9] shadow-md hover:bg-gray-100`}
               >
-                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <svg
+                  className="w-5 h-5 text-gray-700"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </button>
               <button
                 aria-label="Next products"
                 className={`cat-next-${category.replace(/\s/g, "-")} flex items-center justify-center w-10 h-10 rounded-full bg-[#D9D9D9] shadow-md hover:bg-gray-100`}
               >
-                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-5 h-5 text-gray-700"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </button>
             </div>
@@ -164,7 +184,6 @@ export default function LandingCategorySection({ title, category }: LandingCateg
                 image={product.image}
                 category={product.category || ""}
                 team={product.team || ""}
-                availablePatches={product.availablePatches || []}
                 href={`/products/${product.id}`}
                 cardHeight="lg"
                 imageAspectRatio="portrait"

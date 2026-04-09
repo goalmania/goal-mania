@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ revalidated: true, path });
     } else if (tag) {
       // Revalidate based on cache tag
-      revalidateTag(tag);
+      revalidateTag(tag, "default");
       return NextResponse.json({ revalidated: true, tag });
     } else {
       // Default paths to revalidate if no specific path provided

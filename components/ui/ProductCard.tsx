@@ -9,8 +9,8 @@ import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import { ArrowRight, Star, Layers } from "lucide-react";
 
 // Store Imports
-import { useCartStore } from "@/lib/store/cart"; // Adjust path as needed
-import { useWishlistStore } from "@/lib/store/wishlist"; // Adjust path as needed
+import { useCartStore } from "@/lib/store/cart";
+import { useWishlistStore } from "@/lib/store/wishlist";
 
 interface ProductCardProps {
   id: string;
@@ -22,9 +22,19 @@ interface ProductCardProps {
   team?: string;
   isWorldCup?: boolean;
   hasLongSleeve?: boolean;
-  product: any; // Full product object from DB
-  imageAspectRatio?: "square" | "portrait";
+  product?: any;
+  cardHeight?: "sm" | "md" | "lg";
+  imageAspectRatio?: "portrait" | "square" | "landscape";
+  availablePatches?: string[];
   className?: string;
+  badges?: { text: string; bgColor?: string; color?: string }[];
+  videos?: string[];
+  // --- Add these to fix the "Property does not exist" errors ---
+  onWishlistToggle?: (product: any) => void;
+  onAddToCart?: (product: any) => void;
+  isInWishlist?: (id: string) => boolean;
+  showWishlistButton?: boolean;
+  showAddToCartButton?: boolean;
 }
 
 function ProductCard({
@@ -40,18 +50,27 @@ function ProductCard({
   product,
   imageAspectRatio = "square",
   className = "",
+  // Destructure the new props
+  onWishlistToggle,
+  onAddToCart,
+  isInWishlist: externalIsInWishlist,
 }: ProductCardProps) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Zustand Actions & State
+  // Zustand State
   const addItemToCart = useCartStore((state) => state.addItem);
-  const addToWishlist = useWishlistStore((state) => state.addItem);
-  const removeFromWishlist = useWishlistStore((state) => state.removeItem);
-  const isInWishlist = useWishlistStore((state) => state.isInWishlist(id));
-const buyItem = useCartStore((state) => state.buyItem);
+  const buyItem = useCartStore((state) => state.buyItem);
+  
+  // Wishlist internal logic fallback
+  const internalAddToWishlist = useWishlistStore((state) => state.addItem);
+  const internalRemoveFromWishlist = useWishlistStore((state) => state.removeItem);
+  const internalIsInWishlist = useWishlistStore((state) => state.isInWishlist(id));
+
+  // Determine which state/check to use
+  const activeIsInWishlist = externalIsInWishlist ? externalIsInWishlist(id) : internalIsInWishlist;
 
   useEffect(() => {
     setMounted(true);
@@ -68,49 +87,40 @@ const buyItem = useCartStore((state) => state.buyItem);
   const handleWishlistToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (isInWishlist) {
-      removeFromWishlist(id);
+
+    // If parent provided a handler (like in LandingCategorySection), use it
+    if (onWishlistToggle) {
+      onWishlistToggle(product);
+      return;
+    }
+
+    // Otherwise use internal fallback
+    if (activeIsInWishlist) {
+      internalRemoveFromWishlist(id);
     } else {
-      addToWishlist({
-        id,
-        name,
-        price,
-        image,
-        team,
-      });
+      internalAddToWishlist({ id, name, price, image, team: team || "" });
     }
   };
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addItemToCart({
-      id,
-      name,
-      price,
-      image,
-      quantity: 1,
-    });
+
+    if (onAddToCart) {
+      onAddToCart(product);
+    } else {
+      addItemToCart({ id, name, price, image, quantity: 1 });
+    }
   };
 
-const handleBuyNow = (e: React.MouseEvent) => {
-  e.preventDefault();
-  e.stopPropagation();
-
-  // 1. Use the specialized buyItem action that resets/sets quantity to 1
-  buyItem({
-    id,
-    name,
-    price,
-    image,
-    quantity: 1, // Explicitly set to 1
-  });
-
-  // 2. Short delay to allow middleware to sync to localStorage
-  setTimeout(() => {
-    router.push("/checkout");
-  }, 100);
-};
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    buyItem({ id, name, price, image, quantity: 1 });
+    setTimeout(() => {
+      router.push("/checkout");
+    }, 100);
+  };
 
   return (
     <div className="w-full h-full">
@@ -121,14 +131,13 @@ const handleBuyNow = (e: React.MouseEvent) => {
           className="relative overflow-hidden rounded-t-xl bg-gray-50"
           onMouseEnter={() => {
             setIsHovered(true);
-            if (product.videos?.length > 0) setTimeout(() => setShowVideo(true), 500);
+            if (product?.videos?.length > 0) setTimeout(() => setShowVideo(true), 500);
           }}
           onMouseLeave={() => {
             setIsHovered(false);
             setShowVideo(false);
           }}
         >
-          {/* Status Badges */}
           <div className="absolute top-3 left-3 z-20 flex flex-col gap-2">
             {isWorldCup && (
               <span className="bg-indigo-600 text-white text-[9px] font-black uppercase italic tracking-tighter px-2 py-1 rounded-sm shadow-lg">
@@ -145,7 +154,7 @@ const handleBuyNow = (e: React.MouseEvent) => {
 
           <Link href={href}>
             <div className={`relative w-full ${imageAspectRatio === "square" ? "aspect-square" : "aspect-[4/5]"} overflow-hidden`}>
-              {product.videos?.length > 0 && showVideo ? (
+              {product?.videos?.length > 0 && showVideo ? (
                 <video src={product.videos[0]} autoPlay loop muted className="object-cover w-full h-full" />
               ) : (
                 <Image
@@ -159,12 +168,11 @@ const handleBuyNow = (e: React.MouseEvent) => {
             </div>
           </Link>
 
-          {/* Wishlist Toggle */}
           <button 
             onClick={handleWishlistToggle}
             className="absolute top-3 right-3 z-20 p-2.5 bg-white/80 backdrop-blur-md rounded-full shadow-sm hover:bg-white transition-all active:scale-90"
           >
-            {isInWishlist ? (
+            {activeIsInWishlist ? (
               <HeartIconSolid className="h-5 w-5 text-red-500" />
             ) : (
               <HeartIcon className="h-5 w-5 text-gray-600" />
@@ -189,8 +197,8 @@ const handleBuyNow = (e: React.MouseEvent) => {
                   <Star 
                     key={star} 
                     size={10} 
-                    fill={star <= Math.round(product.averageRating || 5) ? "#FF7A00" : "none"} 
-                    color={star <= Math.round(product.averageRating || 5) ? "#FF7A00" : "#D1D5DB"} 
+                    fill={star <= Math.round(product?.averageRating || 5) ? "#FF7A00" : "none"} 
+                    color={star <= Math.round(product?.averageRating || 5) ? "#FF7A00" : "#D1D5DB"} 
                   />
                 ))}
               </div>

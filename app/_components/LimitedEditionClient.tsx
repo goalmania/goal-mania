@@ -3,9 +3,7 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-// @ts-ignore
 import "swiper/css";
-// @ts-ignore
 import "swiper/css/navigation";
 import ProductCard from "@/components/ui/ProductCard";
 import { useWishlistStore } from "@/lib/store/wishlist";

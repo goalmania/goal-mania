@@ -44,6 +44,7 @@ export default function MysteryBoxPageClient({
           isPlayerEdition: false,
           isKidSize: false,
           hasCustomization: false,
+          hasLongSleeve: false,
           excludedShirts: [], // Start with empty exclusion list
         },
         quantity: 1,

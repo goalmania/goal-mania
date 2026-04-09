@@ -1,5 +1,6 @@
 import ShopClient from "./ShopClient";
-import { getBaseUrl } from "@/lib/utils/baseUrl";
+import connectDB from "@/lib/db";
+import ProductModel from "@/lib/models/Product";
 
 interface Product {
   id: string;
@@ -12,37 +13,27 @@ interface Product {
   videos?: string[];
 }
 
+function mapProduct(product: any): Product {
+  return {
+    id: product._id?.toString() || "",
+    name: product.title || "Unknown Product",
+    price: product.basePrice || 0,
+    image: product.images?.[0] || "/images/image.png",
+    category: product.category || "Uncategorized",
+    team: product.title ? product.title.split(" ")[0] : "Unknown",
+    availablePatches: product.availablePatches || [],
+    videos: product.videos || [],
+  };
+}
+
 async function fetchLatestProducts(): Promise<Product[]> {
   try {
-    const baseUrl = getBaseUrl();
-    const response = await fetch(
-      `${baseUrl}/api/products?sortBy=createdAt&sortOrder=desc&limit=8&noPagination=true`,
-      {
-        next: { revalidate: 300 }, // Cache for 5 minutes
-      }
-    );
-    if (!response.ok) {
-      throw new Error(`Error fetching latest products: ${response.status}`);
-    }
-    const data = await response.json();
-    let productsData = [];
-    if (data.products && Array.isArray(data.products)) {
-      productsData = data.products;
-    } else if (Array.isArray(data)) {
-      productsData = data;
-    } else {
-      throw new Error("Invalid data format received from API");
-    }
-    return productsData.map((product: any) => ({
-      id: product._id || "",
-      name: product.title || "Unknown Product",
-      price: product.basePrice || 0,
-      image: product.images?.[0] || "/images/image.png",
-      category: product.category || "Uncategorized",
-      team: product.title ? product.title.split(" ")[0] : "Unknown",
-      availablePatches: product.availablePatches || [],
-      videos: product.videos || [], // Include videos for showcase
-    }));
+    await connectDB();
+    const products = await ProductModel.find()
+      .sort({ createdAt: -1 })
+      .limit(8)
+      .lean();
+    return JSON.parse(JSON.stringify(products)).map(mapProduct);
   } catch (error) {
     console.error("Error fetching latest products:", error);
     return [];
@@ -51,9 +42,6 @@ async function fetchLatestProducts(): Promise<Product[]> {
 
 async function fetchBestSellingProducts(): Promise<Product[]> {
   try {
-    const baseUrl = getBaseUrl();
-    
-    // Specific product titles for Best Sellers - exact match with database
     const bestSellerTitles = [
       "Maglia Away FC Barcelona x Travis Scott - Edizione Speciale",
       "Maglia Napoli Halloween 2025/26",
@@ -63,46 +51,9 @@ async function fetchBestSellingProducts(): Promise<Product[]> {
       "Maglia Barcellona 2014/15 Home",
       "Maglia Barcellona 2010/11 Home"
     ];
-    
-    // Fetch all products
-    const response = await fetch(
-      `${baseUrl}/api/products?limit=200&noPagination=true`,
-      {
-        next: { revalidate: 300 }, // Cache for 5 minutes
-      }
-    );
-    
-    if (!response.ok) {
-      throw new Error(`Error fetching best selling products: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    let productsData = [];
-    
-    if (data.products && Array.isArray(data.products)) {
-      productsData = data.products;
-    } else if (Array.isArray(data)) {
-      productsData = data;
-    } else {
-      throw new Error("Invalid data format received from API");
-    }
-    
-    // Filter products that match the best seller titles (exact match)
-    const bestSellers = productsData.filter((product: any) => {
-      const title = product.title || "";
-      return bestSellerTitles.includes(title);
-    });
-    
-    return bestSellers.map((product: any) => ({
-      id: product._id || "",
-      name: product.title || "Best Seller",
-      price: product.basePrice || 0,
-      image: product.images?.[0] || "/images/image.png",
-      category: product.category || "Uncategorized",
-      team: product.title ? product.title.split(" ")[0] : "Unknown",
-      availablePatches: product.availablePatches || [],
-      videos: product.videos || [], // Include videos for showcase
-    }));
+    await connectDB();
+    const bestSellers = await ProductModel.find({ title: { $in: bestSellerTitles } }).lean();
+    return JSON.parse(JSON.stringify(bestSellers)).map(mapProduct);
   } catch (error) {
     console.error("Error fetching best selling products:", error);
     return [];
@@ -111,32 +62,9 @@ async function fetchBestSellingProducts(): Promise<Product[]> {
 
 async function fetchFeaturedProducts(): Promise<Product[]> {
   try {
-    const baseUrl = getBaseUrl();
-    const response = await fetch(`${baseUrl}/api/products?feature=true`, {
-      next: { revalidate: 300 }, // Cache for 5 minutes
-    });
-    if (!response.ok) {
-      throw new Error(`Error fetching featured products: ${response.status}`);
-    }
-    const data = await response.json();
-    let productsData = [];
-    if (data.products && Array.isArray(data.products)) {
-      productsData = data.products;
-    } else if (Array.isArray(data)) {
-      productsData = data;
-    } else {
-      throw new Error("Invalid data format received from API");
-    }
-    return productsData.map((product: any) => ({
-      id: product._id || "",
-      name: product.title || "Featured Product",
-      price: product.basePrice || 0,
-      image: product.images?.[0] || "/images/image.png",
-      category: product.category || "Uncategorized",
-      team: product.title ? product.title.split(" ")[0] : "Unknown",
-      availablePatches: product.availablePatches || [],
-      videos: product.videos || [], // Include videos for showcase
-    }));
+    await connectDB();
+    const featured = await ProductModel.find({ feature: true }).lean();
+    return JSON.parse(JSON.stringify(featured)).map(mapProduct);
   } catch (error) {
     console.error("Error fetching featured products:", error);
     return [];
@@ -145,36 +73,13 @@ async function fetchFeaturedProducts(): Promise<Product[]> {
 
 async function fetchMysteryBoxProducts(): Promise<Product[]> {
   try {
-    const baseUrl = getBaseUrl();
-    const response = await fetch(
-      `${baseUrl}/api/products?type=mysteryBox&noPagination=true`,
-      {
-        next: { revalidate: 300 }, // Cache for 5 minutes
-      }
-    );
-    if (!response.ok) {
-      throw new Error(
-        `Error fetching Mystery Box products: ${response.status}`
-      );
-    }
-    const data = await response.json();
-    let productsData = [];
-    if (data.products && Array.isArray(data.products)) {
-      productsData = data.products;
-    } else if (Array.isArray(data)) {
-      productsData = data;
-    } else {
-      throw new Error("Invalid data format received from API");
-    }
-    return productsData.map((product: any) => ({
-      id: product._id || "",
-      name: product.title || "Mystery Box",
-      price: product.basePrice || 0,
-      image: product.images?.[0] || "/images/image.png",
-      category: product.category || "Mystery Box",
+    await connectDB();
+    const mysteryBoxes = await ProductModel.find({ isMysteryBox: true }).lean();
+    return JSON.parse(JSON.stringify(mysteryBoxes)).map((p: any) => ({
+      ...mapProduct(p),
+      name: p.title || "Mystery Box",
+      category: p.category || "Mystery Box",
       team: "Mystery",
-      availablePatches: product.availablePatches || [],
-      videos: product.videos || [], // Include videos for showcase
     }));
   } catch (error) {
     console.error("Error fetching Mystery Box products:", error);
@@ -184,39 +89,15 @@ async function fetchMysteryBoxProducts(): Promise<Product[]> {
 
 async function fetchVideoProducts(): Promise<Product[]> {
   try {
-    const baseUrl = getBaseUrl();
-    const response = await fetch(
-      `${baseUrl}/api/products?limit=100&noPagination=true`,
-      {
-        next: { revalidate: 300 }, // Cache for 5 minutes
-        cache: 'no-store', // Don't cache during build
-      }
-    );
-
-    if (!response.ok) {
-      return [];
-    }
-
-    const data = await response.json();
-    const products = data.products || data || [];
-    
-    // Filter products with videos
-    const productsWithVideos = products
-      .filter((product: any) => product.videos && Array.isArray(product.videos) && product.videos.length > 0)
-      .map((product: any) => ({
-        id: product._id || "",
-        name: product.title || "Product",
-        price: product.basePrice || 0,
-        image: product.images?.[0] || "/images/image.png",
-        category: product.category || "Uncategorized",
-        team: product.title ? product.title.split(" ")[0] : "Unknown",
-        availablePatches: product.availablePatches || [],
-        videos: product.videos || [],
-      }));
-    
-    return productsWithVideos;
+    await connectDB();
+    const products = await ProductModel.find()
+      .sort({ createdAt: -1 })
+      .limit(100)
+      .lean();
+    return JSON.parse(JSON.stringify(products))
+      .filter((p: any) => p.videos && Array.isArray(p.videos) && p.videos.length > 0)
+      .map(mapProduct);
   } catch (error) {
-    // Silently fail during build
     return [];
   }
 }

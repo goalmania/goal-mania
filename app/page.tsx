@@ -89,48 +89,12 @@ async function getFeaturedProducts(): Promise<Product[]> {
 // Fetch mystery box products
 async function getMysteryBoxProducts(): Promise<Product[]> {
   try {
-    const baseUrl = getBaseUrl();
-    const response = await fetch(
-      `${baseUrl}/api/products?type=mysteryBox&limit=3&noPagination=true`,
-      {
-        next: { revalidate: 300 }, // Cache for 5 minutes instead of no-store
-      }
-    );
+    await connectDB();
+    const products = await ProductModel.find({ isMysteryBox: true })
+      .limit(3)
+      .lean();
 
-    if (!response.ok) {
-      console.error("Mystery Box API response not ok:", response.status);
-      return [];
-    }
-
-    const data = await response.json();
-    const products = data.products || data || [];
-
-    console.log("Mystery Box API Response:", {
-      totalProducts: products.length,
-      products: products.map((p: any) => ({
-        id: p._id,
-        title: p.title,
-        isMysteryBox: p.isMysteryBox,
-        category: p.category,
-      })),
-    });
-
-    // Only return actual mystery box products
-    const mysteryBoxProducts = products.filter(
-      (product: any) => product.isMysteryBox === true
-    );
-
-    console.log("Filtered Mystery Box Products:", {
-      count: mysteryBoxProducts.length,
-      products: mysteryBoxProducts.map((p: any) => ({
-        id: p._id,
-        title: p.title,
-        isMysteryBox: p.isMysteryBox,
-        category: p.category,
-      })),
-    });
-
-    return mysteryBoxProducts.slice(0, 3).map((product: any) => ({
+    return JSON.parse(JSON.stringify(products)).map((product: any) => ({
       id: product._id || "",
       name: product.title || "Scatola Misteriosa",
       price: product.basePrice || 0,
@@ -148,68 +112,26 @@ async function getMysteryBoxProducts(): Promise<Product[]> {
 // Fetch products with videos
 async function getVideoProducts(): Promise<Product[]> {
   try {
-    const baseUrl = getBaseUrl();
-    console.log("🔍 Fetching from:", `${baseUrl}/api/products`);
-    
-    const response = await fetch(
-      `${baseUrl}/api/products?limit=100&noPagination=true`,
-      {
-        next: { revalidate: 300 }, // Cache for 5 minutes
-      }
-    );
+    await connectDB();
+    const products = await ProductModel.find()
+      .sort({ createdAt: -1 })
+      .limit(100)
+      .lean();
 
-    if (!response.ok) {
-      console.error("❌ API response not ok:", response.status);
-      const errorText = await response.text();
-      console.error("Error body:", errorText);
-      return [];
-    }
-
-    const data = await response.json();
-    const products = data.products || data || [];
-    
-    console.log("📦 Total products from API:", products.length);
-    
-    // Check each product for videos
-    products.forEach((p: any, i: number) => {
-      console.log(`Product ${i}:`, {
-        id: p._id,
-        title: p.title,
-        hasVideos: !!p.videos,
-        videosType: typeof p.videos,
-        videosIsArray: Array.isArray(p.videos),
-        videosLength: p.videos?.length || 0,
-        videosValue: p.videos,
-      });
-    });
-
-    const productsWithVideos = products
-      .filter((product: any) => {
-        const hasVideo = product.videos && Array.isArray(product.videos) && product.videos.length > 0;
-        console.log(`✓ Filtering ${product.title}:`, hasVideo);
-        return hasVideo;
-      })
-      .slice(-4)
-      .map((product: any) => {
-        console.log(`✓ Mapping product:`, {
-          title: product.title,
-          videos: product.videos,
-        });
-        return {
-          id: product._id || "",
-          name: product.title || "Video Product",
-          price: product.basePrice || 0,
-          image: product.images?.[0] || "/images/image.png",
-          category: product.category || "Video",
-          team: product.title ? product.title.split(" ")[0] : "Unknown",
-          availablePatches: product.availablePatches || [],
-          isMysteryBox: product.isMysteryBox || false,
-          videos: product.videos || [],
-        };
-      });
-
-    console.log("🎥 Final products with videos:", productsWithVideos.length);
-    console.log("🎥 Products data:", productsWithVideos);
+    const productsWithVideos = JSON.parse(JSON.stringify(products))
+      .filter((product: any) => product.videos && Array.isArray(product.videos) && product.videos.length > 0)
+      .slice(0, 4)
+      .map((product: any) => ({
+        id: product._id || "",
+        name: product.title || "Video Product",
+        price: product.basePrice || 0,
+        image: product.images?.[0] || "/images/image.png",
+        category: product.category || "Video",
+        team: product.title ? product.title.split(" ")[0] : "Unknown",
+        availablePatches: product.availablePatches || [],
+        isMysteryBox: product.isMysteryBox || false,
+        videos: product.videos || [],
+      }));
 
     return productsWithVideos;
   } catch (error) {
