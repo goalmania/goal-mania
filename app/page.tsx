@@ -109,6 +109,77 @@ async function getMysteryBoxProducts(): Promise<Product[]> {
   }
 }
 
+// Fetch World Cup teams (Priority: DB teams, then API rankings)
+async function getWorldCupTeams() {
+  const API_KEY = process.env.FOOTBALL_API;
+  try {
+    await connectDB();
+    
+    // 1. Get countries that have jerseys in the database
+    const dbCountries = (await ProductModel.distinct("nationalTeam", { 
+      isWorldCup: true, 
+      isActive: true 
+    })) as string[];
+    
+    const availableInDb = new Set(
+      dbCountries.filter(Boolean).map((c: string) => c.toLowerCase())
+    );
+
+    // 2. Fetch live data from Football API
+    const response = await fetch("https://api.football-data.org/v4/competitions/WC/standings", {
+      headers: { "X-Auth-Token": API_KEY || "" },
+      next: { revalidate: 86400 }, // Cache for 24 hours
+    });
+
+    if (!response.ok) throw new Error("Football API fetch failed");
+    const data = await response.json();
+
+    const apiTeams: any[] = [];
+    data.standings?.[0]?.table?.forEach((entry: any) => {
+      apiTeams.push({
+        id: entry.team.name.toLowerCase(),
+        name: entry.team.name,
+        flag: entry.team.crest
+      });
+    });
+
+    // If standings[0] is not enough (e.g. only one group), flatten all standings
+    if (apiTeams.length < 10 && data.standings) {
+      apiTeams.length = 0; // reset
+      data.standings.forEach((group: any) => {
+        group.table.forEach((entry: any) => {
+          apiTeams.push({
+            id: entry.team.name.toLowerCase(),
+            name: entry.team.name,
+            flag: entry.team.crest
+          });
+        });
+      });
+    }
+
+    // 3. Separate prioritized teams (in DB) and filler teams
+    const prioritized = apiTeams.filter(team => availableInDb.has(team.id));
+    const others = apiTeams.filter(team => !availableInDb.has(team.id));
+
+    // 4. Combine and limit to 30
+    const finalTeams = [...prioritized, ...others].slice(0, 30);
+    
+    // Fallback if API returns nothing but we have DB data
+    if (finalTeams.length === 0 && dbCountries.length > 0) {
+      return dbCountries.map((c: string) => ({
+         id: c.toLowerCase(),
+         name: c,
+         flag: `https://flagcdn.com/${c.toLowerCase().slice(0,2)}.svg` // Very rough fallback
+      }));
+    }
+
+    return finalTeams;
+  } catch (error) {
+    console.error("❌ Error fetching World Cup teams:", error);
+    return [];
+  }
+}
+
 // Fetch products with videos
 async function getVideoProducts(): Promise<Product[]> {
   try {
@@ -163,12 +234,13 @@ export default async function Home() {
 
   const featuredProducts = await getFeaturedProducts();
   const videoProducts = await getVideoProducts();
+  const worldCupTeams = await getWorldCupTeams();
 
   return (
     <div className="bg-white min-h-screen relative font-munish">
       <HeroSection />
       <ClientSlider />
-      <WorldCupShowcase />
+      <WorldCupShowcase teams={worldCupTeams} />
       <PremierLeagueClient />
       <SerieATeamsClient />
       <FeaturedProducts products={featuredProducts} />

@@ -8,20 +8,17 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-const TOP_10_TEAMS = [
-  { name: "Argentina", id: "argentina", flag: "https://flagcdn.com/ar.svg" },
-  { name: "Brazil", id: "brazil", flag: "https://flagcdn.com/br.svg" },
-  { name: "Italy", id: "italy", flag: "https://flagcdn.com/it.svg" },
-  { name: "France", id: "france", flag: "https://flagcdn.com/fr.svg" },
-  { name: "England", id: "england", flag: "https://upload.wikimedia.org/wikipedia/en/b/be/Flag_of_England.svg" },
-  { name: "Portugal", id: "portugal", flag: "https://flagcdn.com/pt.svg" },
-  { name: "Germany", id: "germany", flag: "https://flagcdn.com/de.svg" },
-  { name: "Spain", id: "spain", flag: "https://flagcdn.com/es.svg" },
-  { name: "USA", id: "usa", flag: "https://flagcdn.com/us.svg" },
-  { name: "Nigeria", id: "nigeria", flag: "https://flagcdn.com/ng.svg" },
-];
+interface Team {
+  name: string;
+  id: string;
+  flag: string;
+}
 
-export default function WorldCupShowcase() {
+interface WorldCupShowcaseProps {
+  teams?: Team[];
+}
+
+export default function WorldCupShowcase({ teams = [] }: WorldCupShowcaseProps) {
   return (
     <section className="py-16 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 text-center relative">
@@ -49,10 +46,10 @@ export default function WorldCupShowcase() {
             }}
             className="logo-slider !overflow-visible mb-10"
           >
-            {TOP_10_TEAMS.map((team) => (
+            {teams.map((team) => (
               <SwiperSlide key={team.id}>
                 <Link
-                  href={`/worldcup/${team.id}`}
+                  href={`/shop/worldcup/${team.id}`}
                   className="group flex flex-col items-center gap-4 transition-transform duration-300 hover:scale-105"
                 >
                   <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-gray-100 overflow-hidden bg-white p-1 shadow-sm group-hover:border-indigo-500 group-hover:shadow-md transition-all duration-500">

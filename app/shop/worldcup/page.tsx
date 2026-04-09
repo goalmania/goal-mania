@@ -4,6 +4,8 @@ import { ArrowRight } from "lucide-react";
 import connectDB from "@/lib/db"; 
 import Product from "@/lib/models/Product"; 
 
+export const revalidate = 86400; // Revalidate every 24 hours
+
 const TEAM_THEMES: Record<string, string> = {
   nigeria: "group-hover:border-green-500",
   italy: "group-hover:border-blue-600",
@@ -127,7 +129,7 @@ export default async function WorldCupHub({
               return (
                 <Link 
                   key={teamId} 
-                  href={`/worldcup/${teamId}`}
+                  href={`/shop/worldcup/${teamId}`}
                   className="group flex flex-col"
                 >
                   <div className={`relative aspect-square overflow-hidden rounded-xl bg-gray-50 border-2 border-transparent transition-all duration-500 ${accentBorder}`}>

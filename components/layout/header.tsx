@@ -94,7 +94,7 @@ export function Header() {
     { name: t("nav.home"), href: "/" },
     { 
       name: "World Cup 2026", 
-      href: "/worldcup",
+      href: "/shop/worldcup",
       isSpecial: true 
     },
     { name: t("nav.articles"), href: "/news" },
