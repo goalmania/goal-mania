@@ -149,12 +149,16 @@ async function fetchWorldCupTeams() {
         const existing = teamsMap.get(team.id);
         teamsMap.set(team.id, {
           ...existing,
-          flag: team.flag || existing.flag
+          // Prioritize our reliable mapping, use API as fallback if mapping is placeholder
+          flag: existing.flag && !existing.flag.includes('placeholder') 
+            ? existing.flag 
+            : (team.flag || existing.flag)
         });
       } else {
         teamsMap.set(team.id, {
           ...team,
-          flag: team.flag || getFlagUrl(team.id)
+          // Prioritize our reliable mapping for the flag
+          flag: getFlagUrl(team.name, team.flag)
         });
       }
     });

@@ -150,7 +150,7 @@ async function getWorldCupTeams() {
     // Merge logic: Ensure DB teams are present and have flags
     const teamsMap = new Map();
     
-    // DB teams first
+    // DB teams first (reliable manual mapping)
     dbCountries.forEach((c: any) => {
       const id = String(c).toLowerCase();
       teamsMap.set(id, {
@@ -160,18 +160,22 @@ async function getWorldCupTeams() {
       });
     });
 
-    // Merge API teams
+    // Merge API teams (enhancing with API data like crests only if necessary)
     apiTeams.forEach(team => {
       if (teamsMap.has(team.id)) {
         const existing = teamsMap.get(team.id);
         teamsMap.set(team.id, {
           ...existing,
-          flag: team.flag || existing.flag
+          // Prioritize our reliable mapping, use API as fallback if mapping is placeholder
+          flag: existing.flag && !existing.flag.includes('placeholder') 
+            ? existing.flag 
+            : (team.flag || existing.flag)
         });
       } else {
         teamsMap.set(team.id, {
           ...team,
-          flag: team.flag || getFlagUrl(team.id)
+          // Prioritize our reliable mapping for the flag
+          flag: getFlagUrl(team.name, team.flag)
         });
       }
     });

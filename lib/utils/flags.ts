@@ -25,22 +25,38 @@ export const FLAG_MAPPING: Record<string, string> = {
   uruguay: "https://flagcdn.com/w640/uy.png",
   switzerland: "https://flagcdn.com/w640/ch.png",
   denmark: "https://flagcdn.com/w640/dk.png",
-  cameroon: "https://flagcdn.com/w640/cm.png"
+  cameroon: "https://flagcdn.com/w640/cm.png",
+  czechia: "https://flagcdn.com/w640/cz.png",
+  "south africa": "https://flagcdn.com/w640/za.png",
+  "bosnia and herzegovina": "https://flagcdn.com/w640/ba.png",
+  qatar: "https://flagcdn.com/w640/qa.png",
+  poland: "https://flagcdn.com/w640/pl.png",
+  sweden: "https://flagcdn.com/w640/se.png",
+  serbia: "https://flagcdn.com/w640/rs.png",
+  ecuador: "https://flagcdn.com/w640/ec.png",
+  wales: "https://flagcdn.com/w640/gb-wls.png",
+  tunisia: "https://flagcdn.com/w640/tn.png",
+  australia: "https://flagcdn.com/w640/au.png"
 };
 
 /**
- * Returns a flag URL for a given country name, or a fallback URL.
+ * Returns a flag URL for a given country name, preferring the manual mapping
  */
-export function getFlagUrl(countryName: string, fallbackUrl?: string): string {
+export function getFlagUrl(countryName: string, apiFallback?: string): string {
+  if (!countryName) return apiFallback || "/images/placeholder.png";
+  
   const normalized = countryName.toLowerCase().trim();
   
+  // 1. Check manual mapping for known high-quality flags
   if (FLAG_MAPPING[normalized]) {
     return FLAG_MAPPING[normalized];
   }
   
-  // Try to use FlagCDN simple pattern if we don't have a manual mapping
-  // Note: This matches the rough logic I saw in app/page.tsx but safer
-  if (fallbackUrl) return fallbackUrl;
+  // 2. Use API fallback if provided and looks valid
+  if (apiFallback && apiFallback.startsWith('http')) {
+    return apiFallback;
+  }
   
+  // 3. Final default placeholder
   return "/images/placeholder.png";
 }

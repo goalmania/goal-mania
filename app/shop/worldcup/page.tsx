@@ -78,10 +78,14 @@ async function getRankedDbTeams() {
               const teamId = entry.team.name.toLowerCase();
               
               if (teamsMap.has(teamId)) {
+                const existing = teamsMap.get(teamId);
                 teamsMap.set(teamId, {
                   _id: teamId,
                   name: entry.team.name,
-                  representativeImage: entry.team.crest || getFlagUrl(teamId),
+                  // Prioritize our reliable mapping, use API as fallback if mapping is placeholder
+                  representativeImage: existing.representativeImage && !existing.representativeImage.includes('placeholder')
+                    ? existing.representativeImage
+                    : (entry.team.crest || getFlagUrl(teamId)),
                   points: entry.points,
                   goalDifference: entry.goalDifference,
                   isFromApi: true
