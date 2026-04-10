@@ -87,6 +87,8 @@ async function fetchMysteryBoxProducts(): Promise<Product[]> {
   }
 }
 
+import { getFlagUrl } from "@/lib/utils/flags";
+
 async function fetchVideoProducts(): Promise<Product[]> {
   try {
     await connectDB();
@@ -102,14 +104,77 @@ async function fetchVideoProducts(): Promise<Product[]> {
   }
 }
 
+async function fetchWorldCupTeams() {
+  const API_KEY = process.env.FOOTBALL_API;
+  try {
+    await connectDB();
+    const dbCountries = await ProductModel.distinct("nationalTeam", { isWorldCup: true, isActive: true });
+    
+    // Fetch live data from Football API
+    const response = await fetch("https://api.football-data.org/v4/competitions/WC/standings", {
+      headers: { "X-Auth-Token": API_KEY || "" },
+      next: { revalidate: 86400 },
+    });
+
+    let apiTeams: any[] = [];
+    if (response.ok) {
+      const data = await response.json();
+      data.standings?.forEach((group: any) => {
+        group.table.forEach((entry: any) => {
+          apiTeams.push({
+            id: entry.team.name.toLowerCase(),
+            name: entry.team.name,
+            flag: entry.team.crest
+          });
+        });
+      });
+    }
+
+    // Merge with DB teams and fix flags
+    const teamsMap = new Map();
+    
+    // Add DB teams first (ensure they are always included)
+    dbCountries.forEach((c: any) => {
+      const id = String(c).toLowerCase();
+      teamsMap.set(id, {
+        id,
+        name: String(c),
+        flag: getFlagUrl(id)
+      });
+    });
+
+    // Merge API teams
+    apiTeams.forEach(team => {
+      if (teamsMap.has(team.id)) {
+        const existing = teamsMap.get(team.id);
+        teamsMap.set(team.id, {
+          ...existing,
+          flag: team.flag || existing.flag
+        });
+      } else {
+        teamsMap.set(team.id, {
+          ...team,
+          flag: team.flag || getFlagUrl(team.id)
+        });
+      }
+    });
+
+    return Array.from(teamsMap.values()).slice(0, 30);
+  } catch (error) {
+    console.error("Error fetching World Cup teams:", error);
+    return [];
+  }
+}
+
 export default async function ShopClientWrapper() {
-  const [latestProducts, bestSellingProducts, featuredProducts, mysteryBoxProducts, videoProducts] =
+  const [latestProducts, bestSellingProducts, featuredProducts, mysteryBoxProducts, videoProducts, worldCupTeams] =
     await Promise.all([
       fetchLatestProducts(),
       fetchBestSellingProducts(),
       fetchFeaturedProducts(),
       fetchMysteryBoxProducts(),
       fetchVideoProducts(),
+      fetchWorldCupTeams(),
     ]);
   return (
     <ShopClient
@@ -118,6 +183,7 @@ export default async function ShopClientWrapper() {
       featuredProducts={featuredProducts}
       mysteryBoxProducts={mysteryBoxProducts}
       videoProducts={videoProducts}
+      worldCupTeams={worldCupTeams}
     />
   );
 }

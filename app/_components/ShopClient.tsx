@@ -45,18 +45,22 @@ interface Product {
   videos?: string[];
 }
 
+import WorldCupShowcase from "@/components/home/WorldCupShowCase";
+
 export default function ShopClient({
   latestProducts = [],
   bestSellingProducts = [],
   featuredProducts = [],
   mysteryBoxProducts = [],
   videoProducts = [],
+  worldCupTeams = [],
 }: {
   latestProducts: Product[];
   bestSellingProducts: Product[];
   featuredProducts: Product[];
   mysteryBoxProducts: Product[];
   videoProducts?: Product[];
+  worldCupTeams?: any[];
 }) {
   const { t } = useI18n();
 
@@ -96,6 +100,10 @@ export default function ShopClient({
           imageUrl={ShopbannerData.imageUrl}
         />
       </section>
+
+      {/* World Cup Slider Section */}
+      <WorldCupShowcase teams={worldCupTeams} />
+
       <div className="hidden">
         <TeamCarousel />
 

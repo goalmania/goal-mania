@@ -85,6 +85,14 @@ const productSchema = new mongoose.Schema(
       trim: true,
       default: "", 
     },
+    /**
+     * Legacy/Frontend field for World Cup logic
+     */
+    nationalTeam: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     isRetro: {
       type: Boolean,
       default: false,
@@ -164,8 +172,14 @@ const productSchema = new mongoose.Schema(
  * Validation to ensure country is provided if isWorldCup is true
  */
 productSchema.pre("validate", function (next) {
-  if (this.isWorldCup && (!this.country || this.country.trim() === "")) {
-    return next(new Error("Country is required for World Cup products"));
+  // Sync nationalTeam and country
+  if (this.isWorldCup) {
+    if (!this.country && this.nationalTeam) this.country = this.nationalTeam;
+    if (!this.nationalTeam && this.country) this.nationalTeam = this.country;
+
+    if ((!this.country || this.country.trim() === "") && (!this.nationalTeam || this.nationalTeam.trim() === "")) {
+      return next(new Error("Country or National Team is required for World Cup products"));
+    }
   }
 
   // Auto-generate slug if missing

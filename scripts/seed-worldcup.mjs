@@ -23,22 +23,33 @@ async function seed() {
       const product = {};
 
       headers.forEach((h, index) => {
-  let val = values[index]?.replace(/"/g, "").trim();
-  
-  if (["TRUE", "FALSE"].includes(val?.toUpperCase())) {
-    product[h] = val.toUpperCase() === "TRUE";
-  } else if (["basePrice", "retroPrice", "stockQuantity"].includes(h)) {
-    product[h] = Number(val) || 0;
-  } else if (h === "Images") {
-    // Standardizes the image field as an array
-    product[h] = val ? [val] : [];
-  } else if (["adultSizes", "KidsSizes"].includes(h)) {
-    // Converts "S,M,L" into ["S", "M", "L"]
-    product[h] = val ? val.split(",") : [];
-  } else {
-    product[h] = val;
-  }
-});
+      let val = values[index]?.replace(/"/g, "").trim();
+      
+      // Map CSV header names to Schema field names where necessary
+      let fieldName = h;
+      if (h === "Images") fieldName = "images";
+      if (h === "KidsSizes") fieldName = "kidsSizes";
+      if (h === "nationalTeam") {
+        product["country"] = val; // Also set country for compatibility
+      }
+
+      if (["TRUE", "FALSE"].includes(val?.toUpperCase())) {
+        product[fieldName] = val.toUpperCase() === "TRUE";
+      } else if (["basePrice", "retroPrice", "stockQuantity"].includes(fieldName)) {
+        product[fieldName] = Number(val) || 0;
+      } else if (fieldName === "images") {
+        // Standardizes the image field as an array
+        product[fieldName] = val ? [val] : [];
+        // Keep capital Images for frontend compatibility if needed, 
+        // though better to fix frontend
+        product["Images"] = product[fieldName]; 
+      } else if (["adultSizes", "kidsSizes"].includes(fieldName)) {
+        // Converts "S,M,L" into ["S", "M", "L"]
+        product[fieldName] = val ? val.split(",") : [];
+      } else {
+        product[fieldName] = val;
+      }
+    });
 
       product.slug = slugify(product.title, { lower: true, strict: true });
       product.updatedAt = new Date();

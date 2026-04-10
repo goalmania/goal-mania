@@ -1,7 +1,7 @@
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 
-export const revalidate = 86400; // Revalidate every 24 hours
+export const revalidate = 3600; // Revalidate every hour
 import ProductCard from "@/components/ui/ProductCard";
 import Link from "next/link";
 
@@ -15,7 +15,10 @@ export default async function NationalTeamPage({ params }: PageProps) {
 
   const products = await Product.find({
     isWorldCup: true,
-    nationalTeam: { $regex: new RegExp(`^${team}$`, "i") },
+    $or: [
+      { nationalTeam: { $regex: new RegExp(`^${team}$`, "i") } },
+      { country: { $regex: new RegExp(`^${team}$`, "i") } }
+    ],
     isActive: true
   }).lean();
 
@@ -43,9 +46,11 @@ export default async function NationalTeamPage({ params }: PageProps) {
                 id={p._id.toString()}
                 name={p.title}
                 price={p.basePrice}
-                image={p.Images?.[0] || "/placeholder.jpg"}
+                image={p.images?.[0] || p.Images?.[0] || "/placeholder.jpg"}
                 category={p.category}
-                team={p.nationalTeam}
+                team={p.nationalTeam || p.country}
+                isWorldCup={p.isWorldCup}
+                hasLongSleeve={p.hasLongSleeve}
                 href={`/products/${p.slug}`}
                 product={JSON.parse(JSON.stringify(p))}
               />

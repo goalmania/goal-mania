@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import connectDB from "@/lib/db"; 
 import Product from "@/lib/models/Product"; 
 
-export const revalidate = 86400; // Revalidate every 24 hours
+export const revalidate = 3600; // Revalidate every hour
 
 const TEAM_THEMES: Record<string, string> = {
   nigeria: "group-hover:border-green-500",
@@ -21,6 +21,8 @@ const TEAM_THEMES: Record<string, string> = {
 
 const ELITE_TEAMS = ["argentina", "france", "brazil", "italy", "germany", "spain", "england", "portugal", "nigeria"];
 
+import { getFlagUrl } from "@/lib/utils/flags";
+
 async function getRankedDbTeams() {
   const API_KEY = process.env.FOOTBALL_API;
   
@@ -28,44 +30,72 @@ async function getRankedDbTeams() {
     await connectDB();
     
     // 1. Get unique national teams from the Product collection 
-    // filtered by isWorldCup: true and isActive: true
+    // We check both nationalTeam and country fields for compatibility
     const activeWorldCupTeams = await Product.distinct("nationalTeam", { 
       isWorldCup: true, 
       isActive: true 
     });
+
+    // Fallback if nationalTeam is empty (in case it's only in 'country' field)
+    if (!activeWorldCupTeams || activeWorldCupTeams.length === 0) {
+      const byCountry = await Product.distinct("country", { 
+        isWorldCup: true, 
+        isActive: true 
+      });
+      activeWorldCupTeams.push(...byCountry.filter(c => !activeWorldCupTeams.includes(c)));
+    }
 
     // Clean up strings to match API (lowercase)
     const availableTeamIds = activeWorldCupTeams
       .filter(Boolean)
       .map((name: any) => String(name).toLowerCase());
 
-    // 2. Fetch live standings
-    const response = await fetch("https://api.football-data.org/v4/competitions/WC/standings", {
-      headers: { "X-Auth-Token": API_KEY || "" },
-      next: { revalidate: 86400 },
-    });
-
-    if (!response.ok) throw new Error("Errore API");
-
-    const data = await response.json();
-    const rankedTeams: any[] = [];
-
-    // 3. Match API data with your DB teams
-    data.standings.forEach((group: any) => {
-      group.table.forEach((entry: any) => {
-        const teamId = entry.team.name.toLowerCase();
-        
-        if (availableTeamIds.includes(teamId)) {
-          rankedTeams.push({
-            _id: teamId,
-            name: entry.team.name,
-            representativeImage: entry.team.crest,
-            points: entry.points,
-            goalDifference: entry.goalDifference
-          });
-        }
+    const teamsMap = new Map();
+    availableTeamIds.forEach(id => {
+      teamsMap.set(id, {
+        _id: id,
+        name: id.charAt(0).toUpperCase() + id.slice(1),
+        representativeImage: getFlagUrl(id),
+        points: 0,
+        goalDifference: 0,
+        isFromApi: false
       });
     });
+
+    // 2. Fetch live standings (optional, don't throw if fails)
+    try {
+      if (API_KEY) {
+        const response = await fetch("https://api.football-data.org/v4/competitions/WC/standings", {
+          headers: { "X-Auth-Token": API_KEY },
+          next: { revalidate: 3600 },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          // 3. Match API data with your DB teams
+          data.standings.forEach((group: any) => {
+            group.table.forEach((entry: any) => {
+              const teamId = entry.team.name.toLowerCase();
+              
+              if (teamsMap.has(teamId)) {
+                teamsMap.set(teamId, {
+                  _id: teamId,
+                  name: entry.team.name,
+                  representativeImage: entry.team.crest || getFlagUrl(teamId),
+                  points: entry.points,
+                  goalDifference: entry.goalDifference,
+                  isFromApi: true
+                });
+              }
+            });
+          });
+        }
+      }
+    } catch (apiError) {
+      console.warn("Football API fetch failed, using DB defaults:", apiError);
+    }
+
+    const rankedTeams = Array.from(teamsMap.values());
 
     // 4. Sort by Elite status first, then Tournament Points
     return rankedTeams.sort((a, b) => {
@@ -76,7 +106,7 @@ async function getRankedDbTeams() {
       return b.points - a.points || b.goalDifference - a.goalDifference;
     });
   } catch (error) {
-    console.error("Database or API failure:", error);
+    console.error("Database failure:", error);
     return [];
   }
 }
