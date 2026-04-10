@@ -28,6 +28,21 @@ const nextConfig: NextConfig = {
         hostname: "crests.football-data.org",
         pathname: "/**",
       },
+      // {
+      //   protocol: "https",
+      //   hostname: "placeholder.com",
+      //   pathname: "/**",
+      // },
+      // {
+      //   protocol: "https",
+      //   hostname: "images.unsplash.com",
+      //   pathname: "/**",
+      // },
+      {
+        protocol: "https",
+        hostname: "flagcdn.com",
+        pathname: "/**",
+      },
     ],
   },
 };

@@ -111,76 +111,104 @@ async function getMysteryBoxProducts(): Promise<Product[]> {
 
 import { getFlagUrl } from "@/lib/utils/flags";
 
-// Fetch World Cup teams (Priority: DB teams, then API rankings)
+// Fetch World Cup teams (Priority: DB teams, then API rankings, then curated padding)
 async function getWorldCupTeams() {
   const API_KEY = process.env.FOOTBALL_API;
+  
+  // Curated list of top-ranked / historical World Cup teams for padding
+  const PADDING_TEAMS = [
+    "Brazil", "Germany", "Italy", "Argentina", "France", 
+    "Uruguay", "England", "Spain", "Netherlands", "Portugal", 
+    "Belgium", "Croatia", "Morocco", "USA", "Mexico", 
+    "Japan", "Senegal", "Switzerland", "Denmark", "Nigeria"
+  ];
+
   try {
     await connectDB();
     
     // 1. Get countries that have jerseys in the database
-    const dbCountries = (await ProductModel.distinct("nationalTeam", { 
+    const dbCountriesRaw = await ProductModel.distinct("nationalTeam", { 
       isWorldCup: true, 
       isActive: true 
-    })) as string[];
+    });
     
-    const availableInDb = new Set(
-      dbCountries.filter(Boolean).map((c: string) => c.toLowerCase())
-    );
-
-    // 2. Fetch live data from Football API
-    const response = await fetch("https://api.football-data.org/v4/competitions/WC/standings", {
-      headers: { "X-Auth-Token": API_KEY || "" },
-      next: { revalidate: 86400 }, // Cache for 24 hours
+    // Fallback check for 'country' field
+    const dbCountriesAlt = await ProductModel.distinct("country", { 
+      isWorldCup: true, 
+      isActive: true 
     });
 
+    const dbCountries = Array.from(new Set([...dbCountriesRaw, ...dbCountriesAlt]))
+      .filter((c): c is string => typeof c === 'string' && c.length > 0);
+
+    // 2. Fetch live data from Football API (optional)
     let apiTeams: any[] = [];
-    if (response.ok) {
-      const data = await response.json();
-      data.standings?.forEach((group: any) => {
-        group.table.forEach((entry: any) => {
-          apiTeams.push({
-            id: entry.team.name.toLowerCase(),
-            name: entry.team.name,
-            flag: entry.team.crest
+    try {
+      const response = await fetch("https://api.football-data.org/v4/competitions/WC/standings", {
+        headers: { "X-Auth-Token": API_KEY || "" },
+        next: { revalidate: 86400 }, // Cache for 24 hours
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        data.standings?.forEach((group: any) => {
+          group.table.forEach((entry: any) => {
+            apiTeams.push({
+              id: entry.team.name.toLowerCase(),
+              name: entry.team.name,
+              flag: entry.team.crest
+            });
           });
         });
-      });
+      }
+    } catch (apiErr) {
+      console.warn("Football API fetch failed in World Cup Hub:", apiErr);
     }
 
-    // Merge logic: Ensure DB teams are present and have flags
+    // Merge logic: Ensure DB teams are present, then API, then padding
     const teamsMap = new Map();
     
-    // DB teams first (reliable manual mapping)
-    dbCountries.forEach((c: any) => {
-      const id = String(c).toLowerCase();
+    // 1. Add DB teams first (High Priority)
+    dbCountries.forEach((c: string) => {
+      const id = c.toLowerCase().trim();
+      if (!id) return;
       teamsMap.set(id, {
         id,
-        name: String(c),
+        name: c,
         flag: getFlagUrl(id)
       });
     });
 
-    // Merge API teams (enhancing with API data like crests only if necessary)
+    // 2. Merge API teams
     apiTeams.forEach(team => {
-      if (teamsMap.has(team.id)) {
-        const existing = teamsMap.get(team.id);
-        teamsMap.set(team.id, {
-          ...existing,
-          // Prioritize our reliable mapping, use API as fallback if mapping is placeholder
-          flag: existing.flag && !existing.flag.includes('placeholder') 
-            ? existing.flag 
-            : (team.flag || existing.flag)
-        });
-      } else {
+      if (!teamsMap.has(team.id)) {
         teamsMap.set(team.id, {
           ...team,
-          // Prioritize our reliable mapping for the flag
           flag: getFlagUrl(team.name, team.flag)
         });
+      } else {
+        const existing = teamsMap.get(team.id);
+        // Enhance with API flag if local is missing/placeholder
+        if (existing.flag.includes('placeholder') && team.flag) {
+          existing.flag = team.flag;
+        }
       }
     });
 
-    return Array.from(teamsMap.values()).slice(0, 30);
+    // 3. Pad with Curated Teams until we reach ~20
+    for (const teamName of PADDING_TEAMS) {
+      if (teamsMap.size >= 20) break;
+      const id = teamName.toLowerCase().trim();
+      if (!teamsMap.has(id)) {
+        teamsMap.set(id, {
+          id,
+          name: teamName,
+          flag: getFlagUrl(id)
+        });
+      }
+    }
+
+    return Array.from(teamsMap.values()).slice(0, 24); // Return a bit more for the slider if needed
   } catch (error) {
     console.error("❌ Error fetching World Cup teams:", error);
     return [];
