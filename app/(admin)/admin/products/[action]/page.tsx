@@ -12,7 +12,7 @@ import {
   AdultSize,
   KidSize,
 } from "@/lib/types/product";
-import { NextRequest } from "next/server";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -58,17 +58,16 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProductFormSchema, ProductFormData } from "@/lib/schemas/product";
 import { StepIndicator } from "@/components/admin/StepIndicator";
+import { FormStep } from "@/hooks/useProductForm";
+import { StockQuantityInput } from "@/components/admin/StockQuantityInput";
+import { PatchManagementDialog } from "@/components/admin/patches/PatchManagementDialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { PatchsCard } from "@/components/admin/patches/patchs-card";
 
 type ProductFormWithCountry = ProductFormData & {
   country?: string;
   isWorldCup?: boolean;
 };
-import { StockQuantityInput } from "@/components/admin/StockQuantityInput";
-import { FormStep } from "@/hooks/useProductForm";
-import { PatchManagementDialog } from "@/components/admin/patches/PatchManagementDialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { PatchsCard } from "@/components/admin/patches/patchs-card";
-import next from "next";
 
 export default function ProductForm() {
   const router = useRouter();
