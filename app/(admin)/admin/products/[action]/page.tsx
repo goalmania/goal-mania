@@ -1149,6 +1149,26 @@ export default function ProductForm() {
                     />
 
                     <Controller
+                      name="isWorldCup"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="flex items-center space-x-3">
+                          <Checkbox
+                            id="isWorldCup"
+                            checked={!!field.value}
+                            onCheckedChange={(val) => field.onChange(!!val)}
+                          />
+                          <Label
+                            htmlFor="isWorldCup"
+                            className="cursor-pointer font-semibold text-indigo-600 dark:text-indigo-400"
+                          >
+                            World Cup Product
+                          </Label>
+                        </div>
+                      )}
+                    />
+
+                    <Controller
                       name="hasLongSleeve"
                       control={control}
                       render={({ field }) => (

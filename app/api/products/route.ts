@@ -24,14 +24,19 @@ const productSchema = z.object({
   hasShorts: z.boolean().default(true),
   hasSocks: z.boolean().default(true),
   hasPlayerEdition: z.boolean().default(true),
+  hasLongSleeve: z.boolean().default(false),
+  isRetro: z.boolean().default(false),
+  isWorldCup: z.boolean().default(false),
   isMysteryBox: z.boolean().default(false),
+  country: z.string().optional().default(""),
+  nationalTeam: z.string().optional().default(""),
   adultSizes: z.array(z.enum(["S", "M", "L", "XL", "XXL", "3XL"])).default(["S","M","L","XL","XXL"]),
   kidsSizes: z.array(z.enum(["XS","S","M","L","XL"])).default([]),
   category: z.string().min(1),
   allowsNumberOnShirt: z.boolean().default(true),
   allowsNameOnShirt: z.boolean().default(true),
   isActive: z.boolean().default(true),
-  feature: z.boolean().default(true),
+  feature: z.boolean().default(false),
   slug: z.string().optional(),
   patchIds: z.array(z.string()).optional().default([]),
 });
@@ -141,6 +146,7 @@ export async function POST(request: Request) {
       retroPrice: Number(body.retroPrice || 0),
       shippingPrice: Number(body.shippingPrice || 0),
       stockQuantity: Number(body.stockQuantity || 0),
+      isWorldCup: body.category === "World Cup 2026" ? true : body.isWorldCup,
     };
 
     // Size migration

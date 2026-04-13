@@ -44,6 +44,10 @@ const productUpdateSchema = z.object({
   isMysteryBox: z.boolean().optional(),
   // Patch relationships
   patchIds: z.array(z.string()).optional().default([]),
+  isWorldCup: z.boolean().optional(),
+  hasLongSleeve: z.boolean().optional(),
+  country: z.string().optional(),
+  nationalTeam: z.string().optional(),
 });
 
 export async function GET(
@@ -252,6 +256,7 @@ export async function PUT(
         typeof body.stockQuantity === "string"
           ? parseInt(body.stockQuantity, 10)
           : body.stockQuantity,
+      isWorldCup: body.category === "World Cup 2026" ? true : body.isWorldCup,
     };
 
     // Ensure we have adultSizes and kidsSizes (handling migration from old schema)
