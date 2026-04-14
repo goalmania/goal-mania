@@ -7,6 +7,8 @@ import { z } from "zod";
 import { ProductCache } from "@/lib/cache";
 import mongoose from "mongoose";
 import { NextRequest } from "next/server";
+import { revalidatePath } from "next/cache";
+import globalCache from "@/lib/cache";
 
 // Enable ISR caching for this route handler
 export const revalidate = 600;
@@ -183,7 +185,20 @@ export async function POST(request: Request) {
     const existingProduct = await Product.findOne({ slug: validatedData.slug });
     if (existingProduct) validatedData.slug += `-${Date.now()}`;
 
-    const product = await Product.create(validatedData);
+    const product = await Product.create(processedBody); // Use processedBody to ensure isWorldCup is correctly set
+
+    // Clear caches and revalidate paths
+    try {
+      globalCache.clear(); // Clear all memory cache
+      
+      revalidatePath("/");
+      revalidatePath("/shop");
+      revalidatePath("/shop/worldcup");
+      revalidatePath("/products");
+    } catch (cacheErr) {
+      console.error("Cache revalidation failed:", cacheErr);
+    }
+
     return NextResponse.json(product);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";

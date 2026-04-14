@@ -5,7 +5,7 @@ import Product from "@/lib/models/Product";
 import ProductCard from "@/components/ui/ProductCard";
 import { getFlagUrl } from "@/lib/utils/flags";
 
-export const revalidate = 3600; // Revalidate every hour
+export const revalidate = 600; // Revalidate every 10 minutes instead of 1 hour
 
 async function getWorldCupProducts() {
   try {

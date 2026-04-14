@@ -5,6 +5,8 @@ import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { z } from "zod";
 import mongoose from "mongoose";
+import { revalidatePath } from "next/cache";
+import globalCache, { ProductCache } from "@/lib/cache";
 
 
 // More flexible schema for updates - make more fields optional
@@ -48,6 +50,17 @@ const productUpdateSchema = z.object({
   hasLongSleeve: z.boolean().optional(),
   country: z.string().optional(),
   nationalTeam: z.string().optional(),
+}).refine((data) => {
+  if (data.isWorldCup === true) {
+    return (
+      (data.country && data.country.trim() !== "") ||
+      (data.nationalTeam && data.nationalTeam.trim() !== "")
+    );
+  }
+  return true;
+}, {
+  message: "Country or National Team is required for World Cup products",
+  path: ["country"],
 });
 
 export async function GET(
@@ -392,17 +405,29 @@ export async function PUT(
         }
       }
 
-      // Use findByIdAndUpdate with { runValidators: false } to skip mongoose validations
-      const product = await Product.findByIdAndUpdate(id, validatedData, {
-        new: true,
-        runValidators: false, // Skip mongoose validators
-      });
+      // Use findById + save to trigger mongoose hooks (like country/nationalTeam sync)
+      const product = await Product.findById(id);
 
       if (!product) {
         return NextResponse.json(
           { error: "Product not found" },
           { status: 404 }
         );
+      }
+
+      // Update fields
+      Object.assign(product, validatedData);
+      await product.save();
+
+      // Clear caches and revalidate paths
+      try {
+        globalCache.clear();
+        revalidatePath("/");
+        revalidatePath("/shop");
+        revalidatePath("/shop/worldcup");
+        revalidatePath(`/products/${product.slug}`);
+      } catch (cacheErr) {
+        console.error("Revalidation error:", cacheErr);
       }
 
       return NextResponse.json(product);
@@ -503,6 +528,17 @@ export async function PATCH(
         );
       }
 
+      // Clear caches and revalidate paths
+      try {
+        globalCache.clear();
+        revalidatePath("/");
+        revalidatePath("/shop");
+        revalidatePath("/shop/worldcup");
+        revalidatePath(`/products/${product.slug}`);
+      } catch (cacheErr) {
+        console.error("Revalidation error:", cacheErr);
+      }
+
       return NextResponse.json(product);
     } catch (validationError) {
       console.error("Validation error:", validationError);
@@ -568,6 +604,17 @@ export async function DELETE(
 
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    // Clear caches and revalidate paths
+    try {
+      globalCache.clear();
+      revalidatePath("/");
+      revalidatePath("/shop");
+      revalidatePath("/shop/worldcup");
+      revalidatePath(`/products/${product.slug}`);
+    } catch (cacheErr) {
+      console.error("Revalidation error:", cacheErr);
     }
 
     return NextResponse.json({ message: "Product deleted successfully" });
