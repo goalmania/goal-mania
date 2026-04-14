@@ -1,7 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import connectDB from "@/lib/db"; 
 import Product from "@/lib/models/Product"; 
 import ProductCard from "@/components/ui/ProductCard";
+import { getFlagUrl } from "@/lib/utils/flags";
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -21,24 +23,23 @@ async function getWorldCupProducts() {
   }
 }
 
-export default async function WorldCupHub({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string }>;
-}) {
+export default async function WorldCupHub() {
   const products = await getWorldCupProducts();
-  
-  const itemsPerPage = 12;
-  const currentPage = Number((await searchParams).page) || 1;
-  const totalPages = Math.ceil(products.length / itemsPerPage);
-  
-  const paginatedProducts = products.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+
+  // Group products by country
+  const groupedProducts = products.reduce((acc: Record<string, any[]>, p: any) => {
+    const country = p.country || p.nationalTeam || "Other";
+    if (!acc[country]) acc[country] = [];
+    acc[country].push(p);
+    return acc;
+  }, {});
+
+  // Sort countries alphabetically
+  const sortedCountries = Object.keys(groupedProducts).sort();
 
   return (
     <div className="min-h-screen bg-white font-munish">
+      {/* Header Section */}
       <section className="max-w-7xl mx-auto px-6 pt-32 pb-12">
         <div className="flex flex-col items-start gap-2">
           <p className="text-[10px] uppercase tracking-[0.4em] font-black text-indigo-600">
@@ -48,11 +49,12 @@ export default async function WorldCupHub({
             Collezioni <span className="text-transparent [text-stroke:1px_black] [-webkit-text-stroke:1px_black]">Mondiali</span>
           </h1>
           <p className="max-w-xl mt-4 text-sm text-gray-500 leading-relaxed uppercase tracking-wider font-medium">
-            Scopri la nostra selezione esclusiva di maglie ufficiali e kit per i Mondiali 2026.
+            Scopri la nostra selezione esclusiva di maglie ufficiali e kit per i Mondiali 2026, divisi per nazionale.
           </p>
         </div>
       </section>
 
+      {/* Products Section */}
       <section className="max-w-7xl mx-auto px-6 py-12">
         {products.length === 0 ? (
           <div className="text-center py-24 border-2 border-dashed border-gray-100 rounded-3xl">
@@ -61,46 +63,55 @@ export default async function WorldCupHub({
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-12 md:gap-x-8 md:gap-y-20">
-            {paginatedProducts.map((p: any) => (
-              <ProductCard
-                key={p._id.toString()}
-                id={p._id.toString()}
-                name={p.title}
-                price={p.basePrice}
-                image={p.images?.[0] || "/placeholder.jpg"}
-                category={p.category}
-                team={p.nationalTeam || p.country}
-                isWorldCup={p.isWorldCup}
-                hasLongSleeve={p.hasLongSleeve}
-                href={`/products/${p.slug}`}
-                product={p}
-              />
-            ))}
-          </div>
-        )}
+          <div className="space-y-24">
+            {sortedCountries.map((country) => (
+              <div key={country} className="group/section">
+                {/* Country Section Header */}
+                <div className="flex items-center gap-4 mb-10 pb-4 border-b border-gray-100">
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden shadow-sm border border-gray-500/10 transition-transform duration-500 group-hover/section:scale-110">
+                    <Image 
+                      src={getFlagUrl(country)} 
+                      alt={country} 
+                      fill 
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <h2 className="text-3xl font-black italic uppercase tracking-tighter text-gray-900 leading-none">
+                      {country}
+                    </h2>
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-indigo-600 mt-1">
+                      Selezione Ufficiale
+                    </p>
+                  </div>
+                  <Link 
+                    href={`/shop/worldcup/${country.toLowerCase()}`}
+                    className="ml-auto text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-indigo-600 transition-all flex items-center gap-2"
+                  >
+                    Vedi Tutto <span className="text-lg">→</span>
+                  </Link>
+                </div>
 
-        {totalPages > 1 && (
-          <div className="mt-16 flex justify-center items-center gap-6">
-            <Link
-              href={`?page=${Math.max(1, currentPage - 1)}`}
-              className={`px-8 py-3 text-[10px] font-black uppercase tracking-widest border-2 border-gray-900 transition-all ${
-                currentPage === 1 ? "opacity-20 pointer-events-none" : "hover:bg-gray-900 hover:text-white"
-              }`}
-            >
-              Precedente
-            </Link>
-            <span className="text-xs font-black italic">
-              {currentPage} / {totalPages}
-            </span>
-            <Link
-              href={`?page=${Math.min(totalPages, currentPage + 1)}`}
-              className={`px-8 py-3 text-[10px] font-black uppercase tracking-widest border-2 border-gray-900 transition-all ${
-                currentPage === totalPages ? "opacity-20 pointer-events-none" : "hover:bg-gray-900 hover:text-white"
-              }`}
-            >
-              Successivo
-            </Link>
+                {/* Grid for Country Products */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-12 md:gap-x-8 md:gap-y-20">
+                  {groupedProducts[country].map((p: any) => (
+                    <ProductCard
+                      key={p._id.toString()}
+                      id={p._id.toString()}
+                      name={p.title}
+                      price={p.basePrice}
+                      image={p.images?.[0] || "/placeholder.jpg"}
+                      category={p.category}
+                      team={p.nationalTeam || p.country}
+                      isWorldCup={p.isWorldCup}
+                      hasLongSleeve={p.hasLongSleeve}
+                      href={`/products/${p.slug}`}
+                      product={p}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </section>
