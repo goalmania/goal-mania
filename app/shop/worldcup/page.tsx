@@ -34,8 +34,12 @@ export default async function WorldCupHub() {
     return acc;
   }, {});
 
-  // Sort countries alphabetically
-  const sortedCountries = Object.keys(groupedProducts).sort();
+  // Sort countries alphabetically, but keep "Other" at the end
+  const sortedCountries = Object.keys(groupedProducts).sort((a, b) => {
+    if (a === "Other") return 1;
+    if (b === "Other") return -1;
+    return a.localeCompare(b);
+  });
 
   return (
     <div className="min-h-screen bg-white font-munish">
