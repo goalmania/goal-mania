@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import Patch from "@/lib/models/Patch";
@@ -8,6 +9,47 @@ import mongoose from "mongoose";
 
 // Incremental Static Regeneration for product detail
 export const revalidate = 600;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  try {
+    await connectDB();
+    const isValidObjectId = mongoose.Types.ObjectId.isValid(id);
+    const product = isValidObjectId
+      ? await Product.findById(id).select("title description images basePrice").lean()
+      : await Product.findOne({ slug: id }).select("title description images basePrice").lean();
+
+    if (!product) return { title: "Prodotto non trovato | Goal Mania" };
+
+    const p = product as any;
+    const title = `${p.title} | Goal Mania`;
+    const description = p.description?.slice(0, 160) ?? `Acquista ${p.title} su Goal Mania. Spedizione rapida.`;
+    const image = p.images?.[0];
+
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        images: image ? [{ url: image, alt: p.title }] : [],
+        type: "website",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: image ? [image] : [],
+      },
+    };
+  } catch {
+    return { title: "Goal Mania - Maglie Calcio" };
+  }
+}
 
 async function getProduct(id: string) {
   if (!id || typeof id !== "string") {

@@ -5,4 +5,4 @@ Disallow: /api/
 Disallow: /checkout/
 Disallow: /account/
 
-Sitemap: https://goalmania.com/sitemap.xml
+Sitemap: https://goal-mania.it/sitemap.xml

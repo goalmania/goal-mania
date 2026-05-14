@@ -5,11 +5,11 @@ import { notFound } from "next/navigation";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import ArticleContent from "@/app/_components/ArticleContent";
+import { JerseyAdBlock } from "@/app/_components/JerseyAdBlock";
+import { Separator } from "@/components/ui/separator";
 
-// Enable ISR for transfer article pages
 export const revalidate = 300;
 
-// Generate metadata for the page
 export async function generateMetadata({
   params,
 }: {
@@ -18,20 +18,8 @@ export async function generateMetadata({
   try {
     const { slug } = await params;
     await connectDB();
-
-    const article = await Article.findOne({
-      slug: slug,
-      category: "transferMarket",
-    });
-
-    if (!article) {
-      return {
-        title: "Article Not Found | Goal Mania",
-        description:
-          "The article you are looking for does not exist or has been removed.",
-      };
-    }
-
+    const article = await Article.findOne({ slug, category: "transferMarket" });
+    if (!article) return { title: "Articolo non trovato | Goal Mania" };
     return {
       title: `${article.title} | Goal Mania`,
       description: article.summary,
@@ -41,51 +29,108 @@ export async function generateMetadata({
         images: [article.image],
       },
     };
-  } catch (error) {
-    console.error("Error generating metadata:", error);
-    return {
-      title: "Goal Mania",
-      description: "Latest football transfer news and updates",
-    };
+  } catch {
+    return { title: "Goal Mania", description: "Ultime notizie di calciomercato" };
   }
 }
 
-// Function to get the article data
 async function getArticle(slug: string) {
   try {
     await connectDB();
-
     const article = await Article.findOne({
-      slug: slug,
+      slug,
       category: "transferMarket",
       status: "published",
     });
-
     if (!article) return null;
-
     return JSON.parse(JSON.stringify(article));
-  } catch (error) {
-    console.error("Error fetching article:", error);
+  } catch {
     return null;
   }
 }
 
-// Get related articles
-async function getRelatedArticles(articleId: string) {
+const STOP_WORDS = new Set([
+  "della", "dello", "degli", "delle", "nella", "nelle", "negli",
+  "con", "per", "che", "una", "uno", "the", "and", "for", "dal",
+  "dopo", "prima", "come", "quando", "dove", "cosa", "chi", "suo", "sua",
+]);
+
+function extractKeywords(title: string): string[] {
+  return title
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((w) => w.length > 3 && !STOP_WORDS.has(w))
+    .slice(0, 3);
+}
+
+const FOOTBALL_TEAMS = [
+  "Juventus", "Juve", "Inter", "Milan", "Napoli", "Roma", "Lazio", "Atalanta",
+  "Fiorentina", "Torino", "Bologna", "Verona", "Cagliari", "Lecce", "Genoa",
+  "Udinese", "Monza", "Empoli", "Salernitana", "Sassuolo",
+  "Arsenal", "Chelsea", "Liverpool", "Manchester City", "Manchester United",
+  "Tottenham", "Newcastle", "West Ham", "Aston Villa",
+  "Real Madrid", "Barcelona", "Atletico Madrid", "Sevilla", "Valencia",
+  "Bayern", "Dortmund", "Leipzig",
+  "PSG", "Paris Saint-Germain", "Monaco", "Marseille",
+  "Portugal", "Netherlands", "Belgium", "France", "Spain", "Germany",
+  "England", "Brazil", "Argentina", "Italia",
+];
+
+function extractTeamFromTitle(title: string): string | undefined {
+  const lower = title.toLowerCase();
+  for (const team of FOOTBALL_TEAMS) {
+    if (lower.includes(team.toLowerCase())) return team;
+  }
+  return undefined;
+}
+
+function splitContentForAd(content: string): string[] {
+  const isHtml = content.trim().startsWith("<");
+  if (isHtml) {
+    const parts = content.split(/(?<=<\/p>)/);
+    if (parts.length <= 2) return [content, ""];
+    const mid = Math.floor(parts.length / 2);
+    return [parts.slice(0, mid).join(""), parts.slice(mid).join("")];
+  }
+  const paragraphs = content.split("\n\n");
+  if (paragraphs.length <= 2) return [content, ""];
+  const mid = Math.floor(paragraphs.length / 2);
+  return [paragraphs.slice(0, mid).join("\n\n"), paragraphs.slice(mid).join("\n\n")];
+}
+
+async function getRelatedArticles(articleId: string, title: string) {
   try {
     await connectDB();
+    const keywords = extractKeywords(title);
+    let related: any[] = [];
 
-    const relatedArticles = await Article.find({
-      category: "transferMarket",
-      status: "published",
-      _id: { $ne: articleId },
-    })
-      .sort({ publishedAt: -1 })
-      .limit(3);
+    if (keywords.length > 0) {
+      related = await Article.find({
+        category: "transferMarket",
+        status: "published",
+        _id: { $ne: articleId },
+        $or: keywords.map((kw) => ({ title: { $regex: kw, $options: "i" } })),
+      })
+        .sort({ publishedAt: -1 })
+        .limit(3)
+        .lean();
+    }
 
-    return JSON.parse(JSON.stringify(relatedArticles));
-  } catch (error) {
-    console.error("Error fetching related articles:", error);
+    if (related.length < 3) {
+      const existingIds = related.map((a) => a._id);
+      const filler = await Article.find({
+        category: "transferMarket",
+        status: "published",
+        _id: { $nin: [articleId, ...existingIds] },
+      })
+        .sort({ publishedAt: -1 })
+        .limit(3 - related.length)
+        .lean();
+      related = [...related, ...filler];
+    }
+
+    return JSON.parse(JSON.stringify(related));
+  } catch {
     return [];
   }
 }
@@ -98,20 +143,22 @@ export default async function TransferArticlePage({
   const { slug } = await params;
   const article = await getArticle(slug);
 
-  if (!article) {
-    notFound();
-  }
+  if (!article) notFound();
 
-  const relatedArticles = await getRelatedArticles(article._id);
+  const [relatedArticles] = await Promise.all([
+    getRelatedArticles(article._id, article.title),
+  ]);
+
+  const teamHint = extractTeamFromTitle(article.title);
+  const [contentFirstPart, contentSecondPart] = splitContentForAd(article.content);
 
   return (
     <div className="container mx-auto px-4 py-8">
       <article className="max-w-3xl mx-auto">
-        {/* Article Header */}
         <header className="mb-8">
           <div className="flex items-center text-sm text-gray-500 mb-3">
             <time dateTime={article.publishedAt}>
-              {new Date(article.publishedAt).toLocaleDateString("en-US", {
+              {new Date(article.publishedAt).toLocaleDateString("it-IT", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
@@ -126,7 +173,6 @@ export default async function TransferArticlePage({
           <p className="text-lg text-gray-600 mb-6">{article.summary}</p>
         </header>
 
-        {/* Article Featured Image */}
         <div className="relative h-[50vh] w-full mb-8 rounded-lg overflow-hidden">
           <Image
             src={article.image}
@@ -138,33 +184,43 @@ export default async function TransferArticlePage({
           />
         </div>
 
-        {/* Article content */}
         <ArticleContent
-          content={article.content}
+          content={contentFirstPart}
           className="prose prose-lg max-w-none mb-8 text-black"
         />
 
-        {/* Article Footer */}
+        <div className="my-8">
+          <Separator className="mb-6" />
+          <JerseyAdBlock jerseyId={article.featuredJerseyId} teamHint={teamHint} />
+          <Separator className="mt-6" />
+        </div>
+
+        {contentSecondPart && (
+          <ArticleContent
+            content={contentSecondPart}
+            className="prose prose-lg max-w-none mb-12 text-black"
+          />
+        )}
+
         <footer className="border-t border-gray-200 pt-6 mt-8">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-medium text-gray-900">Author</h3>
+              <h3 className="text-sm font-medium text-gray-900">Autore</h3>
               <p className="text-sm text-gray-600">{article.author}</p>
             </div>
             <Link
               href="/transfer"
               className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
             >
-              ← Back to Transfer News
+              ← Torna al Calciomercato
             </Link>
           </div>
         </footer>
       </article>
 
-      {/* Related Articles */}
       {relatedArticles.length > 0 && (
         <section className="max-w-5xl mx-auto mt-16">
-          <h2 className="text-2xl font-bold mb-6">Related Transfer News</h2>
+          <h2 className="text-2xl font-bold mb-6">Notizie correlate</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {relatedArticles.map((related: any) => (
               <Link
@@ -183,11 +239,9 @@ export default async function TransferArticlePage({
                 </div>
                 <div className="p-4 flex-1 flex flex-col">
                   <div className="flex items-center text-xs text-gray-500 mb-2">
-                    <span>
-                      {new Date(related.publishedAt).toLocaleDateString()}
-                    </span>
+                    <span>{new Date(related.publishedAt).toLocaleDateString("it-IT")}</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors duration-200">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
                     {related.title}
                   </h3>
                   <p className="text-sm text-gray-600 mb-4 line-clamp-2">

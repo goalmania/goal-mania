@@ -219,14 +219,15 @@ async function getWorldCupTeams() {
 async function getVideoProducts(): Promise<Product[]> {
   try {
     await connectDB();
-    const products = await ProductModel.find()
+    const products = await ProductModel.find({
+      videos: { $exists: true, $not: { $size: 0 } },
+      isActive: true,
+    })
       .sort({ createdAt: -1 })
-      .limit(100)
+      .limit(4)
       .lean();
 
     const productsWithVideos = JSON.parse(JSON.stringify(products))
-      .filter((product: any) => product.videos && Array.isArray(product.videos) && product.videos.length > 0)
-      .slice(0, 4)
       .map((product: any) => ({
         id: product._id || "",
         name: product.title || "Video Product",

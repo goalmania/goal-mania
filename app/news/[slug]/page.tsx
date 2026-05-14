@@ -81,41 +81,98 @@ async function getArticle(slug: string) {
   }
 }
 
-// Get related articles
-async function getRelatedArticles(articleId: string) {
+const STOP_WORDS = new Set([
+  "della", "dello", "degli", "delle", "nella", "nelle", "negli", "negli",
+  "con", "per", "che", "una", "uno", "the", "and", "for", "dal", "dal",
+  "dopo", "prima", "come", "quando", "dove", "cosa", "chi", "suo", "sua",
+]);
+
+function extractKeywords(title: string): string[] {
+  return title
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((w) => w.length > 3 && !STOP_WORDS.has(w))
+    .slice(0, 3);
+}
+
+const FOOTBALL_TEAMS = [
+  "Juventus", "Juve", "Inter", "Milan", "Napoli", "Roma", "Lazio", "Atalanta",
+  "Fiorentina", "Torino", "Bologna", "Verona", "Cagliari", "Lecce", "Genoa",
+  "Udinese", "Monza", "Empoli", "Salernitana", "Sassuolo",
+  "Arsenal", "Chelsea", "Liverpool", "Manchester City", "Manchester United",
+  "Tottenham", "Newcastle", "West Ham", "Aston Villa",
+  "Real Madrid", "Barcelona", "Atletico Madrid", "Sevilla", "Valencia",
+  "Bayern", "Dortmund", "Leipzig",
+  "PSG", "Paris Saint-Germain", "Monaco", "Marseille",
+  "Portugal", "Netherlands", "Belgium", "France", "Spain", "Germany",
+  "England", "Brazil", "Argentina", "Italia",
+];
+
+function extractTeamFromTitle(title: string): string | undefined {
+  const lower = title.toLowerCase();
+  for (const team of FOOTBALL_TEAMS) {
+    if (lower.includes(team.toLowerCase())) return team;
+  }
+  return undefined;
+}
+
+async function getRelatedArticles(articleId: string, title: string) {
   try {
     await connectDB();
 
-    const relatedArticles = await Article.find({
-      category: "news",
-      status: "published",
-      _id: { $ne: articleId },
-    })
-      .sort({ publishedAt: -1 })
-      .limit(3);
+    const keywords = extractKeywords(title);
+    let related: any[] = [];
 
-    return JSON.parse(JSON.stringify(relatedArticles));
+    if (keywords.length > 0) {
+      related = await Article.find({
+        category: "news",
+        status: "published",
+        _id: { $ne: articleId },
+        $or: keywords.map((kw) => ({ title: { $regex: kw, $options: "i" } })),
+      })
+        .sort({ publishedAt: -1 })
+        .limit(3)
+        .lean();
+    }
+
+    if (related.length < 3) {
+      const existingIds = related.map((a) => a._id);
+      const filler = await Article.find({
+        category: "news",
+        status: "published",
+        _id: { $nin: [articleId, ...existingIds] },
+      })
+        .sort({ publishedAt: -1 })
+        .limit(3 - related.length)
+        .lean();
+      related = [...related, ...filler];
+    }
+
+    return JSON.parse(JSON.stringify(related));
   } catch (error) {
     console.error("Error fetching related articles:", error);
     return [];
   }
 }
 
-// Helper to split content for jersey ad insertion
 function splitContentForAd(content: string): string[] {
-  // Split content at paragraph boundaries
-  const paragraphs = content.split("\n\n");
+  const isHtml = content.trim().startsWith("<");
 
-  if (paragraphs.length <= 2) {
-    return [content, ""]; // Don't split if there are not enough paragraphs
+  if (isHtml) {
+    // Split on closing paragraph tags without breaking mid-tag
+    const parts = content.split(/(?<=<\/p>)/);
+    if (parts.length <= 2) return [content, ""];
+    const mid = Math.floor(parts.length / 2);
+    return [parts.slice(0, mid).join(""), parts.slice(mid).join("")];
   }
 
-  const middleIndex = Math.floor(paragraphs.length / 2);
-
-  const firstPart = paragraphs.slice(0, middleIndex).join("\n\n");
-  const secondPart = paragraphs.slice(middleIndex).join("\n\n");
-
-  return [firstPart, secondPart];
+  const paragraphs = content.split("\n\n");
+  if (paragraphs.length <= 2) return [content, ""];
+  const mid = Math.floor(paragraphs.length / 2);
+  return [
+    paragraphs.slice(0, mid).join("\n\n"),
+    paragraphs.slice(mid).join("\n\n"),
+  ];
 }
 
 export default async function ArticlePage({
@@ -130,12 +187,10 @@ export default async function ArticlePage({
     notFound();
   }
 
-  const relatedArticles = await getRelatedArticles(article._id);
+  const relatedArticles = await getRelatedArticles(article._id, article.title);
 
-  // Split the content to insert the jersey ad
-  const [contentFirstPart, contentSecondPart] = splitContentForAd(
-    article.content
-  );
+  const teamHint = extractTeamFromTitle(article.title);
+  const [contentFirstPart, contentSecondPart] = splitContentForAd(article.content);
 
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
@@ -163,7 +218,7 @@ export default async function ArticlePage({
         <header className="mb-8">
           <div className="flex items-center text-sm text-gray-700 mb-3">
             <time dateTime={article.publishedAt}>
-              {new Date(article.publishedAt).toLocaleDateString("en-US", {
+              {new Date(article.publishedAt).toLocaleDateString("it-IT", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
@@ -201,7 +256,7 @@ export default async function ArticlePage({
         {/* Jersey Ad Block */}
         <div className="my-8">
           <Separator className="mb-6" />
-          <JerseyAdBlock jerseyId={article.featuredJerseyId} />
+          <JerseyAdBlock jerseyId={article.featuredJerseyId} teamHint={teamHint} />
           <Separator className="mt-6" />
         </div>
 

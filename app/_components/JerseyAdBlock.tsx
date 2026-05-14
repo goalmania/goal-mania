@@ -6,9 +6,10 @@ import Link from "next/link";
 
 interface JerseyAdBlockProps {
   jerseyId?: string;
+  teamHint?: string;
 }
 
-export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
+export function JerseyAdBlock({ jerseyId, teamHint }: JerseyAdBlockProps) {
   const [jersey, setJersey] = useState<{
     id: string;
     title: string;
@@ -41,38 +42,46 @@ export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
       try {
         setIsLoading(true);
 
-        const endpoint = jerseyId
-          ? `/api/products/${encodeURIComponent(jerseyId)}`
-          : `/api/products/featured?category=all&limit=1`;
-
-        // timeout for fetch
         const timeout = 10000;
         timeoutId = setTimeout(() => controller.abort(), timeout);
 
-        const response = await fetch(endpoint, { signal: controller.signal });
+        let item: any = null;
 
-        if (timeoutId) clearTimeout(timeoutId);
-
-        if (!response.ok) {
-          console.warn("JerseyAdBlock: non-ok response", response.status, response.statusText);
-          // fallback to placeholder
-          if (!mounted) return;
-          setJersey({
-            id: "placeholder",
-            title: "Offerta Goal Mania",
-            image: "/images/placeholder.png",
-            slug: "/shop",
-            basePrice: 30,
-          });
-          return;
+        // Priority 1: manual jersey override
+        if (jerseyId) {
+          const res = await fetch(
+            `/api/products/${encodeURIComponent(jerseyId)}`,
+            { signal: controller.signal }
+          );
+          if (res.ok) item = await safeJson(res);
         }
 
-        const data = await safeJson(response);
+        // Priority 2: team-based match (the core value prop)
+        if (!item && teamHint) {
+          const res = await fetch(
+            `/api/products?search=${encodeURIComponent(teamHint)}&limit=1`,
+            { signal: controller.signal }
+          );
+          if (res.ok) {
+            const data = await safeJson(res);
+            item = data?.products?.[0] ?? null;
+          }
+        }
 
+        // Priority 3: generic featured fallback
+        if (!item) {
+          const res = await fetch(
+            `/api/products/featured?limit=1`,
+            { signal: controller.signal }
+          );
+          if (res.ok) {
+            const data = await safeJson(res);
+            item = data?.products?.[0] ?? null;
+          }
+        }
+
+        if (timeoutId) clearTimeout(timeoutId);
         if (!mounted) return;
-
-        // data shape may be single object (when jerseyId) or array (featured)
-        const item = jerseyId ? data : Array.isArray(data) ? data[0] : null;
 
         // Validate data before setting
         if (
@@ -130,7 +139,7 @@ export function JerseyAdBlock({ jerseyId }: JerseyAdBlockProps) {
       if (timeoutId) clearTimeout(timeoutId);
       controller.abort();
     };
-  }, [jerseyId]);
+  }, [jerseyId, teamHint]);
 
   if (isLoading) {
     return (

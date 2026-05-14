@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   description: "Negozio ufficiale di maglie da calcio. Trova le migliori maglie delle tue squadre preferite.",
   keywords: ["maglie calcio", "jersey", "football shirts", "Goal Mania", "maglie ufficiali", "calcio"],
   authors: [{ name: "Goal Mania" }],
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://goalmania.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it"),
   openGraph: {
     type: "website",
     locale: "it_IT",
@@ -121,8 +121,8 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "Goal Mania",
-              url: process.env.NEXT_PUBLIC_APP_URL || "https://goalmania.com",
-              logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://goalmania.com"}/favicon-for-public/web-app-manifest-512x512.png`,
+              url: process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it",
+              logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it"}/favicon-for-public/web-app-manifest-512x512.png`,
               description: "Negozio ufficiale di maglie da calcio",
               sameAs: [
                 "https://www.facebook.com/goalmania",
