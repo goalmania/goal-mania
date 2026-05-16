@@ -5,13 +5,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Order from "@/models/Order";
-import Stripe from "stripe";
 import mongoose from "mongoose";
-
-// Initialize Stripe with the secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-04-30.basil",
-});
+import { getStripe } from "@/lib/stripe";
 
 export async function POST(
   req: NextRequest,
@@ -63,6 +58,7 @@ export async function POST(
 
     // Process the refund via Stripe
     try {
+      const stripe = getStripe();
       const refund = await stripe.refunds.create({
         payment_intent: paymentIntentId,
       });

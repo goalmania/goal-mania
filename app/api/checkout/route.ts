@@ -3,14 +3,9 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import Stripe from "stripe";
 import connectDB from "@/lib/db";
 import OrderDetails from "@/lib/models/OrderDetails";
-
-// Initialize Stripe with the secret key from environment variables
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-04-30.basil",
-});
+import { getStripe } from "@/lib/stripe";
 
 interface CartItem {
   id: string;
@@ -94,6 +89,7 @@ export async function POST(req: NextRequest) {
         });
       }
 
+      const stripe = getStripe();
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(finalAmount * 100), // Convert to cents
         currency: "eur",

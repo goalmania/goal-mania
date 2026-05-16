@@ -3,12 +3,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import Stripe from "stripe";
-
-// Initialize Stripe with the secret key from environment variables
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-04-30.basil",
-});
+import { getStripe } from "@/lib/stripe";
 
 interface CartItem {
   productId: string;
@@ -27,14 +22,11 @@ export async function POST(req: NextRequest) {
     const { amount, currency = "eur", addressId, items } = body;
 
     if (!amount || !addressId || !items) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     try {
-      // Stringify cart items to store in metadata
+      const stripe = getStripe();
       const cartItemsString = JSON.stringify(
         items.map((item: CartItem) => ({
           productId: item.productId,
@@ -54,9 +46,7 @@ export async function POST(req: NextRequest) {
         setup_future_usage: "off_session",
       });
 
-      return NextResponse.json({
-        clientSecret: paymentIntent.client_secret,
-      });
+      return NextResponse.json({ clientSecret: paymentIntent.client_secret });
     } catch (error) {
       console.error("Stripe API error:", error);
       return NextResponse.json(
@@ -69,9 +59,6 @@ export async function POST(req: NextRequest) {
     }
   } catch (error) {
     console.error("Error creating payment intent:", error);
-    return NextResponse.json(
-      { error: "Failed to create payment intent", details: error },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to create payment intent", details: error }, { status: 500 });
   }
 }

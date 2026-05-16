@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { getStripe } from "@/lib/stripe";
 import Order from "@/models/Order";
 import connectDB from "@/lib/db";
 import User from "@/lib/models/User";
@@ -13,10 +14,6 @@ import OrderDetails from "@/lib/models/OrderDetails";
 import mongoose from "mongoose";
 import { sendEmail } from "@/lib/utils/email";
 import { orderConfirmationTemplate, invoiceTemplate } from "@/lib/utils/email-templates";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-04-30.basil",
-});
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
@@ -60,6 +57,7 @@ export async function POST(req: NextRequest) {
     let event: Stripe.Event;
 
     try {
+      const stripe = getStripe();
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Unknown error";
