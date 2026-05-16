@@ -6,7 +6,7 @@ import Product from "@/lib/models/Product";
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
-const ARTICLES_PER_RUN = 4;
+const ARTICLES_PER_RUN = 2;
 
 const RSS_FEEDS = [
   { url: "https://www.gazzetta.it/rss/home.xml",          source: "Gazzetta dello Sport", category: "serieA" },
