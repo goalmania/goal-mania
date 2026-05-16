@@ -108,7 +108,7 @@ export default async function NewsPage() {
 
   return (
     <Suspense fallback={<LoadingFallback />}>
-      <div className="min-h-screen flex flex-col font-munish bg-gray-50">
+      <div className="min-h-screen flex flex-col" style={{ background: "#0a0a0a", color: "#f5f5f5" }}>
         {/* ✅ Pass serialized articles to Client Component */}
         <NewsBanner articles={allArticles} imageUrl={MobilebannerData.imageUrl} />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 flex-1 items-start">
@@ -128,10 +128,13 @@ export default async function NewsPage() {
           </div>
 
           <div className="relative max-w-lg mb-8">
-            <div className="absolute slanted-card -top-6 left-0 bg-gray-900 rounded-md text-white font-semibold py-2 px-6  z-10">
-              In Primo Piano
+            <div className="flex items-center gap-3 mb-1">
+              <span className="w-5 h-[2px] rounded-full inline-block" style={{ background: "#c8f000" }} />
+              <span className="text-xs uppercase tracking-[4px]" style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}>
+                // In Primo Piano
+              </span>
             </div>
-            <div className="pt-8 border-t-2 border-gray-200"></div>
+            <div className="pt-4 border-t" style={{ borderColor: "rgba(200,240,0,0.15)" }}></div>
           </div>
 
           {/* Render logic based on article count */}
@@ -150,7 +153,7 @@ export default async function NewsPage() {
                   <div className="mt-4 text-right">
                     <Link
                       href="/news"
-                      className="text-sm font-semibold tracking-wide text-gray-900 hover:text-orange-500 uppercase transition-colors duration-200"
+                      className="text-sm font-semibold tracking-wide text-white hover:text-[#c8f000] uppercase transition-colors duration-200"
                     >
                       See all
                     </Link>
@@ -162,50 +165,50 @@ export default async function NewsPage() {
                   {/* Follow Us Section */}
                   <div className="p-6 ">
                     <div className="relative mb-6">
-                      <div className="absolute slanted-card -top-6 left-0 bg-gray-900 rounded-md text-white font-semibold py-2 px-6">
+                      <div className="absolute slanted-card -top-6 left-0 bg-[#1a1a1a] rounded-md text-white font-semibold py-2 px-6">
                         Follow Us
                       </div>
-                      <div className="pt-8 border-t-2 border-gray-200"></div>
+                      <div className="pt-8 border-t-2 border-[rgba(255,255,255,0.06)]"></div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <a
                         href="https://facebook.com/goalmania"
-                        className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                        className="flex items-center justify-center p-3 bg-[#1a1a1a] text-white/80 rounded-lg hover:bg-[#222] transition-colors duration-200"
                       >
                         <Facebook className="w-5 h-5 mr-2" />
                         <span className="font-medium">Facebook</span>
                       </a>
                       <a
                         href="https://twitter.com/goalmania"
-                        className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                        className="flex items-center justify-center p-3 bg-[#1a1a1a] text-white/80 rounded-lg hover:bg-[#222] transition-colors duration-200"
                       >
                         <Twitter className="w-5 h-5 mr-2" />
                         <span className="font-medium">Twitter</span>
                       </a>
                       <a
                         href="https://www.instagram.com/goalmania.it"
-                        className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                        className="flex items-center justify-center p-3 bg-[#1a1a1a] text-white/80 rounded-lg hover:bg-[#222] transition-colors duration-200"
                       >
                         <Instagram className="w-5 h-5 mr-2" />
                         <span className="font-medium">Instagram</span>
                       </a>
                       <a
                         href=":https://www.tiktok.com/@goalmania.it"
-                        className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                        className="flex items-center justify-center p-3 bg-[#1a1a1a] text-white/80 rounded-lg hover:bg-[#222] transition-colors duration-200"
                       >
                         <IconBrandTiktok className="w-5 h-5 mr-2" />
                         <span className="font-medium">Tiktok</span>
                       </a>
                       <a
                         href="https://linkedin.com/company/goalmania"
-                        className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                        className="flex items-center justify-center p-3 bg-[#1a1a1a] text-white/80 rounded-lg hover:bg-[#222] transition-colors duration-200"
                       >
                         <Linkedin className="w-5 h-5 mr-2" />
                         <span className="font-medium">LinkedIn</span>
                       </a>
                       <a
                         href="https://pinterest.com/goalmania"
-                        className="flex items-center justify-center p-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                        className="flex items-center justify-center p-3 bg-[#1a1a1a] text-white/80 rounded-lg hover:bg-[#222] transition-colors duration-200"
                       >
                         <IconBrandPinterest className="w-5 h-5 mr-2" />
                         <span className="font-medium">Pinterest</span>
@@ -214,16 +217,16 @@ export default async function NewsPage() {
                   </div>
 
                   {/* Newsletter Section */}
-                  <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg text-center">
+                  <div className="bg-[#1a1a1a] text-white p-6 rounded-lg shadow-lg text-center">
                     <div className="relative inline-block mb-4">
-                      <Mail className="w-16 h-16 text-gray-400 opacity-20" />
+                      <Mail className="w-16 h-16 text-white/40 opacity-20" />
                       <div className="absolute inset-0 flex items-center justify-center">
                         <h3 className="text-xl font-semibold whitespace-nowrap">
                           Newsletter Giornaliera
                         </h3>
                       </div>
                     </div>
-                    <p className="text-gray-300 mb-6 text-sm">
+                    <p className="text-white/30 mb-6 text-sm">
                       Ricevi tutte le notizie più importanti dal mondo del
                       calcio
                     </p>
@@ -234,7 +237,7 @@ export default async function NewsPage() {
                     >
                       <button
                         type="submit"
-                        className="flex items-center mx-auto justify-center bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-lg shadow-md transition-colors duration-200"
+                        className="flex items-center mx-auto justify-center bg-[#c8f000] hover:bg-[#c8f000] text-white font-medium py-3 px-4 rounded-lg shadow-md transition-colors duration-200"
                       >
                         Inserisci la tua e-mail
                         <MoveRight className="w-5 h-5" />
@@ -262,7 +265,7 @@ export default async function NewsPage() {
                       <div className="mt-4 text-right">
                         {/* <Link
                           href="/news"
-                          className="text-sm font-semibold tracking-wide text-gray-900 hover:text-orange-500 uppercase transition-colors duration-200"
+                          className="text-sm font-semibold tracking-wide text-white hover:text-[#c8f000] uppercase transition-colors duration-200"
                         >
                           See all
                         </Link> */}
@@ -281,12 +284,12 @@ export default async function NewsPage() {
           )}
         </div>
 
-        <div className="py-8 bg-white">
+        <div className="py-8 bg-[#0a0a0a]">
           <PopularNewsGrid />
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex w-full max-w-4xl mx-auto h-[230px] lg:h-[250px] bg-gray-900 rounded-2xl overflow-hidden shadow-lg">
+          <div className="flex w-full max-w-4xl mx-auto h-[230px] lg:h-[250px] bg-[#1a1a1a] rounded-2xl overflow-hidden shadow-lg">
             <div className="w-[30%] flex-shrink-0">
               <Image
                 src="/images/recentUpdate/banner-ads.png"
@@ -306,7 +309,7 @@ export default async function NewsPage() {
                 </h2>
               </div>
               <Link href="/shop">
-                <button className="inline-flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-xl shadow-md transition-colors duration-200">
+                <button className="inline-flex items-center justify-center bg-[#c8f000] hover:bg-[#c8f000] text-white font-medium py-2 px-4 rounded-xl shadow-md transition-colors duration-200">
                   Buy Now
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </button>

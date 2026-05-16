@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Inter, Italianno, Mulish } from "next/font/google";
+import { Inter, Italianno, Mulish, Barlow_Condensed, Barlow, Space_Mono } from "next/font/google";
 import { Metadata, Viewport } from "next";
 import { Providers } from "@/components/providers";
 import { Header } from "@/components/layout/header";
@@ -24,6 +24,24 @@ const mulish = Mulish({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-mulish",
+});
+const barlowCondensed = Barlow_Condensed({
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-barlow-condensed",
+});
+const barlow = Barlow({
+  weight: ["300", "400", "500", "600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-barlow",
+});
+const spaceMono = Space_Mono({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-space-mono",
 });
 
 export const viewport: Viewport = {
@@ -95,7 +113,7 @@ export const metadata: Metadata = {
       {
         rel: "mask-icon",
         url: "/favicon-for-app/safari-pinned-tab.svg",
-        color: "#0A1A2F",
+        color: "#111111",
       },
     ],
   },
@@ -110,7 +128,7 @@ export default function RootLayout({
     <html
       lang="it"
       suppressHydrationWarning
-      className={`${italianno.variable} ${mulish.variable} font-italianno text-base sm:text-lg`}
+      className={`${italianno.variable} ${mulish.variable} ${barlowCondensed.variable} ${barlow.variable} ${spaceMono.variable} text-base dark`}
     >
       <head>
         {/* Structured Data for Google */}

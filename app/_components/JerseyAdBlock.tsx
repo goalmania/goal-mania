@@ -143,8 +143,8 @@ export function JerseyAdBlock({ jerseyId, teamHint }: JerseyAdBlockProps) {
 
   if (isLoading) {
     return (
-      <div className="w-full bg-white rounded-lg shadow-md p-6 my-8 text-center">
-        <p className="text-black">Caricamento maglia...</p>
+      <div className="w-full bg-[#0a0a0a] rounded-lg shadow-md p-6 my-8 text-center">
+        <p className="text-white">Caricamento maglia...</p>
       </div>
     );
   }
@@ -161,7 +161,7 @@ export function JerseyAdBlock({ jerseyId, teamHint }: JerseyAdBlockProps) {
       <div className="flex flex-col md:flex-row items-center relative z-10">
         <div className="relative w-full md:w-1/3 h-64 md:h-72 mb-4 md:mb-0">
           {/* Enhanced image container with subtle shadow and border */}
-          <div className="relative w-full h-full bg-white rounded-lg shadow-md border-2 border-orange-200 overflow-hidden">
+          <div className="relative w-full h-full bg-[#0a0a0a] rounded-lg shadow-md border-2 border-orange-200 overflow-hidden">
             <Image
               src={jersey.image}
               alt={jersey.title}
@@ -172,7 +172,7 @@ export function JerseyAdBlock({ jerseyId, teamHint }: JerseyAdBlockProps) {
             />
           </div>
           {/* "Featured" badge */}
-          <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">
+          <div className="absolute top-2 left-2 bg-[#c8f000] text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">
             IN EVIDENZA
           </div>
         </div>
@@ -180,25 +180,25 @@ export function JerseyAdBlock({ jerseyId, teamHint }: JerseyAdBlockProps) {
         <div className="w-full md:w-2/3 p-4 md:p-6 flex flex-col">
           {/* Enhanced title with orange accent */}
           <div className="mb-3">
-            <span className="text-orange-500 text-sm font-semibold uppercase tracking-wide">
+            <span className="text-[#c8f000] text-sm font-semibold uppercase tracking-wide">
               Offerta Esclusiva
             </span>
-            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 leading-tight">
+            <h3 className="text-xl md:text-2xl font-bold text-white mb-2 leading-tight">
               {jersey.title}
             </h3>
           </div>
           
           {/* Enhanced description */}
-          <p className="text-gray-700 mb-3 font-medium">
+          <p className="text-white/70 mb-3 font-medium">
             🔥 Acquista la maglia più recente e mostra la tua passione per il calcio!
           </p>
           
           {/* Enhanced price with orange styling */}
           <div className="mb-4">
-            <span className="text-3xl font-bold text-orange-600">
+            <span className="text-3xl font-bold text-[#c8f000]">
               €{jersey.basePrice}
             </span>
-            <span className="text-gray-500 ml-2 line-through text-lg">
+            <span className="text-white/50 ml-2 line-through text-lg">
               €{Math.round(jersey.basePrice * 1.2)}
             </span>
           </div>
@@ -215,7 +215,7 @@ export function JerseyAdBlock({ jerseyId, teamHint }: JerseyAdBlockProps) {
           </Link>
           
           {/* Additional incentive text */}
-          <p className="text-xs text-orange-600 mt-2 text-center font-medium">
+          <p className="text-xs text-[#c8f000] mt-2 text-center font-medium">
             ⚡ Offerta a tempo limitato • Spedizione gratuita
           </p>
         </div>

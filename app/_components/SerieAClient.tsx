@@ -62,42 +62,42 @@ export default function SerieAClient({ products, teamSlug }: SerieAClientProps) 
     : "Serie A & International Collection";
 
   return (
-    <div className="bg-white">
+    <div className="bg-[#0a0a0a]">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         {/* Breadcrumb Navigation */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-6">
-          <Link href="/" className="flex items-center hover:text-[#f5963c] transition-colors">
+        <nav className="flex items-center space-x-2 text-sm text-white/50 mb-6">
+          <Link href="/" className="flex items-center hover:text-[#c8f000] transition-colors">
             <HomeIcon className="h-4 w-4 mr-1" />
             {t('navigation.home', 'Home')}
           </Link>
           <ChevronRightIcon className="h-4 w-4" />
-          <Link href="/shop" className="hover:text-[#f5963c] transition-colors">
+          <Link href="/shop" className="hover:text-[#c8f000] transition-colors">
             {t('navigation.shop', 'Shop')}
           </Link>
           <ChevronRightIcon className="h-4 w-4" />
-          <Link href="/shop/serieA" className="hover:text-[#f5963c] transition-colors">
+          <Link href="/shop/serieA" className="hover:text-[#c8f000] transition-colors">
             Serie A
           </Link>
           {teamSlug && (
             <>
               <ChevronRightIcon className="h-4 w-4" />
-              <span className="text-gray-900 font-medium">
+              <span className="text-white font-medium">
                 {getTeamDisplayName(teamSlug)}
               </span>
             </>
           )}
         </nav>
 
-        <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+        <h2 className="text-2xl font-bold tracking-tight text-white">
           {pageTitle}
         </h2>
         {teamSlug && (
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-white/60">
             {t('shop.team.description', 'Discover the official shirts and merchandise for')} {getTeamDisplayName(teamSlug)}
           </p>
         )}
         {!teamSlug && (
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-white/60">
             {t('shop.serieA.description', 'Discover our complete collection of Serie A and international team shirts')}
           </p>
         )}

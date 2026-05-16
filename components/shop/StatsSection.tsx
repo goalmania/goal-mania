@@ -56,7 +56,7 @@ const StatsSection: React.FC = () => {
   const visibleStats = isDesktop ? stats : stats.slice(0, 2);
 
   return (
-    <section className="lg:bg-[#0A1A2F] font-munish  bg-[#F5F5F5] text-[#0A1A2F] text-left lg:text-white lg:px-20 py-4 mt-10 absolute w-full bottom-0 lg:block z-10">
+    <section className="lg:bg-[#111111] font-munish  bg-[#F5F5F5] text-white text-left lg:text-white lg:px-20 py-4 mt-10 absolute w-full bottom-0 lg:block z-10">
       <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:divide-x md:divide-white divide-x-[0.5px] divide-[#000000]">
         {visibleStats.map((stat) => (
           <div key={stat.id} className="text-left px-4 ">
@@ -68,7 +68,7 @@ const StatsSection: React.FC = () => {
                 </span>
               </p>
             </div>
-            <p className="md:text-[18px] text-[15px] lg:text-[#FFFFFF] text-[#0A1A2F] font-extralight ">
+            <p className="md:text-[18px] text-[15px] lg:text-[#FFFFFF] text-white font-extralight ">
               {stat.description}
             </p>
           </div>

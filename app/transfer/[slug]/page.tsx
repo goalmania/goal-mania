@@ -156,7 +156,7 @@ export default async function TransferArticlePage({
     <div className="container mx-auto px-4 py-8">
       <article className="max-w-3xl mx-auto">
         <header className="mb-8">
-          <div className="flex items-center text-sm text-gray-500 mb-3">
+          <div className="flex items-center text-sm text-white/50 mb-3">
             <time dateTime={article.publishedAt}>
               {new Date(article.publishedAt).toLocaleDateString("it-IT", {
                 year: "numeric",
@@ -167,10 +167,10 @@ export default async function TransferArticlePage({
             <span className="mx-2">•</span>
             <span>{article.author}</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
             {article.title}
           </h1>
-          <p className="text-lg text-gray-600 mb-6">{article.summary}</p>
+          <p className="text-lg text-white/60 mb-6">{article.summary}</p>
         </header>
 
         <div className="relative h-[50vh] w-full mb-8 rounded-lg overflow-hidden">
@@ -186,7 +186,7 @@ export default async function TransferArticlePage({
 
         <ArticleContent
           content={contentFirstPart}
-          className="prose prose-lg max-w-none mb-8 text-black"
+          className="prose prose-lg max-w-none mb-8 text-white"
         />
 
         <div className="my-8">
@@ -198,19 +198,19 @@ export default async function TransferArticlePage({
         {contentSecondPart && (
           <ArticleContent
             content={contentSecondPart}
-            className="prose prose-lg max-w-none mb-12 text-black"
+            className="prose prose-lg max-w-none mb-12 text-white"
           />
         )}
 
-        <footer className="border-t border-gray-200 pt-6 mt-8">
+        <footer className="border-t border-white/8 pt-6 mt-8">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-medium text-gray-900">Autore</h3>
-              <p className="text-sm text-gray-600">{article.author}</p>
+              <h3 className="text-sm font-medium text-white">Autore</h3>
+              <p className="text-sm text-white/60">{article.author}</p>
             </div>
             <Link
               href="/transfer"
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+              className="text-sm font-medium text-[#c8f000] hover:text-[#c8f000]"
             >
               ← Torna al Calciomercato
             </Link>
@@ -226,7 +226,7 @@ export default async function TransferArticlePage({
               <Link
                 key={related._id}
                 href={`/transfer/${related.slug}`}
-                className="group flex flex-col bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
+                className="group flex flex-col bg-[#0a0a0a] rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
               >
                 <div className="relative h-48 w-full">
                   <Image
@@ -238,13 +238,13 @@ export default async function TransferArticlePage({
                   />
                 </div>
                 <div className="p-4 flex-1 flex flex-col">
-                  <div className="flex items-center text-xs text-gray-500 mb-2">
+                  <div className="flex items-center text-xs text-white/50 mb-2">
                     <span>{new Date(related.publishedAt).toLocaleDateString("it-IT")}</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
+                  <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#c8f000] transition-colors">
                     {related.title}
                   </h3>
-                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                  <p className="text-sm text-white/60 mb-4 line-clamp-2">
                     {related.summary}
                   </p>
                 </div>

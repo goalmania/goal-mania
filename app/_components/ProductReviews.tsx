@@ -65,7 +65,7 @@ function CreativeRatingField({
                 className={`h-8 w-8 sm:h-10 sm:w-10 transition-all duration-300 ${
                   (hoveredRating || rating) >= star
                     ? "text-yellow-400 drop-shadow-lg filter brightness-110"
-                    : "text-gray-300 hover:text-gray-400"
+                    : "text-white/30 hover:text-white/40"
                 } ${hoveredRating >= star ? "animate-pulse" : ""}`}
               />
 
@@ -242,7 +242,7 @@ export default function ProductReviews({
   };
 
   return (
-    <div className=" bg-white">
+    <div className=" bg-[#0a0a0a]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="">
           <span className="mt-2 text-sm font-medium text-white">

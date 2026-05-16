@@ -49,11 +49,11 @@ export default function ApplePaySetup() {
   };
 
   return (
-    <div className="bg-white min-h-screen py-16">
+    <div className="bg-[#0a0a0a] min-h-screen py-16">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <div className="overflow-hidden rounded-lg bg-white shadow">
+        <div className="overflow-hidden rounded-lg bg-[#0a0a0a] shadow">
           <div className="px-4 py-5 sm:p-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">
+            <h1 className="text-2xl font-bold text-white mb-6">
               Apple Pay Domain Registration
             </h1>
 
@@ -69,29 +69,29 @@ export default function ApplePaySetup() {
 
             <div className="space-y-6">
               <div>
-                <h2 className="text-lg font-medium text-gray-900 mb-2">
+                <h2 className="text-lg font-medium text-white mb-2">
                   Step 1: Set Up Verification File
                 </h2>
-                <p className="text-sm text-gray-600 mb-4">
+                <p className="text-sm text-white/60 mb-4">
                   We've automatically created a verification file at:
                 </p>
-                <code className="bg-gray-100 p-2 block rounded text-sm">
+                <code className="bg-[#111] p-2 block rounded text-sm">
                   /.well-known/apple-developer-merchantid-domain-association
                 </code>
               </div>
 
               <div>
-                <h2 className="text-lg font-medium text-gray-900 mb-2">
+                <h2 className="text-lg font-medium text-white mb-2">
                   Step 2: Register Domain with Stripe
                 </h2>
-                <p className="text-sm text-gray-600 mb-4">
+                <p className="text-sm text-white/60 mb-4">
                   Register your domain with Stripe to enable Apple Pay:
                 </p>
 
                 <div className="mt-4">
                   <label
                     htmlFor="domain"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-white/70"
                   >
                     Your domain:
                   </label>
@@ -100,7 +100,7 @@ export default function ApplePaySetup() {
                       type="text"
                       name="domain"
                       id="domain"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      className="block w-full rounded-md border-white/10 shadow-sm focus:border-[#c8f000] focus:ring-[#c8f000] sm:text-sm"
                       placeholder={host}
                       value={domain}
                       onChange={(e) => setDomain(e.target.value)}
@@ -119,7 +119,7 @@ export default function ApplePaySetup() {
                   className={`mt-4 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     registered
                       ? "bg-green-600 hover:bg-green-700 focus:ring-green-500"
-                      : "bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500"
+                      : "bg-[#c8f000] hover:bg-indigo-700 focus:ring-[#c8f000]"
                   } ${
                     loading || registered ? "opacity-75 cursor-not-allowed" : ""
                   }`}
@@ -144,7 +144,7 @@ export default function ApplePaySetup() {
                   <div className="mt-4">
                     <Link
                       href="/checkout"
-                      className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                      className="text-sm font-medium text-[#c8f000] hover:text-[#c8f000]"
                     >
                       Go to checkout →
                     </Link>
@@ -153,13 +153,13 @@ export default function ApplePaySetup() {
               )}
 
               <div>
-                <h2 className="text-lg font-medium text-gray-900 mb-2">
+                <h2 className="text-lg font-medium text-white mb-2">
                   Step 3: Test Apple Pay
                 </h2>
-                <p className="text-sm text-gray-600 mb-2">
+                <p className="text-sm text-white/60 mb-2">
                   After registration, Apple Pay should appear in your checkout.
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-white/60">
                   <strong>Requirements:</strong> Safari browser on macOS or iOS
                   with Apple Pay configured.
                 </p>

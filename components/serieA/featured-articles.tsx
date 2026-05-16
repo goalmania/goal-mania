@@ -11,7 +11,7 @@ export async function FeaturedArticles() {
     return (
       <section className="mb-12">
         <div className="text-center py-16">
-          <p className="text-[#0e1924] text-lg">
+          <p className="text-[#0a0a0a] text-lg">
             No Serie A news available yet. Check back soon!
           </p>
         </div>
@@ -27,7 +27,7 @@ export async function FeaturedArticles() {
           <Link
             key={article._id}
             href={`/serieA/${article.slug}`}
-            className="group block bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-[#e5e7eb]"
+            className="group block bg-[#0a0a0a] rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-[#e5e7eb]"
           >
             <div className="relative h-60 sm:h-64 w-full overflow-hidden">
               <Image
@@ -38,9 +38,9 @@ export async function FeaturedArticles() {
                 sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                 priority={true}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0e1924]/80 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/80 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-4">
-                <span className="inline-block px-3 py-1 mb-2 text-xs font-semibold text-white bg-[#f5963c] rounded-full shadow transition-all duration-300">
+                <span className="inline-block px-3 py-1 mb-2 text-xs font-semibold text-white bg-[#c8f000] rounded-full shadow transition-all duration-300">
                   Featured
                 </span>
                 <h2 className="text-lg sm:text-xl font-bold text-white mb-2 drop-shadow">

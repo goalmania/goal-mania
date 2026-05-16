@@ -141,7 +141,7 @@ export default function AdminUsersPage() {
       <div className="container mx-auto p-4">
         <div className="flex flex-col items-center justify-center min-h-[60vh]">
           <div className="loading loading-spinner loading-lg text-primary mb-4"></div>
-          <p className="text-gray-600">Loading user data...</p>
+          <p className="text-white/60">Loading user data...</p>
         </div>
       </div>
     );
@@ -152,8 +152,8 @@ export default function AdminUsersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold text-[#0e1924] tracking-tight">User Management</h1>
-          <p className="mt-2 text-base text-gray-700 max-w-2xl">
+          <h1 className="text-3xl font-bold text-[#0a0a0a] tracking-tight">User Management</h1>
+          <p className="mt-2 text-base text-white/70 max-w-2xl">
             Manage user accounts, roles, and permissions.
           </p>
         </div>
@@ -185,7 +185,7 @@ export default function AdminUsersPage() {
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-blue-600">
+            <div className="text-2xl font-bold text-[#c8f000]">
               {stats.regular}
             </div>
             <p className="text-xs text-muted-foreground">Regular Users</p>

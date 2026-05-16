@@ -69,7 +69,7 @@ function SignInContent() {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           {/* <div className="sm:mx-auto sm:w-full sm:max-w-md"> */}
 
-          <h2 className=" text-start text-[57px] font-medium tracking-tight text-black">
+          <h2 className=" text-start text-[57px] font-medium tracking-tight text-white">
             {t("auth.signIn")}
           </h2>
           <p className=" text-[#131228] text-[22px] ">
@@ -78,7 +78,7 @@ function SignInContent() {
         </div>
 
         <div className=" sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-8 px-4  sm:px-10">
+          <div className="bg-[#0a0a0a] py-8 px-4  sm:px-10">
             {/* Show alert if redirected for auth-required */}
             {showAuthRequired && (
               <div className="mb-4 rounded-md bg-yellow-50 p-4 border border-yellow-200">
@@ -113,7 +113,7 @@ function SignInContent() {
                     type="email"
                     autoComplete="email"
                     required
-                    className="bg-white border-0 w-full py-2 border-b border-black  font-light rounded-none shadow-none pl-0 placeholder:text-[#333333] text-[#333333]"
+                    className="bg-[#0a0a0a] border-0 w-full py-2 border-b border-white/10  font-light rounded-none shadow-none pl-0 placeholder:text-white/30 text-white"
                     placeholder={t("auth.emailPlaceholder")}
                   />
                 </div>
@@ -127,7 +127,7 @@ function SignInContent() {
                     type="password"
                     autoComplete="current-password"
                     required
-                    className="bg-white border-0 w-full border-b py-2 border-black  placeholder:text-[#333333] text-[#333333] font-light rounded-none shadow-none pl-0"
+                    className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/10  placeholder:text-white/30 text-white font-light rounded-none shadow-none pl-0"
                     placeholder={t("auth.passwordPlaceholder")}
                   />
                 </div>
@@ -170,7 +170,7 @@ function SignInContent() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="flex w-full justify-center rounded-full bg-[#FF7A00] px-3 gap-1.5 py-2 text-sm font-medium  items-center text-[#0A1A2F] shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex w-full justify-center rounded-full bg-[#c8f000] px-3 gap-1.5 py-2 text-sm font-medium  items-center text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c8f000] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? t("common.processing") : t("auth.signIn")}
                   <ArrowRight size={15} />
@@ -180,7 +180,7 @@ function SignInContent() {
 
             <div className="mt-6">
               <div className="relative flex justify-center text-sm">
-                <span className="bg-white px-2 text-gray-500">
+                <span className="bg-[#0a0a0a] px-2 text-white/50">
                   {t("auth.orContinueWith")}
                 </span>
               </div>
@@ -188,7 +188,7 @@ function SignInContent() {
               <div className="mt-6">
                 <button
                   onClick={() => signIn("google", { callbackUrl: "/" })}
-                  className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors"
+                  className="flex w-full items-center justify-center gap-3 rounded-md bg-[#0a0a0a] px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-[#0a0a0a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c8f000] transition-colors"
                 >
                   <Image
                     src="/images/contactImages/google.png"
@@ -202,11 +202,11 @@ function SignInContent() {
               </div>
             </div>
 
-            <p className="mt-6 text-center text-sm text-gray-600">
+            <p className="mt-6 text-center text-sm text-white/60">
               {t("auth.notAMember")}{" "}
               <Link
                 href="/auth/signup"
-                className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
+                className="font-medium text-[#c8f000] hover:text-[#c8f000] transition-colors"
               >
                 {t("auth.signUpNow")}
               </Link>
@@ -230,11 +230,11 @@ export default function SignIn() {
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="text-center">
-            <span className="text-3xl font-bold text-indigo-600">
+            <span className="text-3xl font-bold text-[#c8f000]">
               Goal Mania
             </span>
           </div>
-          <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-gray-900">
+          <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-white">
             Sign in to your account
           </h2>
         </div>

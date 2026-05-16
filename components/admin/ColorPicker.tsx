@@ -31,7 +31,7 @@ export function ColorPicker({ value, onChange, label, placeholder }: ColorPicker
       "#22c55e": "green-500", "#16a34a": "green-600", "#15803d": "green-700", "#166534": "green-800", "#14532d": "green-900",
       "#eab308": "yellow-500", "#ca8a04": "yellow-600", "#a16207": "yellow-700", "#854d0e": "yellow-800", "#713f12": "yellow-900",
       "#a855f7": "purple-500", "#9333ea": "purple-600", "#7c3aed": "purple-700", "#6d28d9": "purple-800", "#581c87": "purple-900",
-      "#f97316": "orange-500", "#ea580c": "orange-600", "#c2410c": "orange-700", "#9a3412": "orange-800", "#7c2d12": "orange-900",
+      "#c8f000": "orange-500", "#ea580c": "orange-600", "#c2410c": "orange-700", "#9a3412": "orange-800", "#7c2d12": "orange-900",
       "#6b7280": "gray-500", "#4b5563": "gray-600", "#374151": "gray-700", "#1f2937": "gray-800", "#111827": "gray-900",
       "#ec4899": "pink-500", "#db2777": "pink-600", "#be185d": "pink-700", "#9d174d": "pink-800", "#831843": "pink-900",
       "#06b6d4": "cyan-500", "#0891b2": "cyan-600", "#0e7490": "cyan-700", "#155e75": "cyan-800", "#164e63": "cyan-900",
@@ -72,12 +72,12 @@ export function ColorPicker({ value, onChange, label, placeholder }: ColorPicker
       <Label className="text-xs font-medium">Quick Colors</Label>
       <div className="grid grid-cols-6 gap-1">
         {[
-          "#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#a855f7",
+          "#ef4444", "#c8f000", "#eab308", "#22c55e", "#3b82f6", "#a855f7",
           "#ec4899", "#06b6d4", "#84cc16", "#f59e0b", "#8b5cf6", "#64748b"
         ].map((color) => (
           <button
             key={color}
-            className="w-6 h-6 rounded border border-gray-200 hover:scale-110 transition-transform"
+            className="w-6 h-6 rounded border border-white/8 hover:scale-110 transition-transform"
             style={{ backgroundColor: color }}
             onClick={() => onColorSelect(color)}
           />
@@ -206,7 +206,7 @@ export function ColorPicker({ value, onChange, label, placeholder }: ColorPicker
         <div className="mt-3">
           <Label className="text-xs text-muted-foreground">Preview</Label>
           <div 
-            className="w-full h-8 rounded border border-gray-200 mt-1"
+            className="w-full h-8 rounded border border-white/8 mt-1"
             style={{ 
               background: `linear-gradient(to right, ${fromColor}, ${toColor})` 
             }}
@@ -232,7 +232,7 @@ export function ColorPicker({ value, onChange, label, placeholder }: ColorPicker
     if (val.includes("green")) return "#22c55e";
     if (val.includes("yellow")) return "#eab308";
     if (val.includes("purple")) return "#a855f7";
-    if (val.includes("orange")) return "#f97316";
+    if (val.includes("orange")) return "#c8f000";
     if (val.includes("gray")) return "#6b7280";
     if (val.includes("black")) return "#000000";
     if (val.includes("white")) return "#ffffff";
@@ -279,7 +279,7 @@ export function ColorPicker({ value, onChange, label, placeholder }: ColorPicker
               </div>
               <div className="flex items-center gap-2">
                 <div
-                  className="w-8 h-8 rounded border border-gray-200"
+                  className="w-8 h-8 rounded border border-white/8"
                   style={{ backgroundColor: currentColor }}
                 />
                 <Input

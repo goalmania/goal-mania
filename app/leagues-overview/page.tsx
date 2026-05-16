@@ -16,9 +16,9 @@ export default function LeaguesOverviewPage() {
   ];
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-[#0a0a0a] min-h-screen">
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 text-center text-black">
+        <h1 className="text-3xl font-bold mb-8 text-center text-white">
           Leagues Overview
         </h1>
 

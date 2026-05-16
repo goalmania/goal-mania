@@ -160,7 +160,7 @@ export default function NewsBanner({ articles = [], className, imageUrl }: NewsB
                 className="flex flex-col items-center text-center px-6"
               >
                 <Link href={getArticleUrl(article)} className="w-full">
-                  <h1 className="text-white text-xl font-bold mb-4 font-sans hover:text-[#FF7A00] transition-colors">
+                  <h1 className="text-white text-xl font-bold mb-4 font-sans hover:text-[#c8f000] transition-colors">
                     {article.title}
                   </h1>
                   <p className="text-white text-sm font-light leading-relaxed line-clamp-3">
@@ -194,7 +194,7 @@ export default function NewsBanner({ articles = [], className, imageUrl }: NewsB
               href={getArticleUrl(article)}
               className="text-center flex justify-center flex-col group"
             >
-              <h1 className="text-white text-2xl mb-2 font-bold font-sans max-w-xl group-hover:text-[#FF7A00] transition-colors">
+              <h1 className="text-white text-2xl mb-2 font-bold font-sans max-w-xl group-hover:text-[#c8f000] transition-colors">
                 {article.title}
               </h1>
 

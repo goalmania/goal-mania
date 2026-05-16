@@ -48,7 +48,7 @@ export function Toast({
 
   return (
     <div
-      className={`fixed bottom-4 right-4 z-50 max-w-sm overflow-hidden rounded-lg bg-white shadow-xl ring-1 ring-black ring-opacity-5 transition-all duration-300 ${className}`}
+      className={`fixed bottom-4 right-4 z-50 max-w-sm overflow-hidden rounded-lg bg-[#0a0a0a] shadow-xl ring-1 ring-black ring-opacity-5 transition-all duration-300 ${className}`}
     >
       <div className="relative p-4">
         {/* Accent bar at top */}
@@ -62,25 +62,25 @@ export function Toast({
                 alt="Promotional item"
                 width={80}
                 height={80}
-                className="rounded-md object-cover border border-gray-200 shadow-sm"
+                className="rounded-md object-cover border border-white/8 shadow-sm"
                 unoptimized
               />
             </div>
           )}
           <div className="flex-1">
             <div className="flex items-start justify-between">
-              <h3 className="text-sm font-bold text-black bg-amber-100 px-1 rounded">
+              <h3 className="text-sm font-bold text-white bg-amber-100 px-1 rounded">
                 {title}
               </h3>
               <button
                 onClick={handleClose}
-                className="ml-4 inline-flex text-gray-400 hover:text-gray-500 focus:outline-none"
+                className="ml-4 inline-flex text-white/40 hover:text-white/50 focus:outline-none"
               >
                 <span className="sr-only">Close</span>
                 <XMarkIcon className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
-            <p className="mt-1 text-sm text-gray-800 font-medium">
+            <p className="mt-1 text-sm text-white/80 font-medium">
               {description}
             </p>
             {cta && (

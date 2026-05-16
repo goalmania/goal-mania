@@ -49,9 +49,9 @@ export default async function TransferPage() {
   const { featured, regular } = await getTransferArticles();
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-[#0a0a0a] min-h-screen">
       <div className="container mx-auto px-4 sm:px-6 py-8">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-center text-black">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-center text-white">
           Transfer Market News
         </h1>
 
@@ -63,7 +63,7 @@ export default async function TransferPage() {
                 <Link
                   key={article._id}
                   href={`/transfer/${article.slug}`}
-                  className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                  className="group block bg-[#0a0a0a] rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
                 >
                   <div className="relative h-60 sm:h-64 w-full overflow-hidden">
                     <Image
@@ -76,7 +76,7 @@ export default async function TransferPage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                     <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <span className="inline-block px-3 py-1 mb-2 text-xs font-semibold text-white bg-indigo-600 rounded-full">
+                      <span className="inline-block px-3 py-1 mb-2 text-xs font-semibold text-white bg-[#c8f000] rounded-full">
                         Featured
                       </span>
                       <h2 className="text-lg sm:text-xl font-bold text-white mb-2">
@@ -100,7 +100,7 @@ export default async function TransferPage() {
               <Link
                 key={article._id}
                 href={`/transfer/${article.slug}`}
-                className="group flex flex-col bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
+                className="group flex flex-col bg-[#0a0a0a] rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
               >
                 <div className="relative h-40 sm:h-48 w-full">
                   <Image
@@ -112,20 +112,20 @@ export default async function TransferPage() {
                   />
                 </div>
                 <div className="p-4 flex-1 flex flex-col">
-                  <div className="flex items-center text-xs text-gray-600 mb-2">
+                  <div className="flex items-center text-xs text-white/60 mb-2">
                     <span>
                       {new Date(article.publishedAt).toLocaleDateString()}
                     </span>
                     <span className="mx-2">•</span>
                     <span>{article.author}</span>
                   </div>
-                  <h2 className="text-base sm:text-lg font-semibold text-black mb-2 group-hover:text-indigo-600 transition-colors duration-200">
+                  <h2 className="text-base sm:text-lg font-semibold text-white mb-2 group-hover:text-[#c8f000] transition-colors duration-200">
                     {article.title}
                   </h2>
-                  <p className="text-sm text-gray-700 mb-4 line-clamp-2">
+                  <p className="text-sm text-white/70 mb-4 line-clamp-2">
                     {article.summary}
                   </p>
-                  <span className="mt-auto text-indigo-600 text-sm font-medium">
+                  <span className="mt-auto text-[#c8f000] text-sm font-medium">
                     Read more
                   </span>
                 </div>
@@ -136,7 +136,7 @@ export default async function TransferPage() {
 
         {featured.length === 0 && regular.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-black text-lg">
+            <p className="text-white text-lg">
               No transfer news available yet. Check back soon!
             </p>
           </div>

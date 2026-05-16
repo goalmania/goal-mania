@@ -27,7 +27,7 @@ function FixturesLoading() {
       {[1, 2, 3].map((i) => (
         <div
           key={i}
-          className="bg-gray-100 animate-pulse h-16 rounded-lg"
+          className="bg-[#111] animate-pulse h-16 rounded-lg"
         ></div>
       ))}
     </div>

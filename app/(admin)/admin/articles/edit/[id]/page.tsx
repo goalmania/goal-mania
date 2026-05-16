@@ -394,17 +394,17 @@ export default function EditArticlePage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
+          <div className="h-8 bg-[#1a1a1a] rounded w-1/4 mb-4"></div>
+          <div className="h-4 bg-[#1a1a1a] rounded w-1/2 mb-8"></div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-4">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-4 bg-gray-200 rounded"></div>
+                <div key={i} className="h-4 bg-[#1a1a1a] rounded"></div>
               ))}
             </div>
             <div className="space-y-4">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="h-4 bg-gray-200 rounded"></div>
+                <div key={i} className="h-4 bg-[#1a1a1a] rounded"></div>
               ))}
             </div>
           </div>
@@ -419,16 +419,16 @@ export default function EditArticlePage() {
       <div className="flex items-center justify-between mb-8">
         <div className="flex justify-between w-full items-start space-x-4">
           <div>
-            <h1 className="text-3xl font-bold text-[#0e1924] tracking-tight">
+            <h1 className="text-3xl font-bold text-[#0a0a0a] tracking-tight">
               {isNewArticle ? "Create New Article" : "Edit Article"}
             </h1>
-            <p className="mt-1 text-base text-gray-700">
+            <p className="mt-1 text-base text-white/70">
               {isNewArticle ? "Add a new article to your content library" : "Update article content and settings"}
             </p>
             {hasUnsavedChanges && (
               <div className="mt-2 flex items-center space-x-2">
-                <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-orange-600 font-medium">
+                <div className="w-2 h-2 bg-[#c8f000] rounded-full animate-pulse"></div>
+                <span className="text-sm text-[#c8f000] font-medium">
                   You have unsaved changes
                 </span>
               </div>
@@ -464,7 +464,7 @@ export default function EditArticlePage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="title" className="block text-sm font-medium text-black">
+                  <Label htmlFor="title" className="block text-sm font-medium text-white">
                     Title *
                   </Label>
                   <Input
@@ -480,7 +480,7 @@ export default function EditArticlePage() {
                 </div>
 
                 <div>
-                  <Label htmlFor="summary" className="block text-sm font-medium text-black">
+                  <Label htmlFor="summary" className="block text-sm font-medium text-white">
                     Summary *
                   </Label>
                   <Textarea
@@ -496,7 +496,7 @@ export default function EditArticlePage() {
                 </div>
 
                 <div>
-                  <Label htmlFor="author" className="block text-sm font-medium text-black">
+                  <Label htmlFor="author" className="block text-sm font-medium text-white">
                     Author *
                   </Label>
                   <Input
@@ -541,7 +541,7 @@ export default function EditArticlePage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="image" className="block text-sm font-medium text-black">
+                  <Label htmlFor="image" className="block text-sm font-medium text-white">
                     Main Image URL
                   </Label>
                   <Input
@@ -555,7 +555,7 @@ export default function EditArticlePage() {
                   />
                 </div>
 
-                <div className="border-2 border-dashed border-gray-300 rounded-md p-4 relative">
+                <div className="border-2 border-dashed border-white/10 rounded-md p-4 relative">
                   <input
                     id="image-upload"
                     name="image-upload"
@@ -563,7 +563,7 @@ export default function EditArticlePage() {
                     accept="image/*"
                     multiple
                     onChange={handleImageUpload}
-                    className="block w-full text-sm text-gray-900
+                    className="block w-full text-sm text-white
                       file:mr-4 file:py-2 file:px-4
                       file:rounded-md file:border-0
                       file:text-sm file:font-semibold
@@ -571,14 +571,14 @@ export default function EditArticlePage() {
                       hover:file:bg-indigo-100"
                     disabled={isUploading}
                   />
-                  <div className="mt-2 text-sm text-gray-500">
+                  <div className="mt-2 text-sm text-white/50">
                     PNG, JPG or WebP up to 5MB (multiple files supported)
                   </div>
 
                   {isUploading && (
-                    <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-[#0a0a0a] bg-opacity-70 flex items-center justify-center">
                       <div className="flex flex-col items-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#c8f000]"></div>
                         <p className="mt-2 text-sm font-medium text-indigo-700">
                           Uploading images...
                         </p>
@@ -589,10 +589,10 @@ export default function EditArticlePage() {
 
                 {/* Image Gallery */}
                 <div className="mt-4">
-                  <Label className="block text-sm font-medium text-black mb-2">
+                  <Label className="block text-sm font-medium text-white mb-2">
                     Image Gallery ({formData.images.length} images)
                   </Label>
-                  <div className="text-xs text-gray-500 mb-3">
+                  <div className="text-xs text-white/50 mb-3">
                     Drag to reorder • First image is the main image • Hover to see actions
                   </div>
                   <DraggableImageGallery
@@ -612,7 +612,7 @@ export default function EditArticlePage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="category" className="block text-sm font-medium text-black">
+                  <Label htmlFor="category" className="block text-sm font-medium text-white">
                     Category *
                   </Label>
                   <Select
@@ -634,7 +634,7 @@ export default function EditArticlePage() {
 
                 {formData.category === "internationalTeams" && (
                   <div>
-                    <Label htmlFor="league" className="block text-sm font-medium text-black">
+                    <Label htmlFor="league" className="block text-sm font-medium text-white">
                       League *
                     </Label>
                     <Select
@@ -656,7 +656,7 @@ export default function EditArticlePage() {
                 )}
 
                 <div>
-                  <Label htmlFor="status" className="block text-sm font-medium text-black">
+                  <Label htmlFor="status" className="block text-sm font-medium text-white">
                     Status
                   </Label>
                   <Select
@@ -683,13 +683,13 @@ export default function EditArticlePage() {
                     }
                     className="h-4 w-4"
                   />
-                  <Label htmlFor="featured" className="text-sm text-black">
+                  <Label htmlFor="featured" className="text-sm text-white">
                     Featured Article
                   </Label>
                 </div>
 
                 <div>
-                  <Label htmlFor="featuredJerseyId" className="block text-sm font-medium text-black">
+                  <Label htmlFor="featuredJerseyId" className="block text-sm font-medium text-white">
                     Featured Jersey in Article
                   </Label>
                   <Select
@@ -708,7 +708,7 @@ export default function EditArticlePage() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p className="mt-1 text-xs text-white/50">
                     Select a jersey to feature in the middle of this article
                   </p>
                 </div>

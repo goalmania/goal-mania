@@ -163,7 +163,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
   };
 
   return (
-    <div className="border-b border-gray-200 p-2 bg-gray-50 rounded-t-lg">
+    <div className="border-b border-white/8 p-2 bg-[#0a0a0a] rounded-t-lg">
       <div className="flex flex-wrap gap-1">
         {/* Text Formatting */}
         <Button
@@ -396,7 +396,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
             variant="ghost"
             size="sm"
             onClick={() => setColor("#d97706")}
-            className="w-6 h-6 p-0 bg-orange-600 hover:bg-orange-700"
+            className="w-6 h-6 p-0 bg-[#c8f000] hover:bg-orange-700"
             title="Orange"
           />
           <Button
@@ -451,7 +451,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
       {/* Link Dialog */}
       {showLinkDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-96 max-w-[90vw]">
+          <div className="bg-[#0a0a0a] rounded-lg p-6 w-96 max-w-[90vw]">
             <h3 className="text-lg font-semibold mb-4">
               {editor.isActive("link") ? "Update Link" : "Add Link"}
             </h3>
@@ -460,10 +460,10 @@ const MenuBar = ({ editor }: { editor: any }) => {
             {isTextSelected() && (
               <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
                 <p className="text-sm font-medium text-blue-800 mb-1">Selected Text:</p>
-                <p className="text-sm text-blue-700 bg-white p-2 rounded border">
+                <p className="text-sm text-blue-700 bg-[#0a0a0a] p-2 rounded border">
                   "{getSelectedText()}"
                 </p>
-                <p className="text-xs text-blue-600 mt-1">
+                <p className="text-xs text-[#c8f000] mt-1">
                   This text will become a clickable link
                 </p>
               </div>
@@ -471,7 +471,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-white/70 mb-1">
                   URL *
                 </label>
                 <input
@@ -479,7 +479,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                   value={linkUrl}
                   onChange={(e) => setLinkUrl(e.target.value)}
                   placeholder="https://example.com"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-white/10 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
@@ -492,7 +492,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
               
               {!isTextSelected() && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-white/70 mb-1">
                     Link Text (optional)
                   </label>
                   <input
@@ -500,7 +500,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                     value={linkText}
                     onChange={(e) => setLinkText(e.target.value)}
                     placeholder="Enter link text or leave empty to use URL"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-white/10 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault();
@@ -508,7 +508,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                       }
                     }}
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-white/50 mt-1">
                     If no text is selected, this will be inserted as a new link
                   </p>
                 </div>
@@ -516,11 +516,11 @@ const MenuBar = ({ editor }: { editor: any }) => {
             </div>
 
             {/* Instructions */}
-            <div className="mt-4 p-3 bg-gray-50 rounded-md">
-              <p className="text-xs text-gray-600">
+            <div className="mt-4 p-3 bg-[#0a0a0a] rounded-md">
+              <p className="text-xs text-white/60">
                 <strong>How to use:</strong>
               </p>
-              <ul className="text-xs text-gray-600 mt-1 space-y-1">
+              <ul className="text-xs text-white/60 mt-1 space-y-1">
                 <li>• Select text first, then click "Add Link" to make it clickable</li>
                 <li>• Or click "Add Link" without selection to insert a new link</li>
                 <li>• Press Enter to quickly add the link</li>
@@ -572,15 +572,15 @@ const MenuBar = ({ editor }: { editor: any }) => {
       {/* Image Dialog */}
       {showImageDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-96 max-w-[90vw]">
+          <div className="bg-[#0a0a0a] rounded-lg p-6 w-96 max-w-[90vw]">
             <h3 className="text-lg font-semibold mb-4">Add Image</h3>
             <div className="space-y-4">
               {/* File Upload */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-white/70 mb-1">
                   Upload Image
                 </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-md p-4 relative">
+                <div className="border-2 border-dashed border-white/10 rounded-md p-4 relative">
                   <input
                     type="file"
                     accept="image/*"
@@ -602,15 +602,15 @@ const MenuBar = ({ editor }: { editor: any }) => {
                     {isUploadingImage ? (
                       <div className="flex flex-col items-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mb-2"></div>
-                        <p className="text-sm text-gray-600">Uploading image...</p>
+                        <p className="text-sm text-white/60">Uploading image...</p>
                       </div>
                     ) : (
                       <div>
-                        <ImageIcon className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-                        <p className="text-sm text-gray-600">
+                        <ImageIcon className="mx-auto h-8 w-8 text-white/40 mb-2" />
+                        <p className="text-sm text-white/60">
                           Click to upload or drag and drop
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-white/50 mt-1">
                           PNG, JPG, WebP up to 10MB
                         </p>
                       </div>
@@ -621,16 +621,16 @@ const MenuBar = ({ editor }: { editor: any }) => {
 
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-gray-300" />
+                  <span className="w-full border-t border-white/10" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">Or</span>
+                  <span className="px-2 bg-[#0a0a0a] text-white/50">Or</span>
                 </div>
               </div>
 
               {/* URL Input */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-white/70 mb-1">
                   Image URL
                 </label>
                 <input
@@ -638,7 +638,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
                   placeholder="https://example.com/image.jpg"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-white/10 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
@@ -649,10 +649,10 @@ const MenuBar = ({ editor }: { editor: any }) => {
               </div>
               {imageUrl && (
                 <div className="mt-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-white/70 mb-1">
                     Preview
                   </label>
-                  <div className="border border-gray-300 rounded-md p-2">
+                  <div className="border border-white/10 rounded-md p-2">
                     <img
                       src={imageUrl}
                       alt="Preview"
@@ -708,7 +708,7 @@ export const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: "text-blue-600 underline cursor-pointer",
+          class: "text-[#c8f000] underline cursor-pointer",
         },
       }),
       Image.configure({
@@ -747,19 +747,19 @@ export const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
 
   if (!isMounted) {
     return (
-      <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="border-b border-gray-200 p-2 bg-gray-50 rounded-t-lg">
+      <div className="border border-white/8 rounded-lg overflow-hidden">
+        <div className="border-b border-white/8 p-2 bg-[#0a0a0a] rounded-t-lg">
           <div className="flex flex-wrap gap-1">
             {/* Placeholder toolbar */}
-            <div className="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
-            <div className="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
-            <div className="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+            <div className="h-8 w-8 bg-[#1a1a1a] rounded animate-pulse"></div>
+            <div className="h-8 w-8 bg-[#1a1a1a] rounded animate-pulse"></div>
+            <div className="h-8 w-8 bg-[#1a1a1a] rounded animate-pulse"></div>
           </div>
         </div>
-        <div className="p-4 min-h-[300px] bg-gray-50 animate-pulse">
-          <div className="h-4 bg-gray-200 rounded mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+        <div className="p-4 min-h-[300px] bg-[#0a0a0a] animate-pulse">
+          <div className="h-4 bg-[#1a1a1a] rounded mb-2"></div>
+          <div className="h-4 bg-[#1a1a1a] rounded mb-2"></div>
+          <div className="h-4 bg-[#1a1a1a] rounded w-3/4"></div>
         </div>
       </div>
     );
@@ -767,7 +767,7 @@ export const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
 
   return (
     <div 
-      className="border border-gray-200 rounded-lg overflow-hidden"
+      className="border border-white/8 rounded-lg overflow-hidden"
       onClick={(e) => {
         // Prevent form submission when clicking inside the editor
         e.stopPropagation();

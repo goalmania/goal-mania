@@ -34,9 +34,9 @@ export default function AdminCacheControl() {
   };
 
   return (
-    <div className="bg-white shadow rounded-lg p-4 mb-6">
+    <div className="bg-[#0a0a0a] shadow rounded-lg p-4 mb-6">
       <h2 className="text-lg font-semibold mb-4">Content Cache Control</h2>
-      <p className="text-sm text-gray-600 mb-4">
+      <p className="text-sm text-white/60 mb-4">
         If you've made database changes but don't see them reflected on the
         site, use this button to refresh the content cache.
       </p>

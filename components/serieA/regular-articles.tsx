@@ -11,7 +11,7 @@ export async function RegularArticles() {
     return (
       <section>
         <div className="text-center py-16">
-          <p className="text-[#0e1924] text-lg">
+          <p className="text-[#0a0a0a] text-lg">
             No Serie A news available yet. Check back soon!
           </p>
         </div>
@@ -27,7 +27,7 @@ export async function RegularArticles() {
           <Link
             key={article._id}
             href={`/serieA/${article.slug}`}
-            className="group flex flex-col bg-white rounded-2xl shadow border border-[#e5e7eb] overflow-hidden hover:shadow-lg transition-shadow duration-300"
+            className="group flex flex-col bg-[#0a0a0a] rounded-2xl shadow border border-[#e5e7eb] overflow-hidden hover:shadow-lg transition-shadow duration-300"
           >
             <div className="relative h-40 sm:h-48 w-full">
               <Image
@@ -39,20 +39,20 @@ export async function RegularArticles() {
               />
             </div>
             <div className="p-4 flex-1 flex flex-col">
-              <div className="flex items-center text-xs text-gray-500 mb-2">
+              <div className="flex items-center text-xs text-white/50 mb-2">
                 <span>
                   {new Date(article.publishedAt).toLocaleDateString()}
                 </span>
                 <span className="mx-2">•</span>
                 <span>{article.author}</span>
               </div>
-              <h2 className="text-base sm:text-lg font-semibold text-[#0e1924] mb-2 group-hover:text-[#f5963c] transition-colors duration-300">
+              <h2 className="text-base sm:text-lg font-semibold text-[#0a0a0a] mb-2 group-hover:text-[#c8f000] transition-colors duration-300">
                 {article.title}
               </h2>
-              <p className="text-sm text-gray-700 mb-4 line-clamp-2">
+              <p className="text-sm text-white/70 mb-4 line-clamp-2">
                 {article.summary}
               </p>
-              <span className="mt-auto text-[#f5963c] text-sm font-medium group-hover:underline transition-all duration-300">
+              <span className="mt-auto text-[#c8f000] text-sm font-medium group-hover:underline transition-all duration-300">
                 Read more
               </span>
             </div>

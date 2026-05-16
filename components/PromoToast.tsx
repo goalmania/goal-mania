@@ -126,11 +126,11 @@ export default function PromoToast() {
           exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
           className="fixed bottom-6 sm:bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-[9999] w-[92%] sm:w-[85%] md:w-[600px] lg:w-[700px] max-w-[95vw]"
         >
-          <div className="relative bg-white overflow-hidden rounded-[20px] border border-[#F1F2F9] px-[20px] py-[10px] sm:p-[20px_25px] shadow-[0px_24px_48px_rgba(107,108,126,0.08),0px_12px_24px_rgba(107,108,126,0.12)]">
+          <div className="relative bg-[#0a0a0a] overflow-hidden rounded-[20px] border border-[#F1F2F9] px-[20px] py-[10px] sm:p-[20px_25px] shadow-[0px_24px_48px_rgba(107,108,126,0.08),0px_12px_24px_rgba(107,108,126,0.12)]">
             {/* Close button */}
             <button
               onClick={handleDismiss}
-              className="absolute top-3 left-3 z-10 w-7 h-7 rounded-full bg-[#0A1A2F] hover:bg-[#0A1A2F]/90 flex items-center justify-center transition-colors"
+              className="absolute top-3 left-3 z-10 w-7 h-7 rounded-full bg-[#111111] hover:bg-[#111111]/90 flex items-center justify-center transition-colors"
               aria-label="Chiudi"
             >
               <X className="h-3.5 w-3.5 text-white" />
@@ -175,7 +175,7 @@ export default function PromoToast() {
                   <Link href="/shop" className="w-full sm:w-auto">
                     <button
                       onClick={handleDismiss}
-                      className="bg-[#FF7A00] hover:bg-[#FF7A00]/90 text-white text-[10px] sm:text-[11.5px] md:text-[12.5px] lg:text-[13px] font-semibold px-3 py-1.5 sm:px-4.5 sm:py-1.5 md:px-5 md:py-1.5 lg:px-6 lg:py-2 rounded-full shadow-lg hover:shadow-xl transition-all whitespace-nowrap w-full sm:w-auto"
+                      className="bg-[#c8f000] hover:bg-[#c8f000]/90 text-white text-[10px] sm:text-[11.5px] md:text-[12.5px] lg:text-[13px] font-semibold px-3 py-1.5 sm:px-4.5 sm:py-1.5 md:px-5 md:py-1.5 lg:px-6 lg:py-2 rounded-full shadow-lg hover:shadow-xl transition-all whitespace-nowrap w-full sm:w-auto"
                     >
                       Compra Ora →
                     </button>

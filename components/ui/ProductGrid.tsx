@@ -115,9 +115,9 @@ export default function ProductGrid({
 
         {/* Custom Bottom-Center Navigation */}
         <div className="absolute  left-1/2 -translate-x-1/2 flex gap-4 z-10">
-          <button className="custom-prev bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full p-2 shadow">
+          <button className="custom-prev bg-[#1a1a1a] hover:bg-gray-300 text-white/70 rounded-full p-2 shadow">
             <svg
-              className="w-5 h-5 text-gray-700"
+              className="w-5 h-5 text-white/70"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -130,9 +130,9 @@ export default function ProductGrid({
               />
             </svg>
           </button>
-          <button className="custom-next bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full p-2 shadow">
+          <button className="custom-next bg-[#1a1a1a] hover:bg-gray-300 text-white/70 rounded-full p-2 shadow">
             <svg
-              className="w-5 h-5 text-gray-700"
+              className="w-5 h-5 text-white/70"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

@@ -22,7 +22,7 @@ export function InteractiveHoverButton({
         {children}
         <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
       </span>
-      <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-violet-600 to-indigo-600 opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100" />
+      <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-violet-600 to-[#c8f000] opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100" />
     </button>
   );
 }

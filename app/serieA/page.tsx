@@ -32,7 +32,7 @@ export default async function SerieAPage() {
       <Suspense fallback={<LoadingFallback />}>
         <div className="bg-[#f7f7f9] min-h-screen">
           <div className="container mx-auto px-4 sm:px-6 py-8">
-            <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-center text-[#0e1924] tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-center text-[#0a0a0a] tracking-tight">
               Serie A News
             </h1>
 
@@ -40,7 +40,7 @@ export default async function SerieAPage() {
               {/* Standings Column - Left Side */}
               <div className="lg:col-span-4 order-2 lg:order-1">
                 <div className="sticky top-20">
-                  <h2 className="text-xl font-bold mb-4 text-[#0e1924]">
+                  <h2 className="text-xl font-bold mb-4 text-[#0a0a0a]">
                     Serie A
                   </h2>
                   <LeagueStatistics league="serie-a" />

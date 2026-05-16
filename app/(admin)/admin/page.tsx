@@ -88,7 +88,7 @@ const getStatusColor = (status: string) => {
     case "cancelled":
       return "bg-red-100 text-red-800";
     default:
-      return "bg-gray-100 text-gray-800";
+      return "bg-[#111] text-white/80";
   }
 };
 
@@ -187,7 +187,7 @@ export default function AdminDashboard() {
       <div className="flex justify-center items-center min-h-screen bg-[#f5f6fa]">
         <div className="text-center">
           <ExclamationTriangleIcon className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <p className="text-gray-600">Failed to load dashboard data</p>
+          <p className="text-white/60">Failed to load dashboard data</p>
         </div>
       </div>
     );
@@ -230,8 +230,8 @@ export default function AdminDashboard() {
     <>
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-[#0e1924] tracking-tight">Dashboard</h1>
-        <p className="mt-2 text-base text-gray-700 max-w-2xl">
+        <h1 className="text-3xl font-bold text-[#0a0a0a] tracking-tight">Dashboard</h1>
+        <p className="mt-2 text-base text-white/70 max-w-2xl">
           Welcome back! Here&apos;s an overview of your store performance and insights.
         </p>
       </div>
@@ -244,15 +244,15 @@ export default function AdminDashboard() {
         {stats.map((stat) => (
           <Card key={stat.name} className="hover:shadow-lg transition-shadow duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-white/60">
                 {stat.name}
               </CardTitle>
-              <stat.icon className="h-5 w-5 text-[#f5963c]" />
+              <stat.icon className="h-5 w-5 text-[#c8f000]" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-[#0e1924]">{stat.value}</div>
+              <div className="text-2xl font-bold text-[#0a0a0a]">{stat.value}</div>
               {stat.description && (
-                <p className="text-xs text-gray-500 mt-1">{stat.description}</p>
+                <p className="text-xs text-white/50 mt-1">{stat.description}</p>
               )}
             </CardContent>
           </Card>
@@ -289,15 +289,15 @@ export default function AdminDashboard() {
                         <Line 
                           type="monotone" 
                           dataKey="revenue" 
-                          stroke="#f5963c" 
+                          stroke="#c8f000" 
                           strokeWidth={2}
-                          dot={{ fill: "#f5963c" }}
+                          dot={{ fill: "#c8f000" }}
                         />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>
                 ) : (
-                  <div className="h-[300px] flex items-center justify-center text-gray-500">
+                  <div className="h-[300px] flex items-center justify-center text-white/50">
                     No recent data available
                   </div>
                 )}
@@ -321,12 +321,12 @@ export default function AdminDashboard() {
                     <div key={status.status} className="space-y-2">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
-                          <Icon className="h-4 w-4 text-gray-500" />
+                          <Icon className="h-4 w-4 text-white/50" />
                           <span className="text-sm font-medium capitalize">
                             {status.status}
                           </span>
                         </div>
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-white/50">
                           {status.count} ({percentage.toFixed(1)}%)
                         </span>
                       </div>
@@ -345,10 +345,10 @@ export default function AdminDashboard() {
                 <CardTitle className="text-sm font-medium">Average Order Value</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-[#0e1924]">
+                <div className="text-2xl font-bold text-[#0a0a0a]">
                   {formatCurrency(data.revenue.average)}
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Per order</p>
+                <p className="text-xs text-white/50 mt-1">Per order</p>
               </CardContent>
             </Card>
 
@@ -357,10 +357,10 @@ export default function AdminDashboard() {
                 <CardTitle className="text-sm font-medium">Mystery Box Orders</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-[#0e1924]">
+                <div className="text-2xl font-bold text-[#0a0a0a]">
                   {data.mysteryBoxOrders}
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Special orders</p>
+                <p className="text-xs text-white/50 mt-1">Special orders</p>
               </CardContent>
             </Card>
 
@@ -369,10 +369,10 @@ export default function AdminDashboard() {
                 <CardTitle className="text-sm font-medium">Published Articles</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-[#0e1924]">
+                <div className="text-2xl font-bold text-[#0a0a0a]">
                   {data.stats.articles.value}
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Content pieces</p>
+                <p className="text-xs text-white/50 mt-1">Content pieces</p>
               </CardContent>
             </Card>
           </div>
@@ -395,12 +395,12 @@ export default function AdminDashboard() {
                     return (
                       <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg">
                         <div className="flex items-center space-x-4">
-                          <Icon className="h-5 w-5 text-gray-500" />
+                          <Icon className="h-5 w-5 text-white/50" />
                           <div>
                             <p className="font-medium text-sm">
                               Order #{order.id.substring(0, 8)}...
                             </p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-white/50">
                               {order.itemsCount} items • {formatDate(order.createdAt)}
                             </p>
                           </div>
@@ -416,7 +416,7 @@ export default function AdminDashboard() {
                   })}
                 </div>
               ) : (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-white/50">
                   No orders found
                 </div>
               )}
@@ -443,7 +443,7 @@ export default function AdminDashboard() {
                       <div key={category.name} className="space-y-2">
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-medium">{category.name}</span>
-                          <span className="text-sm text-gray-500">
+                          <span className="text-sm text-white/50">
                             {category.value} ({percentage.toFixed(1)}%)
                           </span>
                         </div>

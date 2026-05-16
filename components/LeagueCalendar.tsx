@@ -70,14 +70,14 @@ export function LeagueCalendar({ league }: LeagueCalendarProps) {
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-md shadow">
+      <div className="bg-[#0a0a0a] rounded-md shadow">
         <div className="p-4 border-b">
-          <h3 className="text-lg font-medium text-black">{t('league.upcomingMatches')}</h3>
+          <h3 className="text-lg font-medium text-white">{t('league.upcomingMatches')}</h3>
         </div>
         <div className="p-4">
           <div className="animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div className="h-4 bg-[#1a1a1a] rounded w-3/4 mb-4"></div>
+            <div className="h-4 bg-[#1a1a1a] rounded w-1/2"></div>
           </div>
         </div>
       </div>
@@ -85,17 +85,17 @@ export function LeagueCalendar({ league }: LeagueCalendarProps) {
   }
 
   return (
-    <div className="bg-white rounded-md shadow">
+    <div className="bg-[#0a0a0a] rounded-md shadow">
       <div className="p-4 border-b">
-        <h3 className="text-lg font-medium text-black">{t('league.upcomingMatches')}</h3>
+        <h3 className="text-lg font-medium text-white">{t('league.upcomingMatches')}</h3>
       </div>
 
       {!hasFixturesData ? (
         <div className="p-4 sm:p-8">
           <Alert variant="destructive" className="bg-amber-50 border-amber-200">
             <AlertCircle className="h-4 w-4 text-amber-600" />
-            <AlertTitle className="text-black">{t('league.noDataAvailable')}</AlertTitle>
-            <AlertDescription className="text-black">
+            <AlertTitle className="text-white">{t('league.noDataAvailable')}</AlertTitle>
+            <AlertDescription className="text-white">
               {t('league.loadError')}
             </AlertDescription>
           </Alert>
@@ -104,8 +104,8 @@ export function LeagueCalendar({ league }: LeagueCalendarProps) {
         <div>
           {sortedRounds.map((round) => (
             <div key={round} className="mb-4">
-              <div className="px-4 py-2 bg-gray-50 border-y border-gray-200">
-                <h4 className="text-sm font-medium text-black">{round}</h4>
+              <div className="px-4 py-2 bg-[#0a0a0a] border-y border-white/8">
+                <h4 className="text-sm font-medium text-white">{round}</h4>
               </div>
               <ul className="divide-y divide-gray-200">
                 {fixturesByRound[round].map((fixture) => {
@@ -116,7 +116,7 @@ export function LeagueCalendar({ league }: LeagueCalendarProps) {
                   return (
                     <li key={fixture.fixture.id} className="p-3 sm:p-4">
                       <div className="flex flex-col space-y-2">
-                        <div className="flex justify-between items-center text-xs sm:text-sm text-black">
+                        <div className="flex justify-between items-center text-xs sm:text-sm text-white">
                           <span className="truncate mr-2">
                             {fixtureDate.toLocaleDateString("it-IT", {
                               weekday: "short",
@@ -130,7 +130,7 @@ export function LeagueCalendar({ league }: LeagueCalendarProps) {
                                 {t('league.live')}
                               </span>
                             ) : isFinished ? (
-                              <span className="px-2 py-0.5 sm:py-1 text-xs font-medium rounded-full bg-gray-100 text-black whitespace-nowrap">
+                              <span className="px-2 py-0.5 sm:py-1 text-xs font-medium rounded-full bg-[#111] text-white whitespace-nowrap">
                                 {t('league.finished')}
                               </span>
                             ) : (
@@ -144,7 +144,7 @@ export function LeagueCalendar({ league }: LeagueCalendarProps) {
 
                         <div className="flex flex-col sm:flex-row sm:items-center">
                           <div className="flex flex-row items-center justify-between sm:justify-end sm:flex-1">
-                            <span className="text-sm font-medium truncate max-w-[120px] sm:max-w-none sm:mr-2 text-black">
+                            <span className="text-sm font-medium truncate max-w-[120px] sm:max-w-none sm:mr-2 text-white">
                               {fixture.teams.home.name}
                             </span>
                             <div className="h-6 w-6 sm:h-8 sm:w-8 relative ml-2 sm:ml-0">
@@ -158,20 +158,20 @@ export function LeagueCalendar({ league }: LeagueCalendarProps) {
                             </div>
                           </div>
 
-                          <div className="mx-0 my-2 sm:mx-4 sm:my-0 px-3 py-1 sm:px-4 sm:py-2 bg-gray-100 rounded-md text-center sm:min-w-[70px] self-center">
+                          <div className="mx-0 my-2 sm:mx-4 sm:my-0 px-3 py-1 sm:px-4 sm:py-2 bg-[#111] rounded-md text-center sm:min-w-[70px] self-center">
                             {isLive || isFinished ? (
-                              <span className="font-bold text-base sm:text-lg text-black">
+                              <span className="font-bold text-base sm:text-lg text-white">
                                 {fixture.goals.home} - {fixture.goals.away}
                               </span>
                             ) : (
-                              <span className="text-xs sm:text-sm text-black">
+                              <span className="text-xs sm:text-sm text-white">
                                 VS
                               </span>
                             )}
                           </div>
 
                           <div className="flex flex-row-reverse sm:flex-row items-center justify-between sm:justify-start sm:flex-1">
-                            <span className="text-sm font-medium truncate max-w-[120px] sm:max-w-none sm:ml-2 text-black">
+                            <span className="text-sm font-medium truncate max-w-[120px] sm:max-w-none sm:ml-2 text-white">
                               {fixture.teams.away.name}
                             </span>
                             <div className="h-6 w-6 sm:h-8 sm:w-8 relative mr-2 sm:mr-0">
@@ -186,7 +186,7 @@ export function LeagueCalendar({ league }: LeagueCalendarProps) {
                           </div>
                         </div>
 
-                        <div className="text-xs text-black text-center mt-1">
+                        <div className="text-xs text-white text-center mt-1">
                           {fixture.fixture.venue.name &&
                             `${fixture.fixture.venue.name}${
                               fixture.fixture.venue.city

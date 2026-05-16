@@ -41,7 +41,7 @@ const NewsCarousel: React.FC<NewsCarouselProps> = ({ articles }) => {
 
   return (
     <div className="mt-16 flex flex-col items-center w-full">
-      <h2 className="text-3xl font-bold mb-6 text-[#0e1924] text-center w-full">
+      <h2 className="text-3xl font-bold mb-6 text-[#0a0a0a] text-center w-full">
         Ultime notizie
       </h2>
       <div className="relative w-full flex items-center justify-center max-w-6xl">
@@ -50,9 +50,9 @@ const NewsCarousel: React.FC<NewsCarouselProps> = ({ articles }) => {
           variant={"ghost"}
           size={"icon"}
           onClick={() => scroll("left")}
-          className="rounded-full bg-white cursor-pointer"
+          className="rounded-full bg-[#0a0a0a] cursor-pointer"
         >
-          <ChevronLeftIcon className="w-4 h-4 text-black" />
+          <ChevronLeftIcon className="w-4 h-4 text-white" />
         </Button>
         {/* Carousel */}
         <Swiper
@@ -64,7 +64,7 @@ const NewsCarousel: React.FC<NewsCarouselProps> = ({ articles }) => {
           {articles.map((article) => (
             <SwiperSlide
               key={article.slug}
-              className="min-w-[280px] max-w-xs bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out flex-shrink-0 border border-gray-100 hover:border-[#f5963c]"
+              className="min-w-[280px] max-w-xs bg-[#0a0a0a] rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out flex-shrink-0 border border-gray-100 hover:border-[#c8f000]"
             >
               <Link href={getArticleUrl(article)} className="block">
                 <div className="relative w-full h-40 rounded-t-lg overflow-hidden">
@@ -80,10 +80,10 @@ const NewsCarousel: React.FC<NewsCarouselProps> = ({ articles }) => {
                   )}
                 </div>
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-[#0e1924] mb-2 line-clamp-2">
+                  <h3 className="text-lg font-semibold text-[#0a0a0a] mb-2 line-clamp-2">
                     {article.title}
                   </h3>
-                  <span className="text-sm text-[#f5963c] font-medium">
+                  <span className="text-sm text-[#c8f000] font-medium">
                     Read more →
                   </span>
                 </div>
@@ -96,9 +96,9 @@ const NewsCarousel: React.FC<NewsCarouselProps> = ({ articles }) => {
           variant={"ghost"}
           size={"icon"}
           onClick={() => scroll("right")}
-          className="rounded-full bg-white cursor-pointer"
+          className="rounded-full bg-[#0a0a0a] cursor-pointer"
         >
-          <ChevronRightIcon className="w-4 h-4 text-black" />
+          <ChevronRightIcon className="w-4 h-4 text-white" />
         </Button>
       </div>
     </div>

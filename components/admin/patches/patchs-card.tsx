@@ -41,9 +41,9 @@ export const PatchsCard = ({ control }: PatchsCardProps) => {
                   <Skeleton className="h-8 w-full" />
                 </div>
               ) : patches.length === 0 ? (
-                <div className="text-center py-4 text-gray-500">
-                  <TagIcon className="mx-auto h-8 w-8 text-gray-400" />
-                  <p className="mt-2 text-xs text-gray-500">No patches available</p>
+                <div className="text-center py-4 text-white/50">
+                  <TagIcon className="mx-auto h-8 w-8 text-white/40" />
+                  <p className="mt-2 text-xs text-white/50">No patches available</p>
                 </div>
                                          ) : (
                  <ScrollArea className="h-[200px]">
@@ -54,8 +54,8 @@ export const PatchsCard = ({ control }: PatchsCardProps) => {
                          className={`
                            flex items-center justify-between p-2 rounded border cursor-pointer transition-colors
                            ${field.value?.includes(patch._id) 
-                             ? 'border-[#f5963c] bg-orange-50' 
-                             : 'border-gray-200 hover:bg-gray-50'
+                             ? 'border-[#c8f000] bg-orange-50' 
+                             : 'border-white/8 hover:bg-[#0a0a0a]'
                            }
                          `}
                          onClick={() => {
@@ -68,7 +68,7 @@ export const PatchsCard = ({ control }: PatchsCardProps) => {
                          }}
                        >
                          <div className="flex items-center space-x-3 flex-1 min-w-0">
-                           <div className="w-8 h-8 rounded overflow-hidden bg-gray-100 flex-shrink-0">
+                           <div className="w-8 h-8 rounded overflow-hidden bg-[#111] flex-shrink-0">
                              <img
                                src={patch.imageUrl}
                                alt={patch.title}
@@ -78,7 +78,7 @@ export const PatchsCard = ({ control }: PatchsCardProps) => {
                            
                            <div className="flex-1 min-w-0">
                              <div className="flex items-center space-x-2">
-                               <span className="text-sm font-medium text-gray-900 truncate">
+                               <span className="text-sm font-medium text-white truncate">
                                  {patch.title}
                                </span>
                                <Badge variant="outline" className="text-xs">
@@ -94,8 +94,8 @@ export const PatchsCard = ({ control }: PatchsCardProps) => {
                          <div className={`
                            w-4 h-4 rounded border flex items-center justify-center flex-shrink-0
                            ${field.value?.includes(patch._id)
-                             ? 'bg-[#f5963c] border-[#f5963c] text-white'
-                             : 'border-gray-300'
+                             ? 'bg-[#c8f000] border-[#c8f000] text-white'
+                             : 'border-white/10'
                            }
                          `}>
                            {field.value?.includes(patch._id) && (

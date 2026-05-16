@@ -57,13 +57,13 @@ export function VideoThumbnail({
 
   return (
     <>
-      <div className={`relative aspect-video overflow-hidden rounded-lg border border-gray-200 group cursor-pointer hover:border-[#f5963c] transition-colors ${className}`}>
+      <div className={`relative aspect-video overflow-hidden rounded-lg border border-white/8 group cursor-pointer hover:border-[#c8f000] transition-colors ${className}`}>
         {/* Video thumbnail - we'll use the video element with poster */}
-        <div className="relative w-full h-full bg-gray-100">
+        <div className="relative w-full h-full bg-[#111]">
           {/* Loading state */}
           {isLoading && (
-            <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#f5963c]"></div>
+            <div className="absolute inset-0 bg-[#1a1a1a] flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#c8f000]"></div>
             </div>
           )}
           
@@ -83,8 +83,8 @@ export function VideoThumbnail({
             className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
             onClick={handlePlay}
           >
-            <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 hover:bg-white transition-colors">
-              <PlayIcon className="h-6 w-6 text-[#f5963c]" />
+            <div className="bg-[#0a0a0a]/90 backdrop-blur-sm rounded-full p-3 hover:bg-[#0a0a0a] transition-colors">
+              <PlayIcon className="h-6 w-6 text-[#c8f000]" />
             </div>
           </div>
 

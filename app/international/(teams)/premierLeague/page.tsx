@@ -32,12 +32,12 @@ export default async function Ligue1Page() {
   })();
   return (
     <div className="min-h-screen">
-      <div className=" md:h-[90vh] h-[75vh] bg-white flex flex-col py-20 gap-4 items-center">
+      <div className=" md:h-[90vh] h-[75vh] bg-[#0a0a0a] flex flex-col py-20 gap-4 items-center">
         <div className="space-y-4 flex flex-col  items-center">
-          <h2 className=" text-[47px] font-munish font-medium text-black">
+          <h2 className=" text-[47px] font-munish font-medium text-white">
             Premier League
           </h2>
-          <p className=" text-[18px] font-munish font-normal md:w-3/5 w-full text-center mx-auto text-black">
+          <p className=" text-[18px] font-munish font-normal md:w-3/5 w-full text-center mx-auto text-white">
             Rimani aggiornato con le novità più importanti dal mondo del calcio:
             trasferimenti, risultati, curiosità e tanto altro in tempo reale.
           </p>
@@ -46,13 +46,13 @@ export default async function Ligue1Page() {
           <Slider />
         </div>
       </div>
-      <div className=" w-11/12 bg-white mx-auto">
+      <div className=" w-11/12 bg-[#0a0a0a] mx-auto">
         <div className="  overflow-hidden animate-in slide-in-from-bottom-4 duration-700 delay-700">
           <div className="space-y-4 flex flex-col  items-center">
-            <h2 className=" text-[47px] font-munish font-medium text-black">
+            <h2 className=" text-[47px] font-munish font-medium text-white">
               Classifica
             </h2>
-            <p className=" text-[18px] font-munish font-normal md:w-3/5 w-full text-center mx-auto text-black">
+            <p className=" text-[18px] font-munish font-normal md:w-3/5 w-full text-center mx-auto text-white">
               Rimani aggiornato con le novità più importanti dal mondo del
               calcio: trasferimenti, risultati, curiosità e tanto altro in tempo
               reale.

@@ -35,7 +35,7 @@ export default function Guarantees() {
 
   return (
     <div className="mx-auto max-w-4xl divide-y divide-gray-900/10">
-      <h2 className="text-xl sm:text-2xl font-bold leading-tight sm:leading-10 tracking-tight text-gray-900">
+      <h2 className="text-xl sm:text-2xl font-bold leading-tight sm:leading-10 tracking-tight text-white">
         Affidabilità Garantita ✅
       </h2>
       <dl className="mt-6 sm:mt-10 space-y-4 sm:space-y-6 divide-y divide-gray-900/10">
@@ -44,7 +44,7 @@ export default function Guarantees() {
             <dt>
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="flex w-full items-start justify-between text-left text-gray-900"
+                className="flex w-full items-start justify-between text-left text-white"
               >
                 <span className="flex items-center text-sm sm:text-base font-semibold leading-6 sm:leading-7">
                   <span className="mr-2 sm:mr-3 text-base sm:text-xl">
@@ -66,7 +66,7 @@ export default function Guarantees() {
                 openIndex === index ? "max-h-96" : "max-h-0"
               }`}
             >
-              <p className="text-xs sm:text-sm md:text-base leading-6 sm:leading-7 text-gray-600">
+              <p className="text-xs sm:text-sm md:text-base leading-6 sm:leading-7 text-white/60">
                 {guarantee.description}
               </p>
             </dd>

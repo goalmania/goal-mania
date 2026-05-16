@@ -32,8 +32,8 @@ export async function LeagueStatistics({ league }: LeagueStatisticsProps) {
   return (
     <div className="space-y-8">
       {/* Standings Table */}
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-        <div className="p-4 border-b bg-[#0e1924]">
+      <div className="bg-[#0a0a0a] rounded-xl shadow-lg overflow-hidden border border-gray-100">
+        <div className="p-4 border-b bg-[#0a0a0a]">
           <h3 className="text-lg font-bold text-white tracking-wide">Classifica</h3>
         </div>
 
@@ -55,7 +55,7 @@ export async function LeagueStatistics({ league }: LeagueStatisticsProps) {
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-[#0e1924] sticky top-0 z-10">
+              <thead className="bg-[#0a0a0a] sticky top-0 z-10">
                 <tr>
                   <th
                     scope="col"
@@ -119,7 +119,7 @@ export async function LeagueStatistics({ league }: LeagueStatisticsProps) {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-100">
+              <tbody className="bg-[#0a0a0a] divide-y divide-gray-100">
                 {standings.league.standings[0].map((team, idx) => {
                   // Highlight top 3
                   let rowBg = "";
@@ -131,7 +131,7 @@ export async function LeagueStatistics({ league }: LeagueStatisticsProps) {
                       key={team.team.id}
                       className={`hover:bg-[#f6f8fa] transition-colors duration-300 ${rowBg}`}
                     >
-                      <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-sm text-gray-700 font-bold border-l-4" style={{ borderColor: idx === 0 ? '#f5963c' : '#e5e7eb' }}>
+                      <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-sm text-white/70 font-bold border-l-4" style={{ borderColor: idx === 0 ? '#c8f000' : '#e5e7eb' }}>
                         <span className="inline-block w-6 text-center">{team.rank}</span>
                       </td>
                       <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">
@@ -145,33 +145,33 @@ export async function LeagueStatistics({ league }: LeagueStatisticsProps) {
                               sizes="24px"
                             />
                           </div>
-                          <div className="text-xs sm:text-sm font-medium text-gray-900 truncate max-w-[120px] sm:max-w-none">
+                          <div className="text-xs sm:text-sm font-medium text-white truncate max-w-[120px] sm:max-w-none">
                             {team.team.name}
                           </div>
                         </div>
                       </td>
-                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden sm:table-cell">
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-white/50 hidden sm:table-cell">
                         {team.all.played}
                       </td>
-                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden sm:table-cell">
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-white/50 hidden sm:table-cell">
                         {team.all.win}
                       </td>
-                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden sm:table-cell">
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-white/50 hidden sm:table-cell">
                         {team.all.draw}
                       </td>
-                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden sm:table-cell">
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-white/50 hidden sm:table-cell">
                         {team.all.lose}
                       </td>
-                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden md:table-cell">
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-white/50 hidden md:table-cell">
                         {team.all.goals.for}
                       </td>
-                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden md:table-cell">
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-white/50 hidden md:table-cell">
                         {team.all.goals.against}
                       </td>
-                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-gray-500 hidden sm:table-cell">
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center text-white/50 hidden sm:table-cell">
                         {team.goalsDiff}
                       </td>
-                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center font-bold text-[#0e1924]">
+                      <td className="px-1 sm:px-3 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-center font-bold text-[#0a0a0a]">
                         {team.points}
                       </td>
                     </tr>
@@ -184,9 +184,9 @@ export async function LeagueStatistics({ league }: LeagueStatisticsProps) {
       </div>
 
       {/* Top Scorers Section */}
-      <div className="bg-white rounded-md shadow overflow-hidden">
+      <div className="bg-[#0a0a0a] rounded-md shadow overflow-hidden">
         <div className="p-4 border-b">
-          <h3 className="text-lg font-medium text-gray-900">
+          <h3 className="text-lg font-medium text-white">
             Classifica Marcatori
           </h3>
         </div>
@@ -211,7 +211,7 @@ export async function LeagueStatistics({ league }: LeagueStatisticsProps) {
             {topScorers.map((scorer, index) => (
               <li key={scorer.player.id} className="p-3 sm:p-4">
                 <div className="flex items-center">
-                  <div className="flex-shrink-0 mr-2 sm:mr-3 text-base sm:text-xl font-semibold text-gray-500 w-6 sm:w-8 text-center">
+                  <div className="flex-shrink-0 mr-2 sm:mr-3 text-base sm:text-xl font-semibold text-white/50 w-6 sm:w-8 text-center">
                     {index + 1}
                   </div>
                   <div className="h-10 w-10 sm:h-12 sm:w-12 relative mr-3 sm:mr-4">
@@ -224,7 +224,7 @@ export async function LeagueStatistics({ league }: LeagueStatisticsProps) {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">
+                    <p className="text-xs sm:text-sm font-medium text-white truncate">
                       {scorer.player.name}
                     </p>
                     <div className="flex items-center mt-1">
@@ -237,16 +237,16 @@ export async function LeagueStatistics({ league }: LeagueStatisticsProps) {
                           sizes="(max-width: 640px) 12px, 16px"
                         />
                       </div>
-                      <p className="text-xs text-gray-500 truncate max-w-[100px] sm:max-w-none">
+                      <p className="text-xs text-white/50 truncate max-w-[100px] sm:max-w-none">
                         {scorer.statistics[0].team.name}
                       </p>
                     </div>
                   </div>
                   <div className="flex flex-col items-end">
-                    <div className="text-lg sm:text-xl font-bold text-indigo-600">
+                    <div className="text-lg sm:text-xl font-bold text-[#c8f000]">
                       {scorer.statistics[0].goals.total}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">
+                    <div className="text-xs text-white/50 mt-1">
                       {scorer.statistics[0].games.appearences} partite
                     </div>
                   </div>

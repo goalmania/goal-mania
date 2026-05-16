@@ -48,14 +48,14 @@ const serieATeams = [
 
 export default function SerieATeamsClient() {
   return (
-    <div className="bg-white">
+    <div className="bg-[#0a0a0a]">
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
           {/* Heading */}
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-white/80 mb-4">
             Squadre della Serie A
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-12">
+          <p className="text-lg text-white/60 max-w-2xl mx-auto mb-12">
             Seleziona la tua squadra preferita della Serie A per esplorare le loro maglie
           </p>
 
@@ -80,7 +80,7 @@ export default function SerieATeamsClient() {
                 <SwiperSlide key={team.slug}>
                   <a
                     href={`/shop/serieA/${team.slug}`}
-                    className="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center rounded-full border-2 border-gray-200 p-2 transform transition-transform duration-300 hover:scale-110 cursor-pointer"
+                    className="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center rounded-full border-2 border-white/8 p-2 transform transition-transform duration-300 hover:scale-110 cursor-pointer"
                   >
                     <img
                       src={team.logo}

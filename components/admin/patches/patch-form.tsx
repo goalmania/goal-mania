@@ -317,10 +317,10 @@ export const PatchForm = ({ isDialog = false, onSuccess, onCancel, initialData }
         <>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             <div>
-              <h1 className="text-3xl font-bold text-[#0e1924] tracking-tight">
+              <h1 className="text-3xl font-bold text-[#0a0a0a] tracking-tight">
                  Create New Patch
                </h1>
-              <p className="mt-2 text-base text-gray-700 max-w-2xl">
+              <p className="mt-2 text-base text-white/70 max-w-2xl">
                 Upload a patch image and configure its details and settings.
               </p>
             </div>
@@ -478,8 +478,8 @@ export const PatchForm = ({ isDialog = false, onSuccess, onCancel, initialData }
                   className={`
                     border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all
                     ${isDragActive 
-                      ? "border-[#f5963c] bg-orange-50" 
-                      : "border-gray-300 hover:border-[#f5963c] hover:bg-gray-50"
+                      ? "border-[#c8f000] bg-orange-50" 
+                      : "border-white/10 hover:border-[#c8f000] hover:bg-[#0a0a0a]"
                     }
                     ${isUploading ? "opacity-50 cursor-not-allowed" : ""}
                   `}
@@ -488,23 +488,23 @@ export const PatchForm = ({ isDialog = false, onSuccess, onCancel, initialData }
                   <div className="space-y-4">
                     <div className="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center">
                       {isUploading ? (
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#f5963c]" />
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#c8f000]" />
                       ) : (
-                        <ArrowUpTrayIcon className="h-8 w-8 text-[#f5963c]" />
+                        <ArrowUpTrayIcon className="h-8 w-8 text-[#c8f000]" />
                       )}
                     </div>
                     <div>
-                      <p className="text-lg font-medium text-gray-900">
+                      <p className="text-lg font-medium text-white">
                         {isDragActive 
                           ? "Drop your patch image here" 
                           : "Drag & drop your patch image here"
                         }
                       </p>
-                      <p className="text-sm text-gray-500 mt-1">
+                      <p className="text-sm text-white/50 mt-1">
                         or click to browse files
                       </p>
                     </div>
-                    <div className="text-xs text-gray-400 space-y-1">
+                    <div className="text-xs text-white/40 space-y-1">
                       <p>Supports: JPG, PNG, WebP, GIF</p>
                       <p>Maximum size: 5MB</p>
                     </div>
@@ -513,7 +513,7 @@ export const PatchForm = ({ isDialog = false, onSuccess, onCancel, initialData }
               ) : (
                 <div className="space-y-4">
                   <div className="relative group">
-                    <div className="aspect-square max-w-xs mx-auto rounded-lg overflow-hidden border-2 border-gray-200">
+                    <div className="aspect-square max-w-xs mx-auto rounded-lg overflow-hidden border-2 border-white/8">
                       <img
                         src={uploadedImage.preview}
                         alt={uploadedImage.filename}
@@ -535,7 +535,7 @@ export const PatchForm = ({ isDialog = false, onSuccess, onCancel, initialData }
                       <CheckCircleIcon className="h-3 w-3 mr-1" />
                       Image uploaded successfully
                     </Badge>
-                    <p className="text-sm text-gray-600">{uploadedImage.filename}</p>
+                    <p className="text-sm text-white/60">{uploadedImage.filename}</p>
                   </div>
                 </div>
               )}
@@ -659,7 +659,7 @@ export const PatchForm = ({ isDialog = false, onSuccess, onCancel, initialData }
                   <Button
                     type="submit"
                     disabled={isSubmitting || !uploadedImage}
-                    className="bg-[#f5963c] hover:bg-[#e0852e]"
+                    className="bg-[#c8f000] hover:bg-[#e0852e]"
                   >
                     {isSubmitting ? (
                       <>
@@ -674,7 +674,7 @@ export const PatchForm = ({ isDialog = false, onSuccess, onCancel, initialData }
                    <Button
                      type="button"
                      onClick={nextStep}
-                     className="bg-[#f5963c] hover:bg-[#e0852e]"
+                     className="bg-[#c8f000] hover:bg-[#e0852e]"
                    >
                      Next
                    </Button>
@@ -697,7 +697,7 @@ export const PatchForm = ({ isDialog = false, onSuccess, onCancel, initialData }
                  <Button
                    type="submit"
                    disabled={isSubmitting || (isDialog ? !uploadedImage || !getValues().title || !getValues().description : !uploadedImage)}
-                   className="bg-[#f5963c] hover:bg-[#e0852e]"
+                   className="bg-[#c8f000] hover:bg-[#e0852e]"
                  >
                    {isSubmitting ? (
                      <>

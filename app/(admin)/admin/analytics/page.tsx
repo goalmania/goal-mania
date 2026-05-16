@@ -88,16 +88,16 @@ interface AnalyticsData {
   cartAbandonmentRate: number;
 }
 
-const COLORS = ["#0e1924", "#f5963c", "#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4"];
+const COLORS = ["#0a0a0a", "#c8f000", "#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4"];
 
 const chartConfig = {
   revenue: {
     label: "Revenue",
-    color: "#f5963c",
+    color: "#c8f000",
   },
   orders: {
     label: "Orders",
-    color: "#0e1924",
+    color: "#0a0a0a",
   },
   mysteryBox: {
     label: "Mystery Box",
@@ -161,7 +161,7 @@ export default function AnalyticsPage() {
       case "cancelled":
         return "bg-red-100 text-red-800";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-[#111] text-white/80";
     }
   };
 
@@ -210,7 +210,7 @@ export default function AnalyticsPage() {
   if (!analyticsData) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="text-gray-500">No analytics data available</p>
+        <p className="text-white/50">No analytics data available</p>
       </div>
     );
   }
@@ -272,8 +272,8 @@ export default function AnalyticsPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
-          <p className="mt-2 text-sm text-gray-600">
+          <h1 className="text-3xl font-bold text-white">Analytics Dashboard</h1>
+          <p className="mt-2 text-sm text-white/60">
             Comprehensive overview of your e-commerce performance
           </p>
         </div>
@@ -287,45 +287,45 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="hover:shadow-lg transition-shadow duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Users</CardTitle>
-            <UsersIcon className="h-5 w-5 text-[#f5963c]" />
+            <CardTitle className="text-sm font-medium text-white/60">Total Users</CardTitle>
+            <UsersIcon className="h-5 w-5 text-[#c8f000]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-[#0e1924]">{stats.users.value.toLocaleString()}</div>
-            <p className="text-xs text-gray-500 mt-1">Conversion: {conversionRate.toFixed(1)}%</p>
+            <div className="text-2xl font-bold text-[#0a0a0a]">{stats.users.value.toLocaleString()}</div>
+            <p className="text-xs text-white/50 mt-1">Conversion: {conversionRate.toFixed(1)}%</p>
           </CardContent>
         </Card>
 
         <Card className="hover:shadow-lg transition-shadow duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Products</CardTitle>
-            <ShoppingBagIcon className="h-5 w-5 text-[#f5963c]" />
+            <CardTitle className="text-sm font-medium text-white/60">Total Products</CardTitle>
+            <ShoppingBagIcon className="h-5 w-5 text-[#c8f000]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-[#0e1924]">{stats.products.value.toLocaleString()}</div>
-            <p className="text-xs text-gray-500 mt-1">Across {categoryChartData.length} categories</p>
+            <div className="text-2xl font-bold text-[#0a0a0a]">{stats.products.value.toLocaleString()}</div>
+            <p className="text-xs text-white/50 mt-1">Across {categoryChartData.length} categories</p>
           </CardContent>
         </Card>
 
         <Card className="hover:shadow-lg transition-shadow duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Orders</CardTitle>
-            <ChartBarIcon className="h-5 w-5 text-[#f5963c]" />
+            <CardTitle className="text-sm font-medium text-white/60">Total Orders</CardTitle>
+            <ChartBarIcon className="h-5 w-5 text-[#c8f000]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-[#0e1924]">{stats.orders.value.toLocaleString()}</div>
-            <p className="text-xs text-gray-500 mt-1">Avg: {formatCurrency(revenue.average)}</p>
+            <div className="text-2xl font-bold text-[#0a0a0a]">{stats.orders.value.toLocaleString()}</div>
+            <p className="text-xs text-white/50 mt-1">Avg: {formatCurrency(revenue.average)}</p>
           </CardContent>
         </Card>
 
         <Card className="hover:shadow-lg transition-shadow duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Revenue</CardTitle>
-            <CurrencyEuroIcon className="h-5 w-5 text-[#f5963c]" />
+            <CardTitle className="text-sm font-medium text-white/60">Total Revenue</CardTitle>
+            <CurrencyEuroIcon className="h-5 w-5 text-[#c8f000]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-[#0e1924]">{formatCurrency(revenue.total)}</div>
-            <p className="text-xs text-gray-500 mt-1">Mystery Box: {mysteryBoxOrders} orders</p>
+            <div className="text-2xl font-bold text-[#0a0a0a]">{formatCurrency(revenue.total)}</div>
+            <p className="text-xs text-white/50 mt-1">Mystery Box: {mysteryBoxOrders} orders</p>
           </CardContent>
         </Card>
       </div>
@@ -353,8 +353,8 @@ export default function AnalyticsPage() {
                 <ComposedChart data={revenueChartData}>
                   <defs>
                     <linearGradient id="fillRevenue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#f5963c" stopOpacity={0.8} />
-                      <stop offset="95%" stopColor="#f5963c" stopOpacity={0.1} />
+                      <stop offset="5%" stopColor="#c8f000" stopOpacity={0.8} />
+                      <stop offset="95%" stopColor="#c8f000" stopOpacity={0.1} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -375,11 +375,11 @@ export default function AnalyticsPage() {
                     yAxisId="left"
                     type="monotone"
                     dataKey="revenue"
-                    stroke="#f5963c"
+                    stroke="#c8f000"
                     fill="url(#fillRevenue)"
                     strokeWidth={2}
                   />
-                  <Bar yAxisId="right" dataKey="orders" fill="#0e1924" radius={[2, 2, 0, 0]} />
+                  <Bar yAxisId="right" dataKey="orders" fill="#0a0a0a" radius={[2, 2, 0, 0]} />
                 </ComposedChart>
               </ChartContainer>
             </CardContent>
@@ -484,16 +484,16 @@ export default function AnalyticsPage() {
                   <Line
                     type="monotone"
                     dataKey="revenue"
-                    stroke="#f5963c"
+                    stroke="#c8f000"
                     strokeWidth={3}
-                    dot={{ fill: "#f5963c", strokeWidth: 2, r: 4 }}
+                    dot={{ fill: "#c8f000", strokeWidth: 2, r: 4 }}
                   />
                   <Line
                     type="monotone"
                     dataKey="orders"
-                    stroke="#0e1924"
+                    stroke="#0a0a0a"
                     strokeWidth={2}
-                    dot={{ fill: "#0e1924", strokeWidth: 2, r: 3 }}
+                    dot={{ fill: "#0a0a0a", strokeWidth: 2, r: 3 }}
                   />
                 </LineChart>
               </ChartContainer>
@@ -521,7 +521,7 @@ export default function AnalyticsPage() {
                         />
                       }
                     />
-                    <Bar dataKey="count" fill="#0e1924" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="count" fill="#0a0a0a" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ChartContainer>
               </CardContent>
@@ -538,8 +538,8 @@ export default function AnalyticsPage() {
                   <div className="text-6xl font-bold text-purple-600 mb-4">
                     {mysteryBoxOrders}
                   </div>
-                  <p className="text-lg text-gray-600 mb-2">Mystery Box Orders</p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-lg text-white/60 mb-2">Mystery Box Orders</p>
+                  <p className="text-sm text-white/50">
                     {((mysteryBoxOrders / stats.orders.value) * 100).toFixed(1)}% of total orders
                   </p>
                   <div className="mt-4 p-3 bg-purple-50 rounded-lg">
@@ -578,9 +578,9 @@ export default function AnalyticsPage() {
                   <Line
                     type="monotone"
                     dataKey="revenue"
-                    stroke="#f5963c"
+                    stroke="#c8f000"
                     strokeWidth={3}
-                    dot={{ fill: "#f5963c", strokeWidth: 2, r: 4 }}
+                    dot={{ fill: "#c8f000", strokeWidth: 2, r: 4 }}
                   />
                 </LineChart>
               </ChartContainer>
@@ -597,8 +597,8 @@ export default function AnalyticsPage() {
                 <AreaChart data={monthlyRevenueData}>
                   <defs>
                     <linearGradient id="fillMonthlyRevenue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#f5963c" stopOpacity={0.8} />
-                      <stop offset="95%" stopColor="#f5963c" stopOpacity={0.1} />
+                      <stop offset="5%" stopColor="#c8f000" stopOpacity={0.8} />
+                      <stop offset="95%" stopColor="#c8f000" stopOpacity={0.1} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -614,7 +614,7 @@ export default function AnalyticsPage() {
                   <Area
                     type="monotone"
                     dataKey="revenue"
-                    stroke="#f5963c"
+                    stroke="#c8f000"
                     fill="url(#fillMonthlyRevenue)"
                     strokeWidth={2}
                   />
@@ -722,7 +722,7 @@ export default function AnalyticsPage() {
                   <div key={order.id} className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
                       <p className="font-medium">Order #{order.id.slice(-8)}</p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-white/50">
                         {order.itemsCount} items • {formatDate(order.createdAt)}
                       </p>
             </div>
@@ -784,8 +784,8 @@ export default function AnalyticsPage() {
             <CardContent className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div className="text-center p-4 bg-blue-50 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">{stats.users.value.toLocaleString()}</div>
-                  <p className="text-sm text-blue-600">Total Users</p>
+                  <div className="text-2xl font-bold text-[#c8f000]">{stats.users.value.toLocaleString()}</div>
+                  <p className="text-sm text-[#c8f000]">Total Users</p>
                 </div>
                 <div className="text-center p-4 bg-green-50 rounded-lg">
                   <div className="text-2xl font-bold text-green-600">{conversionRate.toFixed(1)}%</div>
@@ -794,11 +794,11 @@ export default function AnalyticsPage() {
         </div>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Users to Orders Ratio</span>
+                  <span className="text-sm text-white/60">Users to Orders Ratio</span>
                   <span className="text-sm font-medium">1:{stats.orders.value > 0 ? (stats.orders.value / stats.users.value).toFixed(1) : '0'}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Average Revenue per User</span>
+                  <span className="text-sm text-white/60">Average Revenue per User</span>
                   <span className="text-sm font-medium">{formatCurrency(stats.users.value > 0 ? revenue.total / stats.users.value : 0)}</span>
         </div>
       </div>
@@ -815,11 +815,11 @@ export default function AnalyticsPage() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="text-center p-6 bg-blue-50 rounded-lg">
-                  <div className="text-3xl font-bold text-blue-600 mb-2">
+                  <div className="text-3xl font-bold text-[#c8f000] mb-2">
                     {formatCurrency(averageOrderValue)}
                   </div>
-                  <p className="text-sm text-blue-600 font-medium">Average Order Value</p>
-                  <p className="text-xs text-gray-500 mt-1">Per transaction</p>
+                  <p className="text-sm text-[#c8f000] font-medium">Average Order Value</p>
+                  <p className="text-xs text-white/50 mt-1">Per transaction</p>
                 </div>
                 
                 <div className="text-center p-6 bg-green-50 rounded-lg">
@@ -827,7 +827,7 @@ export default function AnalyticsPage() {
                     {formatCurrency(customerLifetimeValue)}
                   </div>
                   <p className="text-sm text-green-600 font-medium">Customer Lifetime Value</p>
-                  <p className="text-xs text-gray-500 mt-1">Per customer</p>
+                  <p className="text-xs text-white/50 mt-1">Per customer</p>
                 </div>
                 
                 <div className="text-center p-6 bg-purple-50 rounded-lg">
@@ -835,15 +835,15 @@ export default function AnalyticsPage() {
                     {conversionRate.toFixed(1)}%
                   </div>
                   <p className="text-sm text-purple-600 font-medium">Conversion Rate</p>
-                  <p className="text-xs text-gray-500 mt-1">Users to customers</p>
+                  <p className="text-xs text-white/50 mt-1">Users to customers</p>
                 </div>
                 
                 <div className="text-center p-6 bg-orange-50 rounded-lg">
-                  <div className="text-3xl font-bold text-orange-600 mb-2">
+                  <div className="text-3xl font-bold text-[#c8f000] mb-2">
                     {repeatCustomerRate.toFixed(1)}%
                   </div>
-                  <p className="text-sm text-orange-600 font-medium">Repeat Customer Rate</p>
-                  <p className="text-xs text-gray-500 mt-1">Returning customers</p>
+                  <p className="text-sm text-[#c8f000] font-medium">Repeat Customer Rate</p>
+                  <p className="text-xs text-white/50 mt-1">Returning customers</p>
                 </div>
               </div>
               
@@ -854,15 +854,15 @@ export default function AnalyticsPage() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Total Revenue</span>
+                      <span className="text-sm text-white/60">Total Revenue</span>
                       <span className="font-semibold">{formatCurrency(revenue.total)}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Average Order Value</span>
+                      <span className="text-sm text-white/60">Average Order Value</span>
                       <span className="font-semibold">{formatCurrency(averageOrderValue)}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Customer Lifetime Value</span>
+                      <span className="text-sm text-white/60">Customer Lifetime Value</span>
                       <span className="font-semibold">{formatCurrency(customerLifetimeValue)}</span>
                     </div>
                   </CardContent>
@@ -874,15 +874,15 @@ export default function AnalyticsPage() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Total Customers</span>
+                      <span className="text-sm text-white/60">Total Customers</span>
                       <span className="font-semibold">{stats.users.value.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Conversion Rate</span>
+                      <span className="text-sm text-white/60">Conversion Rate</span>
                       <span className="font-semibold">{conversionRate.toFixed(1)}%</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Repeat Customer Rate</span>
+                      <span className="text-sm text-white/60">Repeat Customer Rate</span>
                       <span className="font-semibold">{repeatCustomerRate.toFixed(1)}%</span>
                     </div>
                   </CardContent>

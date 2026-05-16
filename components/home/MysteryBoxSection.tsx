@@ -29,13 +29,13 @@ export default function MysteryBoxSection({ products }: MysteryBoxSectionProps) 
           {products.map((product: Product, index: number) => (
             <div 
               key={product.id} 
-              className="group relative bg-white/10 backdrop-blur-sm rounded-2xl border border-white/30 p-4 sm:p-6 md:p-8 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+              className="group relative bg-[#0a0a0a]/10 backdrop-blur-sm rounded-2xl border border-white/30 p-4 sm:p-6 md:p-8 hover:bg-[#0a0a0a]/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
             >
               <div className="absolute top-3 sm:top-4 right-3 sm:right-4 w-6 h-6 sm:w-8 sm:h-8 bg-yellow-400 rounded-full flex items-center justify-center text-xs sm:text-sm animate-pulse">
                 🎁
               </div>
               
-              <div className="aspect-square bg-white/20 rounded-xl mb-3 sm:mb-4 relative overflow-hidden">
+              <div className="aspect-square bg-[#0a0a0a]/20 rounded-xl mb-3 sm:mb-4 relative overflow-hidden">
                 <Image
                   src={product.image}
                   alt={product.name}
@@ -57,7 +57,7 @@ export default function MysteryBoxSection({ products }: MysteryBoxSectionProps) 
                 </span>
                 <Link
                   href={`/products/${product.id}`}
-                  className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-3 sm:px-4 py-2 rounded-full font-semibold hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm"
+                  className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 sm:px-4 py-2 rounded-full font-semibold hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm"
                 >
                   Scopri →
                 </Link>

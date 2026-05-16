@@ -84,7 +84,7 @@ export default function ShopClient({
   };
 
   return (
-    <div className="bg-white font-munish  ">
+    <div className="bg-[#0a0a0a] font-munish  ">
       <ShopSearchBar />
 
       <section className="relative">
@@ -134,16 +134,16 @@ export default function ShopClient({
       {/* Latest Products Section */}
       <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center">
-          <h2 className="text-[47px] font-medium tracking-tight text-[#0A1A2F]">
+          <h2 className="text-[47px] font-medium tracking-tight text-white">
             Ultimi prodotti
           </h2>
-          <p className="text-[18px]  text-[#333333] text-center ">
+          <p className="text-[18px]  text-white/60 text-center ">
             Comfort e stile in un solo capo.
           </p>
         </div>
         <div className="my-6">
           {latestProducts.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-white/50">
               <p>Nessun prodotto disponibile in questa categoria.</p>
             </div>
           ) : (
@@ -157,17 +157,17 @@ export default function ShopClient({
       {/* Best Selling Products Section */}
       <div className="mx-auto max-w-7xl px-4  sm:px-6 lg:px-8">
         <div className="flex flex-col items-center">
-          <h2 className="text-[47px] font-medium tracking-tight text-[#0A1A2F]">
+          <h2 className="text-[47px] font-medium tracking-tight text-white">
             Più venduti
           </h2>
-          <p className="text-[18px]  text-[#333333] text-center ">
+          <p className="text-[18px]  text-white/60 text-center ">
             Il capo che unisce la comodità di un fit impeccabile alla
             raffinatezza di un design curato nei dettagli.
           </p>
         </div>
         <div className="my-6">
           {bestSellingProducts.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-white/50">
               <p>Nessun prodotto disponibile in questa categoria.</p>
             </div>
           ) : (
@@ -197,12 +197,12 @@ export default function ShopClient({
                   <Link href="/shop/mystery-box">
                     <Button
                       size="lg"
-                      className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 hover:from-yellow-300 hover:to-orange-400 font-bold px-8 py-6 text-lg rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300"
+                      className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white hover:from-yellow-300 hover:to-orange-400 font-bold px-8 py-6 text-lg rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300"
                     >
                       🎁 Scopri i Mystery Box
                     </Button>
                   </Link>
-                  <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30">
+                  <div className="flex items-center gap-2 bg-[#0a0a0a]/20 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30">
                     <CheckCircle2 className="w-5 h-5 text-green-300" />
                     <span className="text-white font-medium">
                       {mysteryBoxProducts.length} Box Disponibili
@@ -213,7 +213,7 @@ export default function ShopClient({
                 <Button
                   size="lg"
                   disabled
-                  className="bg-white/20 text-white/60 px-8 py-6 text-lg rounded-full cursor-not-allowed"
+                  className="bg-[#0a0a0a]/20 text-white/60 px-8 py-6 text-lg rounded-full cursor-not-allowed"
                 >
                   Disponibile Presto
                 </Button>
@@ -237,14 +237,14 @@ export default function ShopClient({
                   <Link
                     key={product.id}
                     href={`/products/${product.id}`}
-                    className="group relative bg-white/10 backdrop-blur-sm rounded-2xl border border-white/30 p-6 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                    className="group relative bg-[#0a0a0a]/10 backdrop-blur-sm rounded-2xl border border-white/30 p-6 hover:bg-[#0a0a0a]/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                   >
                     {/* Mystery Box Icon */}
                     <div className="absolute top-4 right-4 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-sm animate-pulse">
                       🎁
                     </div>
 
-                    <div className="aspect-square bg-white/20 rounded-xl mb-4 relative overflow-hidden">
+                    <div className="aspect-square bg-[#0a0a0a]/20 rounded-xl mb-4 relative overflow-hidden">
                       <Image
                         src={product.image}
                         alt={product.name}
@@ -264,7 +264,7 @@ export default function ShopClient({
                       <span className="text-2xl font-bold text-white">
                         €{product.price.toFixed(2)}
                       </span>
-                      <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-4 py-2 rounded-full font-semibold">
+                      <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full font-semibold">
                         Scopri →
                       </span>
                     </div>
@@ -294,7 +294,7 @@ export default function ShopClient({
 
       {/* Customer Reviews Section */}
       <Suspense
-        fallback={<div className="h-64 bg-gray-100 animate-pulse"></div>}
+        fallback={<div className="h-64 bg-[#111] animate-pulse"></div>}
       >
         <div className="hidden">
           <ReviewsSlider />
@@ -302,7 +302,7 @@ export default function ShopClient({
       </Suspense>
 
       {/* Guarantees Section */}
-      <div className="bg-gray-50 py-16 sm:py-24 hidden">
+      <div className="bg-[#0a0a0a] py-16 sm:py-24 hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Guarantees />
         </div>

@@ -78,7 +78,7 @@ function ProductCard({
 
   if (!mounted) {
     return (
-      <div className={`bg-gray-100 rounded-2xl animate-pulse w-full h-[28rem] ${className}`} />
+      <div className={`bg-[#111] rounded-2xl animate-pulse w-full h-[28rem] ${className}`} />
     );
   }
 
@@ -124,11 +124,11 @@ function ProductCard({
 
   return (
     <div className="w-full h-full">
-      <div className={`group relative bg-white rounded-xl duration-300 h-full flex flex-col border border-gray-100 hover:shadow-2xl ${className}`}>
+      <div className={`group relative bg-[#0a0a0a] rounded-xl duration-300 h-full flex flex-col border border-gray-100 hover:shadow-2xl ${className}`}>
         
         {/* Image Section */}
         <div 
-          className="relative overflow-hidden rounded-t-xl bg-gray-50"
+          className="relative overflow-hidden rounded-t-xl bg-[#0a0a0a]"
           onMouseEnter={() => {
             setIsHovered(true);
             if (product?.videos?.length > 0) setTimeout(() => setShowVideo(true), 500);
@@ -140,14 +140,14 @@ function ProductCard({
         >
           <div className="absolute top-3 left-3 z-20 flex flex-col gap-2">
             {isWorldCup && (
-              <span className="bg-indigo-600 text-white text-[9px] font-black uppercase italic tracking-tighter px-2 py-1 rounded-sm shadow-lg">
+              <span className="bg-[#c8f000] text-white text-[9px] font-black uppercase italic tracking-tighter px-2 py-1 rounded-sm shadow-lg">
                 World Cup 26
               </span>
             )}
             {hasLongSleeve && (
-              <div className="bg-white/90 backdrop-blur-md border border-gray-200 p-1.5 rounded-full shadow-sm flex items-center gap-1">
-                <Layers size={10} className="text-gray-900" />
-                <span className="text-[8px] font-bold text-gray-900 pr-1">LS Available</span>
+              <div className="bg-[#0a0a0a]/90 backdrop-blur-md border border-white/8 p-1.5 rounded-full shadow-sm flex items-center gap-1">
+                <Layers size={10} className="text-white" />
+                <span className="text-[8px] font-bold text-white pr-1">LS Available</span>
               </div>
             )}
           </div>
@@ -170,12 +170,12 @@ function ProductCard({
 
           <button 
             onClick={handleWishlistToggle}
-            className="absolute top-3 right-3 z-20 p-2.5 bg-white/80 backdrop-blur-md rounded-full shadow-sm hover:bg-white transition-all active:scale-90"
+            className="absolute top-3 right-3 z-20 p-2.5 bg-[#0a0a0a]/80 backdrop-blur-md rounded-full shadow-sm hover:bg-[#0a0a0a] transition-all active:scale-90"
           >
             {activeIsInWishlist ? (
               <HeartIconSolid className="h-5 w-5 text-red-500" />
             ) : (
-              <HeartIcon className="h-5 w-5 text-gray-600" />
+              <HeartIcon className="h-5 w-5 text-white/60" />
             )}
           </button>
         </div>
@@ -183,22 +183,22 @@ function ProductCard({
         {/* Content Section */}
         <div className="p-4 flex flex-col flex-grow">
           <div className="flex-grow">
-            <h3 className="text-sm md:text-base font-bold text-gray-900 line-clamp-2 leading-tight group-hover:text-indigo-600 transition-colors">
+            <h3 className="text-sm md:text-base font-bold text-white line-clamp-2 leading-tight group-hover:text-[#c8f000] transition-colors">
               {name}
             </h3>
-            <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-bold mt-1">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold mt-1">
               {team || category || "Jersey"}
             </p>
 
             <div className="mt-3 flex items-center justify-between">
-              <span className="text-lg font-black text-[#0A1A2F]">€{Number(price).toFixed(2)}</span>
+              <span className="text-lg font-black text-white">€{Number(price).toFixed(2)}</span>
               <div className="flex items-center gap-0.5">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star 
                     key={star} 
                     size={10} 
-                    fill={star <= Math.round(product?.averageRating || 5) ? "#FF7A00" : "none"} 
-                    color={star <= Math.round(product?.averageRating || 5) ? "#FF7A00" : "#D1D5DB"} 
+                    fill={star <= Math.round(product?.averageRating || 5) ? "#c8f000" : "none"} 
+                    color={star <= Math.round(product?.averageRating || 5) ? "#c8f000" : "#D1D5DB"} 
                   />
                 ))}
               </div>
@@ -209,13 +209,13 @@ function ProductCard({
           <div className="mt-5 flex flex-col gap-2">
             <button
               onClick={handleAddToCart}
-              className="w-full py-3 rounded-lg border-2 border-[#0A1A2F] text-[10px] font-black uppercase tracking-widest hover:bg-[#0A1A2F] hover:text-white transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-lg border-2 border-[#111111] text-[10px] font-black uppercase tracking-widest hover:bg-[#111111] hover:text-white transition-all flex items-center justify-center gap-2"
             >
               Add to Cart <ArrowRight size={14} />
             </button>
             <button
               onClick={handleBuyNow}
-              className="w-full py-3 rounded-lg bg-[#FF7A00] text-black text-[10px] font-black uppercase tracking-widest hover:bg-[#e66e00] transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-100"
+              className="w-full py-3 rounded-lg bg-[#c8f000] text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#e66e00] transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-100"
             >
               Buy Now <ArrowRight size={14} />
             </button>

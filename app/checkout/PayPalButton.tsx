@@ -73,13 +73,13 @@ export default function PayPalButton({ total, items, addressId, coupon, onSucces
   // Don't render PayPal button until script is ready
   if (!isScriptReady) {
     return (
-      <Card className="border-2 border-gray-200">
+      <Card className="border-2 border-white/8">
         <CardContent className="pt-6">
           <div className="flex items-center justify-center h-12">
-            <div className="w-6 h-6 border-2 border-gray-300 border-t-[#f5963c] rounded-full animate-spin"></div>
+            <div className="w-6 h-6 border-2 border-white/10 border-t-[#c8f000] rounded-full animate-spin"></div>
           </div>
-          <p className="text-center text-sm text-gray-600 mt-2">Preparing PayPal...</p>
-          <p className="text-center text-xs text-gray-500 mt-1">Checking script availability...</p>
+          <p className="text-center text-sm text-white/60 mt-2">Preparing PayPal...</p>
+          <p className="text-center text-xs text-white/50 mt-1">Checking script availability...</p>
         </CardContent>
       </Card>
     );
@@ -260,12 +260,12 @@ export default function PayPalButton({ total, items, addressId, coupon, onSucces
   // Show loading state while PayPal script is loading
   if (isPending) {
     return (
-      <Card className="border-2 border-gray-200">
+      <Card className="border-2 border-white/8">
         <CardContent className="pt-6">
           <div className="flex items-center justify-center h-12">
-            <div className="w-6 h-6 border-2 border-gray-300 border-t-[#f5963c] rounded-full animate-spin"></div>
+            <div className="w-6 h-6 border-2 border-white/10 border-t-[#c8f000] rounded-full animate-spin"></div>
           </div>
-          <p className="text-center text-sm text-gray-600 mt-2">Loading PayPal...</p>
+          <p className="text-center text-sm text-white/60 mt-2">Loading PayPal...</p>
         </CardContent>
       </Card>
     );
@@ -344,7 +344,7 @@ export default function PayPalButton({ total, items, addressId, coupon, onSucces
           </div>
           
           {isLoading && (
-            <div className="mt-4 text-center text-sm text-gray-600">
+            <div className="mt-4 text-center text-sm text-white/60">
               {t("checkout.processing")}...
             </div>
           )}

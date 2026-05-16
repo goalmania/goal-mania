@@ -141,8 +141,8 @@ export default function EditableFantasyTips() {
   // Memoized loading skeleton
   const loadingSkeleton = useMemo(() => (
     <div className="space-y-4 animate-pulse">
-      <div className="h-40 bg-gray-100 rounded-lg"></div>
-      <div className="h-40 bg-gray-100 rounded-lg"></div>
+      <div className="h-40 bg-[#111] rounded-lg"></div>
+      <div className="h-40 bg-[#111] rounded-lg"></div>
     </div>
   ), []);
 
@@ -151,7 +151,7 @@ export default function EditableFantasyTips() {
   }
 
   return (
-    <div className="space-y-4 text-black">
+    <div className="space-y-4 text-white">
       {error && (
         <div className="p-3 text-sm text-amber-800 bg-amber-50 rounded-md mb-4">
           {error}
@@ -167,7 +167,7 @@ export default function EditableFantasyTips() {
               disabled={isSaving}
               className={`p-1.5 text-xs flex items-center gap-1 ${
                 isSaving
-                  ? "bg-gray-100 text-gray-400"
+                  ? "bg-[#111] text-white/40"
                   : "bg-green-100 text-green-800 hover:bg-green-200"
               } rounded-md transition-colors`}
             >
@@ -177,7 +177,7 @@ export default function EditableFantasyTips() {
             <button
               onClick={cancelEditing}
               disabled={isSaving}
-              className="p-1.5 text-xs flex items-center gap-1 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 transition-colors"
+              className="p-1.5 text-xs flex items-center gap-1 bg-[#111] text-white/80 rounded-md hover:bg-[#1a1a1a] transition-colors"
             >
               <X size={14} />
               <span>{t('fantasy.cancel')}</span>
@@ -217,7 +217,7 @@ export default function EditableFantasyTips() {
                       )
                     }
                     placeholder="Nome"
-                    className="p-1.5 text-sm border border-gray-300 rounded col-span-2"
+                    className="p-1.5 text-sm border border-white/10 rounded col-span-2"
                   />
                   <input
                     type="text"
@@ -231,7 +231,7 @@ export default function EditableFantasyTips() {
                       )
                     }
                     placeholder="Squadra"
-                    className="p-1.5 text-sm border border-gray-300 rounded"
+                    className="p-1.5 text-sm border border-white/10 rounded"
                   />
                   <input
                     type="text"
@@ -245,7 +245,7 @@ export default function EditableFantasyTips() {
                       )
                     }
                     placeholder="Motivo"
-                    className="p-1.5 text-sm border border-gray-300 rounded col-span-2"
+                    className="p-1.5 text-sm border border-white/10 rounded col-span-2"
                   />
                 </div>
                 <button
@@ -304,7 +304,7 @@ export default function EditableFantasyTips() {
                       )
                     }
                     placeholder="Nome"
-                    className="p-1.5 text-sm border border-gray-300 rounded col-span-2"
+                    className="p-1.5 text-sm border border-white/10 rounded col-span-2"
                   />
                   <input
                     type="text"
@@ -318,7 +318,7 @@ export default function EditableFantasyTips() {
                       )
                     }
                     placeholder="Squadra"
-                    className="p-1.5 text-sm border border-gray-300 rounded"
+                    className="p-1.5 text-sm border border-white/10 rounded"
                   />
                   <input
                     type="text"
@@ -332,7 +332,7 @@ export default function EditableFantasyTips() {
                       )
                     }
                     placeholder="Motivo"
-                    className="p-1.5 text-sm border border-gray-300 rounded col-span-2"
+                    className="p-1.5 text-sm border border-white/10 rounded col-span-2"
                   />
                 </div>
                 <button

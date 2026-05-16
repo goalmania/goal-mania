@@ -74,18 +74,18 @@ export default function SearchClient({
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen py-8">
+    <div className="bg-[#0a0a0a] min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Search bar removed, now handled by header for /shop */}
         {isLoading ? (
           <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
+            <div className="h-8 bg-[#1a1a1a] rounded w-1/4 mb-4"></div>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {[...Array(8)].map((_, i) => (
-                <div key={i} className="bg-white p-4 rounded-lg shadow">
-                  <div className="h-40 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                <div key={i} className="bg-[#0a0a0a] p-4 rounded-lg shadow">
+                  <div className="h-40 bg-[#1a1a1a] rounded mb-4"></div>
+                  <div className="h-4 bg-[#1a1a1a] rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-[#1a1a1a] rounded w-1/2"></div>
                 </div>
               ))}
             </div>
@@ -94,10 +94,10 @@ export default function SearchClient({
           <>
             {queryParam && products.length === 0 && articles.length === 0 ? (
               <div className="text-center py-12">
-                <h2 className="text-xl font-medium text-gray-900 mb-2">
+                <h2 className="text-xl font-medium text-white mb-2">
                   Nessun risultato trovato per "{queryParam}"
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-white/60">
                   Prova con termini di ricerca diversi o sfoglia le nostre
                   categorie.
                 </p>
@@ -106,7 +106,7 @@ export default function SearchClient({
               <>
                 {products.length > 0 && (
                   <div className="mb-10">
-                    <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+                    <h2 className="text-2xl font-semibold text-white mb-6">
                       Prodotti ({products.length})
                     </h2>
                     <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -116,7 +116,7 @@ export default function SearchClient({
                           href={`/products/${product._id}`}
                           className="group"
                         >
-                          <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8">
+                          <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-[#1a1a1a] xl:aspect-w-7 xl:aspect-h-8">
                             <Image
                               src={product.images?.[0] || "/images/image.png"}
                               alt={product.title}
@@ -125,10 +125,10 @@ export default function SearchClient({
                               className="h-full w-full object-cover object-center group-hover:opacity-75"
                             />
                           </div>
-                          <h3 className="mt-4 text-sm text-gray-700">
+                          <h3 className="mt-4 text-sm text-white/70">
                             {product.title}
                           </h3>
-                          <p className="mt-1 text-lg font-medium text-gray-900">
+                          <p className="mt-1 text-lg font-medium text-white">
                             €{product.basePrice}
                           </p>
                         </Link>
@@ -139,7 +139,7 @@ export default function SearchClient({
 
                 {articles.length > 0 && (
                   <div>
-                    <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+                    <h2 className="text-2xl font-semibold text-white mb-6">
                       Articoli ({articles.length})
                     </h2>
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -147,7 +147,7 @@ export default function SearchClient({
                         <Link
                           key={article._id}
                           href={`/news/${article.slug}`}
-                          className="bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow"
+                          className="bg-[#0a0a0a] rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow"
                         >
                           <div className="aspect-w-16 aspect-h-9">
                             <Image
@@ -159,17 +159,17 @@ export default function SearchClient({
                             />
                           </div>
                           <div className="p-4">
-                            <div className="flex items-center text-xs text-gray-500 mb-1">
+                            <div className="flex items-center text-xs text-white/50 mb-1">
                               <span className="capitalize">
                                 {article.category}
                               </span>
                               <span className="mx-1">•</span>
                               <span>{formatDate(article.createdAt)}</span>
                             </div>
-                            <h3 className="text-lg font-medium text-gray-900 mb-2">
+                            <h3 className="text-lg font-medium text-white mb-2">
                               {article.title}
                             </h3>
-                            <p className="text-sm text-gray-600 line-clamp-2">
+                            <p className="text-sm text-white/60 line-clamp-2">
                               {article.summary}
                             </p>
                           </div>

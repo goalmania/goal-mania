@@ -56,7 +56,7 @@ export function FooterSecond() {
   const { t } = useI18n();
 
   return (
-    <footer className="bg-gradient-to-t from-[#f5963c] to-[#0e1924] text-white pt-10 pb-4">
+    <footer className="bg-gradient-to-t from-[#c8f000] to-[#0a0a0a] text-white pt-10 pb-4">
       <div className="mx-auto max-w-7xl px-4 flex flex-col items-center">
         {/* Logo and Brand */}
         <div className="flex flex-col items-center mb-6">
@@ -70,7 +70,7 @@ export function FooterSecond() {
               style={{ objectFit: "contain" }}
             />
           </div>
-          <h2 className="text-3xl font-bold tracking-wide mb-2">Goal<span className="text-[#f5963c]">Mania</span></h2>
+          <h2 className="text-3xl font-bold tracking-wide mb-2">Goal<span className="text-[#c8f000]">Mania</span></h2>
           <p className="text-center max-w-md text-sm text-white/80 mb-2">
             {t('footer.description')}
           </p>

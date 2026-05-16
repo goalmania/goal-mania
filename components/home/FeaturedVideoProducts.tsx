@@ -57,12 +57,12 @@ export default function FeaturedVideoProducts({
   if (products.length === 0) return null;
 
   return (
-    <section className="py-8 md:py-12  bg-white font-munish">
+    <section className="py-8 md:py-12  bg-[#0a0a0a] font-munish">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-6 ">
+        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0a0a0a] mb-6 ">
           Storie in Primo Piano
         </h2>
-        <p className="text-lg text-gray-600 max-w-2xl text-center mx-auto mb-12">
+        <p className="text-lg text-white/60 max-w-2xl text-center mx-auto mb-12">
           Approfondimenti, interviste e articoli esclusivi che raccontano il
           calcio oltre il risultato.
         </p>
@@ -113,10 +113,10 @@ export default function FeaturedVideoProducts({
             <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4 ">
               <button
                 aria-label="Previous featured products"
-                className="featured-prev flex items-center justify-center w-10 h-10 rounded-full bg-[#D9D9D9] shadow-md hover:bg-gray-100"
+                className="featured-prev flex items-center justify-center w-10 h-10 rounded-full bg-[#D9D9D9] shadow-md hover:bg-[#111]"
               >
                 <svg
-                  className="w-5 h-5 text-gray-700"
+                  className="w-5 h-5 text-white/70"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -132,10 +132,10 @@ export default function FeaturedVideoProducts({
 
               <button
                 aria-label="Next featured products"
-                className="featured-next flex items-center justify-center w-10 h-10 rounded-full bg-[#D9D9D9] shadow-md hover:bg-gray-100"
+                className="featured-next flex items-center justify-center w-10 h-10 rounded-full bg-[#D9D9D9] shadow-md hover:bg-[#111]"
               >
                 <svg
-                  className="w-5 h-5 text-gray-700"
+                  className="w-5 h-5 text-white/70"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -181,7 +181,7 @@ export default function FeaturedVideoProducts({
             asChild
             variant="outline"
             size="lg"
-            className="border-[#f5963c] text-[#f5963c] hover:bg-[#f5963c] hover:text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg"
+            className="border-[#c8f000] text-[#c8f000] hover:bg-[#c8f000] hover:text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg"
           >
             <Link href="/shop">
               {t("home.viewAllProducts")}

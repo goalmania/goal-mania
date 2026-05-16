@@ -110,7 +110,7 @@ async function generateProductCards(items: any[], language: 'it' | 'en' = 'it'):
                 <div style="
                   background: ${product.isMysteryBox ? 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)' : 
                                product.isRetro ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 
-                               'linear-gradient(135deg, #0e1924 0%, #1a365d 100%)'};
+                               'linear-gradient(135deg, #0a0a0a 0%, #1a365d 100%)'};
                   color: white;
                   padding: 4px 8px;
                   border-radius: 6px;
@@ -122,7 +122,7 @@ async function generateProductCards(items: any[], language: 'it' | 'en' = 'it'):
                   ${productType}
                 </div>
                 <h4 style="
-                  color: #0e1924;
+                  color: #0a0a0a;
                   margin: 0 0 5px 0;
                   font-size: 16px;
                   font-weight: 600;
@@ -138,7 +138,7 @@ async function generateProductCards(items: any[], language: 'it' | 'en' = 'it'):
                 ` : ''}
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                   <span style="
-                    color: #0e1924;
+                    color: #0a0a0a;
                     font-weight: 700;
                     font-size: 16px;
                   ">€${item.price.toFixed(2)}</span>
@@ -300,9 +300,9 @@ export async function orderStatusUpdateTemplate({
     const isActive = idx <= currentStep && currentStep !== 4;
     const isCancelled = currentStep === 4;
     const isCurrent = idx === currentStep;
-    const stepColor = isCancelled && idx === 4 ? '#dc2626' : isActive ? '#0e1924' : '#e2e8f0';
-    const textColor = isActive ? '#0e1924' : '#94a3b8';
-    const borderColor = isActive && !isCancelled ? '#0e1924' : '#e2e8f0';
+    const stepColor = isCancelled && idx === 4 ? '#dc2626' : isActive ? '#0a0a0a' : '#e2e8f0';
+    const textColor = isActive ? '#0a0a0a' : '#94a3b8';
+    const borderColor = isActive && !isCancelled ? '#0a0a0a' : '#e2e8f0';
     
     return `
       <table style="width: 100%; border-collapse: collapse; margin: 25px 0;">
@@ -320,14 +320,14 @@ export async function orderStatusUpdateTemplate({
               font-weight: bold;
               margin: 0 auto;
               box-shadow: ${isCurrent ? '0 0 0 4px rgba(14, 25, 36, 0.1)' : 'none'};
-              border: ${isCurrent ? '2px solid #0e1924' : 'none'};
+              border: ${isCurrent ? '2px solid #0a0a0a' : 'none'};
             ">
               ${step.icon}
             </div>
           </td>
           <td style="vertical-align: top; padding-left: 20px;">
             <div style="color: ${textColor}; font-weight: ${isActive ? '600' : '400'}; font-size: 16px; margin-bottom: 4px;">${step.name}</div>
-            ${isCurrent ? `<div style="color: #f5963c; font-size: 14px; font-weight: 600;">Current Status</div>` : ''}
+            ${isCurrent ? `<div style="color: #c8f000; font-size: 14px; font-weight: 600;">Current Status</div>` : ''}
           </td>
         </tr>
       </table>

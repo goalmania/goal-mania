@@ -68,7 +68,7 @@ export default function ProductVideoCard({
   if (!mounted) {
     return (
       <div
-        className={`bg-gray-200 rounded-2xl animate-pulse ${heightClasses[cardHeight]} ${className}`}
+        className={`bg-[#1a1a1a] rounded-2xl animate-pulse ${heightClasses[cardHeight]} ${className}`}
       />
     );
   }
@@ -76,7 +76,7 @@ export default function ProductVideoCard({
   return (
     <Link href={href} className="w-full">
       <div
-        className={`group relative bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col ${className}`}
+        className={`group relative bg-[#0a0a0a] rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col ${className}`}
       >
         {/* Video / PlayIcon Section */}
         <div
@@ -93,7 +93,7 @@ export default function ProductVideoCard({
           }}
         >
           <div
-            className={`relative w-full bg-gray-200 overflow-hidden rounded-t-lg ${
+            className={`relative w-full bg-[#1a1a1a] overflow-hidden rounded-t-lg ${
               imageAspectRatio === "square"
                 ? "aspect-square"
                 : imageAspectClasses[imageAspectRatio]
@@ -124,7 +124,7 @@ export default function ProductVideoCard({
         {/* Info Section */}
         <div className="p-2 sm:p-4 flex flex-col flex-grow">
           <div className="mb-2 flex-grow ">
-            <h3 className="text-xs flex justify-start text-left  items-center sm:text-lg md:text-xl font-bold text-gray-900  transition-colors duration-200 line-clamp-2">
+            <h3 className="text-xs flex justify-start text-left  items-center sm:text-lg md:text-xl font-bold text-white  transition-colors duration-200 line-clamp-2">
               {name}
             </h3>
             <div className="bg-black h-0.5 w-1/2"></div>
@@ -132,13 +132,13 @@ export default function ProductVideoCard({
 
           {/* Price */}
           <div className="flex items-start justify-start mt-auto">
-            <p className="text-xs sm:text-base md:text-lg font-semibold text-[#F1803A]">
+            <p className="text-xs sm:text-base md:text-lg font-semibold text-[#c8f000]">
               €{Number(price).toFixed(2)}
             </p>
           </div>
           <div className="">
             <button className="flex text-[14px] mt-3.5 items-center">
-              Leggi Ora <ArrowRight className="h-3 w-3 text-gray-900" />
+              Leggi Ora <ArrowRight className="h-3 w-3 text-white" />
             </button>
           </div>
         </div>

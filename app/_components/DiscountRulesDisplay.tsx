@@ -178,8 +178,8 @@ export default function DiscountRulesDisplay({
       <Card className="border-2 border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100">
         <CardContent className="p-4">
           <div className="animate-pulse space-y-3">
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+            <div className="h-4 bg-[#1a1a1a] rounded w-3/4"></div>
+            <div className="h-3 bg-[#1a1a1a] rounded w-1/2"></div>
           </div>
         </CardContent>
       </Card>
@@ -194,7 +194,7 @@ export default function DiscountRulesDisplay({
     <Card className="border-2 border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100">
       <CardHeader className="pb-3">
         <CardTitle className="text-lg flex items-center gap-2">
-          <SparklesIcon className="h-5 w-5 text-[#f5963c]" />
+          <SparklesIcon className="h-5 w-5 text-[#c8f000]" />
           {t("shop.offers.availableOffers")}
         </CardTitle>
         <CardDescription>
@@ -211,16 +211,16 @@ export default function DiscountRulesDisplay({
             className={`p-3 rounded-lg border transition-all duration-200 ${
               appliedRules.has(rule._id)
                 ? "border-green-300 bg-green-50"
-                : "border-gray-200 bg-white hover:border-[#f5963c]/30"
+                : "border-white/8 bg-[#0a0a0a] hover:border-[#c8f000]/30"
             }`}
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <div className="p-1 bg-gradient-to-r from-[#f5963c] to-orange-500 rounded">
+                  <div className="p-1 bg-gradient-to-r from-[#c8f000] to-orange-500 rounded">
                     {getRuleIcon(rule.type)}
                   </div>
-                  <h4 className="font-medium text-gray-900">{rule.name}</h4>
+                  <h4 className="font-medium text-white">{rule.name}</h4>
                   <Badge variant="outline" className="text-xs">
                     {rule.type === "quantity_based" && t("admin.discountRules.quantityBased")}
                     {rule.type === "buy_x_get_y" && t("admin.discountRules.buyXGetY")}
@@ -228,12 +228,12 @@ export default function DiscountRulesDisplay({
                     {rule.type === "fixed_amount_off" && t("admin.discountRules.fixedAmountOff")}
                   </Badge>
                 </div>
-                <p className="text-sm text-gray-600 mb-2">{rule.description}</p>
-                <div className="text-sm font-medium text-[#f5963c]">
+                <p className="text-sm text-white/60 mb-2">{rule.description}</p>
+                <div className="text-sm font-medium text-[#c8f000]">
                   {getRuleDescription(rule)}
                 </div>
                 {rule.maxUses && (
-                  <div className="text-xs text-gray-500 mt-1">
+                  <div className="text-xs text-white/50 mt-1">
                     {rule.currentUses} / {rule.maxUses} uses
                   </div>
                 )}
@@ -242,7 +242,7 @@ export default function DiscountRulesDisplay({
                 <Button
                   size="sm"
                   onClick={() => handleApplyRule(rule)}
-                  className="bg-gradient-to-r from-[#f5963c] to-orange-500 hover:from-[#e0852e] hover:to-orange-600 text-white"
+                  className="bg-gradient-to-r from-[#c8f000] to-orange-500 hover:from-[#e0852e] hover:to-orange-600 text-white"
                 >
                   Apply
                 </Button>

@@ -90,8 +90,8 @@ export function LeagueRankings({ league }: LeagueRankingsProps) {
 
   if (isLoading) {
     return (
-      <div className="rounded-lg bg-gray-100 p-4">
-        <div className="text-center text-gray-500">Loading...</div>
+      <div className="rounded-lg bg-[#111] p-4">
+        <div className="text-center text-white/50">Loading...</div>
       </div>
     );
   }
@@ -107,7 +107,7 @@ export function LeagueRankings({ league }: LeagueRankingsProps) {
   return (
     <div className="rounded-lg bg-[#F5F5F5] overflow-auto scrollbar-hide p-6 font-munish">
       <table className="w-full text-sm">
-        <thead className="bg-[#0A1A2F] text-white font-light px-3">
+        <thead className="bg-[#111111] text-white font-light px-3">
           <tr>
             <th className="p-2 text-left font-light rounded-l-full pl-3">
               <span className="rounded-tl-full">POC</span>
@@ -129,7 +129,7 @@ export function LeagueRankings({ league }: LeagueRankingsProps) {
           {rankings.map((team) => (
             <tr
               key={team.teamId || team.team}
-              className="border-b border-gray-200 hover:bg-gray-50"
+              className="border-b border-white/8 hover:bg-[#0a0a0a]"
             >
               <td className="p-2 text-center text-[14px]">{team.position}</td>
               <td className="p-2 flex items-center space-x-2 text-[14px]">

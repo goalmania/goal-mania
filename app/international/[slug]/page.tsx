@@ -124,11 +124,11 @@ export default async function InternationalArticlePage({
   const teamHint = extractTeamFromTitle(article.title);
 
   return (
-    <div className="container mx-auto px-4 py-8 bg-white">
-      <article className="max-w-3xl mx-auto text-black">
+    <div className="container mx-auto px-4 py-8 bg-[#0a0a0a]">
+      <article className="max-w-3xl mx-auto text-white">
         {/* Article Header */}
         <header className="mb-8">
-          <div className="flex items-center text-sm text-black mb-3">
+          <div className="flex items-center text-sm text-white mb-3">
             <time dateTime={article.publishedAt}>
               {new Date(article.publishedAt).toLocaleDateString("en-US", {
                 year: "numeric",
@@ -139,10 +139,10 @@ export default async function InternationalArticlePage({
             <span className="mx-2">•</span>
             <span>{article.author}</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-black mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
             {article.title}
           </h1>
-          <p className="text-lg text-black mb-6">{article.summary}</p>
+          <p className="text-lg text-white mb-6">{article.summary}</p>
         </header>
 
         {/* Article Featured Image */}
@@ -160,22 +160,22 @@ export default async function InternationalArticlePage({
         {/* Article content */}
         <ArticleContent
           content={article.content}
-          className="prose prose-lg max-w-none mb-8 text-black"
+          className="prose prose-lg max-w-none mb-8 text-white"
         />
 
         {/* Jersey popup — maglia della squadra dell'articolo */}
         <JerseyAdBlock jerseyId={article.featuredJerseyId} teamHint={teamHint} />
 
         {/* Article Footer */}
-        <footer className="border-t border-gray-200 pt-6 mt-8">
+        <footer className="border-t border-white/8 pt-6 mt-8">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-medium text-black">Author</h3>
-              <p className="text-sm text-black">{article.author}</p>
+              <h3 className="text-sm font-medium text-white">Author</h3>
+              <p className="text-sm text-white">{article.author}</p>
             </div>
             <Link
               href="/international/laliga"
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+              className="text-sm font-medium text-[#c8f000] hover:text-[#c8f000]"
             >
               ← Torna ai Campionati Esteri
             </Link>
@@ -186,7 +186,7 @@ export default async function InternationalArticlePage({
       {/* Related Articles */}
       {relatedArticles.length > 0 && (
         <section className="max-w-5xl mx-auto mt-16">
-          <h2 className="text-2xl font-bold mb-6 text-black">
+          <h2 className="text-2xl font-bold mb-6 text-white">
             Related International News
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -194,7 +194,7 @@ export default async function InternationalArticlePage({
               <Link
                 key={related._id}
                 href={`/international/${related.slug}`}
-                className="group flex flex-col bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
+                className="group flex flex-col bg-[#0a0a0a] rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
               >
                 <div className="relative h-48 w-full">
                   <Image
@@ -206,15 +206,15 @@ export default async function InternationalArticlePage({
                   />
                 </div>
                 <div className="p-4 flex-1 flex flex-col">
-                  <div className="flex items-center text-xs text-black mb-2">
+                  <div className="flex items-center text-xs text-white mb-2">
                     <span>
                       {new Date(related.publishedAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <h3 className="text-lg font-semibold text-black mb-2 group-hover:text-indigo-600 transition-colors duration-200">
+                  <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#c8f000] transition-colors duration-200">
                     {related.title}
                   </h3>
-                  <p className="text-sm text-black mb-4 line-clamp-2">
+                  <p className="text-sm text-white mb-4 line-clamp-2">
                     {related.summary}
                   </p>
                 </div>

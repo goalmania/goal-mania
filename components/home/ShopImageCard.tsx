@@ -49,24 +49,24 @@ const products: Product[] = [
 
 const ShopImageCard: React.FC = () => {
   return (
-    <section className="py-16 md:py-24 bg-gray-100">
+    <section className="py-16 md:py-24 bg-[#111]">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {products.map((product) => (
             <div
               key={product.id}
-              className="relative bg-white rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row items-center p-6 md:p-0"
+              className="relative bg-[#0a0a0a] rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row items-center p-6 md:p-0"
             >
               <div className="md:w-1/2 p-6 order-2 md:order-1 text-center md:text-left">
-                <h3 className="text-3xl font-bold text-gray-800 mb-4">
+                <h3 className="text-3xl font-bold text-white/80 mb-4">
                   {product.title}
                 </h3>
-                <p className="text-gray-600 mb-6 leading-relaxed">
+                <p className="text-white/60 mb-6 leading-relaxed">
                   {product.description}
                 </p>
                 <a
                   href={product.buttonLink}
-                  className="inline-block bg-orange-500 text-white px-6 py-3 rounded-md font-semibold hover:bg-orange-600 transition-colors"
+                  className="inline-block bg-[#c8f000] text-white px-6 py-3 rounded-md font-semibold hover:bg-[#c8f000] transition-colors"
                 >
                   {product.buttonText}
                 </a>

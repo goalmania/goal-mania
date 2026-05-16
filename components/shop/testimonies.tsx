@@ -167,7 +167,7 @@ const Testimonies = () => {
         <div className="flex gap-4">
           {Array.from({ length: visibleCards }).map((_, index) => (
             <div key={index} className="w-full sm:w-1/2 lg:w-1/4 flex-shrink-0">
-              <div className="h-64 border border-gray-200 rounded-2xl bg-gray-100 animate-pulse">
+              <div className="h-64 border border-white/8 rounded-2xl bg-[#111] animate-pulse">
                 <div className="p-4 space-y-3">
                   <div className="flex gap-1">
                     {Array.from({ length: 5 }).map((_, i) => (
@@ -218,7 +218,7 @@ const Testimonies = () => {
           <h2 className="text-5xl font-bold">I nostri clienti felici</h2>
         </div>
         <div className="text-center py-12">
-          <p className="text-gray-600">No reviews available at the moment.</p>
+          <p className="text-white/60">No reviews available at the moment.</p>
         </div>
       </div>
     );
@@ -266,7 +266,7 @@ const Testimonies = () => {
               key={item.id}
               className="w-full sm:w-1/2 lg:w-1/4 flex-shrink-0 px-3"
             >
-              <div className="h-64 border border-black/10 rounded-2xl shadow-sm bg-white">
+              <div className="h-64 border border-black/10 rounded-2xl shadow-sm bg-[#0a0a0a]">
                 <div className="p-4 text-start space-y-2 h-full flex flex-col">
                   <div className="flex">
                     {Array.from({ length: 5 }).map((_, i) => (
@@ -278,7 +278,7 @@ const Testimonies = () => {
                       />
                     ))}
                   </div>
-                  <h3 className="text-base flex items-center font-bold tracking-tight text-gray-800">
+                  <h3 className="text-base flex items-center font-bold tracking-tight text-white/80">
                     {item.name}
                     <CheckCircle2
                       className="ml-1"
@@ -287,7 +287,7 @@ const Testimonies = () => {
                       size={16}
                     />
                   </h3>
-                  <p className="text-sm text-gray-800 flex-1 overflow-hidden leading-relaxed">
+                  <p className="text-sm text-white/80 flex-1 overflow-hidden leading-relaxed">
                     {item.text}
                   </p>
                 </div>

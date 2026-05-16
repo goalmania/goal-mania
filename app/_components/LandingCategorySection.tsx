@@ -85,12 +85,12 @@ export default function LandingCategorySection({ title, category }: LandingCateg
   if (products.length === 0) return null;
 
   return (
-    <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-white">
+    <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-[#0a0a0a]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-6 sm:mb-8 md:mb-10 font-munish">
+        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0a0a0a] mb-6 sm:mb-8 md:mb-10 font-munish">
           {title}
         </h2>
-        <p className="text-lg text-gray-600 max-w-2xl text-center mx-auto mb-12 font-munish">
+        <p className="text-lg text-white/60 max-w-2xl text-center mx-auto mb-12 font-munish">
           Scopri la nostra selezione di maglie, accessori e articoli ufficiali per vivere il calcio
           ogni giorno.
         </p>
@@ -137,10 +137,10 @@ export default function LandingCategorySection({ title, category }: LandingCateg
             >
               <button
                 aria-label="Previous products"
-                className={`cat-prev-${category.replace(/\s/g, "-")} flex items-center justify-center w-10 h-10 rounded-full bg-[#D9D9D9] shadow-md hover:bg-gray-100`}
+                className={`cat-prev-${category.replace(/\s/g, "-")} flex items-center justify-center w-10 h-10 rounded-full bg-[#D9D9D9] shadow-md hover:bg-[#111]`}
               >
                 <svg
-                  className="w-5 h-5 text-gray-700"
+                  className="w-5 h-5 text-white/70"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -155,10 +155,10 @@ export default function LandingCategorySection({ title, category }: LandingCateg
               </button>
               <button
                 aria-label="Next products"
-                className={`cat-next-${category.replace(/\s/g, "-")} flex items-center justify-center w-10 h-10 rounded-full bg-[#D9D9D9] shadow-md hover:bg-gray-100`}
+                className={`cat-next-${category.replace(/\s/g, "-")} flex items-center justify-center w-10 h-10 rounded-full bg-[#D9D9D9] shadow-md hover:bg-[#111]`}
               >
                 <svg
-                  className="w-5 h-5 text-gray-700"
+                  className="w-5 h-5 text-white/70"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

@@ -498,7 +498,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
               }
               
               .header {
-                background: linear-gradient(135deg, #0e1924 0%, #1e3a8a 100%);
+                background: linear-gradient(135deg, #0a0a0a 0%, #1e3a8a 100%);
                 color: white;
                 padding: 40px;
                 text-align: center;
@@ -652,7 +652,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
               .total-amount {
                 font-size: 1.5rem;
                 font-weight: 700;
-                color: #0e1924;
+                color: #0a0a0a;
               }
               
               .footer {
@@ -714,7 +714,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                 }
                 
                 .header {
-                  background: #0e1924 !important;
+                  background: #0a0a0a !important;
                   -webkit-print-color-adjust: exact;
                   color-adjust: exact;
                 }
@@ -859,7 +859,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
             if (el) el.indeterminate = table.getIsSomePageRowsSelected();
           }}
           onChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          className="rounded border-gray-300"
+          className="rounded border-white/10"
         />
       </div>
     ),
@@ -869,7 +869,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
           type="checkbox"
           checked={row.getIsSelected()}
           onChange={(value) => row.toggleSelected(!!value)}
-          className="rounded border-gray-300"
+          className="rounded border-white/10"
         />
       </div>
     ),
@@ -894,15 +894,15 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
           loadUserData(row.original.userId);
       return (
         <div className="flex items-center">
-          <div className="h-4 w-4 mr-2 rounded-full animate-pulse bg-gray-200"></div>
-              <span className="text-gray-500 text-sm">Loading...</span>
+          <div className="h-4 w-4 mr-2 rounded-full animate-pulse bg-[#1a1a1a]"></div>
+              <span className="text-white/50 text-sm">Loading...</span>
         </div>
       );
     }
     return (
       <div>
             <div className="font-medium text-sm">{user.name}</div>
-            <div className="text-gray-500 text-xs">{user.email}</div>
+            <div className="text-white/50 text-xs">{user.email}</div>
       </div>
     );
       },
@@ -1019,7 +1019,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1">
           <div className="relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/40" />
             <Input
               placeholder="Search orders by ID, customer name, or email..."
               value={(table.getColumn("_id")?.getFilterValue() as string) ?? ""}
@@ -1245,19 +1245,19 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                         
                         return (
                           <div key={status} className="flex items-center gap-2">
-                            <div className={`p-2 rounded-full ${isActive ? config.color : 'bg-gray-100'}`}>
-                              <Icon className={`h-4 w-4 ${isActive ? 'text-white' : 'text-gray-400'}`} />
+                            <div className={`p-2 rounded-full ${isActive ? config.color : 'bg-[#111]'}`}>
+                              <Icon className={`h-4 w-4 ${isActive ? 'text-white' : 'text-white/40'}`} />
                             </div>
                             <div className="text-sm">
-                              <div className={`font-medium ${isActive ? 'text-gray-900' : 'text-gray-500'}`}>
+                              <div className={`font-medium ${isActive ? 'text-white' : 'text-white/50'}`}>
                                 {config.label}
                               </div>
-                              <div className="text-xs text-gray-400">
+                              <div className="text-xs text-white/40">
                                 {config.description}
                               </div>
                             </div>
                             {status !== 'cancelled' && (
-                              <div className={`w-8 h-0.5 ${isCompleted ? 'bg-green-500' : 'bg-gray-200'}`} />
+                              <div className={`w-8 h-0.5 ${isCompleted ? 'bg-green-500' : 'bg-[#1a1a1a]'}`} />
                             )}
                           </div>
                         );
@@ -1298,22 +1298,22 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label className="text-sm font-medium text-gray-700">Name</Label>
+                      <Label className="text-sm font-medium text-white/70">Name</Label>
                       <p className="text-sm">{users[selectedOrder.userId]?.name || 'Loading...'}</p>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium text-gray-700">Email</Label>
+                      <Label className="text-sm font-medium text-white/70">Email</Label>
                       <p className="text-sm">{users[selectedOrder.userId]?.email || 'Loading...'}</p>
                     </div>
                                          <div>
-                       <Label className="text-sm font-medium text-gray-700">Order Date</Label>
+                       <Label className="text-sm font-medium text-white/70">Order Date</Label>
                        <p className="text-sm flex items-center gap-1">
                          <CalendarIcon className="h-4 w-4" />
                          {formatDate(selectedOrder.createdAt)}
                        </p>
                      </div>
                     <div>
-                      <Label className="text-sm font-medium text-gray-700">Total Amount</Label>
+                      <Label className="text-sm font-medium text-white/70">Total Amount</Label>
                       <p className="text-sm font-medium flex items-center gap-1">
                         <CurrencyEuroIcon className="h-4 w-4" />
                         €{Number(selectedOrder.amount).toFixed(2)}
@@ -1354,14 +1354,14 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                         <div className="flex justify-between items-start mb-2">
                                   <div>
                             <h4 className="font-medium">{item.name}</h4>
-                            <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+                            <p className="text-sm text-white/50">Quantity: {item.quantity}</p>
                                     {item.productId && (
-                              <p className="text-xs text-gray-400">ID: {item.productId}</p>
+                              <p className="text-xs text-white/40">ID: {item.productId}</p>
                                     )}
                                   </div>
                           <div className="text-right">
                             <p className="font-medium">€{Number(item.price).toFixed(2)}</p>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-white/50">
                               Total: €{(item.price * item.quantity).toFixed(2)}
                             </p>
                               </div>
@@ -1369,7 +1369,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
 
                             {item.customization && (
                           <div className="mt-3 pt-3 border-t">
-                            <h5 className="text-sm font-medium text-gray-700 mb-2">Customizations</h5>
+                            <h5 className="text-sm font-medium text-white/70 mb-2">Customizations</h5>
                             <div className="grid grid-cols-2 gap-2 text-sm">
                                   {item.customization.size && (
                                     <div className="flex justify-between">
@@ -1413,7 +1413,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                             
                             {item.customization.selectedPatches && item.customization.selectedPatches.length > 0 && (
                               <div className="mt-2">
-                                <p className="text-sm font-medium text-gray-700 mb-1">Patches:</p>
+                                <p className="text-sm font-medium text-white/70 mb-1">Patches:</p>
                                 <div className="flex flex-wrap gap-1">
                                   {item.customization.selectedPatches.map((patch) => (
                                     <Badge key={patch.id} variant="outline" className="text-xs">

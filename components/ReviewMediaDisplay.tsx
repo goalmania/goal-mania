@@ -55,8 +55,8 @@ export default function ReviewMediaDisplay({ media, className = "" }: ReviewMedi
                     </div>
                   </div>
                 ) : (
-                  <div className="relative aspect-square bg-gray-100 flex items-center justify-center">
-                    <Video className="h-6 w-6 text-gray-400" />
+                  <div className="relative aspect-square bg-[#111] flex items-center justify-center">
+                    <Video className="h-6 w-6 text-white/40" />
                     <div className="absolute top-1 left-1 bg-black/50 rounded p-1">
                       <Video className="h-3 w-3 text-white" />
                     </div>
@@ -75,10 +75,10 @@ export default function ReviewMediaDisplay({ media, className = "" }: ReviewMedi
           <div className="relative">
             <Card className="overflow-hidden">
               <CardContent className="p-1">
-                <div className="aspect-square bg-gray-100 flex items-center justify-center">
+                <div className="aspect-square bg-[#111] flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-lg font-semibold text-gray-600">+{allMedia.length - 4}</div>
-                    <div className="text-xs text-gray-500">more</div>
+                    <div className="text-lg font-semibold text-white/60">+{allMedia.length - 4}</div>
+                    <div className="text-xs text-white/50">more</div>
                   </div>
                 </div>
               </CardContent>

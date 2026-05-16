@@ -179,7 +179,7 @@ export default function AdminTeamsPage() {
             <CardTitle className="text-sm font-medium">International</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{stats.international}</div>
+            <div className="text-2xl font-bold text-[#c8f000]">{stats.international}</div>
           </CardContent>
         </Card>
         <Card>
@@ -244,7 +244,7 @@ export default function AdminTeamsPage() {
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 h-4 w-4" />
                     <Input
                       placeholder="Search Serie A teams..."
                       value={searchTerm}
@@ -301,7 +301,7 @@ export default function AdminTeamsPage() {
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 h-4 w-4" />
                     <Input
                       placeholder="Search international teams..."
                       value={searchTerm}

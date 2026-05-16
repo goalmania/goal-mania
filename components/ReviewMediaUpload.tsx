@@ -119,24 +119,24 @@ const ReviewMediaUpload = forwardRef<ReviewMediaUploadRef, ReviewMediaUploadProp
             className={`
               border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors
               ${isDragActive 
-                ? "border-[#f5963c] bg-[#f5963c]/5" 
-                : "border-gray-300 hover:border-[#f5963c] hover:bg-gray-50"
+                ? "border-[#c8f000] bg-[#c8f000]/5" 
+                : "border-white/10 hover:border-[#c8f000] hover:bg-[#0a0a0a]"
               }
               ${isUploading ? "opacity-50 cursor-not-allowed" : ""}
             `}
           >
             <input {...getInputProps()} />
-            <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-            <p className="text-sm text-gray-600 mb-1">
+            <Upload className="h-8 w-8 mx-auto mb-2 text-white/40" />
+            <p className="text-sm text-white/60 mb-1">
               {isDragActive 
                 ? "Drop files here..." 
                 : "Drag & drop photos/videos here, or click to select"
               }
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-white/50">
               Supports: JPG, PNG, WebP, GIF, MP4, WebM, OGG (max 10MB each)
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-white/50">
               Maximum {maxFiles} files
             </p>
           </div>
@@ -153,15 +153,15 @@ const ReviewMediaUpload = forwardRef<ReviewMediaUploadRef, ReviewMediaUploadProp
       {/* Upload Progress */}
       {isUploading && (
         <div className="flex items-center justify-center p-4">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#f5963c]"></div>
-          <span className="ml-2 text-sm text-gray-600">Uploading...</span>
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#c8f000]"></div>
+          <span className="ml-2 text-sm text-white/60">Uploading...</span>
         </div>
       )}
 
       {/* File Previews */}
       {uploadedFiles.length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-sm font-medium text-gray-700">
+          <h4 className="text-sm font-medium text-white/70">
             Uploaded Media ({uploadedFiles.length}/{maxFiles})
           </h4>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -181,14 +181,14 @@ const ReviewMediaUpload = forwardRef<ReviewMediaUploadRef, ReviewMediaUploadProp
                         </div>
                       </div>
                     ) : (
-                      <div className="relative aspect-square bg-gray-100 flex items-center justify-center">
-                        <Video className="h-8 w-8 text-gray-400" />
+                      <div className="relative aspect-square bg-[#111] flex items-center justify-center">
+                        <Video className="h-8 w-8 text-white/40" />
                         <div className="absolute top-1 left-1 bg-black/50 rounded p-1">
                           <Video className="h-3 w-3 text-white" />
                         </div>
                       </div>
                     )}
-                    <p className="text-xs text-gray-600 mt-1 truncate">
+                    <p className="text-xs text-white/60 mt-1 truncate">
                       {file.filename}
                     </p>
                   </CardContent>

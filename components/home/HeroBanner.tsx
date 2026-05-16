@@ -73,12 +73,12 @@ export default function HeroBanner({
               <a
                 key={index}
                 href={button.href}
-                className="lg:py-3 lg:px-6 px-3 py-1.5 rounded-full text-[#0A1A2F] font-semibold transition-all duration-300 bg-[#FF7A00] ease-in-out transform hover:scale-105 hover:shadow-lg focus:outline-none whitespace-nowrap text-xs md:text-base flex items-center"
+                className="lg:py-3 lg:px-6 px-3 py-1.5 rounded-full text-white font-semibold transition-all duration-300 bg-[#c8f000] ease-in-out transform hover:scale-105 hover:shadow-lg focus:outline-none whitespace-nowrap text-xs md:text-base flex items-center"
             
               >
                 {button.text}
 
-              <ArrowRight  className="text-[#0A1A2F] text-sm lg:text-lg w-3 lg:w-5 ml-2 inline-flex lg:ml-4 " />
+              <ArrowRight  className="text-white text-sm lg:text-lg w-3 lg:w-5 ml-2 inline-flex lg:ml-4 " />
 
               </a>
 

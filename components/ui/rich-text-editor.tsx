@@ -52,8 +52,8 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   };
 
   return (
-    <div className="border border-gray-300 rounded-lg overflow-hidden">
-      <div className="flex flex-wrap items-center gap-1 border-b border-gray-200 bg-gray-50 p-2">
+    <div className="border border-white/10 rounded-lg overflow-hidden">
+      <div className="flex flex-wrap items-center gap-1 border-b border-white/8 bg-[#0a0a0a] p-2">
         <Button
           type="button"
           onClick={() => handleFormat("bold")}
@@ -119,7 +119,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             const url = prompt("Enter image URL");
             if (url) handleFormat("insertImage", url);
           }}
-          className="p-1.5 rounded hover:bg-gray-200"
+          className="p-1.5 rounded hover:bg-[#1a1a1a]"
           title="Insert Image"
         >
           <Image size={18} />
@@ -128,7 +128,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         <button
           type="button"
           onClick={() => handleFormat("justifyLeft")}
-          className="p-1.5 rounded hover:bg-gray-200"
+          className="p-1.5 rounded hover:bg-[#1a1a1a]"
           title="Align Left"
         >
           <AlignLeft size={18} />
@@ -136,7 +136,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         <button
           type="button"
           onClick={() => handleFormat("justifyCenter")}
-          className="p-1.5 rounded hover:bg-gray-200"
+          className="p-1.5 rounded hover:bg-[#1a1a1a]"
           title="Align Center"
         >
           <AlignCenter size={18} />
@@ -144,7 +144,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         <button
           type="button"
           onClick={() => handleFormat("justifyRight")}
-          className="p-1.5 rounded hover:bg-gray-200"
+          className="p-1.5 rounded hover:bg-[#1a1a1a]"
           title="Align Right"
         >
           <AlignRight size={18} />
@@ -170,7 +170,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           onChange={handleChange}
         />
         {!content && (
-          <div className="absolute top-3 left-3 text-gray-400 pointer-events-none">
+          <div className="absolute top-3 left-3 text-white/40 pointer-events-none">
             {placeholder}
           </div>
         )}

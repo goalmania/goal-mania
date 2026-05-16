@@ -107,7 +107,7 @@ export default function UpcomingFixtures({ league }: FixtureProps) {
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="bg-gray-100 animate-pulse h-24 rounded-lg"
+            className="bg-[#111] animate-pulse h-24 rounded-lg"
           ></div>
         ))}
       </div>
@@ -124,7 +124,7 @@ export default function UpcomingFixtures({ league }: FixtureProps) {
 
   if (fixtures.length === 0) {
     return (
-      <div className="p-4 text-gray-500 text-center">
+      <div className="p-4 text-white/50 text-center">
         Nessuna partita in programma per questa lega.
       </div>
     );
@@ -137,7 +137,7 @@ export default function UpcomingFixtures({ league }: FixtureProps) {
     <div className="space-y-6">
       {Object.entries(groupedFixtures).map(([date, matches]) => (
         <div key={date} className="space-y-3">
-          <h3 className="font-medium text-gray-700 bg-gray-50 p-2 rounded">
+          <h3 className="font-medium text-white/70 bg-[#0a0a0a] p-2 rounded">
             {date}
           </h3>
 
@@ -145,7 +145,7 @@ export default function UpcomingFixtures({ league }: FixtureProps) {
             {matches.map((match) => (
               <div
                 key={match.id}
-                className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden"
+                className="bg-[#0a0a0a] rounded-lg shadow-sm border border-gray-100 overflow-hidden"
               >
                 <div className="p-3">
                   <div className="flex items-center justify-between">
@@ -159,12 +159,12 @@ export default function UpcomingFixtures({ league }: FixtureProps) {
                           unoptimized
                         />
                       </div>
-                      <span className="font-medium text-gray-800 text-sm">
+                      <span className="font-medium text-white/80 text-sm">
                         {match.teams.home.name}
                       </span>
                     </div>
 
-                    <div className="px-3 py-1 bg-gray-50 rounded text-xs font-medium text-gray-500">
+                    <div className="px-3 py-1 bg-[#0a0a0a] rounded text-xs font-medium text-white/50">
                       {new Date(match.fixture.date).toLocaleTimeString(
                         "it-IT",
                         {
@@ -175,7 +175,7 @@ export default function UpcomingFixtures({ league }: FixtureProps) {
                     </div>
 
                     <div className="flex items-center space-x-2">
-                      <span className="font-medium text-gray-800 text-sm">
+                      <span className="font-medium text-white/80 text-sm">
                         {match.teams.away.name}
                       </span>
                       <div className="relative h-6 w-6">
@@ -190,7 +190,7 @@ export default function UpcomingFixtures({ league }: FixtureProps) {
                     </div>
                   </div>
 
-                  <div className="mt-2 text-xs text-gray-500 text-center">
+                  <div className="mt-2 text-xs text-white/50 text-center">
                     {match.fixture.venue.name}, {match.fixture.venue.city}
                   </div>
                 </div>

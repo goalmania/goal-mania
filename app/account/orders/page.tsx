@@ -216,7 +216,7 @@ function OrderDetailsDialog({ order, isOpen, onClose }: {
       case "cancelled":
         return "bg-red-100 text-red-800";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-[#111] text-white/80";
     }
   };
 
@@ -373,12 +373,12 @@ function OrderDetailsDialog({ order, isOpen, onClose }: {
                 <Label className="text-lg font-semibold">Tracking Information</Label>
                 <div className="bg-blue-50 dark:bg-blue-950/30 p-4 sm:p-6 rounded-lg space-y-4">
                   <div className="flex items-center space-x-3">
-                    <TruckIcon className="h-6 w-6 text-blue-500 flex-shrink-0" />
+                    <TruckIcon className="h-6 w-6 text-[#c8f000] flex-shrink-0" />
                     <div>
                       <p className="text-blue-700 dark:text-blue-300 font-semibold">
                         Tracking Number: {order.trackingCode}
                       </p>
-                      <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">
+                      <p className="text-sm text-[#c8f000] dark:text-blue-400 mt-1">
                         You can use this tracking number to follow your package's journey.
                       </p>
                     </div>
@@ -473,7 +473,7 @@ function OrdersDataTable({ orders }: { orders: Order[] }) {
       case "cancelled":
         return "bg-red-100 text-red-800 border-red-200";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
+        return "bg-[#111] text-white/80 border-white/8";
     }
   };
 

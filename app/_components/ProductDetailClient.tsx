@@ -330,7 +330,7 @@ export default function ProductDetailClient({
   };
 
   return (
-    <div className="bg-white font-munish">
+    <div className="bg-[#0a0a0a] font-munish">
       {/* Product details section */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-18 pb-6 sm:pt-22 sm:pb-6">
         {/* Image gallery - takes 3 columns on large screens */}
@@ -350,8 +350,8 @@ export default function ProductDetailClient({
                 />
 
                 {/* Subtle Counter */}
-                <div className="absolute bottom-4 right-4 bg-white/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-black/5">
-                  <p className="text-[10px] font-bold tracking-tight text-black">
+                <div className="absolute bottom-4 right-4 bg-[#0a0a0a]/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-black/5">
+                  <p className="text-[10px] font-bold tracking-tight text-white">
                     {selectedImage + 1} / {product.images.length}
                   </p>
                 </div>
@@ -385,7 +385,7 @@ export default function ProductDetailClient({
               {/* Videos - More compact preview */}
               {product.videos && product.videos.length > 0 && (
                 <div className="w-full max-w-[380px] sm:max-w-[420px] pt-1">
-                  <h3 className="text-[9px] font-black uppercase tracking-[0.15em] text-gray-400 mb-2">
+                  <h3 className="text-[9px] font-black uppercase tracking-[0.15em] text-white/40 mb-2">
                     Anteprima Video
                   </h3>
                   <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
@@ -400,7 +400,7 @@ export default function ProductDetailClient({
                           preload="metadata"
                         />
                         <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                          <div className="w-6 h-6 bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <div className="w-6 h-6 bg-[#0a0a0a]/30 backdrop-blur-sm rounded-full flex items-center justify-center">
                             <div className="w-0 h-0 border-t-[4px] border-t-transparent border-l-[7px] border-l-white border-b-[4px] border-b-transparent ml-0.5" />
                           </div>
                         </div>
@@ -422,17 +422,17 @@ export default function ProductDetailClient({
                     🎁 Mystery Box
                   </Badge>
                 )}
-                <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-black leading-tight">
+                <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white leading-tight">
                   {product.title}
                 </h1>
               </div>
 
               {/* Pricing */}
               <div className="flex items-baseline gap-3">
-                <p className="text-3xl font-bold text-black">
+                <p className="text-3xl font-bold text-white">
                   €{(calculateTotalPrice() * quantity).toFixed(2)}
                 </p>
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">
                   IVA Inclusa
                 </span>
               </div>
@@ -447,12 +447,12 @@ export default function ProductDetailClient({
                 <span>Spedizione gratuita in Italia — Consegna 3-5 giorni lavorativi</span>
               </div>
 
-              <div className="flex items-center gap-2 text-sm text-[#FF7A00]">
-                <span className="inline-block w-2 h-2 rounded-full bg-[#FF7A00] animate-pulse" />
+              <div className="flex items-center gap-2 text-sm text-[#c8f000]">
+                <span className="inline-block w-2 h-2 rounded-full bg-[#c8f000] animate-pulse" />
                 <span>{viewers} persone stanno guardando questa maglia</span>
               </div>
 
-              <div className="text-xs text-gray-500 font-medium">
+              <div className="text-xs text-white/50 font-medium">
                 ⏱ {deliveryCountdown}
               </div>
 
@@ -460,10 +460,10 @@ export default function ProductDetailClient({
 
               {/* Description */}
               <div className="space-y-2">
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-white/40">
                   Description
                 </h3>
-                <div className="prose prose-sm text-gray-600 leading-relaxed max-w-none">
+                <div className="prose prose-sm text-white/60 leading-relaxed max-w-none">
                   {product.description}
                 </div>
               </div>
@@ -474,16 +474,16 @@ export default function ProductDetailClient({
                   <div className="space-y-8">
                     {/* Section Header */}
                     <div className="space-y-1">
-                      <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#FF7A00]">
+                      <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#c8f000]">
                         {t("products.customizeYourJersey")}
                       </h2>
-                      <div className="h-1 w-10 bg-[#FF7A00] rounded-full" />
+                      <div className="h-1 w-10 bg-[#c8f000] rounded-full" />
                     </div>
 
                     {/* Jersey Edition Selection */}
                     {!product.isMysteryBox && (
                       <div className="space-y-4">
-                        <h3 className="text-sm font-bold text-gray-900">
+                        <h3 className="text-sm font-bold text-white">
                           {t("products.jerseyType")}
                         </h3>
                         <RadioGroup
@@ -516,7 +516,7 @@ export default function ProductDetailClient({
                                   (edition.id === "player" && customization.isPlayerEdition) ||
                                   (edition.id === "fan" && !customization.isPlayerEdition)
                                     ? "border-black bg-black text-white shadow-md"
-                                    : "border-gray-100 bg-gray-50 text-gray-600 hover:border-gray-200"
+                                    : "border-gray-100 bg-[#0a0a0a] text-white/60 hover:border-white/8"
                                 }`}
                               >
                                 <span className="text-[13px] font-bold">{edition.label}</span>
@@ -537,7 +537,7 @@ export default function ProductDetailClient({
                       <div className="grid grid-cols-12 gap-4">
                         {product.allowsNameOnShirt && (
                           <div className="col-span-8 space-y-2">
-                            <Label className="text-[11px] font-black uppercase tracking-wider text-gray-400">
+                            <Label className="text-[11px] font-black uppercase tracking-wider text-white/40">
                               Name on Jersey
                             </Label>
                             <input
@@ -551,13 +551,13 @@ export default function ProductDetailClient({
                               }
                               maxLength={20}
                               placeholder="MARADONA"
-                              className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-black transition-all placeholder:text-gray-300"
+                              className="w-full bg-[#0a0a0a] border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-black transition-all placeholder:text-white/30"
                             />
                           </div>
                         )}
                         {product.allowsNumberOnShirt && (
                           <div className="col-span-4 space-y-2">
-                            <Label className="text-[11px] font-black uppercase tracking-wider text-gray-400">
+                            <Label className="text-[11px] font-black uppercase tracking-wider text-white/40">
                               Number
                             </Label>
                             <input
@@ -571,7 +571,7 @@ export default function ProductDetailClient({
                               }
                               maxLength={2}
                               placeholder="10"
-                              className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-sm font-bold text-center focus:ring-2 focus:ring-black transition-all placeholder:text-gray-300"
+                              className="w-full bg-[#0a0a0a] border-none rounded-xl px-4 py-3 text-sm font-bold text-center focus:ring-2 focus:ring-black transition-all placeholder:text-white/30"
                             />
                           </div>
                         )}
@@ -602,25 +602,25 @@ export default function ProductDetailClient({
                                 }}
                                 className={`flex items-center justify-between px-4 py-3 rounded-xl border-2 transition-all ${
                                   isSelected
-                                    ? "border-black bg-white shadow-sm"
-                                    : "border-gray-50 bg-gray-50 hover:border-gray-200"
+                                    ? "border-black bg-[#0a0a0a] shadow-sm"
+                                    : "border-gray-50 bg-[#0a0a0a] hover:border-white/8"
                                 }`}
                               >
                                 <div className="flex items-center gap-3">
                                   <div
-                                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? "border-black bg-black" : "border-gray-300"}`}
+                                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? "border-black bg-black" : "border-white/10"}`}
                                   >
                                     {isSelected && (
-                                      <div className="w-1.5 h-1.5 bg-white rounded-full" />
+                                      <div className="w-1.5 h-1.5 bg-[#0a0a0a] rounded-full" />
                                     )}
                                   </div>
                                   <span
-                                    className={`text-xs font-bold ${isSelected ? "text-black" : "text-gray-500"}`}
+                                    className={`text-xs font-bold ${isSelected ? "text-white" : "text-white/50"}`}
                                   >
                                     {patch.title}
                                   </span>
                                 </div>
-                                <span className="text-[10px] font-black text-[#FF7A00]">
+                                <span className="text-[10px] font-black text-[#c8f000]">
                                   +€{patch.price}
                                 </span>
                               </button>
@@ -635,7 +635,7 @@ export default function ProductDetailClient({
                       <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-purple-600 to-indigo-700 p-6 text-white shadow-xl shadow-purple-200">
                         <div className="relative z-10 space-y-4">
                           <div className="flex items-center gap-3">
-                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-md">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0a0a0a]/20 backdrop-blur-md">
                               🎁
                             </span>
                             <h3 className="font-black text-sm uppercase tracking-widest">
@@ -656,7 +656,7 @@ export default function ProductDetailClient({
                                 .filter((l) => l.trim() !== "");
                               setCustomization((prev) => ({ ...prev, excludedShirts: lines }));
                             }}
-                            className="w-full rounded-xl border-none bg-white/10 p-4 text-sm font-medium placeholder:text-purple-300 focus:bg-white/20 focus:ring-0 transition-all"
+                            className="w-full rounded-xl border-none bg-[#0a0a0a]/10 p-4 text-sm font-medium placeholder:text-purple-300 focus:bg-[#0a0a0a]/20 focus:ring-0 transition-all"
                             placeholder="E.g. No AC Milan, No yellow jerseys..."
                           />
                           <div className="flex justify-between items-center text-[10px] font-bold text-purple-200 uppercase tracking-tighter">
@@ -667,7 +667,7 @@ export default function ProductDetailClient({
                           </div>
                         </div>
                         {/* Decorative background element */}
-                        <div className="absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
+                        <div className="absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-[#0a0a0a]/10 blur-3xl" />
                       </div>
                     )}
 
@@ -708,12 +708,12 @@ export default function ProductDetailClient({
                                 className={`flex items-center gap-3 px-5 py-3 rounded-full border-2 transition-all ${
                                   extra.current
                                     ? "border-black bg-black text-white shadow-md"
-                                    : "border-gray-100 bg-gray-50 text-gray-500 hover:border-gray-200"
+                                    : "border-gray-100 bg-[#0a0a0a] text-white/50 hover:border-white/8"
                                 }`}
                               >
                                 <span className="text-xs font-bold">{extra.label}</span>
                                 <span
-                                  className={`text-[10px] font-black ${extra.current ? "text-[#FF7A00]" : "text-gray-400"}`}
+                                  className={`text-[10px] font-black ${extra.current ? "text-[#c8f000]" : "text-white/40"}`}
                                 >
                                   +€{extra.price}
                                 </span>
@@ -730,7 +730,7 @@ export default function ProductDetailClient({
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
-                          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 inline">
+                          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 inline">
                             {t("products.chooseSize")}
                           </h3>
                           <button
@@ -745,13 +745,13 @@ export default function ProductDetailClient({
 
                         {/* Adult/Kid Toggle (Only if kids sizes exist) */}
                         {product.kidsSizes && product.kidsSizes.length > 0 && (
-                          <div className="flex items-center gap-2 bg-gray-100 p-1 rounded-full">
+                          <div className="flex items-center gap-2 bg-[#111] p-1 rounded-full">
                             <button
                               type="button"
                               onClick={() =>
                                 setCustomization({ ...customization, isKidSize: false, size: "" })
                               }
-                              className={`px-3 py-1 text-[10px] font-bold rounded-full transition-all ${!customization.isKidSize ? "bg-white text-black shadow-sm" : "text-gray-400"}`}
+                              className={`px-3 py-1 text-[10px] font-bold rounded-full transition-all ${!customization.isKidSize ? "bg-[#0a0a0a] text-white shadow-sm" : "text-white/40"}`}
                             >
                               ADULT
                             </button>
@@ -760,7 +760,7 @@ export default function ProductDetailClient({
                               onClick={() =>
                                 setCustomization({ ...customization, isKidSize: true, size: "" })
                               }
-                              className={`px-3 py-1 text-[10px] font-bold rounded-full transition-all ${customization.isKidSize ? "bg-white text-black shadow-sm" : "text-gray-400"}`}
+                              className={`px-3 py-1 text-[10px] font-bold rounded-full transition-all ${customization.isKidSize ? "bg-[#0a0a0a] text-white shadow-sm" : "text-white/40"}`}
                             >
                               KIDS
                             </button>
@@ -769,10 +769,10 @@ export default function ProductDetailClient({
                       </div>
 
                       {/* Long Sleeve Toggle Card */}
-                      <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100 transition-all hover:border-gray-200">
+                      <div className="flex items-center justify-between p-4 bg-[#0a0a0a] rounded-2xl border border-gray-100 transition-all hover:border-white/8">
                         <div className="flex items-center gap-3">
-                          <div className="bg-white p-2 rounded-lg shadow-sm">
-                            <Layers size={18} className="text-black" />
+                          <div className="bg-[#0a0a0a] p-2 rounded-lg shadow-sm">
+                            <Layers size={18} className="text-white" />
                           </div>
                           <div>
                             <Label
@@ -781,7 +781,7 @@ export default function ProductDetailClient({
                             >
                               Manica Lunga
                             </Label>
-                            <span className="text-[10px] text-[#FF7A00] font-black">+€10.00</span>
+                            <span className="text-[10px] text-[#c8f000] font-black">+€10.00</span>
                           </div>
                         </div>
                         <Switch
@@ -806,7 +806,7 @@ export default function ProductDetailClient({
                                 className={`min-w-[50px] h-12 rounded-xl text-sm font-bold border-2 transition-all ${
                                   isSelected
                                     ? "border-black bg-black text-white shadow-lg scale-105"
-                                    : "border-gray-100 bg-gray-50 text-gray-500 hover:border-gray-300"
+                                    : "border-gray-100 bg-[#0a0a0a] text-white/50 hover:border-white/10"
                                 }`}
                               >
                                 {size}
@@ -827,17 +827,17 @@ export default function ProductDetailClient({
                     <div className="flex flex-col gap-4 pt-4 border-t border-gray-100">
                       <div className="flex items-center gap-3">
                         {/* Quantity Selector */}
-                        <div className="flex items-center bg-gray-100 rounded-2xl p-1 shrink-0">
+                        <div className="flex items-center bg-[#111] rounded-2xl p-1 shrink-0">
                           <Button
                             type="button"
                             variant="ghost"
                             size="icon"
                             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                            className="h-9 w-9 rounded-xl hover:bg-white transition-all"
+                            className="h-9 w-9 rounded-xl hover:bg-[#0a0a0a] transition-all"
                           >
                             <MinusIcon className="h-4 w-4" />
                           </Button>
-                          <span className="text-sm font-black text-black w-10 text-center">
+                          <span className="text-sm font-black text-white w-10 text-center">
                             {quantity}
                           </span>
                           <Button
@@ -845,7 +845,7 @@ export default function ProductDetailClient({
                             variant="ghost"
                             size="icon"
                             onClick={() => setQuantity(quantity + 1)}
-                            className="h-9 w-9 rounded-xl hover:bg-white transition-all"
+                            className="h-9 w-9 rounded-xl hover:bg-[#0a0a0a] transition-all"
                           >
                             <PlusIcon className="h-4 w-4" />
                           </Button>
@@ -871,7 +871,7 @@ export default function ProductDetailClient({
                           {isInWishlist(product._id) ? (
                             <HeartIconSolid className="h-5 w-5 text-red-500" />
                           ) : (
-                            <HeartIcon className="h-5 w-5 text-gray-400 group-hover:text-red-400" />
+                            <HeartIcon className="h-5 w-5 text-white/40 group-hover:text-red-400" />
                           )}
                         </Button>
                       </div>
@@ -880,7 +880,7 @@ export default function ProductDetailClient({
                       <button
                         type="button"
                         onClick={handleBuyNow}
-                        className="w-full h-14 bg-[#FF7A00] text-white flex items-center justify-center rounded-[20px] text-sm font-black uppercase tracking-[0.1em] shadow-xl shadow-orange-100 hover:opacity-90 transition-all active:scale-[0.98]"
+                        className="w-full h-14 bg-[#c8f000] text-white flex items-center justify-center rounded-[20px] text-sm font-black uppercase tracking-[0.1em] shadow-xl shadow-orange-100 hover:opacity-90 transition-all active:scale-[0.98]"
                       >
                         Compra Ora
                       </button>
@@ -910,8 +910,8 @@ export default function ProductDetailClient({
       </div>
       <div className="">
         {/* Trust Badges */}
-        <Card className="bg-[#0A1A2F] text-white font-light flex justify-center rounded-none border-none shadow-none">
-          <CardContent className="p-4 bg-[#0A1A2F] text-white font-light">
+        <Card className="bg-[#111111] text-white font-light flex justify-center rounded-none border-none shadow-none">
+          <CardContent className="p-4 bg-[#111111] text-white font-light">
             <div className="flex justify-around flex-col md:flex-row gap-4 items-center">
               <div className="flex flex-row gap-1 items-center text-white font-light text-center">
                 <ShieldCheck strokeWidth={1} className="h-8 w-8 text-white" />
@@ -946,7 +946,7 @@ export default function ProductDetailClient({
         </Card>
       </div>
       <Tabs defaultValue="ratings" className="md:w-full  px-0  md:max-w-5xl mx-auto">
-        <TabsList className="md:w-full w-[400px] gap-0 px-0 justify-between bg-white border-b  h-14 rounded-none shadow-none pb-0 ">
+        <TabsList className="md:w-full w-[400px] gap-0 px-0 justify-between bg-[#0a0a0a] border-b  h-14 rounded-none shadow-none pb-0 ">
           <TabsTrigger
             value="details"
             className="flex-1  shadow-none rounded-none px-0 font-semibold
@@ -1001,7 +1001,7 @@ export default function ProductDetailClient({
           onClick={() => setSizeChartOpen(false)}
         >
           <div
-            className="bg-white rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto"
+            className="bg-[#0a0a0a] rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
@@ -1010,7 +1010,7 @@ export default function ProductDetailClient({
               </h2>
               <button
                 onClick={() => setSizeChartOpen(false)}
-                className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200"
+                className="w-8 h-8 rounded-full bg-[#111] flex items-center justify-center text-white/60 hover:bg-[#1a1a1a]"
               >
                 ✕
               </button>

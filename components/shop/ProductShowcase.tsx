@@ -82,11 +82,11 @@ export default function ProductGrid({
 
               {/* Text Section - top-left aligned */}
               <div className="relative flex flex-col justify-start items-start px-5 sm:px-7 md:px-10 pt-5 sm:pt-6 md:pt-10 pb-3 z-10 md:max-w-[55%]">
-                <h3 className="text-[16px] sm:text-[20px] md:text-[28px] font-extrabold text-[#0A1A2F] leading-tight mb-1.5 sm:mb-2 md:mb-3">
+                <h3 className="text-[16px] sm:text-[20px] md:text-[28px] font-extrabold text-white leading-tight mb-1.5 sm:mb-2 md:mb-3">
                   {product.title}
                 </h3>
                 <p
-                  className="text-[11px] sm:text-[13px] md:text-[16px] text-[#0A1A2F] leading-relaxed font-medium mb-2 sm:mb-3 md:mb-5 overflow-hidden text-ellipsis max-w-[65%] sm:max-w-[75%] md:max-w-full"
+                  className="text-[11px] sm:text-[13px] md:text-[16px] text-white leading-relaxed font-medium mb-2 sm:mb-3 md:mb-5 overflow-hidden text-ellipsis max-w-[65%] sm:max-w-[75%] md:max-w-full"
                   style={{
                     display: '-webkit-box',
                     WebkitLineClamp: 2,
@@ -97,7 +97,7 @@ export default function ProductGrid({
                 </p>
                 <Link
                   href={`/products/${product.id}`}
-                  className="inline-block bg-[#FF7A00] rounded-full text-white px-5 py-1.5 sm:px-7 sm:py-2 md:px-10 md:py-3 font-bold text-xs sm:text-sm md:text-lg shadow-lg hover:bg-orange-600 transition-colors"
+                  className="inline-block bg-[#c8f000] rounded-full text-white px-5 py-1.5 sm:px-7 sm:py-2 md:px-10 md:py-3 font-bold text-xs sm:text-sm md:text-lg shadow-lg hover:bg-[#c8f000] transition-colors"
                 >
                   Acquista ora →
                 </Link>

@@ -40,7 +40,7 @@ export default function BentoSection({
 
   const mainArticle = (
     <Link href={getArticleUrl(main)} className="block w-full h-full">
-      <div className="h-fit flex flex-col  bg-transparent text-[#0A1A2F]">
+      <div className="h-fit flex flex-col  bg-transparent text-white">
         <div className="relative w-full h-80 md:h-96 rounded-t-xl overflow-hidden">
           <Image
             src={main.image}
@@ -54,12 +54,12 @@ export default function BentoSection({
             {main.category}
           </p>
 
-          <CardTitle className="text-[26px] font-bold line-clamp-2 text-[#0A1A2F]">
+          <CardTitle className="text-[26px] font-bold line-clamp-2 text-white">
             {main.title}
           </CardTitle>
         </div>
         <div className=" pb-4 max-w-lg ">
-          <CardDescription className="text-sm text-gray-700 line-clamp-3">
+          <CardDescription className="text-sm text-white/70 line-clamp-3">
             {main.summary}
           </CardDescription>
         </div>
@@ -90,7 +90,7 @@ export default function BentoSection({
           href={getArticleUrl(news)}
           className="block"
         >
-          <div className=" text-black grid grid-cols-2 w-full mx-auto  gap-4 transition-shadow duration-200">
+          <div className=" text-white grid grid-cols-2 w-full mx-auto  gap-4 transition-shadow duration-200">
             <div className="relative w-full h-32 sm:h-auto  rounded-t-xl overflow-hidden md:order-2 order-1">
               <Image
                 src={news.image}
@@ -106,7 +106,7 @@ export default function BentoSection({
                   {main.category}
                 </p>
 
-                <CardTitle className="md:text-[22px] text-[18px] font-bold line-clamp-2 text-[#0A1A2F]">
+                <CardTitle className="md:text-[22px] text-[18px] font-bold line-clamp-2 text-white">
                   {news.title.length > 10
                     ? `${news.title.slice(0, 55)}...`
                     : news.title}

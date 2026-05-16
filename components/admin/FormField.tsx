@@ -276,11 +276,11 @@ export const ImageUpload = forwardRef<HTMLDivElement, ImageUploadProps>(
                 accept="image/*"
                 onChange={(e) => e.target.files && onImageUpload(e.target.files)}
                 disabled={isUploading}
-                className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#f5963c] file:text-white hover:file:bg-[#e0852e]"
+                className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#c8f000] file:text-white hover:file:bg-[#e0852e]"
               />
               {isUploading && (
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#f5963c]"></div>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#c8f000]"></div>
                   <span>Uploading...</span>
                 </div>
               )}
@@ -318,7 +318,7 @@ export const ImageUpload = forwardRef<HTMLDivElement, ImageUploadProps>(
                 {images.map((url, index) => (
                   <div
                     key={index}
-                    className="relative aspect-square overflow-hidden rounded-lg border border-gray-200 group"
+                    className="relative aspect-square overflow-hidden rounded-lg border border-white/8 group"
                   >
                     <img
                       src={url}

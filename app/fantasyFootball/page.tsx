@@ -29,7 +29,7 @@ export default function FantasyFootballPage() {
     <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 py-8 overflow-x-hidden">
       <div className="container mx-auto px-4 sm:px-6">
         {/* Decorative Section Header */}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#0e1924] drop-shadow-md transition-colors duration-300 mb-8">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#0a0a0a] drop-shadow-md transition-colors duration-300 mb-8">
           Fantacalcio
         </h1>
 
@@ -37,13 +37,13 @@ export default function FantasyFootballPage() {
           {/* Main Content Area */}
           <div className="lg:col-span-8 space-y-8">
             {/* Live Matches Section - Serie A Only */}
-            <Card className="overflow-hidden bg-white border border-gray-100 shadow-lg rounded-2xl transition-shadow duration-300 hover:shadow-xl">
+            <Card className="overflow-hidden bg-[#0a0a0a] border border-gray-100 shadow-lg rounded-2xl transition-shadow duration-300 hover:shadow-xl">
               <CardHeader className="pb-3">
-                <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-black">
+                <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
                   Partite in Diretta - Serie A
                 </CardTitle>
               </CardHeader>
-              <CardContent className="bg-white">
+              <CardContent className="bg-[#0a0a0a]">
                 <Suspense fallback={<LoadingFallback />}>
                 <SerieALiveMatchesSection />
                 </Suspense>
@@ -51,13 +51,13 @@ export default function FantasyFootballPage() {
             </Card>
 
             {/* Serie A News Section */}
-            <Card className="overflow-hidden bg-white border border-gray-100 shadow-lg rounded-2xl transition-shadow duration-300 hover:shadow-xl">
+            <Card className="overflow-hidden bg-[#0a0a0a] border border-gray-100 shadow-lg rounded-2xl transition-shadow duration-300 hover:shadow-xl">
               <CardHeader className="pb-3">
-                <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0e1924]">
+                <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0a0a0a]">
                   Notizie Serie A
                 </CardTitle>
               </CardHeader>
-              <CardContent className="bg-white">
+              <CardContent className="bg-[#0a0a0a]">
                 <Suspense fallback={<LoadingFallback />}>
                 <SerieANews />
                 </Suspense>
@@ -68,9 +68,9 @@ export default function FantasyFootballPage() {
           {/* Sidebar */}
           <div className="lg:col-span-4 space-y-8">
             {/* Fantasy Tips - Editable */}
-            <Card className="overflow-hidden bg-white border border-gray-100 shadow-lg rounded-2xl relative transition-shadow duration-300 hover:shadow-xl">
+            <Card className="overflow-hidden bg-[#0a0a0a] border border-gray-100 shadow-lg rounded-2xl relative transition-shadow duration-300 hover:shadow-xl">
               <CardHeader className="pb-3 pl-6">
-                <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-black">
+                <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
                   Consigli Fantacalcio
                 </CardTitle>
               </CardHeader>

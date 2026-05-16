@@ -6,9 +6,9 @@ export const ProductSizeChart = () => {
   return (
     <div className="my-4">
       <Tabs defaultValue="adult" className="mt-2">
-        <TabsList className="grid w-full max-w-xs mx-auto grid-cols-2 bg-white shadow-sm border mb-4">
-          <TabsTrigger value="adult" className="data-[state=active]:bg-[#0e1924] data-[state=active]:text-white">Adult</TabsTrigger>
-          <TabsTrigger value="kids" className="data-[state=active]:bg-[#f5963c] data-[state=active]:text-white">Kids</TabsTrigger>
+        <TabsList className="grid w-full max-w-xs mx-auto grid-cols-2 bg-[#0a0a0a] shadow-sm border mb-4">
+          <TabsTrigger value="adult" className="data-[state=active]:bg-[#0a0a0a] data-[state=active]:text-white">Adult</TabsTrigger>
+          <TabsTrigger value="kids" className="data-[state=active]:bg-[#c8f000] data-[state=active]:text-white">Kids</TabsTrigger>
         </TabsList>
         <TabsContent value="adult">
           <Card className="shadow-md border-primary-blue/20 animate-fade-in-up">
@@ -17,7 +17,7 @@ export const ProductSizeChart = () => {
             </CardHeader>
             <CardContent>
               <Table>
-                <TableCaption className="text-xs text-gray-500">Tip: For a looser fit, size up!</TableCaption>
+                <TableCaption className="text-xs text-white/50">Tip: For a looser fit, size up!</TableCaption>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Size</TableHead>
@@ -45,7 +45,7 @@ export const ProductSizeChart = () => {
             </CardHeader>
             <CardContent>
               <Table>
-                <TableCaption className="text-xs text-gray-500">Age is approximate. Check height for best fit!</TableCaption>
+                <TableCaption className="text-xs text-white/50">Age is approximate. Check height for best fit!</TableCaption>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Size</TableHead>
@@ -67,7 +67,7 @@ export const ProductSizeChart = () => {
           </Card>
         </TabsContent>
       </Tabs>
-      <div className="mt-3 text-center text-xs text-gray-500 animate-fade-in-up delay-200">
+      <div className="mt-3 text-center text-xs text-white/50 animate-fade-in-up delay-200">
         <span className="font-semibold text-primary-orange">Pro Tip:</span> Measure your favorite shirt and compare for the best fit!
       </div>
     </div>

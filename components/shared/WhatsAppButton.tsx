@@ -18,10 +18,10 @@ const WhatsAppButton = () => {
             initial={{ opacity: 0, scale: 0.8, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 10 }}
-            className="mb-3 bg-white text-[#0A1A2F] px-4 py-2 rounded-xl shadow-2xl border border-gray-100 text-sm font-bold whitespace-nowrap"
+            className="mb-3 bg-[#1a1a1a] text-white px-4 py-2 rounded-xl shadow-2xl border border-gray-100 text-sm font-bold whitespace-nowrap"
           >
             Contattaci direttamente
-            <div className="absolute -bottom-1 right-5 w-2 h-2 bg-white border-r border-b border-gray-100 rotate-45" />
+            <div className="absolute -bottom-1 right-5 w-2 h-2 bg-[#0a0a0a] border-r border-b border-gray-100 rotate-45" />
           </motion.div>
         )}
       </AnimatePresence>

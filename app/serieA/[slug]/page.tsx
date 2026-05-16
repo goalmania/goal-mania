@@ -122,11 +122,11 @@ export default async function SerieAArticlePage({
   const teamHint = extractTeamFromTitle(article.title);
 
   return (
-    <div className="container mx-auto px-4 py-8 bg-white">
-      <article className="max-w-3xl mx-auto text-black">
+    <div className="container mx-auto px-4 py-8 bg-[#0a0a0a]">
+      <article className="max-w-3xl mx-auto text-white">
         {/* Article Header */}
         <header className="mb-8">
-          <div className="flex items-center text-sm text-gray-700 mb-3">
+          <div className="flex items-center text-sm text-white/70 mb-3">
             <time dateTime={article.publishedAt}>
               {new Date(article.publishedAt).toLocaleDateString("en-US", {
                 year: "numeric",
@@ -137,10 +137,10 @@ export default async function SerieAArticlePage({
             <span className="mx-2">•</span>
             <span>{article.author}</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-black mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
             {article.title}
           </h1>
-          <p className="text-lg text-gray-800 mb-6">{article.summary}</p>
+          <p className="text-lg text-white/80 mb-6">{article.summary}</p>
         </header>
 
         {/* Article Featured Image */}
@@ -158,22 +158,22 @@ export default async function SerieAArticlePage({
         {/* Article content */}
         <ArticleContent
           content={article.content}
-          className="prose prose-lg max-w-none mb-8 text-black"
+          className="prose prose-lg max-w-none mb-8 text-white"
         />
 
         {/* Jersey popup — maglia della squadra dell'articolo */}
         <JerseyAdBlock jerseyId={article.featuredJerseyId} teamHint={teamHint} />
 
         {/* Article Footer */}
-        <footer className="border-t border-gray-200 pt-6 mt-8">
+        <footer className="border-t border-white/8 pt-6 mt-8">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-medium text-black">Author</h3>
-              <p className="text-sm text-gray-800">{article.author}</p>
+              <h3 className="text-sm font-medium text-white">Author</h3>
+              <p className="text-sm text-white/80">{article.author}</p>
             </div>
             <Link
               href="/serieA"
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+              className="text-sm font-medium text-[#c8f000] hover:text-[#c8f000]"
             >
               ← Back to Serie A News
             </Link>
@@ -190,7 +190,7 @@ export default async function SerieAArticlePage({
               <Link
                 key={related._id}
                 href={`/serieA/${related.slug}`}
-                className="group flex flex-col bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
+                className="group flex flex-col bg-[#0a0a0a] rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
               >
                 <div className="relative h-48 w-full">
                   <Image
@@ -202,15 +202,15 @@ export default async function SerieAArticlePage({
                   />
                 </div>
                 <div className="p-4 flex-1 flex flex-col">
-                  <div className="flex items-center text-xs text-gray-500 mb-2">
+                  <div className="flex items-center text-xs text-white/50 mb-2">
                     <span>
                       {new Date(related.publishedAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors duration-200">
+                  <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#c8f000] transition-colors duration-200">
                     {related.title}
                   </h3>
-                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                  <p className="text-sm text-white/60 mb-4 line-clamp-2">
                     {related.summary}
                   </p>
                 </div>

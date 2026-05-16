@@ -14,7 +14,7 @@ interface BannerBlockProps {
 export default function BannerBlock({ imageSrc, ctaHref, className }: BannerBlockProps) {
   const { t } = useTranslation();
   return (
-    <div className={cn(`rounded-2xl overflow-hidden shadow-xl bg-white/90 flex flex-col items-center p-4 md:p-8`, className)}>
+    <div className={cn(`rounded-2xl overflow-hidden shadow-xl bg-[#0a0a0a]/90 flex flex-col items-center p-4 md:p-8`, className)}>
       <div className="w-full flex justify-center relative">
         <Image
           src={imageSrc}
@@ -29,7 +29,7 @@ export default function BannerBlock({ imageSrc, ctaHref, className }: BannerBloc
         <Button
           asChild
           size="lg"
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-[#f5963c] hover:bg-[#e0852e] text-white px-8 py-3 text-lg font-semibold rounded-lg shadow-lg transition-transform duration-300 hover:scale-105 z-10"
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-[#c8f000] hover:bg-[#e0852e] text-white px-8 py-3 text-lg font-semibold rounded-lg shadow-lg transition-transform duration-300 hover:scale-105 z-10"
         >
           <Link href={ctaHref}>{t('banners.cta')}</Link>
         </Button>

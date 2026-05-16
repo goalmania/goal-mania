@@ -42,20 +42,20 @@ const FeaturesCardStats: React.FC = () => {
   ];
 
   return (
-    <section className="bg-[#F5F5F5] text-black font-munish md:py-8">
+    <section className="bg-[#F5F5F5] text-white font-munish md:py-8">
       <div className="container mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4">
           {features.map((feature) => (
             <div
               key={feature.id}
-              className="flex md:flex-row flex-col items-center md:gap-3 justify-center border border-gray-300 md:border-none p-6 text-center"
+              className="flex md:flex-row flex-col items-center md:gap-3 justify-center border border-white/10 md:border-none p-6 text-center"
             >
-              <div className="text-black mb-2">{feature.icon}</div>
+              <div className="text-white mb-2">{feature.icon}</div>
               <div className="md:text-left text-center">
-                <p className="text-lg font-semibold text-gray-800">
+                <p className="text-lg font-semibold text-white/80">
                   {feature.label}
                 </p>
-                <p className="text-sm text-gray-600">{feature.description}</p>
+                <p className="text-sm text-white/60">{feature.description}</p>
               </div>
             </div>
           ))}

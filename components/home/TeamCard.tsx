@@ -42,7 +42,7 @@ export default function TeamCard({ team }: TeamCardProps) {
         <div className="relative z-10 h-full flex flex-col items-center justify-center p-4 sm:p-6">
           {/* Team Logo */}
           <div className="relative w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 mb-3 sm:mb-4 transition-transform duration-300">
-            <div className="absolute inset-0 bg-white/5 rounded-full blur-sm transition-all duration-300"></div>
+            <div className="absolute inset-0 bg-[#0a0a0a]/5 rounded-full blur-sm transition-all duration-300"></div>
             <Image
               src={team.logo}
               alt={team.name}
@@ -68,14 +68,14 @@ export default function TeamCard({ team }: TeamCardProps) {
       </div>
 
       {/* Back of Card */}
-      <div className={`absolute inset-0 overflow-hidden rounded-xl shadow-md bg-gradient-to-br from-[#0e1924] via-[#1a2a3a] to-[#0e1924] border border-[#f5963c]/30 transition-opacity duration-700 ${isFlipped ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`absolute inset-0 overflow-hidden rounded-xl shadow-md bg-gradient-to-br from-[#0a0a0a] via-[#1a2a3a] to-[#0a0a0a] border border-[#c8f000]/30 transition-opacity duration-700 ${isFlipped ? 'opacity-100' : 'opacity-0'}`}>
         {/* Dark Pattern Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#f5963c]/5 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-[#c8f000]/5 to-transparent"></div>
         
         {/* Subtle Grid Pattern */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-3 right-3 w-4 h-4 border border-[#f5963c]/30 rounded"></div>
-          <div className="absolute bottom-4 left-3 w-3 h-3 border border-[#f5963c]/30 rounded"></div>
+          <div className="absolute top-3 right-3 w-4 h-4 border border-[#c8f000]/30 rounded"></div>
+          <div className="absolute bottom-4 left-3 w-3 h-3 border border-[#c8f000]/30 rounded"></div>
         </div>
 
         <div className="relative z-10 h-full flex flex-col items-center justify-center p-4 sm:p-6">

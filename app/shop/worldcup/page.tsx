@@ -42,17 +42,17 @@ export default async function WorldCupHub() {
   });
 
   return (
-    <div className="min-h-screen bg-white font-munish">
+    <div className="min-h-screen bg-[#0a0a0a] font-munish">
       {/* Header Section */}
       <section className="max-w-7xl mx-auto px-6 pt-32 pb-12">
         <div className="flex flex-col items-start gap-2">
-          <p className="text-[10px] uppercase tracking-[0.4em] font-black text-indigo-600">
+          <p className="text-[10px] uppercase tracking-[0.4em] font-black text-[#c8f000]">
             Estate 2026
           </p>
-          <h1 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-gray-900 leading-none">
+          <h1 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">
             Collezioni <span className="text-transparent [text-stroke:1px_black] [-webkit-text-stroke:1px_black]">Mondiali</span>
           </h1>
-          <p className="max-w-xl mt-4 text-sm text-gray-500 leading-relaxed uppercase tracking-wider font-medium">
+          <p className="max-w-xl mt-4 text-sm text-white/50 leading-relaxed uppercase tracking-wider font-medium">
             Scopri la nostra selezione esclusiva di maglie ufficiali e kit per i Mondiali 2026, divisi per nazionale.
           </p>
         </div>
@@ -62,7 +62,7 @@ export default async function WorldCupHub() {
       <section className="max-w-7xl mx-auto px-6 py-12">
         {products.length === 0 ? (
           <div className="text-center py-24 border-2 border-dashed border-gray-100 rounded-3xl">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">
               Nessun kit caricato nel database
             </p>
           </div>
@@ -81,16 +81,16 @@ export default async function WorldCupHub() {
                     />
                   </div>
                   <div className="flex flex-col">
-                    <h2 className="text-3xl font-black italic uppercase tracking-tighter text-gray-900 leading-none">
+                    <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white leading-none">
                       {country}
                     </h2>
-                    <p className="text-[10px] uppercase tracking-widest font-bold text-indigo-600 mt-1">
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-[#c8f000] mt-1">
                       Selezione Ufficiale
                     </p>
                   </div>
                   <Link 
                     href={`/shop/worldcup/${country.toLowerCase()}`}
-                    className="ml-auto text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-indigo-600 transition-all flex items-center gap-2"
+                    className="ml-auto text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-[#c8f000] transition-all flex items-center gap-2"
                   >
                     Vedi Tutto <span className="text-lg">→</span>
                   </Link>

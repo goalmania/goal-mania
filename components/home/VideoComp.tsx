@@ -126,10 +126,10 @@ const VideoComp = ({ products = [] }: VideoCompProps) => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-white pt-8">
+    <div className="w-full min-h-screen bg-[#0a0a0a] pt-8">
       {/* Header */}
       <div className="text-center py-12 px-4">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-4">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
           La qualità migliore per te! Guarda qui:
         </h1>
       </div>
@@ -137,7 +137,7 @@ const VideoComp = ({ products = [] }: VideoCompProps) => {
       {/* Show loading or demo badge */}
       {loadingVideos ? (
         <div className="text-center mb-4">
-          <span className="inline-block bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium">
+          <span className="inline-block bg-[#111] text-white/80 px-4 py-2 rounded-full text-sm font-medium">
             Caricamento video...
           </span>
         </div>
@@ -180,9 +180,9 @@ const VideoComp = ({ products = [] }: VideoCompProps) => {
                     className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-center justify-center"
                     onClick={() => toggleVideo(video.id)}
                   >
-                    <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-all hover:scale-110">
+                    <div className="w-12 h-12 bg-[#0a0a0a]/90 rounded-full flex items-center justify-center hover:bg-[#0a0a0a] transition-all hover:scale-110">
                       <Play
-                        className="w-6 h-6 text-[#FF7A00] ml-1"
+                        className="w-6 h-6 text-[#c8f000] ml-1"
                         fill="currentColor"
                       />
                     </div>

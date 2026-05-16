@@ -161,9 +161,9 @@ export default function ReviewsSlider() {
 
   if (!mounted) {
     return (
-      <div className="bg-white py-12">
+      <div className="bg-[#0a0a0a] py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="h-72 bg-gray-100 animate-pulse rounded-lg"></div>
+          <div className="h-72 bg-[#111] animate-pulse rounded-lg"></div>
         </div>
       </div>
     );
@@ -171,22 +171,22 @@ export default function ReviewsSlider() {
 
   if (isLoading) {
     return (
-      <div className="bg-white py-12">
+      <div className="bg-[#0a0a0a] py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
               {t("shop.reviews.title")}
             </h2>
             <div className="mt-10 flex items-center justify-center space-x-4">
               {Array.from({ length: 3 }).map((_, idx) => (
                 <div
                   key={idx}
-                  className="flex flex-col rounded-lg bg-gray-100 p-6 animate-pulse h-64 w-full max-w-md"
+                  className="flex flex-col rounded-lg bg-[#111] p-6 animate-pulse h-64 w-full max-w-md"
                 >
-                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
-                  <div className="h-24 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                  <div className="h-4 bg-[#1a1a1a] rounded w-3/4 mb-4"></div>
+                  <div className="h-4 bg-[#1a1a1a] rounded w-1/2 mb-8"></div>
+                  <div className="h-24 bg-[#1a1a1a] rounded mb-4"></div>
+                  <div className="h-4 bg-[#1a1a1a] rounded w-1/4"></div>
                 </div>
               ))}
             </div>
@@ -198,7 +198,7 @@ export default function ReviewsSlider() {
 
   if (error) {
     return (
-      <div className="bg-white py-12">
+      <div className="bg-[#0a0a0a] py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <p className="text-red-500">{error}</p>
@@ -219,13 +219,13 @@ export default function ReviewsSlider() {
       : reviews;
 
   return (
-    <div className="bg-white py-8 sm:py-12">
+    <div className="bg-[#0a0a0a] py-8 sm:py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white sm:text-4xl">
             {t("shop.reviews.title")}
           </h2>
-          <p className="mt-2 sm:mt-4 text-sm sm:text-base md:text-lg text-gray-600">
+          <p className="mt-2 sm:mt-4 text-sm sm:text-base md:text-lg text-white/60">
             {t("shop.reviews.rating")} ({reviews.length})
           </p>
         </div>
@@ -237,19 +237,19 @@ export default function ReviewsSlider() {
               <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 sm:-translate-x-4 z-10">
                 <button
                   onClick={goToPrev}
-                  className="rounded-full bg-white p-1.5 sm:p-2 shadow-md hover:bg-gray-50 focus:outline-none"
+                  className="rounded-full bg-[#0a0a0a] p-1.5 sm:p-2 shadow-md hover:bg-[#0a0a0a] focus:outline-none"
                   aria-label="Previous review"
                 >
-                  <ChevronLeftIcon className="h-4 w-4 sm:h-6 sm:w-6 text-gray-600" />
+                  <ChevronLeftIcon className="h-4 w-4 sm:h-6 sm:w-6 text-white/60" />
                 </button>
               </div>
               <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 sm:translate-x-4 z-10">
                 <button
                   onClick={goToNext}
-                  className="rounded-full bg-white p-1.5 sm:p-2 shadow-md hover:bg-gray-50 focus:outline-none"
+                  className="rounded-full bg-[#0a0a0a] p-1.5 sm:p-2 shadow-md hover:bg-[#0a0a0a] focus:outline-none"
                   aria-label="Next review"
                 >
-                  <ChevronRightIcon className="h-4 w-4 sm:h-6 sm:w-6 text-gray-600" />
+                  <ChevronRightIcon className="h-4 w-4 sm:h-6 sm:w-6 text-white/60" />
                 </button>
               </div>
             </>
@@ -271,18 +271,18 @@ export default function ReviewsSlider() {
                     : "max-w-[calc(33.333%-11px)] sm:max-w-[calc(33.333%-16px)]"
                 }`}
               >
-                <div className="h-full flex flex-col bg-white border border-gray-200 rounded-lg p-4 sm:p-6 shadow-sm">
+                <div className="h-full flex flex-col bg-[#0a0a0a] border border-white/8 rounded-lg p-4 sm:p-6 shadow-sm">
                   <div className="flex items-center mb-2 sm:mb-4">
                     <div className="flex-shrink-0 mr-3">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-500 font-semibold text-sm sm:text-base">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-indigo-100 flex items-center justify-center text-[#c8f000] font-semibold text-sm sm:text-base">
                         {review.userName?.charAt(0) || "U"}
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-sm sm:text-base font-medium text-gray-900">
+                      <h3 className="text-sm sm:text-base font-medium text-white">
                         {review.userName || "Usuario"}
                       </h3>
-                      <div className="text-xs sm:text-sm text-gray-500">
+                      <div className="text-xs sm:text-sm text-white/50">
                         {formatDate(review.createdAt, review)}
                       </div>
                     </div>
@@ -294,13 +294,13 @@ export default function ReviewsSlider() {
                         className={`h-3.5 w-3.5 sm:h-5 sm:w-5 ${
                           i < review.rating
                             ? "text-yellow-400"
-                            : "text-gray-300"
+                            : "text-white/30"
                         }`}
                         aria-hidden="true"
                       />
                     ))}
                   </div>
-                  <p className="text-xs sm:text-sm md:text-base text-gray-600 flex-grow line-clamp-4 sm:line-clamp-6">
+                  <p className="text-xs sm:text-sm md:text-base text-white/60 flex-grow line-clamp-4 sm:line-clamp-6">
                     {extractComment(review)}
                   </p>
 

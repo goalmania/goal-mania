@@ -60,7 +60,7 @@ export async function LeagueNews({ league }: LeagueNewsProps) {
   if (featured.length === 0 && regular.length === 0) {
     return (
       <div className="text-center py-16">
-        <p className="text-black text-lg">
+        <p className="text-white text-lg">
           Nessuna notizia disponibile per {leagueName} al momento. Controlla più
           tardi!
         </p>
@@ -73,7 +73,7 @@ export async function LeagueNews({ league }: LeagueNewsProps) {
       {/* Featured Articles */}
       {featured.length > 0 && (
         <section className="mb-6 sm:mb-8">
-          <h3 className="text-xl font-semibold mb-3 sm:mb-4 px-2 sm:px-0 text-black">
+          <h3 className="text-xl font-semibold mb-3 sm:mb-4 px-2 sm:px-0 text-white">
             In Evidenza
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 px-2 sm:px-0">
@@ -81,7 +81,7 @@ export async function LeagueNews({ league }: LeagueNewsProps) {
               <Link
                 key={article._id}
                 href={`/international/${article.slug}`}
-                className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                className="group block bg-[#0a0a0a] rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
               >
                 <div className="relative h-48 w-full overflow-hidden">
                   <Image
@@ -94,7 +94,7 @@ export async function LeagueNews({ league }: LeagueNewsProps) {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                   <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <span className="inline-block px-3 py-1 mb-2 text-xs font-semibold text-white bg-indigo-600 rounded-full">
+                    <span className="inline-block px-3 py-1 mb-2 text-xs font-semibold text-white bg-[#c8f000] rounded-full">
                       In Evidenza
                     </span>
                     <h2 className="text-base sm:text-xl font-bold text-white mb-1 line-clamp-2">
@@ -103,7 +103,7 @@ export async function LeagueNews({ league }: LeagueNewsProps) {
                   </div>
                 </div>
                 <div className="p-3 sm:p-4">
-                  <div className="flex items-center text-xs text-black mb-2">
+                  <div className="flex items-center text-xs text-white mb-2">
                     <span>
                       {new Date(article.publishedAt).toLocaleDateString(
                         "it-IT"
@@ -112,7 +112,7 @@ export async function LeagueNews({ league }: LeagueNewsProps) {
                     <span className="mx-2">•</span>
                     <span>{article.author}</span>
                   </div>
-                  <p className="text-xs sm:text-sm text-black line-clamp-2">
+                  <p className="text-xs sm:text-sm text-white line-clamp-2">
                     {article.summary}
                   </p>
                 </div>
@@ -124,7 +124,7 @@ export async function LeagueNews({ league }: LeagueNewsProps) {
 
       {/* Regular Articles */}
       <section>
-        <h3 className="text-xl font-semibold mb-3 sm:mb-4 px-2 sm:px-0 text-black">
+        <h3 className="text-xl font-semibold mb-3 sm:mb-4 px-2 sm:px-0 text-white">
           Ultime Notizie
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 px-2 sm:px-0">
@@ -132,7 +132,7 @@ export async function LeagueNews({ league }: LeagueNewsProps) {
             <Link
               key={article._id}
               href={`/international/${article.slug}`}
-              className="group flex flex-col sm:flex-row bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
+              className="group flex flex-col sm:flex-row bg-[#0a0a0a] rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300"
             >
               <div className="relative h-40 sm:h-auto sm:w-1/3">
                 <Image
@@ -144,20 +144,20 @@ export async function LeagueNews({ league }: LeagueNewsProps) {
                 />
               </div>
               <div className="p-3 sm:p-4 flex-1">
-                <div className="flex items-center text-xs text-black mb-2">
+                <div className="flex items-center text-xs text-white mb-2">
                   <span>
                     {new Date(article.publishedAt).toLocaleDateString("it-IT")}
                   </span>
                   <span className="mx-2">•</span>
                   <span>{article.author}</span>
                 </div>
-                <h2 className="text-base sm:text-lg font-semibold text-black mb-2 group-hover:text-indigo-600 transition-colors duration-200 line-clamp-2">
+                <h2 className="text-base sm:text-lg font-semibold text-white mb-2 group-hover:text-[#c8f000] transition-colors duration-200 line-clamp-2">
                   {article.title}
                 </h2>
-                <p className="text-xs sm:text-sm text-black mb-2 line-clamp-2">
+                <p className="text-xs sm:text-sm text-white mb-2 line-clamp-2">
                   {article.summary}
                 </p>
-                <span className="text-indigo-600 text-xs sm:text-sm font-medium">
+                <span className="text-[#c8f000] text-xs sm:text-sm font-medium">
                   Leggi di più
                 </span>
               </div>

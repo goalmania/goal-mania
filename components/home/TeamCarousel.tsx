@@ -44,9 +44,9 @@ export const TeamCarousel = ({ isInternational = false }: { isInternational?: bo
 
   if (error) {
     return (
-      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gray-50">
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-[#0a0a0a]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-6 sm:mb-8 md:mb-10">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0a0a0a] mb-6 sm:mb-8 md:mb-10">
             {getTitle()}
           </h2>
           <div className="text-center text-red-600">
@@ -58,9 +58,9 @@ export const TeamCarousel = ({ isInternational = false }: { isInternational?: bo
   }
 
   return (
-    <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gray-50">
+    <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-[#0a0a0a]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0e1924] mb-6 sm:mb-8 md:mb-10">
+        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0a0a0a] mb-6 sm:mb-8 md:mb-10">
           {getTitle()}
         </h2>
         <div className="relative">
@@ -91,7 +91,7 @@ export const TeamCarousel = ({ isInternational = false }: { isInternational?: bo
               <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2" />
             </Carousel>
           ) : (
-            <div className="text-center text-gray-600">
+            <div className="text-center text-white/60">
               {t('common.noData')}
             </div>
           )}

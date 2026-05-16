@@ -9,11 +9,11 @@ import { getBaseUrl } from "@/lib/utils/baseUrl";
 
 // Dynamic imports for below-the-fold components (better performance)
 const NewsSection = dynamic(() => import("@/components/home/NewsSection"), {
-  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
 });
 
 const GuaranteesSection = dynamic(() => import("@/components/home/GuaranteesSection"), {
-  loading: () => <div className="h-64 bg-gray-50 animate-pulse" />,
+  loading: () => <div className="h-64 bg-[#0a0a0a] animate-pulse" />,
 });
 
 const BannerBlock = dynamic(() => import("@/components/home/BannerBlock"));
@@ -23,7 +23,7 @@ const TeamCarousel = dynamic(() => import("@/components/home/TeamCarousel").then
 const ClientSlider = dynamic(() => import("@/components/home/ClientSlider"));
 
 const FeaturedVideoProducts = dynamic(() => import("@/components/home/FeaturedVideoProducts"), {
-  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
 });
 
 const CallToAction = dynamic(() => import("@/components/home/CallToAction"));
@@ -33,27 +33,27 @@ const VideoComp = dynamic(() => import("@/components/home/VideoComp"), {
 });
 
 const LandingCategorySection = dynamic(() => import("@/app/_components/LandingCategorySection"), {
-  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
 });
 // components\home\WorldCupShowCase.tsx
 const WorldCupShowcase = dynamic(() => import("@/components/home/WorldCupShowCase"), {
-  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
 });
 
 const PremierLeagueClient = dynamic(() => import("@/app/_components/PremierLeagueClient"), {
-  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
 });
 
 const SerieATeamsClient = dynamic(() => import("@/app/_components/SerieATeamsClient"), {
-  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
 });
 
 const RestOfWorldClient = dynamic(() => import("@/app/_components/RestOfWorldClient"), {
-  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
 });
 
 const LimitedEditionClient = dynamic(() => import("@/app/_components/LimitedEditionClient"), {
-  loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
 });
 
 // Enable caching for better performance
@@ -274,7 +274,7 @@ export default async function Home() {
   const worldCupTeams = await getWorldCupTeams();
 
   return (
-    <div className="bg-white min-h-screen relative font-munish">
+    <div className="bg-[#0a0a0a] min-h-screen relative font-munish">
       <HeroSection />
       <TeamLogoTicker />
       <ClientSlider />

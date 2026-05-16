@@ -68,17 +68,17 @@ function DraggableImageItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`relative group bg-white rounded-lg border-2 border-gray-200 overflow-hidden ${
+      className={`relative group bg-[#0a0a0a] rounded-lg border-2 border-white/8 overflow-hidden ${
         isDragging ? 'opacity-50 shadow-lg' : ''
-      } ${image.isMain ? 'border-blue-500 ring-2 ring-blue-200' : 'hover:border-gray-300'}`}
+      } ${image.isMain ? 'border-blue-500 ring-2 ring-blue-200' : 'hover:border-white/10'}`}
     >
       {/* Drag Handle */}
       <div
         {...attributes}
         {...listeners}
-        className="absolute top-2 left-2 z-10 bg-white/80 backdrop-blur-sm rounded p-1 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute top-2 left-2 z-10 bg-[#0a0a0a]/80 backdrop-blur-sm rounded p-1 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
       >
-        <IconGripVertical className="h-4 w-4 text-gray-600" />
+        <IconGripVertical className="h-4 w-4 text-white/60" />
       </div>
 
       {/* Main Image Badge */}
@@ -107,7 +107,7 @@ function DraggableImageItem({
               size="sm"
               variant="secondary"
               onClick={handleSetMain}
-              className="h-8 px-2 text-xs bg-white/90 hover:bg-white"
+              className="h-8 px-2 text-xs bg-[#0a0a0a]/90 hover:bg-[#0a0a0a]"
             >
               Set Main
             </Button>
@@ -116,7 +116,7 @@ function DraggableImageItem({
             size="sm"
             variant="destructive"
             onClick={handleRemove}
-            className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+            className="h-8 w-8 p-0 bg-[#0a0a0a]/90 hover:bg-[#0a0a0a]"
           >
             <TrashIcon className="h-4 w-4" />
           </Button>
@@ -124,8 +124,8 @@ function DraggableImageItem({
       </div>
 
       {/* Image URL Display */}
-      <div className="p-2 bg-gray-50">
-        <p className="text-xs text-gray-600 truncate" title={image.url}>
+      <div className="p-2 bg-[#0a0a0a]">
+        <p className="text-xs text-white/60 truncate" title={image.url}>
           {image.url}
         </p>
       </div>
@@ -170,8 +170,8 @@ export function DraggableImageGallery({
 
   if (images.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
-        <PhotoIcon className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+      <div className="text-center py-8 text-white/50">
+        <PhotoIcon className="h-12 w-12 mx-auto mb-4 text-white/30" />
         <p>No images uploaded yet</p>
         <p className="text-sm">Upload images to get started</p>
       </div>

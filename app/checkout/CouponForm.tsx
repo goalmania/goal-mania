@@ -73,17 +73,17 @@ export function CouponForm({
   };
 
   return (
-    <Card className="border-2 border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100 hover:border-[#f5963c]/20 transition-all duration-200">
+    <Card className="border-2 border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100 hover:border-[#c8f000]/20 transition-all duration-200">
       <CardContent className="p-4">
         <div className="flex items-center gap-2 mb-3">
-          <div className="p-1.5 bg-gradient-to-r from-[#f5963c] to-orange-500 rounded-lg">
+          <div className="p-1.5 bg-gradient-to-r from-[#c8f000] to-orange-500 rounded-lg">
             <TicketIcon className="h-4 w-4 text-white" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-[#0e1924]">
+            <h3 className="text-sm font-semibold text-[#0a0a0a]">
               Hai un coupon?
             </h3>
-            <p className="text-xs text-gray-600">Inserisci il tuo codice sconto</p>
+            <p className="text-xs text-white/60">Inserisci il tuo codice sconto</p>
           </div>
         </div>
 
@@ -95,14 +95,14 @@ export function CouponForm({
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                 placeholder="Inserisci codice coupon"
-                className="pr-10 h-10 border-2 border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c]/20 transition-all duration-200"
+                className="pr-10 h-10 border-2 border-white/8 focus:border-[#c8f000] focus:ring-[#c8f000]/20 transition-all duration-200"
                 disabled={isDisabled || isLoading}
               />
               {couponCode && (
                 <button
                   type="button"
                   onClick={() => setCouponCode("")}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white/60 transition-colors"
                 >
                   <XMarkIcon className="h-4 w-4" />
                 </button>
@@ -111,7 +111,7 @@ export function CouponForm({
             <Button
               type="submit"
               disabled={isDisabled || isLoading || !couponCode.trim()}
-              className="h-10 bg-gradient-to-r from-[#f5963c] to-orange-500 hover:from-[#e0852e] hover:to-orange-600 text-white font-medium transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-10 bg-gradient-to-r from-[#c8f000] to-orange-500 hover:from-[#e0852e] hover:to-orange-600 text-white font-medium transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">

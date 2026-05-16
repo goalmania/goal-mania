@@ -115,7 +115,7 @@ export function PatchManagementDialog({ children }: PatchManagementDialogProps) 
       "champions-league": "bg-purple-100 text-purple-800 border-purple-200",
       "coppa-italia": "bg-green-100 text-green-800 border-green-200",
       "europa-league": "bg-orange-100 text-orange-800 border-orange-200",
-      "other": "bg-gray-100 text-gray-800 border-gray-200"
+      "other": "bg-[#111] text-white/80 border-white/8"
     };
     return colors[category] || colors.other;
   };
@@ -131,7 +131,7 @@ export function PatchManagementDialog({ children }: PatchManagementDialogProps) 
           </div>
           <Button
             onClick={handleCreate}
-            className="bg-[#f5963c] hover:bg-[#e0852e]"
+            className="bg-[#c8f000] hover:bg-[#e0852e]"
             size="sm"
           >
             <PlusIcon className="h-4 w-4 mr-2" />
@@ -182,7 +182,7 @@ export function PatchManagementDialog({ children }: PatchManagementDialogProps) 
         <div className="space-y-4 pr-4 h-[400px] overflow-y-auto">
         {loading && (
           <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#f5963c]"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#c8f000]"></div>
             <span className="ml-2 text-muted-foreground">Loading patches...</span>
           </div>
         )}
@@ -206,10 +206,10 @@ export function PatchManagementDialog({ children }: PatchManagementDialogProps) 
         )}
 
         {!loading && patches.map((patch) => (
-          <div key={patch._id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors">
+          <div key={patch._id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-[#0a0a0a] transition-colors">
             <div className="flex items-center space-x-4 flex-1 min-w-0">
                              {/* Image thumbnail */}
-               <div className="w-12 h-12 rounded-md overflow-hidden bg-gray-100 flex-shrink-0 flex items-center justify-center">
+               <div className="w-12 h-12 rounded-md overflow-hidden bg-[#111] flex-shrink-0 flex items-center justify-center">
                  {patch.imageUrl ? (
                    <img 
                      src={patch.imageUrl} 
@@ -220,14 +220,14 @@ export function PatchManagementDialog({ children }: PatchManagementDialogProps) 
                      }}
                    />
                  ) : (
-                   <PhotoIcon className="h-6 w-6 text-gray-400" />
+                   <PhotoIcon className="h-6 w-6 text-white/40" />
                  )}
                </div>
               
               {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center space-x-2 mb-1">
-                  <h3 className="font-medium text-sm text-gray-900 truncate">{patch.title}</h3>
+                  <h3 className="font-medium text-sm text-white truncate">{patch.title}</h3>
                   {!patch.isActive && (
                     <Badge variant="secondary" className="text-xs">Inactive</Badge>
                   )}
@@ -235,7 +235,7 @@ export function PatchManagementDialog({ children }: PatchManagementDialogProps) 
                     <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200 text-xs">Featured</Badge>
                   )}
                 </div>
-                <div className="flex items-center space-x-3 text-xs text-gray-500">
+                <div className="flex items-center space-x-3 text-xs text-white/50">
                   <Badge className={`text-xs ${getCategoryColor(patch.category)}`}>
                     {patch.category.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())}
                   </Badge>

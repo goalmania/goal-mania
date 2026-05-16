@@ -99,12 +99,12 @@ function SortableVideoRow({ video, onEdit, onDelete, onToggleStatus }: any) {
     <TableRow ref={setNodeRef} style={style} className={isDragging ? "bg-muted" : ""}>
       <TableCell>
         <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing">
-          <IconGripVertical className="h-5 w-5 text-gray-400" />
+          <IconGripVertical className="h-5 w-5 text-white/40" />
         </div>
       </TableCell>
       <TableCell>{video.order}</TableCell>
       <TableCell>
-        <div className="relative w-20 h-12 rounded overflow-hidden bg-gray-100">
+        <div className="relative w-20 h-12 rounded overflow-hidden bg-[#111]">
           {video.thumbnail ? (
             <>
               <img
@@ -118,7 +118,7 @@ function SortableVideoRow({ video, onEdit, onDelete, onToggleStatus }: any) {
             </>
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <PlayIcon className="w-6 h-6 text-gray-400" />
+              <PlayIcon className="w-6 h-6 text-white/40" />
             </div>
           )}
         </div>
@@ -129,7 +129,7 @@ function SortableVideoRow({ video, onEdit, onDelete, onToggleStatus }: any) {
           href={video.videoUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-600 hover:underline text-sm truncate block max-w-[200px]"
+          className="text-[#c8f000] hover:underline text-sm truncate block max-w-[200px]"
         >
           {video.videoUrl}
         </a>
@@ -151,7 +151,7 @@ function SortableVideoRow({ video, onEdit, onDelete, onToggleStatus }: any) {
             onClick={() => onEdit(video)}
             className="hover:bg-blue-50"
           >
-            <PencilIcon className="h-4 w-4 text-blue-600" />
+            <PencilIcon className="h-4 w-4 text-[#c8f000]" />
           </Button>
           <Button
             variant="ghost"
@@ -501,7 +501,7 @@ export default function AdminVideosPage() {
             resetForm();
             setIsDialogOpen(true);
           }}
-          className="bg-[#f5963c] hover:bg-[#e0852e]"
+          className="bg-[#c8f000] hover:bg-[#e0852e]"
         >
           <PlusIcon className="mr-2 h-4 w-4" />
           Add Video
@@ -724,7 +724,7 @@ export default function AdminVideosPage() {
               </Button>
               <Button 
                 type="submit" 
-                className="bg-[#f5963c] hover:bg-[#e0852e]"
+                className="bg-[#c8f000] hover:bg-[#e0852e]"
                 disabled={uploadingVideo || uploadingThumbnail}
               >
                 {uploadingVideo || uploadingThumbnail ? (

@@ -156,7 +156,7 @@ function StripePayment({
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            <Button type="submit" disabled={!stripe || isLoading} className="w-full bg-[#f5963c] hover:bg-[#e0852e] text-white">
+            <Button type="submit" disabled={!stripe || isLoading} className="w-full bg-[#c8f000] hover:bg-[#e0852e] text-white">
               {isLoading ? t("checkout.processing") : `Pay €${total.toFixed(2)}`}
             </Button>
           </CardContent>
@@ -190,9 +190,9 @@ function PaymentMethods({
   return (
     <div className="space-y-6">
       {/* Payment Method Selection */}
-      <Card className="border-2 border-gray-200">
+      <Card className="border-2 border-white/8">
         <CardContent className="pt-6">
-          <h3 className="text-lg font-semibold text-[#0e1924] mb-4">
+          <h3 className="text-lg font-semibold text-[#0a0a0a] mb-4">
             {t("checkout.choosePaymentMethod")}
           </h3>
           
@@ -204,15 +204,15 @@ function PaymentMethods({
                 onClick={() => setSelectedPaymentMethod("stripe")}
                 className={`p-4 border-2 rounded-lg text-left transition-all duration-200 ${
                   selectedPaymentMethod === "stripe"
-                    ? "border-[#f5963c] bg-orange-50 shadow-md"
-                    : "border-gray-200 hover:border-[#f5963c]/30 bg-white"
+                    ? "border-[#c8f000] bg-orange-50 shadow-md"
+                    : "border-white/8 hover:border-[#c8f000]/30 bg-[#0a0a0a]"
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <CreditCardIcon className="h-6 w-6 text-[#f5963c]" />
+                  <CreditCardIcon className="h-6 w-6 text-[#c8f000]" />
                   <div>
-                    <p className="font-medium text-[#0e1924]">{t("checkout.payWithCard")}</p>
-                    <p className="text-sm text-gray-600">Visa, Mastercard, American Express</p>
+                    <p className="font-medium text-[#0a0a0a]">{t("checkout.payWithCard")}</p>
+                    <p className="text-sm text-white/60">Visa, Mastercard, American Express</p>
                   </div>
                 </div>
               </button>
@@ -225,27 +225,27 @@ function PaymentMethods({
               className={`p-4 border-2 rounded-lg text-left transition-all duration-200 ${
                 selectedPaymentMethod === "paypal"
                   ? "border-blue-500 bg-blue-50 shadow-md"
-                  : "border-gray-200 hover:border-blue-500/30 bg-white"
+                  : "border-white/8 hover:border-blue-500/30 bg-[#0a0a0a]"
               }`}
             >
               <div className="flex items-center gap-3">
-                <svg className="h-6 w-6 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                <svg className="h-6 w-6 text-[#c8f000]" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M20.067 8.500c.492.315.844.825.844 1.406 0 .58-.352 1.09-.844 1.406l-3.547 2.266a1.5 1.5 0 0 1-.844.266H7.5c-.828 0-1.5-.672-1.5-1.5V7.5c0-.828.672-1.5 1.5-1.5h8.172c.316 0 .62.105.844.266l3.547 2.266z"/>
                 </svg>
                 <div>
-                  <p className="font-medium text-[#0e1924]">{t("checkout.payWithPayPal")}</p>
-                  <p className="text-sm text-gray-600">Fast & secure checkout</p>
+                  <p className="font-medium text-[#0a0a0a]">{t("checkout.payWithPayPal")}</p>
+                  <p className="text-sm text-white/60">Fast & secure checkout</p>
                 </div>
               </div>
             </button>
 
             {/* Scalapay placeholder */}
-            <div className="p-4 border-2 border-dashed border-gray-200 rounded-lg opacity-50 cursor-not-allowed">
+            <div className="p-4 border-2 border-dashed border-white/8 rounded-lg opacity-50 cursor-not-allowed">
               <div className="flex items-center gap-3">
-                <div className="h-6 w-6 rounded bg-gray-200 flex items-center justify-center text-[9px] font-bold text-gray-400">S</div>
+                <div className="h-6 w-6 rounded bg-[#1a1a1a] flex items-center justify-center text-[9px] font-bold text-white/40">S</div>
                 <div>
-                  <p className="font-medium text-gray-400 text-sm">Scalapay — Paga in 3 rate</p>
-                  <p className="text-xs text-gray-300 font-mono uppercase tracking-widest">Presto disponibile</p>
+                  <p className="font-medium text-white/40 text-sm">Scalapay — Paga in 3 rate</p>
+                  <p className="text-xs text-white/30 font-mono uppercase tracking-widest">Presto disponibile</p>
                 </div>
               </div>
             </div>

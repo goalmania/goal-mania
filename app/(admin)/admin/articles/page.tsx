@@ -422,7 +422,7 @@ function ArticleDataTable({
         {/* Search Input and Filters */}
         <div className="flex items-center space-x-4">
           <div className="relative flex-1 max-w-sm">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/40" />
             <Input
               placeholder="Search articles..."
               value={globalFilter ?? ""}
@@ -849,8 +849,8 @@ export default function ArticlesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold text-[#0e1924] tracking-tight">Articles</h1>
-          <p className="mt-2 text-base text-gray-700 max-w-2xl">
+          <h1 className="text-3xl font-bold text-[#0a0a0a] tracking-tight">Articles</h1>
+          <p className="mt-2 text-base text-white/70 max-w-2xl">
             Manage your news articles, blog posts, and content across different categories.
           </p>
         </div>
@@ -874,7 +874,7 @@ export default function ArticlesPage() {
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-orange-600">
+            <div className="text-2xl font-bold text-[#c8f000]">
               {stats.drafts}
             </div>
             <p className="text-xs text-muted-foreground">Drafts</p>

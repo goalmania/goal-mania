@@ -91,7 +91,7 @@ const Slider = () => {
           {visiblePlayers.map((player) => (
             <div
               key={player.id}
-              className="flex-1 bg-[#0A1A2F] rounded-xl p-4 text-white relative overflow-hidden min-w-[250px] h-[140px]"
+              className="flex-1 bg-[#111111] rounded-xl p-4 text-white relative overflow-hidden min-w-[250px] h-[140px]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="space-y-2">
@@ -113,7 +113,7 @@ const Slider = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-1 text-[14px]">
-                  <div className="bg-orange-500 h-3 w-3 rounded-full"></div>
+                  <div className="bg-[#c8f000] h-3 w-3 rounded-full"></div>
                   <span>{player.score}</span>
                 </div>
               </div>

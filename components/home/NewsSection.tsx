@@ -23,13 +23,13 @@ export default function NewsSection({ articles }: NewsSectionProps) {
   }
 
   return (
-    <section className="py-12 md:py-20 bg-white">
+    <section className="py-12 md:py-20 bg-[#0a0a0a]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 font-munish">
+          <h2 className="text-2xl md:text-3xl font-bold text-white font-munish">
             {t("home.latestNews") || "Ultime Notizie"}
           </h2>
-          <p className="pt-2 text-gray-600 font-munish">
+          <p className="pt-2 text-white/60 font-munish">
             Scopri le notizie più fresche dal mondo del calcio.
           </p>
         </div>
@@ -67,15 +67,15 @@ export default function NewsSection({ articles }: NewsSectionProps) {
                       className="object-cover rounded-lg"
                     />
                   </div>
-                  <div className="py-4 bg-white">
+                  <div className="py-4 bg-[#0a0a0a]">
                     <h3 className="text-[22px] font-bold line-clamp-2 ">
                       {article.title.slice(0, 36)}...
                     </h3>
                     <div className="bg-black h-[2px] w-1/2"></div>
-                    <p className="text-sm text-black line-clamp-2 mt-2">
+                    <p className="text-sm text-white line-clamp-2 mt-2">
                       {stripHtml(article.content)}
                     </p>
-                    <div className="text-xs text-black mt-2 flex items-center">
+                    <div className="text-xs text-white mt-2 flex items-center">
                       Leggi Ora <ArrowRight size={16} />
                     </div>
                   </div>
@@ -84,10 +84,10 @@ export default function NewsSection({ articles }: NewsSectionProps) {
             ))}
           </Swiper>
           <div className="flex justify-center gap-4 mt-6">
-            <button className="news-prev w-10 h-10 flex items-center justify-center rounded-full bg-white shadow hover:bg-gray-100">
+            <button className="news-prev w-10 h-10 flex items-center justify-center rounded-full bg-[#0a0a0a] shadow hover:bg-[#111]">
               <ChevronLeft />
             </button>
-            <button className="news-next w-10 h-10 flex items-center justify-center rounded-full bg-white shadow hover:bg-gray-100">
+            <button className="news-next w-10 h-10 flex items-center justify-center rounded-full bg-[#0a0a0a] shadow hover:bg-[#111]">
               <ChevronRight />
             </button>
           </div>

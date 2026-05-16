@@ -114,7 +114,7 @@ const NewsCard = ({
                 {article.title}
               </h3>
 
-              <div className="flex items-center justify-between text-xs text-gray-300 uppercase tracking-wide">
+              <div className="flex items-center justify-between text-xs text-white/30 uppercase tracking-wide">
                 <div className="flex items-center gap-4">
                   <span className="flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
@@ -158,7 +158,7 @@ const NewsCard = ({
               {article.title}
             </h3>
 
-            <div className="flex items-center justify-between text-xs text-gray-300 uppercase tracking-wide">
+            <div className="flex items-center justify-between text-xs text-white/30 uppercase tracking-wide">
               <span className="flex items-center gap-1">
                 <Calendar className="w-3 h-3" />
                 {formatDate(article.publishedAt)}
@@ -234,7 +234,7 @@ export default async function PopularNewsGrid() {
                   href={getArticleUrl(article)}
                   className="group cursor-pointer"
                 >
-                  <div className="flex gap-3 p-3 bg-white  transition-shadow duration-200 ">
+                  <div className="flex gap-3 p-3 bg-[#0a0a0a]  transition-shadow duration-200 ">
                     {/* Small Image */}
                     <div className="flex-shrink-0">
                       <div className="relative w-16 h-full rounded overflow-hidden">
@@ -255,12 +255,12 @@ export default async function PopularNewsGrid() {
                       </div>
 
                       {/* Title */}
-                      <h4 className="text-sm font-semibold text-gray-900 leading-tight line-clamp-2 group-hover:text-orange-600 transition-colors duration-200 mb-1">
+                      <h4 className="text-sm font-semibold text-white leading-tight line-clamp-2 group-hover:text-[#c8f000] transition-colors duration-200 mb-1">
                         {article.title}
                       </h4>
 
                       {/* Meta */}
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <div className="flex items-center gap-2 text-xs text-white/50">
                         <span>
                           {new Date(article.publishedAt).toLocaleDateString("it-IT")}
                         </span>

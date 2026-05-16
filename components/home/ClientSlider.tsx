@@ -49,9 +49,9 @@ function ClientSlider({
 
   if (error) {
     return (
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-[#0a0a0a]">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-white/80 mb-4">
             {getTitle()}
           </h2>
           <p className="text-red-600">
@@ -63,14 +63,14 @@ function ClientSlider({
   }
 
   return (
-    <section className="py-16 md:py-24 bg-white">
+    <section className="py-16 md:py-24 bg-[#0a0a0a]">
       <div className="container mx-auto px-4 text-center">
         {/* Heading */}
-        <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+        <h2 className="text-4xl md:text-5xl font-bold text-white/80 mb-4">
           {/* {getTitle()} */}
           La tua squadra
         </h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-12">
+        <p className="text-lg text-white/60 max-w-2xl mx-auto mb-12">
           Qui trovi tutte le informazioni aggiornate,notizie e approfondimenti
           sulla tua squadra del cuore. Potrai anche scegliere tra centinaia di
           maglie, attuali e retro ed acquistare quella che preferisci a prezzi
@@ -108,7 +108,7 @@ function ClientSlider({
                 <SwiperSlide key={team._id}>
                   <a
                     href={team.href}
-                    className="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center rounded-full border-2 border-gray-200 p-2 transform transition-transform duration-300 hover:scale-110 cursor-pointer"
+                    className="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center rounded-full border-2 border-white/8 p-2 transform transition-transform duration-300 hover:scale-110 cursor-pointer"
                   >
                     <img
                       src={team.logo}
@@ -120,7 +120,7 @@ function ClientSlider({
               ))}
             </Swiper>
           ) : (
-            <p className="text-gray-600">{t("common.noData")}</p>
+            <p className="text-white/60">{t("common.noData")}</p>
           )}
 
           {/* Navigation Buttons */}
@@ -129,7 +129,7 @@ function ClientSlider({
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
               viewBox="0 0 24 24"
-              className="w-10 h-10 text-gray-400 hover:text-gray-600 transition-colors"
+              className="w-10 h-10 text-white/40 hover:text-white/60 transition-colors"
             >
               <path
                 fillRule="evenodd"
@@ -150,7 +150,7 @@ function ClientSlider({
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
               viewBox="0 0 24 24"
-              className="w-10 h-10 text-gray-400 hover:text-gray-600 transition-colors"
+              className="w-10 h-10 text-white/40 hover:text-white/60 transition-colors"
             >
               <path
                 fillRule="evenodd"
@@ -169,10 +169,10 @@ function ClientSlider({
           <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4 mt-10">
             <button
               aria-label="Previous featured products"
-              className="swiper-button-prev-custom  flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md hover:bg-gray-100"
+              className="swiper-button-prev-custom  flex items-center justify-center w-10 h-10 rounded-full bg-[#0a0a0a] shadow-md hover:bg-[#111]"
             >
               <svg
-                className="w-5 h-5 text-gray-700"
+                className="w-5 h-5 text-white/70"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -188,10 +188,10 @@ function ClientSlider({
 
             <button
               aria-label="Next featured products"
-              className="swiper-button-next-custom  flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md hover:bg-gray-100"
+              className="swiper-button-next-custom  flex items-center justify-center w-10 h-10 rounded-full bg-[#0a0a0a] shadow-md hover:bg-[#111]"
             >
               <svg
-                className="w-5 h-5 text-gray-700"
+                className="w-5 h-5 text-white/70"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

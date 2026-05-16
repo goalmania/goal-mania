@@ -160,9 +160,9 @@ function ContactForm() {
   const selectedLanguage = form.watch("language");
 
   return (
-    <Card className="w-full max-w-2xl mx-auto bg-white border-none shadow-none">
+    <Card className="w-full max-w-2xl mx-auto bg-[#0a0a0a] border-none shadow-none">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-[#0e1924]">
+        <CardTitle className="text-2xl font-bold text-[#0a0a0a]">
           Scrivici
         </CardTitle>
         <CardDescription>
@@ -184,7 +184,7 @@ function ContactForm() {
                       <Input
                         placeholder="Nome"
                         {...field}
-                        className="bg-white border-0 border-b border-black text-[#939393] font-light rounded-none shadow-none pl-0"
+                        className="bg-[#0a0a0a] border-0 border-b border-black text-[#939393] font-light rounded-none shadow-none pl-0"
                       />
                     </FormControl>
                     <FormMessage />
@@ -200,7 +200,7 @@ function ContactForm() {
                       <Input
                         placeholder="Cognome*"
                         {...field}
-                        className="bg-white border-0 border-b border-black text-[#939393] font-light rounded-none shadow-none pl-0"
+                        className="bg-[#0a0a0a] border-0 border-b border-black text-[#939393] font-light rounded-none shadow-none pl-0"
                       />
                     </FormControl>
                     <FormMessage />
@@ -219,7 +219,7 @@ function ContactForm() {
                       type="email"
                       placeholder="Your Email*"
                       {...field}
-                      className="bg-white border-0 md:w-1/2 w-full border-b border-black text-[#939393] font-light rounded-none shadow-none pl-0"
+                      className="bg-[#0a0a0a] border-0 md:w-1/2 w-full border-b border-black text-[#939393] font-light rounded-none shadow-none pl-0"
                     />
                   </FormControl>
                   <FormMessage />
@@ -307,7 +307,7 @@ function ContactForm() {
                         rows={10}
                         cols={50}
                         {...field}
-                        className="bg-white resize-none border-0 border-b border-black text-[#939393] rounded-none shadow-none pl-0 w-full h-[190px]"
+                        className="bg-[#0a0a0a] resize-none border-0 border-b border-black text-[#939393] rounded-none shadow-none pl-0 w-full h-[190px]"
                         placeholder=" "
                       />
                       <span className="absolute bottom-2 left-0 text-[#939393] font-light pointer-events-none">
@@ -322,7 +322,7 @@ function ContactForm() {
 
             <div className=" flex justify-between flex-col md:flex-row">
               <div className=" space-y-2">
-                <Label className=" text-black font-light">Products*</Label>
+                <Label className=" text-white font-light">Products*</Label>
                 <div className=" flex gap-4">
                   <div className="flex items-center gap-1.5 text-[#131228] font-light text-[22px]">
                     <Checkbox id="news" className=" bg-[#D9D9D9" />
@@ -346,7 +346,7 @@ function ContactForm() {
               </div>
               <Button
                 type="submit"
-                className="w-[264px] h-[50px] mt-3 flex bg-[#FF7A00] hover:bg-[#e0852e] text-[#0A1A2F] rounded-full"
+                className="w-[264px] h-[50px] mt-3 flex bg-[#c8f000] hover:bg-[#e0852e] text-white rounded-full"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
@@ -375,8 +375,8 @@ function SocialMediaSection() {
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-[#0e1924] flex items-center">
-          <Mail className="h-6 w-6 mr-2 text-[#f5963c]" />
+        <CardTitle className="text-2xl font-bold text-[#0a0a0a] flex items-center">
+          <Mail className="h-6 w-6 mr-2 text-[#c8f000]" />
           {t("contact.page.socialMedia.title")}
         </CardTitle>
         <CardDescription>
@@ -434,7 +434,7 @@ export default function ContactPage() {
   const { t } = useI18n();
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-[#0a0a0a] min-h-screen">
       <div className="lg:hidden">
         <ContactBanner />
       </div>
@@ -451,7 +451,7 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div className="bg-[#0A1A2F] border w-full text-[#FAFBFF] p-6 rounded-2xl mt-5 shadow-lg  ">
+            <div className="bg-[#111111] border w-full text-[#FAFBFF] p-6 rounded-2xl mt-5 shadow-lg  ">
               <div className="flex items-center mb-4">
                 <Phone className="  mr-3" size={20} />
                 <span className="text-[16px] font-light text-[#FAFBFF]">

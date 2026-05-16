@@ -91,7 +91,7 @@ export function OrderStatus() {
           <div className="flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-blue-500 mr-2"
+              className="h-6 w-6 text-[#c8f000] mr-2"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -107,7 +107,7 @@ export function OrderStatus() {
               <h3 className="text-blue-800 font-medium">
                 Your order has been shipped!
               </h3>
-              <p className="text-blue-600 text-sm">
+              <p className="text-[#c8f000] text-sm">
                 Tracking number: {recentShippedOrder.trackingCode}
               </p>
             </div>
@@ -130,7 +130,7 @@ export function OrderStatus() {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-indigo-800 font-medium">Order Processing</h3>
-          <p className="text-indigo-600 text-sm">
+          <p className="text-[#c8f000] text-sm">
             {timeElapsed < 10
               ? "Your order is being processed. Please wait a moment..."
               : "It's taking longer than expected. You may need to refresh."}
@@ -147,7 +147,7 @@ export function OrderStatus() {
           )}
           <button
             onClick={handleContinueShopping}
-            className="px-3 py-1 bg-white border border-indigo-300 text-indigo-700 text-sm rounded hover:bg-indigo-50"
+            className="px-3 py-1 bg-[#0a0a0a] border border-indigo-300 text-indigo-700 text-sm rounded hover:bg-indigo-50"
           >
             Continue Shopping
           </button>

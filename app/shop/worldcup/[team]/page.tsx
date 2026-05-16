@@ -33,13 +33,13 @@ export default async function NationalTeamPage({ params }: PageProps) {
   }).lean();
 
   return (
-    <main className="min-h-screen pb-20 bg-white">
+    <main className="min-h-screen pb-20 bg-[#0a0a0a]">
       <div className="bg-[#fcfcfc] border-b border-gray-100 py-16">
         <div className="max-w-7xl mx-auto px-6">
-          <nav className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-6">
-            <Link href="/shop/worldcup" className="hover:text-black transition-colors">World Cup</Link> 
+          <nav className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-white/40 mb-6">
+            <Link href="/shop/worldcup" className="hover:text-white transition-colors">World Cup</Link> 
             <span>/</span> 
-            <span className="text-indigo-600 font-bold">{team}</span>
+            <span className="text-[#c8f000] font-bold">{team}</span>
           </nav>
           <h1 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter leading-none">
             {team} <span className="text-transparent [text-stroke:1px_#4f46e5] [-webkit-text-stroke:1px_#4f46e5]">Edition</span>
@@ -68,8 +68,8 @@ export default async function NationalTeamPage({ params }: PageProps) {
           </div>
         ) : (
           <div className="text-center py-40 border-2 border-dashed border-gray-100 rounded-3xl">
-             <h2 className="text-2xl font-black uppercase italic text-gray-300">No jerseys found for {team}</h2>
-             <Link href="/shop/worldcup" className="mt-4 inline-block text-indigo-600 font-bold uppercase tracking-widest text-xs">Back to Hub</Link>
+             <h2 className="text-2xl font-black uppercase italic text-white/30">No jerseys found for {team}</h2>
+             <Link href="/shop/worldcup" className="mt-4 inline-block text-[#c8f000] font-bold uppercase tracking-widest text-xs">Back to Hub</Link>
           </div>
         )}
       </div>

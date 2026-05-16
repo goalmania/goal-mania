@@ -117,21 +117,21 @@ export function TeamImageUpload({ value, onChange, label = "Team Logo" }: TeamIm
                 className={`
                   border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors
                   ${isDragActive 
-                    ? "border-[#f5963c] bg-[#f5963c]/5" 
-                    : "border-gray-300 hover:border-[#f5963c] hover:bg-gray-50"
+                    ? "border-[#c8f000] bg-[#c8f000]/5" 
+                    : "border-white/10 hover:border-[#c8f000] hover:bg-[#0a0a0a]"
                   }
                   ${isUploading ? "opacity-50 cursor-not-allowed" : ""}
                 `}
               >
                 <input {...getInputProps()} />
-                <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                <p className="text-sm text-gray-600 mb-1">
+                <Upload className="h-8 w-8 mx-auto mb-2 text-white/40" />
+                <p className="text-sm text-white/60 mb-1">
                   {isDragActive 
                     ? "Drop image here..." 
                     : "Drag & drop team logo here, or click to select"
                   }
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-white/50">
                   Supports: JPG, PNG, WebP, GIF, SVG (max 5MB)
                 </p>
               </div>
@@ -150,8 +150,8 @@ export function TeamImageUpload({ value, onChange, label = "Team Logo" }: TeamIm
       {/* Upload Progress */}
       {isUploading && (
         <div className="flex items-center justify-center p-4">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#f5963c]"></div>
-          <span className="ml-2 text-sm text-gray-600">Uploading...</span>
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#c8f000]"></div>
+          <span className="ml-2 text-sm text-white/60">Uploading...</span>
         </div>
       )}
 
@@ -170,11 +170,11 @@ export function TeamImageUpload({ value, onChange, label = "Team Logo" }: TeamIm
               <X className="h-4 w-4" />
             </Button>
           </div>
-          <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-200">
+          <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-white/8">
             <img
               src={value}
               alt="Team logo preview"
-              className="w-full h-full object-contain bg-gray-50"
+              className="w-full h-full object-contain bg-[#0a0a0a]"
               onError={() => setError("Failed to load image. Please check the URL.")}
             />
           </div>

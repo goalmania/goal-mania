@@ -89,7 +89,7 @@ export async function SerieANews() {
             href={`/serieA/${article.slug}`}
             className="group"
           >
-            <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+            <div className="bg-[#0a0a0a] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100">
               <div className="relative h-48 w-full">
                 <Image
                   src={article.image}
@@ -99,7 +99,7 @@ export async function SerieANews() {
                   unoptimized
                 />
                 {article.featured && (
-                  <div className="absolute top-2 left-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded">
+                  <div className="absolute top-2 left-2 bg-[#c8f000] text-white text-xs px-2 py-1 rounded">
                     In Evidenza
                   </div>
                 )}
@@ -108,10 +108,10 @@ export async function SerieANews() {
                 </div>
               </div>
               <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-2">
+                <h3 className="text-lg font-semibold text-white group-hover:text-[#c8f000] transition-colors line-clamp-2">
                   {article.title}
                 </h3>
-                <p className="mt-2 text-gray-600 text-sm line-clamp-3">
+                <p className="mt-2 text-white/60 text-sm line-clamp-3">
                   {article.summary}
                 </p>
               </div>
@@ -127,7 +127,7 @@ export async function SerieANews() {
             href={`/serieA/${article.slug}`}
             className="group"
           >
-            <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col sm:flex-row h-full">
+            <div className="bg-[#0a0a0a] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col sm:flex-row h-full">
               <div className="relative h-32 sm:h-auto sm:w-1/3 flex-shrink-0">
                 <Image
                   src={article.image}
@@ -144,14 +144,14 @@ export async function SerieANews() {
                       In Evidenza
                     </span>
                   )}
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-white/50">
                     {new Date(article.publishedAt).toLocaleDateString("it-IT")}
                   </span>
                 </div>
-                <h3 className="text-sm font-medium text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-2">
+                <h3 className="text-sm font-medium text-white group-hover:text-[#c8f000] transition-colors line-clamp-2">
                   {article.title}
                 </h3>
-                <p className="mt-1 text-gray-600 text-xs line-clamp-2">
+                <p className="mt-1 text-white/60 text-xs line-clamp-2">
                   {article.summary}
                 </p>
               </div>
@@ -163,7 +163,7 @@ export async function SerieANews() {
       <div className="text-center">
         <Link
           href="/serieA"
-          className="inline-flex items-center px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-md hover:bg-indigo-100 transition-colors"
+          className="inline-flex items-center px-4 py-2 text-sm font-medium text-[#c8f000] bg-indigo-50 rounded-md hover:bg-indigo-100 transition-colors"
         >
           Vedi tutte le notizie
           <svg

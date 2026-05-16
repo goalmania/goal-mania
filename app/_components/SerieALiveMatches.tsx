@@ -234,14 +234,14 @@ export default async function SerieALiveMatches() {
       )}
 
       {matches.length === 0 ? (
-        <div className="p-4 text-center text-gray-500">
+        <div className="p-4 text-center text-white/50">
           Nessuna partita di Serie A in diretta al momento.
         </div>
       ) : (
         matches.map((match) => (
           <div
             key={match.id}
-            className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100"
+            className="bg-[#0a0a0a] rounded-lg shadow-sm overflow-hidden border border-gray-100"
           >
             <div className="bg-indigo-50 border-b border-indigo-100 text-indigo-800 px-4 py-2 text-sm flex justify-between items-center">
               <div className="flex items-center">
@@ -278,23 +278,23 @@ export default async function SerieALiveMatches() {
                       unoptimized
                     />
                   </div>
-                  <span className="font-medium text-gray-800">
+                  <span className="font-medium text-white/80">
                     {match.teams.home.name}
                   </span>
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <span className="text-xl font-bold text-gray-900">
+                  <span className="text-xl font-bold text-white">
                     {match.goals.home !== null ? match.goals.home : "-"}
                   </span>
-                  <span className="text-xl text-gray-700">-</span>
-                  <span className="text-xl font-bold text-gray-900">
+                  <span className="text-xl text-white/70">-</span>
+                  <span className="text-xl font-bold text-white">
                     {match.goals.away !== null ? match.goals.away : "-"}
                   </span>
                 </div>
 
                 <div className="flex items-center space-x-3">
-                  <span className="font-medium text-gray-800">
+                  <span className="font-medium text-white/80">
                     {match.teams.away.name}
                   </span>
                   <div className="relative h-8 w-8">
@@ -309,7 +309,7 @@ export default async function SerieALiveMatches() {
                 </div>
               </div>
 
-              <div className="mt-2 text-xs text-gray-500 text-center">
+              <div className="mt-2 text-xs text-white/50 text-center">
                 {match.fixture.venue.name} - {match.fixture.venue.city}
               </div>
             </div>

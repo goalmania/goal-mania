@@ -58,7 +58,7 @@ export function TeamDataTable({
   };
 
   const getStatusColor = (isActive: boolean) => {
-    return isActive ? "bg-emerald-100 text-emerald-800" : "bg-gray-100 text-gray-800";
+    return isActive ? "bg-emerald-100 text-emerald-800" : "bg-[#111] text-white/80";
   };
 
   return (
@@ -153,7 +153,7 @@ export function TeamDataTable({
                           className={`h-8 w-8 p-0 ${
                             team.isActive 
                               ? "text-green-600 hover:text-green-700" 
-                              : "text-gray-400 hover:text-gray-600"
+                              : "text-white/40 hover:text-white/60"
                           }`}
                         >
                           {team.isActive ? (
@@ -174,7 +174,7 @@ export function TeamDataTable({
                           variant="ghost"
                           size="sm"
                           onClick={() => onEdit(team)}
-                          className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700"
+                          className="h-8 w-8 p-0 text-[#c8f000] hover:text-blue-700"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>

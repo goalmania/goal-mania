@@ -328,17 +328,17 @@ export function DiscountRulesForm({
   // Show rules to all users
 
   return (
-    <Card className="border-2 border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100 hover:border-[#f5963c]/20 transition-all duration-200">
+    <Card className="border-2 border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100 hover:border-[#c8f000]/20 transition-all duration-200">
       <CardContent className="p-4">
         <div className="flex items-center gap-2 mb-4">
-          <div className="p-1.5 bg-gradient-to-r from-[#f5963c] to-orange-500 rounded-lg">
+          <div className="p-1.5 bg-gradient-to-r from-[#c8f000] to-orange-500 rounded-lg">
             <SparklesIcon className="h-4 w-4 text-white" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-[#0e1924] flex items-center gap-1">
+            <h3 className="text-sm font-semibold text-[#0a0a0a] flex items-center gap-1">
               Available Discount Rules
             </h3>
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-white/60">
               Rules are applied automatically when conditions are met
             </p>
           </div>
@@ -382,8 +382,8 @@ export function DiscountRulesForm({
         {availableRules.length > 0 && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-medium text-gray-700">Available Rules</h4>
-              <div className="text-xs text-gray-500">
+              <h4 className="text-sm font-medium text-white/70">Available Rules</h4>
+              <div className="text-xs text-white/50">
                 {availableRules.filter(r => r.isApplicable).length} ready to apply
               </div>
             </div>
@@ -393,28 +393,28 @@ export function DiscountRulesForm({
                 className={`p-3 rounded-lg border transition-all duration-200 ${
                   rule.isApplicable
                     ? "border-green-300 bg-green-50"
-                    : "border-gray-200 bg-gray-50"
+                    : "border-white/8 bg-[#0a0a0a]"
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <div className="p-1 bg-gradient-to-r from-[#f5963c] to-orange-500 rounded">
+                      <div className="p-1 bg-gradient-to-r from-[#c8f000] to-orange-500 rounded">
                         {getRuleIcon(rule.type)}
                       </div>
-                      <h4 className="font-medium text-gray-900">{rule.name}</h4>
+                      <h4 className="font-medium text-white">{rule.name}</h4>
                       <Badge 
                         variant={rule.isApplicable ? "default" : "secondary"}
-                        className={`text-xs ${rule.isApplicable ? 'bg-green-600' : 'bg-gray-500'}`}
+                        className={`text-xs ${rule.isApplicable ? 'bg-green-600' : 'bg-[#0a0a0a]0'}`}
                       >
                         {rule.isApplicable ? "Ready" : "Requirements"}
                       </Badge>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">{rule.description}</p>
-                    <div className="text-sm font-medium text-[#f5963c] mb-1">
+                    <p className="text-sm text-white/60 mb-2">{rule.description}</p>
+                    <div className="text-sm font-medium text-[#c8f000] mb-1">
                       {getRuleDescription(rule)}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-white/50">
                       {rule.isApplicable ? (
                         <div className="flex items-center gap-2">
                           <span className="text-green-600">Ready to apply - Save €{rule.discountAmount?.toFixed(2)}</span>
@@ -424,11 +424,11 @@ export function DiscountRulesForm({
                         </div>
                       ) : (
                         <div className="space-y-1">
-                          <span className="text-gray-600">{rule.reason}</span>
+                          <span className="text-white/60">{rule.reason}</span>
                           {rule.howToQualify && (
-                            <div className="text-blue-600 bg-blue-50 p-2 rounded border border-blue-200">
+                            <div className="text-[#c8f000] bg-blue-50 p-2 rounded border border-blue-200">
                               <div className="flex items-start gap-2">
-                                <div className="text-blue-500 mt-0.5">💡</div>
+                                <div className="text-[#c8f000] mt-0.5">💡</div>
                                 <div className="text-xs">
                                   <div className="font-medium mb-1">How to qualify:</div>
                                   <div>{rule.howToQualify}</div>
@@ -459,15 +459,15 @@ export function DiscountRulesForm({
                       size="sm"
                       onClick={() => handleApplyRule(rule)}
                       disabled={isLoading}
-                      className="bg-gradient-to-r from-[#f5963c] to-orange-500 hover:from-[#e0852e] hover:to-orange-600 text-white"
+                      className="bg-gradient-to-r from-[#c8f000] to-orange-500 hover:from-[#e0852e] hover:to-orange-600 text-white"
                     >
                       Apply
                     </Button>
                   )}
                   {!rule.isApplicable && (
-                    <div className="text-xs text-gray-500 text-right">
+                    <div className="text-xs text-white/50 text-right">
                       <div className="text-red-500 font-medium">Not Eligible</div>
-                      <div className="text-gray-400">Complete requirements to apply</div>
+                      <div className="text-white/40">Complete requirements to apply</div>
                     </div>
                   )}
                 </div>
@@ -493,8 +493,8 @@ export function DiscountRulesForm({
           </Alert>
         )}
 
-        <div className="mt-3 pt-3 border-t border-gray-200">
-          <div className="flex items-center gap-2 text-xs text-gray-600">
+        <div className="mt-3 pt-3 border-t border-white/8">
+          <div className="flex items-center gap-2 text-xs text-white/60">
             <CheckCircleIcon className="h-3 w-3 text-green-500" />
             <span>
               Discount rules are applied automatically when conditions are met. You can also manually apply rules if needed.

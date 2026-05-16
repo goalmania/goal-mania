@@ -8,20 +8,20 @@ export default function NotFound() {
   const { t } = useI18n();
 
   return (
-    <main className="grid min-h-full  bg-white px-6 py-24 sm:py-32 lg:px-12 ">
+    <main className="grid min-h-full  bg-[#0a0a0a] px-6 py-24 sm:py-32 lg:px-12 ">
       <div className=" flex flex-col md:flex-row justify-between">
         <div className="md:w-1/2 w-full">
           <div className="md:text-start text-center">
-            <h1 className="mt-4 text-5xl font-semibold tracking-tight text-balance text-black sm:text-7xl">
+            <h1 className="mt-4 text-5xl font-semibold tracking-tight text-balance text-white sm:text-7xl">
               {t("notFound.title")}
             </h1>
-            <p className="mt-6 text-lg font-medium font-munish text-pretty text-[#333333] sm:text-xl/8">
+            <p className="mt-6 text-lg font-medium font-munish text-pretty text-white/60 sm:text-xl/8">
               {t("notFound.description")}
             </p>
             <div className="mt-10 md:flex items-start justify-start gap-x-6 hidden ">
               <Link
                 href="/"
-                className="rounded-full flex items-center  bg-[#FF7A00] px-3.5 py-2.5 text-sm font-medium text-[#0A1A2F] font-munish shadow-xs hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                className="rounded-full flex items-center  bg-[#c8f000] px-3.5 py-2.5 text-sm font-medium text-white font-munish shadow-xs hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
                 {t("notFound.goHome")}
                 <ArrowRight size={16} />
@@ -42,7 +42,7 @@ export default function NotFound() {
         <div className="mt-10 flex items-start justify-center gap-x-6 md:hidden ">
           <Link
             href="/"
-            className="rounded-full flex items-center  bg-[#FF7A00] px-3.5 py-2.5 text-sm font-medium text-[#0A1A2F] font-munish shadow-xs hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="rounded-full flex items-center  bg-[#c8f000] px-3.5 py-2.5 text-sm font-medium text-white font-munish shadow-xs hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             {t("notFound.goHome")}
             <ArrowRight size={16} />

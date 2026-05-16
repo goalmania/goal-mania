@@ -97,8 +97,8 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#f5963c] mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading your profile...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#c8f000] mx-auto mb-4"></div>
+          <p className="text-white/60 text-lg">Loading your profile...</p>
         </div>
       </div>
     );
@@ -258,8 +258,8 @@ export default function ProfilePage() {
         <div className="text-center mb-12">
           <div className="flex justify-center mb-8">
             <div className="relative">
-              <Avatar className="h-20 w-20 border-4 border-[#f5963c] shadow-lg">
-                <AvatarFallback className="bg-gradient-to-br from-[#f5963c] to-[#e67e22] text-white text-xl font-semibold">
+              <Avatar className="h-20 w-20 border-4 border-[#c8f000] shadow-lg">
+                <AvatarFallback className="bg-gradient-to-br from-[#c8f000] to-[#e67e22] text-white text-xl font-semibold">
                   {getInitials(session.user?.name || "U")}
                 </AvatarFallback>
               </Avatar>
@@ -268,36 +268,36 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-white mb-2">
             Welcome back, {session.user?.name?.split(" ")[0]}!
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="text-white/60 text-lg">
             Manage your account settings and preferences
           </p>
         </div>
 
         <Tabs defaultValue="profile" className="space-y-8">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 bg-white shadow-sm border">
-            <TabsTrigger value="profile" className="data-[state=active]:bg-[#f5963c] data-[state=active]:text-white">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 bg-[#0a0a0a] shadow-sm border">
+            <TabsTrigger value="profile" className="data-[state=active]:bg-[#c8f000] data-[state=active]:text-white">
               <User className="h-4 w-4 mr-2" />
               Profile
             </TabsTrigger>
-            <TabsTrigger value="security" className="data-[state=active]:bg-[#f5963c] data-[state=active]:text-white">
+            <TabsTrigger value="security" className="data-[state=active]:bg-[#c8f000] data-[state=active]:text-white">
               <Shield className="h-4 w-4 mr-2" />
               Security
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="profile" className="space-y-6">
-            <Card className="bg-white shadow-lg border-0">
+            <Card className="bg-[#0a0a0a] shadow-lg border-0">
               <CardHeader className="pb-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-xl font-semibold text-gray-900 flex items-center">
-                      <User className="h-5 w-5 mr-2 text-[#f5963c]" />
+                    <CardTitle className="text-xl font-semibold text-white flex items-center">
+                      <User className="h-5 w-5 mr-2 text-[#c8f000]" />
                       Profile Information
                     </CardTitle>
-                    <CardDescription className="text-gray-600 mt-1">
+                    <CardDescription className="text-white/60 mt-1">
                       Update your personal information and contact details
                     </CardDescription>
                   </div>
@@ -310,7 +310,7 @@ export default function ProfilePage() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="text-gray-700 font-medium">
+                      <Label htmlFor="name" className="text-white/70 font-medium">
                         Full Name
                       </Label>
                       <Input
@@ -320,7 +320,7 @@ export default function ProfilePage() {
                         value={formData.name}
                         onChange={handleInputChange}
                         disabled={!isEditing}
-                        className="border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c]"
+                        className="border-white/8 focus:border-[#c8f000] focus:ring-[#c8f000]"
                         placeholder="Enter your full name"
                       />
                       {validationErrors.name && (
@@ -332,7 +332,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-gray-700 font-medium">
+                      <Label htmlFor="email" className="text-white/70 font-medium">
                         Email Address
                       </Label>
                       <Input
@@ -343,7 +343,7 @@ export default function ProfilePage() {
                         value={formData.email}
                         onChange={handleInputChange}
                         disabled={!isEditing}
-                        className="border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c]"
+                        className="border-white/8 focus:border-[#c8f000] focus:ring-[#c8f000]"
                         placeholder="Enter your email address"
                       />
                       {validationErrors.email && (
@@ -378,7 +378,7 @@ export default function ProfilePage() {
                       <Button
                         type="button"
                         onClick={() => setIsEditing(true)}
-                        className="bg-[#f5963c] hover:bg-[#e67e22] text-white"
+                        className="bg-[#c8f000] hover:bg-[#e67e22] text-white"
                       >
                         <Edit3 className="h-4 w-4 mr-2" />
                         Edit Profile
@@ -388,7 +388,7 @@ export default function ProfilePage() {
                         <Button
                           type="submit"
                           disabled={isLoading}
-                          className="bg-[#f5963c] hover:bg-[#e67e22] text-white"
+                          className="bg-[#c8f000] hover:bg-[#e67e22] text-white"
                         >
                           {isLoading ? (
                             <>
@@ -413,7 +413,7 @@ export default function ProfilePage() {
                             setValidationErrors({});
                           }}
                           variant="outline"
-                          className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                          className="border-white/10 text-white/70 hover:bg-[#0a0a0a]"
                         >
                           <X className="h-4 w-4 mr-2" />
                           Cancel
@@ -427,15 +427,15 @@ export default function ProfilePage() {
           </TabsContent>
 
           <TabsContent value="security" className="space-y-6">
-            <Card className="bg-white shadow-lg border-0">
+            <Card className="bg-[#0a0a0a] shadow-lg border-0">
               <CardHeader className="pb-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-xl font-semibold text-gray-900 flex items-center">
-                      <Shield className="h-5 w-5 mr-2 text-[#f5963c]" />
+                    <CardTitle className="text-xl font-semibold text-white flex items-center">
+                      <Shield className="h-5 w-5 mr-2 text-[#c8f000]" />
                       Security Settings
                     </CardTitle>
-                    <CardDescription className="text-gray-600 mt-1">
+                    <CardDescription className="text-white/60 mt-1">
                       Update your password to keep your account secure
                     </CardDescription>
                   </div>
@@ -448,7 +448,7 @@ export default function ProfilePage() {
                 <form onSubmit={handlePasswordSubmit} className="space-y-6">
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="currentPassword" className="text-gray-700 font-medium">
+                      <Label htmlFor="currentPassword" className="text-white/70 font-medium">
                         Current Password
                       </Label>
                       <div className="relative">
@@ -459,7 +459,7 @@ export default function ProfilePage() {
                           value={passwordData.currentPassword}
                           onChange={handlePasswordInputChange}
                           disabled={!isChangingPassword}
-                          className="border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c] pr-10"
+                          className="border-white/8 focus:border-[#c8f000] focus:ring-[#c8f000] pr-10"
                           placeholder="Enter current password"
                         />
                         <Button
@@ -470,9 +470,9 @@ export default function ProfilePage() {
                           onClick={() => togglePasswordVisibility('current')}
                         >
                           {showPasswords.current ? (
-                            <EyeOff className="h-4 w-4 text-gray-400" />
+                            <EyeOff className="h-4 w-4 text-white/40" />
                           ) : (
-                            <Eye className="h-4 w-4 text-gray-400" />
+                            <Eye className="h-4 w-4 text-white/40" />
                           )}
                         </Button>
                       </div>
@@ -485,7 +485,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="newPassword" className="text-gray-700 font-medium">
+                      <Label htmlFor="newPassword" className="text-white/70 font-medium">
                         New Password
                       </Label>
                       <div className="relative">
@@ -496,7 +496,7 @@ export default function ProfilePage() {
                           value={passwordData.newPassword}
                           onChange={handlePasswordInputChange}
                           disabled={!isChangingPassword}
-                          className="border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c] pr-10"
+                          className="border-white/8 focus:border-[#c8f000] focus:ring-[#c8f000] pr-10"
                           placeholder="Enter new password"
                         />
                         <Button
@@ -507,9 +507,9 @@ export default function ProfilePage() {
                           onClick={() => togglePasswordVisibility('new')}
                         >
                           {showPasswords.new ? (
-                            <EyeOff className="h-4 w-4 text-gray-400" />
+                            <EyeOff className="h-4 w-4 text-white/40" />
                           ) : (
-                            <Eye className="h-4 w-4 text-gray-400" />
+                            <Eye className="h-4 w-4 text-white/40" />
                           )}
                         </Button>
                       </div>
@@ -522,7 +522,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="confirmPassword" className="text-gray-700 font-medium">
+                      <Label htmlFor="confirmPassword" className="text-white/70 font-medium">
                         Confirm New Password
                       </Label>
                       <div className="relative">
@@ -533,7 +533,7 @@ export default function ProfilePage() {
                           value={passwordData.confirmPassword}
                           onChange={handlePasswordInputChange}
                           disabled={!isChangingPassword}
-                          className="border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c] pr-10"
+                          className="border-white/8 focus:border-[#c8f000] focus:ring-[#c8f000] pr-10"
                           placeholder="Confirm new password"
                         />
                         <Button
@@ -544,9 +544,9 @@ export default function ProfilePage() {
                           onClick={() => togglePasswordVisibility('confirm')}
                         >
                           {showPasswords.confirm ? (
-                            <EyeOff className="h-4 w-4 text-gray-400" />
+                            <EyeOff className="h-4 w-4 text-white/40" />
                           ) : (
-                            <Eye className="h-4 w-4 text-gray-400" />
+                            <Eye className="h-4 w-4 text-white/40" />
                           )}
                         </Button>
                       </div>
@@ -582,7 +582,7 @@ export default function ProfilePage() {
                       <Button
                         type="button"
                         onClick={() => setIsChangingPassword(true)}
-                        className="bg-[#f5963c] hover:bg-[#e67e22] text-white"
+                        className="bg-[#c8f000] hover:bg-[#e67e22] text-white"
                       >
                         <Shield className="h-4 w-4 mr-2" />
                         Change Password
@@ -592,7 +592,7 @@ export default function ProfilePage() {
                         <Button
                           type="submit"
                           disabled={isPasswordLoading}
-                          className="bg-[#f5963c] hover:bg-[#e67e22] text-white"
+                          className="bg-[#c8f000] hover:bg-[#e67e22] text-white"
                         >
                           {isPasswordLoading ? (
                             <>
@@ -618,7 +618,7 @@ export default function ProfilePage() {
                             setPasswordValidationErrors({});
                           }}
                           variant="outline"
-                          className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                          className="border-white/10 text-white/70 hover:bg-[#0a0a0a]"
                         >
                           <X className="h-4 w-4 mr-2" />
                           Cancel

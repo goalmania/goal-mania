@@ -41,7 +41,7 @@ export function ApiConfigCheck() {
 
   if (isLoading) {
     return (
-      <div className="fixed bottom-4 right-4 bg-white rounded-lg shadow-lg p-4 z-50 max-w-sm">
+      <div className="fixed bottom-4 right-4 bg-[#0a0a0a] rounded-lg shadow-lg p-4 z-50 max-w-sm">
         <div className="flex items-center">
           <div className="animate-spin h-4 w-4 border-2 border-blue-500 rounded-full border-t-transparent mr-2"></div>
           <span>{t('apiConfig.checking')}</span>
@@ -60,7 +60,7 @@ export function ApiConfigCheck() {
           </div>
           <button
             onClick={() => setIsExpanded(false)}
-            className="ml-4 text-gray-500 hover:text-gray-700"
+            className="ml-4 text-white/50 hover:text-white/70"
           >
             ×
           </button>
@@ -96,7 +96,7 @@ export function ApiConfigCheck() {
           </button>
           <button
             onClick={() => setIsExpanded(false)}
-            className="ml-4 text-gray-500 hover:text-gray-700"
+            className="ml-4 text-white/50 hover:text-white/70"
           >
             ×
           </button>
@@ -156,7 +156,7 @@ export function ApiConfigCheck() {
                   href="https://dashboard.api-football.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
+                  className="text-[#c8f000] hover:underline"
                 >
                   API-Football.com
                 </a>

@@ -159,19 +159,19 @@ export default function SignUp() {
       {/* Form Right */}
       <div className="flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <h2 className="mt-6 text-start text-[47px] font-medium font-munish tracking-tight text-gray-900">
+          <h2 className="mt-6 text-start text-[47px] font-medium font-munish tracking-tight text-white">
             Crea account
           </h2>
         </div>
 
         <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white px-4">
+          <div className="bg-[#0a0a0a] px-4">
             <form className="space-y-6 font-munish" onSubmit={handleSubmit}>
               {/* Phone Number with Prefix Selector */}
               <div>
                 <Label
                   htmlFor="phone"
-                  className="text-sm font-medium text-gray-700"
+                  className="text-sm font-medium text-white/70"
                 >
                   Numero di telefono
                 </Label>
@@ -179,7 +179,7 @@ export default function SignUp() {
                   <select
                     id="phonePrefix"
                     name="phonePrefix"
-                    className="bg-white border text-sm rounded-lg py-2.5 font-munish border-gray-300 text-[#333333] font-light px-3 shadow-none focus:ring-1 focus:ring-[#FF7A00] focus:border-[#FF7A00]"
+                    className="bg-[#0a0a0a] border text-sm rounded-lg py-2.5 font-munish border-white/10 text-white/60 font-light px-3 shadow-none focus:ring-1 focus:ring-[#c8f000] focus:border-[#c8f000]"
                     defaultValue="+39"
                   >
                     {phonePrefix.map((prefix) => (
@@ -193,7 +193,7 @@ export default function SignUp() {
                     name="phone"
                     type="tel"
                     required
-                    className="bg-white border-0 flex-1 border-b py-2 border-black placeholder:text-[#333333] text-[#333333] font-light rounded-none shadow-none pl-0"
+                    className="bg-[#0a0a0a] border-0 flex-1 border-b py-2 border-white/10 placeholder:text-white/30 text-white font-light rounded-none shadow-none pl-0"
                     placeholder="xxxxxxxxxx"
                   />
                 </div>
@@ -213,7 +213,7 @@ export default function SignUp() {
                 />
                 <Label
                   htmlFor="marketing"
-                  className="text-sm text-gray-600 select-none cursor-pointer"
+                  className="text-sm text-white/60 select-none cursor-pointer"
                 >
                   Avvisami su ordini, offerte e aggiornamenti
                 </Label>
@@ -225,7 +225,7 @@ export default function SignUp() {
                 name="name"
                 type="text"
                 required
-                className="bg-white border-0 w-full border-b py-2 border-black placeholder:text-[#333333] text-[#333333] font-light rounded-none shadow-none pl-0"
+                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/10 placeholder:text-white/30 text-white font-light rounded-none shadow-none pl-0"
                 placeholder="Nome completo"
               />
               {validationErrors.name && (
@@ -240,7 +240,7 @@ export default function SignUp() {
                 name="email"
                 type="email"
                 required
-                className="bg-white border-0 w-full border-b py-2 border-black placeholder:text-[#333333] text-[#333333] font-light rounded-none shadow-none pl-0"
+                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/10 placeholder:text-white/30 text-white font-light rounded-none shadow-none pl-0"
                 placeholder="Indirizzo email"
               />
               {validationErrors.email && (
@@ -253,14 +253,14 @@ export default function SignUp() {
               <div>
                 <Label
                   htmlFor="country"
-                  className="text-sm font-medium text-gray-700"
+                  className="text-sm font-medium text-white/70"
                 >
                   Paese
                 </Label>
                 <select
                   id="country"
                   name="country"
-                  className="bg-white border text-sm rounded-lg py-2.5 mt-1 w-full font-munish border-gray-300 text-[#333333] font-light px-3 shadow-none focus:ring-1 focus:ring-[#FF7A00] focus:border-[#FF7A00]"
+                  className="bg-[#0a0a0a] border text-sm rounded-lg py-2.5 mt-1 w-full font-munish border-white/10 text-white/60 font-light px-3 shadow-none focus:ring-1 focus:ring-[#c8f000] focus:border-[#c8f000]"
                   defaultValue="Italy"
                 >
                   <option value="Italy">Italia</option>
@@ -289,7 +289,7 @@ export default function SignUp() {
                 name="password"
                 type="password"
                 required
-                className="bg-white border-0 w-full border-b py-2 border-black placeholder:text-[#333333] text-[#333333] font-light rounded-none shadow-none pl-0"
+                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/10 placeholder:text-white/30 text-white font-light rounded-none shadow-none pl-0"
                 placeholder="Crea una password"
               />
               {validationErrors.password && (
@@ -304,7 +304,7 @@ export default function SignUp() {
                 name="confirmPassword"
                 type="password"
                 required
-                className="bg-white border-0 w-full border-b py-2 border-black placeholder:text-[#333333] text-[#333333] font-light rounded-none shadow-none pl-0"
+                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/10 placeholder:text-white/30 text-white font-light rounded-none shadow-none pl-0"
                 placeholder="Conferma la password"
               />
               {validationErrors.confirmPassword && (
@@ -324,7 +324,7 @@ export default function SignUp() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="flex w-full justify-center rounded-full bg-[#FF7A00] px-3 gap-1.5 py-2 text-sm font-medium items-center text-[#0A1A2F] shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#FF7A00]/90"
+                  className="flex w-full justify-center rounded-full bg-[#c8f000] px-3 gap-1.5 py-2 text-sm font-medium items-center text-white shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#c8f000]/90"
                 >
                   {isLoading ? "Creazione account..." : "Crea account →"}
                 </Button>

@@ -795,10 +795,10 @@ export default function EditProductPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold text-[#0e1924] tracking-tight">
+          <h1 className="text-3xl font-bold text-[#0a0a0a] tracking-tight">
             Edit Product
           </h1>
-          <p className="mt-2 text-base text-gray-700 max-w-2xl">
+          <p className="mt-2 text-base text-white/70 max-w-2xl">
             Update product information, pricing, and settings.
           </p>
         </div>
@@ -1289,11 +1289,11 @@ export default function EditProductPage() {
                     accept="image/*"
                     onChange={handleImageUpload}
                     disabled={uploadingImages}
-                    className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#f5963c] file:text-white hover:file:bg-[#e0852e]"
+                    className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#c8f000] file:text-white hover:file:bg-[#e0852e]"
                   />
                   {uploadingImages && (
                     <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#f5963c]"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#c8f000]"></div>
                       <span>Uploading...</span>
                     </div>
                   )}
@@ -1351,7 +1351,7 @@ export default function EditProductPage() {
                           {field.value.map((url, index) => (
                             <div
                               key={index}
-                              className="relative aspect-square overflow-hidden rounded-lg border border-gray-200 group"
+                              className="relative aspect-square overflow-hidden rounded-lg border border-white/8 group"
                             >
                               <img
                                 src={url}
@@ -1407,11 +1407,11 @@ export default function EditProductPage() {
                     accept="video/*"
                     onChange={handleVideoUpload}
                     disabled={uploadingVideos}
-                    className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#f5963c] file:text-white hover:file:bg-[#e0852e]"
+                    className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#c8f000] file:text-white hover:file:bg-[#e0852e]"
                   />
                   {uploadingVideos && (
                     <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#f5963c]"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#c8f000]"></div>
                       <span>Uploading videos...</span>
                     </div>
                   )}
@@ -1424,15 +1424,15 @@ export default function EditProductPage() {
                     {Object.entries(uploadProgress).map(([fileId, progress]) => {
                       const fileName = fileId.split('-')[0];
                       return (
-                        <div key={fileId} className="flex items-center space-x-2 text-xs bg-gray-50 p-2 rounded">
+                        <div key={fileId} className="flex items-center space-x-2 text-xs bg-[#0a0a0a] p-2 rounded">
                           <span className="truncate flex-1 font-medium">{fileName}</span>
-                          <div className="w-24 bg-gray-200 rounded-full h-2">
+                          <div className="w-24 bg-[#1a1a1a] rounded-full h-2">
                             <div 
-                              className="bg-[#f5963c] h-2 rounded-full transition-all duration-300" 
+                              className="bg-[#c8f000] h-2 rounded-full transition-all duration-300" 
                               style={{ width: `${progress}%` }}
                             ></div>
                           </div>
-                          <span className="text-[#f5963c] font-medium min-w-[3rem]">{progress.toFixed(2)}%</span>
+                          <span className="text-[#c8f000] font-medium min-w-[3rem]">{progress.toFixed(2)}%</span>
                         </div>
                       );
                     })}
@@ -1496,7 +1496,7 @@ export default function EditProductPage() {
                           {field.value.map((url, index) => (
                             <div
                               key={index}
-                              className="relative aspect-video overflow-hidden rounded-lg border border-gray-200 group cursor-pointer hover:border-[#f5963c] transition-colors"
+                              className="relative aspect-video overflow-hidden rounded-lg border border-white/8 group cursor-pointer hover:border-[#c8f000] transition-colors"
                               onClick={() => {
                                 console.log("Video clicked:", url);
                                 setSelectedVideoUrl(url);
@@ -1528,8 +1528,8 @@ export default function EditProductPage() {
                               
                               {/* Play overlay */}
                               <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
-                                  <svg className="h-4 w-4 text-[#f5963c]" fill="currentColor" viewBox="0 0 24 24">
+                                <div className="bg-[#0a0a0a]/90 backdrop-blur-sm rounded-full p-2">
+                                  <svg className="h-4 w-4 text-[#c8f000]" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M8 5v14l11-7z"/>
                                   </svg>
                                 </div>
@@ -1567,7 +1567,7 @@ export default function EditProductPage() {
 
                     {/* Show message when no videos */}
                     {(!field.value || field.value.length === 0) && (
-                      <div className="text-sm text-gray-500 italic">
+                      <div className="text-sm text-white/50 italic">
                         No videos uploaded yet. Upload videos above or add video URLs.
                       </div>
                     )}
@@ -1602,7 +1602,7 @@ export default function EditProductPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="bg-[#f5963c] hover:bg-[#e0852e]"
+                className="bg-[#c8f000] hover:bg-[#e0852e]"
               >
                 {isLoading ? (
                   <>
@@ -1617,7 +1617,7 @@ export default function EditProductPage() {
               <Button
                 type="button"
                 onClick={nextStep}
-                className="bg-[#f5963c] hover:bg-[#e0852e]"
+                className="bg-[#c8f000] hover:bg-[#e0852e]"
               >
                 Next
               </Button>

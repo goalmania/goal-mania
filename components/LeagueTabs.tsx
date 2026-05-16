@@ -16,7 +16,7 @@ export function LeagueTabs({ children, leagueName }: LeagueTabsProps) {
 
   return (
     <div className="w-full">
-      <div className="border-b border-gray-200">
+      <div className="border-b border-white/8">
         <div className="flex space-x-1 md:space-x-2">
           {tabNames.map((tab, index) => (
             <button
@@ -24,11 +24,11 @@ export function LeagueTabs({ children, leagueName }: LeagueTabsProps) {
               onClick={() => setActiveTab(index)}
               className={cn(
                 "px-3 py-2 md:px-4 md:py-3 text-sm md:text-base font-medium transition-all duration-300 rounded-t-lg",
-                "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#f5963c]",
-                "hover:bg-gray-50",
+                "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#c8f000]",
+                "hover:bg-[#0a0a0a]",
                 activeTab === index
-                  ? "border-b-2 border-[#f5963c] text-[#f5963c] bg-white shadow-sm"
-                  : "text-gray-600 hover:text-[#0e1924]"
+                  ? "border-b-2 border-[#c8f000] text-[#c8f000] bg-[#0a0a0a] shadow-sm"
+                  : "text-white/60 hover:text-[#0a0a0a]"
               )}
               aria-selected={activeTab === index}
               role="tab"
@@ -37,7 +37,7 @@ export function LeagueTabs({ children, leagueName }: LeagueTabsProps) {
               <span className="flex items-center space-x-2">
                 <span>{tab}</span>
                 {activeTab === index && (
-                  <span className="w-2 h-2 bg-[#f5963c] rounded-full animate-pulse"></span>
+                  <span className="w-2 h-2 bg-[#c8f000] rounded-full animate-pulse"></span>
                 )}
               </span>
             </button>

@@ -45,7 +45,7 @@ export default function AnnouncementBar() {
   if (!visible) return null;
 
   return (
-    <div className="bg-[#f5963c] text-white text-xs font-semibold flex items-center justify-center gap-3 px-4 py-2 relative">
+    <div className="bg-[#c8f000] text-white text-xs font-semibold flex items-center justify-center gap-3 px-4 py-2 relative">
       <span className="text-center leading-tight">{MESSAGES[msgIndex]}</span>
       <button
         onClick={dismiss}

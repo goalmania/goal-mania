@@ -74,8 +74,8 @@ export default function FaqSection() {
             onClick={() => setActiveCategory(cat.id)}
             className={`w-full px-4 py-3 sm:py-4 text-sm border border-[#ffff] sm:text-base font-semibold uppercase tracking-wide transition-colors ${
               activeCategory === cat.id
-                ? "bg-transparent text-[#0A1A2F]"
-                : "bg-[#0A1A2F] text-[#F5F5F5] hover:bg-[#132c4d]"
+                ? "bg-transparent text-white"
+                : "bg-[#111111] text-[#F5F5F5] hover:bg-[#132c4d]"
             }`}
           >
             {cat.label}
@@ -95,11 +95,11 @@ export default function FaqSection() {
             value={String(index)}
             className="pt-4 sm:pt-6 border-0"
           >
-            <AccordionTrigger className="flex w-full items-start justify-between text-left text-[#0A1A2F] text-sm sm:text-base font-semibold leading-6 sm:leading-7 py-2 hover:underline">
+            <AccordionTrigger className="flex w-full items-start justify-between text-left text-white text-sm sm:text-base font-semibold leading-6 sm:leading-7 py-2 hover:underline">
               {`Q${index + 1}. ${faq.question}`}
             </AccordionTrigger>
             <AccordionContent className="px-2 sm:px-6">
-              <p className="text-xs sm:text-sm md:text-base leading-6 sm:leading-7 text-gray-700">
+              <p className="text-xs sm:text-sm md:text-base leading-6 sm:leading-7 text-white/70">
                 {faq.answer}
               </p>
             </AccordionContent>

@@ -20,12 +20,12 @@ interface WorldCupShowcaseProps {
 
 export default function WorldCupShowcase({ teams = [] }: WorldCupShowcaseProps) {
   return (
-    <section className="py-16 bg-white overflow-hidden">
+    <section className="py-16 bg-[#0a0a0a] overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 text-center relative">
-        <h2 className="text-3xl md:text-4xl font-black uppercase italic text-gray-900 mb-2 tracking-tighter">
-          Mondiali <span className="text-indigo-600">2026</span>
+        <h2 className="text-3xl md:text-4xl font-black uppercase italic text-white mb-2 tracking-tighter">
+          Mondiali <span className="text-[#c8f000]">2026</span>
         </h2>
-        <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400 mb-12">
+        <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/40 mb-12">
           Le Nazionali più amate
         </p>
 
@@ -52,7 +52,7 @@ export default function WorldCupShowcase({ teams = [] }: WorldCupShowcaseProps) 
                   href={`/shop/worldcup/${team.id}`}
                   className="group flex flex-col items-center gap-4 transition-transform duration-300 hover:scale-105"
                 >
-                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-gray-100 overflow-hidden bg-white p-1 shadow-sm group-hover:border-indigo-500 group-hover:shadow-md transition-all duration-500">
+                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-gray-100 overflow-hidden bg-[#0a0a0a] p-1 shadow-sm group-hover:border-[#c8f000] group-hover:shadow-md transition-all duration-500">
                     <div className="relative w-full h-full rounded-full overflow-hidden">
                       <Image
                         src={team.flag}
@@ -63,7 +63,7 @@ export default function WorldCupShowcase({ teams = [] }: WorldCupShowcaseProps) 
                     </div>
                   </div>
                   
-                  <span className="text-[9px] font-black uppercase tracking-widest text-gray-400 group-hover:text-indigo-600 transition-colors">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-white/40 group-hover:text-[#c8f000] transition-colors">
                     {team.name}
                   </span>
                 </Link>
@@ -73,10 +73,10 @@ export default function WorldCupShowcase({ teams = [] }: WorldCupShowcaseProps) 
 
           {/* Navigation Controls placed below the images */}
           <div className="flex justify-center items-center gap-4 mt-4">
-            <button className="swiper-button-prev-wc w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-900 hover:text-white transition-all shadow-sm cursor-pointer">
+            <button className="swiper-button-prev-wc w-10 h-10 rounded-full border border-white/8 flex items-center justify-center text-white/40 hover:bg-gray-900 hover:text-white transition-all shadow-sm cursor-pointer">
               <span className="text-lg">←</span>
             </button>
-            <button className="swiper-button-next-wc w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-900 hover:text-white transition-all shadow-sm cursor-pointer">
+            <button className="swiper-button-next-wc w-10 h-10 rounded-full border border-white/8 flex items-center justify-center text-white/40 hover:bg-gray-900 hover:text-white transition-all shadow-sm cursor-pointer">
               <span className="text-lg">→</span>
             </button>
           </div>

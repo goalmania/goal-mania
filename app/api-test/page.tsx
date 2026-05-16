@@ -60,14 +60,14 @@ export default function ApiTestPage() {
             <div className="space-y-4">
               <div>
                 <h3 className="font-semibold mb-2">Environment Variables:</h3>
-                <pre className="bg-gray-100 p-3 rounded text-sm overflow-auto">
+                <pre className="bg-[#111] p-3 rounded text-sm overflow-auto">
                   {JSON.stringify(paypalEnvStatus.environment, null, 2)}
                 </pre>
               </div>
               
               <div>
                 <h3 className="font-semibold mb-2">PayPal Authentication Test:</h3>
-                <pre className="bg-gray-100 p-3 rounded text-sm overflow-auto">
+                <pre className="bg-[#111] p-3 rounded text-sm overflow-auto">
                   {JSON.stringify(paypalEnvStatus.paypalAuthTest, null, 2)}
                 </pre>
               </div>
@@ -80,7 +80,7 @@ export default function ApiTestPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <CheckCircleIcon className="h-5 w-5 text-blue-600" />
+            <CheckCircleIcon className="h-5 w-5 text-[#c8f000]" />
             PayPal Script Status
           </CardTitle>
         </CardHeader>
@@ -93,7 +93,7 @@ export default function ApiTestPage() {
             <div className="space-y-4">
               <div>
                 <h3 className="font-semibold mb-2">Script Status:</h3>
-                <pre className="bg-gray-100 p-3 rounded text-sm overflow-auto">
+                <pre className="bg-[#111] p-3 rounded text-sm overflow-auto">
                   {JSON.stringify(paypalScriptStatus, null, 2)}
                 </pre>
               </div>
@@ -121,7 +121,7 @@ export default function ApiTestPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <ExclamationTriangleIcon className="h-5 w-5 text-orange-600" />
+            <ExclamationTriangleIcon className="h-5 w-5 text-[#c8f000]" />
             Troubleshooting Tips
           </CardTitle>
         </CardHeader>

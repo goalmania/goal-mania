@@ -43,11 +43,11 @@ export default function FixDatabasePage() {
       <h1 className="text-2xl font-bold mb-6">Fix Database Indexes</h1>
 
       <div className="space-y-8">
-        <div className="p-6 bg-white rounded-lg shadow-md">
+        <div className="p-6 bg-[#0a0a0a] rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4">
             Product Collection Indexes
           </h2>
-          <p className="mb-4 text-gray-600">
+          <p className="mb-4 text-white/60">
             Click the button below to remove the problematic SKU index from the
             products collection. This will fix the "duplicate key error" when
             creating products.
@@ -61,20 +61,20 @@ export default function FixDatabasePage() {
           </button>
 
           {productResult && (
-            <div className="mt-4 p-4 bg-gray-50 rounded border">
+            <div className="mt-4 p-4 bg-[#0a0a0a] rounded border">
               <h3 className="font-bold">{productResult.message}</h3>
-              <pre className="mt-2 text-sm overflow-auto max-h-64 bg-gray-100 p-2 rounded">
+              <pre className="mt-2 text-sm overflow-auto max-h-64 bg-[#111] p-2 rounded">
                 {JSON.stringify(productResult, null, 2)}
               </pre>
             </div>
           )}
         </div>
 
-        <div className="p-6 bg-white rounded-lg shadow-md">
+        <div className="p-6 bg-[#0a0a0a] rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4">
             Article Collection Indexes
           </h2>
-          <p className="mb-4 text-gray-600">
+          <p className="mb-4 text-white/60">
             Click the button below to check for and remove any problematic
             indexes from the articles collection.
           </p>
@@ -87,9 +87,9 @@ export default function FixDatabasePage() {
           </button>
 
           {articleResult && (
-            <div className="mt-4 p-4 bg-gray-50 rounded border">
+            <div className="mt-4 p-4 bg-[#0a0a0a] rounded border">
               <h3 className="font-bold">{articleResult.message}</h3>
-              <pre className="mt-2 text-sm overflow-auto max-h-64 bg-gray-100 p-2 rounded">
+              <pre className="mt-2 text-sm overflow-auto max-h-64 bg-[#111] p-2 rounded">
                 {JSON.stringify(articleResult, null, 2)}
               </pre>
             </div>

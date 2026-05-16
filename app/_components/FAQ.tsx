@@ -24,7 +24,7 @@ export default function FAQ() {
   return (
     <div className="w-full bg-[#F5F5F5] pb-10 ">
       <CardHeader className="p-0 mb-8 text-center">
-        <CardTitle className="bg-[#0A1A2F] md:text-[38px] flex items-center justify-center text-lg text-[#FFEFE5] font-medium md:h-[74px] h-[50px] font-munish">
+        <CardTitle className="bg-[#111111] md:text-[38px] flex items-center justify-center text-lg text-[#FFEFE5] font-medium md:h-[74px] h-[50px] font-munish">
           {t("faq.title")}
         </CardTitle>
       </CardHeader>
@@ -40,11 +40,11 @@ export default function FAQ() {
             value={String(index)}
             className="pt-4 sm:pt-6 border-0"
           >
-            <AccordionTrigger className="flex w-full items-start justify-between text-left text-gray-900 text-sm sm:text-base font-semibold leading-6 sm:leading-7 py-0 px-0 bg-transparent hover:underline">
+            <AccordionTrigger className="flex w-full items-start justify-between text-left text-white text-sm sm:text-base font-semibold leading-6 sm:leading-7 py-0 px-0 bg-transparent hover:underline">
               {faq.question}
             </AccordionTrigger>
             <AccordionContent className="px-6">
-              <p className="text-xs sm:text-sm md:text-base leading-6 sm:leading-7 text-gray-600">
+              <p className="text-xs sm:text-sm md:text-base leading-6 sm:leading-7 text-white/60">
                 {faq.answer}
               </p>
             </AccordionContent>
@@ -55,25 +55,25 @@ export default function FAQ() {
         <TabsList className="bg-[#F5F5F5] mx-auto md:gap-10 gap-0 font-munish md:text-[22px] text-base">
           <TabsTrigger
             value="generale"
-            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-[#333333] data-[state=active]:shadow-none data-[state=active]:rounded-none md:text-[22px] text-base"
+            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-white/60 data-[state=active]:shadow-none data-[state=active]:rounded-none md:text-[22px] text-base"
           >
             Generale
           </TabsTrigger>
           <TabsTrigger
             value="costruzione"
-            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-[#333333] data-[state=active]:shadow-none data-[state=active]:rounded-none md:text-[22px] text-base"
+            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-white/60 data-[state=active]:shadow-none data-[state=active]:rounded-none md:text-[22px] text-base"
           >
             Costruzione
           </TabsTrigger>
           <TabsTrigger
             value="assistenza"
-            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-[#333333] data-[state=active]:shadow-none data-[state=active]:rounded-none md:text-[22px] text-base"
+            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-white/60 data-[state=active]:shadow-none data-[state=active]:rounded-none md:text-[22px] text-base"
           >
             Assistenza
           </TabsTrigger>
           <TabsTrigger
             value="legale"
-            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-[#333333] data-[state=active]:shadow-none data-[state=active]:rounded-none md:text-[22px] text-base"
+            className="data-[state=active]:border-b-2 data-[state=active]:bg-[#F5F5F5] data-[state=active]:border-b-black data-[state=active]:text-white/60 data-[state=active]:shadow-none data-[state=active]:rounded-none md:text-[22px] text-base"
           >
             Legale
           </TabsTrigger>
@@ -82,7 +82,7 @@ export default function FAQ() {
           <Accordion
             type="single"
             collapsible
-            className="data-[state=active]:border-b-2 data-[state=active]:border-b-black data-[state=active]:text-[#333333] data-[state=active]:shadow-none data-[state=active]:rounded-none md:text-[22px] text-base"
+            className="data-[state=active]:border-b-2 data-[state=active]:border-b-black data-[state=active]:text-white/60 data-[state=active]:shadow-none data-[state=active]:rounded-none md:text-[22px] text-base"
           >
             {questions.map((faq, index) => (
               <AccordionItem
@@ -90,11 +90,11 @@ export default function FAQ() {
                 value={String(index)}
                 className="pt-2 sm:pt-4 border-0"
               >
-                <AccordionTrigger className="flex w-full items-start justify-between text-left font-munish text-[#333333] text-sm sm:text-base font-medium leading-6 sm:leading-7 py-0 px-0 bg-transparent hover:underline">
+                <AccordionTrigger className="flex w-full items-start justify-between text-left font-munish text-white/60 text-sm sm:text-base font-medium leading-6 sm:leading-7 py-0 px-0 bg-transparent hover:underline">
                   Q{index + 1}. {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="px-6">
-                  <p className="text-xs sm:text-sm md:text-base leading-6 sm:leading-7 font-munish text-[#333333]">
+                  <p className="text-xs sm:text-sm md:text-base leading-6 sm:leading-7 font-munish text-white/60">
                     {faq.answer}
                   </p>
                 </AccordionContent>

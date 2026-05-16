@@ -36,7 +36,7 @@ export default function ShopNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow sticky top-0 z-5">
+    <nav className="bg-[#0a0a0a] shadow sticky top-0 z-5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Desktop Navigation */}
         <div className="hidden md:flex h-14 lg:h-16 justify-between">
@@ -46,8 +46,8 @@ export default function ShopNav() {
                 href="/shop"
                 className={`inline-flex items-center justify-center px-1 pt-1 text-sm font-medium min-h-[32px] leading-none ${
                   pathname === "/shop"
-                    ? "border-b-2 border-indigo-500 text-gray-900"
-                    : "border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                    ? "border-b-2 border-[#c8f000] text-white"
+                    : "border-b-2 border-transparent text-white/50 hover:border-white/10 hover:text-white/70"
                 }`}
               >
                 Featured
@@ -61,8 +61,8 @@ export default function ShopNav() {
                   }
                   className={`inline-flex items-center justify-center px-1 pt-1 text-sm font-medium min-h-[32px] leading-none ${
                     pathname === categoryToPath[category]
-                      ? "border-b-2 border-indigo-500 text-gray-900"
-                      : "border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                      ? "border-b-2 border-[#c8f000] text-white"
+                      : "border-b-2 border-transparent text-white/50 hover:border-white/10 hover:text-white/70"
                   }`}
                 >
                   <span className="flex items-center gap-1">
@@ -79,7 +79,7 @@ export default function ShopNav() {
         <div className="md:hidden py-2 relative">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-gray-900 bg-gray-100 rounded-md shadow-sm"
+            className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-white bg-[#111] rounded-md shadow-sm"
           >
             <span className="truncate">
               {pathname === "/shop"
@@ -102,14 +102,14 @@ export default function ShopNav() {
           </button>
 
           {isMenuOpen && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-md shadow-lg overflow-hidden z-10">
+            <div className="absolute top-full left-0 right-0 mt-1 bg-[#0a0a0a] rounded-md shadow-lg overflow-hidden z-10">
               <div className="py-1">
                 <Link
                   href="/shop"
                   className={`block px-4 py-2 text-sm ${
                     pathname === "/shop"
-                      ? "bg-indigo-50 text-indigo-600"
-                      : "text-gray-700 hover:bg-gray-50"
+                      ? "bg-indigo-50 text-[#c8f000]"
+                      : "text-white/70 hover:bg-[#0a0a0a]"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -124,8 +124,8 @@ export default function ShopNav() {
                     }
                     className={`block px-4 py-2 text-sm ${
                       pathname === categoryToPath[category]
-                        ? "bg-indigo-50 text-indigo-600"
-                        : "text-gray-700 hover:bg-gray-50"
+                        ? "bg-indigo-50 text-[#c8f000]"
+                        : "text-white/70 hover:bg-[#0a0a0a]"
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >

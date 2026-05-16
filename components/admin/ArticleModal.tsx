@@ -204,10 +204,10 @@ export default function ArticleModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-          <h3 className="text-lg font-medium text-black">
+    <div className="fixed inset-0 bg-[#0a0a0a]0 bg-opacity-75 z-50 flex items-center justify-center p-4">
+      <div className="bg-[#0a0a0a] rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="px-6 py-4 border-b border-white/8 flex items-center justify-between">
+          <h3 className="text-lg font-medium text-white">
             {article ? "Edit Article" : "Create New Article"}
           </h3>
           <Button
@@ -223,7 +223,7 @@ export default function ArticleModal({
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="col-span-2">
-              <Label htmlFor="title" className="block text-sm font-medium text-black">
+              <Label htmlFor="title" className="block text-sm font-medium text-white">
                 Title
               </Label>
               <Input
@@ -238,7 +238,7 @@ export default function ArticleModal({
             </div>
 
             <div className="col-span-2">
-              <Label htmlFor="summary" className="block text-sm font-medium text-black">
+              <Label htmlFor="summary" className="block text-sm font-medium text-white">
                 Summary
               </Label>
               <Textarea
@@ -253,7 +253,7 @@ export default function ArticleModal({
             </div>
 
             <div>
-              <Label htmlFor="image" className="block text-sm font-medium text-black">
+              <Label htmlFor="image" className="block text-sm font-medium text-white">
                 Image
               </Label>
               <div className="mt-1 space-y-2">
@@ -268,14 +268,14 @@ export default function ArticleModal({
                   className="block w-full"
                 />
 
-                <div className="border-2 border-dashed border-gray-300 rounded-md p-4 relative">
+                <div className="border-2 border-dashed border-white/10 rounded-md p-4 relative">
                   <input
                     id="image-upload"
                     name="image-upload"
                     type="file"
                     accept="image/*"
                     onChange={handleImageUpload}
-                    className="block w-full text-sm text-gray-900
+                    className="block w-full text-sm text-white
                       file:mr-4 file:py-2 file:px-4
                       file:rounded-md file:border-0
                       file:text-sm file:font-semibold
@@ -283,14 +283,14 @@ export default function ArticleModal({
                       hover:file:bg-indigo-100"
                     disabled={isUploading}
                   />
-                  <div className="mt-2 text-sm text-gray-500">
+                  <div className="mt-2 text-sm text-white/50">
                     PNG, JPG or WebP up to 5MB
                   </div>
 
                   {isUploading && (
-                    <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-[#0a0a0a] bg-opacity-70 flex items-center justify-center">
                       <div className="flex flex-col items-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#c8f000]"></div>
                         <p className="mt-2 text-sm font-medium text-indigo-700">
                           Uploading image...
                         </p>
@@ -300,7 +300,7 @@ export default function ArticleModal({
                 </div>
 
                 {formData.image && (
-                  <div className="mt-2 h-32 w-32 relative overflow-hidden rounded-md border border-gray-200">
+                  <div className="mt-2 h-32 w-32 relative overflow-hidden rounded-md border border-white/8">
                     <Image
                       src={formData.image}
                       alt="Preview"
@@ -313,7 +313,7 @@ export default function ArticleModal({
             </div>
 
             <div>
-              <Label htmlFor="author" className="block text-sm font-medium text-black">
+              <Label htmlFor="author" className="block text-sm font-medium text-white">
                 Author
               </Label>
               <Input
@@ -328,7 +328,7 @@ export default function ArticleModal({
             </div>
 
             <div>
-              <Label htmlFor="category" className="block text-sm font-medium text-black">
+              <Label htmlFor="category" className="block text-sm font-medium text-white">
                 Category
               </Label>
               <Select
@@ -350,7 +350,7 @@ export default function ArticleModal({
 
             {formData.category === "internationalTeams" && (
               <div>
-                <Label htmlFor="league" className="block text-sm font-medium text-black">
+                <Label htmlFor="league" className="block text-sm font-medium text-white">
                   League
                 </Label>
                 <Select
@@ -372,7 +372,7 @@ export default function ArticleModal({
             )}
 
             <div>
-              <Label htmlFor="status" className="block text-sm font-medium text-black">
+              <Label htmlFor="status" className="block text-sm font-medium text-white">
                 Status
               </Label>
               <Select
@@ -399,13 +399,13 @@ export default function ArticleModal({
                 }
                 className="h-4 w-4"
               />
-              <Label htmlFor="featured" className="ml-2 block text-sm text-black">
+              <Label htmlFor="featured" className="ml-2 block text-sm text-white">
                 Featured Article
               </Label>
             </div>
 
             <div>
-              <Label htmlFor="featuredJerseyId" className="block text-sm font-medium text-black">
+              <Label htmlFor="featuredJerseyId" className="block text-sm font-medium text-white">
                 Featured Jersey in Article
               </Label>
               <Select
@@ -424,13 +424,13 @@ export default function ArticleModal({
                   ))}
                 </SelectContent>
               </Select>
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-white/50">
                 Select a jersey to feature in the middle of this article
               </p>
             </div>
 
             <div className="col-span-2">
-              <Label htmlFor="content" className="block text-sm font-medium text-black">
+              <Label htmlFor="content" className="block text-sm font-medium text-white">
                 Content
               </Label>
               <Textarea
@@ -445,7 +445,7 @@ export default function ArticleModal({
             </div>
           </div>
 
-          <div className="flex justify-end space-x-3 border-t border-gray-200 pt-5">
+          <div className="flex justify-end space-x-3 border-t border-white/8 pt-5">
             <Button
               type="button"
               variant="outline"

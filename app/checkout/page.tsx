@@ -477,33 +477,33 @@ export default function CheckoutPage() {
 
   if (status === "unauthenticated" && checkoutMode === "choose") {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 pt-[112px]">
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-4 pt-[112px]">
         <div className="w-full max-w-md">
-          <h1 className="text-3xl font-black uppercase tracking-tight text-[#0e1924] mb-2">Checkout</h1>
-          <p className="text-gray-500 text-sm mb-8">Come vuoi procedere?</p>
+          <h1 className="text-3xl font-black uppercase tracking-tight text-[#0a0a0a] mb-2">Checkout</h1>
+          <p className="text-white/50 text-sm mb-8">Come vuoi procedere?</p>
           <div className="space-y-4">
             <button
               onClick={() => router.push("/auth/signin?callbackUrl=/checkout")}
-              className="w-full flex items-center gap-4 p-5 border-2 border-gray-200 rounded-2xl hover:border-[#f5963c] hover:bg-orange-50 transition-all duration-200 text-left"
+              className="w-full flex items-center gap-4 p-5 border-2 border-white/8 rounded-2xl hover:border-[#c8f000] hover:bg-orange-50 transition-all duration-200 text-left"
             >
-              <div className="w-10 h-10 rounded-full bg-[#0e1924] flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-[#0a0a0a] flex items-center justify-center flex-shrink-0">
                 <UserIcon className="h-5 w-5 text-white" />
               </div>
               <div>
-                <p className="font-bold text-[#0e1924]">Accedi al tuo account</p>
-                <p className="text-xs text-gray-500">Usa i tuoi indirizzi salvati e traccia gli ordini</p>
+                <p className="font-bold text-[#0a0a0a]">Accedi al tuo account</p>
+                <p className="text-xs text-white/50">Usa i tuoi indirizzi salvati e traccia gli ordini</p>
               </div>
             </button>
             <button
               onClick={() => setCheckoutMode("guest")}
-              className="w-full flex items-center gap-4 p-5 border-2 border-gray-200 rounded-2xl hover:border-[#f5963c] hover:bg-orange-50 transition-all duration-200 text-left"
+              className="w-full flex items-center gap-4 p-5 border-2 border-white/8 rounded-2xl hover:border-[#c8f000] hover:bg-orange-50 transition-all duration-200 text-left"
             >
-              <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                <GlobeAltIcon className="h-5 w-5 text-gray-600" />
+              <div className="w-10 h-10 rounded-full bg-[#111] flex items-center justify-center flex-shrink-0">
+                <GlobeAltIcon className="h-5 w-5 text-white/60" />
               </div>
               <div>
-                <p className="font-bold text-[#0e1924]">Continua come ospite</p>
-                <p className="text-xs text-gray-500">Senza registrazione — inserisci solo i dati di spedizione</p>
+                <p className="font-bold text-[#0a0a0a]">Continua come ospite</p>
+                <p className="text-xs text-white/50">Senza registrazione — inserisci solo i dati di spedizione</p>
               </div>
             </button>
           </div>
@@ -513,16 +513,16 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-[112px]">
+    <div className="min-h-screen bg-[#0a0a0a] pt-[112px]">
       <div className="container mx-auto p-4 md:p-6">
         {/* Debug component */}
         {/* <SessionDebug /> */}
 
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-[#0e1924] mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#0a0a0a] mb-2">
             {t("checkout.title")}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-white/60">
             {t("checkout.description")}
           </p>
         </div>
@@ -532,9 +532,9 @@ export default function CheckoutPage() {
           <div className="lg:col-span-2 space-y-6">
             {step === "address" ? (
               <Card className="border-2 border-gray-100 shadow-lg overflow-hidden pt-0">
-                <CardHeader className="bg-gradient-to-r from-[#0e1924] to-[#1a2a3a] text-white p-6">
+                <CardHeader className="bg-gradient-to-r from-[#0a0a0a] to-[#1a2a3a] text-white p-6">
                   <CardTitle className="flex items-center gap-2 text-white">
-                    <MapPinIcon className="h-5 w-5 text-[#f5963c]" />
+                    <MapPinIcon className="h-5 w-5 text-[#c8f000]" />
                     {t("checkout.shippingAddress")}
                   </CardTitle>
                   <CardDescription className="text-gray-200">
@@ -546,41 +546,41 @@ export default function CheckoutPage() {
                     /* Guest address form */
                     <form onSubmit={(e) => { e.preventDefault(); handleContinueToPayment(); }} className="space-y-5">
                       <div className="space-y-2">
-                        <Label className="text-sm font-semibold text-[#0e1924]">Email *</Label>
-                        <Input type="email" value={guestEmail} onChange={(e) => setGuestEmail(e.target.value)} required placeholder="La tua email per la conferma ordine" className="h-11 border-2 border-gray-200 focus:border-[#f5963c]" />
+                        <Label className="text-sm font-semibold text-[#0a0a0a]">Email *</Label>
+                        <Input type="email" value={guestEmail} onChange={(e) => setGuestEmail(e.target.value)} required placeholder="La tua email per la conferma ordine" className="h-11 border-2 border-white/8 focus:border-[#c8f000]" />
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label className="text-sm font-semibold text-[#0e1924]">Nome completo *</Label>
-                          <Input value={guestAddress.fullName} onChange={(e) => setGuestAddress(p => ({...p, fullName: e.target.value}))} required placeholder="Mario Rossi" className="h-11 border-2 border-gray-200 focus:border-[#f5963c]" />
+                          <Label className="text-sm font-semibold text-[#0a0a0a]">Nome completo *</Label>
+                          <Input value={guestAddress.fullName} onChange={(e) => setGuestAddress(p => ({...p, fullName: e.target.value}))} required placeholder="Mario Rossi" className="h-11 border-2 border-white/8 focus:border-[#c8f000]" />
                         </div>
                         <div className="space-y-2">
-                          <Label className="text-sm font-semibold text-[#0e1924]">Telefono *</Label>
-                          <Input type="tel" value={guestAddress.phone} onChange={(e) => setGuestAddress(p => ({...p, phone: e.target.value}))} required placeholder="+39 333 000 0000" className="h-11 border-2 border-gray-200 focus:border-[#f5963c]" />
+                          <Label className="text-sm font-semibold text-[#0a0a0a]">Telefono *</Label>
+                          <Input type="tel" value={guestAddress.phone} onChange={(e) => setGuestAddress(p => ({...p, phone: e.target.value}))} required placeholder="+39 333 000 0000" className="h-11 border-2 border-white/8 focus:border-[#c8f000]" />
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-sm font-semibold text-[#0e1924]">Indirizzo *</Label>
-                        <Input value={guestAddress.addressLine1} onChange={(e) => setGuestAddress(p => ({...p, addressLine1: e.target.value}))} required placeholder="Via Roma 1" className="h-11 border-2 border-gray-200 focus:border-[#f5963c]" />
+                        <Label className="text-sm font-semibold text-[#0a0a0a]">Indirizzo *</Label>
+                        <Input value={guestAddress.addressLine1} onChange={(e) => setGuestAddress(p => ({...p, addressLine1: e.target.value}))} required placeholder="Via Roma 1" className="h-11 border-2 border-white/8 focus:border-[#c8f000]" />
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <div className="space-y-2">
-                          <Label className="text-sm font-semibold text-[#0e1924]">Città *</Label>
-                          <Input value={guestAddress.city} onChange={(e) => setGuestAddress(p => ({...p, city: e.target.value}))} required placeholder="Milano" className="h-11 border-2 border-gray-200 focus:border-[#f5963c]" />
+                          <Label className="text-sm font-semibold text-[#0a0a0a]">Città *</Label>
+                          <Input value={guestAddress.city} onChange={(e) => setGuestAddress(p => ({...p, city: e.target.value}))} required placeholder="Milano" className="h-11 border-2 border-white/8 focus:border-[#c8f000]" />
                         </div>
                         <div className="space-y-2">
-                          <Label className="text-sm font-semibold text-[#0e1924]">CAP *</Label>
-                          <Input value={guestAddress.postalCode} onChange={(e) => setGuestAddress(p => ({...p, postalCode: e.target.value}))} required placeholder="20100" className="h-11 border-2 border-gray-200 focus:border-[#f5963c]" />
+                          <Label className="text-sm font-semibold text-[#0a0a0a]">CAP *</Label>
+                          <Input value={guestAddress.postalCode} onChange={(e) => setGuestAddress(p => ({...p, postalCode: e.target.value}))} required placeholder="20100" className="h-11 border-2 border-white/8 focus:border-[#c8f000]" />
                         </div>
                         <div className="space-y-2 col-span-2 md:col-span-1">
-                          <Label className="text-sm font-semibold text-[#0e1924]">Provincia</Label>
-                          <Input value={guestAddress.state} onChange={(e) => setGuestAddress(p => ({...p, state: e.target.value}))} placeholder="MI" className="h-11 border-2 border-gray-200 focus:border-[#f5963c]" />
+                          <Label className="text-sm font-semibold text-[#0a0a0a]">Provincia</Label>
+                          <Input value={guestAddress.state} onChange={(e) => setGuestAddress(p => ({...p, state: e.target.value}))} placeholder="MI" className="h-11 border-2 border-white/8 focus:border-[#c8f000]" />
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-sm font-semibold text-[#0e1924]">Paese *</Label>
+                        <Label className="text-sm font-semibold text-[#0a0a0a]">Paese *</Label>
                         <Select value={guestAddress.country} onValueChange={(v) => setGuestAddress(p => ({...p, country: v}))}>
-                          <SelectTrigger className="h-11 border-2 border-gray-200 focus:border-[#f5963c]">
+                          <SelectTrigger className="h-11 border-2 border-white/8 focus:border-[#c8f000]">
                             <SelectValue placeholder="Seleziona paese" />
                           </SelectTrigger>
                           <SelectContent>
@@ -592,11 +592,11 @@ export default function CheckoutPage() {
                           </SelectContent>
                         </Select>
                       </div>
-                      <div className="flex justify-between items-center pt-4 border-t border-gray-200">
-                        <Button type="button" variant="outline" onClick={() => setCheckoutMode("choose")} className="border-2 border-gray-200">
+                      <div className="flex justify-between items-center pt-4 border-t border-white/8">
+                        <Button type="button" variant="outline" onClick={() => setCheckoutMode("choose")} className="border-2 border-white/8">
                           Indietro
                         </Button>
-                        <Button type="submit" disabled={isLoading} className="bg-gradient-to-r from-[#f5963c] to-orange-500 text-white font-semibold shadow-md">
+                        <Button type="submit" disabled={isLoading} className="bg-gradient-to-r from-[#c8f000] to-orange-500 text-white font-semibold shadow-md">
                           {isLoading ? <div className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Caricamento...</div> : <div className="flex items-center gap-2"><CreditCardIcon className="h-4 w-4" />Continua al pagamento</div>}
                         </Button>
                       </div>
@@ -613,22 +613,22 @@ export default function CheckoutPage() {
                             key={address._id}
                             className={`border-2 rounded-lg p-4 cursor-pointer transition-all duration-200 hover:shadow-md ${
                               selectedAddressId === address._id
-                                ? "border-[#f5963c] bg-gradient-to-r from-orange-50 to-yellow-50 shadow-md"
-                                : "border-gray-200 hover:border-[#f5963c]/30 bg-white"
+                                ? "border-[#c8f000] bg-gradient-to-r from-orange-50 to-yellow-50 shadow-md"
+                                : "border-white/8 hover:border-[#c8f000]/30 bg-[#0a0a0a]"
                             }`}
                           >
                             <div className="flex items-start space-x-3">
                               <RadioGroupItem
                                 value={address._id || ""}
                                 id={address._id}
-                                className="mt-1 data-[state=checked]:border-[#f5963c] data-[state=checked]:bg-[#f5963c]"
+                                className="mt-1 data-[state=checked]:border-[#c8f000] data-[state=checked]:bg-[#c8f000]"
                               />
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-3">
-                                  <div className="p-1.5 bg-[#0e1924] rounded-full">
+                                  <div className="p-1.5 bg-[#0a0a0a] rounded-full">
                                     <UserIcon className="h-3 w-3 text-white" />
                                   </div>
-                                  <p className="font-semibold text-[#0e1924]">
+                                  <p className="font-semibold text-[#0a0a0a]">
                                     {address.fullName}
                                   </p>
                                   {address.isDefault && (
@@ -637,22 +637,22 @@ export default function CheckoutPage() {
                                     </Badge>
                                   )}
                                 </div>
-                                <div className="space-y-2 text-sm text-gray-600">
+                                <div className="space-y-2 text-sm text-white/60">
                                   <div className="flex items-start gap-2">
-                                    <MapPinIcon className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                                    <MapPinIcon className="h-4 w-4 text-white/40 mt-0.5 flex-shrink-0" />
                                     <div>
-                                      <p className="font-medium text-[#0e1924]">{address.addressLine1}</p>
+                                      <p className="font-medium text-[#0a0a0a]">{address.addressLine1}</p>
                                       {address.addressLine2 && (
-                                        <p className="text-gray-500">{address.addressLine2}</p>
+                                        <p className="text-white/50">{address.addressLine2}</p>
                                       )}
-                                      <p className="text-gray-600">
+                                      <p className="text-white/60">
                                         {address.city}, {address.state} {address.postalCode}
                                       </p>
-                                      <p className="text-gray-600">{address.country}</p>
+                                      <p className="text-white/60">{address.country}</p>
                                     </div>
                                   </div>
                                   <div className="flex items-center gap-2">
-                                    <PhoneIcon className="h-4 w-4 text-gray-400" />
+                                    <PhoneIcon className="h-4 w-4 text-white/40" />
                                     <span>{address.phone}</span>
                                   </div>
                                 </div>
@@ -662,12 +662,12 @@ export default function CheckoutPage() {
                         ))}
                       </RadioGroup>
 
-                      <div className="flex justify-between items-center pt-6 border-t border-gray-200">
+                      <div className="flex justify-between items-center pt-6 border-t border-white/8">
                         <Button
                           type="button"
                           variant="outline"
                           onClick={() => setIsAddingAddress(true)}
-                          className="flex items-center gap-2 border-2 border-gray-200 hover:border-[#f5963c] hover:bg-orange-50 transition-all duration-200"
+                          className="flex items-center gap-2 border-2 border-white/8 hover:border-[#c8f000] hover:bg-orange-50 transition-all duration-200"
                         >
                           <PlusIcon className="h-4 w-4" />
                           {t("checkout.addNewAddress")}
@@ -696,7 +696,7 @@ export default function CheckoutPage() {
                               type="button"
                               onClick={handleContinueToPayment}
                               disabled={!selectedAddressId || isLoading}
-                              className="bg-gradient-to-r from-[#f5963c] to-orange-500 hover:from-[#e0852e] hover:to-orange-600 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50"
+                              className="bg-gradient-to-r from-[#c8f000] to-orange-500 hover:from-[#e0852e] hover:to-orange-600 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50"
                             >
                               {isLoading ? (
                                 <div className="flex items-center gap-2">
@@ -717,8 +717,8 @@ export default function CheckoutPage() {
                     <form onSubmit={handleAddressSubmit} className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-3">
-                          <Label htmlFor="fullName" className="flex items-center gap-2 text-sm font-semibold text-[#0e1924]">
-                            <div className="p-1 bg-[#f5963c] rounded-full">
+                          <Label htmlFor="fullName" className="flex items-center gap-2 text-sm font-semibold text-[#0a0a0a]">
+                            <div className="p-1 bg-[#c8f000] rounded-full">
                               <UserIcon className="h-3 w-3 text-white" />
                             </div>
                             Full Name *
@@ -731,13 +731,13 @@ export default function CheckoutPage() {
                             onChange={handleAddressChange}
                             required
                             placeholder="Enter your full name"
-                            className="h-11 border-2 border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c]/20 transition-all duration-200"
+                            className="h-11 border-2 border-white/8 focus:border-[#c8f000] focus:ring-[#c8f000]/20 transition-all duration-200"
                           />
                         </div>
 
                         <div className="space-y-3">
-                          <Label htmlFor="phone" className="flex items-center gap-2 text-sm font-semibold text-[#0e1924]">
-                            <div className="p-1 bg-[#f5963c] rounded-full">
+                          <Label htmlFor="phone" className="flex items-center gap-2 text-sm font-semibold text-[#0a0a0a]">
+                            <div className="p-1 bg-[#c8f000] rounded-full">
                               <PhoneIcon className="h-3 w-3 text-white" />
                             </div>
                             Phone Number *
@@ -750,14 +750,14 @@ export default function CheckoutPage() {
                             onChange={handleAddressChange}
                             required
                             placeholder="Enter your phone number"
-                            className="h-11 border-2 border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c]/20 transition-all duration-200"
+                            className="h-11 border-2 border-white/8 focus:border-[#c8f000] focus:ring-[#c8f000]/20 transition-all duration-200"
                           />
                         </div>
                       </div>
 
                       <div className="space-y-3">
-                        <Label htmlFor="addressLine1" className="flex items-center gap-2 text-sm font-semibold text-[#0e1924]">
-                          <div className="p-1 bg-[#f5963c] rounded-full">
+                        <Label htmlFor="addressLine1" className="flex items-center gap-2 text-sm font-semibold text-[#0a0a0a]">
+                          <div className="p-1 bg-[#c8f000] rounded-full">
                             <MapPinIcon className="h-3 w-3 text-white" />
                           </div>
                           Address Line 1 *
@@ -770,12 +770,12 @@ export default function CheckoutPage() {
                           onChange={handleAddressChange}
                           required
                           placeholder="Street address, P.O. box, company name"
-                          className="h-11 border-2 border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c]/20 transition-all duration-200"
+                          className="h-11 border-2 border-white/8 focus:border-[#c8f000] focus:ring-[#c8f000]/20 transition-all duration-200"
                         />
                       </div>
 
                       <div className="space-y-3">
-                        <Label htmlFor="addressLine2" className="flex items-center gap-2 text-sm font-semibold text-[#0e1924]">
+                        <Label htmlFor="addressLine2" className="flex items-center gap-2 text-sm font-semibold text-[#0a0a0a]">
                           <div className="p-1 bg-gray-400 rounded-full">
                             <BuildingOfficeIcon className="h-3 w-3 text-white" />
                           </div>
@@ -788,14 +788,14 @@ export default function CheckoutPage() {
                           value={newAddress.addressLine2 || ""}
                           onChange={handleAddressChange}
                           placeholder="Apartment, suite, unit, building, floor, etc."
-                          className="h-11 border-2 border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c]/20 transition-all duration-200"
+                          className="h-11 border-2 border-white/8 focus:border-[#c8f000] focus:ring-[#c8f000]/20 transition-all duration-200"
                         />
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="space-y-3">
-                          <Label htmlFor="city" className="flex items-center gap-2 text-sm font-semibold text-[#0e1924]">
-                            <div className="p-1 bg-[#f5963c] rounded-full">
+                          <Label htmlFor="city" className="flex items-center gap-2 text-sm font-semibold text-[#0a0a0a]">
+                            <div className="p-1 bg-[#c8f000] rounded-full">
                               <BuildingOfficeIcon className="h-3 w-3 text-white" />
                             </div>
                             City *
@@ -808,13 +808,13 @@ export default function CheckoutPage() {
                             onChange={handleAddressChange}
                             required
                             placeholder="Enter city"
-                            className="h-11 border-2 border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c]/20 transition-all duration-200"
+                            className="h-11 border-2 border-white/8 focus:border-[#c8f000] focus:ring-[#c8f000]/20 transition-all duration-200"
                           />
                         </div>
 
                         <div className="space-y-3">
-                          <Label htmlFor="state" className="flex items-center gap-2 text-sm font-semibold text-[#0e1924]">
-                            <div className="p-1 bg-[#f5963c] rounded-full">
+                          <Label htmlFor="state" className="flex items-center gap-2 text-sm font-semibold text-[#0a0a0a]">
+                            <div className="p-1 bg-[#c8f000] rounded-full">
                               <MapPinIcon className="h-3 w-3 text-white" />
                             </div>
                             State / Province *
@@ -827,13 +827,13 @@ export default function CheckoutPage() {
                             onChange={handleAddressChange}
                             required
                             placeholder="Enter state or province"
-                            className="h-11 border-2 border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c]/20 transition-all duration-200"
+                            className="h-11 border-2 border-white/8 focus:border-[#c8f000] focus:ring-[#c8f000]/20 transition-all duration-200"
                           />
                         </div>
 
                         <div className="space-y-3">
-                          <Label htmlFor="postalCode" className="flex items-center gap-2 text-sm font-semibold text-[#0e1924]">
-                            <div className="p-1 bg-[#f5963c] rounded-full">
+                          <Label htmlFor="postalCode" className="flex items-center gap-2 text-sm font-semibold text-[#0a0a0a]">
+                            <div className="p-1 bg-[#c8f000] rounded-full">
                               <MapPinIcon className="h-3 w-3 text-white" />
                             </div>
                             Postal Code *
@@ -846,14 +846,14 @@ export default function CheckoutPage() {
                             onChange={handleAddressChange}
                             required
                             placeholder="Enter postal code"
-                            className="h-11 border-2 border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c]/20 transition-all duration-200"
+                            className="h-11 border-2 border-white/8 focus:border-[#c8f000] focus:ring-[#c8f000]/20 transition-all duration-200"
                           />
                         </div>
                       </div>
 
                       <div className="space-y-3">
-                        <Label htmlFor="country" className="flex items-center gap-2 text-sm font-semibold text-[#0e1924]">
-                          <div className="p-1 bg-[#f5963c] rounded-full">
+                        <Label htmlFor="country" className="flex items-center gap-2 text-sm font-semibold text-[#0a0a0a]">
+                          <div className="p-1 bg-[#c8f000] rounded-full">
                             <GlobeAltIcon className="h-3 w-3 text-white" />
                           </div>
                           Country *
@@ -864,7 +864,7 @@ export default function CheckoutPage() {
                             setNewAddress((prev) => ({ ...prev, country: value }))
                           }
                         >
-                          <SelectTrigger className="h-11 border-2 border-gray-200 focus:border-[#f5963c] focus:ring-[#f5963c]/20 transition-all duration-200">
+                          <SelectTrigger className="h-11 border-2 border-white/8 focus:border-[#c8f000] focus:ring-[#c8f000]/20 transition-all duration-200">
                             <SelectValue placeholder="Select your country" />
                           </SelectTrigger>
                           <SelectContent>
@@ -878,13 +878,13 @@ export default function CheckoutPage() {
                         </Select>
                       </div>
 
-                      <div className="flex justify-between items-center pt-6 border-t border-gray-200">
+                      <div className="flex justify-between items-center pt-6 border-t border-white/8">
                         {addresses.length > 0 && (
                           <Button
                             type="button"
                             variant="outline"
                             onClick={() => setIsAddingAddress(false)}
-                            className="border-2 border-gray-200 hover:border-gray-300 transition-all duration-200"
+                            className="border-2 border-white/8 hover:border-white/10 transition-all duration-200"
                           >
                             {t("checkout.cancel")}
                           </Button>
@@ -892,7 +892,7 @@ export default function CheckoutPage() {
                         <Button
                           type="submit"
                           disabled={isLoading}
-                          className="bg-gradient-to-r from-[#f5963c] to-orange-500 hover:from-[#e0852e] hover:to-orange-600 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-200"
+                          className="bg-gradient-to-r from-[#c8f000] to-orange-500 hover:from-[#e0852e] hover:to-orange-600 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-200"
                         >
                           {isLoading ? (
                             <div className="flex items-center gap-2">
@@ -913,9 +913,9 @@ export default function CheckoutPage() {
               </Card>
             ) : (
               <Card className="border-2 border-gray-100 shadow-lg overflow-hidden pt-0">
-                <CardHeader className="bg-gradient-to-r from-[#0e1924] to-[#1a2a3a] text-white p-6">
+                <CardHeader className="bg-gradient-to-r from-[#0a0a0a] to-[#1a2a3a] text-white p-6">
                   <CardTitle className="flex items-center gap-2 text-white">
-                    <CreditCardIcon className="h-5 w-5 text-[#f5963c]" />
+                    <CreditCardIcon className="h-5 w-5 text-[#c8f000]" />
                     {t("checkout.paymentInformation")}
                   </CardTitle>
                   <CardDescription className="text-gray-200">
@@ -949,10 +949,10 @@ export default function CheckoutPage() {
           {/* Order summary */}
           <div className="lg:col-span-1">
             <Card className="sticky top-6 border-2 border-gray-100 shadow-lg overflow-hidden pt-0">
-              <CardHeader className="bg-gradient-to-r from-[#0e1924] to-[#1a2a3a] text-white p-6">
+              <CardHeader className="bg-gradient-to-r from-[#0a0a0a] to-[#1a2a3a] text-white p-6">
                 <CardTitle className="flex items-center gap-2 text-white">
                   <svg
-                    className="h-5 w-5 text-[#f5963c]"
+                    className="h-5 w-5 text-[#c8f000]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -975,18 +975,18 @@ export default function CheckoutPage() {
                 {/* Items List */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-[#0e1924] uppercase tracking-wide">
+                    <h3 className="text-sm font-semibold text-[#0a0a0a] uppercase tracking-wide">
                       {t("checkout.items")} ({items.length})
                     </h3>
-                    <Badge variant="secondary" className="bg-[#f5963c] text-white">
+                    <Badge variant="secondary" className="bg-[#c8f000] text-white">
                       {items.reduce((acc, item) => acc + item.quantity, 0)} items
                     </Badge>
                   </div>
                   
                   <div className="space-y-3 max-h-64 overflow-y-auto">
                     {items.map((item) => (
-                      <div key={item.id} className="flex items-start space-x-3 p-3 rounded-lg border border-gray-100 hover:border-[#f5963c]/20 transition-colors">
-                        <div className="relative w-16 h-16 rounded-lg overflow-hidden border-2 border-gray-200 flex-shrink-0">
+                      <div key={item.id} className="flex items-start space-x-3 p-3 rounded-lg border border-gray-100 hover:border-[#c8f000]/20 transition-colors">
+                        <div className="relative w-16 h-16 rounded-lg overflow-hidden border-2 border-white/8 flex-shrink-0">
                           <Image
                             src={item.image || "/placeholder.png"}
                             alt={item.name}
@@ -995,13 +995,13 @@ export default function CheckoutPage() {
                             className="hover:scale-105 transition-transform duration-200"
                           />
                           {item.quantity > 1 && (
-                            <div className="absolute -top-1 -right-1 bg-[#f5963c] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                            <div className="absolute -top-1 -right-1 bg-[#c8f000] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                               {item.quantity}
                             </div>
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-[#0e1924] truncate text-sm leading-tight">
+                          <p className="font-medium text-[#0a0a0a] truncate text-sm leading-tight">
                             {item.name}
                           </p>
                           <div className="flex items-center gap-2 mt-1">
@@ -1016,11 +1016,11 @@ export default function CheckoutPage() {
                           </div>
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <p className="font-semibold text-[#0e1924] text-sm">
+                          <p className="font-semibold text-[#0a0a0a] text-sm">
                             €{(item.price * item.quantity).toFixed(2)}
                           </p>
                           {item.quantity > 1 && (
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-white/50">
                               €{item.price.toFixed(2)} each
                             </p>
                           )}
@@ -1030,12 +1030,12 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <Separator className="bg-gray-200 my-6" />
+                <Separator className="bg-[#1a1a1a] my-6" />
 
                 {/* Discount Rules Form */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-[#0e1924] uppercase tracking-wide">
+                    <h3 className="text-sm font-semibold text-[#0a0a0a] uppercase tracking-wide">
                       {t("checkout.discountRules")}
                     </h3>
                     {appliedDiscountRules.length > 0 && (
@@ -1052,12 +1052,12 @@ export default function CheckoutPage() {
                   />
                 </div>
 
-                <Separator className="bg-gray-200 my-6" />
+                <Separator className="bg-[#1a1a1a] my-6" />
 
                 {/* Coupon Form */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-[#0e1924] uppercase tracking-wide">
+                    <h3 className="text-sm font-semibold text-[#0a0a0a] uppercase tracking-wide">
                       {t("checkout.discounts")}
                     </h3>
                     {appliedCoupon && (
@@ -1073,18 +1073,18 @@ export default function CheckoutPage() {
                   />
                 </div>
 
-                <Separator className="bg-gray-200 my-6" />
+                <Separator className="bg-[#1a1a1a] my-6" />
 
                 {/* Price Breakdown */}
                 <div className="space-y-3">
-                  <h3 className="text-sm font-semibold text-[#0e1924] uppercase tracking-wide">
+                  <h3 className="text-sm font-semibold text-[#0a0a0a] uppercase tracking-wide">
                     {t("checkout.priceBreakdown")}
                   </h3>
                   
                   <div className="space-y-2">
                     <div className="flex justify-between items-center py-1">
-                      <span className="text-sm text-gray-600">{t("checkout.subtotal")}</span>
-                      <span className="font-medium text-[#0e1924]">€{subtotal.toFixed(2)}</span>
+                      <span className="text-sm text-white/60">{t("checkout.subtotal")}</span>
+                      <span className="font-medium text-[#0a0a0a]">€{subtotal.toFixed(2)}</span>
                     </div>
 
                     {appliedCoupon && (
@@ -1116,7 +1116,7 @@ export default function CheckoutPage() {
                     )}
 
                     <div className="flex justify-between items-center py-1">
-                      <span className="text-sm text-gray-600">{t("checkout.shipping")}</span>
+                      <span className="text-sm text-white/60">{t("checkout.shipping")}</span>
                       <span className="font-medium text-green-600">Free</span>
                     </div>
                   </div>
@@ -1125,10 +1125,10 @@ export default function CheckoutPage() {
 
                   {/* Total */}
                   <div className="flex justify-between items-center py-2">
-                    <span className="text-lg font-bold text-[#0e1924]">{t("checkout.total")}</span>
+                    <span className="text-lg font-bold text-[#0a0a0a]">{t("checkout.total")}</span>
                     <div className="text-right">
-                      <span className="text-2xl font-bold text-[#0e1924]">€{total.toFixed(2)}</span>
-                      <p className="text-xs text-gray-500">{t("checkout.includesVat")}</p>
+                      <span className="text-2xl font-bold text-[#0a0a0a]">€{total.toFixed(2)}</span>
+                      <p className="text-xs text-white/50">{t("checkout.includesVat")}</p>
                     </div>
                   </div>
                 </div>
@@ -1142,23 +1142,23 @@ export default function CheckoutPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
-                      <span className="text-xs text-gray-600">{t("checkout.secure")}</span>
+                      <span className="text-xs text-white/60">{t("checkout.secure")}</span>
                     </div>
                     <div className="flex flex-col items-center">
                       <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mb-1">
-                        <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-[#c8f000]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
                       </div>
-                      <span className="text-xs text-gray-600">{t("checkout.fast")}</span>
+                      <span className="text-xs text-white/60">{t("checkout.fast")}</span>
                     </div>
                     <div className="flex flex-col items-center">
                       <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mb-1">
-                        <svg className="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-[#c8f000]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
                       </div>
-                      <span className="text-xs text-gray-600">{t("checkout.quality")}</span>
+                      <span className="text-xs text-white/60">{t("checkout.quality")}</span>
                     </div>
                   </div>
                 </div>
