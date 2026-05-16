@@ -3,6 +3,7 @@ import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { IProduct } from "@/lib/types/product";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 
 // Enable ISR for team-specific pages
 export const revalidate = 300;
@@ -48,6 +49,34 @@ async function getTeamProducts(teamSlug: string) {
   const products = await Product.find(query).sort({ feature: -1, createdAt: -1 });
   
   return JSON.parse(JSON.stringify(products)); // Serialize the Mongoose documents
+}
+
+const TEAM_DISPLAY_NAMES: Record<string, string> = {
+  inter: "Inter",
+  milan: "AC Milan",
+  juventus: "Juventus",
+  napoli: "Napoli",
+  roma: "Roma",
+  lazio: "Lazio",
+  atalanta: "Atalanta",
+  fiorentina: "Fiorentina",
+  torino: "Torino",
+  bologna: "Bologna",
+};
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ team: string }>;
+}): Promise<Metadata> {
+  const { team } = await params;
+  const teamName =
+    TEAM_DISPLAY_NAMES[team.toLowerCase()] ||
+    team.charAt(0).toUpperCase() + team.slice(1);
+  return {
+    title: `Maglie ${teamName}`,
+    description: `Acquista le maglie ufficiali ${teamName} 2025-26. Spedizione gratuita in Italia.`,
+  };
 }
 
 interface TeamPageProps {

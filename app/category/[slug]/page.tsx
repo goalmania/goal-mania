@@ -5,11 +5,30 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+async function resolveCategoryName(slug: string): Promise<string> {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it"}/api/admin/categories`,
+      { cache: "no-store" }
+    );
+    if (res.ok) {
+      const cats = await res.json();
+      const match = cats.find((c: any) => c.slug === slug);
+      if (match) return match.name;
+    }
+  } catch {}
+  return slug
+    .split("-")
+    .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
+  const categoryName = await resolveCategoryName(slug);
   return {
-    title: `Category: ${slug}`,
-    description: `Products in category ${slug}`,
+    title: categoryName,
+    description: `Acquista le migliori maglie ${categoryName} su Goal Mania. Spedizione gratuita in Italia.`,
   };
 }
 

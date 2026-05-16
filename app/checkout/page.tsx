@@ -76,6 +76,13 @@ export default function CheckoutPage() {
     [items]
   );
 
+  const [checkoutMode, setCheckoutMode] = useState<"choose" | "guest" | "account">("choose");
+  const [guestEmail, setGuestEmail] = useState("");
+  const [guestAddress, setGuestAddress] = useState<Omit<Address, "isDefault">>({
+    fullName: "", addressLine1: "", addressLine2: "", city: "", state: "", postalCode: "", country: "", phone: "",
+  });
+  const [guestAddressConfirmed, setGuestAddressConfirmed] = useState(false);
+
   const [step, setStep] = useState<"address" | "payment">("address");
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<
@@ -219,8 +226,14 @@ export default function CheckoutPage() {
   };
 
   const handleContinueToPayment = async () => {
-    if (!selectedAddressId) {
-      toast.error("Please select a shipping address");
+    const isGuest = checkoutMode === "guest";
+
+    if (!isGuest && !selectedAddressId) {
+      toast.error("Seleziona un indirizzo di spedizione");
+      return;
+    }
+    if (isGuest && (!guestAddress.fullName || !guestAddress.addressLine1 || !guestAddress.city || !guestEmail)) {
+      toast.error("Compila tutti i campi obbligatori");
       return;
     }
 
@@ -235,7 +248,9 @@ export default function CheckoutPage() {
         },
         body: JSON.stringify({
           items,
-          addressId: selectedAddressId,
+          addressId: isGuest ? null : selectedAddressId,
+          guestEmail: isGuest ? guestEmail : undefined,
+          guestAddress: isGuest ? guestAddress : undefined,
           coupon: appliedCoupon
             ? {
                 id: appliedCoupon.couponId,
@@ -340,35 +355,39 @@ export default function CheckoutPage() {
   const handlePaymentSuccess = () => {
     setPaymentSuccess(true);
 
+    const isGuest = checkoutMode === "guest";
+    const orderBody = {
+      items: items.map((item) => ({
+        productId: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        customization: item.customization,
+      })),
+      amount: total,
+      addressId: isGuest ? null : selectedAddressId,
+      shippingAddress: isGuest
+        ? guestAddress
+        : addresses.find((addr) => addr._id === selectedAddressId),
+      guestEmail: isGuest ? guestEmail : undefined,
+      coupon: appliedCoupon
+        ? {
+            code: appliedCoupon.code,
+            discountPercentage: appliedCoupon.discountPercentage,
+            discountAmount: couponDiscount,
+            id: appliedCoupon.couponId,
+          }
+        : null,
+    };
+
     // Create order directly instead of relying on webhook
-    if (selectedAddressId) {
+    if (selectedAddressId || isGuest) {
       fetch("/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          items: items.map((item) => ({
-            productId: item.id,
-            name: item.name,
-            price: item.price,
-            quantity: item.quantity,
-            customization: item.customization,
-          })),
-          amount: total,
-          addressId: selectedAddressId,
-          shippingAddress: addresses.find(
-            (addr) => addr._id === selectedAddressId
-          ),
-          coupon: appliedCoupon
-            ? {
-                code: appliedCoupon.code,
-                discountPercentage: appliedCoupon.discountPercentage,
-                discountAmount: couponDiscount,
-                id: appliedCoupon.couponId,
-              }
-            : null,
-        }),
+        body: JSON.stringify(orderBody),
       })
         .then((response) => {
           if (!response.ok) {
@@ -394,18 +413,20 @@ export default function CheckoutPage() {
           }
         })
         .then(() => {
-          // Redirect to orders page
-          router.push("/account/orders?success=true");
+          clearCart();
+          if (isGuest) {
+            router.push("/checkout/success?guest=true");
+          } else {
+            router.push("/account/orders?success=true");
+          }
         })
         .catch((error) => {
           console.error("Error creating order:", error);
-          toast.error("There was an issue creating your order");
-          // Still redirect to orders page, but without success parameter
-          router.push("/account/orders");
+          toast.error("Si è verificato un problema con il tuo ordine");
+          router.push(isGuest ? "/checkout/success?guest=true" : "/account/orders");
         });
     } else {
-      // If no address is selected, show error and don't proceed
-      toast.error("No shipping address selected");
+      toast.error("Nessun indirizzo di spedizione selezionato");
       setIsLoading(false);
     }
   };
@@ -454,9 +475,41 @@ export default function CheckoutPage() {
     );
   }
 
-  if (status === "unauthenticated") {
-    router.push("/auth/signin?callbackUrl=/checkout");
-    return null;
+  if (status === "unauthenticated" && checkoutMode === "choose") {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 pt-[112px]">
+        <div className="w-full max-w-md">
+          <h1 className="text-3xl font-black uppercase tracking-tight text-[#0e1924] mb-2">Checkout</h1>
+          <p className="text-gray-500 text-sm mb-8">Come vuoi procedere?</p>
+          <div className="space-y-4">
+            <button
+              onClick={() => router.push("/auth/signin?callbackUrl=/checkout")}
+              className="w-full flex items-center gap-4 p-5 border-2 border-gray-200 rounded-2xl hover:border-[#f5963c] hover:bg-orange-50 transition-all duration-200 text-left"
+            >
+              <div className="w-10 h-10 rounded-full bg-[#0e1924] flex items-center justify-center flex-shrink-0">
+                <UserIcon className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <p className="font-bold text-[#0e1924]">Accedi al tuo account</p>
+                <p className="text-xs text-gray-500">Usa i tuoi indirizzi salvati e traccia gli ordini</p>
+              </div>
+            </button>
+            <button
+              onClick={() => setCheckoutMode("guest")}
+              className="w-full flex items-center gap-4 p-5 border-2 border-gray-200 rounded-2xl hover:border-[#f5963c] hover:bg-orange-50 transition-all duration-200 text-left"
+            >
+              <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                <GlobeAltIcon className="h-5 w-5 text-gray-600" />
+              </div>
+              <div>
+                <p className="font-bold text-[#0e1924]">Continua come ospite</p>
+                <p className="text-xs text-gray-500">Senza registrazione — inserisci solo i dati di spedizione</p>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -489,7 +542,66 @@ export default function CheckoutPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
-                  {addresses.length > 0 && !isAddingAddress ? (
+                  {checkoutMode === "guest" ? (
+                    /* Guest address form */
+                    <form onSubmit={(e) => { e.preventDefault(); handleContinueToPayment(); }} className="space-y-5">
+                      <div className="space-y-2">
+                        <Label className="text-sm font-semibold text-[#0e1924]">Email *</Label>
+                        <Input type="email" value={guestEmail} onChange={(e) => setGuestEmail(e.target.value)} required placeholder="La tua email per la conferma ordine" className="h-11 border-2 border-gray-200 focus:border-[#f5963c]" />
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-sm font-semibold text-[#0e1924]">Nome completo *</Label>
+                          <Input value={guestAddress.fullName} onChange={(e) => setGuestAddress(p => ({...p, fullName: e.target.value}))} required placeholder="Mario Rossi" className="h-11 border-2 border-gray-200 focus:border-[#f5963c]" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-sm font-semibold text-[#0e1924]">Telefono *</Label>
+                          <Input type="tel" value={guestAddress.phone} onChange={(e) => setGuestAddress(p => ({...p, phone: e.target.value}))} required placeholder="+39 333 000 0000" className="h-11 border-2 border-gray-200 focus:border-[#f5963c]" />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-sm font-semibold text-[#0e1924]">Indirizzo *</Label>
+                        <Input value={guestAddress.addressLine1} onChange={(e) => setGuestAddress(p => ({...p, addressLine1: e.target.value}))} required placeholder="Via Roma 1" className="h-11 border-2 border-gray-200 focus:border-[#f5963c]" />
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-sm font-semibold text-[#0e1924]">Città *</Label>
+                          <Input value={guestAddress.city} onChange={(e) => setGuestAddress(p => ({...p, city: e.target.value}))} required placeholder="Milano" className="h-11 border-2 border-gray-200 focus:border-[#f5963c]" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-sm font-semibold text-[#0e1924]">CAP *</Label>
+                          <Input value={guestAddress.postalCode} onChange={(e) => setGuestAddress(p => ({...p, postalCode: e.target.value}))} required placeholder="20100" className="h-11 border-2 border-gray-200 focus:border-[#f5963c]" />
+                        </div>
+                        <div className="space-y-2 col-span-2 md:col-span-1">
+                          <Label className="text-sm font-semibold text-[#0e1924]">Provincia</Label>
+                          <Input value={guestAddress.state} onChange={(e) => setGuestAddress(p => ({...p, state: e.target.value}))} placeholder="MI" className="h-11 border-2 border-gray-200 focus:border-[#f5963c]" />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-sm font-semibold text-[#0e1924]">Paese *</Label>
+                        <Select value={guestAddress.country} onValueChange={(v) => setGuestAddress(p => ({...p, country: v}))}>
+                          <SelectTrigger className="h-11 border-2 border-gray-200 focus:border-[#f5963c]">
+                            <SelectValue placeholder="Seleziona paese" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Italy">Italia</SelectItem>
+                            <SelectItem value="France">Francia</SelectItem>
+                            <SelectItem value="Germany">Germania</SelectItem>
+                            <SelectItem value="Spain">Spagna</SelectItem>
+                            <SelectItem value="United Kingdom">Regno Unito</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="flex justify-between items-center pt-4 border-t border-gray-200">
+                        <Button type="button" variant="outline" onClick={() => setCheckoutMode("choose")} className="border-2 border-gray-200">
+                          Indietro
+                        </Button>
+                        <Button type="submit" disabled={isLoading} className="bg-gradient-to-r from-[#f5963c] to-orange-500 text-white font-semibold shadow-md">
+                          {isLoading ? <div className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Caricamento...</div> : <div className="flex items-center gap-2"><CreditCardIcon className="h-4 w-4" />Continua al pagamento</div>}
+                        </Button>
+                      </div>
+                    </form>
+                  ) : addresses.length > 0 && !isAddingAddress ? (
                     <>
                       <RadioGroup
                         value={selectedAddressId}

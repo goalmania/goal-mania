@@ -2,6 +2,7 @@ import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { IProduct } from "@/lib/types/product";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 import PremierLeagueTeamClient from "../../../_components/PremierLeagueTeamClient";
 
 // Enable ISR for team-specific pages
@@ -41,6 +42,19 @@ async function getTeamProducts(teamSlug: string) {
   }).sort({ feature: -1, createdAt: -1 });
 
   return JSON.parse(JSON.stringify(products)); // Serialize the Mongoose documents
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ team: string }>;
+}): Promise<Metadata> {
+  const { team } = await params;
+  const teamName = teamNameMap[team.toLowerCase()] || team;
+  return {
+    title: `Maglie ${teamName}`,
+    description: `Acquista le maglie ufficiali ${teamName} 2025-26. Spedizione gratuita in Italia.`,
+  };
 }
 
 interface TeamPageProps {

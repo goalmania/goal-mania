@@ -604,3 +604,21 @@
     rgba(10, 26, 47, 1) 73%
   );
 }
+
+@keyframes ticker-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes ticker-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-ticker-left {
+  animation: ticker-left 30s linear infinite;
+}
+
+.animate-ticker-right {
+  animation: ticker-right 30s linear infinite;
+}

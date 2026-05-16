@@ -1,12 +1,22 @@
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
-
-export const revalidate = 3600; // Revalidate every hour
+import { Metadata } from "next";
 import ProductCard from "@/components/ui/ProductCard";
 import Link from "next/link";
 
+export const revalidate = 3600;
+
 interface PageProps {
   params: Promise<{ team: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { team } = await params;
+  const teamName = team.charAt(0).toUpperCase() + team.slice(1);
+  return {
+    title: `Maglia ${teamName} Mondiali 2026`,
+    description: `Acquista la maglia ufficiale ${teamName} per i Mondiali 2026. Spedizione gratuita in Italia.`,
+  };
 }
 
 export default async function NationalTeamPage({ params }: PageProps) {

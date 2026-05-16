@@ -97,6 +97,9 @@ export default function ProductDetailClient({
   const [errors, setErrors] = useState<{
     size?: string;
   }>({});
+  const [sizeChartOpen, setSizeChartOpen] = useState(false);
+  const [viewers, setViewers] = useState(() => Math.floor(Math.random() * 15) + 6);
+  const [deliveryCountdown, setDeliveryCountdown] = useState("");
   const { t } = useI18n();
   const {
     addItem: addToWishlist,
@@ -124,11 +127,58 @@ export default function ProductDetailClient({
 
   useEffect(() => {
     setMounted(true);
-    // Initialize reviews from product data
     if (product.reviews) {
       setReviews(product.reviews);
     }
   }, [product.reviews]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setViewers((v) => {
+        const delta = Math.random() < 0.5 ? 1 : -1;
+        return Math.max(4, Math.min(23, v + delta));
+      });
+    }, Math.random() * 30000 + 20000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    function buildCountdown() {
+      const now = new Date();
+      const cutoff = new Date();
+      cutoff.setHours(18, 0, 0, 0);
+
+      let deliveryDate = new Date(now);
+      // If past cutoff, ship next working day
+      if (now >= cutoff) deliveryDate.setDate(deliveryDate.getDate() + 1);
+      // Skip weekends for shipping
+      while (deliveryDate.getDay() === 0 || deliveryDate.getDay() === 6)
+        deliveryDate.setDate(deliveryDate.getDate() + 1);
+      // Add 3-5 working days for delivery
+      let workingDaysAdded = 0;
+      const target = new Date(deliveryDate);
+      while (workingDaysAdded < 4) {
+        target.setDate(target.getDate() + 1);
+        if (target.getDay() !== 0 && target.getDay() !== 6) workingDaysAdded++;
+      }
+
+      const remaining = cutoff.getTime() - now.getTime();
+      if (remaining <= 0) {
+        setDeliveryCountdown("");
+        return;
+      }
+      const h = Math.floor(remaining / 3600000);
+      const m = Math.floor((remaining % 3600000) / 60000);
+      const dayNames = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
+      const monthNames = ["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
+      const dateStr = `${dayNames[target.getDay()]} ${target.getDate()} ${monthNames[target.getMonth()]}`;
+      setDeliveryCountdown(`Ordina entro ${h}h ${m}m per riceverlo entro ${dateStr}`);
+    }
+    buildCountdown();
+    const timer = setInterval(buildCountdown, 60000);
+    return () => clearInterval(timer);
+  }, []);
+
   // Don't render anything until mounted to prevent hydration mismatch
   if (!mounted) {
     return null;
@@ -140,8 +190,8 @@ export default function ProductDetailClient({
 
     // Validate size selection
     if (!customization.size) {
-      setErrors({ size: "Please select a size before adding to cart" });
-      toast.error("Please select a size before adding to cart");
+      setErrors({ size: "Seleziona una taglia prima di aggiungere al carrello" });
+      toast.error("Seleziona una taglia prima di aggiungere al carrello");
       return;
     }
 
@@ -208,8 +258,8 @@ export default function ProductDetailClient({
 
     // Validate size selection
     if (!customization.size) {
-      setErrors({ size: "Please select a size before proceeding" });
-      toast.error("Please select a size before proceeding");
+      setErrors({ size: "Seleziona una taglia prima di procedere" });
+      toast.error("Seleziona una taglia prima di procedere");
       return;
     }
 
@@ -247,9 +297,9 @@ export default function ProductDetailClient({
       const error = await response.json();
       if (response.status === 401) {
         signIn();
-        throw new Error("Session expired. Please sign in again.");
+        throw new Error("Sessione scaduta. Effettua di nuovo il login.");
       } else {
-        throw new Error(error.error || "Failed to submit review");
+        throw new Error(error.error || "Impossibile inviare la recensione");
       }
     }
 
@@ -336,7 +386,7 @@ export default function ProductDetailClient({
               {product.videos && product.videos.length > 0 && (
                 <div className="w-full max-w-[380px] sm:max-w-[420px] pt-1">
                   <h3 className="text-[9px] font-black uppercase tracking-[0.15em] text-gray-400 mb-2">
-                    Video Preview
+                    Anteprima Video
                   </h3>
                   <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
                     {product.videos.map((videoUrl, index) => (
@@ -383,7 +433,7 @@ export default function ProductDetailClient({
                   €{(calculateTotalPrice() * quantity).toFixed(2)}
                 </p>
                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                  Vat Included
+                  IVA Inclusa
                 </span>
               </div>
 
@@ -395,6 +445,15 @@ export default function ProductDetailClient({
                   <circle cx="12" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
                 </svg>
                 <span>Spedizione gratuita in Italia — Consegna 3-5 giorni lavorativi</span>
+              </div>
+
+              <div className="flex items-center gap-2 text-sm text-[#FF7A00]">
+                <span className="inline-block w-2 h-2 rounded-full bg-[#FF7A00] animate-pulse" />
+                <span>{viewers} persone stanno guardando questa maglia</span>
+              </div>
+
+              <div className="text-xs text-gray-500 font-medium">
+                ⏱ {deliveryCountdown}
               </div>
 
               <hr className="border-gray-100" />
@@ -671,9 +730,16 @@ export default function ProductDetailClient({
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
-                          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400">
+                          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 inline">
                             {t("products.chooseSize")}
                           </h3>
+                          <button
+                            type="button"
+                            onClick={() => setSizeChartOpen(true)}
+                            className="text-xs text-orange-400 underline ml-2"
+                          >
+                            Guida alle taglie →
+                          </button>
                           <div className="h-0.5 w-8 bg-black rounded-full" />
                         </div>
 
@@ -927,6 +993,32 @@ export default function ProductDetailClient({
           <FaqSection />
         </TabsContent>
       </Tabs>
+
+      {/* Size Chart Modal */}
+      {sizeChartOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={() => setSizeChartOpen(false)}
+        >
+          <div
+            className="bg-white rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-black uppercase tracking-tight">
+                Guida alle Taglie
+              </h2>
+              <button
+                onClick={() => setSizeChartOpen(false)}
+                className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200"
+              >
+                ✕
+              </button>
+            </div>
+            <ProductSizeChart />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

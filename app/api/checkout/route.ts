@@ -39,14 +39,16 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || !session.user) {
+    const body = await req.json();
+    const { items, addressId, coupon, guestEmail, guestAddress } = body;
+
+    // Require either authenticated session OR guest details
+    const isGuest = !session?.user;
+    if (isGuest && (!guestEmail || !guestAddress)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await req.json();
-    const { items, addressId, coupon } = body;
-
-    if (!items || !items.length || !addressId) {
+    if (!items || !items.length || (!addressId && !guestAddress)) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -97,8 +99,9 @@ export async function POST(req: NextRequest) {
           enabled: true,
         },
         metadata: {
-          userId: session.user.id || "",
-          addressId,
+          userId: session?.user?.id || "guest",
+          addressId: addressId || "guest",
+          guestEmail: guestEmail || "",
           items: cartItemsString,
           coupon: couponString,
           total: total.toString(),
@@ -118,8 +121,10 @@ export async function POST(req: NextRequest) {
           quantity: item.quantity,
           customization: item.customization || {},
         })),
-        userId: session.user.id,
-        addressId,
+        userId: session?.user?.id || null,
+        guestEmail: guestEmail || null,
+        guestAddress: guestAddress || null,
+        addressId: addressId || null,
         couponData: coupon
           ? {
               code: coupon.code,

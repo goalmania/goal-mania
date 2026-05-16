@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import HeroSection from "@/components/home/HeroSection";
+import TeamLogoTicker from "@/components/home/TeamLogoTicker";
 import { Product } from "@/lib/types/home";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
 import { getBaseUrl } from "@/lib/utils/baseUrl";
@@ -275,6 +276,7 @@ export default async function Home() {
   return (
     <div className="bg-white min-h-screen relative font-munish">
       <HeroSection />
+      <TeamLogoTicker />
       <ClientSlider />
       <WorldCupShowcase teams={worldCupTeams} />
       <PremierLeagueClient />

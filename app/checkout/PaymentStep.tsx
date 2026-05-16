@@ -217,7 +217,7 @@ function PaymentMethods({
                 </div>
               </button>
             )}
-            
+
             {/* PayPal Option - always available */}
             <button
               type="button"
@@ -238,6 +238,17 @@ function PaymentMethods({
                 </div>
               </div>
             </button>
+
+            {/* Scalapay placeholder */}
+            <div className="p-4 border-2 border-dashed border-gray-200 rounded-lg opacity-50 cursor-not-allowed">
+              <div className="flex items-center gap-3">
+                <div className="h-6 w-6 rounded bg-gray-200 flex items-center justify-center text-[9px] font-bold text-gray-400">S</div>
+                <div>
+                  <p className="font-medium text-gray-400 text-sm">Scalapay — Paga in 3 rate</p>
+                  <p className="text-xs text-gray-300 font-mono uppercase tracking-widest">Presto disponibile</p>
+                </div>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>

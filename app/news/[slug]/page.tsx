@@ -272,14 +272,14 @@ export default async function ArticlePage({
         <footer className="border-t border-gray-200 pt-6 mt-8">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-medium text-gray-900">Author</h3>
+              <h3 className="text-sm font-medium text-gray-900">Autore</h3>
               <p className="text-sm text-gray-600">{article.author}</p>
             </div>
             <Link
               href="/news"
               className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
             >
-              ← Back to News
+              ← Torna alle Notizie
             </Link>
           </div>
         </footer>
@@ -288,7 +288,7 @@ export default async function ArticlePage({
       {/* Related Articles */}
       {relatedArticles.length > 0 && (
         <section className="max-w-5xl mx-auto mt-16">
-          <h2 className="text-2xl font-bold mb-6 text-black">Related Articles</h2>
+          <h2 className="text-2xl font-bold mb-6 text-black">Articoli Correlati</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {relatedArticles.map((related: any) => (
               <Link key={related._id} href={`/news/${related.slug}`}>

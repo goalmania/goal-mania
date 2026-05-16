@@ -1,19 +1,13 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useState } from "react";
 import toast from "react-hot-toast";
-import { refreshUserSession } from "@/lib/utils/session";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Skeleton } from "@/components/ui/skeleton";
-import { 
-  TicketIcon, 
-  CheckCircleIcon, 
+import {
+  TicketIcon,
   ExclamationTriangleIcon,
   SparklesIcon,
   XMarkIcon
@@ -32,50 +26,12 @@ export function CouponForm({
   onApplyCoupon,
   isDisabled = false,
 }: CouponFormProps) {
-  const { data: session, update: updateSession } = useSession();
   const [couponCode, setCouponCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isPremiumUser, setIsPremiumUser] = useState(false);
-  const [isSessionLoading, setIsSessionLoading] = useState(true);
-
-  // Check premium status whenever session changes
-  useEffect(() => {
-    const userRole = session?.user?.role;
-    const premium = userRole === "premium" || userRole === "admin";
-    setIsPremiumUser(premium);
-    setIsSessionLoading(false);
-  }, [session?.user?.role]);
-
-  // Force refresh session when component mounts
-  useEffect(() => {
-    if (session?.user) {
-      setIsSessionLoading(true);
-      refreshUserSession(updateSession, session)
-        .then((userData) => {
-          // Directly update premium status based on the response
-          const premium =
-            userData?.role === "premium" || userData?.role === "admin";
-          setIsPremiumUser(premium);
-        })
-        .catch((error) => {
-          console.error("Error refreshing session:", error);
-        })
-        .finally(() => {
-          setIsSessionLoading(false);
-        });
-    } else {
-      setIsSessionLoading(false);
-    }
-  }, [session?.user?.id, updateSession]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!isPremiumUser) {
-      toast.error("Solo gli utenti premium possono applicare coupon");
-      return;
-    }
 
     if (!couponCode.trim()) {
       setError("Per favore inserisci un codice coupon");
@@ -116,29 +72,6 @@ export function CouponForm({
     setError(null);
   };
 
-  // Show loading skeleton while checking premium status
-  if (isSessionLoading) {
-    return (
-      <Card className="border-2 border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-3 mb-3">
-            <Skeleton className="h-5 w-5 rounded" />
-            <Skeleton className="h-4 w-32 rounded" />
-          </div>
-          <div className="flex gap-2">
-            <Skeleton className="h-10 flex-1 rounded" />
-            <Skeleton className="h-10 w-20 rounded" />
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // Don't render anything if not premium
-  if (!isPremiumUser) {
-    return null;
-  }
-
   return (
     <Card className="border-2 border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100 hover:border-[#f5963c]/20 transition-all duration-200">
       <CardContent className="p-4">
@@ -147,11 +80,8 @@ export function CouponForm({
             <TicketIcon className="h-4 w-4 text-white" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-[#0e1924] flex items-center gap-1">
+            <h3 className="text-sm font-semibold text-[#0e1924]">
               Hai un coupon?
-              <Badge variant="secondary" className="text-xs bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-                Premium
-              </Badge>
             </h3>
             <p className="text-xs text-gray-600">Inserisci il tuo codice sconto</p>
           </div>
@@ -215,12 +145,7 @@ export function CouponForm({
           )}
         </form>
 
-        <div className="mt-3 pt-3 border-t border-gray-200">
-          <div className="flex items-center gap-2 text-xs text-gray-600">
-            <CheckCircleIcon className="h-3 w-3 text-green-500" />
-            <span>Gli utenti premium hanno accesso esclusivo ai codici sconto</span>
-          </div>
-        </div>
+
       </CardContent>
     </Card>
   );
