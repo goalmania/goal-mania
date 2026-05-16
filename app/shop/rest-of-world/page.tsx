@@ -5,7 +5,7 @@ import SerieAClient from "@/app/_components/SerieAClient";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Resto del Mondo | Goal Mania",
+  title: "Resto del Mondo",
   description: "Scopri le maglie dei migliori club dal resto del mondo",
 };
 

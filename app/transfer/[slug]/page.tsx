@@ -19,9 +19,9 @@ export async function generateMetadata({
     const { slug } = await params;
     await connectDB();
     const article = await Article.findOne({ slug, category: "transferMarket" });
-    if (!article) return { title: "Articolo non trovato | Goal Mania" };
+    if (!article) return { title: "Articolo non trovato" };
     return {
-      title: `${article.title} | Goal Mania`,
+      title: article.title,
       description: article.summary,
       openGraph: {
         title: article.title,

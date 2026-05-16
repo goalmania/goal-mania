@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions | Goal Mania",
+  title: "Terms & Conditions",
   description: "Terms and conditions for Goal Mania football jersey purchases and services.",
 };
 

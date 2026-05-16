@@ -10,7 +10,7 @@ import EditableFantasyTips from "@/app/_components/EditableFantasyTips";
 import { LoadingFallback } from "@/components/shared/loading-fallback";
 
 export const metadata: Metadata = {
-  title: "Fantacalcio | Goal Mania",
+  title: "Fantacalcio",
   description: "Notizie, statistiche e consigli per il fantacalcio",
 };
 

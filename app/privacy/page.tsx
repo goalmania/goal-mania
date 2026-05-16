@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Goal Mania",
+  title: "Privacy Policy",
   description: "Privacy policy and data protection information for Goal Mania customers.",
 };
 

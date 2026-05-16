@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,6 +9,13 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function PromoToast() {
+  const pathname = usePathname();
+  const shouldSuppress =
+    pathname?.startsWith('/products/') ||
+    pathname === '/cart' ||
+    pathname === '/checkout' ||
+    pathname?.startsWith('/checkout/');
+
   const [isVisible, setIsVisible] = useState(false);
   const [featuredProductImage, setFeaturedProductImage] = useState<string>(
     "/images/jersey1.webp"
@@ -82,11 +90,8 @@ export default function PromoToast() {
   }, []);
 
   useEffect(() => {
-
-    const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, 2000);
-
+    if (localStorage.getItem('promoToastDismissed') === 'true') return;
+    const timer = setTimeout(() => setIsVisible(true), 2000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -109,6 +114,8 @@ export default function PromoToast() {
     }
     return count.toString();
   };
+
+  if (shouldSuppress) return null;
 
   return (
     <AnimatePresence>

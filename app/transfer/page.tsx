@@ -8,7 +8,7 @@ import Article from "@/lib/models/Article";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Transfer Market | Goal Mania",
+  title: "Transfer Market",
   description:
     "Latest football transfer news, rumors and updates from Goal Mania",
 };

@@ -37,7 +37,7 @@ import PopularNewsGrid from "@/components/news/PopularNewsGrid";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "News | Goal Mania",
+  title: "News",
   description: "Latest football news and updates from Goal Mania",
 };
 

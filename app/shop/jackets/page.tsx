@@ -5,7 +5,7 @@ import SerieAClient from "@/app/_components/SerieAClient";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Giacche | Goal Mania",
+  title: "Giacche",
   description: "Scopri le nostre giacche sportive",
 };
 

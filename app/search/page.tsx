@@ -5,7 +5,7 @@ import Article from "@/lib/models/Article";
 import SearchClient from "./SearchClient";
 
 export const metadata: Metadata = {
-  title: "Cerca | Goal Mania",
+  title: "Cerca",
   description: "Cerca prodotti e notizie su Goal Mania",
 };
 

@@ -15,17 +15,37 @@ const validTeams = [
   "genoa", "empoli", "verona", "salernitana"
 ];
 
+const TEAM_NAME_OVERRIDES: Record<string, string[]> = {
+  'inter': ['Inter', 'Internazionale', 'F.C. Inter', 'FC Inter'],
+  'milan': ['Milan', 'AC Milan', 'A.C. Milan'],
+  'roma': ['Roma', 'AS Roma', 'A.S. Roma'],
+};
+
 async function getTeamProducts(teamSlug: string) {
   await connectDB();
-  
-  // Convert team slug to proper case for matching
-  const teamName = teamSlug.charAt(0).toUpperCase() + teamSlug.slice(1).toLowerCase();
-  
-  // Search for team name in title across all categories (not just SerieA which doesn't exist)
-  const products = await Product.find({
-    isActive: true,
-    title: { $regex: new RegExp(`^Maglia\\s+${teamName}`, 'i') } // Match "Maglia [TeamName]" at start of title
-  }).sort({ feature: -1, createdAt: -1 });
+
+  const slug = teamSlug.toLowerCase();
+  console.log('Searching for team:', slug, 'in products');
+
+  let query: Record<string, unknown>;
+
+  if (TEAM_NAME_OVERRIDES[slug]) {
+    const names = TEAM_NAME_OVERRIDES[slug];
+    query = {
+      isActive: true,
+      $or: names.map((name) => ({
+        title: { $regex: new RegExp(`^Maglia\\s+${name}`, 'i') },
+      })),
+    };
+  } else {
+    const teamName = slug.charAt(0).toUpperCase() + slug.slice(1);
+    query = {
+      isActive: true,
+      title: { $regex: new RegExp(`^Maglia\\s+${teamName}`, 'i') },
+    };
+  }
+
+  const products = await Product.find(query).sort({ feature: -1, createdAt: -1 });
   
   return JSON.parse(JSON.stringify(products)); // Serialize the Mongoose documents
 }

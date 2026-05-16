@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { Truck, Clock, Shield, MapPin, Package, Globe } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Shipping Information | Goal Mania",
+  title: "Shipping Information",
   description: "Shipping options, delivery times, and policies for Goal Mania football jerseys.",
 };
 

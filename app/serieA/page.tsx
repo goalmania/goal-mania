@@ -8,7 +8,7 @@ import { LoadingFallback } from "@/components/shared/loading-fallback";
 import NewsSeriaBanner from "@/components/home/NewsSeriaBanner";
 
 export const metadata: Metadata = {
-  title: "Serie A | Goal Mania",
+  title: "Serie A",
   description:
     "Latest Serie A news, match reports, and analysis from Goal Mania",
 };

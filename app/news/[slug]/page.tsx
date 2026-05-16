@@ -37,14 +37,14 @@ export async function generateMetadata({
 
     if (!article) {
       return {
-        title: "Article Not Found | Goal Mania",
+        title: "Article Not Found",
         description:
           "The article you are looking for does not exist or has been removed.",
       };
     }
 
     return {
-      title: `${article.title} | Goal Mania`,
+      title: article.title,
       description: article.summary,
       openGraph: {
         title: article.title,

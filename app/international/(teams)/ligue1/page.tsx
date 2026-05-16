@@ -10,7 +10,7 @@ import Article from "@/lib/models/Article";
 import connectDB from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Ligue 1 | Goal Mania",
+  title: "Ligue 1",
   description: "Ultime notizie, calendario e statistiche della Ligue 1",
 };
 

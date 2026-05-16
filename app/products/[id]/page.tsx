@@ -23,10 +23,10 @@ export async function generateMetadata({
       ? await Product.findById(id).select("title description images basePrice").lean()
       : await Product.findOne({ slug: id }).select("title description images basePrice").lean();
 
-    if (!product) return { title: "Prodotto non trovato | Goal Mania" };
+    if (!product) return { title: "Prodotto non trovato" };
 
     const p = product as any;
-    const title = `${p.title} | Goal Mania`;
+    const title = p.title;
     const description = p.description?.slice(0, 160) ?? `Acquista ${p.title} su Goal Mania. Spedizione rapida.`;
     const image = p.images?.[0];
 

@@ -4,7 +4,7 @@ import { LeagueNews } from "@/components/LeagueNews";
 import { LeagueCalendar } from "@/components/LeagueCalendar";
 
 export const metadata: Metadata = {
-  title: "Altri campionati | Goal Mania",
+  title: "Altri campionati",
   description:
     "Ultime notizie e calendario degli altri campionati internazionali",
 };
