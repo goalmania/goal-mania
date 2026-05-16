@@ -6,6 +6,21 @@ import { notFound } from "next/navigation";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import ArticleContent from "@/app/_components/ArticleContent";
+import { JerseyAdBlock } from "@/app/_components/JerseyAdBlock";
+
+const SERIE_A_TEAMS = [
+  "Juventus", "Juve", "Inter", "Milan", "Napoli", "Roma", "Lazio", "Atalanta",
+  "Fiorentina", "Torino", "Bologna", "Verona", "Cagliari", "Lecce", "Genoa",
+  "Udinese", "Monza", "Empoli", "Salernitana", "Sassuolo",
+];
+
+function extractTeamFromTitle(title: string): string | undefined {
+  const lower = title.toLowerCase();
+  for (const team of SERIE_A_TEAMS) {
+    if (lower.includes(team.toLowerCase())) return team;
+  }
+  return undefined;
+}
 
 // Enable ISR for article pages
 export const revalidate = 300;
@@ -104,6 +119,7 @@ export default async function SerieAArticlePage({
   }
 
   const relatedArticles = await getRelatedArticles(article._id);
+  const teamHint = extractTeamFromTitle(article.title);
 
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
@@ -144,6 +160,9 @@ export default async function SerieAArticlePage({
           content={article.content}
           className="prose prose-lg max-w-none mb-8 text-black"
         />
+
+        {/* Jersey popup — maglia della squadra dell'articolo */}
+        <JerseyAdBlock jerseyId={article.featuredJerseyId} teamHint={teamHint} />
 
         {/* Article Footer */}
         <footer className="border-t border-gray-200 pt-6 mt-8">

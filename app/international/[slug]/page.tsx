@@ -5,6 +5,24 @@ import { notFound } from "next/navigation";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import ArticleContent from "@/app/_components/ArticleContent";
+import { JerseyAdBlock } from "@/app/_components/JerseyAdBlock";
+
+const INTL_TEAMS = [
+  "Arsenal", "Chelsea", "Liverpool", "Manchester City", "Manchester United",
+  "Tottenham", "Newcastle", "West Ham", "Aston Villa",
+  "Real Madrid", "Barcelona", "Atletico Madrid", "Sevilla", "Valencia",
+  "Bayern", "Dortmund", "Leipzig", "PSG", "Paris Saint-Germain",
+  "Portugal", "Netherlands", "Belgium", "France", "Spain", "Germany",
+  "England", "Brazil", "Argentina", "Italia",
+];
+
+function extractTeamFromTitle(title: string): string | undefined {
+  const lower = title.toLowerCase();
+  for (const team of INTL_TEAMS) {
+    if (lower.includes(team.toLowerCase())) return team;
+  }
+  return undefined;
+}
 
 // Enable ISR for international article pages
 export const revalidate = 300;
@@ -21,7 +39,7 @@ export async function generateMetadata({
 
     const article = await Article.findOne({
       slug: slug,
-      category: "international",
+      category: "internationalTeams",
     });
 
     if (!article) {
@@ -57,7 +75,7 @@ async function getArticle(slug: string) {
 
     const article = await Article.findOne({
       slug: slug,
-      category: "international",
+      category: "internationalTeams",
       status: "published",
     });
 
@@ -76,7 +94,7 @@ async function getRelatedArticles(articleId: string) {
     await connectDB();
 
     const relatedArticles = await Article.find({
-      category: "international",
+      category: "internationalTeams",
       status: "published",
       _id: { $ne: articleId },
     })
@@ -103,6 +121,7 @@ export default async function InternationalArticlePage({
   }
 
   const relatedArticles = await getRelatedArticles(article._id);
+  const teamHint = extractTeamFromTitle(article.title);
 
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
@@ -143,6 +162,9 @@ export default async function InternationalArticlePage({
           content={article.content}
           className="prose prose-lg max-w-none mb-8 text-black"
         />
+
+        {/* Jersey popup — maglia della squadra dell'articolo */}
+        <JerseyAdBlock jerseyId={article.featuredJerseyId} teamHint={teamHint} />
 
         {/* Article Footer */}
         <footer className="border-t border-gray-200 pt-6 mt-8">
