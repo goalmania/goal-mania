@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Instagram, Twitter, Globe } from "lucide-react";
+import { Instagram, Twitter, Globe, ShieldCheck, Truck, RotateCcw, BadgeCheck } from "lucide-react";
 
 export function Footer() {
   const links = [
@@ -19,6 +19,22 @@ export function Footer() {
     { href: "https://www.instagram.com/goalmaniaofficial/", icon: <Instagram size={18} />, label: "Instagram" },
   ];
 
+  const trustBadges = [
+    { icon: ShieldCheck, label: "Originale Garantito", sub: "100% autentico" },
+    { icon: Truck, label: "Spedizione Gratuita", sub: "Sopra €89" },
+    { icon: RotateCcw, label: "Reso Gratuito", sub: "30 giorni" },
+    { icon: BadgeCheck, label: "Pagamento Sicuro", sub: "Crittografato SSL" },
+  ];
+
+  const paymentMethods = [
+    { label: "VISA", color: "#1434CB" },
+    { label: "Mastercard", color: "#EB001B" },
+    { label: "PayPal", color: "#003087" },
+    { label: "Apple Pay", color: "#fff" },
+    { label: "Stripe", color: "#635BFF" },
+    { label: "Google Pay", color: "#4285F4" },
+  ];
+
   return (
     <footer
       style={{
@@ -26,6 +42,41 @@ export function Footer() {
         borderTop: "0.5px solid rgba(200,240,0,0.12)",
       }}
     >
+      {/* Trust badges strip */}
+      <div
+        className="border-b"
+        style={{ borderColor: "rgba(255,255,255,0.04)", background: "#0d0d0d" }}
+      >
+        <div className="max-w-6xl mx-auto px-6 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {trustBadges.map(({ icon: Icon, label, sub }) => (
+              <div key={label} className="flex items-center gap-3 group">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110"
+                  style={{ background: "rgba(200,240,0,0.08)", border: "1px solid rgba(200,240,0,0.15)" }}
+                >
+                  <Icon size={18} style={{ color: "#c8f000" }} />
+                </div>
+                <div>
+                  <p
+                    className="text-xs font-black uppercase text-white leading-tight"
+                    style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "0.5px" }}
+                  >
+                    {label}
+                  </p>
+                  <p
+                    className="text-[10px] mt-0.5"
+                    style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.5)" }}
+                  >
+                    {sub}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Newsletter bar */}
       <div
         className="border-b"
@@ -161,10 +212,39 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Payment methods */}
+        <div
+          className="mt-8 pt-8 border-t flex flex-col sm:flex-row items-center justify-between gap-4"
+          style={{ borderColor: "rgba(255,255,255,0.06)" }}
+        >
+          <p
+            className="text-[10px] uppercase tracking-widest"
+            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.2)" }}
+          >
+            Metodi di Pagamento Accettati
+          </p>
+          <div className="flex items-center gap-2 flex-wrap justify-center">
+            {paymentMethods.map((method) => (
+              <span
+                key={method.label}
+                className="text-[9px] font-black px-2.5 py-1.5 rounded-lg tracking-widest"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  color: "rgba(255,255,255,0.35)",
+                  fontFamily: "var(--font-mono, monospace)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                }}
+              >
+                {method.label}
+              </span>
+            ))}
+          </div>
+        </div>
+
         {/* Bottom bar */}
         <div
-          className="mt-8 pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-3"
-          style={{ borderColor: "rgba(255,255,255,0.06)" }}
+          className="mt-6 pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-3"
+          style={{ borderColor: "rgba(255,255,255,0.04)" }}
         >
           <span
             className="text-xs"
@@ -174,8 +254,8 @@ export function Footer() {
           </span>
           <div className="flex items-center gap-2">
             <span
-              className="w-1.5 h-1.5 rounded-full inline-block"
-              style={{ background: "#c8f000", animation: "dotBlink 1.5s ease-in-out infinite" }}
+              className="w-1.5 h-1.5 rounded-full inline-block animate-dot-blink"
+              style={{ background: "#c8f000" }}
             />
             <span
               className="text-xs"

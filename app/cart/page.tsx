@@ -8,16 +8,57 @@ import { useTranslation } from "@/lib/hooks/useTranslation";
 import { TrashIcon, ShoppingBagIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { ShieldCheck, Truck, RotateCcw, BadgeCheck, Zap, Star, ArrowRight, Package } from "lucide-react";
+
+const FREE_SHIPPING_THRESHOLD = 89;
+
+function ShippingProgressBar({ total }: { total: number }) {
+  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - total);
+  const progress = Math.min(100, (total / FREE_SHIPPING_THRESHOLD) * 100);
+  const reached = total >= FREE_SHIPPING_THRESHOLD;
+
+  return (
+    <div className="rounded-2xl p-4 mb-6" style={{ background: reached ? "rgba(200,240,0,0.08)" : "#111", border: "1px solid rgba(200,240,0,0.2)" }}>
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <Truck size={14} className={reached ? "text-[#c8f000]" : "text-white/50"} />
+          <span className="text-xs font-black uppercase tracking-widest" style={{ fontFamily: "var(--font-display, sans-serif)", color: reached ? "#c8f000" : "rgba(255,255,255,0.6)" }}>
+            {reached ? "Spedizione Gratuita Sbloccata!" : `Aggiungi €${remaining.toFixed(2)} per la spedizione gratuita`}
+          </span>
+        </div>
+        {reached && (
+          <BadgeCheck size={16} className="text-[#c8f000]" />
+        )}
+      </div>
+      <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+        <div
+          className="h-full rounded-full transition-all duration-700"
+          style={{
+            width: `${progress}%`,
+            background: reached ? "#c8f000" : "linear-gradient(90deg, rgba(200,240,0,0.5), #c8f000)",
+          }}
+        />
+      </div>
+      <div className="flex justify-between mt-1">
+        <span className="text-[10px] text-white/30" style={{ fontFamily: "var(--font-mono, monospace)" }}>€0</span>
+        <span className="text-[10px] text-[#c8f000]" style={{ fontFamily: "var(--font-mono, monospace)" }}>€{FREE_SHIPPING_THRESHOLD} gratis</span>
+      </div>
+    </div>
+  );
+}
+
+const UPSELL_ITEMS = [
+  { name: "Calzettoni da Calcio", price: 12.99, image: "/images/placeholder.png", href: "/shop" },
+  { name: "Patch Champions League", price: 4.99, image: "/images/placeholder.png", href: "/shop" },
+];
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, getTotal } = useCartStore();
   const { t } = useTranslation();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const router = useRouter();
+
+  const total = getTotal();
 
   const handleQuantityChange = (id: string, newQuantity: number) => {
     if (newQuantity < 1) {
@@ -30,7 +71,6 @@ export default function CartPage() {
   const handleCheckout = async () => {
     setIsCheckingOut(true);
     try {
-      // Redirect to checkout page
       router.push("/checkout");
     } catch (error) {
       console.error("Checkout failed:", error);
@@ -43,24 +83,27 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] pt-[112px]">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <div className="mx-auto w-24 h-24 bg-[#111] rounded-full flex items-center justify-center mb-6">
-              <ShoppingBagIcon className="w-12 h-12 text-white/40" />
+            <div className="mx-auto w-24 h-24 bg-[#111] rounded-full flex items-center justify-center mb-6 border border-white/8">
+              <ShoppingBagIcon className="w-12 h-12 text-white/20" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#0a0a0a]">
+            <h1
+              className="text-3xl font-black uppercase text-white mb-3"
+              style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px" }}
+            >
               {t("cart.empty.title")}
             </h1>
-            <p className="mt-4 text-base sm:text-lg text-white/60">
+            <p className="text-white/40 mb-8 max-w-sm mx-auto">
               {t("cart.empty.description")}
             </p>
-            <div className="mt-8">
-              <Button asChild size="lg" className="bg-[#c8f000] hover:bg-[#e0852e] text-white">
-                <Link href="/shop">
-                  {t("cart.empty.cta")}
-                </Link>
-              </Button>
-            </div>
+            <Link
+              href="/shop"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-black text-black uppercase tracking-wider transition-all hover:opacity-90 hover:-translate-y-0.5"
+              style={{ background: "#c8f000", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px", boxShadow: "0 8px 32px rgba(200,240,0,0.25)" }}
+            >
+              {t("cart.empty.cta")} <ArrowRight size={16} />
+            </Link>
           </div>
         </div>
       </div>
@@ -68,239 +111,298 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] pt-[112px]">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-[#0a0a0a] mb-2">
-            {t("cart.title")}
+    <div className="min-h-screen bg-[#0a0a0a] pt-[90px]">
+      {/* Page header */}
+      <div className="border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center gap-3">
+            <span className="w-5 h-[2px] rounded-full inline-block" style={{ background: "#c8f000" }} />
+            <span className="text-[10px] uppercase tracking-[4px]" style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}>
+              // Carrello
+            </span>
+          </div>
+          <h1
+            className="font-black uppercase text-white mt-2 leading-tight"
+            style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.8rem, 4vw, 2.8rem)", letterSpacing: "1px" }}
+          >
+            Il Tuo Carrello
+            <span className="text-[#c8f000] ml-3">({items.length})</span>
           </h1>
-          <p className="text-white/60">
-            Review your items and proceed to checkout
-          </p>
         </div>
+      </div>
 
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Cart Items */}
-          <div className="lg:col-span-2">
-            <Card className="border-2 border-gray-100 shadow-lg overflow-hidden pt-0">
-              <CardHeader className="bg-gradient-to-r from-[#0a0a0a] to-[#1a2a3a] text-white p-6 pt-6">
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <ShoppingBagIcon className="h-5 w-5 text-[#c8f000]" />
-                  Shopping Cart
-                </CardTitle>
-                <CardDescription className="text-gray-200">
-                  {items.length} {items.length === 1 ? 'item' : 'items'} in your cart
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  {items.map((item) => (
-                    <div key={item.id} className="flex items-start space-x-4 p-4 rounded-lg border border-gray-100 hover:border-[#c8f000]/20 transition-colors">
-                      <div className="relative w-20 h-20 rounded-lg overflow-hidden border-2 border-white/8 flex-shrink-0">
-                        <Image
-                          src={item.image || "/images/image.png"}
-                          alt={item.name || "Product image"}
-                          fill
-                          className="object-cover hover:scale-105 transition-transform duration-200"
-                        />
-                        {item.quantity > 1 && (
-                          <div className="absolute -top-1 -right-1 bg-[#c8f000] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                            {item.quantity}
-                          </div>
-                        )}
-                      </div>
 
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <h3 className="font-medium text-[#0a0a0a] text-sm leading-tight mb-1">
-                              <Link href={`/products/${item.id}`} className="hover:text-[#c8f000] transition-colors">
-                                {item.name}
-                              </Link>
-                            </h3>
-                            <div className="flex items-center gap-2 mb-2">
-                              <Badge variant="outline" className="text-xs">
-                                Qty: {item.quantity}
-                              </Badge>
-                              {item.customization && (
-                                <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
-                                  Custom
-                                </Badge>
-                              )}
-                            </div>
-                            <p className="text-sm text-white/60">
-                              €{Number(item.price).toFixed(2)} each
-                            </p>
-                          </div>
-                          <div className="text-right ml-4">
-                            <p className="font-semibold text-[#0a0a0a] text-sm">
-                              €{(Number(item.price) * item.quantity).toFixed(2)}
-                            </p>
-                          </div>
-                        </div>
+          {/* ── Cart Items ── */}
+          <div className="lg:col-span-2 space-y-4">
+            {/* Shipping progress */}
+            <ShippingProgressBar total={total} />
 
-                        <div className="flex items-center justify-between mt-3">
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                              className="w-8 h-8 p-0"
-                            >
-                              -
-                            </Button>
-                            <span className="text-sm font-medium text-[#0a0a0a] min-w-[2rem] text-center">
-                              {item.quantity}
-                            </span>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                              className="w-8 h-8 p-0"
-                            >
-                              +
-                            </Button>
-                          </div>
+            {/* Items list */}
+            <div
+              className="rounded-2xl overflow-hidden"
+              style={{ border: "1px solid rgba(255,255,255,0.06)", background: "#111" }}
+            >
+              <div className="px-6 py-4 border-b flex items-center justify-between" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+                <div className="flex items-center gap-2">
+                  <Package size={14} className="text-[#c8f000]" />
+                  <span
+                    className="text-xs uppercase tracking-widest font-black text-white"
+                    style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px" }}
+                  >
+                    {items.length} {items.length === 1 ? "Articolo" : "Articoli"}
+                  </span>
+                </div>
+                <Link href="/shop" className="text-[10px] uppercase tracking-widest text-white/30 hover:text-[#c8f000] transition-colors" style={{ fontFamily: "var(--font-mono, monospace)" }}>
+                  Continua a comprare →
+                </Link>
+              </div>
 
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeItem(item.id)}
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              <div className="divide-y" style={{ borderColor: "rgba(255,255,255,0.04)" }}>
+                {items.map((item) => (
+                  <div key={item.id} className="flex items-start gap-4 p-5 hover:bg-white/[0.02] transition-colors">
+                    {/* Image */}
+                    <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-[#1a1a1a]">
+                      <Image
+                        src={item.image || "/images/image.png"}
+                        alt={item.name || "Product image"}
+                        fill
+                        className="object-cover hover:scale-105 transition-transform duration-200"
+                      />
+                    </div>
+
+                    {/* Details */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1">
+                          <h3
+                            className="font-bold text-white text-sm leading-tight mb-1 hover:text-[#c8f000] transition-colors"
+                            style={{ fontFamily: "var(--font-display, sans-serif)" }}
                           >
-                            <TrashIcon className="h-4 w-4" />
-                          </Button>
+                            <Link href={`/products/${item.id}`}>{item.name}</Link>
+                          </h3>
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                            {item.customization?.size && (
+                              <span
+                                className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full"
+                                style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000", fontFamily: "var(--font-mono, monospace)" }}
+                              >
+                                Taglia: {item.customization.size}
+                              </span>
+                            )}
+                            {item.customization?.hasCustomization && (
+                              <span
+                                className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full"
+                                style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-mono, monospace)" }}
+                              >
+                                Personalizzata
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-white/30" style={{ fontFamily: "var(--font-mono, monospace)" }}>
+                            €{Number(item.price).toFixed(2)} cad.
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-black text-white text-base" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+                            €{(Number(item.price) * item.quantity).toFixed(2)}
+                          </p>
                         </div>
                       </div>
+
+                      {/* Quantity + Remove */}
+                      <div className="flex items-center justify-between mt-3">
+                        <div className="flex items-center bg-[#0a0a0a] rounded-xl p-1 gap-1">
+                          <button
+                            onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                            className="w-7 h-7 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-[#1a1a1a] transition-all text-sm font-bold"
+                          >
+                            −
+                          </button>
+                          <span
+                            className="text-sm font-black text-white w-8 text-center"
+                            style={{ fontFamily: "var(--font-display, sans-serif)" }}
+                          >
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                            className="w-7 h-7 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-[#1a1a1a] transition-all text-sm font-bold"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <button
+                          onClick={() => removeItem(item.id)}
+                          className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-red-400/60 hover:text-red-400 transition-colors"
+                          style={{ fontFamily: "var(--font-mono, monospace)" }}
+                        >
+                          <TrashIcon className="h-3.5 w-3.5" />
+                          Rimuovi
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Upsell suggestions */}
+            <div
+              className="rounded-2xl p-5"
+              style={{ border: "1px solid rgba(200,240,0,0.12)", background: "rgba(200,240,0,0.03)" }}
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <Zap size={12} className="text-[#c8f000]" />
+                <span
+                  className="text-[10px] uppercase tracking-widest text-[#c8f000] font-black"
+                  style={{ fontFamily: "var(--font-mono, monospace)" }}
+                >
+                  // Completa il Look
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {UPSELL_ITEMS.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="flex items-center gap-3 p-3 rounded-xl transition-all hover:border-[#c8f000]/30"
+                    style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
+                  >
+                    <div className="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[#1a1a1a]">
+                      <Image src={item.image} alt={item.name} fill className="object-cover" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold text-white line-clamp-1 leading-tight">{item.name}</p>
+                      <p className="text-xs text-[#c8f000] font-black mt-0.5">€{item.price.toFixed(2)}</p>
+                    </div>
+                    <ArrowRight size={12} className="text-white/30 flex-shrink-0" />
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* ── Order Summary Sidebar ── */}
+          <div className="lg:col-span-1">
+            <div
+              className="rounded-2xl overflow-hidden sticky top-24"
+              style={{ background: "#111", border: "1px solid rgba(255,255,255,0.08)" }}
+            >
+              {/* Header */}
+              <div className="px-6 py-5 border-b" style={{ borderColor: "rgba(255,255,255,0.06)", background: "rgba(200,240,0,0.04)" }}>
+                <span
+                  className="text-[10px] uppercase tracking-[4px] text-[#c8f000]"
+                  style={{ fontFamily: "var(--font-mono, monospace)" }}
+                >
+                  // Riepilogo Ordine
+                </span>
+              </div>
+
+              <div className="p-6 space-y-5">
+                {/* Price breakdown */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-white/50">Subtotale</span>
+                    <span className="font-bold text-white">€{total.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-white/50">Spedizione</span>
+                    <span className={`font-bold ${total >= FREE_SHIPPING_THRESHOLD ? "text-[#c8f000]" : "text-white"}`}>
+                      {total >= FREE_SHIPPING_THRESHOLD ? "Gratuita" : "€5.99"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-white/50">IVA inclusa</span>
+                    <span className="text-xs text-white/30" style={{ fontFamily: "var(--font-mono, monospace)" }}>✓</span>
+                  </div>
+                </div>
+
+                <div className="h-[1px]" style={{ background: "rgba(255,255,255,0.06)" }} />
+
+                {/* Total */}
+                <div className="flex justify-between items-center">
+                  <span
+                    className="text-sm font-black uppercase tracking-widest text-white"
+                    style={{ fontFamily: "var(--font-display, sans-serif)" }}
+                  >
+                    Totale
+                  </span>
+                  <span
+                    className="text-2xl font-black text-white"
+                    style={{ fontFamily: "var(--font-display, sans-serif)" }}
+                  >
+                    €{(total >= FREE_SHIPPING_THRESHOLD ? total : total + 5.99).toFixed(2)}
+                  </span>
+                </div>
+
+                {/* CTA */}
+                <button
+                  onClick={handleCheckout}
+                  disabled={isCheckingOut}
+                  className="w-full py-4 rounded-2xl font-black uppercase tracking-widest text-black transition-all hover:opacity-90 hover:-translate-y-0.5 disabled:opacity-50 flex items-center justify-center gap-2"
+                  style={{
+                    background: "#c8f000",
+                    fontFamily: "var(--font-display, sans-serif)",
+                    letterSpacing: "2px",
+                    boxShadow: "0 8px 32px rgba(200,240,0,0.25)",
+                    fontSize: "0.85rem",
+                  }}
+                >
+                  {isCheckingOut ? "Caricamento..." : (
+                    <>Procedi al Checkout <ArrowRight size={16} /></>
+                  )}
+                </button>
+
+                {/* Trust badges */}
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { icon: ShieldCheck, label: "Pag. Sicuro" },
+                    { icon: Truck, label: "Sped. Veloce" },
+                    { icon: RotateCcw, label: "Reso 30gg" },
+                    { icon: BadgeCheck, label: "Originale" },
+                  ].map(({ icon: Icon, label }) => (
+                    <div key={label} className="flex flex-col items-center gap-1.5 py-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                      <Icon size={16} className="text-[#c8f000]" />
+                      <span className="text-[9px] uppercase tracking-widest text-white/40 text-center" style={{ fontFamily: "var(--font-mono, monospace)" }}>
+                        {label}
+                      </span>
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-          </div>
 
-          {/* Order Summary */}
-          <div className="lg:col-span-1">
-            <Card className="sticky top-6 border-2 border-gray-100 shadow-lg overflow-hidden pt-0">
-              <CardHeader className="bg-gradient-to-r from-[#0a0a0a] to-[#1a2a3a] text-white p-6">
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <svg
-                    className="h-5 w-5 text-[#c8f000]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                    />
-                  </svg>
-                  Order Summary
-                </CardTitle>
-                <CardDescription className="text-gray-200">
-                  Review your items and total
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-6">
-                {/* Items Count */}
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-[#0a0a0a] uppercase tracking-wide">
-                    Items ({items.length})
-                  </h3>
-                  <Badge variant="secondary" className="bg-[#c8f000] text-white">
-                    {items.reduce((acc, item) => acc + item.quantity, 0)} items
-                  </Badge>
-                </div>
-
-                <Separator className="bg-[#1a1a1a] my-6" />
-
-                {/* Price Breakdown */}
-                <div className="space-y-3">
-                  <h3 className="text-sm font-semibold text-[#0a0a0a] uppercase tracking-wide">
-                    Price Breakdown
-                  </h3>
-                  
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center py-1">
-                      <span className="text-sm text-white/60">Subtotal</span>
-                      <span className="font-medium text-[#0a0a0a]">€{getTotal().toFixed(2)}</span>
-                    </div>
-
-                    <div className="flex justify-between items-center py-1">
-                      <span className="text-sm text-white/60">Shipping</span>
-                      <span className="font-medium text-green-600">Free</span>
-                    </div>
-                  </div>
-
-                  <Separator className="bg-gray-300 my-4" />
-
-                  {/* Total */}
-                  <div className="flex justify-between items-center py-2">
-                    <span className="text-lg font-bold text-[#0a0a0a]">Total</span>
-                    <div className="text-right">
-                      <span className="text-2xl font-bold text-[#0a0a0a]">€{getTotal().toFixed(2)}</span>
-                      <p className="text-xs text-white/50">Includes VAT</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Checkout Button */}
-                <Button
-                  onClick={handleCheckout}
-                  disabled={isCheckingOut}
-                  size="lg"
-                  className="w-full bg-[#c8f000] hover:bg-[#e0852e] text-white font-semibold mt-6"
-                >
-                  {isCheckingOut ? t("cart.processing") : t("cart.proceedToCheckout")}
-                </Button>
-
-                {/* Continue Shopping */}
-                <div className="text-center mt-4">
-                  <p className="text-sm text-white/50">
-                    {t("cart.or")}{" "}
-                    <Link
-                      href="/shop"
-                      className="font-medium text-[#c8f000] hover:text-[#e0852e] transition-colors"
-                    >
-                      {t("cart.continueShopping")}
-                    </Link>
+                {/* Payment methods */}
+                <div className="pt-2">
+                  <p className="text-[9px] uppercase tracking-widest text-white/20 text-center mb-2" style={{ fontFamily: "var(--font-mono, monospace)" }}>
+                    Metodi di Pagamento Accettati
                   </p>
-                </div>
-
-                {/* Trust Indicators */}
-                <div className="pt-6 mt-6 border-t border-gray-100">
-                  <div className="grid grid-cols-3 gap-3 text-center">
-                    <div className="flex flex-col items-center">
-                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mb-1">
-                        <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                      <span className="text-xs text-white/60">Secure</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mb-1">
-                        <svg className="w-4 h-4 text-[#c8f000]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                        </svg>
-                      </div>
-                      <span className="text-xs text-white/60">Fast</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mb-1">
-                        <svg className="w-4 h-4 text-[#c8f000]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                      </div>
-                      <span className="text-xs text-white/60">Quality</span>
-                    </div>
+                  <div className="flex justify-center gap-2 flex-wrap">
+                    {["VISA", "MC", "PayPal", "Apple Pay"].map((method) => (
+                      <span
+                        key={method}
+                        className="text-[8px] font-black px-2 py-1 rounded tracking-widest"
+                        style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-mono, monospace)", border: "1px solid rgba(255,255,255,0.06)" }}
+                      >
+                        {method}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+
+                {/* Stars social proof */}
+                <div className="flex items-center justify-center gap-2 py-2">
+                  <div className="flex">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star key={s} size={10} fill="#c8f000" color="#c8f000" />
+                    ))}
+                  </div>
+                  <span className="text-[9px] text-white/30" style={{ fontFamily: "var(--font-mono, monospace)" }}>
+                    10.000+ clienti soddisfatti
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

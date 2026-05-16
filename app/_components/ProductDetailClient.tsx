@@ -31,27 +31,18 @@ import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ProductSizeChart } from "@/app/_components/ProductSizeChart";
 import ProductReviews from "@/app/_components/ProductReviews";
 import DiscountRulesDisplay from "@/app/_components/DiscountRulesDisplay";
 import {
   ArrowRight,
-  Coins,
-  CreditCard,
   MinusIcon,
   PlusIcon,
-  ShieldCheck,
-  Truck,
 } from "lucide-react";
 import { useI18n } from "@/lib/hooks/useI18n";
 import FaqSection from "./FaqSection";
@@ -329,8 +320,35 @@ export default function ProductDetailClient({
     }
   };
 
+  const trustBadges = [
+    { icon: "🚚", label: "Spedizione Gratuita", sub: "Sopra €89" },
+    { icon: "↩️", label: "Reso 30gg", sub: "Gratuito" },
+    { icon: "🔒", label: "Pag. Sicuro", sub: "SSL 256-bit" },
+    { icon: "✅", label: "Originale", sub: "Garantito" },
+  ];
+
   return (
     <div className="bg-[#0a0a0a] font-munish">
+      {/* Sticky mobile CTA */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 p-3 border-t flex gap-2" style={{ background: "rgba(10,10,10,0.98)", borderColor: "rgba(200,240,0,0.15)", backdropFilter: "blur(16px)" }}>
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          className="flex-1 h-12 bg-[#111] text-white flex items-center justify-center gap-2 rounded-2xl text-sm font-black uppercase tracking-tight hover:bg-[#1a1a1a] transition-all active:scale-95 border"
+          style={{ borderColor: "rgba(255,255,255,0.08)" }}
+        >
+          + Carrello
+        </button>
+        <button
+          type="button"
+          onClick={handleBuyNow}
+          className="flex-1 h-12 text-black flex items-center justify-center rounded-2xl text-sm font-black uppercase tracking-tight hover:opacity-90 transition-all active:scale-[0.98] shadow-xl"
+          style={{ background: "#c8f000", boxShadow: "0 4px 20px rgba(200,240,0,0.3)", letterSpacing: "1px" }}
+        >
+          Compra Ora →
+        </button>
+      </div>
+
       {/* Product details section */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-18 pb-6 sm:pt-22 sm:pb-6">
         {/* Image gallery - takes 3 columns on large screens */}
@@ -908,42 +926,35 @@ export default function ProductDetailClient({
 
         {/* </div> */}
       </div>
-      <div className="">
-        {/* Trust Badges */}
-        <Card className="bg-[#111111] text-white font-light flex justify-center rounded-none border-none shadow-none">
-          <CardContent className="p-4 bg-[#111111] text-white font-light">
-            <div className="flex justify-around flex-col md:flex-row gap-4 items-center">
-              <div className="flex flex-row gap-1 items-center text-white font-light text-center">
-                <ShieldCheck strokeWidth={1} className="h-8 w-8 text-white" />
-                <div className=" flex flex-col text-start">
-                  <span className="mt-2 text-sm font-medium text-white">1 Anno</span>
-                  <span className="mt-2 text-sm font-medium text-white">Garanzia</span>
+      {/* Trust Badges — redesigned */}
+      <div className="border-y" style={{ borderColor: "rgba(255,255,255,0.06)", background: "#0d0d0d" }}>
+        <div className="max-w-5xl mx-auto px-4 py-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {trustBadges.map(({ icon, label, sub }) => (
+              <div
+                key={label}
+                className="flex items-center gap-3 p-4 rounded-2xl group transition-all duration-300 hover:border-[#c8f000]/20"
+                style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                <span className="text-2xl">{icon}</span>
+                <div>
+                  <p
+                    className="text-xs font-black uppercase text-white leading-tight"
+                    style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "0.5px" }}
+                  >
+                    {label}
+                  </p>
+                  <p
+                    className="text-[10px] mt-0.5"
+                    style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.5)" }}
+                  >
+                    {sub}
+                  </p>
                 </div>
               </div>
-              <div className="flex flex-row gap-1 items-center text-white font-light text-center">
-                <Truck strokeWidth={1} className="h-8 w-8 text-white" />
-                <div className=" flex flex-col text-start">
-                  <span className="mt-2 text-sm font-medium text-white">Spedizione Gratuita</span>
-                  <span className="mt-2 text-sm font-medium text-white">Express</span>
-                </div>
-              </div>
-              <div className="flex flex-row gap-1 items-center text-white font-light text-center">
-                <Coins strokeWidth={1} className="h-8 w-8 text-white" />
-                <div className=" flex flex-col text-start">
-                  <span className="mt-2 text-sm font-medium text-white">7 Giorni</span>
-                  <span className="mt-2 text-sm font-medium text-white">Sostituzione</span>
-                </div>
-              </div>
-              <div className="flex flex-row gap-1 items-center text-white font-light text-center">
-                <CreditCard strokeWidth={1} className="h-8 w-8 text-white" />
-                <div className=" flex flex-col text-start">
-                  <span className="mt-2 text-sm font-medium text-white">100% Sicuri</span>
-                  <span className="mt-2 text-sm font-medium text-white">Pagamenti</span>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            ))}
+          </div>
+        </div>
       </div>
       <Tabs defaultValue="ratings" className="md:w-full  px-0  md:max-w-5xl mx-auto">
         <TabsList className="md:w-full w-[400px] gap-0 px-0 justify-between bg-[#0a0a0a] border-b  h-14 rounded-none shadow-none pb-0 ">

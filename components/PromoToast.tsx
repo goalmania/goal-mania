@@ -5,8 +5,9 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { X, Clock, Star, Zap, ShoppingBag } from "lucide-react";
+
+const TOAST_DURATION = 15 * 60; // 15 minutes countdown in seconds
 
 export default function PromoToast() {
   const pathname = usePathname();
@@ -17,17 +18,13 @@ export default function PromoToast() {
     pathname?.startsWith('/checkout/');
 
   const [isVisible, setIsVisible] = useState(false);
-  const [featuredProductImage, setFeaturedProductImage] = useState<string>(
-    "/images/jersey1.webp"
-  );
+  const [featuredProductImage, setFeaturedProductImage] = useState<string>("/images/jersey1.webp");
   const [altText, setAltText] = useState<string>("Prodotto in offerta");
-  const [productTitle, setProductTitle] = useState<string>(
-    "Maglie da Calcio - Offerta valida 24/7"
-  );
+  const [productTitle, setProductTitle] = useState<string>("Maglie da Calcio");
+  const [productId, setProductId] = useState<string | null>(null);
   const [reviewCount, setReviewCount] = useState<number>(2500);
   const [averageRating, setAverageRating] = useState<number>(4.9);
-
-  
+  const [countdown, setCountdown] = useState(TOAST_DURATION);
 
   useEffect(() => {
     async function fetchFeaturedProducts() {
@@ -36,54 +33,29 @@ export default function PromoToast() {
         if (!response.ok) throw new Error("Failed to fetch");
         const data = await response.json();
 
-        let products = [];
-        if (
-          data.products &&
-          Array.isArray(data.products) &&
-          data.products.length > 0
-        ) {
+        let products: any[] = [];
+        if (data.products && Array.isArray(data.products) && data.products.length > 0) {
           products = data.products;
         } else if (Array.isArray(data) && data.length > 0) {
           products = data;
         }
 
-        let productData = null;
         if (products.length > 0) {
-          productData = products[Math.floor(Math.random() * products.length)];
-        }
-
-        if (productData) {
-          setFeaturedProductImage(
-            productData.images?.[0] || "/images/jersey1.webp"
-          );
+          const productData = products[Math.floor(Math.random() * products.length)];
+          setFeaturedProductImage(productData.images?.[0] || "/images/jersey1.webp");
           setAltText(productData.title || "Prodotto in offerta");
-          setProductTitle(
-            productData.title || "Maglie da Calcio - Offerta valida 24/7"
-          );
+          setProductTitle(productData.title || "Maglie da Calcio");
+          setProductId(productData._id || null);
 
-          // Set review data
           const reviews = productData.reviews || [];
-          setReviewCount(reviews.length || 2500);
-
-          // Calculate average rating
+          setReviewCount(reviews.length > 0 ? reviews.length : 2500);
           if (reviews.length > 0) {
-            const totalRating = reviews.reduce(
-              (sum: number, review: any) => sum + (review.rating || 0),
-              0
-            );
-            const avgRating = totalRating / reviews.length;
-            setAverageRating(Number(avgRating.toFixed(1)));
-          } else {
-            setAverageRating(4.9);
+            const avg = reviews.reduce((s: number, r: any) => s + (r.rating || 0), 0) / reviews.length;
+            setAverageRating(Number(avg.toFixed(1)));
           }
         }
-      } catch (error) {
-        console.error("❌ Error fetching products:", error);
-        setFeaturedProductImage("/images/jersey1.webp");
-        setAltText("Prodotto in offerta");
-        setProductTitle("Maglie da Calcio - Offerta valida 24/7");
-        setReviewCount(2500);
-        setAverageRating(4.9);
+      } catch {
+        // fallback already set
       }
     }
     fetchFeaturedProducts();
@@ -91,29 +63,38 @@ export default function PromoToast() {
 
   useEffect(() => {
     if (localStorage.getItem('promoToastDismissed') === 'true') return;
-    const timer = setTimeout(() => setIsVisible(true), 2000);
+    const timer = setTimeout(() => setIsVisible(true), 3000);
     return () => clearTimeout(timer);
   }, []);
 
+  // Countdown timer
   useEffect(() => {
+    if (!isVisible) return;
+    const id = setInterval(() => {
+      setCountdown((c) => Math.max(0, c - 1));
+    }, 1000);
+    return () => clearInterval(id);
   }, [isVisible]);
 
   const handleDismiss = () => {
     setIsVisible(false);
     localStorage.setItem("promoToastDismissed", "true");
-
     setTimeout(() => {
       localStorage.removeItem("promoToastDismissed");
     }, 12 * 60 * 60 * 1000);
   };
 
-  // Helper function to format review count
-  const formatReviewCount = (count: number) => {
-    if (count >= 1000) {
-      return `${(count / 1000).toFixed(1)}k`;
-    }
-    return count.toString();
+  const formatTime = (secs: number) => {
+    const m = Math.floor(secs / 60).toString().padStart(2, "0");
+    const s = (secs % 60).toString().padStart(2, "0");
+    return { m, s };
   };
+
+  const formatCount = (count: number) =>
+    count >= 1000 ? `${(count / 1000).toFixed(1)}k` : String(count);
+
+  const { m, s } = formatTime(countdown);
+  const productHref = productId ? `/products/${productId}` : "/shop";
 
   if (shouldSuppress) return null;
 
@@ -121,101 +102,122 @@ export default function PromoToast() {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.3 }}
+          initial={{ opacity: 0, y: 80, scale: 0.85 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
-          className="fixed bottom-6 sm:bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-[9999] w-[92%] sm:w-[85%] md:w-[600px] lg:w-[700px] max-w-[95vw]"
+          exit={{ opacity: 0, y: 40, scale: 0.9, transition: { duration: 0.2 } }}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] w-[92vw] max-w-[480px]"
         >
-          <div className="relative bg-[#0a0a0a] overflow-hidden rounded-[20px] border border-[#F1F2F9] px-[20px] py-[10px] sm:p-[20px_25px] shadow-[0px_24px_48px_rgba(107,108,126,0.08),0px_12px_24px_rgba(107,108,126,0.12)]">
+          <div
+            className="relative overflow-hidden rounded-2xl shadow-2xl"
+            style={{
+              background: "#0a0a0a",
+              border: "1px solid rgba(200,240,0,0.3)",
+              boxShadow: "0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,240,0,0.15)",
+            }}
+          >
+            {/* Lime accent bar at top */}
+            <div className="h-[3px] w-full" style={{ background: "linear-gradient(90deg, #c8f000, rgba(200,240,0,0.3))" }} />
+
             {/* Close button */}
             <button
               onClick={handleDismiss}
-              className="absolute top-3 left-3 z-10 w-7 h-7 rounded-full bg-[#111111] hover:bg-[#111111]/90 flex items-center justify-center transition-colors"
+              className="absolute top-3 right-3 z-20 w-7 h-7 rounded-full flex items-center justify-center transition-all hover:bg-white/10"
+              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}
               aria-label="Chiudi"
             >
-              <X className="h-3.5 w-3.5 text-white" />
+              <X className="h-3.5 w-3.5 text-white/60" />
             </button>
 
-            {/* Rectangle-shaped horizontal layout - reduced vertical padding on mobile */}
-            <div className="flex flex-row items-center justify-center gap-[15px] sm:gap-[20px] md:gap-[25px] lg:gap-[30px] py-0 sm:py-4 min-h-[180px] sm:min-h-[200px] md:min-h-[220px] lg:h-[240px]">
-              {/* Left Side Content */}
-              <div className="flex flex-col justify-center items-center text-center w-[50%] sm:w-[48%] md:w-[240px] lg:w-[280px]">
-                {/* Logo - proportional sizing */}
-                <div className="w-[50px] h-[55px] sm:w-[55px] sm:h-[60px] md:w-[60px] md:h-[65px] lg:w-[65px] lg:h-[70px] relative mb-3 sm:mb-3 md:mb-3.5 lg:mb-4">
-                  <Image
-                    src="/logos/pop_up_logo.svg"
-                    alt="Logo Goal Mania"
-                    fill
-                    className="object-contain"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = "/logos/pop_up_logo.svg";
-                    }}
-                    unoptimized
-                  />
-                </div>
-
-                {/* Text Content - consistent spacing */}
-                <div className="space-y-1.5 mb-3 sm:mb-3 md:mb-3.5 lg:mb-4">
-                  <h2 className="text-[16px] sm:text-[17px] md:text-[19px] lg:text-[20px] font-bold text-[#170F49] leading-tight">
-                    Offerta a Tempo
-                    <br />
-                    Limitato
-                  </h2>
-                  <p className="text-[11px] sm:text-[11.5px] md:text-[12.5px] lg:text-[13px] text-[#6F6C8F] line-clamp-1 px-1 sm:px-0">
-                    {productTitle}
-                  </p>
-                </div>
-
-                {/* Price + Button - vertical on mobile, horizontal on desktop */}
-                <div className="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2.5 md:gap-3 lg:gap-3 mb-3 sm:mb-3 md:mb-3.5 lg:mb-4 w-full">
-                  <span className="text-[14px] sm:text-[16px] md:text-[17px] lg:text-[18px] font-bold text-[#170F49] whitespace-nowrap">
-                    a soli 30€
-                  </span>
-                  <Link href="/shop" className="w-full sm:w-auto">
-                    <button
-                      onClick={handleDismiss}
-                      className="bg-[#c8f000] hover:bg-[#c8f000]/90 text-white text-[10px] sm:text-[11.5px] md:text-[12.5px] lg:text-[13px] font-semibold px-3 py-1.5 sm:px-4.5 sm:py-1.5 md:px-5 md:py-1.5 lg:px-6 lg:py-2 rounded-full shadow-lg hover:shadow-xl transition-all whitespace-nowrap w-full sm:w-auto"
-                    >
-                      Compra Ora →
-                    </button>
-                  </Link>
-                </div>
-
-                {/* Review Content - consistent spacing */}
-                <div className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] sm:text-[10.5px] md:text-[11px] font-medium text-[#6F6C8F]">
-                    {formatReviewCount(reviewCount)} recensioni {averageRating}
-                  </span>
-                  <div className="flex items-center gap-0.5">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <svg
-                        key={star}
-                        className="fill-[#FFD700] w-[10px] h-[10px] sm:w-[10.5px] sm:h-[10.5px] md:w-[11px] md:h-[11px] lg:w-[12px] lg:h-[12px]"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-                      </svg>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Side - Product Image */}
-              <div className="relative flex-shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-3 md:p-3.5 lg:p-4 shadow-inner w-[48%] sm:w-[150px] md:w-[175px] lg:w-[200px] h-[150px] sm:h-[165px] md:h-[180px] lg:h-[200px]">
-                <div className="relative w-full h-full">
+            <div className="flex items-center gap-4 p-4">
+              {/* Product image */}
+              <Link href={productHref} onClick={handleDismiss} className="flex-shrink-0">
+                <div
+                  className="relative w-24 h-24 rounded-xl overflow-hidden"
+                  style={{ background: "#f5f5f5" }}
+                >
                   <Image
                     src={featuredProductImage}
                     alt={altText}
                     fill
-                    className="object-contain hover:scale-105 transition-transform duration-300"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = "/images/jersey1.webp";
-                    }}
+                    className="object-contain p-1 hover:scale-105 transition-transform duration-300"
                     unoptimized
-                    priority
                   />
+                </div>
+              </Link>
+
+              {/* Content */}
+              <div className="flex-1 min-w-0">
+                {/* Label */}
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <Zap size={11} className="text-[#c8f000]" />
+                  <span
+                    className="text-[9px] font-black uppercase tracking-[3px] text-[#c8f000]"
+                    style={{ fontFamily: "var(--font-mono, monospace)" }}
+                  >
+                    Offerta Limitata
+                  </span>
+                </div>
+
+                {/* Title */}
+                <p
+                  className="font-black uppercase text-white text-sm leading-tight mb-2 line-clamp-2"
+                  style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "0.5px" }}
+                >
+                  {productTitle}
+                </p>
+
+                {/* Stars */}
+                <div className="flex items-center gap-1.5 mb-2">
+                  <div className="flex">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        size={10}
+                        fill={star <= Math.round(averageRating) ? "#c8f000" : "none"}
+                        color={star <= Math.round(averageRating) ? "#c8f000" : "#555"}
+                      />
+                    ))}
+                  </div>
+                  <span
+                    className="text-[9px] text-white/30"
+                    style={{ fontFamily: "var(--font-mono, monospace)" }}
+                  >
+                    {formatCount(reviewCount)} recensioni
+                  </span>
+                </div>
+
+                {/* Countdown + CTA */}
+                <div className="flex items-center gap-2">
+                  {/* Countdown */}
+                  <div className="flex items-center gap-1">
+                    <Clock size={10} className="text-red-400 flex-shrink-0" />
+                    <div className="flex items-center gap-0.5">
+                      <span
+                        className="text-xs font-black text-red-400 tabular-nums"
+                        style={{ fontFamily: "var(--font-mono, monospace)" }}
+                      >
+                        {m}:{s}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* CTA */}
+                  <Link href={productHref} onClick={handleDismiss} className="flex-1">
+                    <button
+                      className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl font-black uppercase text-black transition-all hover:opacity-90 active:scale-95"
+                      style={{
+                        background: "#c8f000",
+                        fontFamily: "var(--font-display, sans-serif)",
+                        fontSize: "0.7rem",
+                        letterSpacing: "1.5px",
+                        boxShadow: "0 4px 16px rgba(200,240,0,0.25)",
+                      }}
+                    >
+                      <ShoppingBag size={11} />
+                      Compra Ora
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>

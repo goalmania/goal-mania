@@ -32,24 +32,24 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import NewsBanner from "@/components/news/NewsBanner";
 import PopularNewsGrid from "@/components/news/PopularNewsGrid";
+import NewsCategoryTabs from "@/app/_components/NewsCategoryTabs";
 
 // Enable ISR for news listing
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "News",
-  description: "Latest football news and updates from Goal Mania",
+  title: "News | Goal Mania",
+  description: "Latest football news, Serie A updates, transfers and match analysis from Goal Mania",
 };
 
 async function getNewsArticles(): Promise<{
   featured: NewsArticle[];
   regular: NewsArticle[];
+  all: NewsArticle[];
 }> {
   try {
     await connectDB();
 
-    // Fetch featured articles - sorted by publishedAt DESC (newest first)
-    // Mostra articoli di tutte le categorie nella pagina news principale
     const featuredArticles = await Article.find({
       status: "published",
       featured: true,
@@ -58,28 +58,24 @@ async function getNewsArticles(): Promise<{
       .limit(10)
       .lean();
 
-    // Fetch regular articles - sorted by publishedAt DESC (newest first)
     const regularArticles = await Article.find({
       status: "published",
       featured: { $ne: true },
     })
       .sort({ publishedAt: -1 })
-      .limit(12)
+      .limit(20)
       .lean();
 
-    // ✅ Serialize MongoDB documents to plain objects
-    const serialize = (articles: any[]) =>
-      JSON.parse(JSON.stringify(articles));
+    const serialize = (articles: any[]) => JSON.parse(JSON.stringify(articles));
+    const normalize = (a: any): NewsArticle => ({ ...a, tags: a.tags ?? [] });
 
-    // ✅ Normalize to match NewsArticle (ensure `tags` exists)
-    const normalize = (a: any): NewsArticle => ({
-      ...a,
-      tags: a.tags ?? [],
-    });
+    const featured = serialize(featuredArticles).map(normalize);
+    const regular = serialize(regularArticles).map(normalize);
 
     return {
-      featured: serialize(featuredArticles).map(normalize),
-      regular: serialize(regularArticles).map(normalize),
+      featured,
+      regular,
+      all: [...featured, ...regular],
     };
   } catch (error) {
     console.error("Failed to fetch news articles:", {
@@ -92,12 +88,13 @@ async function getNewsArticles(): Promise<{
 
 export default async function NewsPage() {
   let allArticles: NewsArticle[] = [];
+  let featuredArticles: NewsArticle[] = [];
   let errorMessage: string | null = null;
 
   try {
-    const { featured, regular } = await getNewsArticles();
-    // ✅ Articles are already serialized, just combine them
-    allArticles = [...featured, ...regular];
+    const data = await getNewsArticles();
+    allArticles = data.all;
+    featuredArticles = data.featured;
   } catch (error) {
     errorMessage = (error as Error).message;
   }
@@ -109,168 +106,144 @@ export default async function NewsPage() {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <div className="min-h-screen flex flex-col" style={{ background: "#0a0a0a", color: "#f5f5f5" }}>
-        {/* ✅ Pass serialized articles to Client Component */}
+        {/* Hero banner */}
         <NewsBanner articles={allArticles} imageUrl={MobilebannerData.imageUrl} />
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 flex-1 items-start">
-          {/* Breadcrumb */}
-          <div className="mb-6 hidden">
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/">Home</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>News</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
 
-          <div className="relative max-w-lg mb-8">
-            <div className="flex items-center gap-3 mb-1">
-              <span className="w-5 h-[2px] rounded-full inline-block" style={{ background: "#c8f000" }} />
-              <span className="text-xs uppercase tracking-[4px]" style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}>
-                // In Primo Piano
-              </span>
-            </div>
-            <div className="pt-4 border-t" style={{ borderColor: "rgba(200,240,0,0.15)" }}></div>
-          </div>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 flex-1">
 
-          {/* Render logic based on article count */}
           {errorMessage ? (
             <Alert variant="destructive" className="max-w-2xl mx-auto">
-              <AlertDescription className="text-center">
-                {errorMessage}
-              </AlertDescription>
+              <AlertDescription className="text-center">{errorMessage}</AlertDescription>
             </Alert>
           ) : allArticles.length > 0 ? (
             <>
-              {/* First Section with Sidebar */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+              {/* ── Section header ── */}
+              <div className="flex items-center gap-3 mb-6">
+                <span className="w-5 h-[2px] rounded-full inline-block" style={{ background: "#c8f000" }} />
+                <span
+                  className="text-xs uppercase tracking-[4px]"
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
+                >
+                  // In Primo Piano
+                </span>
+              </div>
+
+              {/* ── Category tabs (client component) ── */}
+              <NewsCategoryTabs articles={allArticles} />
+
+              {/* ── First bento section with sidebar ── */}
+              <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
                 <div className="lg:col-span-2">
                   <BentoSection articles={allArticles.slice(0, 4)} />
-                  <div className="mt-4 text-right">
-                    <Link
-                      href="/news"
-                      className="text-sm font-semibold tracking-wide text-white hover:text-[#c8f000] uppercase transition-colors duration-200"
-                    >
-                      See all
-                    </Link>
-                  </div>
                 </div>
 
                 {/* Sidebar */}
-                <div className="lg:col-span-1 space-y-8">
-                  {/* Follow Us Section */}
-                  <div className="p-6 ">
-                    <div className="relative mb-6">
-                      <div className="absolute slanted-card -top-6 left-0 bg-[#1a1a1a] rounded-md text-white font-semibold py-2 px-6">
-                        Follow Us
-                      </div>
-                      <div className="pt-8 border-t-2 border-[rgba(255,255,255,0.06)]"></div>
+                <div className="lg:col-span-1 space-y-6">
+                  {/* Follow Us */}
+                  <div className="rounded-2xl p-5" style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}>
+                    <div
+                      className="text-[10px] uppercase tracking-[3px] mb-4 flex items-center gap-2"
+                      style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
+                    >
+                      <span className="w-3 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
+                      Seguici
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <a
-                        href="https://facebook.com/goalmania"
-                        className="flex items-center justify-center p-3 bg-[#1a1a1a] text-white/80 rounded-lg hover:bg-[#222] transition-colors duration-200"
-                      >
-                        <Facebook className="w-5 h-5 mr-2" />
-                        <span className="font-medium">Facebook</span>
-                      </a>
-                      <a
-                        href="https://twitter.com/goalmania"
-                        className="flex items-center justify-center p-3 bg-[#1a1a1a] text-white/80 rounded-lg hover:bg-[#222] transition-colors duration-200"
-                      >
-                        <Twitter className="w-5 h-5 mr-2" />
-                        <span className="font-medium">Twitter</span>
-                      </a>
-                      <a
-                        href="https://www.instagram.com/goalmania.it"
-                        className="flex items-center justify-center p-3 bg-[#1a1a1a] text-white/80 rounded-lg hover:bg-[#222] transition-colors duration-200"
-                      >
-                        <Instagram className="w-5 h-5 mr-2" />
-                        <span className="font-medium">Instagram</span>
-                      </a>
-                      <a
-                        href=":https://www.tiktok.com/@goalmania.it"
-                        className="flex items-center justify-center p-3 bg-[#1a1a1a] text-white/80 rounded-lg hover:bg-[#222] transition-colors duration-200"
-                      >
-                        <IconBrandTiktok className="w-5 h-5 mr-2" />
-                        <span className="font-medium">Tiktok</span>
-                      </a>
-                      <a
-                        href="https://linkedin.com/company/goalmania"
-                        className="flex items-center justify-center p-3 bg-[#1a1a1a] text-white/80 rounded-lg hover:bg-[#222] transition-colors duration-200"
-                      >
-                        <Linkedin className="w-5 h-5 mr-2" />
-                        <span className="font-medium">LinkedIn</span>
-                      </a>
-                      <a
-                        href="https://pinterest.com/goalmania"
-                        className="flex items-center justify-center p-3 bg-[#1a1a1a] text-white/80 rounded-lg hover:bg-[#222] transition-colors duration-200"
-                      >
-                        <IconBrandPinterest className="w-5 h-5 mr-2" />
-                        <span className="font-medium">Pinterest</span>
-                      </a>
+                    <div className="grid grid-cols-2 gap-3">
+                      {[
+                        { href: "https://facebook.com/goalmania", icon: <Facebook className="w-4 h-4" />, name: "Facebook" },
+                        { href: "https://twitter.com/goalmania", icon: <Twitter className="w-4 h-4" />, name: "Twitter" },
+                        { href: "https://www.instagram.com/goalmania.it", icon: <Instagram className="w-4 h-4" />, name: "Instagram" },
+                        { href: "https://www.tiktok.com/@goalmania.it", icon: <IconBrandTiktok className="w-4 h-4" />, name: "Tiktok" },
+                      ].map((s) => (
+                        <a
+                          key={s.name}
+                          href={s.href}
+                          className="flex items-center gap-2 p-2.5 rounded-xl text-white/60 hover:text-[#c8f000] hover:border-[#c8f000]/20 transition-all text-xs font-bold"
+                          style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+                        >
+                          {s.icon}
+                          <span style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1px", textTransform: "uppercase", fontSize: "0.7rem" }}>
+                            {s.name}
+                          </span>
+                        </a>
+                      ))}
                     </div>
                   </div>
 
-                  {/* Newsletter Section */}
-                  <div className="bg-[#1a1a1a] text-white p-6 rounded-lg shadow-lg text-center">
-                    <div className="relative inline-block mb-4">
-                      <Mail className="w-16 h-16 text-white/40 opacity-20" />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <h3 className="text-xl font-semibold whitespace-nowrap">
-                          Newsletter Giornaliera
-                        </h3>
+                  {/* Newsletter */}
+                  <div
+                    className="rounded-2xl p-5 text-center"
+                    style={{
+                      background: "linear-gradient(135deg, #111 0%, rgba(200,240,0,0.04) 100%)",
+                      border: "1px solid rgba(200,240,0,0.15)",
+                    }}
+                  >
+                    <div
+                      className="text-[10px] uppercase tracking-[3px] mb-3 flex items-center justify-center gap-2"
+                      style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
+                    >
+                      <Mail size={10} />
+                      Newsletter Giornaliera
+                    </div>
+                    <p className="text-xs text-white/40 mb-4 leading-relaxed">
+                      Ricevi tutte le notizie più importanti dal mondo del calcio
+                    </p>
+                    <Link href="/shop">
+                      <button
+                        className="flex items-center mx-auto justify-center gap-2 px-5 py-2.5 rounded-full font-black text-black uppercase text-xs tracking-wider transition-all hover:opacity-90"
+                        style={{ background: "#c8f000", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1.5px" }}
+                      >
+                        Iscriviti ora
+                        <MoveRight className="w-4 h-4" />
+                      </button>
+                    </Link>
+                  </div>
+
+                  {/* Featured article mini-list */}
+                  {featuredArticles.slice(4, 7).length > 0 && (
+                    <div className="rounded-2xl p-5" style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}>
+                      <div
+                        className="text-[10px] uppercase tracking-[3px] mb-4 flex items-center gap-2"
+                        style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
+                      >
+                        <span className="w-3 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
+                        Più Letti
+                      </div>
+                      <div className="flex flex-col gap-4">
+                        {featuredArticles.slice(4, 7).map((art, i) => (
+                          <Link
+                            key={art.slug}
+                            href={`/news/${art.slug}`}
+                            className="flex gap-3 group"
+                          >
+                            <span
+                              className="text-2xl font-black leading-none flex-shrink-0 w-6"
+                              style={{ fontFamily: "var(--font-display, sans-serif)", color: "rgba(200,240,0,0.2)" }}
+                            >
+                              {String(i + 1).padStart(2, "0")}
+                            </span>
+                            <h4
+                              className="text-xs font-bold uppercase leading-tight text-white/70 group-hover:text-[#c8f000] transition-colors line-clamp-2"
+                              style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "0.3px" }}
+                            >
+                              {art.title}
+                            </h4>
+                          </Link>
+                        ))}
                       </div>
                     </div>
-                    <p className="text-white/30 mb-6 text-sm">
-                      Ricevi tutte le notizie più importanti dal mondo del
-                      calcio
-                    </p>
-                    <form
-                      action="/api/newsletter"
-                      method="POST"
-                      className="flex w-full"
-                    >
-                      <button
-                        type="submit"
-                        className="flex items-center mx-auto justify-center bg-[#c8f000] hover:bg-[#c8f000] text-white font-medium py-3 px-4 rounded-lg shadow-md transition-colors duration-200"
-                      >
-                        Inserisci la tua e-mail
-                        <MoveRight className="w-5 h-5" />
-                      </button>
-                    </form>
-                  </div>
+                  )}
                 </div>
               </div>
 
-              {/* Remaining Sections */}
-              <div className="flex flex-col gap-16">
-                {Array.from({
-                  length: Math.ceil((allArticles.length - 4) / 4),
-                }).map((_, i) => {
+              {/* ── Remaining sections ── */}
+              <div className="flex flex-col gap-12">
+                {Array.from({ length: Math.ceil((allArticles.length - 4) / 4) }).map((_, i) => {
                   const start = 4 + i * 4;
-                  const end = start + 4;
-                  const sectionArticles = allArticles.slice(start, end);
-
+                  const sectionArticles = allArticles.slice(start, start + 4);
+                  if (!sectionArticles.length) return null;
                   return (
-                    <div key={i}>
-                      <BentoSection
-                        articles={sectionArticles}
-                        reverse={i % 2 === 1}
-                      />
-                      <div className="mt-4 text-right">
-                        {/* <Link
-                          href="/news"
-                          className="text-sm font-semibold tracking-wide text-white hover:text-[#c8f000] uppercase transition-colors duration-200"
-                        >
-                          See all
-                        </Link> */}
-                      </div>
-                    </div>
+                    <BentoSection key={i} articles={sectionArticles} reverse={i % 2 === 1} />
                   );
                 })}
               </div>
@@ -278,19 +251,21 @@ export default async function NewsPage() {
           ) : (
             <Alert variant="destructive" className="max-w-2xl mx-auto">
               <AlertDescription className="text-center">
-                No news articles found.
+                Nessun articolo trovato.
               </AlertDescription>
             </Alert>
           )}
         </div>
 
+        {/* Popular grid */}
         <div className="py-8 bg-[#0a0a0a]">
           <PopularNewsGrid />
         </div>
 
+        {/* Promo banner */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex w-full max-w-4xl mx-auto h-[230px] lg:h-[250px] bg-[#1a1a1a] rounded-2xl overflow-hidden shadow-lg">
-            <div className="w-[30%] flex-shrink-0">
+          <div className="flex w-full max-w-4xl mx-auto rounded-2xl overflow-hidden" style={{ background: "#111", border: "1px solid rgba(200,240,0,0.15)" }}>
+            <div className="w-[28%] flex-shrink-0">
               <Image
                 src="/images/recentUpdate/banner-ads.png"
                 alt="Promotional product"
@@ -299,19 +274,29 @@ export default async function NewsPage() {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="w-[70%] p-6 flex flex-col md:flex-row justify-between items-center text-white">
+            <div className="flex-1 p-6 flex flex-col md:flex-row justify-between items-center gap-4">
               <div>
-                <p className="text-red-500 text-sm font-semibold mb-1">
-                  30% Off
-                </p>
-                <h2 className="text-xl lg:text-2xl font-bold leading-tight mb-4">
+                <span
+                  className="text-[9px] uppercase tracking-[3px] text-[#c8f000]"
+                  style={{ fontFamily: "var(--font-mono, monospace)" }}
+                >
+                  // Offerta Speciale
+                </span>
+                <h2
+                  className="text-xl lg:text-2xl font-black uppercase text-white leading-tight mt-1"
+                  style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "0.5px" }}
+                >
                   Compra la Nuova Maglia Ufficiale
                 </h2>
+                <p className="text-sm text-white/40 mt-1">Spedizione gratuita · Originale Garantito</p>
               </div>
               <Link href="/shop">
-                <button className="inline-flex items-center justify-center bg-[#c8f000] hover:bg-[#c8f000] text-white font-medium py-2 px-4 rounded-xl shadow-md transition-colors duration-200">
-                  Buy Now
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                <button
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-black uppercase text-black text-sm transition-all hover:opacity-90 whitespace-nowrap"
+                  style={{ background: "#c8f000", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1.5px", boxShadow: "0 4px 20px rgba(200,240,0,0.2)" }}
+                >
+                  Vai allo Shop
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </Link>
             </div>

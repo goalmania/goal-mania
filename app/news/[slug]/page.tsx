@@ -306,42 +306,102 @@ export default async function ArticlePage({
 
             {/* ── Article Footer ── */}
             <div
-              className="mt-12 pt-6 border-t flex items-center justify-between gap-4 flex-wrap"
+              className="mt-12 pt-8 border-t"
               style={{ borderColor: "rgba(255,255,255,0.08)" }}
             >
-              <div className="flex items-center gap-4">
+              {/* Author card */}
+              <div
+                className="flex items-center gap-4 p-5 rounded-2xl mb-6"
+                style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
+              >
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center font-black text-white text-sm"
+                  className="w-12 h-12 rounded-full flex items-center justify-center font-black text-black text-lg flex-shrink-0"
                   style={{ background: "#c8f000", fontFamily: "var(--font-display, sans-serif)" }}
                 >
                   {article.author?.[0]?.toUpperCase() || "GM"}
                 </div>
-                <div>
+                <div className="flex-1">
                   <div
-                    className="text-xs uppercase tracking-widest mb-0.5"
-                    style={{ fontFamily: "var(--font-mono, monospace)", color: "#888" }}
+                    className="text-[9px] uppercase tracking-[3px] mb-0.5"
+                    style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
                   >
-                    // Autore
+                    // Autore dell'articolo
                   </div>
                   <div
-                    className="text-white font-bold uppercase tracking-wide"
-                    style={{ fontFamily: "var(--font-display, sans-serif)" }}
+                    className="text-white font-black uppercase tracking-wide"
+                    style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "1.1rem" }}
                   >
                     {article.author}
                   </div>
+                  <p className="text-xs text-white/30 mt-0.5">Redazione Goal Mania</p>
                 </div>
               </div>
-              <Link
-                href="/news"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full text-white font-bold text-sm uppercase tracking-wider transition-all hover:opacity-90 hover:-translate-y-0.5"
-                style={{
-                  background: "#c8f000",
-                  fontFamily: "var(--font-display, sans-serif)",
-                  letterSpacing: "2px",
-                }}
-              >
-                ← Tutte le News
-              </Link>
+
+              {/* Mobile share buttons */}
+              <div className="lg:hidden mb-6">
+                <div
+                  className="text-[9px] uppercase tracking-[3px] mb-3 flex items-center gap-2"
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
+                >
+                  <span className="w-3 h-[2px] rounded-full inline-block" style={{ background: "#c8f000" }} />
+                  Condividi questo articolo
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    {
+                      label: "Twitter / X",
+                      href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(articleUrl)}`,
+                    },
+                    {
+                      label: "Facebook",
+                      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(articleUrl)}`,
+                    },
+                    {
+                      label: "WhatsApp",
+                      href: `https://wa.me/?text=${encodeURIComponent(article.title + " " + articleUrl)}`,
+                    },
+                  ].map((s) => (
+                    <a
+                      key={s.label}
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all hover:border-[#c8f000]/30 hover:text-[#c8f000]"
+                      style={{
+                        fontFamily: "var(--font-display, sans-serif)",
+                        letterSpacing: "1px",
+                        background: "rgba(255,255,255,0.03)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        color: "rgba(255,255,255,0.6)",
+                      }}
+                    >
+                      {s.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-4 flex-wrap">
+                <Link
+                  href="/news"
+                  className="flex items-center gap-2 text-xs uppercase tracking-widest transition-colors hover:text-[#c8f000]"
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "#888" }}
+                >
+                  ← Tutte le News
+                </Link>
+                <Link
+                  href="/news"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-full text-black font-bold text-sm uppercase tracking-wider transition-all hover:opacity-90 hover:-translate-y-0.5"
+                  style={{
+                    background: "#c8f000",
+                    fontFamily: "var(--font-display, sans-serif)",
+                    letterSpacing: "2px",
+                    boxShadow: "0 4px 20px rgba(200,240,0,0.2)",
+                  }}
+                >
+                  Più News →
+                </Link>
+              </div>
             </div>
           </main>
 
