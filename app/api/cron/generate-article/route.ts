@@ -279,14 +279,30 @@ Regole rigide:
 - content: MINIMO 800 parole, struttura giornalistica professionale
 - Non inventare fatti non presenti nelle notizie fornite`;
 
-  const response = await axios.post(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-    {
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.75, maxOutputTokens: 3000 },
-    },
-    { headers: { "content-type": "application/json" }, timeout: 60000 }
-  );
+  // Retry con backoff per gestire 429 (rate limit)
+  let response;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      response = await axios.post(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+        {
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.75, maxOutputTokens: 8000 },
+        },
+        { headers: { "content-type": "application/json" }, timeout: 90000 }
+      );
+      break; // successo
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response?.status;
+      if (status === 429 && attempt < 3) {
+        const waitMs = attempt * 15000; // 15s → 30s
+        await new Promise((r) => setTimeout(r, waitMs));
+        continue;
+      }
+      throw err;
+    }
+  }
+  if (!response) throw new Error("Gemini non ha risposto dopo 3 tentativi");
 
   const rawText: string = response.data.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
   if (!rawText) throw new Error("Gemini risposta vuota");
