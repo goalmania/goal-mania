@@ -280,7 +280,7 @@ Regole rigide:
 - Non inventare fatti non presenti nelle notizie fornite`;
 
   const response = await axios.post(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
     {
       contents: [{ parts: [{ text: prompt }] }],
       generationConfig: { temperature: 0.75, maxOutputTokens: 3000 },
