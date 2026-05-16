@@ -1,14 +1,16 @@
 export interface NewsArticle {
-  id: string;
+  _id?: string;
+  id?: string;
   title: string;
   content: string;
   summary: string;
   image: string;
-  category: "news" | "transfer" | "general";
+  category: "news" | "transferMarket" | "serieA" | "internationalTeams" | "transfer" | "general";
   author: string;
   publishedAt: string;
   slug: string;
   tags: string[];
+  featured?: boolean;
 }
 
 export interface NewsResponse {

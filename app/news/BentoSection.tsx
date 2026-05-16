@@ -11,6 +11,20 @@ import Link from "next/link";
 import { NewsArticle } from "@/types/news";
 import { Calendar, Clock, History, User, UserCircle } from "lucide-react";
 
+function getArticleUrl(article: NewsArticle): string {
+  const slug = article.slug;
+  switch (article.category) {
+    case "transferMarket":
+      return `/transfer/${slug}`;
+    case "serieA":
+      return `/serieA/${slug}`;
+    case "internationalTeams":
+      return `/international/${slug}`;
+    default:
+      return `/news/${slug}`;
+  }
+}
+
 interface BentoSectionProps {
   articles: NewsArticle[];
   reverse?: boolean;
@@ -25,7 +39,7 @@ export default function BentoSection({
   const [main, ...grid] = articles;
 
   const mainArticle = (
-    <Link href={`/news/${main.slug}`} className="block w-full h-full">
+    <Link href={getArticleUrl(main)} className="block w-full h-full">
       <div className="h-fit flex flex-col  bg-transparent text-[#0A1A2F]">
         <div className="relative w-full h-80 md:h-96 rounded-t-xl overflow-hidden">
           <Image
@@ -73,7 +87,7 @@ export default function BentoSection({
       {grid.map((news) => (
         <Link
           key={news.slug}
-          href={`/news/${news.slug}`}
+          href={getArticleUrl(news)}
           className="block"
         >
           <div className=" text-black grid grid-cols-2 w-full mx-auto  gap-4 transition-shadow duration-200">

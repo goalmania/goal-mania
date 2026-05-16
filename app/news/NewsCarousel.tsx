@@ -6,6 +6,15 @@ import Image from "next/image";
 import { NewsArticle } from "@/types/news";
 import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+
+function getArticleUrl(article: NewsArticle): string {
+  switch (article.category) {
+    case "transferMarket": return `/transfer/${article.slug}`;
+    case "serieA": return `/serieA/${article.slug}`;
+    case "internationalTeams": return `/international/${article.slug}`;
+    default: return `/news/${article.slug}`;
+  }
+}
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import "swiper/swiper-bundle.css";
@@ -57,7 +66,7 @@ const NewsCarousel: React.FC<NewsCarouselProps> = ({ articles }) => {
               key={article.slug}
               className="min-w-[280px] max-w-xs bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out flex-shrink-0 border border-gray-100 hover:border-[#f5963c]"
             >
-              <Link href={`/news/${article.slug}`} className="block">
+              <Link href={getArticleUrl(article)} className="block">
                 <div className="relative w-full h-40 rounded-t-lg overflow-hidden">
                   {article.image && (
                     <Image

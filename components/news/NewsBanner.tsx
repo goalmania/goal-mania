@@ -21,6 +21,21 @@ interface Article {
   publishedAt: string;
   slug: string;
   content: string;
+  category?: string;
+}
+
+function getArticleUrl(article: Article): string {
+  const slug = article.slug;
+  switch (article.category) {
+    case "transferMarket":
+      return `/transfer/${slug}`;
+    case "serieA":
+      return `/serieA/${slug}`;
+    case "internationalTeams":
+      return `/international/${slug}`;
+    default:
+      return `/news/${slug}`;
+  }
 }
 
 interface NewsBannerProps {
@@ -144,7 +159,7 @@ export default function NewsBanner({ articles = [], className, imageUrl }: NewsB
                 key={article._id}
                 className="flex flex-col items-center text-center px-6"
               >
-                <Link href={`/news/${article.slug}`} className="w-full">
+                <Link href={getArticleUrl(article)} className="w-full">
                   <h1 className="text-white text-xl font-bold mb-4 font-sans hover:text-[#FF7A00] transition-colors">
                     {article.title}
                   </h1>
@@ -176,7 +191,7 @@ export default function NewsBanner({ articles = [], className, imageUrl }: NewsB
           {displayArticles.map((article) => (
             <Link
               key={article._id}
-              href={`/news/${article.slug}`}
+              href={getArticleUrl(article)}
               className="text-center flex justify-center flex-col group"
             >
               <h1 className="text-white text-2xl mb-2 font-bold font-sans max-w-xl group-hover:text-[#FF7A00] transition-colors">

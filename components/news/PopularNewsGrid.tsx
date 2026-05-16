@@ -15,15 +15,24 @@ interface ArticleType {
   publishedAt: string | Date;
 }
 
+// Helper: URL corretto in base alla categoria
+function getArticleUrl(article: ArticleType): string {
+  switch (article.category) {
+    case "transferMarket": return `/transfer/${article.slug}`;
+    case "serieA": return `/serieA/${article.slug}`;
+    case "internationalTeams": return `/international/${article.slug}`;
+    default: return `/news/${article.slug}`;
+  }
+}
+
 // Helper function to fetch articles
 async function getPopularArticles() {
   try {
     await connectDB();
 
-    // Fetch popular articles (featured or most recent)
+    // Fetch popular articles (featured or most recent) — tutte le categorie
     const articles = await Article.find({
       status: "published",
-      category: "news",
     })
       .sort({ publishedAt: -1 })
       .limit(10)
@@ -81,7 +90,7 @@ const NewsCard = ({
   if (isLarge) {
     return (
       <Link
-        href={`/news/${article.slug}`}
+        href={getArticleUrl(article)}
         className={`group cursor-pointer ${className}`}
       >
         <div className="relative overflow-hidden rounded-lg bg-gray-900 shadow-xl">
@@ -222,7 +231,7 @@ export default async function PopularNewsGrid() {
               {recentArticles.map((article: ArticleType) => (
                 <Link
                   key={article._id}
-                  href={`/news/${article.slug}`}
+                  href={getArticleUrl(article)}
                   className="group cursor-pointer"
                 >
                   <div className="flex gap-3 p-3 bg-white  transition-shadow duration-200 ">

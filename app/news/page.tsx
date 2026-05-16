@@ -49,8 +49,8 @@ async function getNewsArticles(): Promise<{
     await connectDB();
 
     // Fetch featured articles - sorted by publishedAt DESC (newest first)
+    // Mostra articoli di tutte le categorie nella pagina news principale
     const featuredArticles = await Article.find({
-      category: "news",
       status: "published",
       featured: true,
     })
@@ -60,7 +60,6 @@ async function getNewsArticles(): Promise<{
 
     // Fetch regular articles - sorted by publishedAt DESC (newest first)
     const regularArticles = await Article.find({
-      category: "news",
       status: "published",
       featured: { $ne: true },
     })

@@ -16,12 +16,13 @@ const RSS_FEEDS = [
   { url: "https://www.goal.com/feeds/it/news",             source: "Goal.com",             category: "news" },
 ];
 
+// Immagini di fallback verificate (URL attivi, maggio 2026)
 const FALLBACK_IMAGES = [
   "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=1200&q=80",
   "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1200&q=80",
-  "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1200&q=80",
-  "https://images.unsplash.com/photo-1431324155629-1a6dae1434d5?w=1200&q=80",
-  "https://images.unsplash.com/photo-1551958219-acbc630e2914?w=1200&q=80",
+  "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80",
+  "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1200&q=80",
+  "https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=1200&q=80",
 ];
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -307,11 +308,37 @@ Regole rigide:
   const rawText: string = response.data.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
   if (!rawText) throw new Error("Gemini risposta vuota");
 
-  const cleaned = rawText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+  // Pulizia robusta del JSON: rimuovi markdown, isola il blocco JSON
+  let cleaned = rawText
+    .replace(/```json\n?/gi, "")
+    .replace(/```\n?/g, "")
+    .trim();
+
   const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error("JSON non trovato nella risposta Gemini");
 
-  const parsed = JSON.parse(jsonMatch[0]) as GeneratedArticle;
+  // Sanitizzazione avanzata: rimuovi caratteri di controllo non validi nel JSON
+  // Sostituisci newline/tab raw dentro stringhe JSON con versioni escaped
+  let rawJson = jsonMatch[0]
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "") // caratteri controllo non validi
+    .replace(/\n/g, "\\n")                               // newline → \n escaped
+    .replace(/\r/g, "\\r")                               // carriage return
+    .replace(/\t/g, "\\t");                              // tab
+
+  // Dopo il replace dei newline, ripristina i newline strutturali del JSON
+  // (quelli fuori dalle stringhe — tra le chiavi del JSON)
+  // Approccio più sicuro: usa JSON5/jsonrepair se disponibile, altrimenti try/catch
+  let parsed: GeneratedArticle;
+  try {
+    parsed = JSON.parse(rawJson) as GeneratedArticle;
+  } catch {
+    // Fallback: prova col testo originale senza escape newline
+    try {
+      parsed = JSON.parse(jsonMatch[0]) as GeneratedArticle;
+    } catch (e2) {
+      throw new Error(`JSON non valido da Gemini: ${(e2 as Error).message}`);
+    }
+  }
 
   // Validazione campi
   if (!parsed.title || !parsed.content || !parsed.summary) {
