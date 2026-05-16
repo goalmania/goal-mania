@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Inter, Italianno, Mulish, Barlow_Condensed, Barlow, Space_Mono } from "next/font/google";
 import { Metadata, Viewport } from "next";

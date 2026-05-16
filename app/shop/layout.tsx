@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { Footer } from "@/components/layout/footer";
 
 export default function ShopLayout({
