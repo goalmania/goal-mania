@@ -508,13 +508,13 @@ export default function ProductDetailClient({
               </div>
 
               {/* Urgency: low stock */}
-              {product.stockCount !== undefined && product.stockCount > 0 && product.stockCount < 5 && (
+              {product.stockQuantity !== undefined && product.stockQuantity > 0 && product.stockQuantity < 5 && (
                 <div
                   className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold"
                   style={{ background: "rgba(251,146,60,0.08)", border: "1px solid rgba(251,146,60,0.25)", color: "#fb923c" }}
                 >
                   <span className="animate-pulse">⚠️</span>
-                  Solo {product.stockCount} rimast{product.stockCount === 1 ? "o" : "i"} in magazzino!
+                  Solo {product.stockQuantity} rimast{product.stockQuantity === 1 ? "o" : "i"} in magazzino!
                 </div>
               )}
 
