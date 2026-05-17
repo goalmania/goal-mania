@@ -23,9 +23,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import {
   ArrowRight,
   Globe,
@@ -36,6 +34,8 @@ import {
   Search,
   Trophy,
   ChevronDown,
+  Zap,
+  Star,
 } from "lucide-react";
 
 export interface User {
@@ -48,6 +48,91 @@ export interface User {
 
 const getUserImage = (user: any): string => {
   return user?.image || "/images/default-avatar.png";
+};
+
+// ─────────────────────────────────────────────
+// MEGA MENU DATA
+// ─────────────────────────────────────────────
+const SHOP_MEGA = {
+  columns: [
+    {
+      title: "Serie A",
+      href: "/international/serieA",
+      items: [
+        { name: "Inter", href: "/international/serieA" },
+        { name: "Milan", href: "/international/serieA" },
+        { name: "Juventus", href: "/international/serieA" },
+        { name: "Napoli", href: "/international/serieA" },
+        { name: "Roma", href: "/international/serieA" },
+        { name: "Vedi tutti →", href: "/international/serieA" },
+      ],
+    },
+    {
+      title: "Premier League",
+      href: "/international/premierLeague",
+      items: [
+        { name: "Liverpool", href: "/international/premierLeague" },
+        { name: "Arsenal", href: "/international/premierLeague" },
+        { name: "Man City", href: "/international/premierLeague" },
+        { name: "Chelsea", href: "/international/premierLeague" },
+        { name: "Man United", href: "/international/premierLeague" },
+        { name: "Vedi tutti →", href: "/international/premierLeague" },
+      ],
+    },
+    {
+      title: "Champions",
+      href: "/shop",
+      items: [
+        { name: "Real Madrid", href: "/international/laliga" },
+        { name: "Barcelona", href: "/international/laliga" },
+        { name: "Bayern", href: "/international/bundesliga" },
+        { name: "PSG", href: "/international/ligue1" },
+        { name: "Dortmund", href: "/international/bundesliga" },
+        { name: "Vedi tutti →", href: "/shop" },
+      ],
+    },
+    {
+      title: "Mondiali",
+      href: "/shop/worldcup",
+      items: [
+        { name: "Brasile", href: "/shop/worldcup" },
+        { name: "Argentina", href: "/shop/worldcup" },
+        { name: "Francia", href: "/shop/worldcup" },
+        { name: "Italia", href: "/shop/worldcup" },
+        { name: "Portogallo", href: "/shop/worldcup" },
+        { name: "Vedi tutti →", href: "/shop/worldcup" },
+      ],
+    },
+  ],
+  featured: {
+    label: "⚡ Nuovi Arrivi",
+    title: "Maglie 2025/26",
+    subtitle: "Le ultime uscite ufficiali",
+    href: "/shop",
+    badge: "NEW",
+  },
+};
+
+const NEWS_MEGA = {
+  latest: [
+    { name: "Tutte le Notizie", href: "/news" },
+    { name: "Calciomercato", href: "/news?category=calciomercato" },
+    { name: "Serie A", href: "/news?category=serie-a" },
+    { name: "Champions League", href: "/news?category=champions-league" },
+    { name: "Premier League", href: "/news?category=premier-league" },
+  ],
+  categories: [
+    { name: "Mondiali 2026", href: "/news?category=mondiali" },
+    { name: "Interviste", href: "/news?category=interviste" },
+    { name: "Analisi Tattica", href: "/news?category=analisi" },
+    { name: "Youth Football", href: "/news?category=youth" },
+  ],
+  featured: {
+    label: "// In Evidenza",
+    title: "Ultime Notizie dal Campo",
+    subtitle: "Aggiornamenti in tempo reale",
+    href: "/news",
+  },
 };
 
 export function Header() {
@@ -65,7 +150,9 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
+  const [activeMega, setActiveMega] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const megaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -90,35 +177,6 @@ export function Header() {
 
   const languageNames: Record<string, string> = { en: "EN", it: "IT" };
 
-  const staticSubItems = [
-    { name: t("nav.laliga"), href: "/international/laliga" },
-    { name: t("nav.premierLeague"), href: "/international/premierLeague" },
-    { name: t("nav.bundesliga"), href: "/international/bundesliga" },
-    { name: t("nav.ligue1"), href: "/international/ligue1" },
-    { name: t("nav.serieA"), href: "/international/serieA" },
-    { name: t("nav.leaguesOverview"), href: "/leagues-overview" },
-    { name: t("nav.otherLeagues"), href: "/international/other" },
-  ];
-
-  const navigation = [
-    { name: t("nav.home"), href: "/" },
-    {
-      name: "World Cup 2026",
-      href: "/shop/worldcup",
-      isSpecial: true,
-    },
-    { name: t("nav.articles"), href: "/news" },
-    { name: t("nav.shop"), href: "/shop" },
-    {
-      name: t("nav.category"),
-      href: "/category",
-      hasDropdown: true,
-      subItems: staticSubItems,
-    },
-    { name: t("nav.about"), href: "/about" },
-    { name: t("nav.contact"), href: "/contact" },
-  ];
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -128,23 +186,40 @@ export function Header() {
     }
   };
 
+  const openMega = (key: string) => {
+    if (megaTimeoutRef.current) clearTimeout(megaTimeoutRef.current);
+    setActiveMega(key);
+  };
+
+  const closeMega = () => {
+    megaTimeoutRef.current = setTimeout(() => setActiveMega(null), 120);
+  };
+
+  const keepMega = () => {
+    if (megaTimeoutRef.current) clearTimeout(megaTimeoutRef.current);
+  };
+
   if (!mounted) return null;
+
+  const ANNOUNCEMENT_HEIGHT = 40; // px — must match AnnouncementBar height
 
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        className="fixed left-0 right-0 z-50 transition-all duration-300"
         style={{
-          background: scrolled
-            ? "rgba(10, 10, 10, 0.95)"
-            : "rgba(10, 10, 10, 0.85)",
+          top: 0,
+          background: scrolled ? "rgba(10,10,10,0.98)" : "rgba(10,10,10,0.92)",
           backdropFilter: "blur(20px)",
-          borderBottom: "0.5px solid rgba(200, 240, 0, 0.12)",
-          height: "72px",
+          borderBottom: "0.5px solid rgba(200,240,0,0.12)",
           boxShadow: scrolled ? "0 4px 30px rgba(0,0,0,0.4)" : "none",
         }}
       >
-        <nav className="container mx-auto flex items-center justify-between px-4 h-full max-w-7xl">
+        {/* Main nav row */}
+        <nav
+          className="container mx-auto flex items-center justify-between px-4 max-w-7xl transition-all duration-300"
+          style={{ height: scrolled ? "60px" : "72px" }}
+        >
           {/* ── Left: Hamburger + Logo ── */}
           <div className="flex items-center gap-3">
             <button
@@ -162,10 +237,9 @@ export function Header() {
                   alt="Goal Mania"
                   width={44}
                   height={44}
-                  className="w-11 h-11 object-contain transition-all duration-500 group-hover:drop-shadow-[0_0_12px_rgba(200,240,0,0.6)]"
+                  className="w-10 h-10 object-contain transition-all duration-500 group-hover:drop-shadow-[0_0_12px_rgba(200,240,0,0.6)]"
                   style={{ filter: "brightness(1.05)" }}
                 />
-                {/* Pulsing ring on hover */}
                 <span className="absolute inset-0 rounded-full border border-[#c8f000]/0 group-hover:border-[#c8f000]/30 transition-all duration-500 scale-110" />
               </div>
               <div className="hidden sm:flex flex-col leading-none">
@@ -177,7 +251,7 @@ export function Header() {
                 </span>
                 <span
                   className="text-[9px] tracking-[3px] uppercase"
-                  style={{ fontFamily: "var(--font-mono, monospace)", color: "#888" }}
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "#666" }}
                 >
                   // football universe
                 </span>
@@ -186,75 +260,77 @@ export function Header() {
           </div>
 
           {/* ── Center: Desktop Navigation ── */}
-          <div className="hidden md:flex items-center gap-1">
-            {navigation.map((item) =>
-              item.hasDropdown ? (
-                <DropdownMenu key={item.name}>
-                  <DropdownMenuTrigger asChild>
-                    <button
-                      className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold tracking-wide uppercase transition-all duration-200 ${
-                        pathname.startsWith(item.href)
-                          ? "text-[#c8f000]"
-                          : "text-white/70 hover:text-white"
-                      }`}
-                      style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1.5px", fontSize: "0.78rem" }}
-                    >
-                      {item.name}
-                      <ChevronDown className="w-3 h-3 opacity-60" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    className="rounded-xl border shadow-2xl p-1"
-                    style={{ background: "#111", borderColor: "rgba(200,240,0,0.15)", minWidth: "180px" }}
-                  >
-                    {item.subItems?.map((sub) => (
-                      <DropdownMenuItem
-                        key={sub.href}
-                        asChild
-                        className="rounded-lg focus:bg-[#c8f000]/10 focus:text-[#c8f000]"
-                      >
-                        <Link
-                          href={sub.href}
-                          className="text-white/80 hover:text-[#c8f000] transition-colors px-3 py-2 text-sm"
-                          style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1px", textTransform: "uppercase", fontSize: "0.75rem" }}
-                        >
-                          {sub.name}
-                        </Link>
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`relative flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold uppercase transition-all duration-200 group ${
-                    pathname === item.href
-                      ? "text-[#c8f000]"
-                      : item.isSpecial
-                      ? "text-[#c8f000] hover:text-white"
-                      : "text-white/70 hover:text-white"
-                  }`}
-                  style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1.5px", fontSize: "0.78rem" }}
-                >
-                  {item.isSpecial && (
-                    <Trophy
-                      size={12}
-                      className="animate-[pulse_2s_ease-in-out_infinite]"
-                    />
-                  )}
-                  {item.name}
-                  {/* Active underline */}
-                  {pathname === item.href && (
-                    <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-[#c8f000] rounded-full" />
-                  )}
-                  {/* Hover underline */}
-                  {pathname !== item.href && (
-                    <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-[#c8f000]/40 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
-                  )}
-                </Link>
-              )
-            )}
+          <div className="hidden md:flex items-center gap-0.5">
+            {/* SHOP with mega */}
+            <div
+              className="relative"
+              onMouseEnter={() => openMega("shop")}
+              onMouseLeave={closeMega}
+            >
+              <button
+                className={`flex items-center gap-1 px-3 py-2 rounded-lg text-[0.78rem] font-semibold uppercase tracking-wider transition-all duration-200 ${
+                  pathname.startsWith("/shop") || activeMega === "shop"
+                    ? "text-[#c8f000]"
+                    : "text-white/70 hover:text-white"
+                }`}
+                style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1.5px" }}
+              >
+                Shop
+                <ChevronDown
+                  className={`w-3 h-3 transition-transform duration-200 ${activeMega === "shop" ? "rotate-180" : ""}`}
+                />
+              </button>
+            </div>
+
+            {/* NEWS with mega */}
+            <div
+              className="relative"
+              onMouseEnter={() => openMega("news")}
+              onMouseLeave={closeMega}
+            >
+              <button
+                className={`flex items-center gap-1 px-3 py-2 rounded-lg text-[0.78rem] font-semibold uppercase tracking-wider transition-all duration-200 ${
+                  pathname.startsWith("/news") || activeMega === "news"
+                    ? "text-[#c8f000]"
+                    : "text-white/70 hover:text-white"
+                }`}
+                style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1.5px" }}
+              >
+                News
+                <ChevronDown
+                  className={`w-3 h-3 transition-transform duration-200 ${activeMega === "news" ? "rotate-180" : ""}`}
+                />
+              </button>
+            </div>
+
+            {/* Static links */}
+            {[
+              { name: "World Cup 2026", href: "/shop/worldcup", isSpecial: true },
+              { name: "Squadre", href: "/category" },
+              { name: "About", href: "/about" },
+            ].map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`relative flex items-center gap-1.5 px-3 py-2 rounded-lg text-[0.78rem] font-semibold uppercase tracking-wider transition-all duration-200 group ${
+                  pathname === item.href
+                    ? "text-[#c8f000]"
+                    : item.isSpecial
+                    ? "text-[#c8f000] hover:text-[#c8f000]/80"
+                    : "text-white/70 hover:text-white"
+                }`}
+                style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1.5px" }}
+              >
+                {item.isSpecial && <Trophy size={11} className="animate-pulse" />}
+                {item.name}
+                {pathname === item.href && (
+                  <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-[#c8f000] rounded-full" />
+                )}
+                {pathname !== item.href && !item.isSpecial && (
+                  <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-[#c8f000]/40 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                )}
+              </Link>
+            ))}
           </div>
 
           {/* ── Right: Icons + Auth ── */}
@@ -265,7 +341,7 @@ export function Header() {
               className="flex items-center justify-center w-9 h-9 rounded-xl text-white/70 hover:text-[#c8f000] hover:bg-[#c8f000]/8 transition-all duration-200"
               aria-label="Cerca"
             >
-              <Search className="h-4.5 w-4.5" />
+              <Search className="h-4 w-4" />
             </button>
 
             {/* Language toggle */}
@@ -284,9 +360,9 @@ export function Header() {
                 className="flex items-center justify-center w-9 h-9 rounded-xl text-white/70 hover:text-[#c8f000] hover:bg-[#c8f000]/8 transition-all duration-200"
                 aria-label="Wishlist"
               >
-                <Heart className="h-4.5 w-4.5" />
+                <Heart className="h-4 w-4" />
                 {session && wishlistItemCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 bg-[#c8f000] text-white text-[9px] font-black rounded-full">
+                  <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 bg-[#c8f000] text-[#0a0a0a] text-[9px] font-black rounded-full">
                     {wishlistItemCount}
                   </span>
                 )}
@@ -299,9 +375,9 @@ export function Header() {
                 className="flex items-center justify-center w-9 h-9 rounded-xl text-white/70 hover:text-[#c8f000] hover:bg-[#c8f000]/8 transition-all duration-200"
                 aria-label="Carrello"
               >
-                <ShoppingBag className="h-4.5 w-4.5" />
+                <ShoppingBag className="h-4 w-4" />
                 {session && cartItemCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 bg-[#c8f000] text-white text-[9px] font-black rounded-full">
+                  <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 bg-[#c8f000] text-[#0a0a0a] text-[9px] font-black rounded-full">
                     {cartItemCount}
                   </span>
                 )}
@@ -361,12 +437,11 @@ export function Header() {
               <div className="hidden sm:flex items-center">
                 <Link
                   href="/auth/signin"
-                  className="flex items-center gap-2 px-4 py-2 rounded-full text-white font-bold text-sm uppercase tracking-wider transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
+                  className="flex items-center gap-2 px-4 py-2 rounded-full text-[#0a0a0a] font-black text-[0.75rem] uppercase tracking-wider transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
                   style={{
                     background: "#c8f000",
                     fontFamily: "var(--font-display, sans-serif)",
                     letterSpacing: "1.5px",
-                    fontSize: "0.75rem",
                     boxShadow: "0 4px 16px rgba(200,240,0,0.25)",
                   }}
                 >
@@ -377,6 +452,217 @@ export function Header() {
             )}
           </div>
         </nav>
+
+        {/* ── MEGA MENUS ── */}
+        {/* Shop Mega */}
+        {activeMega === "shop" && (
+          <div
+            className="absolute left-0 right-0 shadow-2xl border-t transition-all duration-200"
+            style={{
+              top: "100%",
+              background: "rgba(10,10,10,0.98)",
+              backdropFilter: "blur(24px)",
+              borderColor: "rgba(200,240,0,0.1)",
+              borderBottom: "0.5px solid rgba(200,240,0,0.12)",
+            }}
+            onMouseEnter={keepMega}
+            onMouseLeave={closeMega}
+          >
+            <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-5 gap-8">
+              {/* 4 league columns */}
+              {SHOP_MEGA.columns.map((col) => (
+                <div key={col.title}>
+                  <Link
+                    href={col.href}
+                    className="text-[10px] uppercase tracking-[3px] mb-3 block hover:text-[#c8f000] transition-colors"
+                    style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.7)" }}
+                  >
+                    // {col.title}
+                  </Link>
+                  <ul className="space-y-2">
+                    {col.items.map((item) => (
+                      <li key={item.name}>
+                        <Link
+                          href={item.href}
+                          className="text-sm text-white/60 hover:text-white transition-colors block py-0.5"
+                          style={{ fontFamily: "var(--font-body, sans-serif)" }}
+                        >
+                          {item.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+              {/* Featured promo */}
+              <div
+                className="rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden"
+                style={{
+                  background: "linear-gradient(135deg, rgba(200,240,0,0.1) 0%, rgba(200,240,0,0.04) 100%)",
+                  border: "1.5px solid rgba(200,240,0,0.2)",
+                }}
+              >
+                <div
+                  className="absolute top-0 left-0 right-0 h-[2px]"
+                  style={{ background: "linear-gradient(90deg, transparent, #c8f000, transparent)" }}
+                />
+                <div>
+                  <div
+                    className="text-[9px] uppercase tracking-[3px] mb-2"
+                    style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}
+                  >
+                    {SHOP_MEGA.featured.label}
+                  </div>
+                  <h3
+                    className="font-black uppercase text-white text-lg leading-tight mb-1"
+                    style={{ fontFamily: "var(--font-display, sans-serif)" }}
+                  >
+                    {SHOP_MEGA.featured.title}
+                  </h3>
+                  <p
+                    className="text-xs text-white/40 mb-4"
+                    style={{ fontFamily: "var(--font-body, sans-serif)" }}
+                  >
+                    {SHOP_MEGA.featured.subtitle}
+                  </p>
+                </div>
+                <Link
+                  href={SHOP_MEGA.featured.href}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-black text-xs uppercase tracking-wider transition-all hover:opacity-90"
+                  style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-display, sans-serif)" }}
+                >
+                  <Zap size={12} />
+                  Scopri Ora
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* News Mega */}
+        {activeMega === "news" && (
+          <div
+            className="absolute left-0 right-0 shadow-2xl border-t transition-all duration-200"
+            style={{
+              top: "100%",
+              background: "rgba(10,10,10,0.98)",
+              backdropFilter: "blur(24px)",
+              borderColor: "rgba(200,240,0,0.1)",
+              borderBottom: "0.5px solid rgba(200,240,0,0.12)",
+            }}
+            onMouseEnter={keepMega}
+            onMouseLeave={closeMega}
+          >
+            <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-3 gap-10">
+              {/* Latest news */}
+              <div>
+                <div
+                  className="text-[10px] uppercase tracking-[3px] mb-4"
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.7)" }}
+                >
+                  // Ultime Notizie
+                </div>
+                <ul className="space-y-2.5">
+                  {NEWS_MEGA.latest.map((item) => (
+                    <li key={item.name}>
+                      <Link
+                        href={item.href}
+                        className="text-sm text-white/60 hover:text-white transition-colors flex items-center gap-2 group"
+                        style={{ fontFamily: "var(--font-body, sans-serif)" }}
+                      >
+                        <span
+                          className="w-1 h-1 rounded-full flex-shrink-0 group-hover:bg-[#c8f000] transition-colors"
+                          style={{ background: "rgba(255,255,255,0.2)" }}
+                        />
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Categories */}
+              <div>
+                <div
+                  className="text-[10px] uppercase tracking-[3px] mb-4"
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.7)" }}
+                >
+                  // Categorie
+                </div>
+                <ul className="space-y-2.5">
+                  {NEWS_MEGA.categories.map((item) => (
+                    <li key={item.name}>
+                      <Link
+                        href={item.href}
+                        className="text-sm text-white/60 hover:text-white transition-colors flex items-center gap-2 group"
+                        style={{ fontFamily: "var(--font-body, sans-serif)" }}
+                      >
+                        <span
+                          className="w-1 h-1 rounded-full flex-shrink-0 group-hover:bg-[#c8f000] transition-colors"
+                          style={{ background: "rgba(255,255,255,0.2)" }}
+                        />
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Featured promo */}
+              <div
+                className="rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden"
+                style={{
+                  background: "linear-gradient(135deg, rgba(200,240,0,0.08) 0%, rgba(200,240,0,0.02) 100%)",
+                  border: "1.5px solid rgba(200,240,0,0.18)",
+                }}
+              >
+                <div
+                  className="absolute top-0 left-0 right-0 h-[2px]"
+                  style={{ background: "linear-gradient(90deg, transparent, #c8f000, transparent)" }}
+                />
+                <div>
+                  <div
+                    className="text-[9px] uppercase tracking-[3px] mb-2"
+                    style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}
+                  >
+                    {NEWS_MEGA.featured.label}
+                  </div>
+                  <h3
+                    className="font-black uppercase text-white text-lg leading-tight mb-1"
+                    style={{ fontFamily: "var(--font-display, sans-serif)" }}
+                  >
+                    {NEWS_MEGA.featured.title}
+                  </h3>
+                  <p
+                    className="text-xs text-white/40 mb-4"
+                    style={{ fontFamily: "var(--font-body, sans-serif)" }}
+                  >
+                    {NEWS_MEGA.featured.subtitle}
+                  </p>
+                  {/* Fake rating */}
+                  <div className="flex items-center gap-1 mb-4">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star key={s} size={10} fill="#c8f000" color="#c8f000" />
+                    ))}
+                    <span
+                      className="text-[9px] ml-1.5"
+                      style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}
+                    >
+                      Aggiornate ogni ora
+                    </span>
+                  </div>
+                </div>
+                <Link
+                  href={NEWS_MEGA.featured.href}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-black text-xs uppercase tracking-wider transition-all hover:opacity-90"
+                  style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-display, sans-serif)" }}
+                >
+                  Leggi le Notizie →
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* ── Search Overlay ── */}
@@ -385,7 +671,7 @@ export function Header() {
           className="fixed inset-0 z-[200] flex flex-col"
           style={{ background: "rgba(10,10,10,0.97)", backdropFilter: "blur(24px)" }}
         >
-          <div className="flex items-center justify-between px-6 py-5 border-b border-white/06">
+          <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
             <div
               className="text-[#c8f000] text-xs uppercase tracking-[3px]"
               style={{ fontFamily: "var(--font-mono, monospace)" }}
@@ -401,7 +687,7 @@ export function Header() {
           </div>
           <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-16">
             <h2
-              className="text-white/20 text-[80px] font-black uppercase leading-none mb-8 select-none"
+              className="text-white/10 text-[80px] font-black uppercase leading-none mb-8 select-none"
               style={{ fontFamily: "var(--font-display, sans-serif)" }}
             >
               SEARCH
@@ -426,13 +712,31 @@ export function Header() {
                 />
                 <button
                   type="submit"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 px-5 py-2.5 rounded-xl font-bold text-white text-sm uppercase tracking-wide transition-all hover:opacity-90"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 px-5 py-2.5 rounded-xl font-black text-[#0a0a0a] text-sm uppercase tracking-wide transition-all hover:opacity-90"
                   style={{ background: "#c8f000", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px" }}
                 >
                   Cerca
                 </button>
               </div>
             </form>
+
+            {/* Search suggestions */}
+            <div className="flex flex-wrap items-center gap-2 mt-6 justify-center">
+              {["Inter", "Real Madrid", "Champions 2025", "Mondiali 2026", "Retro"].map((s) => (
+                <button
+                  key={s}
+                  onClick={() => { setSearchQuery(s); }}
+                  className="px-4 py-1.5 rounded-full text-xs uppercase tracking-wider transition-all hover:text-[#c8f000] hover:border-[#c8f000]/40"
+                  style={{
+                    fontFamily: "var(--font-mono, monospace)",
+                    color: "rgba(255,255,255,0.4)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                  }}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -490,7 +794,7 @@ export function Header() {
                 />
                 <button
                   type="submit"
-                  className="px-4 py-2.5 rounded-xl text-white font-bold transition-all hover:opacity-90"
+                  className="px-4 py-2.5 rounded-xl text-[#0a0a0a] font-bold transition-all hover:opacity-90"
                   style={{ background: "#c8f000" }}
                 >
                   <Search className="h-4 w-4" />
@@ -500,43 +804,33 @@ export function Header() {
 
             {/* Nav */}
             <nav className="flex-1 overflow-y-auto p-4 flex flex-col gap-1">
-              {navigation.map((item) => (
-                <div key={item.name}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setOpenMenu(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-200 ${
-                      pathname === item.href
-                        ? "text-[#c8f000] bg-[#c8f000]/8"
-                        : item.isSpecial
-                        ? "text-[#c8f000]"
-                        : "text-white/70 hover:text-white hover:bg-[#0a0a0a]/5"
-                    }`}
-                    style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px" }}
-                  >
-                    {item.isSpecial && <Trophy size={14} />}
-                    {item.name}
-                  </Link>
-                  {item.hasDropdown && (
-                    <div className="ml-4 mt-1 flex flex-col gap-0.5">
-                      {item.subItems?.map((sub) => (
-                        <Link
-                          key={sub.name}
-                          href={sub.href}
-                          onClick={() => setOpenMenu(false)}
-                          className={`px-4 py-2 rounded-lg text-xs uppercase tracking-widest transition-colors ${
-                            pathname === sub.href
-                              ? "text-[#c8f000]"
-                              : "text-white/40 hover:text-white/80"
-                          }`}
-                          style={{ fontFamily: "var(--font-mono, monospace)" }}
-                        >
-                          {sub.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
+              {[
+                { name: "Shop", href: "/shop" },
+                { name: "News", href: "/news" },
+                { name: "World Cup 2026", href: "/shop/worldcup", isSpecial: true },
+                { name: "Serie A", href: "/international/serieA" },
+                { name: "Premier League", href: "/international/premierLeague" },
+                { name: "La Liga", href: "/international/laliga" },
+                { name: "Bundesliga", href: "/international/bundesliga" },
+                { name: "About", href: "/about" },
+                { name: "Contatti", href: "/contact" },
+              ].map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setOpenMenu(false)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-200 ${
+                    pathname === item.href
+                      ? "text-[#c8f000] bg-[#c8f000]/8"
+                      : item.isSpecial
+                      ? "text-[#c8f000]"
+                      : "text-white/70 hover:text-white hover:bg-white/3"
+                  }`}
+                  style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px" }}
+                >
+                  {item.isSpecial && <Trophy size={14} />}
+                  {item.name}
+                </Link>
               ))}
             </nav>
 
@@ -563,7 +857,7 @@ export function Header() {
                   <Link
                     href="/auth/signup"
                     onClick={() => setOpenMenu(false)}
-                    className="flex-1 text-center py-2.5 rounded-xl text-white text-sm font-bold uppercase tracking-wider transition-all hover:opacity-90"
+                    className="flex-1 text-center py-2.5 rounded-xl text-[#0a0a0a] text-sm font-bold uppercase tracking-wider transition-all hover:opacity-90"
                     style={{ background: "#c8f000", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px" }}
                   >
                     Sign up

@@ -20,7 +20,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
         <>
           <AnnouncementBar />
           <Header />
-          <main className="flex-grow pt-14 sm:pt-16">{children}</main>
+          <main className="flex-grow pt-[72px]">{children}</main>
           {!isShop && <Footer />}
         </>
       )}

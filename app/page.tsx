@@ -6,6 +6,9 @@ import TeamLogoTicker from "@/components/home/TeamLogoTicker";
 import { Product } from "@/lib/types/home";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
 import { getBaseUrl } from "@/lib/utils/baseUrl";
+import TrustSection from "@/components/home/TrustSection";
+import SocialProofSection from "@/components/home/SocialProofSection";
+import FlashSaleSection from "@/components/home/FlashSaleSection";
 
 // Dynamic imports for below-the-fold components (better performance)
 const NewsSection = dynamic(() => import("@/components/home/NewsSection"), {
@@ -275,13 +278,29 @@ export default async function Home() {
 
   return (
     <div className="bg-[#0a0a0a] min-h-screen relative font-munish">
+      {/* Hero — full-screen conversion machine */}
       <HeroSection />
+
+      {/* Trust pillars strip — right below the hero */}
+      <TrustSection />
+
+      {/* Team logo ticker */}
       <TeamLogoTicker />
+
+      {/* Flash sale section — urgency + conversion */}
+      <FlashSaleSection />
+
+      {/* Featured products */}
+      <FeaturedProducts products={featuredProducts} />
+
+      {/* Social proof / testimonials */}
+      <SocialProofSection />
+
+      {/* Existing sections */}
       <ClientSlider />
       <WorldCupShowcase teams={worldCupTeams} />
       <PremierLeagueClient />
       <SerieATeamsClient />
-      <FeaturedProducts products={featuredProducts} />
       <NewsSection articles={featuredArticles} />
       <FeaturedVideoProducts products={featuredProducts} />
       <VideoComp products={videoProducts} />

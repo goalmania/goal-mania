@@ -5,20 +5,29 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
 const MESSAGES = [
-  { text: "🚚 Spedizione Gratuita sopra €89 | 30 giorni di reso gratuito", href: "/shop" },
-  { text: "⚡ Personalizza la tua maglia con nome e numero!", href: "/shop" },
+  { text: "🚚 Spedizione GRATUITA sopra €89", href: "/shop" },
+  { text: "🔥 Saldi: fino al -40% sulle maglie", href: "/shop" },
+  { text: "⚡ Nuovi arrivi: Maglie 2025/26 disponibili", href: "/shop" },
   { text: "🏆 Maglie ufficiali Mondiali 2026 — disponibili ora!", href: "/shop/worldcup" },
-  { text: "🔒 Pagamenti 100% Sicuri · Originale Garantito · Spedizione Express", href: "/shop" },
 ];
 
-const DISMISS_KEY = "announcementBarDismissed_v2";
-const TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
+const DISMISS_KEY = "announcementBarDismissed_v3";
+const TTL_MS = 12 * 60 * 60 * 1000;
+
+// Flash sale countdown — 30 min window
+const SALE_DURATION = 30 * 60;
+
+function pad(n: number) {
+  return n.toString().padStart(2, "0");
+}
 
 export default function AnnouncementBar() {
   const [visible, setVisible] = useState(false);
   const [msgIndex, setMsgIndex] = useState(0);
   const [animating, setAnimating] = useState(false);
+  const [countdown, setCountdown] = useState(SALE_DURATION);
 
+  // Visibility check
   useEffect(() => {
     try {
       const raw = localStorage.getItem(DISMISS_KEY);
@@ -30,6 +39,7 @@ export default function AnnouncementBar() {
     setVisible(true);
   }, []);
 
+  // Message rotation
   useEffect(() => {
     if (!visible) return;
     const id = setInterval(() => {
@@ -42,6 +52,14 @@ export default function AnnouncementBar() {
     return () => clearInterval(id);
   }, [visible]);
 
+  // Countdown
+  useEffect(() => {
+    if (!visible) return;
+    if (countdown <= 0) return;
+    const id = setInterval(() => setCountdown((c) => Math.max(0, c - 1)), 1000);
+    return () => clearInterval(id);
+  }, [visible, countdown]);
+
   const dismiss = () => {
     try {
       localStorage.setItem(DISMISS_KEY, String(Date.now()));
@@ -52,60 +70,88 @@ export default function AnnouncementBar() {
   if (!visible) return null;
 
   const current = MESSAGES[msgIndex];
+  const minutes = Math.floor(countdown / 60);
+  const seconds = countdown % 60;
 
   return (
     <div
-      className="relative z-[60] flex items-center justify-center px-8 py-2.5 overflow-hidden"
+      className="relative z-[61] overflow-hidden"
       style={{
-        background: "linear-gradient(90deg, #0a0a0a 0%, #111 40%, #0a0a0a 100%)",
-        borderBottom: "1px solid rgba(200,240,0,0.2)",
+        background: "#c8f000",
       }}
     >
-      {/* Animated lime scan line */}
-      <div
-        className="absolute inset-y-0 left-0 w-[60px] opacity-20"
-        style={{
-          background: "linear-gradient(90deg, transparent, #c8f000, transparent)",
-          animation: "scanLine 4s linear infinite",
-        }}
-      />
-
-      <Link href={current.href} className="flex-1 text-center">
-        <span
-          className={`text-xs font-black uppercase tracking-[3px] text-[#c8f000] transition-all duration-300 ${
-            animating ? "opacity-0 -translate-y-1" : "opacity-100 translate-y-0"
-          }`}
-          style={{
-            fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
-            display: "inline-block",
-          }}
-        >
-          {current.text}
-        </span>
-      </Link>
-
-      {/* Message dots */}
-      <div className="flex items-center gap-1 mx-3">
-        {MESSAGES.map((_, i) => (
+      <div className="flex items-center justify-between px-4 py-2.5 max-w-7xl mx-auto">
+        {/* Left: rotating message */}
+        <Link href={current.href} className="flex-1 min-w-0 mr-4">
           <span
-            key={i}
-            className="inline-block rounded-full transition-all duration-300"
+            className={`text-xs font-black uppercase tracking-[2px] text-[#0a0a0a] transition-all duration-300 block truncate ${
+              animating ? "opacity-0 -translate-y-1" : "opacity-100 translate-y-0"
+            }`}
             style={{
-              width: i === msgIndex ? "12px" : "4px",
-              height: "4px",
-              background: i === msgIndex ? "#c8f000" : "rgba(200,240,0,0.2)",
+              fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
             }}
-          />
-        ))}
-      </div>
+          >
+            {current.text}
+          </span>
+        </Link>
 
-      <button
-        onClick={dismiss}
-        aria-label="Chiudi"
-        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 opacity-30 hover:opacity-80 transition-opacity"
-      >
-        <XMarkIcon className="h-3.5 w-3.5 text-white" />
-      </button>
+        {/* Center: Flash sale countdown */}
+        <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
+          <span
+            className="text-[10px] font-black uppercase tracking-[2px] text-[#0a0a0a]/70"
+            style={{ fontFamily: "var(--font-mono, monospace)" }}
+          >
+            🔥 OFFERTA LAMPO — Scade tra:
+          </span>
+          <div className="flex items-center gap-0.5">
+            <span
+              className="font-black text-sm px-2 py-0.5 rounded"
+              style={{
+                fontFamily: "var(--font-mono, monospace)",
+                background: "rgba(0,0,0,0.15)",
+                color: "#0a0a0a",
+              }}
+            >
+              {pad(minutes)}
+            </span>
+            <span className="font-black text-sm" style={{ color: "#0a0a0a" }}>:</span>
+            <span
+              className="font-black text-sm px-2 py-0.5 rounded"
+              style={{
+                fontFamily: "var(--font-mono, monospace)",
+                background: "rgba(0,0,0,0.15)",
+                color: "#0a0a0a",
+              }}
+            >
+              {pad(seconds)}
+            </span>
+          </div>
+        </div>
+
+        {/* Right: dots + dismiss */}
+        <div className="flex items-center gap-2 ml-4">
+          <div className="hidden sm:flex items-center gap-1">
+            {MESSAGES.map((_, i) => (
+              <span
+                key={i}
+                className="inline-block rounded-full transition-all duration-300"
+                style={{
+                  width: i === msgIndex ? "12px" : "4px",
+                  height: "4px",
+                  background: i === msgIndex ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.2)",
+                }}
+              />
+            ))}
+          </div>
+          <button
+            onClick={dismiss}
+            aria-label="Chiudi"
+            className="p-0.5 opacity-50 hover:opacity-90 transition-opacity"
+          >
+            <XMarkIcon className="h-3.5 w-3.5 text-[#0a0a0a]" />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

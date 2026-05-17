@@ -7,6 +7,9 @@ import Article from "@/lib/models/Article";
 import { JerseyAdBlock } from "@/app/_components/JerseyAdBlock";
 import ArticleContent from "@/app/_components/ArticleContent";
 import ReadingProgressBar from "@/app/_components/ReadingProgressBar";
+import ArticleCard from "@/components/news/ArticleCard";
+import { NewsArticle } from "@/types/news";
+import { Calendar, Clock, BookOpen, Share2, Bookmark, ChevronLeft } from "lucide-react";
 
 export const revalidate = 300;
 
@@ -21,9 +24,16 @@ export async function generateMetadata({
     const article = await Article.findOne({ slug, category: "news" });
     if (!article) return { title: "Article Not Found" };
     return {
-      title: article.title,
+      title: `${article.title} | Goal Mania`,
       description: article.summary,
       openGraph: {
+        title: article.title,
+        description: article.summary,
+        images: [article.image],
+        type: "article",
+      },
+      twitter: {
+        card: "summary_large_image",
         title: article.title,
         description: article.summary,
         images: [article.image],
@@ -58,13 +68,9 @@ function extractKeywords(title: string): string[] {
 const FOOTBALL_TEAMS = [
   "Juventus","Juve","Inter","Milan","Napoli","Roma","Lazio","Atalanta",
   "Fiorentina","Torino","Bologna","Verona","Cagliari","Lecce","Genoa",
-  "Udinese","Monza","Empoli","Salernitana","Sassuolo",
-  "Arsenal","Chelsea","Liverpool","Manchester City","Manchester United",
-  "Tottenham","Newcastle","West Ham","Aston Villa",
-  "Real Madrid","Barcelona","Atletico Madrid","Sevilla","Valencia",
-  "Bayern","Dortmund","Leipzig","PSG","Paris Saint-Germain","Monaco","Marseille",
-  "Portugal","Netherlands","Belgium","France","Spain","Germany",
-  "England","Brazil","Argentina","Italia",
+  "Udinese","Monza","Empoli","Arsenal","Chelsea","Liverpool","Manchester City",
+  "Manchester United","Tottenham","Real Madrid","Barcelona","Atletico Madrid",
+  "Bayern","Dortmund","PSG","Monaco",
 ];
 
 function extractTeamFromTitle(title: string): string | undefined {
@@ -75,7 +81,7 @@ function extractTeamFromTitle(title: string): string | undefined {
   return undefined;
 }
 
-async function getRelatedArticles(articleId: string, title: string) {
+async function getRelatedArticles(articleId: string, title: string): Promise<NewsArticle[]> {
   try {
     await connectDB();
     const keywords = extractKeywords(title);
@@ -94,7 +100,7 @@ async function getRelatedArticles(articleId: string, title: string) {
       }).sort({ publishedAt: -1 }).limit(3 - related.length).lean();
       related = [...related, ...filler];
     }
-    return JSON.parse(JSON.stringify(related));
+    return JSON.parse(JSON.stringify(related)).map((a: any) => ({ ...a, tags: a.tags ?? [] }));
   } catch {
     return [];
   }
@@ -122,6 +128,11 @@ function formatDate(date: string) {
   });
 }
 
+function estimateReadingTime(content?: string): number {
+  if (!content) return 5;
+  return Math.max(2, Math.ceil(content.split(/\s+/).length / 200));
+}
+
 export default async function ArticlePage({
   params,
 }: {
@@ -134,17 +145,18 @@ export default async function ArticlePage({
   const relatedArticles = await getRelatedArticles(article._id, article.title);
   const teamHint = extractTeamFromTitle(article.title);
   const [contentFirstPart, contentSecondPart] = splitContentForAd(article.content);
+  const readingTime = estimateReadingTime(article.content);
 
   const articleUrl = `https://goal-mania.it/news/${article.slug}`;
+  const shareLinks = {
+    twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(articleUrl)}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(articleUrl)}`,
+    whatsapp: `https://wa.me/?text=${encodeURIComponent(article.title + " " + articleUrl)}`,
+    telegram: `https://t.me/share/url?url=${encodeURIComponent(articleUrl)}&text=${encodeURIComponent(article.title)}`,
+  };
 
   return (
-    <div
-      style={{
-        background: "#0a0a0a",
-        color: "#f5f5f5",
-        minHeight: "100vh",
-      }}
-    >
+    <div style={{ background: "#0a0a0a", color: "#f5f5f5", minHeight: "100vh" }}>
       {/* Reading progress bar */}
       <ReadingProgressBar />
 
@@ -156,7 +168,7 @@ export default async function ArticlePage({
         <Link
           href="/"
           className="text-xs uppercase tracking-widest transition-colors hover:text-[#c8f000]"
-          style={{ fontFamily: "var(--font-mono, monospace)", color: "#888" }}
+          style={{ fontFamily: "var(--font-mono, monospace)", color: "#555" }}
         >
           Home
         </Link>
@@ -164,21 +176,21 @@ export default async function ArticlePage({
         <Link
           href="/news"
           className="text-xs uppercase tracking-widest transition-colors hover:text-[#c8f000]"
-          style={{ fontFamily: "var(--font-mono, monospace)", color: "#888" }}
+          style={{ fontFamily: "var(--font-mono, monospace)", color: "#555" }}
         >
           News
         </Link>
         <span style={{ color: "#c8f000" }} className="text-xs">/</span>
         <span
           className="text-xs uppercase tracking-widest truncate max-w-[200px]"
-          style={{ fontFamily: "var(--font-mono, monospace)", color: "#555" }}
+          style={{ fontFamily: "var(--font-mono, monospace)", color: "#333" }}
         >
           {article.title.slice(0, 30)}…
         </span>
       </div>
 
-      {/* ── Hero Section ── */}
-      <div className="relative w-full overflow-hidden" style={{ height: "min(65vh, 580px)" }}>
+      {/* ── Hero: Full-width image + title overlay ── */}
+      <div className="relative w-full overflow-hidden" style={{ height: "min(70vh, 600px)" }}>
         <Image
           src={article.image}
           alt={article.title}
@@ -187,98 +199,297 @@ export default async function ArticlePage({
           priority
           sizes="100vw"
         />
-        {/* Gradient overlay */}
+        {/* Multi-layered gradient for dramatic effect */}
         <div
           className="absolute inset-0"
           style={{
-            background:
-              "linear-gradient(to bottom, rgba(10,10,10,0.1) 0%, rgba(10,10,10,0.5) 50%, rgba(10,10,10,0.98) 100%)",
+            background: "linear-gradient(to bottom, rgba(10,10,10,0.05) 0%, rgba(10,10,10,0.3) 40%, rgba(10,10,10,0.98) 100%)",
           }}
         />
-        {/* Lime accent line at top of hero */}
+        {/* Lime accent bar top */}
         <div
-          className="absolute top-0 left-0 right-0 h-[2px]"
-          style={{ background: "linear-gradient(90deg, transparent, #c8f000, transparent)" }}
+          className="absolute top-0 left-0 right-0 h-[3px]"
+          style={{ background: "linear-gradient(90deg, transparent, #c8f000 30%, #c8f000 70%, transparent)" }}
         />
 
-        {/* Hero content */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 max-w-5xl mx-auto">
+        {/* Hero content overlaid at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 px-6 md:px-12 pb-8 max-w-5xl">
           {/* Category tag */}
           <span
-            className="inline-block mb-3 px-3 py-1 rounded-full text-white text-xs font-bold uppercase tracking-widest"
+            className="inline-block mb-4 px-3 py-1 rounded-full text-[#0a0a0a] text-[10px] font-black uppercase tracking-[3px]"
             style={{ background: "#c8f000", fontFamily: "var(--font-mono, monospace)" }}
           >
-            // News
+            News
           </span>
 
-          {/* Title */}
+          {/* Article title */}
           <h1
-            className="font-black uppercase text-white mb-4 leading-[1.05]"
+            className="font-black uppercase text-white mb-5 leading-[1.03]"
             style={{
               fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
-              fontSize: "clamp(1.8rem, 5vw, 3.5rem)",
-              textShadow: "0 2px 30px rgba(0,0,0,0.6)",
+              fontSize: "clamp(2rem, 5.5vw, 4rem)",
+              textShadow: "0 2px 40px rgba(0,0,0,0.7)",
               letterSpacing: "0.5px",
             }}
           >
             {article.title}
           </h1>
 
-          {/* Meta */}
-          <div
-            className="flex items-center gap-4 text-xs uppercase tracking-widest"
-            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(245,245,245,0.6)" }}
-          >
-            <time dateTime={article.publishedAt}>{formatDate(article.publishedAt)}</time>
-            <span style={{ color: "#c8f000" }}>·</span>
-            <span>{article.author}</span>
-            <span style={{ color: "#c8f000" }}>·</span>
-            <span style={{ color: "#c8f000" }}>⏱ 5 min</span>
+          {/* Article meta */}
+          <div className="flex items-center flex-wrap gap-4">
+            {/* Author avatar + name */}
+            <div className="flex items-center gap-2.5">
+              <div
+                className="w-9 h-9 rounded-full flex items-center justify-center font-black text-black text-sm flex-shrink-0"
+                style={{ background: "#c8f000", fontFamily: "var(--font-display, sans-serif)" }}
+              >
+                {article.author?.[0]?.toUpperCase() || "G"}
+              </div>
+              <div>
+                <div
+                  className="text-xs font-black uppercase text-white"
+                  style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "0.5px" }}
+                >
+                  {article.author}
+                </div>
+                <div
+                  className="text-[9px] uppercase"
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(245,245,245,0.4)" }}
+                >
+                  Redazione Goal Mania
+                </div>
+              </div>
+            </div>
+
+            <span style={{ color: "rgba(255,255,255,0.15)" }}>|</span>
+
+            <time
+              dateTime={article.publishedAt}
+              className="flex items-center gap-1.5 text-xs uppercase"
+              style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(245,245,245,0.5)" }}
+            >
+              <Calendar size={11} style={{ color: "#c8f000" }} />
+              {formatDate(article.publishedAt)}
+            </time>
+
+            <div
+              className="flex items-center gap-1.5 text-xs uppercase"
+              style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(245,245,245,0.5)" }}
+            >
+              <Clock size={11} style={{ color: "#c8f000" }} />
+              {readingTime} min di lettura
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── Main Layout: Content + Sidebar ── */}
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
+      {/* ── Main Layout ── */}
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 relative">
+        <div className="grid grid-cols-1 lg:grid-cols-[60px_1fr_320px] gap-0 lg:gap-6 xl:gap-10">
 
-          {/* ── Article Body ── */}
-          <main>
+          {/* ── LEFT: Sticky Share Bar (desktop) ── */}
+          <div className="hidden lg:block">
+            <div className="sticky top-28 flex flex-col items-center gap-3">
+              {/* Share label */}
+              <span
+                className="text-[8px] uppercase tracking-[3px] rotate-180 writing-mode-vertical"
+                style={{
+                  fontFamily: "var(--font-mono, monospace)",
+                  color: "rgba(255,255,255,0.2)",
+                  writingMode: "vertical-rl",
+                  marginBottom: "8px",
+                }}
+              >
+                Condividi
+              </span>
+
+              {/* Twitter */}
+              <a
+                href={shareLinks.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Condividi su Twitter"
+                className="share-icon-btn group"
+                style={{
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "50%",
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.2s",
+                  color: "rgba(255,255,255,0.4)",
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                }}
+              >
+                𝕏
+              </a>
+
+              {/* Facebook */}
+              <a
+                href={shareLinks.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Condividi su Facebook"
+                style={{
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "50%",
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.2s",
+                  color: "rgba(255,255,255,0.4)",
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                }}
+              >
+                f
+              </a>
+
+              {/* WhatsApp */}
+              <a
+                href={shareLinks.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Condividi su WhatsApp"
+                style={{
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "50%",
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.2s",
+                  color: "rgba(255,255,255,0.4)",
+                  fontSize: "13px",
+                }}
+              >
+                WA
+              </a>
+
+              {/* Telegram */}
+              <a
+                href={shareLinks.telegram}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Condividi su Telegram"
+                style={{
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "50%",
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.2s",
+                  color: "rgba(255,255,255,0.4)",
+                  fontSize: "13px",
+                }}
+              >
+                TG
+              </a>
+
+              {/* Divider */}
+              <div style={{ width: "1px", height: "24px", background: "rgba(255,255,255,0.08)" }} />
+
+              {/* Bookmark */}
+              <button
+                title="Salva articolo"
+                style={{
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "50%",
+                  background: "rgba(200,240,0,0.06)",
+                  border: "1px solid rgba(200,240,0,0.2)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.2s",
+                  color: "#c8f000",
+                  cursor: "pointer",
+                }}
+              >
+                <Bookmark size={16} />
+              </button>
+            </div>
+          </div>
+
+          {/* ── CENTER: Article Body ── */}
+          <main className="min-w-0">
             {/* Summary callout */}
             {article.summary && (
               <div
                 className="rounded-2xl p-6 mb-8"
                 style={{
-                  background: "rgba(200,240,0,0.06)",
-                  border: "1px solid rgba(200,240,0,0.2)",
+                  background: "rgba(200,240,0,0.05)",
+                  border: "1px solid rgba(200,240,0,0.18)",
                 }}
               >
                 <div
-                  className="text-xs uppercase tracking-widest mb-2"
+                  className="text-xs uppercase tracking-widest mb-2 flex items-center gap-2"
                   style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
                 >
-                  // In Breve
+                  <BookOpen size={12} />
+                  In Breve
                 </div>
-                <p className="text-white/80 text-lg leading-relaxed" style={{ fontFamily: "var(--font-body, sans-serif)" }}>
+                <p
+                  className="text-white/80 leading-relaxed"
+                  style={{ fontFamily: "var(--font-body, sans-serif)", fontSize: "17px", lineHeight: "1.8" }}
+                >
                   {article.summary}
                 </p>
               </div>
             )}
 
             {/* First content block */}
-            <div className="article-prose">
+            <div
+              className="article-prose article-dropcap"
+              style={{ fontSize: "18px", lineHeight: "1.85", fontFamily: "var(--font-body, sans-serif)" }}
+            >
               <ArticleContent
                 content={contentFirstPart}
-                className="prose prose-invert prose-lg max-w-none"
+                className="prose prose-invert prose-lg max-w-none prose-p:leading-[1.85] prose-p:text-white/80 prose-h2:font-black prose-h2:uppercase prose-h2:text-[#c8f000] prose-a:text-[#c8f000]"
               />
             </div>
 
-            {/* ── Jersey Ad Block ── */}
+            {/* Pull quote (if article is long enough) */}
+            {article.summary && (
+              <blockquote
+                className="my-10 pl-6 py-2"
+                style={{
+                  borderLeft: "4px solid #c8f000",
+                  background: "rgba(200,240,0,0.03)",
+                  borderRadius: "0 12px 12px 0",
+                }}
+              >
+                <p
+                  className="text-xl italic leading-relaxed"
+                  style={{
+                    fontFamily: "var(--font-body, sans-serif)",
+                    color: "rgba(245,245,245,0.85)",
+                    fontStyle: "italic",
+                  }}
+                >
+                  &ldquo;{article.summary}&rdquo;
+                </p>
+              </blockquote>
+            )}
+
+            {/* Jersey Ad Block */}
             <div
               className="my-10 rounded-2xl overflow-hidden"
               style={{
-                background: "linear-gradient(135deg, #111 0%, rgba(200,240,0,0.05) 100%)",
-                border: "1px solid rgba(200,240,0,0.15)",
+                background: "linear-gradient(135deg, #111 0%, rgba(200,240,0,0.04) 100%)",
+                border: "1px solid rgba(200,240,0,0.12)",
               }}
             >
               <div className="px-5 py-3 border-b" style={{ borderColor: "rgba(200,240,0,0.1)" }}>
@@ -294,109 +505,193 @@ export default async function ArticlePage({
               </div>
             </div>
 
+            {/* Related article inline (after ad) */}
+            {relatedArticles[0] && (
+              <div className="my-8">
+                <div
+                  className="text-[9px] uppercase tracking-[3px] mb-3 flex items-center gap-2"
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.2)" }}
+                >
+                  <span className="w-3 h-[1px]" style={{ background: "rgba(255,255,255,0.2)" }} />
+                  Correlati
+                </div>
+                <Link
+                  href={`/news/${relatedArticles[0].slug}`}
+                  className="group flex gap-4 rounded-xl p-3 transition-all duration-200 hover:border-[#c8f000]/20"
+                  style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+                >
+                  <div className="relative w-24 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                    <Image
+                      src={relatedArticles[0].image}
+                      alt={relatedArticles[0].title}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-110"
+                      sizes="96px"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0 flex flex-col justify-center">
+                    <span
+                      className="text-[9px] uppercase tracking-widest mb-1"
+                      style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
+                    >
+                      Leggi anche
+                    </span>
+                    <h4
+                      className="font-black uppercase text-sm leading-tight text-white group-hover:text-[#c8f000] transition-colors line-clamp-2"
+                      style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "0.3px" }}
+                    >
+                      {relatedArticles[0].title}
+                    </h4>
+                    <span
+                      className="text-[9px] uppercase mt-1"
+                      style={{ fontFamily: "var(--font-mono, monospace)", color: "#444" }}
+                    >
+                      {new Date(relatedArticles[0].publishedAt).toLocaleDateString("it-IT")}
+                    </span>
+                  </div>
+                </Link>
+              </div>
+            )}
+
             {/* Second content block */}
             {contentSecondPart && (
-              <div className="article-prose">
+              <div
+                className="article-prose"
+                style={{ fontSize: "18px", lineHeight: "1.85", fontFamily: "var(--font-body, sans-serif)" }}
+              >
                 <ArticleContent
                   content={contentSecondPart}
-                  className="prose prose-invert prose-lg max-w-none"
+                  className="prose prose-invert prose-lg max-w-none prose-p:leading-[1.85] prose-p:text-white/80 prose-h2:font-black prose-h2:uppercase prose-h2:text-[#c8f000] prose-a:text-[#c8f000]"
                 />
               </div>
             )}
 
+            {/* Mobile share bar */}
+            <div className="lg:hidden mt-8 mb-4">
+              <p
+                className="text-[9px] uppercase tracking-[3px] mb-3 flex items-center gap-2"
+                style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.3)" }}
+              >
+                <Share2 size={10} />
+                Condividi questo articolo
+              </p>
+              <div className="grid grid-cols-4 gap-2">
+                {[
+                  { label: "Twitter", href: shareLinks.twitter },
+                  { label: "Facebook", href: shareLinks.facebook },
+                  { label: "WhatsApp", href: shareLinks.whatsapp },
+                  { label: "Telegram", href: shareLinks.telegram },
+                ].map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all hover:border-[#c8f000]/30 hover:text-[#c8f000]"
+                    style={{
+                      fontFamily: "var(--font-display, sans-serif)",
+                      letterSpacing: "1px",
+                      background: "rgba(255,255,255,0.03)",
+                      border: "1px solid rgba(255,255,255,0.07)",
+                      color: "rgba(255,255,255,0.5)",
+                    }}
+                  >
+                    {s.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+
             {/* ── Article Footer ── */}
-            <div
-              className="mt-12 pt-8 border-t"
-              style={{ borderColor: "rgba(255,255,255,0.08)" }}
-            >
-              {/* Author card */}
+            <div className="mt-12 pt-8 border-t" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
+              {/* Author bio card */}
               <div
-                className="flex items-center gap-4 p-5 rounded-2xl mb-6"
+                className="flex items-start gap-4 p-6 rounded-2xl mb-8"
                 style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
               >
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center font-black text-black text-lg flex-shrink-0"
+                  className="w-14 h-14 rounded-full flex items-center justify-center font-black text-black text-xl flex-shrink-0"
                   style={{ background: "#c8f000", fontFamily: "var(--font-display, sans-serif)" }}
                 >
-                  {article.author?.[0]?.toUpperCase() || "GM"}
+                  {article.author?.[0]?.toUpperCase() || "G"}
                 </div>
                 <div className="flex-1">
                   <div
-                    className="text-[9px] uppercase tracking-[3px] mb-0.5"
+                    className="text-[9px] uppercase tracking-[3px] mb-1"
                     style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
                   >
-                    // Autore dell'articolo
+                    // Autore
                   </div>
                   <div
-                    className="text-white font-black uppercase tracking-wide"
-                    style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "1.1rem" }}
+                    className="text-white font-black uppercase tracking-wide text-lg mb-1"
+                    style={{ fontFamily: "var(--font-display, sans-serif)" }}
                   >
                     {article.author}
                   </div>
-                  <p className="text-xs text-white/30 mt-0.5">Redazione Goal Mania</p>
+                  <p className="text-sm text-white/40 leading-relaxed" style={{ fontFamily: "var(--font-body, sans-serif)" }}>
+                    Giornalista della redazione di Goal Mania. Segue il calcio italiano ed europeo con passione da oltre 10 anni. Specializzato in calciomercato e tattica.
+                  </p>
+                  <div className="flex items-center gap-3 mt-3">
+                    {["Twitter", "Instagram"].map((sn) => (
+                      <a
+                        key={sn}
+                        href="#"
+                        className="text-[9px] uppercase tracking-widest px-3 py-1.5 rounded-full transition-all hover:text-[#c8f000] hover:border-[#c8f000]/30"
+                        style={{
+                          fontFamily: "var(--font-mono, monospace)",
+                          color: "rgba(255,255,255,0.3)",
+                          border: "1px solid rgba(255,255,255,0.08)",
+                        }}
+                      >
+                        {sn}
+                      </a>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Mobile share buttons */}
-              <div className="lg:hidden mb-6">
+              {/* Comments placeholder */}
+              <div
+                className="rounded-2xl p-8 text-center"
+                style={{
+                  background: "rgba(255,255,255,0.02)",
+                  border: "1px dashed rgba(255,255,255,0.08)",
+                }}
+              >
                 <div
-                  className="text-[9px] uppercase tracking-[3px] mb-3 flex items-center gap-2"
-                  style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
+                  className="text-[10px] uppercase tracking-[3px] mb-2"
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.2)" }}
                 >
-                  <span className="w-3 h-[2px] rounded-full inline-block" style={{ background: "#c8f000" }} />
-                  Condividi questo articolo
+                  // Commenti
                 </div>
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    {
-                      label: "Twitter / X",
-                      href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(articleUrl)}`,
-                    },
-                    {
-                      label: "Facebook",
-                      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(articleUrl)}`,
-                    },
-                    {
-                      label: "WhatsApp",
-                      href: `https://wa.me/?text=${encodeURIComponent(article.title + " " + articleUrl)}`,
-                    },
-                  ].map((s) => (
-                    <a
-                      key={s.label}
-                      href={s.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all hover:border-[#c8f000]/30 hover:text-[#c8f000]"
-                      style={{
-                        fontFamily: "var(--font-display, sans-serif)",
-                        letterSpacing: "1px",
-                        background: "rgba(255,255,255,0.03)",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                        color: "rgba(255,255,255,0.6)",
-                      }}
-                    >
-                      {s.label}
-                    </a>
-                  ))}
-                </div>
+                <p
+                  className="text-sm font-black uppercase text-white/30 mb-1"
+                  style={{ fontFamily: "var(--font-display, sans-serif)" }}
+                >
+                  Sezione Commenti — Prossimamente
+                </p>
+                <p className="text-xs text-white/20" style={{ fontFamily: "var(--font-body, sans-serif)" }}>
+                  I commenti saranno disponibili presto. Seguici sui social per interagire!
+                </p>
               </div>
 
-              <div className="flex items-center justify-between gap-4 flex-wrap">
+              {/* Navigation */}
+              <div className="flex items-center justify-between gap-4 flex-wrap mt-8">
                 <Link
                   href="/news"
                   className="flex items-center gap-2 text-xs uppercase tracking-widest transition-colors hover:text-[#c8f000]"
-                  style={{ fontFamily: "var(--font-mono, monospace)", color: "#888" }}
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "#666" }}
                 >
-                  ← Tutte le News
+                  <ChevronLeft size={14} /> Tutte le News
                 </Link>
                 <Link
                   href="/news"
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-full text-black font-bold text-sm uppercase tracking-wider transition-all hover:opacity-90 hover:-translate-y-0.5"
+                  className="flex items-center gap-2 px-6 py-3 rounded-full text-black font-bold text-sm uppercase tracking-wider transition-all hover:opacity-90 hover:-translate-y-0.5"
                   style={{
                     background: "#c8f000",
                     fontFamily: "var(--font-display, sans-serif)",
                     letterSpacing: "2px",
-                    boxShadow: "0 4px 20px rgba(200,240,0,0.2)",
+                    boxShadow: "0 4px 20px rgba(200,240,0,0.25)",
                   }}
                 >
                   Più News →
@@ -405,9 +700,37 @@ export default async function ArticlePage({
             </div>
           </main>
 
-          {/* ── Sticky Sidebar ── */}
+          {/* ── RIGHT: Sticky Sidebar ── */}
           <aside className="hidden lg:block">
             <div className="sticky top-24 space-y-5">
+
+              {/* Table of contents placeholder */}
+              <div
+                className="rounded-2xl p-5"
+                style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                <div
+                  className="text-xs uppercase tracking-widest mb-4 pb-3 border-b flex items-center gap-2"
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000", borderColor: "rgba(200,240,0,0.12)" }}
+                >
+                  <span className="w-3 h-[2px] rounded-full" style={{ background: "#c8f000" }} />
+                  In questo articolo
+                </div>
+                <div className="flex flex-col gap-2">
+                  {[article.title.split(" ").slice(0, 4).join(" "), "Analisi e Commento", "Conclusioni"].map((item, i) => (
+                    <div
+                      key={i}
+                      className="flex items-start gap-2 text-xs"
+                      style={{ color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-body, sans-serif)" }}
+                    >
+                      <span style={{ color: "#c8f000", flexShrink: 0, marginTop: "2px", fontFamily: "var(--font-mono, monospace)", fontSize: "10px" }}>
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="leading-relaxed">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               {/* Share widget */}
               <div
@@ -416,46 +739,38 @@ export default async function ArticlePage({
               >
                 <div
                   className="text-xs uppercase tracking-widest mb-4 pb-3 border-b flex items-center gap-2"
-                  style={{
-                    fontFamily: "var(--font-mono, monospace)",
-                    color: "#c8f000",
-                    borderColor: "rgba(200,240,0,0.15)",
-                  }}
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000", borderColor: "rgba(200,240,0,0.12)" }}
                 >
-                  <span className="w-3 h-[2px] rounded-full inline-block" style={{ background: "#c8f000" }} />
+                  <span className="w-3 h-[2px] rounded-full" style={{ background: "#c8f000" }} />
                   Condividi
                 </div>
                 {[
-                  {
-                    label: "Twitter / X",
-                    href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(articleUrl)}`,
-                    icon: "𝕏",
-                  },
-                  {
-                    label: "Facebook",
-                    href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(articleUrl)}`,
-                    icon: "f",
-                  },
-                  {
-                    label: "WhatsApp",
-                    href: `https://wa.me/?text=${encodeURIComponent(article.title + " " + articleUrl)}`,
-                    icon: "●",
-                  },
+                  { label: "Twitter / X", href: shareLinks.twitter, icon: "𝕏" },
+                  { label: "Facebook", href: shareLinks.facebook, icon: "f" },
+                  { label: "WhatsApp", href: shareLinks.whatsapp, icon: "●" },
+                  { label: "Telegram", href: shareLinks.telegram, icon: "✈" },
                 ].map((s) => (
                   <a
                     key={s.label}
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="share-btn"
+                    className="flex items-center gap-3 py-2.5 px-3 rounded-xl mb-2 text-xs font-bold uppercase tracking-wider transition-all hover:border-[#c8f000]/20 hover:text-[#c8f000]"
+                    style={{
+                      fontFamily: "var(--font-display, sans-serif)",
+                      letterSpacing: "1px",
+                      background: "rgba(255,255,255,0.02)",
+                      border: "1px solid rgba(255,255,255,0.05)",
+                      color: "rgba(255,255,255,0.5)",
+                    }}
                   >
-                    <span className="text-[#c8f000] text-sm w-5 text-center">{s.icon}</span>
+                    <span style={{ color: "#c8f000", fontSize: "14px", width: "20px", textAlign: "center" }}>{s.icon}</span>
                     {s.label}
                   </a>
                 ))}
               </div>
 
-              {/* Related articles sidebar */}
+              {/* Related articles */}
               {relatedArticles.length > 0 && (
                 <div
                   className="rounded-2xl p-5"
@@ -463,17 +778,13 @@ export default async function ArticlePage({
                 >
                   <div
                     className="text-xs uppercase tracking-widest mb-4 pb-3 border-b flex items-center gap-2"
-                    style={{
-                      fontFamily: "var(--font-mono, monospace)",
-                      color: "#c8f000",
-                      borderColor: "rgba(200,240,0,0.15)",
-                    }}
+                    style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000", borderColor: "rgba(200,240,0,0.12)" }}
                   >
-                    <span className="w-3 h-[2px] rounded-full inline-block" style={{ background: "#c8f000" }} />
-                    Leggi anche
+                    <span className="w-3 h-[2px] rounded-full" style={{ background: "#c8f000" }} />
+                    Più letti oggi
                   </div>
                   <div className="flex flex-col gap-4">
-                    {relatedArticles.slice(0, 4).map((rel: any) => (
+                    {relatedArticles.slice(0, 4).map((rel) => (
                       <Link
                         key={rel._id}
                         href={`/news/${rel.slug}`}
@@ -490,13 +801,13 @@ export default async function ArticlePage({
                         </div>
                         <div className="flex-1 min-w-0">
                           <div
-                            className="text-[10px] uppercase tracking-widest mb-1"
-                            style={{ fontFamily: "var(--font-mono, monospace)", color: "#888" }}
+                            className="text-[9px] uppercase tracking-widest mb-1"
+                            style={{ fontFamily: "var(--font-mono, monospace)", color: "#555" }}
                           >
                             {new Date(rel.publishedAt).toLocaleDateString("it-IT")}
                           </div>
                           <h4
-                            className="text-xs font-bold uppercase leading-tight transition-colors group-hover:text-[#c8f000] line-clamp-2"
+                            className="text-xs font-black uppercase leading-tight transition-colors group-hover:text-[#c8f000] line-clamp-2"
                             style={{ fontFamily: "var(--font-display, sans-serif)", color: "#f5f5f5", letterSpacing: "0.5px" }}
                           >
                             {rel.title}
@@ -508,12 +819,40 @@ export default async function ArticlePage({
                 </div>
               )}
 
-              {/* Back to news CTA */}
+              {/* Newsletter widget */}
+              <div
+                className="rounded-2xl p-5 text-center"
+                style={{
+                  background: "linear-gradient(135deg, #111 0%, rgba(200,240,0,0.05) 100%)",
+                  border: "1px solid rgba(200,240,0,0.15)",
+                }}
+              >
+                <div
+                  className="text-[10px] uppercase tracking-[3px] mb-2 flex items-center justify-center gap-2"
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
+                >
+                  Newsletter
+                </div>
+                <p className="text-xs text-white/35 mb-4 leading-relaxed">
+                  Le notizie più importanti ogni giorno
+                </p>
+                <Link href="/shop">
+                  <button
+                    className="flex items-center mx-auto justify-center gap-2 px-5 py-2.5 rounded-full font-black text-black uppercase text-xs tracking-wider transition-all hover:opacity-90"
+                    style={{ background: "#c8f000", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1.5px" }}
+                  >
+                    Iscriviti
+                  </button>
+                </Link>
+              </div>
+
+              {/* Back to news */}
               <Link
                 href="/news"
-                className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-white font-bold uppercase tracking-wider text-sm transition-all hover:opacity-90 hover:-translate-y-0.5"
+                className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl font-bold uppercase tracking-wider text-sm transition-all hover:opacity-90"
                 style={{
                   background: "#c8f000",
+                  color: "#0a0a0a",
                   fontFamily: "var(--font-display, sans-serif)",
                   letterSpacing: "2px",
                   boxShadow: "0 4px 20px rgba(200,240,0,0.2)",
@@ -526,111 +865,32 @@ export default async function ArticlePage({
         </div>
       </div>
 
-      {/* ── Related Articles — Full Width Grid ── */}
+      {/* ── "Ti Potrebbe Interessare" — 3 article cards ── */}
       {relatedArticles.length > 0 && (
-        <section
-          className="border-t"
-          style={{ borderColor: "rgba(255,255,255,0.06)" }}
-        >
+        <section className="border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
           <div className="max-w-7xl mx-auto px-4 md:px-8 py-14">
-            {/* Section header */}
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <span
-                  className="w-5 h-[2px] rounded-full inline-block"
-                  style={{ background: "#c8f000" }}
-                />
+                <span className="w-5 h-[2px] rounded-full" style={{ background: "#c8f000" }} />
                 <span
                   className="text-xs uppercase tracking-[4px]"
                   style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
                 >
-                  // Articoli Correlati
+                  // Ti Potrebbe Interessare
                 </span>
               </div>
               <Link
                 href="/news"
                 className="text-xs uppercase tracking-widest transition-colors hover:text-[#c8f000]"
-                style={{ fontFamily: "var(--font-mono, monospace)", color: "#888" }}
+                style={{ fontFamily: "var(--font-mono, monospace)", color: "#555" }}
               >
                 Vedi tutti →
               </Link>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {relatedArticles.map((rel: any, i: number) => (
-                <Link
-                  key={rel._id}
-                  href={`/news/${rel.slug}`}
-                  className="group flex flex-col rounded-2xl overflow-hidden transition-all duration-400 hover:-translate-y-2"
-                  style={{
-                    background: "#111",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                    transitionDuration: `${350 + i * 50}ms`,
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(200,240,0,0.2)";
-                    (e.currentTarget as HTMLElement).style.boxShadow = "0 16px 48px rgba(0,0,0,0.4)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.06)";
-                    (e.currentTarget as HTMLElement).style.boxShadow = "none";
-                  }}
-                >
-                  {/* Image */}
-                  <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={rel.image}
-                      alt={rel.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
-                    {/* Lime line on hover */}
-                    <div
-                      className="absolute top-0 left-0 right-0 h-[2px] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
-                      style={{ background: "linear-gradient(90deg, #c8f000, rgba(200,240,0,0.3))" }}
-                    />
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 p-5 flex flex-col">
-                    <div
-                      className="text-[10px] uppercase tracking-widest mb-2"
-                      style={{ fontFamily: "var(--font-mono, monospace)", color: "#888" }}
-                    >
-                      {new Date(rel.publishedAt).toLocaleDateString("it-IT", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </div>
-                    <h3
-                      className="font-black uppercase leading-tight mb-3 transition-colors group-hover:text-[#c8f000] flex-1"
-                      style={{
-                        fontFamily: "var(--font-display, sans-serif)",
-                        fontSize: "1rem",
-                        letterSpacing: "0.5px",
-                        color: "#f5f5f5",
-                      }}
-                    >
-                      {rel.title}
-                    </h3>
-                    {rel.summary && (
-                      <p
-                        className="text-sm leading-relaxed line-clamp-2"
-                        style={{ color: "rgba(245,245,245,0.5)", fontFamily: "var(--font-body, sans-serif)" }}
-                      >
-                        {rel.summary}
-                      </p>
-                    )}
-                    <div
-                      className="mt-4 text-xs uppercase tracking-widest transition-colors group-hover:text-[#c8f000]"
-                      style={{ fontFamily: "var(--font-mono, monospace)", color: "#555" }}
-                    >
-                      Leggi →
-                    </div>
-                  </div>
-                </Link>
+              {relatedArticles.map((rel) => (
+                <ArticleCard key={rel._id} article={rel} variant="standard" />
               ))}
             </div>
           </div>

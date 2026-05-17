@@ -1,40 +1,73 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Instagram, Twitter, Globe, ShieldCheck, Truck, RotateCcw, BadgeCheck } from "lucide-react";
+import {
+  Instagram,
+  Twitter,
+  Youtube,
+  Facebook,
+  ShieldCheck,
+  Truck,
+  RotateCcw,
+  BadgeCheck,
+} from "lucide-react";
+
+// TikTok icon (not in lucide)
+function TikTokIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34l.04-8.41A8.16 8.16 0 0 0 21 9.41V6.01a4.85 4.85 0 0 1-1.41.68z" />
+    </svg>
+  );
+}
+
+const SHOP_LINKS = [
+  { label: "Serie A", href: "/international/serieA" },
+  { label: "Premier League", href: "/international/premierLeague" },
+  { label: "La Liga", href: "/international/laliga" },
+  { label: "Bundesliga", href: "/international/bundesliga" },
+  { label: "Champions League", href: "/shop" },
+  { label: "Mondiali 2026", href: "/shop/worldcup" },
+  { label: "Maglie Retro", href: "/shop/retro" },
+];
+
+const NEWS_LINKS = [
+  { label: "Tutte le Notizie", href: "/news" },
+  { label: "Calciomercato", href: "/news?category=calciomercato" },
+  { label: "Serie A", href: "/news?category=serie-a" },
+  { label: "Champions League", href: "/news?category=champions-league" },
+  { label: "Premier League", href: "/news?category=premier-league" },
+  { label: "Mondiali 2026", href: "/news?category=mondiali" },
+];
+
+const SUPPORT_LINKS = [
+  { label: "FAQ", href: "/contact" },
+  { label: "I Miei Ordini", href: "/account/orders" },
+  { label: "Resi e Rimborsi", href: "/contact" },
+  { label: "Guida alle Taglie", href: "/contact" },
+  { label: "Contattaci", href: "/contact" },
+  { label: "About", href: "/about" },
+];
+
+const TRUST_BADGES = [
+  { icon: Truck, label: "Spedizione Gratuita", sub: "Sopra €89" },
+  { icon: RotateCcw, label: "Reso Gratuito", sub: "30 giorni" },
+  { icon: ShieldCheck, label: "Pagamento Sicuro", sub: "SSL 256-bit" },
+  { icon: BadgeCheck, label: "Originale Garantito", sub: "100% autentico" },
+];
+
+const PAYMENT_METHODS = [
+  "VISA", "Mastercard", "PayPal", "Apple Pay", "Google Pay", "Klarna", "Stripe",
+];
+
+const SOCIALS = [
+  { href: "https://www.instagram.com/goalmaniaofficial/", icon: Instagram, label: "Instagram" },
+  { href: "https://www.facebook.com/goalmania", icon: Facebook, label: "Facebook" },
+  { href: "https://x.com/goalmania_", icon: Twitter, label: "Twitter / X" },
+  { href: "https://www.youtube.com/@goalmania", icon: Youtube, label: "YouTube" },
+  { href: "https://www.tiktok.com/@goalmania_", icon: TikTokIcon, label: "TikTok" },
+];
 
 export function Footer() {
-  const links = [
-    { label: "About", href: "/about" },
-    { label: "News", href: "/news" },
-    { label: "Shop", href: "/shop" },
-    { label: "Contact", href: "/contact" },
-    { label: "Privacy", href: "/privacy" },
-    { label: "Termini", href: "/terms" },
-    { label: "Ordini", href: "/account/orders" },
-  ];
-
-  const socials = [
-    { href: "https://www.tiktok.com/@goalmania_", icon: <Globe size={18} />, label: "TikTok" },
-    { href: "https://x.com/goalmania_", icon: <Twitter size={18} />, label: "Twitter" },
-    { href: "https://www.instagram.com/goalmaniaofficial/", icon: <Instagram size={18} />, label: "Instagram" },
-  ];
-
-  const trustBadges = [
-    { icon: ShieldCheck, label: "Originale Garantito", sub: "100% autentico" },
-    { icon: Truck, label: "Spedizione Gratuita", sub: "Sopra €89" },
-    { icon: RotateCcw, label: "Reso Gratuito", sub: "30 giorni" },
-    { icon: BadgeCheck, label: "Pagamento Sicuro", sub: "Crittografato SSL" },
-  ];
-
-  const paymentMethods = [
-    { label: "VISA", color: "#1434CB" },
-    { label: "Mastercard", color: "#EB001B" },
-    { label: "PayPal", color: "#003087" },
-    { label: "Apple Pay", color: "#fff" },
-    { label: "Stripe", color: "#635BFF" },
-    { label: "Google Pay", color: "#4285F4" },
-  ];
-
   return (
     <footer
       style={{
@@ -42,77 +75,40 @@ export function Footer() {
         borderTop: "0.5px solid rgba(200,240,0,0.12)",
       }}
     >
-      {/* Trust badges strip */}
+      {/* ── Newsletter bar ── */}
       <div
         className="border-b"
-        style={{ borderColor: "rgba(255,255,255,0.04)", background: "#0d0d0d" }}
+        style={{ borderColor: "rgba(255,255,255,0.05)", background: "#0d0d0d" }}
       >
-        <div className="max-w-6xl mx-auto px-6 py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {trustBadges.map(({ icon: Icon, label, sub }) => (
-              <div key={label} className="flex items-center gap-3 group">
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110"
-                  style={{ background: "rgba(200,240,0,0.08)", border: "1px solid rgba(200,240,0,0.15)" }}
-                >
-                  <Icon size={18} style={{ color: "#c8f000" }} />
-                </div>
-                <div>
-                  <p
-                    className="text-xs font-black uppercase text-white leading-tight"
-                    style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "0.5px" }}
-                  >
-                    {label}
-                  </p>
-                  <p
-                    className="text-[10px] mt-0.5"
-                    style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.5)" }}
-                  >
-                    {sub}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Newsletter bar */}
-      <div
-        className="border-b"
-        style={{ borderColor: "rgba(255,255,255,0.06)" }}
-      >
-        <div className="max-w-4xl mx-auto px-6 py-12 text-center">
+        <div className="max-w-5xl mx-auto px-6 py-14 text-center">
           <div
-            className="text-xs uppercase tracking-[4px] mb-4 flex items-center justify-center gap-2"
+            className="text-[10px] uppercase tracking-[4px] mb-4 flex items-center justify-center gap-2"
             style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
           >
             <span className="w-4 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
-            Newsletter
+            // Newsletter
             <span className="w-4 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
           </div>
           <h2
             className="font-black uppercase text-white mb-3 leading-tight"
             style={{
               fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
-              fontSize: "clamp(1.4rem, 4vw, 2.2rem)",
+              fontSize: "clamp(1.6rem, 4vw, 2.4rem)",
               letterSpacing: "1px",
             }}
           >
-            Resta informato.{" "}
-            <span style={{ color: "#c8f000" }}>Rimani un passo avanti.</span>
+            Resta aggiornato su{" "}
+            <span style={{ color: "#c8f000" }}>offerte esclusive</span> e nuovi arrivi
           </h2>
           <p
-            className="mb-8 max-w-xl mx-auto"
+            className="mb-8 max-w-lg mx-auto text-sm"
             style={{
-              color: "rgba(245,245,245,0.5)",
+              color: "rgba(245,245,245,0.45)",
               fontFamily: "var(--font-body, sans-serif)",
-              fontSize: "0.95rem",
               lineHeight: "1.7",
             }}
           >
-            Iscriviti per ricevere aggiornamenti su partite, mercato, interviste
-            esclusive e offerte speciali.
+            Iscriviti per ricevere aggiornamenti su offerte speciali, nuovi arrivi e notizie dal mondo del calcio.
           </p>
 
           <div className="flex justify-center">
@@ -126,12 +122,12 @@ export function Footer() {
               <input
                 type="email"
                 placeholder="La tua email..."
-                className="flex-1 bg-transparent text-white px-5 py-2 text-sm outline-none placeholder-white/30"
+                className="flex-1 bg-transparent text-white px-5 py-2 text-sm outline-none placeholder-white/25"
                 style={{ fontFamily: "var(--font-body, sans-serif)" }}
               />
               <button
                 type="submit"
-                className="px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider transition-all hover:opacity-90 hover:-translate-y-0.5"
+                className="px-6 py-2.5 rounded-full font-black text-sm uppercase tracking-wider transition-all hover:opacity-90 hover:-translate-y-0.5"
                 style={{
                   color: "#0a0a0a",
                   background: "#c8f000",
@@ -144,15 +140,57 @@ export function Footer() {
               </button>
             </div>
           </div>
+
+          <p
+            className="mt-4 text-[10px] uppercase tracking-widest"
+            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.2)" }}
+          >
+            Nessuno spam. Cancellati quando vuoi.
+          </p>
         </div>
       </div>
 
-      {/* Main footer */}
-      <div className="max-w-7xl mx-auto px-6 py-10">
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8">
-          {/* Brand */}
-          <div className="flex flex-col items-center md:items-start gap-3">
-            <Link href="/" className="flex items-center gap-3 group">
+      {/* ── Trust badges strip ── */}
+      <div
+        className="border-b"
+        style={{ borderColor: "rgba(255,255,255,0.04)" }}
+      >
+        <div className="max-w-6xl mx-auto px-6 py-7">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+            {TRUST_BADGES.map(({ icon: Icon, label, sub }) => (
+              <div key={label} className="flex items-center gap-3 group">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110"
+                  style={{ background: "rgba(200,240,0,0.07)", border: "1px solid rgba(200,240,0,0.13)" }}
+                >
+                  <Icon size={18} style={{ color: "#c8f000" }} />
+                </div>
+                <div>
+                  <p
+                    className="text-xs font-black uppercase text-white leading-tight"
+                    style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "0.5px" }}
+                  >
+                    {label}
+                  </p>
+                  <p
+                    className="text-[10px] mt-0.5"
+                    style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.45)" }}
+                  >
+                    {sub}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Main footer grid ── */}
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
+          {/* Brand column */}
+          <div className="col-span-2 md:col-span-4 lg:col-span-1">
+            <Link href="/" className="flex items-center gap-3 group mb-4 w-fit">
               <Image
                 src="/images/recentUpdate/desktop-logo.png"
                 alt="Goal Mania"
@@ -168,101 +206,182 @@ export function Footer() {
               </span>
             </Link>
             <p
-              className="text-xs text-center md:text-left max-w-[200px]"
-              style={{ color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-mono, monospace)", lineHeight: "1.6" }}
+              className="text-xs max-w-[180px] mb-6"
+              style={{ color: "rgba(255,255,255,0.28)", fontFamily: "var(--font-mono, monospace)", lineHeight: "1.7" }}
             >
               // The football universe
               <br />
               Maglie · News · Analisi
+              <br />
+              Dal 2024, con passione.
             </p>
+            {/* Socials */}
+            <div className="flex flex-wrap gap-2">
+              {SOCIALS.map(({ href, icon: Icon, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  aria-label={label}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center border transition-all duration-200 hover:border-[#c8f000]/40 hover:text-[#c8f000] hover:-translate-y-0.5"
+                  style={{
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    color: "rgba(255,255,255,0.35)",
+                  }}
+                >
+                  <Icon size={15} />
+                </Link>
+              ))}
+            </div>
           </div>
 
-          {/* Nav links */}
-          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-            {links.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className="text-xs uppercase tracking-widest transition-colors hover:text-[#c8f000]"
-                style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.4)" }}
-              >
-                {l.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Socials */}
-          <div className="flex items-center gap-2">
-            {socials.map((s) => (
-              <Link
-                key={s.href}
-                href={s.href}
-                aria-label={s.label}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-xl flex items-center justify-center border transition-all duration-200 hover:border-[#c8f000]/40 hover:text-[#c8f000] hover:-translate-y-0.5"
-                style={{
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  color: "rgba(255,255,255,0.4)",
-                }}
-              >
-                {s.icon}
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Payment methods */}
-        <div
-          className="mt-8 pt-8 border-t flex flex-col sm:flex-row items-center justify-between gap-4"
-          style={{ borderColor: "rgba(255,255,255,0.06)" }}
-        >
-          <p
-            className="text-[10px] uppercase tracking-widest"
-            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.2)" }}
-          >
-            Metodi di Pagamento Accettati
-          </p>
-          <div className="flex items-center gap-2 flex-wrap justify-center">
-            {paymentMethods.map((method) => (
-              <span
-                key={method.label}
-                className="text-[9px] font-black px-2.5 py-1.5 rounded-lg tracking-widest"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  color: "rgba(255,255,255,0.35)",
-                  fontFamily: "var(--font-mono, monospace)",
-                  border: "1px solid rgba(255,255,255,0.06)",
-                }}
-              >
-                {method.label}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom bar */}
-        <div
-          className="mt-6 pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-3"
-          style={{ borderColor: "rgba(255,255,255,0.04)" }}
-        >
-          <span
-            className="text-xs"
-            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.2)" }}
-          >
-            &copy; 2025 Goal Mania. All rights reserved.
-          </span>
-          <div className="flex items-center gap-2">
-            <span
-              className="w-1.5 h-1.5 rounded-full inline-block animate-dot-blink"
-              style={{ background: "#c8f000" }}
-            />
-            <span
-              className="text-xs"
-              style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.5)" }}
+          {/* Shop links */}
+          <div>
+            <div
+              className="text-[9px] uppercase tracking-[3px] mb-4"
+              style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}
             >
-              // Goal Mania is live
+              // Shop
+            </div>
+            <ul className="space-y-2.5">
+              {SHOP_LINKS.map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="text-xs transition-colors hover:text-[#c8f000]"
+                    style={{ fontFamily: "var(--font-body, sans-serif)", color: "rgba(255,255,255,0.38)" }}
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* News links */}
+          <div>
+            <div
+              className="text-[9px] uppercase tracking-[3px] mb-4"
+              style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}
+            >
+              // News
+            </div>
+            <ul className="space-y-2.5">
+              {NEWS_LINKS.map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="text-xs transition-colors hover:text-[#c8f000]"
+                    style={{ fontFamily: "var(--font-body, sans-serif)", color: "rgba(255,255,255,0.38)" }}
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Support links */}
+          <div>
+            <div
+              className="text-[9px] uppercase tracking-[3px] mb-4"
+              style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}
+            >
+              // Supporto
+            </div>
+            <ul className="space-y-2.5">
+              {SUPPORT_LINKS.map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="text-xs transition-colors hover:text-[#c8f000]"
+                    style={{ fontFamily: "var(--font-body, sans-serif)", color: "rgba(255,255,255,0.38)" }}
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Payment methods + legal ── */}
+      <div
+        className="border-t"
+        style={{ borderColor: "rgba(255,255,255,0.04)" }}
+      >
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          {/* Payment row */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
+            <p
+              className="text-[10px] uppercase tracking-widest"
+              style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.18)" }}
+            >
+              Metodi di Pagamento Accettati
+            </p>
+            <div className="flex items-center gap-2 flex-wrap justify-center">
+              {PAYMENT_METHODS.map((method) => (
+                <span
+                  key={method}
+                  className="text-[9px] font-black px-2.5 py-1.5 rounded-lg tracking-widest"
+                  style={{
+                    background: "rgba(255,255,255,0.04)",
+                    color: "rgba(255,255,255,0.3)",
+                    fontFamily: "var(--font-mono, monospace)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                  }}
+                >
+                  {method}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div
+            className="pt-5 border-t flex flex-col sm:flex-row items-center justify-between gap-3"
+            style={{ borderColor: "rgba(255,255,255,0.04)" }}
+          >
+            <span
+              className="text-[10px]"
+              style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.18)" }}
+            >
+              &copy; 2025 Goal Mania. All rights reserved.
             </span>
+
+            {/* Legal links */}
+            <div className="flex items-center gap-4 flex-wrap justify-center">
+              {[
+                { label: "Privacy Policy", href: "/privacy" },
+                { label: "Cookie Policy", href: "/privacy" },
+                { label: "Termini di Servizio", href: "/terms" },
+              ].map((l) => (
+                <Link
+                  key={l.href + l.label}
+                  href={l.href}
+                  className="text-[10px] uppercase tracking-widest hover:text-[#c8f000] transition-colors"
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.2)" }}
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </div>
+
+            {/* Live dot */}
+            <div className="flex items-center gap-2">
+              <span
+                className="w-1.5 h-1.5 rounded-full inline-block animate-dot-blink"
+                style={{ background: "#c8f000" }}
+              />
+              <span
+                className="text-[10px]"
+                style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.45)" }}
+              >
+                // Goal Mania is live
+              </span>
+            </div>
           </div>
         </div>
       </div>

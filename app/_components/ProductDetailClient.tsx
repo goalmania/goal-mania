@@ -39,6 +39,7 @@ import { Label } from "@/components/ui/label";
 import { ProductSizeChart } from "@/app/_components/ProductSizeChart";
 import ProductReviews from "@/app/_components/ProductReviews";
 import DiscountRulesDisplay from "@/app/_components/DiscountRulesDisplay";
+import SizeGuideModal from "@/components/shop/SizeGuideModal";
 import {
   ArrowRight,
   MinusIcon,
@@ -89,7 +90,8 @@ export default function ProductDetailClient({
     size?: string;
   }>({});
   const [sizeChartOpen, setSizeChartOpen] = useState(false);
-  const [viewers, setViewers] = useState(() => Math.floor(Math.random() * 15) + 6);
+  const [viewers, setViewers] = useState(() => Math.floor(Math.random() * 30) + 30);
+  const [soldThisWeek] = useState(() => Math.floor(Math.random() * 20) + 15);
   const [deliveryCountdown, setDeliveryCountdown] = useState("");
   const { t } = useI18n();
   const {
@@ -329,24 +331,53 @@ export default function ProductDetailClient({
 
   return (
     <div className="bg-[#0a0a0a] font-munish">
-      {/* Sticky mobile CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 p-3 border-t flex gap-2" style={{ background: "rgba(10,10,10,0.98)", borderColor: "rgba(200,240,0,0.15)", backdropFilter: "blur(16px)" }}>
-        <button
-          type="button"
-          onClick={handleAddToCart}
-          className="flex-1 h-12 bg-[#111] text-white flex items-center justify-center gap-2 rounded-2xl text-sm font-black uppercase tracking-tight hover:bg-[#1a1a1a] transition-all active:scale-95 border"
-          style={{ borderColor: "rgba(255,255,255,0.08)" }}
-        >
-          + Carrello
-        </button>
-        <button
-          type="button"
-          onClick={handleBuyNow}
-          className="flex-1 h-12 text-black flex items-center justify-center rounded-2xl text-sm font-black uppercase tracking-tight hover:opacity-90 transition-all active:scale-[0.98] shadow-xl"
-          style={{ background: "#c8f000", boxShadow: "0 4px 20px rgba(200,240,0,0.3)", letterSpacing: "1px" }}
-        >
-          Compra Ora →
-        </button>
+      {/* Sticky mobile bottom bar */}
+      <div
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 border-t"
+        style={{ background: "rgba(10,10,10,0.97)", borderColor: "rgba(200,240,0,0.12)", backdropFilter: "blur(20px)" }}
+      >
+        {customization.size && (
+          <div className="flex items-center justify-center gap-2 py-1.5 border-b" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
+            <span className="text-[9px] uppercase tracking-widest text-white/30" style={{ fontFamily: "var(--font-mono, monospace)" }}>
+              Taglia selezionata:
+            </span>
+            <span
+              className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full"
+              style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000", fontFamily: "var(--font-mono, monospace)" }}
+            >
+              {customization.size}
+            </span>
+          </div>
+        )}
+        <div className="flex gap-2 p-3">
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            className="flex-1 h-12 flex items-center justify-center gap-2 rounded-2xl text-[11px] font-black uppercase tracking-tight transition-all active:scale-95"
+            style={{
+              background: "#0d0d0d",
+              color: "#fff",
+              border: "1.5px solid rgba(200,240,0,0.2)",
+              fontFamily: "var(--font-display, sans-serif)",
+            }}
+          >
+            + Carrello
+          </button>
+          <button
+            type="button"
+            onClick={handleBuyNow}
+            className="flex-1 h-12 flex items-center justify-center rounded-2xl text-[11px] font-black uppercase tracking-tight transition-all active:scale-[0.98]"
+            style={{
+              background: "#c8f000",
+              color: "#000",
+              boxShadow: "0 4px 20px rgba(200,240,0,0.3)",
+              fontFamily: "var(--font-display, sans-serif)",
+              letterSpacing: "1px",
+            }}
+          >
+            Compra Subito →
+          </button>
+        </div>
       </div>
 
       {/* Product details section */}
@@ -465,10 +496,27 @@ export default function ProductDetailClient({
                 <span>Spedizione gratuita in Italia — Consegna 3-5 giorni lavorativi</span>
               </div>
 
-              <div className="flex items-center gap-2 text-sm text-[#c8f000]">
-                <span className="inline-block w-2 h-2 rounded-full bg-[#c8f000] animate-pulse" />
-                <span>{viewers} persone stanno guardando questa maglia</span>
+              {/* Social proof */}
+              <div className="flex flex-wrap gap-3">
+                <div className="flex items-center gap-2 text-sm text-[#c8f000]">
+                  <span className="inline-block w-2 h-2 rounded-full bg-[#c8f000] animate-pulse flex-shrink-0" />
+                  <span>⚡ {viewers} persone stanno guardando</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-white/50">
+                  <span>✅ {soldThisWeek} venduti questa settimana</span>
+                </div>
               </div>
+
+              {/* Urgency: low stock */}
+              {product.stockCount !== undefined && product.stockCount > 0 && product.stockCount < 5 && (
+                <div
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold"
+                  style={{ background: "rgba(251,146,60,0.08)", border: "1px solid rgba(251,146,60,0.25)", color: "#fb923c" }}
+                >
+                  <span className="animate-pulse">⚠️</span>
+                  Solo {product.stockCount} rimast{product.stockCount === 1 ? "o" : "i"} in magazzino!
+                </div>
+              )}
 
               <div className="text-xs text-white/50 font-medium">
                 ⏱ {deliveryCountdown}
@@ -754,7 +802,8 @@ export default function ProductDetailClient({
                           <button
                             type="button"
                             onClick={() => setSizeChartOpen(true)}
-                            className="text-xs text-orange-400 underline ml-2"
+                            className="text-xs font-bold ml-2 transition-colors"
+                            style={{ color: "#c8f000", textDecoration: "underline" }}
                           >
                             Guida alle taglie →
                           </button>
@@ -841,6 +890,25 @@ export default function ProductDetailClient({
                       )}
                     </div>
 
+                    {/* Trust Strip ABOVE CTA */}
+                    <div
+                      className="grid grid-cols-4 gap-1 py-3 rounded-xl mt-4"
+                      style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}
+                    >
+                      {[
+                        { icon: "🚚", label: "Sped. Gratuita", sub: "Sopra €89" },
+                        { icon: "🔄", label: "Reso 30gg", sub: "Gratuito" },
+                        { icon: "🔒", label: "Pag. Sicuro", sub: "SSL 256-bit" },
+                        { icon: "✅", label: "Originale", sub: "Garantito" },
+                      ].map(({ icon, label, sub }) => (
+                        <div key={label} className="flex flex-col items-center gap-0.5 text-center px-1">
+                          <span className="text-base">{icon}</span>
+                          <span className="text-[9px] font-black text-white leading-tight" style={{ fontFamily: "var(--font-display, sans-serif)" }}>{label}</span>
+                          <span className="text-[8px] leading-tight" style={{ color: "rgba(200,240,0,0.55)", fontFamily: "var(--font-mono, monospace)" }}>{sub}</span>
+                        </div>
+                      ))}
+                    </div>
+
                     {/* Action Bar */}
                     <div className="flex flex-col gap-4 pt-4 border-t border-gray-100">
                       <div className="flex items-center gap-3">
@@ -873,9 +941,16 @@ export default function ProductDetailClient({
                         <button
                           type="button"
                           onClick={handleAddToCart}
-                          className="flex-1 h-11 bg-black text-white flex items-center justify-center gap-2 rounded-2xl text-[13px] font-black uppercase tracking-tight hover:bg-gray-800 transition-all active:scale-95"
+                          className="flex-1 h-12 flex items-center justify-center gap-2 rounded-2xl text-[13px] font-black uppercase tracking-tight transition-all active:scale-95"
+                          style={{
+                            background: "#0a0a0a",
+                            color: "#fff",
+                            border: "2px solid rgba(200,240,0,0.25)",
+                            fontFamily: "var(--font-display, sans-serif)",
+                            letterSpacing: "1px",
+                          }}
                         >
-                          Aggiungi
+                          AGGIUNGI AL CARRELLO
                           <ArrowRight size={16} />
                         </button>
 
@@ -884,7 +959,7 @@ export default function ProductDetailClient({
                           onClick={handleWishlistToggle}
                           variant="outline"
                           size="icon"
-                          className="h-11 w-11 rounded-2xl border-gray-100 hover:bg-red-50 hover:border-red-100 group transition-all"
+                          className="h-12 w-12 rounded-2xl border-gray-100 hover:bg-red-50 hover:border-red-100 group transition-all flex-shrink-0"
                         >
                           {isInWishlist(product._id) ? (
                             <HeartIconSolid className="h-5 w-5 text-red-500" />
@@ -898,10 +973,35 @@ export default function ProductDetailClient({
                       <button
                         type="button"
                         onClick={handleBuyNow}
-                        className="w-full h-14 bg-[#c8f000] text-white flex items-center justify-center rounded-[20px] text-sm font-black uppercase tracking-[0.1em] shadow-xl shadow-orange-100 hover:opacity-90 transition-all active:scale-[0.98]"
+                        className="w-full h-14 flex items-center justify-center rounded-[20px] text-sm font-black uppercase tracking-[0.12em] transition-all active:scale-[0.98] hover:opacity-92"
+                        style={{
+                          background: "#c8f000",
+                          color: "#000",
+                          boxShadow: "0 8px 32px rgba(200,240,0,0.3)",
+                          fontFamily: "var(--font-display, sans-serif)",
+                          letterSpacing: "2px",
+                        }}
                       >
-                        Compra Ora
+                        COMPRA SUBITO →
                       </button>
+
+                      {/* Payment icons row */}
+                      <div className="flex items-center justify-center gap-2 flex-wrap pt-1">
+                        {["VISA", "MC", "PayPal", "Apple Pay", "Google Pay", "Klarna"].map((m) => (
+                          <span
+                            key={m}
+                            className="text-[8px] font-black px-2 py-1 rounded tracking-widest"
+                            style={{
+                              background: "rgba(255,255,255,0.05)",
+                              color: "rgba(255,255,255,0.3)",
+                              fontFamily: "var(--font-mono, monospace)",
+                              border: "1px solid rgba(255,255,255,0.07)",
+                            }}
+                          >
+                            {m}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
@@ -1005,31 +1105,8 @@ export default function ProductDetailClient({
         </TabsContent>
       </Tabs>
 
-      {/* Size Chart Modal */}
-      {sizeChartOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-          onClick={() => setSizeChartOpen(false)}
-        >
-          <div
-            className="bg-[#0a0a0a] rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-black uppercase tracking-tight">
-                Guida alle Taglie
-              </h2>
-              <button
-                onClick={() => setSizeChartOpen(false)}
-                className="w-8 h-8 rounded-full bg-[#111] flex items-center justify-center text-white/60 hover:bg-[#1a1a1a]"
-              >
-                ✕
-              </button>
-            </div>
-            <ProductSizeChart />
-          </div>
-        </div>
-      )}
+      {/* Size Guide Modal */}
+      <SizeGuideModal isOpen={sizeChartOpen} onClose={() => setSizeChartOpen(false)} />
     </div>
   );
 }

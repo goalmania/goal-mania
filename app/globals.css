@@ -996,3 +996,99 @@ html {
 .gradient {
   background: linear-gradient(135deg, rgba(200, 240, 0, 0.1) 0%, var(--gm-surface) 70%);
 }
+
+/* ================================================================
+   GOAL MANIA — NEW GLOBAL MICRO-INTERACTIONS v3.0
+   ================================================================ */
+
+/* ── Page load fade ── */
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.gm-page-fade {
+  animation: pageFadeIn 0.4s ease both;
+}
+
+/* ── Hover lift ── */
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Lime glow ── */
+.glow-lime {
+  box-shadow: 0 0 16px rgba(200, 240, 0, 0.3), 0 0 40px rgba(200, 240, 0, 0.1);
+}
+.glow-lime:hover {
+  box-shadow: 0 0 24px rgba(200, 240, 0, 0.5), 0 0 60px rgba(200, 240, 0, 0.2);
+}
+
+/* ── LIVE pulse indicator ── */
+@keyframes livePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(200, 240, 0, 0.5); }
+  50%       { box-shadow: 0 0 0 6px rgba(200, 240, 0, 0); }
+}
+.pulse-live {
+  animation: livePulse 1.5s ease-in-out infinite;
+  border-radius: 50%;
+}
+
+/* ── Shimmer skeleton (alias using existing keyframes) ── */
+.skeleton-gm {
+  background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* ── Smooth scroll ── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Custom scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #c8f000;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(200, 240, 0, 0.8);
+}
+
+/* ── Text selection ── */
+::selection {
+  background: rgba(200, 240, 0, 0.25);
+  color: #f5f5f5;
+}
+::-moz-selection {
+  background: rgba(200, 240, 0, 0.25);
+  color: #f5f5f5;
+}
+
+/* ── Font smoothing (belt-and-suspenders) ── */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Hero floating card animation ── */
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-12px) rotate(0.5deg); }
+  66%       { transform: translateY(-6px) rotate(-0.4deg); }
+}
+.animate-hero-float {
+  animation: heroFloat 4s ease-in-out infinite;
+}
+}
