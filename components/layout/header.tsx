@@ -307,9 +307,9 @@ export function Header() {
 
             {/* Static links */}
             {[
-              { name: "World Cup 2026", href: "/shop/worldcup", isSpecial: true },
               { name: "2026/27", href: "/shop/2026/27", isNew: true },
               { name: "Maglie Retro", href: "/shop/retro", isRetro: true },
+              { name: "World Cup 2026", href: "/shop/worldcup", isSpecial: true },
             ].map((item: any) => (
               <Link
                 key={item.name}
@@ -816,13 +816,13 @@ export function Header() {
             <nav className="flex-1 overflow-y-auto p-4 flex flex-col gap-1">
               {[
                 { name: "Shop", href: "/shop" },
-                { name: "News", href: "/news" },
+                { name: "2026/27", href: "/shop/2026/27", isNew: true },
+                { name: "Maglie Retro", href: "/shop/retro", isRetro: true },
                 { name: "World Cup 2026", href: "/shop/worldcup", isSpecial: true },
                 { name: "Serie A", href: "/international/serieA" },
                 { name: "Premier League", href: "/international/premierLeague" },
                 { name: "La Liga", href: "/international/laliga" },
-                { name: "Bundesliga", href: "/international/bundesliga" },
-                { name: "About", href: "/about" },
+                { name: "Notizie", href: "/news" },
                 { name: "Contatti", href: "/contact" },
               ].map((item) => (
                 <Link
@@ -840,6 +840,14 @@ export function Header() {
                 >
                   {item.isSpecial && <Trophy size={14} />}
                   {item.name}
+                  {(item as any).isNew && (
+                    <span className="text-[7px] font-black uppercase px-1.5 py-0.5 rounded leading-none ml-auto"
+                      style={{ background: "#c8f000", color: "#000" }}>NEW</span>
+                  )}
+                  {(item as any).isRetro && (
+                    <span className="text-[7px] font-black uppercase px-1.5 py-0.5 rounded leading-none ml-auto"
+                      style={{ background: "rgba(200,240,0,0.15)", color: "#c8f000", border: "1px solid rgba(200,240,0,0.3)" }}>RETRO</span>
+                  )}
                 </Link>
               ))}
             </nav>
