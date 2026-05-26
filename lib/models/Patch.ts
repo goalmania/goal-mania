@@ -22,7 +22,7 @@ const patchSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, "Category is required"],
-      enum: ["champions-league", "serie-a", "coppa-italia", "europa-league", "other"],
+      enum: ["champions-league", "serie-a", "coppa-italia", "europa-league", "conference-league", "premier-league", "fa-cup", "other"],
       default: "other",
     },
     price: {
