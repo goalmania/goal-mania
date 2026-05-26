@@ -276,7 +276,9 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
             .filter(c => FEATURED.includes(c) && (groupedProducts[c]?.length ?? 0) > 0)
             .map(country => {
               const count = groupedProducts[country]?.length ?? 0;
-              const preview = groupedProducts[country]?.[0]?.images?.[0];
+              const countryProducts = groupedProducts[country] ?? [];
+              // Pick the best jersey preview (first image available)
+              const preview = countryProducts[0]?.images?.[0] ?? null;
               const isSelected = selectedNation === country;
 
               return (
@@ -288,80 +290,97 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
                   }}
                   className="group relative rounded-2xl overflow-hidden text-left transition-all duration-300 active:scale-[0.97]"
                   style={{
-                    aspectRatio: "4/3",
-                    background: NATION_COLORS[country] ?? "rgba(255,255,255,0.03)",
+                    aspectRatio: "3/4",
                     border: isSelected
-                      ? "1.5px solid rgba(200,240,0,0.6)"
-                      : "1px solid rgba(255,255,255,0.06)",
+                      ? "2px solid #c8f000"
+                      : "1px solid rgba(255,255,255,0.08)",
                     boxShadow: isSelected
-                      ? "0 0 24px rgba(200,240,0,0.15)"
-                      : "none",
+                      ? "0 0 32px rgba(200,240,0,0.2), 0 8px 32px rgba(0,0,0,0.5)"
+                      : "0 4px 24px rgba(0,0,0,0.4)",
                   }}
                 >
-                  {/* Flag background */}
+                  {/* ── Flag: colorful, covers full card ── */}
                   <img
                     src={getFlagUrl(country)}
                     alt={country}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    style={{ filter: "brightness(0.2) saturate(0.6)" }}
-                  />
-                  {/* Overlay */}
-                  <div
-                    className="absolute inset-0"
-                    style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%)" }}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    style={{
+                      filter: "brightness(0.48) saturate(1.6) contrast(1.05)",
+                    }}
                   />
 
-                  {/* Kit image preview */}
+                  {/* ── Gradient overlay — darker at bottom for text ── */}
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.75) 100%)",
+                    }}
+                  />
+
+                  {/* ── Jersey: large, centered, prominent ── */}
                   {preview && (
                     <div
-                      className="absolute bottom-0 right-0 w-16 h-16 sm:w-20 sm:h-20 transition-all duration-500 group-hover:scale-110 group-hover:opacity-100"
-                      style={{ opacity: 0.7 }}
+                      className="absolute inset-0 flex items-center justify-center transition-transform duration-500 group-hover:scale-105"
+                      style={{ paddingBottom: "28%", paddingTop: "8%" }}
                     >
-                      <Image
-                        src={preview}
-                        alt={country}
-                        fill
-                        className="object-contain drop-shadow-xl"
-                        sizes="80px"
-                      />
+                      <div className="relative w-4/5 h-full" style={{ maxHeight: "65%" }}>
+                        <Image
+                          src={preview}
+                          alt={`Kit ${country}`}
+                          fill
+                          className="object-contain"
+                          style={{
+                            filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.7)) drop-shadow(0 2px 8px rgba(0,0,0,0.9))",
+                          }}
+                          sizes="(max-width: 640px) 50vw, 25vw"
+                        />
+                      </div>
                     </div>
                   )}
 
-                  {/* Content */}
-                  <div className="absolute inset-0 p-3 flex flex-col justify-between">
-                    {/* Mini flag */}
+                  {/* ── Top: mini flag pill ── */}
+                  <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2 py-1 rounded-full"
+                    style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }}
+                  >
                     <img
                       src={getFlagUrl(country)}
                       alt={country}
-                      className="w-9 h-6 object-cover rounded-sm shadow-lg"
+                      className="w-4 h-3 object-cover rounded-sm flex-shrink-0"
                     />
-                    <div>
-                      <p className="font-black italic uppercase text-white text-sm leading-tight">
-                        {country}
-                      </p>
-                      <p
-                        className="text-[9px] font-bold uppercase tracking-wider"
-                        style={{ color: "rgba(200,240,0,0.7)" }}
-                      >
-                        {count} kit
-                      </p>
-                    </div>
+                    <span className="text-[9px] font-black uppercase tracking-wide text-white/90">
+                      {country}
+                    </span>
                   </div>
 
-                  {/* Selected indicator */}
+                  {/* ── Selected badge ── */}
                   {isSelected && (
                     <div
-                      className="absolute top-2 right-2 text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full"
+                      className="absolute top-3 right-3 z-10 text-[8px] font-black uppercase tracking-wider px-2 py-1 rounded-full"
                       style={{ background: "#c8f000", color: "#000" }}
                     >
-                      ✓ Selezionata
+                      ✓
                     </div>
                   )}
 
-                  {/* Hover border glow */}
+                  {/* ── Bottom: nation name + kit count ── */}
+                  <div className="absolute bottom-0 left-0 right-0 z-10 p-3">
+                    <p className="font-black italic uppercase text-white leading-none"
+                      style={{ fontSize: "clamp(0.9rem, 2.5vw, 1.1rem)", textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}
+                    >
+                      {country}
+                    </p>
+                    <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5"
+                      style={{ color: "#c8f000" }}
+                    >
+                      {count} {count === 1 ? "kit" : "kit"} disponibili
+                    </p>
+                  </div>
+
+                  {/* ── Hover glow ring ── */}
                   <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-2xl pointer-events-none"
-                    style={{ border: "1.5px solid rgba(255,215,0,0.3)" }}
+                    className="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ border: "1.5px solid rgba(255,215,0,0.4)", boxShadow: "inset 0 0 30px rgba(255,215,0,0.04)" }}
                   />
                 </button>
               );
