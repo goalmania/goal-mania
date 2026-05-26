@@ -26,7 +26,6 @@ import FAQ from "@/app/_components/FAQ";
 import ShopSearchBar from "./ShopSearchBar";
 import SerieATeamsClient from "@/app/_components/SerieATeamsClient";
 import PremierLeagueClient from "@/app/_components/PremierLeagueClient";
-import WorldCupShowcase from "@/components/home/WorldCupShowCase";
 import VideoComp from "@/components/home/VideoComp";
 import Testimonies from "@/components/shop/testimonies";
 import FeaturesCardStats from "@/components/shop/FeaturesCardStats";
@@ -620,6 +619,109 @@ function NuoviArrivi({ products }: { products: Product[] }) {
 }
 
 // ─────────────────────────────────────────────────────────────
+// Nazionali section (local logos, same card style as homepage)
+// ─────────────────────────────────────────────────────────────
+
+const LN = (slug: string) => `/team-logos/${slug}.png`;
+
+const NAZIONALI = [
+  { name: "Italia",      slug: "italia",      logo: LN("italia"),      href: "/shop/worldcup/italy" },
+  { name: "Francia",     slug: "francia",     logo: LN("francia"),     href: "/shop/worldcup/france" },
+  { name: "Germania",    slug: "germania",    logo: LN("germania"),    href: "/shop/worldcup/germany" },
+  { name: "Spagna",      slug: "spagna",      logo: LN("spagna"),      href: "/shop/worldcup/spain" },
+  { name: "Brasile",     slug: "brasile",     logo: LN("brasile"),     href: "/shop/worldcup/brazil" },
+  { name: "Argentina",   slug: "argentina",   logo: LN("argentina"),   href: "/shop/worldcup/argentina" },
+  { name: "Portogallo",  slug: "portogallo",  logo: LN("portogallo"),  href: "/shop/worldcup/portugal" },
+  { name: "Inghilterra", slug: "inghilterra", logo: LN("inghilterra"), href: "/shop/worldcup/england" },
+  { name: "Olanda",      slug: "olanda",      logo: LN("olanda"),      href: "/shop/worldcup/netherlands" },
+  { name: "Belgio",      slug: "belgio",      logo: LN("belgio"),      href: "/shop/worldcup/belgium" },
+  { name: "Croazia",     slug: "croazia",     logo: LN("croazia"),     href: "/shop/worldcup/croatia" },
+  { name: "Marocco",     slug: "marocco",     logo: LN("marocco"),     href: "/shop/worldcup/morocco" },
+  { name: "USA",         slug: "usa",         logo: LN("usa"),         href: "/shop/worldcup/usa" },
+  { name: "Messico",     slug: "messico",     logo: LN("messico"),     href: "/shop/worldcup/mexico" },
+  { name: "Senegal",     slug: "senegal",     logo: LN("senegal"),     href: "/shop/worldcup/senegal" },
+  { name: "Giappone",    slug: "giappone",    logo: LN("giappone"),    href: "/shop/worldcup/japan" },
+];
+
+function NazionaliLogoCard({ name, logo, href }: { name: string; logo: string; href: string }) {
+  return (
+    <Link
+      href={href}
+      className="naz-logo-card group flex flex-col items-center gap-2"
+      style={{ width: "88px", flexShrink: 0 }}
+    >
+      <div
+        className="w-full flex items-center justify-center rounded-2xl overflow-hidden"
+        style={{
+          height: "96px",
+          background: "rgba(255,255,255,0.03)",
+          border: "1px solid rgba(255,255,255,0.07)",
+          transition: "transform 200ms cubic-bezier(0.23,1,0.32,1), box-shadow 200ms, border-color 200ms",
+        }}
+      >
+        <Image
+          src={logo}
+          alt={name}
+          width={52}
+          height={52}
+          className="object-contain drop-shadow-lg"
+          style={{ maxWidth: "52px", maxHeight: "52px" }}
+          draggable={false}
+        />
+      </div>
+      <span
+        className="text-center leading-tight"
+        style={{
+          fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
+          fontSize: "10px",
+          fontWeight: 700,
+          letterSpacing: "1.2px",
+          color: "rgba(255,255,255,0.5)",
+          textTransform: "uppercase",
+          transition: "color 200ms",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          maxWidth: "88px",
+        }}
+      >
+        {name}
+      </span>
+      <style jsx>{`
+        @media (hover: hover) and (pointer: fine) {
+          .naz-logo-card:hover > div:first-child {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(200,240,0,0.3);
+            border-color: rgba(200,240,0,0.3) !important;
+          }
+          .naz-logo-card:hover span { color: rgba(200,240,0,0.9) !important; }
+        }
+        .naz-logo-card:active > div:first-child { transform: scale(0.97); }
+      `}</style>
+    </Link>
+  );
+}
+
+function NazionaliSection() {
+  return (
+    <section className="pb-12 px-4 sm:px-6" style={{ background: "#0a0a0a" }}>
+      <div className="max-w-7xl mx-auto">
+        <div
+          className="grid gap-x-4 gap-y-6"
+          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(88px, 1fr))" }}
+        >
+          {NAZIONALI.map((n) => (
+            <div key={n.slug} className="flex justify-center">
+              <NazionaliLogoCard name={n.name} logo={n.logo} href={n.href} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
 // League Divider
 // ─────────────────────────────────────────────────────────────
 
@@ -709,7 +811,7 @@ export default function ShopClient({
   featuredProducts: Product[];
   mysteryBoxProducts: Product[];
   videoProducts?: Product[];
-  worldCupTeams?: any[];
+  worldCupTeams?: any[]; // kept for API compatibility, not used
 }) {
   const featuredProduct = featuredProducts[0] ?? latestProducts[0] ?? null;
   const bestsellers = bestSellingProducts.length > 0 ? bestSellingProducts : latestProducts.slice(0, 5);
@@ -748,8 +850,9 @@ export default function ShopClient({
         <PremierLeagueClient />
       </div>
 
-      <div id="nazionali-section" style={{ background: "#0a0a0a", borderTop: "0.5px solid rgba(255,255,255,0.04)" }}>
-        <WorldCupShowcase teams={worldCupTeams} />
+      <div style={{ background: "#0a0a0a", borderTop: "0.5px solid rgba(255,255,255,0.04)" }}>
+        <LeagueDivider id="nazionali-section" label="Nazionali" sublabel="Mondiali 2026" href="/shop/worldcup" />
+        <NazionaliSection />
       </div>
 
       {/* Video products */}
