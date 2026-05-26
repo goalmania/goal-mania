@@ -1,78 +1,114 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { X, Zap, ShoppingCart, Clock } from "lucide-react";
 
-const DEALS = [
-  {
-    id: 1,
-    emoji: "🇦🇷",
-    team: "Argentina",
-    label: "Mondiali 2026",
-    price: "€30",
-    originalPrice: "€45",
-    savings: "-33%",
-    href: "/shop/worldcup/argentina",
-    urgency: "Solo 3 taglie rimaste!",
-    color: "rgba(117,170,219,0.15)",
-    accent: "#74AADB",
-  },
-  {
-    id: 2,
-    emoji: "🔴",
-    team: "Arsenal",
-    label: "Premier League",
-    price: "€35",
-    originalPrice: "€50",
-    savings: "-30%",
-    href: "/shop/premier-league/arsenal",
-    urgency: "12 persone stanno guardando",
-    color: "rgba(200,0,0,0.12)",
-    accent: "#EF4444",
-  },
-  {
-    id: 3,
-    emoji: "⚫🔵",
-    team: "Inter",
-    label: "Serie A",
-    price: "€30",
-    originalPrice: "€42",
-    savings: "-29%",
-    href: "/shop/serieA/inter",
-    urgency: "Ultimi 2 disponibili!",
-    color: "rgba(0,60,150,0.15)",
-    accent: "#3B82F6",
-  },
-  {
-    id: 4,
-    emoji: "🌍",
-    team: "Maglie Retro",
-    label: "Edizione Storica",
-    price: "€35",
-    originalPrice: "€55",
-    savings: "-36%",
-    href: "/shop/retro",
-    urgency: "Collezione limitata!",
-    color: "rgba(200,240,0,0.08)",
-    accent: "#c8f000",
-  },
+const URGENCY_MESSAGES = [
+  "Solo 3 taglie rimaste!",
+  "12 persone stanno guardando",
+  "Ultimi 2 disponibili!",
+  "Collezione limitata!",
+  "5 ordini nelle ultime 2h",
+  "Quasi esaurito!",
+  "Alta richiesta oggi",
 ];
 
-const DISMISS_KEY = "urgencyFloat_v2";
+const ACCENTS = ["#c8f000", "#74AADB", "#EF4444", "#F97316", "#A78BFA"];
+const COLORS = [
+  "rgba(200,240,0,0.08)",
+  "rgba(117,170,219,0.12)",
+  "rgba(239,68,68,0.10)",
+  "rgba(249,115,22,0.10)",
+  "rgba(167,139,250,0.10)",
+];
+
+const DISMISS_KEY = "urgencyFloat_v3";
 const TTL_MS = 4 * 60 * 60 * 1000; // 4 ore
-const SHOW_DELAY = 6000; // 6 secondi
+const SHOW_DELAY = 7000; // 7 secondi
 const COUNTDOWN_START = 18 * 60; // 18 minuti
 
 function pad(n: number) {
   return n.toString().padStart(2, "0");
 }
 
+function extractTeamName(title: string): string {
+  // "Maglia Arsenal Home 2026-27" → "Arsenal"
+  // "Maglia Inter Away 25/26" → "Inter"
+  const cleaned = title
+    .replace(/^maglia\s+/i, "")
+    .replace(/\s+(home|away|third|portiere|gk|goalkeeper|training|allenamento)\s*.*/i, "")
+    .replace(/\s+\d{4}[\/-]\d{2,4}.*$/i, "")
+    .trim();
+  return cleaned || title;
+}
+
+function getCategoryLabel(category: string, isWorldCup: boolean, isRetro: boolean): string {
+  if (isWorldCup) return "Mondiali 2026";
+  if (isRetro) return "Edizione Storica";
+  if (category === "2025/26") return "Stagione 25/26";
+  if (category === "2026/27") return "Nuova Stagione";
+  return category || "Maglia da Calcio";
+}
+
+interface Deal {
+  id: string;
+  image: string;
+  team: string;
+  label: string;
+  price: string;
+  href: string;
+  urgency: string;
+  accent: string;
+  color: string;
+}
+
 export default function UrgencyFloat() {
   const [visible, setVisible] = useState(false);
+  const [deals, setDeals] = useState<Deal[]>([]);
   const [dealIdx, setDealIdx] = useState(0);
   const [countdown, setCountdown] = useState(COUNTDOWN_START);
   const [animating, setAnimating] = useState(false);
+  const fetchedRef = useRef(false);
+
+  // Fetch real products once
+  useEffect(() => {
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
+
+    fetch("/api/products?limit=50&sortBy=feature&sortOrder=desc")
+      .then((r) => r.json())
+      .then((data) => {
+        const prods: any[] = data.products || [];
+        // Only products with images
+        const withImages = prods.filter((p: any) => p.images?.[0] && p.slug);
+        if (withImages.length === 0) return;
+
+        // Shuffle and take up to 8
+        const shuffled = withImages
+          .map((p: any) => ({ p, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .slice(0, 8)
+          .map(({ p }) => p);
+
+        const mapped: Deal[] = shuffled.map((p: any, i: number) => ({
+          id: p._id,
+          image: p.images[0],
+          team: extractTeamName(p.title),
+          label: getCategoryLabel(p.category, !!p.isWorldCup, !!p.isRetro),
+          price: `€${p.basePrice ?? 30}`,
+          href: `/products/${p.slug}`,
+          urgency: URGENCY_MESSAGES[Math.floor(Math.random() * URGENCY_MESSAGES.length)],
+          accent: ACCENTS[i % ACCENTS.length],
+          color: COLORS[i % COLORS.length],
+        }));
+
+        setDeals(mapped);
+        setDealIdx(Math.floor(Math.random() * mapped.length));
+      })
+      .catch(() => {});
+  }, []);
 
   // Show after delay, respecting dismiss TTL
   useEffect(() => {
@@ -84,12 +120,13 @@ export default function UrgencyFloat() {
       }
     } catch {}
 
-    // Pick a random deal index
-    setDealIdx(Math.floor(Math.random() * DEALS.length));
+    const timer = setTimeout(() => {
+      if (deals.length > 0) setVisible(true);
+    }, SHOW_DELAY);
 
-    const timer = setTimeout(() => setVisible(true), SHOW_DELAY);
     return () => clearTimeout(timer);
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deals]);
 
   // Countdown
   useEffect(() => {
@@ -101,16 +138,16 @@ export default function UrgencyFloat() {
 
   // Auto-rotate deals every 8 sec
   useEffect(() => {
-    if (!visible) return;
+    if (!visible || deals.length === 0) return;
     const id = setInterval(() => {
       setAnimating(true);
       setTimeout(() => {
-        setDealIdx((i) => (i + 1) % DEALS.length);
+        setDealIdx((i) => (i + 1) % deals.length);
         setAnimating(false);
       }, 300);
     }, 8000);
     return () => clearInterval(id);
-  }, [visible]);
+  }, [visible, deals]);
 
   const dismiss = () => {
     try {
@@ -119,9 +156,9 @@ export default function UrgencyFloat() {
     setVisible(false);
   };
 
-  if (!visible) return null;
+  if (!visible || deals.length === 0) return null;
 
-  const deal = DEALS[dealIdx];
+  const deal = deals[dealIdx];
   const minutes = Math.floor(countdown / 60);
   const seconds = countdown % 60;
 
@@ -175,11 +212,19 @@ export default function UrgencyFloat() {
 
         {/* Body */}
         <div className="px-4 py-3 flex items-center gap-3">
+          {/* Product image */}
           <div
-            className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center text-2xl"
+            className="flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden relative"
             style={{ background: deal.color }}
           >
-            {deal.emoji}
+            <Image
+              src={deal.image}
+              alt={deal.team}
+              fill
+              sizes="56px"
+              className="object-cover"
+              style={{ objectFit: "cover" }}
+            />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-white font-black text-sm leading-tight truncate">
@@ -190,12 +235,11 @@ export default function UrgencyFloat() {
             </p>
             <div className="flex items-baseline gap-2 mt-1">
               <span className="font-black text-white text-base">{deal.price}</span>
-              <span className="text-white/30 text-xs line-through">{deal.originalPrice}</span>
               <span
                 className="text-[9px] font-black px-1.5 py-0.5 rounded-full"
-                style={{ background: "rgba(239,68,68,0.15)", color: "#f87171" }}
+                style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000" }}
               >
-                {deal.savings}
+                SPEDIZIONE GRATIS
               </span>
             </div>
           </div>
@@ -226,7 +270,7 @@ export default function UrgencyFloat() {
 
       {/* Dots indicator */}
       <div className="flex justify-center gap-1 mt-2">
-        {DEALS.map((_, i) => (
+        {deals.map((_, i) => (
           <span
             key={i}
             className="rounded-full transition-all duration-300"

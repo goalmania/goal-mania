@@ -233,7 +233,7 @@ export function Header() {
             <Link href="/" className="flex items-center gap-2.5 group">
               <div className="relative">
                 <Image
-                  src="/images/recentUpdate/desktop-logo.png"
+                  src="/images/recentUpdate/gm-shield-v2.png"
                   alt="Goal Mania"
                   width={44}
                   height={44}
@@ -767,7 +767,7 @@ export function Header() {
             <div className="flex items-center justify-between p-5 border-b" style={{ borderColor: "rgba(200,240,0,0.1)" }}>
               <Link href="/" onClick={() => setOpenMenu(false)} className="flex items-center gap-2.5">
                 <Image
-                  src="/images/recentUpdate/desktop-logo.png"
+                  src="/images/recentUpdate/gm-shield-v2.png"
                   alt="Goal Mania"
                   width={38}
                   height={38}

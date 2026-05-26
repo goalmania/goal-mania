@@ -20,6 +20,9 @@ async function get2627Products() {
         { category: "2026/27" },
         { season: "2026/27" },
         { tags: "2026/27" },
+        { title: { $regex: "2026-27", $options: "i" } },
+        { title: { $regex: "26/27", $options: "i" } },
+        { title: { $regex: "2026.27", $options: "i" } },
       ],
       isActive: true,
     }).sort({ feature: -1, createdAt: -1 }).lean();
