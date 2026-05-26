@@ -267,7 +267,8 @@ export function Header() {
               onMouseEnter={() => openMega("shop")}
               onMouseLeave={closeMega}
             >
-              <button
+              <Link
+                href="/shop"
                 className={`flex items-center gap-1 px-3 py-2 rounded-lg text-[0.78rem] font-semibold uppercase tracking-wider transition-all duration-200 ${
                   pathname.startsWith("/shop") || activeMega === "shop"
                     ? "text-[#c8f000]"
@@ -279,7 +280,7 @@ export function Header() {
                 <ChevronDown
                   className={`w-3 h-3 transition-transform duration-200 ${activeMega === "shop" ? "rotate-180" : ""}`}
                 />
-              </button>
+              </Link>
             </div>
 
             {/* NEWS with mega */}
@@ -288,7 +289,8 @@ export function Header() {
               onMouseEnter={() => openMega("news")}
               onMouseLeave={closeMega}
             >
-              <button
+              <Link
+                href="/news"
                 className={`flex items-center gap-1 px-3 py-2 rounded-lg text-[0.78rem] font-semibold uppercase tracking-wider transition-all duration-200 ${
                   pathname.startsWith("/news") || activeMega === "news"
                     ? "text-[#c8f000]"
@@ -300,13 +302,12 @@ export function Header() {
                 <ChevronDown
                   className={`w-3 h-3 transition-transform duration-200 ${activeMega === "news" ? "rotate-180" : ""}`}
                 />
-              </button>
+              </Link>
             </div>
 
             {/* Static links */}
             {[
               { name: "World Cup 2026", href: "/shop/worldcup", isSpecial: true },
-              { name: "Squadre", href: "/category" },
               { name: "About", href: "/about" },
             ].map((item) => (
               <Link

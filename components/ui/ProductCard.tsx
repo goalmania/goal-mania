@@ -138,15 +138,15 @@ function ProductCard({
       >
         {/* Image Section — 65% of card */}
         <Link href={href} className="block" style={{ flexBasis: "65%" }}>
-          <div className="relative overflow-hidden" style={{ paddingBottom: "65%" }}>
+          <div className="relative overflow-hidden" style={{ paddingBottom: "100%", background: "#F7F7F7" }}>
             {/* Primary image */}
             <Image
               src={image || "/images/placeholder.png"}
               alt={name}
               fill
-              className="object-cover transition-all duration-700 ease-in-out"
+              className="object-contain transition-all duration-700 ease-in-out p-3"
               style={{
-                transform: isHovered && !secondImage ? "scale(1.07)" : "scale(1)",
+                transform: isHovered && !secondImage ? "scale(1.05)" : "scale(1)",
                 opacity: isHovered && secondImage ? 0 : 1,
               }}
               sizes="(max-width: 768px) 50vw, 25vw"
@@ -158,10 +158,10 @@ function ProductCard({
                 src={secondImage}
                 alt={`${name} - Vista 2`}
                 fill
-                className="object-cover absolute inset-0 transition-all duration-700 ease-in-out"
+                className="object-contain absolute inset-0 transition-all duration-700 ease-in-out p-3"
                 style={{
                   opacity: isHovered ? 1 : 0,
-                  transform: isHovered ? "scale(1.04)" : "scale(1.1)",
+                  transform: isHovered ? "scale(1.03)" : "scale(1.08)",
                 }}
                 sizes="(max-width: 768px) 50vw, 25vw"
               />
