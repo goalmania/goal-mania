@@ -42,27 +42,14 @@ export const TeamCarousel = ({ isInternational = false }: { isInternational?: bo
     return t('home.serieATeams');
   };
 
-  if (error) {
-    return (
-      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-[#0a0a0a]">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0a0a0a] mb-6 sm:mb-8 md:mb-10">
-            {getTitle()}
-          </h2>
-          <div className="text-center text-red-600">
-            {t('common.error')}: {error}
-          </div>
-        </div>
-      </section>
-    );
+  // Don't render anything on error or when there are no teams
+  if (error || (!isLoading && teams.length === 0)) {
+    return null;
   }
 
   return (
     <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-[#0a0a0a]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0a0a0a] mb-6 sm:mb-8 md:mb-10">
-          {getTitle()}
-        </h2>
         <div className="relative">
           {isLoading ? (
             <div className="flex space-x-4 overflow-hidden px-8">
@@ -72,7 +59,7 @@ export const TeamCarousel = ({ isInternational = false }: { isInternational?: bo
                 </div>
               ))}
             </div>
-          ) : teams.length > 0 ? (
+          ) : (
             <Carousel
               className="py-4 sm:py-6 md:py-8 px-8"
               opts={{
@@ -90,10 +77,6 @@ export const TeamCarousel = ({ isInternational = false }: { isInternational?: bo
               </CarouselContent>
               <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2" />
             </Carousel>
-          ) : (
-            <div className="text-center text-white/60">
-              {t('common.noData')}
-            </div>
           )}
         </div>
       </div>
