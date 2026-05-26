@@ -8,7 +8,7 @@ const MESSAGES = [
   { text: "🚚 Spedizione GRATUITA sopra €89", href: "/shop" },
   { text: "🔥 Saldi: fino al -40% sulle maglie", href: "/shop" },
   { text: "⚡ Nuovi arrivi: Maglie 2025/26 disponibili", href: "/shop" },
-  { text: "🏆 Maglie ufficiali Mondiali 2026 — disponibili ora!", href: "/shop/worldcup" },
+  { text: "🏆 Mondiali 2026 — Maglie delle Nazionali disponibili ora!", href: "/shop/worldcup" },
 ];
 
 const DISMISS_KEY = "announcementBarDismissed_v3";

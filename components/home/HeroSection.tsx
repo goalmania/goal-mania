@@ -112,7 +112,7 @@ export default function HeroSection() {
             className={`text-base md:text-lg text-white/60 mb-8 max-w-lg leading-relaxed transition-all duration-700 delay-200 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
             style={{ fontFamily: "var(--font-body, sans-serif)" }}
           >
-            Maglie ufficiali Serie A, Premier League, Champions League.
+            Maglie Serie A, Premier League, Champions League e molto altro.
             Spedizione gratuita sopra €89. Reso gratuito entro 30 giorni.
           </p>
 
@@ -122,20 +122,12 @@ export default function HeroSection() {
           >
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-black uppercase transition-all duration-300 hover:-translate-y-1"
+              className="gm-btn gm-btn-primary inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-black uppercase"
               style={{
-                background: "#c8f000",
-                color: "#0a0a0a",
                 fontFamily: "var(--font-display, sans-serif)",
                 letterSpacing: "2px",
                 fontSize: "0.85rem",
                 boxShadow: "0 4px 24px rgba(200,240,0,0.35)",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 40px rgba(200,240,0,0.55)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 24px rgba(200,240,0,0.35)";
               }}
             >
               <ShoppingBag className="w-4 h-4" />
@@ -145,14 +137,11 @@ export default function HeroSection() {
 
             <Link
               href="/news"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-black uppercase transition-all duration-300 hover:-translate-y-0.5 hover:border-[#c8f000]/60 hover:text-[#c8f000]"
+              className="gm-btn gm-btn-secondary inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-black uppercase"
               style={{
-                background: "transparent",
-                color: "rgba(255,255,255,0.7)",
                 fontFamily: "var(--font-display, sans-serif)",
                 letterSpacing: "2px",
                 fontSize: "0.85rem",
-                border: "1.5px solid rgba(255,255,255,0.2)",
               }}
             >
               <Newspaper className="w-4 h-4" />

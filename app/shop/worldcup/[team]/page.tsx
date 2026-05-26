@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const teamName = team.charAt(0).toUpperCase() + team.slice(1);
   return {
     title: `Maglia ${teamName} Mondiali 2026`,
-    description: `Acquista la maglia ufficiale ${teamName} per i Mondiali 2026. Spedizione gratuita in Italia.`,
+    description: `Acquista la maglia ${teamName} per i Mondiali 2026. Spedizione gratuita in Italia.`,
   };
 }
 

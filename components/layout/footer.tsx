@@ -60,11 +60,8 @@ const PAYMENT_METHODS = [
 ];
 
 const SOCIALS = [
-  { href: "https://www.instagram.com/goalmaniaofficial/", icon: Instagram, label: "Instagram" },
-  { href: "https://www.facebook.com/goalmania", icon: Facebook, label: "Facebook" },
-  { href: "https://x.com/goalmania_", icon: Twitter, label: "Twitter / X" },
-  { href: "https://www.youtube.com/@goalmania", icon: Youtube, label: "YouTube" },
-  { href: "https://www.tiktok.com/@goalmania_", icon: TikTokIcon, label: "TikTok" },
+  { href: "https://www.instagram.com/goalmania.it/", icon: Instagram, label: "Instagram" },
+  { href: "https://www.tiktok.com/@goalmania.it", icon: TikTokIcon, label: "TikTok" },
 ];
 
 export function Footer() {

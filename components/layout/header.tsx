@@ -107,7 +107,7 @@ const SHOP_MEGA = {
   featured: {
     label: "⚡ Nuovi Arrivi",
     title: "Maglie 2025/26",
-    subtitle: "Le ultime uscite ufficiali",
+    subtitle: "Le ultime uscite 2025/26",
     href: "/shop",
     badge: "NEW",
   },

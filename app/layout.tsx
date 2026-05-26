@@ -54,12 +54,12 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Goal Mania - Maglie Calcio Ufficiali",
+    default: "Goal Mania - Maglie da Calcio",
     template: "%s | Goal Mania",
   },
   manifest: "/site.webmanifest",
-  description: "Negozio ufficiale di maglie da calcio. Trova le migliori maglie delle tue squadre preferite.",
-  keywords: ["maglie calcio", "jersey", "football shirts", "Goal Mania", "maglie ufficiali", "calcio"],
+  description: "Il tuo negozio di maglie da calcio. Trova le migliori maglie delle tue squadre preferite.",
+  keywords: ["maglie calcio", "jersey", "football shirts", "Goal Mania", "maglie calcio", "calcio"],
   authors: [{ name: "Goal Mania" }],
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it"),
   openGraph: {
@@ -67,8 +67,8 @@ export const metadata: Metadata = {
     locale: "it_IT",
     url: "/",
     siteName: "Goal Mania",
-    title: "Goal Mania - Maglie Calcio Ufficiali",
-    description: "Negozio ufficiale di maglie da calcio",
+    title: "Goal Mania - Maglie da Calcio",
+    description: "Le migliori maglie da calcio",
     images: [
       {
         url: "/favicon-for-public/web-app-manifest-512x512.png",
@@ -80,8 +80,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Goal Mania - Maglie Calcio Ufficiali",
-    description: "Negozio ufficiale di maglie da calcio",
+    title: "Goal Mania - Maglie da Calcio",
+    description: "Le migliori maglie da calcio",
     images: ["/favicon-for-public/web-app-manifest-512x512.png"],
   },
   robots: {
@@ -143,7 +143,7 @@ export default function RootLayout({
               name: "Goal Mania",
               url: process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it",
               logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it"}/favicon-for-public/web-app-manifest-512x512.png`,
-              description: "Negozio ufficiale di maglie da calcio",
+              description: "Le migliori maglie da calcio",
               sameAs: [
                 "https://www.facebook.com/goalmania",
                 "https://www.instagram.com/goalmania",

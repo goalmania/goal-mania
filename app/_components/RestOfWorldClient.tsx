@@ -105,7 +105,7 @@ export default function RestOfWorldClient() {
           Resto del Mondo
         </h2>
         <p className="text-lg text-white/60 max-w-2xl text-center mx-auto mb-8 font-munish">
-          Scopri la nostra selezione di maglie, accessori e articoli ufficiali per vivere il calcio ogni giorno.
+          Scopri la nostra selezione di maglie e accessori per vivere il calcio ogni giorno.
         </p>
         <div className="relative pb-16">
           <Swiper

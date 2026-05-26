@@ -53,7 +53,7 @@ export async function generateMetadata({
   const teamName = teamNameMap[team.toLowerCase()] || team;
   return {
     title: `Maglie ${teamName}`,
-    description: `Acquista le maglie ufficiali ${teamName} 2025-26. Spedizione gratuita in Italia.`,
+    description: `Acquista le maglie ${teamName} 2025-26. Spedizione gratuita in Italia.`,
   };
 }
 

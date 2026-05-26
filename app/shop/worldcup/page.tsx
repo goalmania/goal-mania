@@ -53,7 +53,7 @@ export default async function WorldCupHub() {
             Collezioni <span className="text-transparent [text-stroke:1px_black] [-webkit-text-stroke:1px_black]">Mondiali</span>
           </h1>
           <p className="max-w-xl mt-4 text-sm text-white/50 leading-relaxed uppercase tracking-wider font-medium">
-            Scopri la nostra selezione esclusiva di maglie ufficiali e kit per i Mondiali 2026, divisi per nazionale.
+            Scopri la nostra selezione esclusiva di maglie e kit per i Mondiali 2026, divisi per nazionale.
           </p>
         </div>
       </section>

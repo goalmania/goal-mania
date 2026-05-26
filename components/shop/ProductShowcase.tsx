@@ -38,7 +38,7 @@ export default function ProductGrid({
       id: featuredProduct4?.id,
       title: "Dettagli autentici",
       description:
-        "Ogni maglia è arricchita da dettagli originali e patch ufficiali, per un look da vero campione.",
+        "Ogni maglia è arricchita da dettagli curati e patch esclusivi, per un look da vero campione.",
       image: featuredProduct4?.image,
     },
   ].filter(Boolean);

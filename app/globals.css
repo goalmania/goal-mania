@@ -596,6 +596,86 @@
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200, 240, 0, 0.35); }
 .btn-accent:hover  { opacity: 0.9; transform: translateY(-1px); }
 
+/* ================================================================
+   MICRO-INTERACTIONS — Emil Kowalski philosophy
+   Enter: ease-out (feels fast). Exit: faster than enter.
+   Hover only on pointer devices, never on touch.
+   ================================================================ */
+
+:root {
+  --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* ── Button press feedback (all .gm-btn) ── */
+.gm-btn:active {
+  transform: scale(0.97) !important;
+  transition-duration: 100ms !important;
+}
+.btn-primary:active,
+.btn-accent:active {
+  transform: scale(0.97) !important;
+  transition-duration: 100ms !important;
+}
+
+/* ── Precise hover only on pointer devices ── */
+@media (hover: hover) and (pointer: fine) {
+  .gm-btn-primary:hover  { transform: translateY(-2px) scale(1.02); }
+  .gm-btn-secondary:hover { transform: translateY(-1px); }
+  .gm-card:hover         { transform: translateY(-4px); }
+  .gm-product-card:hover { transform: translateY(-6px) scale(1.01); }
+
+  /* Link underline left→right */
+  .gm-link {
+    position: relative;
+    text-decoration: none;
+  }
+  .gm-link::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0;
+    width: 100%; height: 1.5px;
+    background: var(--gm-lime);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 200ms var(--ease-out);
+  }
+  .gm-link:hover::after { transform: scaleX(1); }
+}
+
+/* ── Product card image zoom on hover ── */
+@media (hover: hover) and (pointer: fine) {
+  .gm-product-img {
+    transition: transform 400ms var(--ease-out);
+  }
+  .gm-product-card:hover .gm-product-img { transform: scale(1.05); }
+}
+
+/* ── Input focus ring ── */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  border-color: var(--gm-lime) !important;
+  box-shadow: 0 0 0 3px rgba(200, 240, 0, 0.15) !important;
+  transition: border-color 150ms var(--ease-out), box-shadow 150ms var(--ease-out);
+}
+
+/* ── Reduced motion: keep opacity, remove transforms ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  /* Keep color/opacity transitions */
+  .gm-btn, .gm-card, .gm-product-card, .gm-link::after {
+    transition-property: opacity, color, background-color, border-color, box-shadow !important;
+    transform: none !important;
+  }
+}
+
 .goalmania-title {
   font-family: var(--font-display);
   font-weight: 800;

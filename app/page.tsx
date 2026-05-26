@@ -9,6 +9,7 @@ import { getBaseUrl } from "@/lib/utils/baseUrl";
 import TrustSection from "@/components/home/TrustSection";
 import SocialProofSection from "@/components/home/SocialProofSection";
 import FlashSaleSection from "@/components/home/FlashSaleSection";
+import EditorialCommerceSection from "@/components/home/EditorialCommerceSection";
 
 // Dynamic imports for below-the-fold components (better performance)
 const NewsSection = dynamic(() => import("@/components/home/NewsSection"), {
@@ -292,6 +293,9 @@ export default async function Home() {
 
       {/* Featured products */}
       <FeaturedProducts products={featuredProducts} />
+
+      {/* Editorial-commerce hybrid: news + matching jerseys alternating */}
+      <EditorialCommerceSection articles={featuredArticles.slice(0, 3)} products={featuredProducts.slice(0, 3)} />
 
       {/* Social proof / testimonials */}
       <SocialProofSection />

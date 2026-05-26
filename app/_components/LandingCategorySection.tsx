@@ -91,7 +91,7 @@ export default function LandingCategorySection({ title, category }: LandingCateg
           {title}
         </h2>
         <p className="text-lg text-white/60 max-w-2xl text-center mx-auto mb-12 font-munish">
-          Scopri la nostra selezione di maglie, accessori e articoli ufficiali per vivere il calcio
+          Scopri la nostra selezione di maglie e accessori per vivere il calcio
           ogni giorno.
         </p>
         {products.length > 3 ? (

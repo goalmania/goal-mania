@@ -19,7 +19,7 @@ const navigation = {
   social: [
     {
       name: "Instagram",
-      href: "https://www.instagram.com/goalmaniaofficial/",
+      href: "https://www.instagram.com/goalmania.it/",
       icon: (props: React.ComponentProps<"svg">) => (
         <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
           <path
@@ -41,7 +41,7 @@ const navigation = {
     },
     {
       name: "TikTok",
-      href: "https://www.tiktok.com/@goalmania_",
+      href: "https://www.tiktok.com/@goalmania.it",
       icon: (props: React.ComponentProps<"svg">) => (
         <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
           <path d="M9.37,23.5a7.468,7.468,0,0,1-7.5-7.5,7.407,7.407,0,0,1,5.483-7.14v3.746a3.763,3.763,0,1,0,4.017,6.344V6.621h3.253a6.3,6.3,0,0,0,.687,3.257h-.687a10.494,10.494,0,0,1-5.253,9.285V23.5Z" />
