@@ -5,10 +5,12 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
 const MESSAGES = [
-  { text: "🚚 Spedizione GRATUITA sopra €89", href: "/shop" },
-  { text: "🔥 Saldi: fino al -40% sulle maglie", href: "/shop" },
-  { text: "⚡ Nuovi arrivi: Maglie 2025/26 disponibili", href: "/shop" },
-  { text: "🏆 Mondiali 2026 — Maglie delle Nazionali disponibili ora!", href: "/shop/worldcup" },
+  { text: "🚚 SPEDIZIONE GRATUITA su tutti gli ordini — nessun minimo!", href: "/shop" },
+  { text: "🔥 Scorte limitate: solo pochi pezzi rimasti su alcune taglie!", href: "/shop" },
+  { text: "⚡ Nuove Maglie 2026/27 disponibili — ordina adesso!", href: "/shop/2026/27" },
+  { text: "🏆 Mondiali 2026 — Vesti la tua Nazionale prima che finiscano!", href: "/shop/worldcup" },
+  { text: "🔄 Reso gratuito entro 30 giorni — acquisto senza rischi", href: "/shop" },
+  { text: "⭐ Oltre 1.200 clienti soddisfatti — unisciti a loro!", href: "/shop" },
 ];
 
 const DISMISS_KEY = "announcementBarDismissed_v3";

@@ -283,7 +283,7 @@ export function Header() {
               </Link>
             </div>
 
-            {/* NEWS with mega */}
+            {/* ULTIME NOTIZIE with mega */}
             <div
               className="relative"
               onMouseEnter={() => openMega("news")}
@@ -298,7 +298,7 @@ export function Header() {
                 }`}
                 style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1.5px" }}
               >
-                News
+                Notizie
                 <ChevronDown
                   className={`w-3 h-3 transition-transform duration-200 ${activeMega === "news" ? "rotate-180" : ""}`}
                 />
@@ -308,8 +308,9 @@ export function Header() {
             {/* Static links */}
             {[
               { name: "World Cup 2026", href: "/shop/worldcup", isSpecial: true },
-              { name: "About", href: "/about" },
-            ].map((item) => (
+              { name: "2026/27", href: "/shop/2026/27", isNew: true },
+              { name: "Retro", href: "/shop/retro", isRetro: true },
+            ].map((item: any) => (
               <Link
                 key={item.name}
                 href={item.href}
@@ -324,6 +325,14 @@ export function Header() {
               >
                 {item.isSpecial && <Trophy size={11} className="animate-pulse" />}
                 {item.name}
+                {item.isNew && (
+                  <span className="text-[7px] font-black uppercase px-1 py-0.5 rounded ml-0.5 leading-none"
+                    style={{ background: "#c8f000", color: "#000" }}>NEW</span>
+                )}
+                {item.isRetro && (
+                  <span className="text-[7px] font-black uppercase px-1 py-0.5 rounded ml-0.5 leading-none"
+                    style={{ background: "rgba(200,240,0,0.15)", color: "#c8f000", border: "1px solid rgba(200,240,0,0.3)" }}>RETRO</span>
+                )}
                 {pathname === item.href && (
                   <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-[#c8f000] rounded-full" />
                 )}

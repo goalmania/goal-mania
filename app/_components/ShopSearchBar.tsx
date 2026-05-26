@@ -41,15 +41,23 @@ export default function ShopSearchBar({
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Cerca prodotti, articoli..."
-          className="block w-full rounded-full border-0 py-3 bg-[#F0F0F0] pl-10 pr-3 text-white ring-1 ring-inset ring-gray-300 placeholder:text-white/40 focus:ring-1 focus:ring-inset sm:text-sm sm:leading-6"
+          placeholder="Cerca maglie, squadre, articoli..."
+          className="block w-full rounded-full py-3 pl-10 pr-3 text-white text-sm outline-none transition-all"
+          style={{
+            background: "#111",
+            border: "1.5px solid rgba(200,240,0,0.2)",
+            fontFamily: "var(--font-body, sans-serif)",
+          }}
+          onFocus={(e) => (e.currentTarget.style.borderColor = "#c8f000")}
+          onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(200,240,0,0.2)")}
         />
         <button
           type="submit"
-          className="absolute border-black hidden items-center md:flex inset-y-0 mr-4 right-0 border rounded-full m-1.5  px-4 py-2 bg-transparent  text-white  hover:bg-[] focus:outline-none focus:ring-1"
+          className="absolute inset-y-0 right-0 m-1.5 hidden md:flex items-center gap-1.5 px-4 py-2 rounded-full font-black text-[#0a0a0a] text-xs uppercase tracking-wide transition-all hover:opacity-90"
+          style={{ background: "#c8f000" }}
         >
           Cerca
-          <ArrowRight className="inline-flex mr-1.5 w-4 items-center h-4" />
+          <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
     </form>
