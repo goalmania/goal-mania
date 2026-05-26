@@ -309,7 +309,7 @@ export function Header() {
             {[
               { name: "World Cup 2026", href: "/shop/worldcup", isSpecial: true },
               { name: "2026/27", href: "/shop/2026/27", isNew: true },
-              { name: "Retro", href: "/shop/retro", isRetro: true },
+              { name: "Maglie Retro", href: "/shop/retro", isRetro: true },
             ].map((item: any) => (
               <Link
                 key={item.name}
