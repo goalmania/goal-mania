@@ -131,8 +131,8 @@ export default function Season2627Client({ products }: { products: SeasonProduct
     return map;
   }, [products]);
 
-  // Sections that actually have products
-  const activeSections = SECTIONS.filter((s) => grouped[s.key]?.length > 0);
+  // All sections always shown (empty ones show "prossimamente")
+  const activeSections = SECTIONS;
 
   // Flat filtered view
   const filteredProducts = useMemo(() => {
@@ -189,18 +189,19 @@ export default function Season2627Client({ products }: { products: SeasonProduct
               letterSpacing: "-0.025em",
             }}
           >
-            Stagione{" "}
-            <span style={{ color: "#c8f000" }}>2025/26</span>
+            Maglie{" "}
+            <span style={{ color: "#c8f000" }}>2026/27</span>
           </h1>
 
           <p className="text-sm text-white/40 max-w-xl mb-6">
-            {products.length} kit della stagione corrente — Serie A, Premier League, La Liga e Nazionali.
-            Ogni maglia spedita gratis, resa in 30 giorni.
+            {products.length > 0
+              ? `${products.length} kit già disponibili — Serie A, Premier League, La Liga e Nazionali. Nuovi arrivi ogni settimana.`
+              : "I nuovi kit della stagione 2026/27 stanno arrivando. Ogni maglia spedita gratis, resa in 30 giorni."}
           </p>
 
           {/* League quick-jump chips */}
           <div className="flex flex-wrap gap-2 mb-4">
-            {activeSections.map((s) => (
+            {SECTIONS.map((s) => (
               <button
                 key={s.key}
                 onClick={() => setActiveFilter(s.key)}
@@ -213,7 +214,7 @@ export default function Season2627Client({ products }: { products: SeasonProduct
               >
                 <span>{s.flag}</span>
                 <span>{s.label}</span>
-                <span className="opacity-50">({grouped[s.key].length})</span>
+                <span className="opacity-50">({grouped[s.key]?.length ?? 0})</span>
               </button>
             ))}
           </div>
@@ -302,7 +303,8 @@ export default function Season2627Client({ products }: { products: SeasonProduct
       {activeFilter === "all" && (
         <div className="pb-24 space-y-16">
           {activeSections.map((section) => {
-            const prods = grouped[section.key];
+            const prods = grouped[section.key] ?? [];
+            const isEmpty = prods.length === 0;
 
             // Group by team within each league
             const byTeam: Record<string, SeasonProduct[]> = {};
@@ -356,8 +358,29 @@ export default function Season2627Client({ products }: { products: SeasonProduct
                   <p className="text-xs text-white/30">{section.description}</p>
                 </div>
 
+                {/* Empty state — coming soon */}
+                {isEmpty && (
+                  <div
+                    className="rounded-2xl flex items-center gap-4 px-6 py-5 mb-2"
+                    style={{
+                      border: `1px dashed ${section.accentBorder}`,
+                      background: section.accent,
+                    }}
+                  >
+                    <span className="text-2xl">{section.flag}</span>
+                    <div>
+                      <p className="text-xs font-black uppercase tracking-wider" style={{ color: section.accentText }}>
+                        Prossimamente
+                      </p>
+                      <p className="text-[11px] text-white/30 mt-0.5">
+                        I kit {section.label} 2026/27 saranno disponibili a breve.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 {/* Team sub-sections */}
-                {teams.length > 1 ? (
+                {!isEmpty && teams.length > 1 ? (
                   <div className="space-y-8">
                     {teams.map((team) => (
                       <div key={team}>
@@ -400,7 +423,7 @@ export default function Season2627Client({ products }: { products: SeasonProduct
                       </div>
                     ))}
                   </div>
-                ) : (
+                ) : !isEmpty ? (
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
                     {prods.map((p) => (
                       <ProductCard
@@ -417,21 +440,23 @@ export default function Season2627Client({ products }: { products: SeasonProduct
                       />
                     ))}
                   </div>
-                )}
+                ) : null}
 
-                {/* View all CTA */}
-                <div className="mt-6 flex justify-center">
-                  <button
-                    onClick={() => setActiveFilter(section.key)}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-200 active:scale-95"
-                    style={{
-                      border: `1px solid ${section.accentBorder}`,
-                      color: section.accentText,
-                    }}
-                  >
-                    Tutti i kit {section.label} <ChevronRight size={12} />
-                  </button>
-                </div>
+                {/* View all CTA — only when section has products */}
+                {!isEmpty && (
+                  <div className="mt-6 flex justify-center">
+                    <button
+                      onClick={() => setActiveFilter(section.key)}
+                      className="flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-200 active:scale-95"
+                      style={{
+                        border: `1px solid ${section.accentBorder}`,
+                        color: section.accentText,
+                      }}
+                    >
+                      Tutti i kit {section.label} <ChevronRight size={12} />
+                    </button>
+                  </div>
+                )}
               </section>
             );
           })}

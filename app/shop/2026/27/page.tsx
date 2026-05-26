@@ -6,8 +6,8 @@ import Season2627Client from "@/app/_components/Season2627Client";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Maglie 2025/26 — 2026/27 | Goal Mania",
-  description: "Tutte le maglie della stagione corrente: Serie A, Premier League, La Liga e Nazionali. Spedizione gratuita.",
+  title: "Maglie 2026/27 | Goal Mania",
+  description: "Le nuove maglie della stagione 2026/27: Serie A, Premier League, La Liga e Nazionali. Spedizione gratuita.",
 };
 
 async function getCurrentSeasonProducts() {
@@ -15,10 +15,8 @@ async function getCurrentSeasonProducts() {
     await connectDB();
     const products = await Product.find({
       $or: [
-        { category: "2025/26" },
         { category: "2026/27" },
-        { title: { $regex: "2026-27", $options: "i" } },
-        { title: { $regex: "26/27", $options: "i" } },
+        { title: { $regex: "2026[-/]27", $options: "i" } },
       ],
       isActive: true,
     })
