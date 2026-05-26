@@ -105,23 +105,23 @@ export function LeagueRankings({ league }: LeagueRankingsProps) {
   }
 
   return (
-    <div className="rounded-lg bg-[#F5F5F5] overflow-auto scrollbar-hide p-6 font-munish">
+    <div className="rounded-xl overflow-auto scrollbar-hide font-munish" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}>
       <table className="w-full text-sm">
-        <thead className="bg-[#111111] text-white font-light px-3">
+        <thead style={{ background: "rgba(200,240,0,0.06)", borderBottom: "1px solid rgba(200,240,0,0.12)" }}>
           <tr>
-            <th className="p-2 text-left font-light rounded-l-full pl-3">
-              <span className="rounded-tl-full">POC</span>
+            <th className="p-3 text-left font-black pl-4" style={{ color: "rgba(200,240,0,0.7)", fontSize: "10px", letterSpacing: "2px", fontFamily: "var(--font-mono,monospace)" }}>
+              #
             </th>
-            <th className="p-2 text-left font-light">Squad</th>
-            <th className="p-2 text-center font-light">PG</th>
-            <th className="p-2 text-center font-light">W</th>
-            <th className="p-2 text-center font-light">D</th>
-            <th className="p-2 text-center font-light">L</th>
-            <th className="p-2 text-center font-light">GF</th>
-            <th className="p-2 text-center font-light">GS</th>
-            <th className="p-2 text-center font-light">DR</th>
-            <th className="p-2 text-center font-light rounded-r-full pr-3">
-              Pti
+            <th className="p-3 text-left font-black" style={{ color: "rgba(200,240,0,0.7)", fontSize: "10px", letterSpacing: "2px", fontFamily: "var(--font-mono,monospace)" }}>SQUADRA</th>
+            <th className="p-3 text-center font-black" style={{ color: "rgba(200,240,0,0.7)", fontSize: "10px", letterSpacing: "2px", fontFamily: "var(--font-mono,monospace)" }}>PG</th>
+            <th className="p-3 text-center font-black" style={{ color: "rgba(200,240,0,0.7)", fontSize: "10px", letterSpacing: "2px", fontFamily: "var(--font-mono,monospace)" }}>W</th>
+            <th className="p-3 text-center font-black" style={{ color: "rgba(200,240,0,0.7)", fontSize: "10px", letterSpacing: "2px", fontFamily: "var(--font-mono,monospace)" }}>D</th>
+            <th className="p-3 text-center font-black" style={{ color: "rgba(200,240,0,0.7)", fontSize: "10px", letterSpacing: "2px", fontFamily: "var(--font-mono,monospace)" }}>L</th>
+            <th className="p-3 text-center font-black" style={{ color: "rgba(200,240,0,0.7)", fontSize: "10px", letterSpacing: "2px", fontFamily: "var(--font-mono,monospace)" }}>GF</th>
+            <th className="p-3 text-center font-black" style={{ color: "rgba(200,240,0,0.7)", fontSize: "10px", letterSpacing: "2px", fontFamily: "var(--font-mono,monospace)" }}>GS</th>
+            <th className="p-3 text-center font-black" style={{ color: "rgba(200,240,0,0.7)", fontSize: "10px", letterSpacing: "2px", fontFamily: "var(--font-mono,monospace)" }}>DR</th>
+            <th className="p-3 text-center font-black pr-4" style={{ color: "#c8f000", fontSize: "10px", letterSpacing: "2px", fontFamily: "var(--font-mono,monospace)" }}>
+              PTI
             </th>
           </tr>
         </thead>
@@ -129,44 +129,47 @@ export function LeagueRankings({ league }: LeagueRankingsProps) {
           {rankings.map((team) => (
             <tr
               key={team.teamId || team.team}
-              className="border-b border-white/8 hover:bg-[#0a0a0a]"
+              className="transition-colors"
+              style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
+              onMouseEnter={e => (e.currentTarget.style.background = "rgba(200,240,0,0.04)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
             >
-              <td className="p-2 text-center text-[14px]">{team.position}</td>
-              <td className="p-2 flex items-center space-x-2 text-[14px]">
+              <td className="p-3 pl-4 text-center text-[13px] font-black" style={{ color: "rgba(255,255,255,0.35)", fontFamily: "var(--font-mono,monospace)", width: 40 }}>{team.position}</td>
+              <td className="p-3 flex items-center gap-2.5 text-[13px]">
                 {team.logo && (
                   <img
                     src={team.logo}
                     alt={`${team.team} logo`}
-                    className="w-6 h-6 object-contain"
+                    className="w-6 h-6 object-contain flex-shrink-0"
                     onError={(e) => (e.currentTarget.style.display = "none")}
                   />
                 )}
-                <span className="truncate">{team.team}</span>
+                <span className="truncate font-semibold text-white">{team.team}</span>
               </td>
-              <td className="p-2 text-center text-[#848A90] text-[14px]">
+              <td className="p-3 text-center text-[13px]" style={{ color: "rgba(255,255,255,0.45)" }}>
                 {team.played}
               </td>
-              <td className="p-2 text-center text-[#848A90] text-[14px]">
+              <td className="p-3 text-center text-[13px] font-semibold" style={{ color: "#4ade80" }}>
                 {team.won}
               </td>
-              <td className="p-2 text-center text-[#848A90] text-[14px]">
+              <td className="p-3 text-center text-[13px]" style={{ color: "rgba(255,255,255,0.45)" }}>
                 {team.drawn}
               </td>
-              <td className="p-2 text-center text-[#848A90] text-[14px]">
+              <td className="p-3 text-center text-[13px]" style={{ color: "rgba(255,100,100,0.7)" }}>
                 {team.lost}
               </td>
-              <td className="p-2 text-center text-[#848A90] text-[14px]">
+              <td className="p-3 text-center text-[13px]" style={{ color: "rgba(255,255,255,0.45)" }}>
                 {team.goalsFor}
               </td>
-              <td className="p-2 text-center text-[#848A90] text-[14px]">
+              <td className="p-3 text-center text-[13px]" style={{ color: "rgba(255,255,255,0.45)" }}>
                 {team.goalsAgainst}
               </td>
-              <td className="p-2 text-center text-[#848A90] text-[14px]">
+              <td className="p-3 text-center text-[13px]" style={{ color: "rgba(255,255,255,0.45)" }}>
                 {team.goalDifference > 0
                   ? `+${team.goalDifference}`
                   : team.goalDifference}
               </td>
-              <td className="p-2 text-center font-bold text-[14px]">
+              <td className="p-3 pr-4 text-center font-black text-[14px]" style={{ color: "#c8f000", fontFamily: "var(--font-display,sans-serif)" }}>
                 {team.points}
               </td>
             </tr>

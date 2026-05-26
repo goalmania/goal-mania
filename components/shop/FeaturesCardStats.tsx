@@ -42,7 +42,7 @@ const FeaturesCardStats: React.FC = () => {
   ];
 
   return (
-    <section className="bg-[#F5F5F5] text-white font-munish md:py-8">
+    <section className="bg-[#0d0d0d] text-white font-munish md:py-8" style={{ borderTop: "1px solid rgba(255,255,255,0.05)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
       <div className="container mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4">
           {features.map((feature) => (
