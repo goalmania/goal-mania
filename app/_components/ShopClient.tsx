@@ -1,139 +1,39 @@
 "use client";
-import ProductGridWrapper from "@/app/_components/ProductGridWrapper";
-import FAQ from "@/app/_components/FAQ";
-import Guarantees from "@/app/_components/Guarantees";
-import ReviewsSlider from "@/app/_components/ReviewsSlider";
-import { Suspense, useState, useMemo } from "react";
+
+import { Suspense, useState, useMemo, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRight,
+  Truck,
+  RotateCcw,
+  ShieldCheck,
+  BadgeCheck,
+  Star,
+  TrendingUp,
+  Clock,
+  ArrowUp,
+  ArrowDown,
+  Percent,
+  ChevronDown,
+  X,
+  Zap,
+  Trophy,
+  Globe,
+} from "lucide-react";
+import ProductGridWrapper from "@/app/_components/ProductGridWrapper";
+import FAQ from "@/app/_components/FAQ";
 import ShopSearchBar from "./ShopSearchBar";
-import { TeamCarousel } from "@/components/home/TeamCarousel";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useI18n } from "@/lib/hooks/useI18n";
-import ShopBanner from "@/components/shop/ShopBanner";
-import ShopImageCard from "@/components/home/ShopImageCard";
-import ProductShowCase from "@/components/shop/ProductShowcase";
-import FaqSection from "./FaqSection";
-import FeaturesCardStats from "@/components/shop/FeaturesCardStats";
-import { CheckCircle2, SparklesIcon, Star, SlidersHorizontal, X, ChevronDown, Grid3X3, List, TrendingUp, Clock, Tag, ArrowUp, ArrowDown, Percent } from "lucide-react";
-import Testimonies from "@/components/shop/testimonies";
-import VideoComp from "@/components/home/VideoComp";
-import LandingCategorySection from "@/app/_components/LandingCategorySection";
-import RestOfWorldClient from "@/app/_components/RestOfWorldClient";
-import LimitedEditionClient from "@/app/_components/LimitedEditionClient";
-import PremierLeagueClient from "@/app/_components/PremierLeagueClient";
 import SerieATeamsClient from "@/app/_components/SerieATeamsClient";
+import PremierLeagueClient from "@/app/_components/PremierLeagueClient";
+import WorldCupShowcase from "@/components/home/WorldCupShowCase";
+import VideoComp from "@/components/home/VideoComp";
+import Testimonies from "@/components/shop/testimonies";
+import FeaturesCardStats from "@/components/shop/FeaturesCardStats";
 
-// ── Shop Filter & Sort Bar ──────────────────────────────────────
-type SortOption = "bestseller" | "newest" | "price_asc" | "price_desc" | "discount";
-
-interface ShopFilterBarProps {
-  totalCount: number;
-  shownCount: number;
-  onSortChange: (sort: SortOption) => void;
-  activeSort: SortOption;
-  activeFilters: string[];
-  onRemoveFilter: (filter: string) => void;
-}
-
-function ShopFilterBar({ totalCount, shownCount, onSortChange, activeSort, activeFilters, onRemoveFilter }: ShopFilterBarProps) {
-  const [sortOpen, setSortOpen] = useState(false);
-
-  const sortOptions: { value: SortOption; label: string; icon: React.ReactNode }[] = [
-    { value: "bestseller", label: "Più Venduti", icon: <TrendingUp size={12} /> },
-    { value: "newest", label: "Novità", icon: <Clock size={12} /> },
-    { value: "price_asc", label: "Prezzo ↑", icon: <ArrowUp size={12} /> },
-    { value: "price_desc", label: "Prezzo ↓", icon: <ArrowDown size={12} /> },
-    { value: "discount", label: "Scontati", icon: <Percent size={12} /> },
-  ];
-
-  const currentSort = sortOptions.find((s) => s.value === activeSort)!;
-
-  return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        {/* Results count */}
-        <p className="text-[11px] text-white/40" style={{ fontFamily: "var(--font-mono, monospace)" }}>
-          Mostrando <span className="text-white font-black">{shownCount}</span> di{" "}
-          <span className="text-white font-black">{totalCount}</span> maglie
-        </p>
-
-        {/* Sort dropdown */}
-        <div className="relative">
-          <button
-            onClick={() => setSortOpen((v) => !v)}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-bold transition-all"
-            style={{
-              background: "#111",
-              border: "1px solid rgba(255,255,255,0.1)",
-              color: "rgba(255,255,255,0.7)",
-              fontFamily: "var(--font-mono, monospace)",
-            }}
-          >
-            {currentSort.icon}
-            {currentSort.label}
-            <ChevronDown size={11} className={`transition-transform ${sortOpen ? "rotate-180" : ""}`} />
-          </button>
-
-          {sortOpen && (
-            <div
-              className="absolute right-0 top-full mt-2 z-30 rounded-xl overflow-hidden min-w-[160px]"
-              style={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 16px 48px rgba(0,0,0,0.6)" }}
-            >
-              {sortOptions.map((opt) => (
-                <button
-                  key={opt.value}
-                  onClick={() => { onSortChange(opt.value); setSortOpen(false); }}
-                  className="w-full flex items-center gap-2.5 px-4 py-2.5 text-[11px] font-bold text-left transition-all hover:bg-white/5"
-                  style={{
-                    color: activeSort === opt.value ? "#c8f000" : "rgba(255,255,255,0.6)",
-                    fontFamily: "var(--font-mono, monospace)",
-                    background: activeSort === opt.value ? "rgba(200,240,0,0.06)" : "transparent",
-                  }}
-                >
-                  {opt.icon}
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Active filter chips */}
-      {activeFilters.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {activeFilters.map((filter) => (
-            <span
-              key={filter}
-              className="flex items-center gap-1.5 text-[10px] font-bold px-3 py-1 rounded-full cursor-pointer transition-all hover:opacity-80"
-              style={{
-                background: "rgba(200,240,0,0.1)",
-                color: "#c8f000",
-                border: "1px solid rgba(200,240,0,0.25)",
-                fontFamily: "var(--font-mono, monospace)",
-              }}
-              onClick={() => onRemoveFilter(filter)}
-            >
-              {filter}
-              <X size={9} />
-            </span>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-interface Review {
-  id: string;
-  name: string;
-  rating: number;
-  comment: string;
-  date?: string;
-}
+// ─────────────────────────────────────────────────────────────
+// Types
+// ─────────────────────────────────────────────────────────────
 
 interface Product {
   id: string;
@@ -146,7 +46,655 @@ interface Product {
   videos?: string[];
 }
 
-import WorldCupShowcase from "@/components/home/WorldCupShowCase";
+// ─────────────────────────────────────────────────────────────
+// Sticky league nav
+// ─────────────────────────────────────────────────────────────
+
+const NAV_ITEMS = [
+  { label: "Tutto", href: "#top" },
+  { label: "Nuovi Arrivi", href: "#nuovi-arrivi" },
+  { label: "Bestseller", href: "#bestseller" },
+  { label: "Serie A", href: "#serie-a-section" },
+  { label: "Premier League", href: "#premier-section" },
+  { label: "Nazionali", href: "#nazionali-section" },
+  { label: "Retro", href: "/shop/retro" },
+];
+
+function LeagueNav() {
+  return (
+    <div
+      className="sticky top-0 z-30 border-b"
+      style={{ background: "rgba(10,10,10,0.92)", backdropFilter: "blur(16px)", borderColor: "rgba(255,255,255,0.06)" }}
+    >
+      <div className="max-w-7xl mx-auto px-4">
+        <div
+          className="flex gap-1 overflow-x-auto py-3"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" } as React.CSSProperties}
+        >
+          {NAV_ITEMS.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="flex-shrink-0 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest transition-all hover:text-white hover:bg-white/5"
+              style={{
+                fontFamily: "var(--font-mono, monospace)",
+                color: "rgba(255,255,255,0.4)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {item.label}
+            </a>
+          ))}
+          <a
+            href="/shop/worldcup"
+            className="flex-shrink-0 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest transition-all"
+            style={{
+              fontFamily: "var(--font-mono, monospace)",
+              background: "rgba(200,240,0,0.1)",
+              color: "#c8f000",
+              border: "1px solid rgba(200,240,0,0.2)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            🏆 Mondiali 2026
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Shop Hero
+// ─────────────────────────────────────────────────────────────
+
+function ShopHero({ featuredProduct }: { featuredProduct: Product | null }) {
+  return (
+    <section
+      id="top"
+      className="relative overflow-hidden"
+      style={{ background: "#0a0a0a" }}
+    >
+      {/* Grid dot background */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: "radial-gradient(rgba(200,240,0,0.035) 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
+      {/* Lime glow */}
+      <div
+        className="absolute top-0 right-1/4 w-[600px] h-[400px] pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse at center, rgba(200,240,0,0.06) 0%, transparent 70%)",
+        }}
+      />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24 flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+        {/* Left: Copy */}
+        <div className="flex-1 min-w-0">
+          {/* Live badge */}
+          <div className="inline-flex items-center gap-2 mb-7 px-3 py-1.5 rounded-full" style={{ background: "rgba(200,240,0,0.07)", border: "1px solid rgba(200,240,0,0.15)" }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#c8f000] animate-pulse" />
+            <span className="text-[10px] uppercase tracking-[3px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}>
+              // Stagione 2025/26 Live
+            </span>
+          </div>
+
+          <h1
+            className="font-black uppercase text-white mb-6 leading-[0.9]"
+            style={{
+              fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
+              fontSize: "clamp(3rem, 8vw, 6rem)",
+              letterSpacing: "-1px",
+            }}
+          >
+            Le Migliori<br />
+            <span style={{ color: "#c8f000" }}>Maglie</span><br />
+            da Calcio
+          </h1>
+
+          <p className="text-sm mb-10 max-w-md" style={{ color: "rgba(255,255,255,0.45)", fontFamily: "var(--font-body, sans-serif)", lineHeight: "1.75" }}>
+            Serie A, Premier League, Champions League, Nazionali —<br />
+            tutta la passione del calcio in un unico posto.
+          </p>
+
+          {/* Stats row */}
+          <div className="flex items-center gap-8 mb-10 flex-wrap">
+            {[
+              { num: "3.200+", label: "Maglie", icon: <Trophy size={14} /> },
+              { num: "50+",    label: "Squadre", icon: <Globe size={14} /> },
+              { num: "24h",    label: "Spedizione", icon: <Zap size={14} /> },
+            ].map(({ num, label, icon }) => (
+              <div key={label} className="flex items-center gap-2">
+                <div
+                  className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: "rgba(200,240,0,0.08)", color: "#c8f000" }}
+                >
+                  {icon}
+                </div>
+                <div>
+                  <p className="font-black text-lg text-white leading-none" style={{ fontFamily: "var(--font-display, sans-serif)" }}>{num}</p>
+                  <p className="text-[10px] uppercase tracking-[2px] mt-0.5" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.55)" }}>{label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTAs */}
+          <div className="flex gap-3 flex-wrap">
+            <a
+              href="#nuovi-arrivi"
+              className="px-7 py-3.5 rounded-full font-black text-sm uppercase tracking-widest transition-all hover:opacity-90 active:scale-[0.97]"
+              style={{
+                background: "#c8f000",
+                color: "#0a0a0a",
+                fontFamily: "var(--font-display, sans-serif)",
+                letterSpacing: "2px",
+                boxShadow: "0 8px 32px rgba(200,240,0,0.25)",
+              }}
+            >
+              Esplora Ora
+            </a>
+            <a
+              href="#bestseller"
+              className="px-7 py-3.5 rounded-full font-black text-sm uppercase tracking-widest transition-all hover:border-white/30"
+              style={{
+                background: "transparent",
+                color: "rgba(255,255,255,0.65)",
+                border: "1.5px solid rgba(255,255,255,0.12)",
+                fontFamily: "var(--font-display, sans-serif)",
+                letterSpacing: "2px",
+              }}
+            >
+              Bestseller
+            </a>
+          </div>
+        </div>
+
+        {/* Right: Featured product card */}
+        {featuredProduct ? (
+          <div className="flex-shrink-0 w-full max-w-[300px] lg:max-w-[340px]">
+            <Link
+              href={`/products/${featuredProduct.id}`}
+              className="group block relative rounded-3xl overflow-hidden"
+              style={{ background: "#111", border: "1px solid rgba(255,255,255,0.08)" }}
+            >
+              <div className="relative overflow-hidden" style={{ aspectRatio: "3/4" }}>
+                <Image
+                  src={featuredProduct.image}
+                  alt={featuredProduct.name}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  sizes="(max-width: 1024px) 100vw, 340px"
+                />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%)" }} />
+                <div
+                  className="absolute top-4 left-4 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest"
+                  style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-mono, monospace)" }}
+                >
+                  ⭐ In Evidenza
+                </div>
+              </div>
+              <div className="p-5">
+                <p className="text-[9px] uppercase tracking-[2px] mb-1" style={{ color: "rgba(200,240,0,0.6)", fontFamily: "var(--font-mono, monospace)" }}>
+                  {featuredProduct.team}
+                </p>
+                <p className="font-black text-sm text-white leading-tight mb-3" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+                  {featuredProduct.name}
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="font-black text-xl text-white" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+                    €{featuredProduct.price.toFixed(2)}
+                  </span>
+                  <span
+                    className="text-[10px] font-bold uppercase tracking-widest transition-colors group-hover:text-[#c8f000]"
+                    style={{ color: "rgba(255,255,255,0.35)", fontFamily: "var(--font-mono, monospace)" }}
+                  >
+                    Vedi →
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </div>
+        ) : (
+          /* Fallback decorative element when no featured product */
+          <div
+            className="hidden lg:flex flex-shrink-0 w-[340px] h-[440px] rounded-3xl items-center justify-center"
+            style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
+          >
+            <span className="text-6xl opacity-20">⚽</span>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Trust Strip
+// ─────────────────────────────────────────────────────────────
+
+const TRUST = [
+  { icon: Truck,       label: "Spedizione Gratuita", sub: "Sopra €89" },
+  { icon: RotateCcw,   label: "Reso Gratuito",        sub: "30 giorni" },
+  { icon: ShieldCheck, label: "Pagamento Sicuro",      sub: "SSL 256-bit" },
+  { icon: BadgeCheck,  label: "Qualità Garantita",     sub: "100% verificato" },
+];
+
+function TrustStrip() {
+  return (
+    <div
+      className="border-y"
+      style={{ borderColor: "rgba(255,255,255,0.05)", background: "#0d0d0d" }}
+    >
+      <div className="max-w-6xl mx-auto px-6 py-5">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {TRUST.map(({ icon: Icon, label, sub }) => (
+            <div key={label} className="flex items-center gap-3">
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: "rgba(200,240,0,0.07)", border: "1px solid rgba(200,240,0,0.12)" }}
+              >
+                <Icon size={16} style={{ color: "#c8f000" }} />
+              </div>
+              <div>
+                <p className="text-xs font-black uppercase text-white leading-tight" style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "0.3px" }}>{label}</p>
+                <p className="text-[10px] mt-0.5" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.45)" }}>{sub}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Bestseller product card
+// ─────────────────────────────────────────────────────────────
+
+function BestsellerCard({ product, size = "md" }: { product: Product; size?: "lg" | "md" }) {
+  return (
+    <Link
+      href={`/products/${product.id}`}
+      className="group relative block rounded-2xl overflow-hidden"
+      style={{ background: "#111", border: "1px solid rgba(255,255,255,0.07)" }}
+    >
+      <div
+        className="relative overflow-hidden"
+        style={{ aspectRatio: size === "lg" ? "3/4" : "4/5" }}
+      >
+        <Image
+          src={product.image}
+          alt={product.name}
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          sizes={size === "lg" ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 50vw, 25vw"}
+        />
+        <div
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 55%)" }}
+        />
+
+        {/* Bestseller badge */}
+        <div
+          className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest"
+          style={{ background: "rgba(10,10,10,0.85)", color: "#c8f000", fontFamily: "var(--font-mono, monospace)", border: "1px solid rgba(200,240,0,0.25)", backdropFilter: "blur(8px)" }}
+        >
+          🏆 Bestseller
+        </div>
+
+        {/* Hover CTA overlay */}
+        <div
+          className="absolute inset-x-4 bottom-4 py-3 rounded-xl font-black text-xs uppercase tracking-widest text-center transition-all duration-300 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0"
+          style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px" }}
+        >
+          Vedi Maglia →
+        </div>
+      </div>
+
+      <div className="p-4">
+        <p className="text-[9px] uppercase tracking-[2px] mb-1" style={{ color: "rgba(200,240,0,0.55)", fontFamily: "var(--font-mono, monospace)" }}>
+          {product.team}
+        </p>
+        <p
+          className="font-black leading-tight mb-2"
+          style={{
+            fontFamily: "var(--font-display, sans-serif)",
+            fontSize: size === "lg" ? "1rem" : "0.8rem",
+            color: "rgba(255,255,255,0.9)",
+          }}
+        >
+          {product.name}
+        </p>
+        <div className="flex items-center gap-2">
+          <span
+            className="font-black"
+            style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: size === "lg" ? "1.25rem" : "1rem", color: "#fff" }}
+          >
+            €{product.price.toFixed(2)}
+          </span>
+          {/* Stars */}
+          <div className="flex items-center gap-0.5">
+            {[1,2,3,4,5].map((s) => (
+              <Star key={s} size={9} fill="#c8f000" stroke="none" />
+            ))}
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Bestseller section
+// ─────────────────────────────────────────────────────────────
+
+function BestsellerSection({ products }: { products: Product[] }) {
+  if (products.length === 0) return null;
+  const [main, ...rest] = products.slice(0, 5);
+
+  return (
+    <section id="bestseller" className="py-16 md:py-20" style={{ background: "#0a0a0a" }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Header */}
+        <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-4 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
+              <span className="text-[9px] uppercase tracking-[3px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}>
+                // Scelti da Goal Mania
+              </span>
+            </div>
+            <h2
+              className="font-black uppercase text-white"
+              style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.8rem, 4vw, 3rem)", letterSpacing: "-0.5px" }}
+            >
+              I Più Venduti
+            </h2>
+          </div>
+          <Link
+            href="#nuovi-arrivi"
+            className="text-xs font-bold uppercase tracking-widest transition-colors hover:text-white flex items-center gap-1.5"
+            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.35)" }}
+          >
+            Vedi tutto <ArrowRight size={12} />
+          </Link>
+        </div>
+
+        {/* Asymmetric grid: 1 large left + up to 4 right */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Large featured card */}
+          <div className="md:row-span-2">
+            <div className="h-full">
+              <BestsellerCard product={main} size="lg" />
+            </div>
+          </div>
+
+          {/* Smaller cards */}
+          {rest.map((p) => (
+            <BestsellerCard key={p.id} product={p} size="md" />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Sort / filter bar
+// ─────────────────────────────────────────────────────────────
+
+type SortOption = "bestseller" | "newest" | "price_asc" | "price_desc" | "discount";
+
+const SORT_OPTIONS: { value: SortOption; label: string; icon: React.ReactNode }[] = [
+  { value: "bestseller", label: "Più Venduti",  icon: <TrendingUp size={11} /> },
+  { value: "newest",     label: "Novità",        icon: <Clock size={11} /> },
+  { value: "price_asc",  label: "Prezzo ↑",      icon: <ArrowUp size={11} /> },
+  { value: "price_desc", label: "Prezzo ↓",      icon: <ArrowDown size={11} /> },
+  { value: "discount",   label: "Scontati",      icon: <Percent size={11} /> },
+];
+
+function SortBar({
+  total, shown, activeSort, onSortChange,
+}: {
+  total: number;
+  shown: number;
+  activeSort: SortOption;
+  onSortChange: (s: SortOption) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const current = SORT_OPTIONS.find((s) => s.value === activeSort)!;
+
+  return (
+    <div className="flex items-center justify-between gap-4 flex-wrap mb-6">
+      <p className="text-[11px]" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.35)" }}>
+        Mostrando{" "}
+        <span className="text-white font-black">{shown}</span>{" "}
+        di{" "}
+        <span className="text-white font-black">{total}</span>{" "}
+        maglie
+      </p>
+
+      <div className="relative">
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-[11px] font-bold transition-all"
+          style={{
+            background: "#111",
+            border: "1px solid rgba(255,255,255,0.1)",
+            color: "rgba(255,255,255,0.65)",
+            fontFamily: "var(--font-mono, monospace)",
+          }}
+        >
+          {current.icon}
+          {current.label}
+          <ChevronDown size={10} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+        </button>
+
+        {open && (
+          <div
+            className="absolute right-0 top-full mt-2 z-20 rounded-xl overflow-hidden min-w-[160px]"
+            style={{ background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 20px 60px rgba(0,0,0,0.7)" }}
+          >
+            {SORT_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => { onSortChange(opt.value); setOpen(false); }}
+                className="w-full flex items-center gap-2.5 px-4 py-2.5 text-[11px] font-bold text-left transition-all hover:bg-white/5"
+                style={{
+                  color: activeSort === opt.value ? "#c8f000" : "rgba(255,255,255,0.5)",
+                  fontFamily: "var(--font-mono, monospace)",
+                  background: activeSort === opt.value ? "rgba(200,240,0,0.06)" : "transparent",
+                }}
+              >
+                {opt.icon}
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Nuovi Arrivi section
+// ─────────────────────────────────────────────────────────────
+
+function NuoviArrivi({ products }: { products: Product[] }) {
+  const [activeSort, setActiveSort] = useState<SortOption>("newest");
+  const [visible, setVisible] = useState(12);
+
+  const sorted = useMemo(() => {
+    switch (activeSort) {
+      case "price_asc":  return [...products].sort((a, b) => a.price - b.price);
+      case "price_desc": return [...products].sort((a, b) => b.price - a.price);
+      default: return products;
+    }
+  }, [products, activeSort]);
+
+  const shownProducts = sorted.slice(0, visible);
+
+  return (
+    <section
+      id="nuovi-arrivi"
+      className="py-16 md:py-20"
+      style={{ background: "#080808", borderTop: "0.5px solid rgba(255,255,255,0.05)" }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Header */}
+        <div className="mb-10">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="w-4 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
+            <span className="text-[9px] uppercase tracking-[3px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}>
+              // Nuovi Arrivi
+            </span>
+          </div>
+          <h2
+            className="font-black uppercase text-white"
+            style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.8rem, 4vw, 3rem)", letterSpacing: "-0.5px" }}
+          >
+            Ultimi Prodotti
+          </h2>
+          <p className="text-sm mt-2" style={{ color: "rgba(255,255,255,0.35)", fontFamily: "var(--font-body, sans-serif)" }}>
+            Le maglie più recenti, fresche di stagione.
+          </p>
+        </div>
+
+        <SortBar
+          total={sorted.length}
+          shown={shownProducts.length}
+          activeSort={activeSort}
+          onSortChange={setActiveSort}
+        />
+
+        {sorted.length === 0 ? (
+          <div
+            className="text-center py-20 rounded-2xl"
+            style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
+          >
+            <div className="text-5xl mb-4">🔍</div>
+            <h3 className="text-lg font-black text-white mb-2" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+              Nessun prodotto trovato
+            </h3>
+            <p className="text-white/40 text-sm">Torna presto, nuovi arrivi ogni settimana!</p>
+          </div>
+        ) : (
+          <>
+            <Suspense fallback={<div className="h-96 animate-pulse rounded-2xl bg-[#111]" />}>
+              <ProductGridWrapper products={shownProducts} />
+            </Suspense>
+
+            {visible < sorted.length && (
+              <div className="flex justify-center mt-12">
+                <button
+                  onClick={() => setVisible((v) => v + 12)}
+                  className="group flex items-center gap-3 px-8 py-4 rounded-full font-black text-sm uppercase tracking-widest transition-all hover:border-[#c8f000]/40 hover:text-[#c8f000]"
+                  style={{
+                    background: "transparent",
+                    color: "rgba(255,255,255,0.5)",
+                    border: "1.5px solid rgba(255,255,255,0.1)",
+                    fontFamily: "var(--font-display, sans-serif)",
+                    letterSpacing: "2px",
+                  }}
+                >
+                  Carica altri
+                  <span
+                    className="px-2 py-0.5 rounded-full text-[10px]"
+                    style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", fontFamily: "var(--font-mono, monospace)" }}
+                  >
+                    {sorted.length - visible}
+                  </span>
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// League Divider
+// ─────────────────────────────────────────────────────────────
+
+function LeagueDivider({ id, label, sublabel, href }: { id: string; label: string; sublabel: string; href: string }) {
+  return (
+    <div
+      id={id}
+      className="flex items-center justify-between px-4 sm:px-6 max-w-7xl mx-auto pt-12 pb-4"
+    >
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-3 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
+          <span className="text-[9px] uppercase tracking-[3px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}>
+            // {sublabel}
+          </span>
+        </div>
+        <h2
+          className="font-black uppercase text-white"
+          style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)", letterSpacing: "-0.3px" }}
+        >
+          {label}
+        </h2>
+      </div>
+      <Link
+        href={href}
+        className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest transition-colors hover:text-[#c8f000]"
+        style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.3)" }}
+      >
+        Vedi tutto <ArrowRight size={12} />
+      </Link>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Social proof band
+// ─────────────────────────────────────────────────────────────
+
+function SocialProofBand() {
+  const stats = [
+    { value: "4.9/5", label: "Rating medio clienti" },
+    { value: "1.200+", label: "Ordini completati" },
+    { value: "98%", label: "Clienti soddisfatti" },
+    { value: "50+", label: "Squadre disponibili" },
+  ];
+
+  return (
+    <div
+      className="py-10 border-y"
+      style={{ background: "#0d0d0d", borderColor: "rgba(255,255,255,0.04)" }}
+    >
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          {stats.map(({ value, label }) => (
+            <div key={label}>
+              <p
+                className="font-black text-2xl text-white mb-1"
+                style={{ fontFamily: "var(--font-display, sans-serif)", color: "#c8f000" }}
+              >
+                {value}
+              </p>
+              <p className="text-[10px] uppercase tracking-[2px]" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.3)" }}>
+                {label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Main export
+// ─────────────────────────────────────────────────────────────
 
 export default function ShopClient({
   latestProducts = [],
@@ -163,339 +711,62 @@ export default function ShopClient({
   videoProducts?: Product[];
   worldCupTeams?: any[];
 }) {
-  const { t } = useI18n();
-  const [activeSort, setActiveSort] = useState<SortOption>("bestseller");
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
-  const [latestVisible, setLatestVisible] = useState(12);
-
-  const handleRemoveFilter = (filter: string) => {
-    setActiveFilters((prev) => prev.filter((f) => f !== filter));
-  };
-
-  // Sort products based on activeSort
-  const sortProducts = (products: Product[]): Product[] => {
-    switch (activeSort) {
-      case "newest": return [...products]; // assume already newest-first from API
-      case "price_asc": return [...products].sort((a, b) => a.price - b.price);
-      case "price_desc": return [...products].sort((a, b) => b.price - a.price);
-      case "bestseller": return [...products];
-      default: return products;
-    }
-  };
-
-  const sortedLatest = useMemo(() => sortProducts(latestProducts), [latestProducts, activeSort]);
-  const sortedBestsellers = useMemo(() => sortProducts(bestSellingProducts), [bestSellingProducts, activeSort]);
-
-  // Extract featured products
-  const featuredProduct = featuredProducts[0] || null;
-  const featuredProduct2 = featuredProducts[1] || null;
-  const featuredProduct3 = featuredProducts[2] || null;
-
-  // SHOP BANNER CONTENT
-  const ShopbannerData = {
-    title: `${t("Trova la Maglia che Rispecchia il Tuo Tifo")}`,
-    subtitle: `${t(
-      " Esplora la nostra vasta gamma di capi realizzati con cura, pensati per esaltare la tua individualità e soddisfare il tuo senso dello stile."
-    )}`,
-    buttons: [
-      { text: `${t("Ultime Notizie")}`, href: `news` },
-      { text: `${t("Maglie Attuali")}`, href: `/shop/2025/26` },
-      { text: `${t("Maglie Retro")}`, href: `/shop/retro` },
-    ],
-    imageUrl: `/images/recentUpdate/product-banner.jpg`, // This uses the uploaded image
-  };
+  const featuredProduct = featuredProducts[0] ?? latestProducts[0] ?? null;
+  const bestsellers = bestSellingProducts.length > 0 ? bestSellingProducts : latestProducts.slice(0, 5);
 
   return (
-    <div className="bg-[#0a0a0a] font-munish  ">
+    <div style={{ background: "#0a0a0a" }}>
+      {/* Search */}
       <ShopSearchBar />
 
-      <section className="relative">
-        <img
-          src={`/images/recentUpdate/mobile-banner-logo.png`}
-          alt="Banner Background"
-          className="w-15 h-15 absolute z-10  lg:hidden  top-10 right-3 "
-        />
-        <ShopBanner
-          title={ShopbannerData.title}
-          subtitle={ShopbannerData.subtitle}
-          buttons={ShopbannerData.buttons}
-          imageUrl={ShopbannerData.imageUrl}
-        />
-      </section>
+      {/* Sticky league nav */}
+      <LeagueNav />
 
-      {/* World Cup Slider Section */}
-      <WorldCupShowcase teams={worldCupTeams} />
+      {/* Hero */}
+      <ShopHero featuredProduct={featuredProduct} />
 
-      <div className="hidden">
-        <TeamCarousel />
+      {/* Trust strip */}
+      <TrustStrip />
 
-        {/* Customer Satisfaction Message */}
-        <div className="bg-gray-800 py-10 sm:py-16 hidden">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white">
-                Oltre 1200 Clienti Felici ⭐️{" "}
-              </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-sm sm:text-base md:text-lg text-white">
-                Oltre 1200 persone hanno scelto di fare parte della nostra
-                famiglia di clienti soddisfatti. La qualità dei nostri prodotti
-                e l&apos;attenzione che dedichiamo a ogni dettaglio hanno reso
-                ogni acquisto un&apos;esperienza positiva.
-              </p>
-            </div>
-          </div>
-        </div>
+      {/* Bestsellers */}
+      <BestsellerSection products={bestsellers} />
+
+      {/* Nuovi Arrivi */}
+      <NuoviArrivi products={latestProducts} />
+
+      {/* Social proof numbers */}
+      <SocialProofBand />
+
+      {/* ── League sections ── */}
+      <div style={{ background: "#0a0a0a" }}>
+        <LeagueDivider id="serie-a-section" label="Serie A" sublabel="Campionato Italiano" href="/shop/serieA" />
+        <SerieATeamsClient />
       </div>
 
-      {/* Premier League Teams Section */}
-      <PremierLeagueClient />
-
-      {/* Serie A Teams Section */}
-      <SerieATeamsClient />
-
-      {/* Latest Products Section */}
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center mb-8">
-          <h2 className="text-[47px] font-medium tracking-tight text-white">
-            Ultimi prodotti
-          </h2>
-          <p className="text-[18px] text-white/60 text-center">
-            Comfort e stile in un solo capo.
-          </p>
-        </div>
-
-        {/* Filter bar */}
-        <div className="mb-6">
-          <ShopFilterBar
-            totalCount={sortedLatest.length}
-            shownCount={Math.min(latestVisible, sortedLatest.length)}
-            onSortChange={setActiveSort}
-            activeSort={activeSort}
-            activeFilters={activeFilters}
-            onRemoveFilter={handleRemoveFilter}
-          />
-        </div>
-
-        {sortedLatest.length === 0 ? (
-          <div className="text-center py-20 rounded-2xl" style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-black text-white mb-2" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-              Nessun risultato trovato
-            </h3>
-            <p className="text-white/40 text-sm mb-6">Prova a rimuovere i filtri attivi</p>
-            <Link
-              href="/shop"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-black text-black text-sm uppercase tracking-widest transition-all hover:opacity-90"
-              style={{ background: "#c8f000", fontFamily: "var(--font-display, sans-serif)" }}
-            >
-              Vedi tutti i prodotti
-            </Link>
-          </div>
-        ) : (
-          <>
-            <Suspense fallback={<div className="h-96 animate-pulse rounded-2xl bg-[#111]" />}>
-              <ProductGridWrapper products={sortedLatest.slice(0, latestVisible)} />
-            </Suspense>
-
-            {latestVisible < sortedLatest.length && (
-              <div className="flex justify-center mt-10">
-                <button
-                  onClick={() => setLatestVisible((v) => v + 8)}
-                  className="px-8 py-4 rounded-full font-black uppercase text-sm tracking-widest transition-all hover:opacity-90 hover:-translate-y-0.5"
-                  style={{
-                    background: "#111",
-                    color: "#c8f000",
-                    border: "1.5px solid rgba(200,240,0,0.3)",
-                    fontFamily: "var(--font-display, sans-serif)",
-                    letterSpacing: "2px",
-                  }}
-                >
-                  Carica altri ({sortedLatest.length - latestVisible} rimanenti)
-                </button>
-              </div>
-            )}
-          </>
-        )}
+      <div style={{ background: "#080808", borderTop: "0.5px solid rgba(255,255,255,0.04)" }}>
+        <LeagueDivider id="premier-section" label="Premier League" sublabel="Campionato Inglese" href="/shop/premier-league" />
+        <PremierLeagueClient />
       </div>
 
-      {/* Best Selling Products Section */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center mb-8">
-          <h2 className="text-[47px] font-medium tracking-tight text-white">
-            Più venduti
-          </h2>
-          <p className="text-[18px] text-white/60 text-center">
-            Il capo che unisce la comodità di un fit impeccabile alla
-            raffinatezza di un design curato nei dettagli.
-          </p>
-        </div>
-        <div className="mb-6">
-          <ShopFilterBar
-            totalCount={sortedBestsellers.length}
-            shownCount={sortedBestsellers.length}
-            onSortChange={setActiveSort}
-            activeSort={activeSort}
-            activeFilters={[]}
-            onRemoveFilter={handleRemoveFilter}
-          />
-        </div>
-        {sortedBestsellers.length === 0 ? (
-          <div className="text-center py-20 rounded-2xl" style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <div className="text-6xl mb-4">🏆</div>
-            <h3 className="text-xl font-black text-white mb-2" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-              Nessun bestseller disponibile
-            </h3>
-            <p className="text-white/40 text-sm">Controlla presto per nuovi arrivi!</p>
-          </div>
-        ) : (
-          <Suspense fallback={<div className="h-96 animate-pulse rounded-2xl bg-[#111]" />}>
-            <ProductGridWrapper products={sortedBestsellers} />
-          </Suspense>
-        )}
+      <div id="nazionali-section" style={{ background: "#0a0a0a", borderTop: "0.5px solid rgba(255,255,255,0.04)" }}>
+        <WorldCupShowcase teams={worldCupTeams} />
       </div>
 
-      {/* Mystery Box Section */}
-      <div className="overflow-hidden gradient">
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-          <div className="text-center flex justify-center flex-col">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-6 flex text-center justify-center items-center gap-2">
-              {t("mysteryBox.title")}
-              <SparklesIcon className="h-6 w-6 text-yellow-300" />
-            </h1>
+      {/* Video products */}
+      {videoProducts && videoProducts.length > 0 && (
+        <VideoComp products={videoProducts} />
+      )}
 
-            <p className="mx-auto max-w-3xl text-xl sm:text-2xl text-purple-100 mb-8">
-              {t("mysteryBox.description")}
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              {mysteryBoxProducts.length > 0 ? (
-                <>
-                  <Link href="/shop/mystery-box">
-                    <Button
-                      size="lg"
-                      className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white hover:from-yellow-300 hover:to-orange-400 font-bold px-8 py-6 text-lg rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300"
-                    >
-                      🎁 Scopri i Mystery Box
-                    </Button>
-                  </Link>
-                  <div className="flex items-center gap-2 bg-[#0a0a0a]/20 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30">
-                    <CheckCircle2 className="w-5 h-5 text-green-300" />
-                    <span className="text-white font-medium">
-                      {mysteryBoxProducts.length} Box Disponibili
-                    </span>
-                  </div>
-                </>
-              ) : (
-                <Button
-                  size="lg"
-                  disabled
-                  className="bg-[#0a0a0a]/20 text-white/60 px-8 py-6 text-lg rounded-full cursor-not-allowed"
-                >
-                  Disponibile Presto
-                </Button>
-              )}
-            </div>
-          </div>
-
-          {/* Mystery Box Products Grid - Centered for 1-2 items */}
-          {mysteryBoxProducts.length > 0 && (
-            <div className="mt-12 flex justify-center">
-              <div
-                className={`grid gap-6 ${
-                  mysteryBoxProducts.length === 1
-                    ? "grid-cols-1 max-w-md"
-                    : mysteryBoxProducts.length === 2
-                    ? "grid-cols-1 sm:grid-cols-2 max-w-3xl"
-                    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full"
-                }`}
-              >
-                {mysteryBoxProducts.map((product, index) => (
-                  <Link
-                    key={product.id}
-                    href={`/products/${product.id}`}
-                    className="group relative bg-[#0a0a0a]/10 backdrop-blur-sm rounded-2xl border border-white/30 p-6 hover:bg-[#0a0a0a]/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-                  >
-                    {/* Mystery Box Icon */}
-                    <div className="absolute top-4 right-4 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-sm animate-pulse">
-                      🎁
-                    </div>
-
-                    <div className="aspect-square bg-[#0a0a0a]/20 rounded-xl mb-4 relative overflow-hidden">
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className="object-cover object-center group-hover:scale-110 transition-transform duration-300"
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      />
-                    </div>
-
-                    <h3 className="text-white font-bold text-lg mb-2 group-hover:text-yellow-300 transition-colors">
-                      {product.name}
-                    </h3>
-                    <p className="text-purple-100 text-sm mb-4">
-                      Contenuto a sorpresa • Valore garantito
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-white">
-                        €{product.price.toFixed(2)}
-                      </span>
-                      <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full font-semibold">
-                        Scopri →
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+      {/* Testimonials */}
+      <div style={{ background: "#080808", borderTop: "0.5px solid rgba(255,255,255,0.04)" }}>
+        <Testimonies />
       </div>
 
-      {/* Video Section - Always render, VideoComp will show admin videos or demo videos as fallback */}
-      <VideoComp products={videoProducts || []} />
-
-      {/* Category Sections */}
-      <LandingCategorySection title="Serie A" category="Serie A" />
-      <RestOfWorldClient />
-      <LimitedEditionClient />
-      <LandingCategorySection title="Jackets" category="Jackets" />
-      <LandingCategorySection title="Maglie Retro" category="Retro" />
-
-      <ProductShowCase
-        featuredProduct={featuredProduct}
-        featuredProduct2={featuredProduct2}
-        featuredProduct3={featuredProduct3}
-      />
-
-      {/* Customer Reviews Section */}
-      <Suspense
-        fallback={<div className="h-64 bg-[#111] animate-pulse"></div>}
-      >
-        <div className="hidden">
-          <ReviewsSlider />
-        </div>
-      </Suspense>
-
-      {/* Guarantees Section */}
-      <div className="bg-[#0a0a0a] py-16 sm:py-24 hidden">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Guarantees />
-        </div>
-      </div>
-
-      {/* Customer Satisfaction Banner */}
-      <div className=" p-6">
-        <div className=" ">
-          <Testimonies />
-        </div>
-      </div>
+      {/* Stats */}
       <FeaturesCardStats />
 
-      {/* FAQ Section */}
-      <div className="">
-        <FAQ />
-      </div>
+      {/* FAQ */}
+      <FAQ />
     </div>
   );
 }
