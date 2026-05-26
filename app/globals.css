@@ -1171,3 +1171,7 @@ html {
 .animate-hero-float {
   animation: heroFloat 4s ease-in-out infinite;
 }
+
+/* ── Hide scrollbar (keep scroll functionality) ── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
