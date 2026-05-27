@@ -171,7 +171,7 @@ function RetroLogoStrip({
     >
       <div
         ref={scrollRef}
-        className="overflow-x-scroll"
+        className="retro-scroll-wrap overflow-x-scroll"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
@@ -248,10 +248,10 @@ function RetroLogoStrip({
             );
           })}
         </div>
-        <style jsx>{`div::-webkit-scrollbar{display:none}`}</style>
       </div>
 
       <style jsx global>{`
+        .retro-scroll-wrap::-webkit-scrollbar { display: none; }
         .retro-logo-img {
           filter: sepia(0.5) contrast(1.15) brightness(0.85);
           opacity: 0.65;
