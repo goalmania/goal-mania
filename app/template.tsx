@@ -20,7 +20,8 @@ export default function Template({ children }: { children: React.ReactNode }) {
         <>
           <AnnouncementBar />
           <Header />
-          <main className="flex-grow pt-[72px]">{children}</main>
+          {/* pt = ANNOUNCEMENT_BAR_HEIGHT (40) + header height (72) = 112px */}
+          <main className="flex-grow pt-[112px]">{children}</main>
           {!isShop && <Footer />}
         </>
       )}

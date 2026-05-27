@@ -1,12 +1,12 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const L = (slug: string) => `/team-logos/${slug}.png`;
 
-// ─── Club lists — exactly the clubs requested ─────────────────
+// ─── Club lists ───────────────────────────────────────────────
 const SERIE_A = [
   { name: "Juventus",   slug: "juventus",   logo: L("juventus"),   href: "/shop/serieA/juventus" },
   { name: "Inter",      slug: "inter",      logo: L("inter"),      href: "/shop/serieA/inter" },
@@ -59,13 +59,13 @@ const NAZIONALI = [
 
 interface Team { name: string; slug: string; logo: string; href: string; }
 
-// ─── Single team card ─────────────────────────────────────────
+// ─── Team card (div, not Link — navigation handled by Strip) ─
 function TeamCard({ team }: { team: Team }) {
   const [imgError, setImgError] = useState(false);
 
   return (
-    <Link
-      href={team.href}
+    <div
+      data-href={team.href}
       className="team-card group flex-shrink-0 flex flex-col items-center gap-2 mx-2"
       style={{ width: "88px" }}
       draggable={false}
@@ -77,6 +77,7 @@ function TeamCard({ team }: { team: Team }) {
           background: "rgba(255,255,255,0.03)",
           border: "1px solid rgba(255,255,255,0.07)",
           transition: "transform 200ms cubic-bezier(0.23,1,0.32,1), box-shadow 200ms cubic-bezier(0.23,1,0.32,1), border-color 200ms",
+          pointerEvents: "none",
         }}
       >
         {!imgError ? (
@@ -91,13 +92,13 @@ function TeamCard({ team }: { team: Team }) {
             onError={() => setImgError(true)}
           />
         ) : (
-          // Fallback initials when logo file is missing
           <span
             className="font-black text-xl select-none"
             style={{
               fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
               color: "rgba(200,240,0,0.5)",
               letterSpacing: "1px",
+              pointerEvents: "none",
             }}
           >
             {team.name.slice(0, 2).toUpperCase()}
@@ -112,6 +113,7 @@ function TeamCard({ team }: { team: Team }) {
           color: "rgba(255,255,255,0.55)",
           textTransform: "uppercase",
           transition: "color 200ms",
+          pointerEvents: "none",
         }}
       >
         {team.name}
@@ -127,11 +129,11 @@ function TeamCard({ team }: { team: Team }) {
           .team-card:hover span { color: rgba(200,240,0,0.85) !important; }
         }
       `}</style>
-    </Link>
+    </div>
   );
 }
 
-// ─── Scrolling strip — JS-driven auto-scroll + touch/pointer drag ──
+// ─── Scrolling strip ─────────────────────────────────────────
 function Strip({
   teams,
   direction,
@@ -141,6 +143,7 @@ function Strip({
   direction: "left" | "right";
   duration: number;
 }) {
+  const router = useRouter();
   const scrollRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
   const posRef = useRef(0);
@@ -149,6 +152,7 @@ function Strip({
   const scrollAtDragStart = useRef(0);
   const lastTs = useRef(0);
   const isPaused = useRef(false);
+  const dragMoved = useRef(0); // track drag distance for click detection
 
   const doubled = [...teams, ...teams];
 
@@ -176,7 +180,6 @@ function Strip({
         if (lastTs.current === 0) lastTs.current = ts;
         const dt = Math.min(ts - lastTs.current, 64);
         lastTs.current = ts;
-
         const halfWidth = el.scrollWidth / 2;
         const speed = halfWidth / duration;
         const delta = speed * (dt / 1000);
@@ -188,12 +191,10 @@ function Strip({
           posRef.current -= delta;
           if (posRef.current <= 0) posRef.current += halfWidth;
         }
-
         el.scrollLeft = posRef.current;
       } else {
         lastTs.current = ts;
       }
-
       rafRef.current = requestAnimationFrame(tick);
     }
 
@@ -206,6 +207,7 @@ function Strip({
 
   function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
     isDragging.current = true;
+    dragMoved.current = 0;
     dragStartX.current = e.clientX;
     scrollAtDragStart.current = scrollRef.current?.scrollLeft ?? 0;
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -216,6 +218,7 @@ function Strip({
     if (!isDragging.current || !scrollRef.current) return;
     const el = scrollRef.current;
     const delta = dragStartX.current - e.clientX;
+    dragMoved.current = Math.abs(delta);
     const halfWidth = el.scrollWidth / 2;
     let newPos = scrollAtDragStart.current + delta;
     if (newPos < 0) newPos += halfWidth;
@@ -227,6 +230,14 @@ function Strip({
   function onPointerUp(e: React.PointerEvent<HTMLDivElement>) {
     isDragging.current = false;
     e.currentTarget.style.cursor = "grab";
+
+    // If barely moved → treat as a click → navigate
+    if (dragMoved.current < 6) {
+      const target = e.target as HTMLElement;
+      const card = target.closest("[data-href]") as HTMLElement | null;
+      const href = card?.dataset?.href;
+      if (href) router.push(href);
+    }
   }
 
   return (
@@ -291,7 +302,6 @@ export default function TeamLogoTicker() {
         style={{ background: "linear-gradient(to left, #0a0a0a, transparent)" }}
       />
 
-      {/* Section heading */}
       <div className="flex items-center justify-center gap-3 mb-7 px-4">
         <span className="w-6 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
         <span
@@ -307,17 +317,14 @@ export default function TeamLogoTicker() {
         <SectionLabel label="Serie A" />
         <Strip teams={SERIE_A} direction="left" duration={28} />
       </div>
-
       <div className="mb-5">
         <SectionLabel label="Premier League" />
         <Strip teams={PREMIER} direction="right" duration={24} />
       </div>
-
       <div className="mb-5">
         <SectionLabel label="Internazionali" />
         <Strip teams={INTERNAZIONALI} direction="left" duration={22} />
       </div>
-
       <div>
         <SectionLabel label="Nazionali" />
         <Strip teams={NAZIONALI} direction="right" duration={30} />
@@ -327,7 +334,7 @@ export default function TeamLogoTicker() {
         className="text-center mt-5 text-[9px] uppercase tracking-[2px]"
         style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.18)" }}
       >
-        ← trascina per scorrere →
+        ← trascina per scorrere • clicca per visitare →
       </p>
     </section>
   );

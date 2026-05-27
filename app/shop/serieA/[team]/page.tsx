@@ -14,8 +14,8 @@ export const revalidate = 300;
 
 // Define valid teams
 const validTeams = [
-  "inter", "milan", "juventus", "napoli", "roma", "lazio", 
-  "atalanta", "fiorentina", "torino", "bologna", "sassuolo",
+  "inter", "milan", "juventus", "napoli", "roma", "lazio",
+  "atalanta", "fiorentina", "como", "torino", "bologna", "sassuolo",
   "udinese", "monza", "lecce", "frosinone", "cagliari",
   "genoa", "empoli", "verona", "salernitana"
 ];
@@ -138,13 +138,14 @@ export default async function TeamShopPage({ params }: TeamPageProps) {
 
   // Map server products to client format
   const products = validProducts.map((product: IProduct) => ({
-    id: product._id || "", // Ensure id is never undefined
-    name: product.title || "Untitled Product", // Ensure name is never undefined
-    price: product.basePrice || 0, // Ensure price is never undefined
-    image: product.images?.[0] || "/images/image.png", // Ensure image is never undefined with a fallback
-    category: product.category || "SerieA", // Ensure category is never undefined
-    team: product.title ? product.title.split(" ")[1] : "Unknown", // Extract team name (second word)
-    videos: product.videos || [], // Include videos for showcase
+    id: product._id || "",
+    slug: (product as any).slug || "",
+    name: product.title || "Untitled Product",
+    price: product.basePrice || 0,
+    image: product.images?.[0] || "/images/image.png",
+    category: product.category || "SerieA",
+    team: product.title ? product.title.split(" ")[1] : "Unknown",
+    videos: product.videos || [],
   }));
 
   const teamDisplayName = TEAM_DISPLAY_NAMES[team.toLowerCase()] || team.charAt(0).toUpperCase() + team.slice(1);

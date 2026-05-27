@@ -8,6 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
+import { ANNOUNCEMENT_BAR_HEIGHT } from "@/components/AnnouncementBar";
 import Image from "next/image";
 import { useCartStore } from "@/lib/store/cart";
 import { useWishlistStore } from "@/lib/store/wishlist";
@@ -201,14 +202,12 @@ export function Header() {
 
   if (!mounted) return null;
 
-  const ANNOUNCEMENT_HEIGHT = 40; // px — must match AnnouncementBar height
-
   return (
     <>
       <header
         className="fixed left-0 right-0 z-50 transition-all duration-300"
         style={{
-          top: 0,
+          top: ANNOUNCEMENT_BAR_HEIGHT,
           background: scrolled ? "rgba(10,10,10,0.98)" : "rgba(10,10,10,0.92)",
           backdropFilter: "blur(20px)",
           borderBottom: "0.5px solid rgba(200,240,0,0.12)",
