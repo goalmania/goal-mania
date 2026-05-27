@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Image from "next/image";
 import ProductCard from "@/components/ui/ProductCard";
 import { Zap, ChevronRight } from "lucide-react";
 
@@ -150,6 +151,25 @@ export default function Season2627Client({ products }: { products: SeasonProduct
 
       {/* ── HERO ──────────────────────────────────────── */}
       <section className="relative pt-32 pb-12 overflow-hidden">
+        {/* Hero background image */}
+        <Image
+          src="/hero-2627.jpg"
+          alt=""
+          fill
+          priority
+          className="absolute inset-0 object-cover object-center"
+          style={{ zIndex: 0 }}
+          sizes="100vw"
+        />
+        {/* Dark gradient overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to right, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.72) 50%, rgba(10,10,10,0.45) 100%)",
+            zIndex: 1,
+          }}
+        />
         {/* Grid bg */}
         <div
           className="absolute inset-0 pointer-events-none"
@@ -158,6 +178,7 @@ export default function Season2627Client({ products }: { products: SeasonProduct
               "linear-gradient(rgba(200,240,0,0.025) 1px, transparent 1px)," +
               "linear-gradient(90deg, rgba(200,240,0,0.025) 1px, transparent 1px)",
             backgroundSize: "60px 60px",
+            zIndex: 2,
           }}
         />
         {/* Radial glow */}
@@ -165,10 +186,11 @@ export default function Season2627Client({ products }: { products: SeasonProduct
           className="absolute inset-0 pointer-events-none"
           style={{
             background: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(200,240,0,0.06) 0%, transparent 70%)",
+            zIndex: 2,
           }}
         />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative" style={{ zIndex: 3 }}>
           {/* Eyebrow */}
           <div className="flex items-center gap-2 mb-4">
             <Zap size={12} style={{ color: "#c8f000" }} />
