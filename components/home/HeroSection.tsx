@@ -65,19 +65,19 @@ export default function HeroSection({ products = [] }: Props) {
       className="relative w-full min-h-screen flex flex-col overflow-hidden"
       style={{ background: "#070707" }}
     >
-      {/* Stadium bg */}
+      {/* Hero bg — jersey collage */}
       <div className="absolute inset-0">
         <img
-          src="/images/recentUpdate/home-banner.jpg"
+          src="/hero-home.jpg"
           alt=""
           className="w-full h-full object-cover object-center"
-          style={{ opacity: 0.18 }}
+          style={{ opacity: 0.55 }}
         />
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(135deg, rgba(7,7,7,0.98) 0%, rgba(7,7,7,0.75) 55%, rgba(7,7,7,0.95) 100%)",
+              "linear-gradient(135deg, rgba(7,7,7,0.92) 0%, rgba(7,7,7,0.60) 50%, rgba(7,7,7,0.88) 100%)",
           }}
         />
         {/* Lime glow BL */}
