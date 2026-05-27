@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import ProductCard from "@/components/ui/ProductCard";
 import { Clock, Trophy, Globe, Star, ChevronRight, Flame } from "lucide-react";
 
@@ -30,6 +31,123 @@ const HOF_SLUGS = new Set([
   "maglia-juventus-199798-home",         // Juve anni d'oro
   "maglia-francia-1998-home",            // Mondiali Francia 98
 ]);
+
+// ─── Retro club logos for the vintage strip ────────────────
+const RETRO_CLUBS = [
+  { name: "Napoli",      slug: "napoli",    href: "/shop/retro" },
+  { name: "Inter",       slug: "inter",     href: "/shop/retro" },
+  { name: "Milan",       slug: "milan",     href: "/shop/retro" },
+  { name: "Juventus",    slug: "juventus",  href: "/shop/retro" },
+  { name: "Roma",        slug: "roma",      href: "/shop/retro" },
+  { name: "Parma",       slug: "parma",     href: "/shop/retro" },
+  { name: "Barcellona",  slug: "barcelona", href: "/shop/retro" },
+  { name: "Man United",  slug: "man-utd",   href: "/shop/retro" },
+  { name: "Arsenal",     slug: "arsenal",   href: "/shop/retro" },
+  { name: "Ajax",        slug: "ajax",      href: "/shop/retro" },
+  { name: "Real Madrid", slug: "real-madrid", href: "/shop/retro" },
+  { name: "Brasile",     slug: "brasile",   href: "/shop/retro" },
+  { name: "Argentina",   slug: "argentina", href: "/shop/retro" },
+  { name: "Francia",     slug: "francia",   href: "/shop/retro" },
+  { name: "Italia",      slug: "italia",    href: "/shop/retro" },
+];
+
+// ─── Vintage strip — CSS marquee, no JS scroll ────────────
+function RetroLogoStrip() {
+  const items = [...RETRO_CLUBS, ...RETRO_CLUBS]; // duplicate for seamless loop
+
+  return (
+    <div
+      className="overflow-hidden py-6"
+      style={{
+        borderTop: "1px solid rgba(255,255,255,0.04)",
+        borderBottom: "1px solid rgba(255,255,255,0.04)",
+      }}
+    >
+      <div
+        className="flex"
+        style={{
+          width: "max-content",
+          animation: "retroMarquee 40s linear infinite",
+          willChange: "transform",
+        }}
+      >
+        {items.map((club, i) => (
+          <Link
+            key={i}
+            href={club.href}
+            className="retro-logo-card flex-shrink-0 flex flex-col items-center mx-5"
+            style={{ width: "76px" }}
+            draggable={false}
+          >
+            {/* Logo with sepia/grayscale for vintage feel */}
+            <div
+              className="retro-logo-box relative w-14 h-14 flex items-center justify-center rounded-xl mb-2 transition-all duration-300"
+              style={{
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.06)",
+              }}
+            >
+              <Image
+                src={`/team-logos/${club.slug}.png`}
+                alt={club.name}
+                width={44}
+                height={44}
+                className="retro-logo-img object-contain pointer-events-none"
+                style={{
+                  maxWidth: "44px",
+                  maxHeight: "44px",
+                }}
+                draggable={false}
+              />
+            </div>
+            <span
+              className="retro-logo-name text-center leading-tight"
+              style={{
+                fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
+                fontSize: "9px",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "1.5px",
+                color: "rgba(255,255,255,0.3)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {club.name}
+            </span>
+          </Link>
+        ))}
+      </div>
+
+      <style jsx global>{`
+        @keyframes retroMarquee {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          @keyframes retroMarquee { 0%, 100% { transform: translateX(0); } }
+        }
+        .retro-logo-img {
+          filter: grayscale(0.6) sepia(0.25) contrast(1.15);
+          opacity: 0.65;
+          transition: filter 0.3s, opacity 0.3s;
+        }
+        @media (hover: hover) and (pointer: fine) {
+          .retro-logo-card:hover .retro-logo-img {
+            filter: grayscale(0) sepia(0) contrast(1);
+            opacity: 1;
+          }
+          .retro-logo-card:hover .retro-logo-box {
+            background: rgba(200,240,0,0.05) !important;
+            border-color: rgba(200,240,0,0.2) !important;
+          }
+          .retro-logo-card:hover .retro-logo-name {
+            color: rgba(200,240,0,0.7) !important;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
 
 // ─── Categorisation helpers ────────────────────────────────
 function getSection(title: string): "nationals" | "serieA" | "europe" {
@@ -216,6 +334,45 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
             ))}
           </div>
         </div>
+      </section>
+
+      {/* ── RETRO LOGO STRIP ──────────────────────────── */}
+      <section className="relative overflow-hidden mb-12">
+        {/* Section label */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-5">
+          <div className="flex items-center gap-3">
+            <div className="h-px flex-shrink-0 w-8" style={{ background: "rgba(200,240,0,0.3)" }} />
+            <span
+              className="text-[9px] font-black uppercase whitespace-nowrap"
+              style={{
+                fontFamily: "var(--font-mono, monospace)",
+                letterSpacing: "0.4em",
+                color: "rgba(200,240,0,0.5)",
+              }}
+            >
+              // Icone del Calcio
+            </span>
+            <div className="h-px flex-1" style={{ background: "rgba(200,240,0,0.08)" }} />
+            <span
+              className="text-[9px] text-white/20 whitespace-nowrap"
+              style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "8px" }}
+            >
+              clicca per sfogliare le retro
+            </span>
+          </div>
+        </div>
+
+        {/* Left/right edge fade */}
+        <div
+          className="absolute inset-y-0 left-0 w-16 z-10 pointer-events-none"
+          style={{ background: "linear-gradient(to right, #0a0a0a, transparent)" }}
+        />
+        <div
+          className="absolute inset-y-0 right-0 w-16 z-10 pointer-events-none"
+          style={{ background: "linear-gradient(to left, #0a0a0a, transparent)" }}
+        />
+
+        <RetroLogoStrip />
       </section>
 
       {/* ── HALL OF FAME ──────────────────────────────── */}
