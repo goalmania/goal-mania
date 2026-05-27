@@ -41,6 +41,32 @@ const CLUB_IDENTITY: Record<string, ClubIdentity> = {
   newcastle:          { accent: "#E8E8E8", dim: "rgba(220,220,220,0.12)", label: "Newcastle United",   motto: "Toon Army forever",               logoSlug: "newcastle" },
   tottenham:          { accent: "#132257", dim: "rgba(19,34,87,0.25)",    label: "Tottenham Hotspur",  motto: "To Dare is to Do",                logoSlug: "tottenham" },
   "aston-villa":      { accent: "#670E36", dim: "rgba(103,14,54,0.2)",    label: "Aston Villa F.C.",   motto: "Prepared",                        logoSlug: "aston-villa" },
+
+  // ── Club Internazionali ──────────────────────────────────────
+  "real-madrid":  { accent: "#FEBE10", dim: "rgba(254,190,16,0.15)",  label: "Real Madrid C.F.",       motto: "Hala Madrid y nada más",          logoSlug: "real-madrid" },
+  barcelona:      { accent: "#A50044", dim: "rgba(165,0,68,0.18)",    label: "FC Barcelona",           motto: "Més que un club",                 logoSlug: "barcelona" },
+  psg:            { accent: "#004170", dim: "rgba(0,65,112,0.22)",    label: "Paris Saint-Germain",    motto: "Ici c'est Paris",                 logoSlug: "psg" },
+  atletico:       { accent: "#CB3524", dim: "rgba(203,53,36,0.18)",   label: "Atlético de Madrid",     motto: "Con el Atleti hasta el final",    logoSlug: "atletico" },
+  bayern:         { accent: "#DC052D", dim: "rgba(220,5,45,0.18)",    label: "FC Bayern München",      motto: "Mia san mia",                     logoSlug: "bayern" },
+  dortmund:       { accent: "#FFD700", dim: "rgba(255,215,0,0.15)",   label: "Borussia Dortmund",      motto: "Echte Liebe",                     logoSlug: "dortmund" },
+
+  // ── Nazionali — World Cup ────────────────────────────────────
+  italy:          { accent: "#0066CC", dim: "rgba(0,102,204,0.18)",   label: "Italia",                 motto: "Forza Azzurri",                   logoSlug: "italia" },
+  france:         { accent: "#002395", dim: "rgba(0,35,149,0.2)",     label: "Francia",                motto: "Allez les Bleus",                 logoSlug: "francia" },
+  germany:        { accent: "#DD0000", dim: "rgba(221,0,0,0.15)",     label: "Germania",               motto: "Die Mannschaft",                  logoSlug: "germania" },
+  spain:          { accent: "#E30613", dim: "rgba(227,6,19,0.18)",    label: "Spagna",                 motto: "La Roja",                         logoSlug: "spagna" },
+  brazil:         { accent: "#FBDB17", dim: "rgba(251,219,23,0.15)",  label: "Brasile",                motto: "A Seleção",                       logoSlug: "brasile" },
+  argentina:      { accent: "#74ACDF", dim: "rgba(116,172,223,0.18)", label: "Argentina",              motto: "La Albiceleste",                  logoSlug: "argentina" },
+  portugal:       { accent: "#E30613", dim: "rgba(227,6,19,0.18)",    label: "Portogallo",             motto: "Selecção das Quinas",             logoSlug: "portogallo" },
+  england:        { accent: "#CF2B36", dim: "rgba(207,43,54,0.18)",   label: "Inghilterra",            motto: "Three Lions",                     logoSlug: "inghilterra" },
+  netherlands:    { accent: "#FF6300", dim: "rgba(255,99,0,0.18)",    label: "Olanda",                 motto: "Oranje boven",                    logoSlug: "olanda" },
+  belgium:        { accent: "#EF2B2D", dim: "rgba(239,43,45,0.18)",   label: "Belgio",                 motto: "Les Diables Rouges",              logoSlug: "belgio" },
+  croatia:        { accent: "#FF0000", dim: "rgba(255,0,0,0.15)",     label: "Croazia",                motto: "Vatreni",                         logoSlug: "croazia" },
+  morocco:        { accent: "#C1272D", dim: "rgba(193,39,45,0.18)",   label: "Marocco",                motto: "Lions de l'Atlas",                logoSlug: "marocco" },
+  usa:            { accent: "#002868", dim: "rgba(0,40,104,0.22)",    label: "USA",                    motto: "The Stars and Stripes",           logoSlug: "usa" },
+  mexico:         { accent: "#006847", dim: "rgba(0,104,71,0.18)",    label: "Messico",                motto: "El Tri",                          logoSlug: "messico" },
+  senegal:        { accent: "#00853F", dim: "rgba(0,133,63,0.18)",    label: "Senegal",                motto: "Lions de la Teranga",             logoSlug: "senegal" },
+  japan:          { accent: "#BC002D", dim: "rgba(188,0,45,0.18)",    label: "Giappone",               motto: "Samurai Blue",                    logoSlug: "giappone" },
 };
 
 const DEFAULT_IDENTITY: ClubIdentity = {

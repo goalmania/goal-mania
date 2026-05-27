@@ -30,12 +30,12 @@ const PREMIER = [
 ];
 
 const INTERNAZIONALI = [
-  { name: "Real Madrid",  slug: "real-madrid", logo: L("real-madrid"), href: "/shop/international" },
-  { name: "Barcellona",   slug: "barcelona",   logo: L("barcelona"),   href: "/shop/international" },
-  { name: "PSG",          slug: "psg",         logo: L("psg"),         href: "/shop/international" },
-  { name: "Atletico",     slug: "atletico",    logo: L("atletico"),    href: "/shop/international" },
-  { name: "Bayern",       slug: "bayern",      logo: L("bayern"),      href: "/shop/international" },
-  { name: "Dortmund",     slug: "dortmund",    logo: L("dortmund"),    href: "/shop/international" },
+  { name: "Real Madrid",  slug: "real-madrid", logo: L("real-madrid"), href: "/shop/international/real-madrid" },
+  { name: "Barcellona",   slug: "barcelona",   logo: L("barcelona"),   href: "/shop/international/barcelona" },
+  { name: "PSG",          slug: "psg",         logo: L("psg"),         href: "/shop/international/psg" },
+  { name: "Atletico",     slug: "atletico",    logo: L("atletico"),    href: "/shop/international/atletico" },
+  { name: "Bayern",       slug: "bayern",      logo: L("bayern"),      href: "/shop/international/bayern" },
+  { name: "Dortmund",     slug: "dortmund",    logo: L("dortmund"),    href: "/shop/international/dortmund" },
 ];
 
 const NAZIONALI = [
