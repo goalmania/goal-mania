@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ProductCard from "@/components/ui/ProductCard";
@@ -32,15 +32,25 @@ const HOF_SLUGS = new Set([
   "maglia-francia-1998-home",            // Mondiali Francia 98
 ]);
 
-// ─── Retro club logos — vintage 90s badges + team filter keys ──
+// ─── Retro club logos — vintage badges + team filter keys ──────
+// retroLogo: primary vintage URL  |  fallback: /team-logos/{slug}.png
 const RETRO_CLUBS = [
+  {
+    name: "Napoli",     slug: "napoli",     filterKey: "napoli",
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Napoli_FC_%282020%29.svg/400px-Napoli_FC_%282020%29.svg.png",
+  },
+  {
+    name: "Inter",      slug: "inter",      filterKey: "inter",
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/FC_Internazionale_Milano_2021.svg/400px-FC_Internazionale_Milano_2021.svg.png",
+  },
   {
     name: "Milan",      slug: "milan",      filterKey: "milan",
     retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Logo_AC_Milan.svg/400px-Logo_AC_Milan.svg.png",
   },
   {
     name: "Juventus",   slug: "juventus",   filterKey: "juventus",
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Juventus_F.C._logo_old.svg/400px-Juventus_F.C._logo_old.svg.png",
+    // Old oval badge (1979-2017) — used in Serie A glory years
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Juventus_FC_%281979%E2%80%932004%29.svg/400px-Juventus_FC_%281979%E2%80%932004%29.svg.png",
   },
   {
     name: "Roma",       slug: "roma",       filterKey: "roma",
@@ -82,13 +92,11 @@ const RETRO_CLUBS = [
     name: "Francia",    slug: "francia",    filterKey: "francia",
     retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/FFF_logo.svg/400px-FFF_logo.svg.png",
   },
-  {
-    name: "Italia",     slug: "italia",     filterKey: "italia",
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Logo_FIGC_%282022%29.svg/400px-Logo_FIGC_%282022%29.svg.png",
-  },
 ];
 
-// ─── Vintage logo strip — interactive, pauses on hover ────────────
+const STRIP_DURATION_S = 38; // seconds for one full loop
+
+// ─── Vintage logo strip — rAF auto-scroll + pointer drag ──────────
 function RetroLogoStrip({
   selectedTeam,
   onSelectTeam,
@@ -96,102 +104,164 @@ function RetroLogoStrip({
   selectedTeam: string | null;
   onSelectTeam: (slug: string) => void;
 }) {
-  const items = [...RETRO_CLUBS, ...RETRO_CLUBS]; // duplicate for seamless loop
+  const scrollRef    = useRef<HTMLDivElement>(null);
+  const rafRef       = useRef<number>(0);
+  const posRef       = useRef(0);
+  const lastTs       = useRef(0);
+  const isDragging   = useRef(false);
+  const dragStartX   = useRef(0);
+  const scrollAtDrag = useRef(0);
+  const dragMoved    = useRef(0);
+  const isPaused     = useRef(false);
+
+  const doubled = [...RETRO_CLUBS, ...RETRO_CLUBS];
+
+  useEffect(() => {
+    function tick(ts: number) {
+      const el = scrollRef.current;
+      if (!el) { rafRef.current = requestAnimationFrame(tick); return; }
+      if (!isDragging.current && !isPaused.current) {
+        if (lastTs.current === 0) lastTs.current = ts;
+        const dt = Math.min(ts - lastTs.current, 64);
+        lastTs.current = ts;
+        const half = el.scrollWidth / 2;
+        if (half > 0) {
+          posRef.current += (half / STRIP_DURATION_S) * (dt / 1000);
+          if (posRef.current >= half) posRef.current -= half;
+          el.scrollLeft = posRef.current;
+        }
+      } else {
+        lastTs.current = ts;
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    }
+    rafRef.current = requestAnimationFrame(tick);
+
+    const onMove = (e: PointerEvent) => {
+      if (!isDragging.current || !scrollRef.current) return;
+      const delta = dragStartX.current - e.clientX;
+      dragMoved.current = Math.abs(delta);
+      const half = scrollRef.current.scrollWidth / 2;
+      let np = scrollAtDrag.current + delta;
+      if (np < 0) np += half;
+      if (np >= half * 2) np -= half;
+      scrollRef.current.scrollLeft = np;
+      posRef.current = np;
+    };
+    const onUp = () => {
+      if (!isDragging.current) return;
+      isDragging.current = false;
+      if (scrollRef.current) scrollRef.current.style.cursor = "grab";
+    };
+    document.addEventListener("pointermove", onMove);
+    document.addEventListener("pointerup",   onUp);
+    document.addEventListener("pointercancel", onUp);
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerup",   onUp);
+      document.removeEventListener("pointercancel", onUp);
+    };
+  }, []);
 
   return (
     <div
       className="overflow-hidden py-6"
-      style={{
-        borderTop: "1px solid rgba(255,255,255,0.04)",
-        borderBottom: "1px solid rgba(255,255,255,0.04)",
-      }}
+      style={{ borderTop: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)" }}
     >
       <div
-        className="retro-strip-inner flex"
+        ref={scrollRef}
+        className="overflow-x-scroll"
         style={{
-          width: "max-content",
-          animation: "retroMarquee 40s linear infinite",
-          willChange: "transform",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          cursor: "grab",
+          userSelect: "none",
+          WebkitOverflowScrolling: "touch",
+        } as React.CSSProperties}
+        onMouseEnter={() => { isPaused.current = true;  lastTs.current = 0; }}
+        onMouseLeave={() => { isPaused.current = false; }}
+        onPointerDown={(e) => {
+          isDragging.current = true;
+          dragMoved.current  = 0;
+          dragStartX.current = e.clientX;
+          scrollAtDrag.current = scrollRef.current?.scrollLeft ?? 0;
+          e.currentTarget.style.cursor = "grabbing";
         }}
       >
-        {items.map((club, i) => {
-          const isActive = selectedTeam === club.slug;
-          return (
-            <button
-              key={i}
-              onClick={() => onSelectTeam(club.slug)}
-              className="retro-logo-card flex-shrink-0 flex flex-col items-center mx-4 focus:outline-none"
-              style={{ width: "80px", background: "transparent", border: "none", cursor: "pointer" }}
-            >
-              {/* Logo box */}
-              <div
-                className="retro-logo-box relative w-16 h-16 flex items-center justify-center rounded-2xl mb-2 transition-all duration-300"
-                style={{
-                  background: isActive ? "rgba(200,240,0,0.1)" : "rgba(255,255,255,0.03)",
-                  border: isActive ? "2px solid rgba(200,240,0,0.5)" : "1px solid rgba(255,255,255,0.07)",
-                  boxShadow: isActive ? "0 0 16px rgba(200,240,0,0.15)" : "none",
-                }}
+        <div className="flex py-1" style={{ width: "max-content" }}>
+          {doubled.map((club, i) => {
+            const isActive = selectedTeam === club.slug;
+            return (
+              <button
+                key={`${club.slug}-${i}`}
+                onClick={() => { if (dragMoved.current < 6) onSelectTeam(club.slug); }}
+                className="retro-logo-card flex-shrink-0 flex flex-col items-center mx-4 focus:outline-none"
+                style={{ width: "84px", background: "transparent", border: "none", cursor: "pointer" }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={club.retroLogo}
-                  alt={club.name}
-                  width={46}
-                  height={46}
-                  className="retro-logo-img object-contain pointer-events-none select-none"
-                  style={{ maxWidth: "46px", maxHeight: "46px" }}
-                  draggable={false}
-                  onError={(e) => {
-                    // Fallback to modern logo if vintage not available
-                    (e.target as HTMLImageElement).src = `/team-logos/${club.slug}.png`;
+                <div
+                  className="retro-logo-box relative w-16 h-16 flex items-center justify-center rounded-2xl mb-2"
+                  style={{
+                    background: isActive ? "rgba(200,240,0,0.1)" : "rgba(255,255,255,0.03)",
+                    border: isActive ? "2px solid rgba(200,240,0,0.5)" : "1px solid rgba(255,255,255,0.07)",
+                    boxShadow: isActive ? "0 0 20px rgba(200,240,0,0.2)" : "none",
+                    transition: "background 0.2s, border-color 0.2s, box-shadow 0.2s",
                   }}
-                />
-                {/* Active dot */}
-                {isActive && (
-                  <span
-                    className="absolute -top-1 -right-1 w-3 h-3 rounded-full"
-                    style={{ background: "#c8f000", border: "2px solid #0a0a0a" }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={club.retroLogo}
+                    alt={club.name}
+                    className="retro-logo-img object-contain pointer-events-none select-none"
+                    style={{ width: "46px", height: "46px", maxWidth: "46px", maxHeight: "46px" }}
+                    draggable={false}
+                    onError={(e) => {
+                      const t = e.target as HTMLImageElement;
+                      if (!t.src.includes("/team-logos/")) {
+                        t.src = `/team-logos/${club.slug}.png`;
+                      }
+                    }}
                   />
-                )}
-              </div>
-              <span
-                className="retro-logo-name text-center leading-tight"
-                style={{
-                  fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
-                  fontSize: "9px",
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "1.5px",
-                  color: isActive ? "rgba(200,240,0,0.85)" : "rgba(255,255,255,0.3)",
-                  whiteSpace: "nowrap",
-                  transition: "color 0.2s",
-                }}
-              >
-                {club.name}
-              </span>
-            </button>
-          );
-        })}
+                  {isActive && (
+                    <span
+                      className="absolute -top-1 -right-1 w-3 h-3 rounded-full"
+                      style={{ background: "#c8f000", border: "2px solid #0a0a0a" }}
+                    />
+                  )}
+                </div>
+                <span
+                  className="retro-logo-name text-center leading-tight"
+                  style={{
+                    fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
+                    fontSize: "9px",
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "1.5px",
+                    color: isActive ? "rgba(200,240,0,0.85)" : "rgba(255,255,255,0.3)",
+                    whiteSpace: "nowrap",
+                    transition: "color 0.2s",
+                  }}
+                >
+                  {club.name}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        <style jsx>{`div::-webkit-scrollbar{display:none}`}</style>
       </div>
 
       <style jsx global>{`
-        @keyframes retroMarquee {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          @keyframes retroMarquee { 0%, 100% { transform: translateX(0); } }
-        }
         .retro-logo-img {
-          filter: sepia(0.4) contrast(1.1) brightness(0.9);
-          opacity: 0.7;
+          filter: sepia(0.5) contrast(1.15) brightness(0.85);
+          opacity: 0.65;
           transition: filter 0.3s, opacity 0.3s, transform 0.3s;
         }
         @media (hover: hover) and (pointer: fine) {
           .retro-logo-card:hover .retro-logo-img {
             filter: sepia(0) contrast(1) brightness(1);
             opacity: 1;
-            transform: scale(1.08);
+            transform: scale(1.1);
           }
           .retro-logo-card:hover .retro-logo-box {
             background: rgba(200,240,0,0.06) !important;
@@ -200,9 +270,6 @@ function RetroLogoStrip({
           .retro-logo-card:hover .retro-logo-name {
             color: rgba(200,240,0,0.75) !important;
           }
-        }
-        .retro-strip-inner:hover {
-          animation-play-state: paused;
         }
       `}</style>
     </div>
