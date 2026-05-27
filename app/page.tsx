@@ -60,8 +60,8 @@ export default async function Home() {
       {/* 2. CATEGORIE — navigazione per campionato */}
       <HomeCategoryCards />
 
-      {/* 3. OFFERTA LAMPO — urgency + prodotto reale */}
-      <FlashSaleSection product={featuredProducts[0]} />
+      {/* 3. OFFERTA LAMPO — urgency + prodotti reali in rotazione */}
+      <FlashSaleSection products={featuredProducts.slice(0, 6)} />
 
       {/* 4. MAGLIE IN EVIDENZA — grid prodotti featured */}
       <FeaturedProducts products={featuredProducts} />
