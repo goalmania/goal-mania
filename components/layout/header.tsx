@@ -84,12 +84,12 @@ const SHOP_MEGA = {
       title: "Resto del Mondo",
       href: "/shop/rest-of-world",
       items: [
-        { name: "Real Madrid", href: "/shop/rest-of-world" },
-        { name: "Barcelona",   href: "/shop/rest-of-world" },
-        { name: "Bayern",      href: "/shop/rest-of-world" },
-        { name: "PSG",         href: "/shop/rest-of-world" },
-        { name: "Dortmund",    href: "/shop/rest-of-world" },
-        { name: "Vedi tutti →", href: "/shop/rest-of-world" },
+        { name: "Real Madrid", href: "/shop/international/real-madrid" },
+        { name: "Barcelona",   href: "/shop/international/barcelona" },
+        { name: "Bayern",      href: "/shop/international/bayern" },
+        { name: "PSG",         href: "/shop/international/psg" },
+        { name: "Dortmund",    href: "/shop/international/dortmund" },
+        { name: "Vedi tutti →", href: "/shop/international" },
       ],
     },
     {
