@@ -213,13 +213,13 @@ function RetroLogoStrip({
       <style jsx global>{`
         .retro-scroll-wrap::-webkit-scrollbar { display: none; }
         .retro-logo-img {
-          filter: sepia(0.5) contrast(1.15) brightness(0.85);
-          opacity: 0.65;
-          transition: filter 0.3s, opacity 0.3s, transform 0.3s;
+          filter: none;
+          opacity: 1;
+          transition: opacity 0.3s, transform 0.3s;
         }
         @media (hover: hover) and (pointer: fine) {
           .retro-logo-card:hover .retro-logo-img {
-            filter: sepia(0) contrast(1) brightness(1);
+            filter: none;
             opacity: 1;
             transform: scale(1.1);
           }
