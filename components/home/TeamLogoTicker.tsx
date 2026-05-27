@@ -59,7 +59,7 @@ const NAZIONALI = [
 
 interface Team { name: string; slug: string; logo: string; href: string; }
 
-// ─── Team card (div, not Link — navigation handled by Strip) ─
+// ─── Team card ───────────────────────────────────────────────
 function TeamCard({ team }: { team: Team }) {
   const [imgError, setImgError] = useState(false);
 
@@ -67,7 +67,7 @@ function TeamCard({ team }: { team: Team }) {
     <div
       data-href={team.href}
       className="team-card group flex-shrink-0 flex flex-col items-center gap-2 mx-2"
-      style={{ width: "88px" }}
+      style={{ width: "88px", cursor: "pointer" }}
       draggable={false}
     >
       <div
@@ -152,9 +152,8 @@ function Strip({
   const scrollAtDragStart = useRef(0);
   const lastTs = useRef(0);
   const isPaused = useRef(false);
+  // Track total movement to distinguish tap vs drag
   const dragMoved = useRef(0);
-  // Save the original pointerdown target BEFORE setPointerCapture redirects events
-  const pointerDownTarget = useRef<HTMLElement | null>(null);
 
   const doubled = [...teams, ...teams];
 
@@ -162,6 +161,7 @@ function Strip({
     const el = scrollRef.current;
     if (!el) return;
 
+    // Init scroll position
     const init = () => {
       const halfWidth = el.scrollWidth / 2;
       if (direction === "right") {
@@ -174,6 +174,7 @@ function Strip({
     };
     requestAnimationFrame(init);
 
+    // Auto-scroll rAF loop
     function tick(ts: number) {
       const el = scrollRef.current;
       if (!el) { rafRef.current = requestAnimationFrame(tick); return; }
@@ -199,51 +200,60 @@ function Strip({
       }
       rafRef.current = requestAnimationFrame(tick);
     }
-
     rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current);
+
+    // ── Document-level drag handlers ──────────────────────────
+    // Using document listeners instead of setPointerCapture so that
+    // onClick fires correctly on the actual target element.
+    const handlePointerMove = (e: PointerEvent) => {
+      if (!isDragging.current || !scrollRef.current) return;
+      const el = scrollRef.current;
+      const delta = dragStartX.current - e.clientX;
+      dragMoved.current = Math.abs(delta);
+      const halfWidth = el.scrollWidth / 2;
+      let newPos = scrollAtDragStart.current + delta;
+      if (newPos < 0) newPos += halfWidth;
+      if (newPos >= halfWidth * 2) newPos -= halfWidth;
+      el.scrollLeft = newPos;
+      posRef.current = newPos;
+    };
+
+    const handlePointerUp = () => {
+      if (!isDragging.current) return;
+      isDragging.current = false;
+      if (scrollRef.current) scrollRef.current.style.cursor = "grab";
+    };
+
+    document.addEventListener("pointermove", handlePointerMove);
+    document.addEventListener("pointerup", handlePointerUp);
+    document.addEventListener("pointercancel", handlePointerUp);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      document.removeEventListener("pointermove", handlePointerMove);
+      document.removeEventListener("pointerup", handlePointerUp);
+      document.removeEventListener("pointercancel", handlePointerUp);
+    };
   }, [direction, duration]);
 
   function onMouseEnter() { isPaused.current = true; lastTs.current = 0; }
   function onMouseLeave() { isPaused.current = false; }
 
   function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
-    // Save e.target BEFORE setPointerCapture — after capture, e.target becomes the strip div.
-    // e.target here is still the real clicked element (TeamCard outer div or its ancestor).
-    pointerDownTarget.current = e.target as HTMLElement;
     isDragging.current = true;
     dragMoved.current = 0;
     dragStartX.current = e.clientX;
     scrollAtDragStart.current = scrollRef.current?.scrollLeft ?? 0;
-    e.currentTarget.setPointerCapture(e.pointerId);
     e.currentTarget.style.cursor = "grabbing";
+    // No setPointerCapture — document-level handlers manage the drag
   }
 
-  function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
-    if (!isDragging.current || !scrollRef.current) return;
-    const el = scrollRef.current;
-    const delta = dragStartX.current - e.clientX;
-    dragMoved.current = Math.abs(delta);
-    const halfWidth = el.scrollWidth / 2;
-    let newPos = scrollAtDragStart.current + delta;
-    if (newPos < 0) newPos += halfWidth;
-    if (newPos >= halfWidth * 2) newPos -= halfWidth;
-    el.scrollLeft = newPos;
-    posRef.current = newPos;
-  }
-
-  function onPointerUp(e: React.PointerEvent<HTMLDivElement>) {
-    isDragging.current = false;
-    e.currentTarget.style.cursor = "grab";
-
-    // Use the target saved at pointerdown time (before setPointerCapture redirected events).
-    // elementFromPoint is unreliable under capture — the original e.target is always correct.
-    if (dragMoved.current < 6) {
-      const card = pointerDownTarget.current?.closest("[data-href]") as HTMLElement | null;
-      const href = card?.dataset?.href;
-      if (href) router.push(href);
-    }
-    pointerDownTarget.current = null;
+  // onClick fires reliably because there's no pointer capture redirecting events
+  function handleClick(e: React.MouseEvent<HTMLDivElement>) {
+    if (dragMoved.current >= 8) return; // was a drag, not a tap
+    const card = (e.target as HTMLElement).closest("[data-href]") as HTMLElement | null;
+    const href = card?.dataset?.href;
+    if (href) router.push(href);
   }
 
   return (
@@ -260,9 +270,7 @@ function Strip({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerCancel={onPointerUp}
+      onClick={handleClick}
     >
       <div className="flex" style={{ width: "max-content" }}>
         {doubled.map((team, i) => (
