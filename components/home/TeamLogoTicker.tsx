@@ -232,9 +232,11 @@ function Strip({
     e.currentTarget.style.cursor = "grab";
 
     // If barely moved → treat as a click → navigate
+    // NOTE: with setPointerCapture, e.target is the capturing element (Strip div),
+    // NOT the element under the cursor. Use elementFromPoint to find the real target.
     if (dragMoved.current < 6) {
-      const target = e.target as HTMLElement;
-      const card = target.closest("[data-href]") as HTMLElement | null;
+      const el = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
+      const card = el?.closest("[data-href]") as HTMLElement | null;
       const href = card?.dataset?.href;
       if (href) router.push(href);
     }

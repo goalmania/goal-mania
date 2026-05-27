@@ -129,13 +129,6 @@ export default function SerieAClient({ products, teamSlug }: SerieAClientProps) 
     ? products
     : products.filter((p) => classifyProduct(p).includes(activeTab));
 
-  // Show tabs only if at least one sub-category has products
-  const hasSubcategories =
-    categoryCounts.attuali > 0 ||
-    categoryCounts.retro > 0 ||
-    categoryCounts.tute > 0 ||
-    categoryCounts.combo > 0;
-
   const logoPath = identity.logoSlug ? `/team-logos/${identity.logoSlug}.png` : null;
   const [logoError, setLogoError] = useState(false);
 
@@ -265,55 +258,85 @@ export default function SerieAClient({ products, teamSlug }: SerieAClientProps) 
         />
       </div>
 
-      {/* ── Category Tabs ─────────────────────────────────── */}
-      {hasSubcategories && (
+      {/* ── Category Tabs — always visible ───────────────── */}
+      <div
+        className="sticky z-20"
+        style={{ top: "112px", background: "#0d0d0d", borderTop: `1px solid rgba(255,255,255,0.06)`, borderBottom: `1px solid rgba(255,255,255,0.06)` }}
+      >
         <div
-          className="sticky z-20 overflow-x-auto"
-          style={{ top: "112px", background: "#0a0a0a", borderBottom: `1px solid rgba(255,255,255,0.06)` }}
+          className="overflow-x-auto"
+          style={{ scrollbarWidth: "none" }}
         >
           <div
-            className="flex items-stretch px-4 sm:px-8"
-            style={{ minWidth: "max-content", scrollbarWidth: "none" }}
+            className="flex items-stretch px-4 sm:px-8 gap-1 py-2"
+            style={{ minWidth: "max-content" }}
           >
             {(["tutte", "attuali", "retro", "tute", "combo"] as Category[]).map((cat) => {
               const count = categoryCounts[cat];
-              if (cat !== "tutte" && count === 0) return null;
               const isActive = activeTab === cat;
+              const isEmpty = count === 0 && cat !== "tutte";
+
+              // Colori specifici per categoria
+              const catColor: Record<Category, string> = {
+                tutte:   identity.accent,
+                attuali: identity.accent,
+                retro:   "#f5a623",   // arancio vintage
+                tute:    "#7ed6df",   // azzurro
+                combo:   "#c8f000",   // lime
+              };
+              const color = catColor[cat];
+
               return (
                 <button
                   key={cat}
-                  onClick={() => setActiveTab(cat)}
-                  className="relative flex items-center gap-2 py-4 px-4 text-[11px] font-bold uppercase tracking-[2px] transition-colors duration-200 whitespace-nowrap flex-shrink-0"
+                  onClick={() => { if (!isEmpty) setActiveTab(cat); }}
+                  className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-[1.5px] transition-all duration-200 whitespace-nowrap flex-shrink-0"
                   style={{
                     fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
-                    color: isActive ? identity.accent : "rgba(255,255,255,0.35)",
-                    background: "none",
+                    cursor: isEmpty ? "not-allowed" : "pointer",
                     border: "none",
-                    cursor: "pointer",
-                    borderBottom: isActive ? `2px solid ${identity.accent}` : "2px solid transparent",
-                    marginBottom: "-1px",
+                    outline: "none",
+                    // Active: filled pill
+                    background: isActive
+                      ? `${color}18`
+                      : isEmpty
+                        ? "rgba(255,255,255,0.03)"
+                        : "rgba(255,255,255,0.05)",
+                    color: isActive
+                      ? color
+                      : isEmpty
+                        ? "rgba(255,255,255,0.2)"
+                        : "rgba(255,255,255,0.5)",
+                    boxShadow: isActive ? `inset 0 0 0 1.5px ${color}55` : `inset 0 0 0 1px rgba(255,255,255,0.08)`,
+                    opacity: isEmpty ? 0.5 : 1,
                   }}
                 >
-                  {CATEGORY_LABELS[cat]}
-                  {count > 0 && (
+                  {/* Active indicator dot */}
+                  {isActive && (
                     <span
-                      className="text-[9px] font-black px-1.5 py-0.5 rounded"
-                      style={{
-                        background: isActive ? `${identity.accent}22` : "rgba(255,255,255,0.06)",
-                        color: isActive ? identity.accent : "rgba(255,255,255,0.3)",
-                        fontFamily: "var(--font-mono, monospace)",
-                      }}
-                    >
-                      {count}
-                    </span>
+                      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                      style={{ background: color }}
+                    />
                   )}
+                  {CATEGORY_LABELS[cat]}
+                  <span
+                    className="text-[9px] font-black px-1.5 py-0.5 rounded-md flex-shrink-0"
+                    style={{
+                      background: isActive ? `${color}25` : "rgba(255,255,255,0.07)",
+                      color: isActive ? color : "rgba(255,255,255,0.3)",
+                      fontFamily: "var(--font-mono, monospace)",
+                      letterSpacing: "0px",
+                    }}
+                  >
+                    {count}
+                  </span>
                 </button>
               );
             })}
           </div>
-          <style jsx>{`div::-webkit-scrollbar { display: none; }`}</style>
         </div>
-      )}
+        <style jsx>{`div::-webkit-scrollbar { display: none; }`}</style>
+      </div>
 
       {/* ── Product Grid ──────────────────────────────────── */}
       <div className="px-4 sm:px-6 lg:px-8 py-10 max-w-7xl mx-auto">
