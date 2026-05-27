@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, useMemo, useRef } from "react";
+import { Suspense, useState, useMemo, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -107,7 +107,47 @@ function LeagueNav() {
 // Shop Hero
 // ─────────────────────────────────────────────────────────────
 
-function ShopHero({ featuredProduct }: { featuredProduct: Product | null }) {
+const HERO_FADE_MS = 350;
+const HERO_ROTATE_MS = 6000;
+
+function ShopHero({ featuredProducts: products }: { featuredProducts: Product[] }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [visible, setVisible]           = useState(true);
+  const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const indexRef     = useRef(0);
+  const lenRef       = useRef(products.length);
+  lenRef.current     = products.length;
+
+  const goTo = (idx: number) => {
+    if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
+    setVisible(false);
+    fadeTimerRef.current = setTimeout(() => {
+      indexRef.current = idx;
+      setCurrentIndex(idx);
+      setVisible(true);
+    }, HERO_FADE_MS);
+  };
+
+  useEffect(() => {
+    if (lenRef.current <= 1) return;
+    const id = setInterval(() => {
+      const next = (indexRef.current + 1) % lenRef.current;
+      if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
+      setVisible(false);
+      fadeTimerRef.current = setTimeout(() => {
+        indexRef.current = next;
+        setCurrentIndex(next);
+        setVisible(true);
+      }, HERO_FADE_MS);
+    }, HERO_ROTATE_MS);
+    return () => {
+      clearInterval(id);
+      if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
+    };
+  }, []); // intentionally empty — uses refs
+
+  const current = products[currentIndex] ?? null;
+
   return (
     <section
       id="top"
@@ -162,15 +202,12 @@ function ShopHero({ featuredProduct }: { featuredProduct: Product | null }) {
           {/* Stats row */}
           <div className="flex items-center gap-8 mb-10 flex-wrap">
             {[
-              { num: "3.200+", label: "Maglie", icon: <Trophy size={14} /> },
-              { num: "50+",    label: "Squadre", icon: <Globe size={14} /> },
-              { num: "24h",    label: "Spedizione", icon: <Zap size={14} /> },
+              { num: "3.200+", label: "Maglie",      icon: <Trophy size={14} /> },
+              { num: "50+",    label: "Squadre",     icon: <Globe size={14} /> },
+              { num: "24h",    label: "Spedizione",  icon: <Zap size={14} /> },
             ].map(({ num, label, icon }) => (
               <div key={label} className="flex items-center gap-2">
-                <div
-                  className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: "rgba(200,240,0,0.08)", color: "#c8f000" }}
-                >
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "rgba(200,240,0,0.08)", color: "#c8f000" }}>
                   {icon}
                 </div>
                 <div>
@@ -186,79 +223,87 @@ function ShopHero({ featuredProduct }: { featuredProduct: Product | null }) {
             <a
               href="#nuovi-arrivi"
               className="px-7 py-3.5 rounded-full font-black text-sm uppercase tracking-widest transition-all hover:opacity-90 active:scale-[0.97]"
-              style={{
-                background: "#c8f000",
-                color: "#0a0a0a",
-                fontFamily: "var(--font-display, sans-serif)",
-                letterSpacing: "2px",
-                boxShadow: "0 8px 32px rgba(200,240,0,0.25)",
-              }}
+              style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px", boxShadow: "0 8px 32px rgba(200,240,0,0.25)" }}
             >
               Esplora Ora
             </a>
             <a
               href="#bestseller"
               className="px-7 py-3.5 rounded-full font-black text-sm uppercase tracking-widest transition-all hover:border-white/30"
-              style={{
-                background: "transparent",
-                color: "rgba(255,255,255,0.65)",
-                border: "1.5px solid rgba(255,255,255,0.12)",
-                fontFamily: "var(--font-display, sans-serif)",
-                letterSpacing: "2px",
-              }}
+              style={{ background: "transparent", color: "rgba(255,255,255,0.65)", border: "1.5px solid rgba(255,255,255,0.12)", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px" }}
             >
               Bestseller
             </a>
           </div>
         </div>
 
-        {/* Right: Featured product card */}
-        {featuredProduct ? (
+        {/* Right: Rotating featured product card */}
+        {current ? (
           <div className="flex-shrink-0 w-full max-w-[300px] lg:max-w-[340px]">
-            <Link
-              href={`/products/${featuredProduct.id}`}
-              className="group block relative rounded-3xl overflow-hidden"
-              style={{ background: "#111", border: "1px solid rgba(255,255,255,0.08)" }}
-            >
-              <div className="relative overflow-hidden" style={{ aspectRatio: "3/4" }}>
-                <Image
-                  src={featuredProduct.image}
-                  alt={featuredProduct.name}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 1024px) 100vw, 340px"
-                />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%)" }} />
-                <div
-                  className="absolute top-4 left-4 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest"
-                  style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-mono, monospace)" }}
-                >
-                  ⭐ In Evidenza
-                </div>
-              </div>
-              <div className="p-5">
-                <p className="text-[9px] uppercase tracking-[2px] mb-1" style={{ color: "rgba(200,240,0,0.6)", fontFamily: "var(--font-mono, monospace)" }}>
-                  {featuredProduct.team}
-                </p>
-                <p className="font-black text-sm text-white leading-tight mb-3" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-                  {featuredProduct.name}
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="font-black text-xl text-white" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-                    €{featuredProduct.price.toFixed(2)}
-                  </span>
-                  <span
-                    className="text-[10px] font-bold uppercase tracking-widest transition-colors group-hover:text-[#c8f000]"
-                    style={{ color: "rgba(255,255,255,0.35)", fontFamily: "var(--font-mono, monospace)" }}
+            {/* Card fades on product change */}
+            <div style={{ opacity: visible ? 1 : 0, transition: `opacity ${HERO_FADE_MS}ms cubic-bezier(0.4,0,0.2,1)` }}>
+              <Link
+                href={`/products/${current.id}`}
+                className="group block relative rounded-3xl overflow-hidden"
+                style={{ background: "#111", border: "1px solid rgba(255,255,255,0.08)" }}
+              >
+                <div className="relative overflow-hidden" style={{ aspectRatio: "3/4" }}>
+                  <Image
+                    src={current.image}
+                    alt={current.name}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    sizes="(max-width: 1024px) 100vw, 340px"
+                  />
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%)" }} />
+                  <div
+                    className="absolute top-4 left-4 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest"
+                    style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-mono, monospace)" }}
                   >
-                    Vedi →
-                  </span>
+                    ⭐ In Evidenza
+                  </div>
                 </div>
+                <div className="p-5">
+                  <p className="text-[9px] uppercase tracking-[2px] mb-1" style={{ color: "rgba(200,240,0,0.6)", fontFamily: "var(--font-mono, monospace)" }}>
+                    {current.team}
+                  </p>
+                  <p className="font-black text-sm text-white leading-tight mb-3" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+                    {current.name}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="font-black text-xl text-white" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+                      €{current.price.toFixed(2)}
+                    </span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest transition-colors group-hover:text-[#c8f000]" style={{ color: "rgba(255,255,255,0.35)", fontFamily: "var(--font-mono, monospace)" }}>
+                      Vedi →
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </div>
+
+            {/* Dot indicators */}
+            {products.length > 1 && (
+              <div className="flex items-center justify-center gap-1.5 mt-4">
+                {products.map((_, i) => (
+                  <button
+                    key={i}
+                    aria-label={`Maglia ${i + 1}`}
+                    onClick={() => goTo(i)}
+                    className="rounded-full transition-all duration-300"
+                    style={{
+                      width:  i === currentIndex ? "20px" : "6px",
+                      height: "6px",
+                      background: i === currentIndex ? "#c8f000" : "rgba(200,240,0,0.25)",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  />
+                ))}
               </div>
-            </Link>
+            )}
           </div>
         ) : (
-          /* Fallback decorative element when no featured product */
           <div
             className="hidden lg:flex flex-shrink-0 w-[340px] h-[440px] rounded-3xl items-center justify-center"
             style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
@@ -813,7 +858,8 @@ export default function ShopClient({
   videoProducts?: Product[];
   worldCupTeams?: any[]; // kept for API compatibility, not used
 }) {
-  const featuredProduct = featuredProducts[0] ?? latestProducts[0] ?? null;
+  // Use feature-flagged products for hero; fall back to latest if none
+  const heroProducts = (featuredProducts.length > 0 ? featuredProducts : latestProducts).slice(0, 8);
   const bestsellers = bestSellingProducts.length > 0 ? bestSellingProducts : latestProducts.slice(0, 5);
 
   return (
@@ -825,7 +871,7 @@ export default function ShopClient({
       <LeagueNav />
 
       {/* Hero */}
-      <ShopHero featuredProduct={featuredProduct} />
+      <ShopHero featuredProducts={heroProducts} />
 
       {/* Trust strip */}
       <TrustStrip />
