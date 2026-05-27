@@ -7,6 +7,7 @@ import SocialProofSection from "@/components/home/SocialProofSection";
 import FlashSaleSection from "@/components/home/FlashSaleSection";
 import EditorialCommerceSection from "@/components/home/EditorialCommerceSection";
 import HomeCategoryCards from "@/app/_components/HomeCategoryCards";
+import ReviewsStrip from "@/components/home/ReviewsStrip";
 import ProductModel from "@/lib/models/Product";
 
 export const revalidate = 300;
@@ -59,6 +60,11 @@ export default async function Home() {
 
       {/* 2. CATEGORIE — navigazione per campionato */}
       <HomeCategoryCards />
+
+      {/* 2b. RECENSIONI TICKER — espanso dal bottone "Leggi tutte" in SocialProofSection */}
+      <div data-reviews-strip>
+        <ReviewsStrip />
+      </div>
 
       {/* 3. OFFERTA LAMPO — urgency + prodotti reali in rotazione */}
       <FlashSaleSection products={featuredProducts.slice(0, 6)} />

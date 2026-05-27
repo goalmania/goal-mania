@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Star, CheckCircle, RefreshCw, ThumbsUp } from "lucide-react";
+import { Star, CheckCircle, RefreshCw, ThumbsUp, ChevronUp } from "lucide-react";
 import Link from "next/link";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -516,6 +516,37 @@ export default function SocialProofSection() {
           >
             Unisciti a {AGGREGATE.total.toLocaleString("it-IT")} clienti soddisfatti
           </p>
+
+          {/* "Leggi tutte" → opens ReviewsStrip at top of page */}
+          <button
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent("goal-mania:open-reviews"));
+              // Scroll to strip after it opens (brief delay for state update)
+              setTimeout(() => {
+                const strip = document.querySelector("[data-reviews-strip]");
+                if (strip) strip.scrollIntoView({ behavior: "smooth", block: "start" });
+              }, 120);
+            }}
+            className="inline-flex items-center gap-2 text-sm uppercase tracking-widest transition-colors duration-200 mb-6"
+            style={{
+              fontFamily: "var(--font-mono, monospace)",
+              color: "rgba(200,240,0,0.6)",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              display: "block",
+              margin: "0 auto 24px",
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "#c8f000"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = "rgba(200,240,0,0.6)"; }}
+          >
+            <span className="flex items-center gap-2 justify-center">
+              <ChevronUp size={14} />
+              Leggi tutte le {AGGREGATE.total.toLocaleString("it-IT")} recensioni
+              <ChevronUp size={14} />
+            </span>
+          </button>
+
           <Link
             href="/shop"
             className="inline-flex items-center gap-3 px-8 py-4 rounded-full font-black uppercase transition-all duration-300 hover:-translate-y-1"
