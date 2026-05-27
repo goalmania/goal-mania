@@ -3,10 +3,10 @@ import Article from "@/lib/models/Article";
 import HeroSection from "@/components/home/HeroSection";
 import TeamLogoTicker from "@/components/home/TeamLogoTicker";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
-import TrustSection from "@/components/home/TrustSection";
 import SocialProofSection from "@/components/home/SocialProofSection";
 import FlashSaleSection from "@/components/home/FlashSaleSection";
 import EditorialCommerceSection from "@/components/home/EditorialCommerceSection";
+import HomeCategoryCards from "@/app/_components/HomeCategoryCards";
 import ProductModel from "@/lib/models/Product";
 
 export const revalidate = 300;
@@ -52,29 +52,30 @@ export default async function Home() {
   const featuredProducts = await getFeaturedProducts();
 
   return (
-    <div className="bg-[#0a0a0a] min-h-screen relative font-munish">
-      {/* Hero — full-screen, rotating real jerseys */}
+    <div className="bg-[#070707] min-h-screen relative font-munish">
+
+      {/* 1. HERO — "MAGLIE DA CALCIO A 30€" + maglie reali rotanti */}
       <HeroSection products={featuredProducts} />
 
-      {/* Trust pillars strip */}
-      <TrustSection />
+      {/* 2. CATEGORIE — navigazione per campionato */}
+      <HomeCategoryCards />
 
-      {/* Team logo ticker */}
-      <TeamLogoTicker />
-
-      {/* Flash sale — real featured product, urgency */}
+      {/* 3. OFFERTA LAMPO — urgency + prodotto reale */}
       <FlashSaleSection product={featuredProducts[0]} />
 
-      {/* Featured products grid */}
+      {/* 4. MAGLIE IN EVIDENZA — grid prodotti featured */}
       <FeaturedProducts products={featuredProducts} />
 
-      {/* Editorial-commerce hybrid */}
+      {/* 5. LOGHI SQUADRE — social proof visivo */}
+      <TeamLogoTicker />
+
+      {/* 6. NOTIZIE + MAGLIE — editoriale ibrido */}
       <EditorialCommerceSection
         articles={featuredArticles.slice(0, 3)}
         products={featuredProducts.slice(0, 3)}
       />
 
-      {/* Social proof / testimonials */}
+      {/* 7. RECENSIONI */}
       <SocialProofSection />
     </div>
   );

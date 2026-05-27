@@ -6,7 +6,7 @@ const PILLARS = [
   {
     icon: Truck,
     title: "Spedizione Gratuita",
-    subtitle: "Sopra €89 in tutta Italia",
+    subtitle: "Su tutti gli ordini in Italia",
     emoji: "🚚",
   },
   {
