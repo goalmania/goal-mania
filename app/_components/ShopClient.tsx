@@ -357,76 +357,150 @@ function TrustStrip() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Bestseller product card — compact
+// ─────────────────────────────────────────────────────────────
+// Generic product carousel (auto-scroll + drag, reused in both sections)
 // ─────────────────────────────────────────────────────────────
 
-function BestsellerCard({ product }: { product: Product }) {
+const CAROUSEL_DURATION_S = 42;
+
+function ProductCarousel({ products, badge }: { products: Product[]; badge?: string }) {
+  const router = useRouter();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const rafRef    = useRef<number>(0);
+  const posRef    = useRef(0);
+  const isDragging = useRef(false);
+  const dragStartX = useRef(0);
+  const scrollAtDragStart = useRef(0);
+  const lastTs    = useRef(0);
+  const isPaused  = useRef(false);
+  const dragMoved = useRef(0);
+
+  const doubled = [...products, ...products];
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    requestAnimationFrame(() => { el.scrollLeft = 0; posRef.current = 0; });
+
+    function tick(ts: number) {
+      const el = scrollRef.current;
+      if (!el) { rafRef.current = requestAnimationFrame(tick); return; }
+      if (!isDragging.current && !isPaused.current) {
+        if (lastTs.current === 0) lastTs.current = ts;
+        const dt = Math.min(ts - lastTs.current, 64);
+        lastTs.current = ts;
+        const halfWidth = el.scrollWidth / 2;
+        if (halfWidth === 0) { rafRef.current = requestAnimationFrame(tick); return; }
+        posRef.current += (halfWidth / CAROUSEL_DURATION_S) * (dt / 1000);
+        if (posRef.current >= halfWidth) posRef.current -= halfWidth;
+        el.scrollLeft = posRef.current;
+      } else { lastTs.current = ts; }
+      rafRef.current = requestAnimationFrame(tick);
+    }
+    rafRef.current = requestAnimationFrame(tick);
+
+    const onMove = (e: PointerEvent) => {
+      if (!isDragging.current || !scrollRef.current) return;
+      const delta = dragStartX.current - e.clientX;
+      dragMoved.current = Math.abs(delta);
+      const half = scrollRef.current.scrollWidth / 2;
+      let np = scrollAtDragStart.current + delta;
+      if (np < 0) np += half;
+      if (np >= half * 2) np -= half;
+      scrollRef.current.scrollLeft = np;
+      posRef.current = np;
+    };
+    const onUp = () => {
+      if (!isDragging.current) return;
+      isDragging.current = false;
+      if (scrollRef.current) scrollRef.current.style.cursor = "grab";
+    };
+    document.addEventListener("pointermove", onMove);
+    document.addEventListener("pointerup",   onUp);
+    document.addEventListener("pointercancel", onUp);
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerup",   onUp);
+      document.removeEventListener("pointercancel", onUp);
+    };
+  }, []);
+
+  function handleClick(e: React.MouseEvent<HTMLDivElement>) {
+    if (dragMoved.current >= 8) return;
+    const card = (e.target as HTMLElement).closest("[data-href]") as HTMLElement | null;
+    if (card?.dataset?.href) router.push(card.dataset.href);
+  }
+
   return (
-    <Link
-      href={`/products/${product.id}`}
-      className="group relative block rounded-xl overflow-hidden"
-      style={{ background: "#111", border: "1px solid rgba(255,255,255,0.07)" }}
+    <div
+      ref={scrollRef}
+      className="overflow-x-scroll"
+      style={{ scrollbarWidth: "none", msOverflowStyle: "none", cursor: "grab", userSelect: "none", WebkitOverflowScrolling: "touch" } as React.CSSProperties}
+      onMouseEnter={() => { isPaused.current = true;  lastTs.current = 0; }}
+      onMouseLeave={() => { isPaused.current = false; }}
+      onPointerDown={(e) => {
+        isDragging.current = true;
+        dragMoved.current  = 0;
+        dragStartX.current = e.clientX;
+        scrollAtDragStart.current = scrollRef.current?.scrollLeft ?? 0;
+        e.currentTarget.style.cursor = "grabbing";
+      }}
+      onClick={handleClick}
     >
-      <div className="relative overflow-hidden" style={{ aspectRatio: "3/4" }}>
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-        />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 55%)" }} />
-
-        {/* Badge */}
-        <div
-          className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest"
-          style={{ background: "rgba(10,10,10,0.9)", color: "#c8f000", fontFamily: "var(--font-mono, monospace)", border: "1px solid rgba(200,240,0,0.22)" }}
-        >
-          🏆 Top
-        </div>
-
-        {/* Hover CTA */}
-        <div
-          className="absolute inset-x-2 bottom-2 py-2 rounded-lg font-black text-[10px] uppercase tracking-widest text-center transition-all duration-300 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0"
-          style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-display, sans-serif)" }}
-        >
-          Vedi →
-        </div>
-      </div>
-
-      <div className="p-2.5">
-        <p
-          className="font-black text-xs text-white leading-tight truncate"
-          style={{ fontFamily: "var(--font-display, sans-serif)" }}
-        >
-          {product.name}
-        </p>
-        <div className="flex items-center justify-between mt-1">
-          <span className="font-black text-sm text-white" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-            €{product.price.toFixed(2)}
-          </span>
-          <div className="flex items-center gap-px">
-            {[1,2,3,4,5].map((s) => <Star key={s} size={8} fill="#c8f000" stroke="none" />)}
+      <div className="flex py-3" style={{ width: "max-content" }}>
+        {doubled.map((p, i) => (
+          <div
+            key={`${p.id}-${i}`}
+            data-href={`/products/${p.id}`}
+            className="carousel-card group flex-shrink-0 mx-2 rounded-2xl overflow-hidden"
+            style={{ width: "190px", background: "#111", border: "1px solid rgba(255,255,255,0.07)", cursor: "pointer" }}
+            draggable={false}
+          >
+            <div className="relative overflow-hidden" style={{ aspectRatio: "3/4", pointerEvents: "none" }}>
+              <Image src={p.image} alt={p.name} fill className="object-cover" style={{ transition: "transform 500ms cubic-bezier(0.23,1,0.32,1)", pointerEvents: "none" }} sizes="190px" draggable={false} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)", pointerEvents: "none" }} />
+              {badge && (
+                <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest" style={{ background: "rgba(10,10,10,0.9)", color: "#c8f000", fontFamily: "var(--font-mono, monospace)", border: "1px solid rgba(200,240,0,0.22)", pointerEvents: "none" }}>
+                  {badge}
+                </div>
+              )}
+              <div className="absolute bottom-3 left-0 right-0 flex justify-center" style={{ pointerEvents: "none" }}>
+                <span className="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest opacity-0 translate-y-1" style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-mono, monospace)", transition: "opacity 250ms, transform 250ms" }}>Vedi →</span>
+              </div>
+            </div>
+            <div className="p-2.5" style={{ pointerEvents: "none" }}>
+              <p className="font-black text-xs text-white leading-tight truncate" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+                {p.name.replace(/^Maglia\s+/i, "")}
+              </p>
+              <div className="flex items-center justify-between mt-1">
+                <p className="font-black text-sm" style={{ fontFamily: "var(--font-display, sans-serif)", color: "#c8f000" }}>€{p.price.toFixed(2)}</p>
+                <div className="flex items-center gap-px">{[1,2,3,4,5].map((s) => <Star key={s} size={7} fill="#c8f000" stroke="none" />)}</div>
+              </div>
+            </div>
           </div>
-        </div>
+        ))}
       </div>
-    </Link>
+      <style jsx>{`div::-webkit-scrollbar{display:none}.carousel-card:hover img{transform:scale(1.06)}.carousel-card:hover span{opacity:1!important;transform:translateY(0)!important}`}</style>
+    </div>
   );
 }
 
 // ─────────────────────────────────────────────────────────────
-// Bestseller section — compact 5-col grid
+// Bestseller section — carousel
 // ─────────────────────────────────────────────────────────────
 
 function BestsellerSection({ products }: { products: Product[] }) {
   if (products.length === 0) return null;
-  const shown = products.slice(0, 10);
 
   return (
-    <section id="bestseller" className="py-14 md:py-16" style={{ background: "#0a0a0a" }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
+    <section id="bestseller" className="py-14 md:py-16 relative overflow-hidden" style={{ background: "#0a0a0a" }}>
+      {/* Fade edges */}
+      <div className="absolute inset-y-0 left-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(to right, #0a0a0a, transparent)" }} />
+      <div className="absolute inset-y-0 right-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(to left, #0a0a0a, transparent)" }} />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-6 relative z-0">
+        <div className="flex items-end justify-between flex-wrap gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="w-4 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
@@ -434,29 +508,21 @@ function BestsellerSection({ products }: { products: Product[] }) {
                 // Scelti da Goal Mania
               </span>
             </div>
-            <h2
-              className="font-black uppercase text-white"
-              style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", letterSpacing: "-0.5px" }}
-            >
+            <h2 className="font-black uppercase text-white" style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", letterSpacing: "-0.5px" }}>
               I Più Venduti
             </h2>
           </div>
-          <Link
-            href="#nuovi-arrivi"
-            className="text-xs font-bold uppercase tracking-widest transition-colors hover:text-white flex items-center gap-1.5"
-            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.35)" }}
-          >
+          <Link href="#nuovi-arrivi" className="text-xs font-bold uppercase tracking-widest transition-colors hover:text-white flex items-center gap-1.5" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.35)" }}>
             Vedi tutto <ArrowRight size={12} />
           </Link>
         </div>
-
-        {/* Compact 5-column grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-          {shown.map((p) => (
-            <BestsellerCard key={p.id} product={p} />
-          ))}
-        </div>
       </div>
+
+      <ProductCarousel products={products} badge="🏆 Top" />
+
+      <p className="text-center mt-3 text-[9px] uppercase tracking-[2px] relative z-20" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.15)" }}>
+        ← trascina per scorrere • clicca per vedere la maglia →
+      </p>
     </section>
   );
 }
@@ -539,156 +605,7 @@ function SortBar({
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// Nuovi Arrivi — horizontal auto-scroll + drag carousel
-// ─────────────────────────────────────────────────────────────
-
-const CAROUSEL_DURATION_S = 42; // seconds per full cycle
-
-function NuoviArriviCarousel({ products }: { products: Product[] }) {
-  const router = useRouter();
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const rafRef    = useRef<number>(0);
-  const posRef    = useRef(0);
-  const isDragging = useRef(false);
-  const dragStartX = useRef(0);
-  const scrollAtDragStart = useRef(0);
-  const lastTs    = useRef(0);
-  const isPaused  = useRef(false);
-  const dragMoved = useRef(0);
-
-  const doubled = [...products, ...products];
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    requestAnimationFrame(() => { el.scrollLeft = 0; posRef.current = 0; });
-
-    function tick(ts: number) {
-      const el = scrollRef.current;
-      if (!el) { rafRef.current = requestAnimationFrame(tick); return; }
-      if (!isDragging.current && !isPaused.current) {
-        if (lastTs.current === 0) lastTs.current = ts;
-        const dt = Math.min(ts - lastTs.current, 64);
-        lastTs.current = ts;
-        const halfWidth = el.scrollWidth / 2;
-        if (halfWidth === 0) { rafRef.current = requestAnimationFrame(tick); return; }
-        const speed = halfWidth / CAROUSEL_DURATION_S;
-        posRef.current += speed * (dt / 1000);
-        if (posRef.current >= halfWidth) posRef.current -= halfWidth;
-        el.scrollLeft = posRef.current;
-      } else {
-        lastTs.current = ts;
-      }
-      rafRef.current = requestAnimationFrame(tick);
-    }
-    rafRef.current = requestAnimationFrame(tick);
-
-    const handlePointerMove = (e: PointerEvent) => {
-      if (!isDragging.current || !scrollRef.current) return;
-      const el = scrollRef.current;
-      const delta = dragStartX.current - e.clientX;
-      dragMoved.current = Math.abs(delta);
-      const halfWidth = el.scrollWidth / 2;
-      let newPos = scrollAtDragStart.current + delta;
-      if (newPos < 0) newPos += halfWidth;
-      if (newPos >= halfWidth * 2) newPos -= halfWidth;
-      el.scrollLeft = newPos;
-      posRef.current = newPos;
-    };
-    const handlePointerUp = () => {
-      if (!isDragging.current) return;
-      isDragging.current = false;
-      if (scrollRef.current) scrollRef.current.style.cursor = "grab";
-    };
-
-    document.addEventListener("pointermove", handlePointerMove);
-    document.addEventListener("pointerup",   handlePointerUp);
-    document.addEventListener("pointercancel", handlePointerUp);
-    return () => {
-      cancelAnimationFrame(rafRef.current);
-      document.removeEventListener("pointermove", handlePointerMove);
-      document.removeEventListener("pointerup",   handlePointerUp);
-      document.removeEventListener("pointercancel", handlePointerUp);
-    };
-  }, []);
-
-  function handleClick(e: React.MouseEvent<HTMLDivElement>) {
-    if (dragMoved.current >= 8) return;
-    const card = (e.target as HTMLElement).closest("[data-href]") as HTMLElement | null;
-    if (card?.dataset?.href) router.push(card.dataset.href);
-  }
-
-  return (
-    <div
-      ref={scrollRef}
-      className="overflow-x-scroll"
-      style={{ scrollbarWidth: "none", msOverflowStyle: "none", cursor: "grab", userSelect: "none", WebkitOverflowScrolling: "touch" } as React.CSSProperties}
-      onMouseEnter={() => { isPaused.current = true;  lastTs.current = 0; }}
-      onMouseLeave={() => { isPaused.current = false; }}
-      onPointerDown={(e) => {
-        isDragging.current = true;
-        dragMoved.current = 0;
-        dragStartX.current = e.clientX;
-        scrollAtDragStart.current = scrollRef.current?.scrollLeft ?? 0;
-        e.currentTarget.style.cursor = "grabbing";
-      }}
-      onClick={handleClick}
-    >
-      <div className="flex py-3" style={{ width: "max-content" }}>
-        {doubled.map((p, i) => (
-          <div
-            key={`${p.id}-${i}`}
-            data-href={`/products/${p.id}`}
-            className="carousel-card group flex-shrink-0 mx-2 rounded-2xl overflow-hidden"
-            style={{ width: "190px", background: "#111", border: "1px solid rgba(255,255,255,0.07)", cursor: "pointer" }}
-            draggable={false}
-          >
-            <div
-              className="relative overflow-hidden"
-              style={{ aspectRatio: "3/4", pointerEvents: "none" }}
-            >
-              <Image
-                src={p.image}
-                alt={p.name}
-                fill
-                className="object-cover"
-                style={{ transition: "transform 500ms cubic-bezier(0.23,1,0.32,1)", pointerEvents: "none" }}
-                sizes="190px"
-                draggable={false}
-              />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)", pointerEvents: "none" }} />
-              <div
-                className="absolute bottom-3 left-0 right-0 flex justify-center"
-                style={{ pointerEvents: "none" }}
-              >
-                <span
-                  className="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest opacity-0 translate-y-1"
-                  style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-mono, monospace)", transition: "opacity 250ms, transform 250ms" }}
-                >
-                  Vedi →
-                </span>
-              </div>
-            </div>
-            <div className="p-2.5" style={{ pointerEvents: "none" }}>
-              <p className="font-black text-xs text-white leading-tight truncate" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-                {p.name.replace(/^Maglia\s+/i, "")}
-              </p>
-              <p className="font-black text-sm mt-0.5" style={{ fontFamily: "var(--font-display, sans-serif)", color: "#c8f000" }}>
-                €{p.price.toFixed(2)}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-      <style jsx>{`
-        div::-webkit-scrollbar { display: none; }
-        .carousel-card:hover img { transform: scale(1.06); }
-        .carousel-card:hover span { opacity: 1 !important; transform: translateY(0) !important; }
-      `}</style>
-    </div>
-  );
-}
+// (ProductCarousel defined above — reused here)
 
 function NuoviArrivi({ products }: { products: Product[] }) {
   const [activeSort, setActiveSort] = useState<SortOption>("newest");
@@ -734,7 +651,7 @@ function NuoviArrivi({ products }: { products: Product[] }) {
 
       {/* Full-width carousel (intentionally overflows the container) */}
       {sorted.length > 0 ? (
-        <NuoviArriviCarousel products={sorted} />
+        <ProductCarousel products={sorted} />
       ) : (
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center py-20 rounded-2xl" style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}>
@@ -949,7 +866,12 @@ export default function ShopClient({
 }) {
   // Use feature-flagged products for hero; fall back to latest if none
   const heroProducts = (featuredProducts.length > 0 ? featuredProducts : latestProducts).slice(0, 8);
-  const bestsellers = bestSellingProducts.length > 0 ? bestSellingProducts : latestProducts.slice(0, 5);
+  // Bestseller carousel: hardcoded bestsellers first, then fill with latestProducts (deduplicated)
+  const bsIds = new Set(bestSellingProducts.map((p) => p.id));
+  const bestsellers = [
+    ...bestSellingProducts,
+    ...latestProducts.filter((p) => !bsIds.has(p.id)),
+  ].slice(0, 20);
 
   return (
     <div style={{ background: "#0a0a0a" }}>
