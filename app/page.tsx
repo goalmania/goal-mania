@@ -61,7 +61,10 @@ export default async function Home() {
       {/* 2. CATEGORIE — navigazione per campionato */}
       <HomeCategoryCards />
 
-      {/* 2b. RECENSIONI TICKER — espanso dal bottone "Leggi tutte" in SocialProofSection */}
+      {/* 2b. LOGHI SQUADRE — ticker cliccabile tra categorie e offerta */}
+      <TeamLogoTicker />
+
+      {/* 2c. RECENSIONI TICKER — espanso dal bottone "Leggi tutte" in SocialProofSection */}
       <div data-reviews-strip>
         <ReviewsStrip />
       </div>
@@ -72,16 +75,13 @@ export default async function Home() {
       {/* 4. MAGLIE IN EVIDENZA — grid prodotti featured */}
       <FeaturedProducts products={featuredProducts} />
 
-      {/* 5. LOGHI SQUADRE — social proof visivo */}
-      <TeamLogoTicker />
-
-      {/* 6. NOTIZIE + MAGLIE — editoriale ibrido */}
+      {/* 5. NOTIZIE + MAGLIE — editoriale ibrido */}
       <EditorialCommerceSection
         articles={featuredArticles.slice(0, 3)}
         products={featuredProducts.slice(0, 3)}
       />
 
-      {/* 7. RECENSIONI */}
+      {/* 6. RECENSIONI */}
       <SocialProofSection />
     </div>
   );
