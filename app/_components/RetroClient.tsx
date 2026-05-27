@@ -32,66 +32,23 @@ const HOF_SLUGS = new Set([
   "maglia-francia-1998-home",            // Mondiali Francia 98
 ]);
 
-// ─── Retro club logos — vintage badges + team filter keys ──────
-// retroLogo: primary vintage URL  |  fallback: /team-logos/{slug}.png
+// ─── Retro club logos — vintage badges stored locally in /public/retro-logos/ ──
 const RETRO_CLUBS = [
-  {
-    name: "Napoli",     slug: "napoli",     filterKey: "napoli",
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Napoli_FC_%282020%29.svg/400px-Napoli_FC_%282020%29.svg.png",
-  },
-  {
-    name: "Inter",      slug: "inter",      filterKey: "inter",
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/FC_Internazionale_Milano_2021.svg/400px-FC_Internazionale_Milano_2021.svg.png",
-  },
-  {
-    name: "Milan",      slug: "milan",      filterKey: "milan",
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Logo_AC_Milan.svg/400px-Logo_AC_Milan.svg.png",
-  },
-  {
-    name: "Juventus",   slug: "juventus",   filterKey: "juventus",
-    // Old oval badge (1979-2017) — used in Serie A glory years
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Juventus_FC_%281979%E2%80%932004%29.svg/400px-Juventus_FC_%281979%E2%80%932004%29.svg.png",
-  },
-  {
-    name: "Roma",       slug: "roma",       filterKey: "roma",
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/AS_Roma_%28crest%29.svg/400px-AS_Roma_%28crest%29.svg.png",
-  },
-  {
-    name: "Parma",      slug: "parma",      filterKey: "parma",
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Parma_Calcio_1913.svg/400px-Parma_Calcio_1913.svg.png",
-  },
-  {
-    name: "Barcellona", slug: "barcelona",  filterKey: "barcellona",
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/FC_Barcelona_%28crest%29.svg/400px-FC_Barcelona_%28crest%29.svg.png",
-  },
-  {
-    name: "Man United", slug: "man-utd",    filterKey: "manchester",
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Manchester_United_FC_crest.svg/400px-Manchester_United_FC_crest.svg.png",
-  },
-  {
-    name: "Arsenal",    slug: "arsenal",    filterKey: "arsenal",
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Arsenal_FC.svg/400px-Arsenal_FC.svg.png",
-  },
-  {
-    name: "Ajax",       slug: "ajax",       filterKey: "ajax",
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Ajax_Amsterdam.svg/400px-Ajax_Amsterdam.svg.png",
-  },
-  {
-    name: "Real Madrid",slug: "real-madrid",filterKey: "real madrid",
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Real_Madrid_CF.svg/400px-Real_Madrid_CF.svg.png",
-  },
-  {
-    name: "Brasile",    slug: "brasile",    filterKey: "brasile",
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Logo_CBF_%28novo%29.svg/400px-Logo_CBF_%28novo%29.svg.png",
-  },
-  {
-    name: "Argentina",  slug: "argentina",  filterKey: "argentina",
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Logo_of_the_Argentine_Football_Association_%28AFA%29.svg/400px-Logo_of_the_Argentine_Football_Association_%28AFA%29.svg.png",
-  },
-  {
-    name: "Francia",    slug: "francia",    filterKey: "francia",
-    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/FFF_logo.svg/400px-FFF_logo.svg.png",
-  },
+  { name: "Napoli",     slug: "napoli",      filterKey: "napoli",      retroLogo: "/retro-logos/napoli.png"     },
+  { name: "Inter",      slug: "inter",       filterKey: "inter",       retroLogo: "/retro-logos/inter.svg"      },
+  { name: "Milan",      slug: "milan",       filterKey: "milan",       retroLogo: "/retro-logos/milan.png"      },
+  // Vintage oval badge (1970-2004) — served locally from /public/retro-logos/
+  { name: "Juventus",   slug: "juventus",    filterKey: "juventus",    retroLogo: "/retro-logos/juventus.svg"   },
+  { name: "Roma",       slug: "roma",        filterKey: "roma",        retroLogo: "/retro-logos/roma.png"       },
+  { name: "Parma",      slug: "parma",       filterKey: "parma",       retroLogo: "/retro-logos/parma.png"      },
+  { name: "Barcellona", slug: "barcelona",   filterKey: "barcellona",  retroLogo: "/retro-logos/barcelona.png"  },
+  { name: "Man United", slug: "man-utd",     filterKey: "manchester",  retroLogo: "/retro-logos/man-utd.png"   },
+  { name: "Arsenal",    slug: "arsenal",     filterKey: "arsenal",     retroLogo: "/retro-logos/arsenal.png"    },
+  { name: "Ajax",       slug: "ajax",        filterKey: "ajax",        retroLogo: "/retro-logos/ajax.png"       },
+  { name: "Real Madrid",slug: "real-madrid", filterKey: "real madrid", retroLogo: "/retro-logos/real-madrid.png"},
+  { name: "Brasile",    slug: "brasile",     filterKey: "brasile",     retroLogo: "/retro-logos/brasile.png"    },
+  { name: "Argentina",  slug: "argentina",   filterKey: "argentina",   retroLogo: "/retro-logos/argentina.png"  },
+  { name: "Francia",    slug: "francia",     filterKey: "francia",     retroLogo: "/retro-logos/francia.png"    },
 ];
 
 const STRIP_DURATION_S = 38; // seconds for one full loop
@@ -217,8 +174,11 @@ function RetroLogoStrip({
                     draggable={false}
                     onError={(e) => {
                       const t = e.target as HTMLImageElement;
-                      if (!t.src.includes("/team-logos/")) {
+                      // Fallback chain: retro-logos → team-logos → hide
+                      if (t.src.includes("/retro-logos/")) {
                         t.src = `/team-logos/${club.slug}.png`;
+                      } else {
+                        t.style.display = "none";
                       }
                     }}
                   />
