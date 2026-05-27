@@ -152,7 +152,9 @@ function Strip({
   const scrollAtDragStart = useRef(0);
   const lastTs = useRef(0);
   const isPaused = useRef(false);
-  const dragMoved = useRef(0); // track drag distance for click detection
+  const dragMoved = useRef(0);
+  // Save the original pointerdown target BEFORE setPointerCapture redirects events
+  const pointerDownTarget = useRef<HTMLElement | null>(null);
 
   const doubled = [...teams, ...teams];
 
@@ -206,6 +208,9 @@ function Strip({
   function onMouseLeave() { isPaused.current = false; }
 
   function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    // Save e.target BEFORE setPointerCapture — after capture, e.target becomes the strip div.
+    // e.target here is still the real clicked element (TeamCard outer div or its ancestor).
+    pointerDownTarget.current = e.target as HTMLElement;
     isDragging.current = true;
     dragMoved.current = 0;
     dragStartX.current = e.clientX;
@@ -231,15 +236,14 @@ function Strip({
     isDragging.current = false;
     e.currentTarget.style.cursor = "grab";
 
-    // If barely moved → treat as a click → navigate
-    // NOTE: with setPointerCapture, e.target is the capturing element (Strip div),
-    // NOT the element under the cursor. Use elementFromPoint to find the real target.
+    // Use the target saved at pointerdown time (before setPointerCapture redirected events).
+    // elementFromPoint is unreliable under capture — the original e.target is always correct.
     if (dragMoved.current < 6) {
-      const el = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
-      const card = el?.closest("[data-href]") as HTMLElement | null;
+      const card = pointerDownTarget.current?.closest("[data-href]") as HTMLElement | null;
       const href = card?.dataset?.href;
       if (href) router.push(href);
     }
+    pointerDownTarget.current = null;
   }
 
   return (

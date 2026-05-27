@@ -70,7 +70,7 @@ const CLUB_IDENTITY: Record<string, ClubIdentity> = {
 };
 
 const DEFAULT_IDENTITY: ClubIdentity = {
-  accent: "#c8f000", dim: "rgba(200,240,0,0.12)", label: "Serie A", motto: "Il meglio del calcio italiano", logoSlug: "",
+  accent: "#c8f000", dim: "rgba(200,240,0,0.12)", label: "", motto: "", logoSlug: "",
 };
 
 // ── Category filter logic ────────────────────────────────────
@@ -148,8 +148,8 @@ export default function SerieAClient({ products, teamSlug, leagueName = "Serie A
 
   const teamDisplayName = identity.label || (
     slug.length > 0
-      ? slug.charAt(0).toUpperCase() + slug.slice(1)
-      : "Serie A"
+      ? slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, " ")
+      : leagueName
   );
 
   // Count products per category

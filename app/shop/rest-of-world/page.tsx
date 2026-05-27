@@ -39,5 +39,11 @@ export default async function RestOfWorldPage() {
     videos: product.videos || [],
   }));
 
-  return <SerieAClient products={products} />;
+  return (
+    <SerieAClient
+      products={products}
+      leagueName="Resto del Mondo"
+      leagueHref="/shop/rest-of-world"
+    />
+  );
 }

@@ -47,5 +47,11 @@ export default async function InternationalShopPage() {
     videos: product.videos || [], // Include videos for showcase
   }));
 
-  return <SerieAClient products={products} />;
+  return (
+    <SerieAClient
+      products={products}
+      leagueName="Internazionali"
+      leagueHref="/shop/international"
+    />
+  );
 }
