@@ -17,6 +17,7 @@ const validTeams = [
   "chelsea",
   "newcastle",
   "tottenham",
+  "aston-villa",
 ];
 
 // Map slugs to team names in product titles
@@ -28,6 +29,7 @@ const teamNameMap: { [key: string]: string } = {
   "chelsea": "Chelsea",
   "newcastle": "Newcastle",
   "tottenham": "Tottenham",
+  "aston-villa": "Aston Villa",
 };
 
 async function getTeamProducts(teamSlug: string) {
@@ -95,13 +97,14 @@ export default async function PremierLeagueTeamPage({
 
   // Map server products to client format
   const products = validProducts.map((product: IProduct) => ({
-    id: product._id || "", // Ensure id is never undefined
-    name: product.title || "Untitled Product", // Ensure name is never undefined
-    price: product.basePrice || 0, // Ensure price is never undefined
-    image: product.images?.[0] || "/images/image.png", // Ensure image is never undefined with a fallback
-    category: product.category || "Premier League", // Ensure category is never undefined
-    team: teamNameMap[team] || "Unknown", // Use the team name from map
-    videos: product.videos || [], // Include videos for showcase
+    id: product._id || "",
+    slug: (product as any).slug || "",
+    name: product.title || "Untitled Product",
+    price: product.basePrice || 0,
+    image: product.images?.[0] || "/images/image.png",
+    category: product.category || "Premier League",
+    team: teamNameMap[team] || "Unknown",
+    videos: product.videos || [],
   }));
 
   return (

@@ -19,17 +19,28 @@ interface ClubIdentity {
 }
 
 const CLUB_IDENTITY: Record<string, ClubIdentity> = {
-  inter:      { accent: "#0068A8", dim: "rgba(0,104,168,0.18)",  label: "F.C. Internazionale", motto: "Fratelli nell'azzurro e nel nero", logoSlug: "inter" },
-  milan:      { accent: "#FB090B", dim: "rgba(251,9,11,0.18)",   label: "A.C. Milan",           motto: "La Casa del Diavolo Rossonero",  logoSlug: "milan" },
-  juventus:   { accent: "#E8E8E8", dim: "rgba(220,220,220,0.12)",label: "Juventus F.C.",         motto: "Fino alla fine",                 logoSlug: "juventus" },
-  napoli:     { accent: "#12A0D7", dim: "rgba(18,160,215,0.18)", label: "S.S.C. Napoli",        motto: "Il Cielo di Napoli nel cuore",   logoSlug: "napoli" },
-  roma:       { accent: "#C5282D", dim: "rgba(197,40,45,0.18)",  label: "A.S. Roma",            motto: "La Lupa dell'Eterna Città",      logoSlug: "roma" },
-  lazio:      { accent: "#87CEEB", dim: "rgba(135,206,235,0.15)",label: "S.S. Lazio",           motto: "Biancoceleste per sempre",       logoSlug: "lazio" },
-  atalanta:   { accent: "#1C3B7A", dim: "rgba(28,59,122,0.22)",  label: "Atalanta B.C.",        motto: "La Dea di Bergamo",              logoSlug: "atalanta" },
-  fiorentina: { accent: "#7B2D8B", dim: "rgba(123,45,139,0.18)", label: "ACF Fiorentina",       motto: "Viola per sempre, viola per fede",logoSlug: "fiorentina" },
-  como:       { accent: "#0054A4", dim: "rgba(0,84,164,0.18)",   label: "Como 1907",            motto: "Sul lago, con il cuore",         logoSlug: "como" },
-  torino:     { accent: "#8B0000", dim: "rgba(139,0,0,0.18)",    label: "Torino F.C.",          motto: "Il Grande Torino vive",          logoSlug: "torino" },
-  bologna:    { accent: "#B22222", dim: "rgba(178,34,34,0.18)",  label: "Bologna F.C. 1909",    motto: "Rossoblu di cuore",              logoSlug: "bologna" },
+  // ── Serie A ──────────────────────────────────────────────────
+  inter:      { accent: "#0068A8", dim: "rgba(0,104,168,0.18)",  label: "F.C. Internazionale", motto: "Fratelli nell'azzurro e nel nero",  logoSlug: "inter" },
+  milan:      { accent: "#FB090B", dim: "rgba(251,9,11,0.18)",   label: "A.C. Milan",           motto: "La Casa del Diavolo Rossonero",    logoSlug: "milan" },
+  juventus:   { accent: "#E8E8E8", dim: "rgba(220,220,220,0.12)",label: "Juventus F.C.",         motto: "Fino alla fine",                   logoSlug: "juventus" },
+  napoli:     { accent: "#12A0D7", dim: "rgba(18,160,215,0.18)", label: "S.S.C. Napoli",        motto: "Il Cielo di Napoli nel cuore",     logoSlug: "napoli" },
+  roma:       { accent: "#C5282D", dim: "rgba(197,40,45,0.18)",  label: "A.S. Roma",            motto: "La Lupa dell'Eterna Città",        logoSlug: "roma" },
+  lazio:      { accent: "#87CEEB", dim: "rgba(135,206,235,0.15)",label: "S.S. Lazio",           motto: "Biancoceleste per sempre",         logoSlug: "lazio" },
+  atalanta:   { accent: "#1C3B7A", dim: "rgba(28,59,122,0.22)",  label: "Atalanta B.C.",        motto: "La Dea di Bergamo",                logoSlug: "atalanta" },
+  fiorentina: { accent: "#7B2D8B", dim: "rgba(123,45,139,0.18)", label: "ACF Fiorentina",       motto: "Viola per sempre, viola per fede", logoSlug: "fiorentina" },
+  como:       { accent: "#0054A4", dim: "rgba(0,84,164,0.18)",   label: "Como 1907",            motto: "Sul lago, con il cuore",           logoSlug: "como" },
+  torino:     { accent: "#8B0000", dim: "rgba(139,0,0,0.18)",    label: "Torino F.C.",          motto: "Il Grande Torino vive",            logoSlug: "torino" },
+  bologna:    { accent: "#B22222", dim: "rgba(178,34,34,0.18)",  label: "Bologna F.C. 1909",    motto: "Rossoblu di cuore",                logoSlug: "bologna" },
+
+  // ── Premier League ───────────────────────────────────────────
+  "manchester-united": { accent: "#DA291C", dim: "rgba(218,41,28,0.18)",  label: "Manchester United",  motto: "The Theatre of Dreams",           logoSlug: "man-utd" },
+  "manchester-city":  { accent: "#6CABDD", dim: "rgba(108,171,221,0.18)", label: "Manchester City",    motto: "Sky Blue forever",                logoSlug: "man-city" },
+  liverpool:          { accent: "#C8102E", dim: "rgba(200,16,46,0.18)",   label: "Liverpool F.C.",     motto: "You'll Never Walk Alone",         logoSlug: "liverpool" },
+  arsenal:            { accent: "#EF0107", dim: "rgba(239,1,7,0.18)",     label: "Arsenal F.C.",       motto: "North London is Red",             logoSlug: "arsenal" },
+  chelsea:            { accent: "#034694", dim: "rgba(3,70,148,0.2)",     label: "Chelsea F.C.",       motto: "The Pride of West London",        logoSlug: "chelsea" },
+  newcastle:          { accent: "#E8E8E8", dim: "rgba(220,220,220,0.12)", label: "Newcastle United",   motto: "Toon Army forever",               logoSlug: "newcastle" },
+  tottenham:          { accent: "#132257", dim: "rgba(19,34,87,0.25)",    label: "Tottenham Hotspur",  motto: "To Dare is to Do",                logoSlug: "tottenham" },
+  "aston-villa":      { accent: "#670E36", dim: "rgba(103,14,54,0.2)",    label: "Aston Villa F.C.",   motto: "Prepared",                        logoSlug: "aston-villa" },
 };
 
 const DEFAULT_IDENTITY: ClubIdentity = {
@@ -94,9 +105,11 @@ const GrainSVG = () => (
 interface SerieAClientProps {
   products: Product[];
   teamSlug?: string;
+  leagueName?: string;   // e.g. "Premier League"
+  leagueHref?: string;   // e.g. "/shop/premier-league"
 }
 
-export default function SerieAClient({ products, teamSlug }: SerieAClientProps) {
+export default function SerieAClient({ products, teamSlug, leagueName = "Serie A", leagueHref = "/shop/serieA" }: SerieAClientProps) {
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
   const { addItem: addToCart } = useCartStore();
   const [mounted, setMounted] = useState(false);
@@ -181,7 +194,7 @@ export default function SerieAClient({ products, teamSlug }: SerieAClientProps) 
             <span>/</span>
             <Link href="/shop" className="hover:text-white/60 transition-colors">Shop</Link>
             <span>/</span>
-            <Link href="/shop/serieA" className="hover:text-white/60 transition-colors">Serie A</Link>
+            <Link href={leagueHref} className="hover:text-white/60 transition-colors">{leagueName}</Link>
             {teamSlug && (
               <>
                 <span>/</span>
