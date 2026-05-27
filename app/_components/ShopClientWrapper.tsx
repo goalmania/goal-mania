@@ -29,9 +29,10 @@ function mapProduct(product: any): Product {
 async function fetchLatestProducts(): Promise<Product[]> {
   try {
     await connectDB();
-    const products = await ProductModel.find()
-      .sort({ createdAt: -1 })
-      .limit(8)
+    // Feature-flagged products first, then newest — gives "le più belle" at the front
+    const products = await ProductModel.find({ isActive: true })
+      .sort({ feature: -1, createdAt: -1 })
+      .limit(24)
       .lean();
     return JSON.parse(JSON.stringify(products)).map(mapProduct);
   } catch (error) {
