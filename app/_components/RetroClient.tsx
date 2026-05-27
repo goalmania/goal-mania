@@ -351,10 +351,29 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
 
       {/* ── HERO ──────────────────────────────────────── */}
       <section className="relative pt-32 pb-14 overflow-hidden">
+        {/* Hero background image */}
+        <Image
+          src="/retro-hero-bg.avif"
+          alt=""
+          fill
+          priority
+          className="absolute inset-0 object-cover object-center"
+          style={{ zIndex: 0 }}
+          sizes="100vw"
+        />
+        {/* Dark gradient overlay — preserves text readability */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to right, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.72) 50%, rgba(10,10,10,0.45) 100%)",
+            zIndex: 1,
+          }}
+        />
         {/* Grain overlay */}
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.04] mix-blend-overlay"
-          style={{ backgroundImage: GRAIN_SVG, backgroundSize: "300px 300px" }}
+          style={{ backgroundImage: GRAIN_SVG, backgroundSize: "300px 300px", zIndex: 2 }}
         />
         {/* Warm radial glow */}
         <div
@@ -362,6 +381,7 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
           style={{
             background:
               "radial-gradient(ellipse 70% 55% at 50% 0%, rgba(200,160,50,0.08) 0%, transparent 70%)",
+            zIndex: 2,
           }}
         />
         {/* Grid pattern */}
@@ -372,10 +392,11 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
               "linear-gradient(rgba(200,240,0,0.015) 1px, transparent 1px)," +
               "linear-gradient(90deg, rgba(200,240,0,0.015) 1px, transparent 1px)",
             backgroundSize: "60px 60px",
+            zIndex: 2,
           }}
         />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative" style={{ zIndex: 3 }}>
           {/* Eyebrow */}
           <div className="flex items-center gap-3 mb-5">
             <div
