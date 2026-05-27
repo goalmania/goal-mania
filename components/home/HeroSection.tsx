@@ -71,13 +71,13 @@ export default function HeroSection({ products = [] }: Props) {
           src="/hero-home.jpg"
           alt=""
           className="w-full h-full object-cover object-center"
-          style={{ opacity: 0.55 }}
+          style={{ opacity: 0.45 }}
         />
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(135deg, rgba(7,7,7,0.92) 0%, rgba(7,7,7,0.60) 50%, rgba(7,7,7,0.88) 100%)",
+              "linear-gradient(135deg, rgba(7,7,7,0.95) 0%, rgba(7,7,7,0.70) 45%, rgba(7,7,7,0.88) 100%)",
           }}
         />
         {/* Lime glow BL */}
@@ -107,15 +107,6 @@ export default function HeroSection({ products = [] }: Props) {
         />
       </div>
 
-      {/* Desktop overlay */}
-      <div className="absolute hidden lg:block inset-0 pointer-events-none">
-        <img
-          src="/images/recentUpdate/desktop-overlay.png"
-          alt=""
-          className="w-full h-full object-cover"
-          style={{ opacity: 0.08 }}
-        />
-      </div>
 
       {/* ── Main ── */}
       <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between flex-1 container mx-auto px-6 lg:px-12 max-w-7xl pt-12 pb-16 lg:pt-16 gap-10">
