@@ -32,27 +32,70 @@ const HOF_SLUGS = new Set([
   "maglia-francia-1998-home",            // Mondiali Francia 98
 ]);
 
-// ─── Retro club logos for the vintage strip ────────────────
+// ─── Retro club logos — vintage 90s badges + team filter keys ──
 const RETRO_CLUBS = [
-  { name: "Napoli",      slug: "napoli",    href: "/shop/retro" },
-  { name: "Inter",       slug: "inter",     href: "/shop/retro" },
-  { name: "Milan",       slug: "milan",     href: "/shop/retro" },
-  { name: "Juventus",    slug: "juventus",  href: "/shop/retro" },
-  { name: "Roma",        slug: "roma",      href: "/shop/retro" },
-  { name: "Parma",       slug: "parma",     href: "/shop/retro" },
-  { name: "Barcellona",  slug: "barcelona", href: "/shop/retro" },
-  { name: "Man United",  slug: "man-utd",   href: "/shop/retro" },
-  { name: "Arsenal",     slug: "arsenal",   href: "/shop/retro" },
-  { name: "Ajax",        slug: "ajax",      href: "/shop/retro" },
-  { name: "Real Madrid", slug: "real-madrid", href: "/shop/retro" },
-  { name: "Brasile",     slug: "brasile",   href: "/shop/retro" },
-  { name: "Argentina",   slug: "argentina", href: "/shop/retro" },
-  { name: "Francia",     slug: "francia",   href: "/shop/retro" },
-  { name: "Italia",      slug: "italia",    href: "/shop/retro" },
+  {
+    name: "Milan",      slug: "milan",      filterKey: "milan",
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Logo_AC_Milan.svg/400px-Logo_AC_Milan.svg.png",
+  },
+  {
+    name: "Juventus",   slug: "juventus",   filterKey: "juventus",
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Juventus_F.C._logo_old.svg/400px-Juventus_F.C._logo_old.svg.png",
+  },
+  {
+    name: "Roma",       slug: "roma",       filterKey: "roma",
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/AS_Roma_%28crest%29.svg/400px-AS_Roma_%28crest%29.svg.png",
+  },
+  {
+    name: "Parma",      slug: "parma",      filterKey: "parma",
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Parma_Calcio_1913.svg/400px-Parma_Calcio_1913.svg.png",
+  },
+  {
+    name: "Barcellona", slug: "barcelona",  filterKey: "barcellona",
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/FC_Barcelona_%28crest%29.svg/400px-FC_Barcelona_%28crest%29.svg.png",
+  },
+  {
+    name: "Man United", slug: "man-utd",    filterKey: "manchester",
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Manchester_United_FC_crest.svg/400px-Manchester_United_FC_crest.svg.png",
+  },
+  {
+    name: "Arsenal",    slug: "arsenal",    filterKey: "arsenal",
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Arsenal_FC.svg/400px-Arsenal_FC.svg.png",
+  },
+  {
+    name: "Ajax",       slug: "ajax",       filterKey: "ajax",
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Ajax_Amsterdam.svg/400px-Ajax_Amsterdam.svg.png",
+  },
+  {
+    name: "Real Madrid",slug: "real-madrid",filterKey: "real madrid",
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Real_Madrid_CF.svg/400px-Real_Madrid_CF.svg.png",
+  },
+  {
+    name: "Brasile",    slug: "brasile",    filterKey: "brasile",
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Logo_CBF_%28novo%29.svg/400px-Logo_CBF_%28novo%29.svg.png",
+  },
+  {
+    name: "Argentina",  slug: "argentina",  filterKey: "argentina",
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Logo_of_the_Argentine_Football_Association_%28AFA%29.svg/400px-Logo_of_the_Argentine_Football_Association_%28AFA%29.svg.png",
+  },
+  {
+    name: "Francia",    slug: "francia",    filterKey: "francia",
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/FFF_logo.svg/400px-FFF_logo.svg.png",
+  },
+  {
+    name: "Italia",     slug: "italia",     filterKey: "italia",
+    retroLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Logo_FIGC_%282022%29.svg/400px-Logo_FIGC_%282022%29.svg.png",
+  },
 ];
 
-// ─── Vintage strip — CSS marquee, no JS scroll ────────────
-function RetroLogoStrip() {
+// ─── Vintage logo strip — interactive, pauses on hover ────────────
+function RetroLogoStrip({
+  selectedTeam,
+  onSelectTeam,
+}: {
+  selectedTeam: string | null;
+  onSelectTeam: (slug: string) => void;
+}) {
   const items = [...RETRO_CLUBS, ...RETRO_CLUBS]; // duplicate for seamless loop
 
   return (
@@ -64,58 +107,71 @@ function RetroLogoStrip() {
       }}
     >
       <div
-        className="flex"
+        className="retro-strip-inner flex"
         style={{
           width: "max-content",
           animation: "retroMarquee 40s linear infinite",
           willChange: "transform",
         }}
       >
-        {items.map((club, i) => (
-          <Link
-            key={i}
-            href={club.href}
-            className="retro-logo-card flex-shrink-0 flex flex-col items-center mx-5"
-            style={{ width: "76px" }}
-            draggable={false}
-          >
-            {/* Logo with sepia/grayscale for vintage feel */}
-            <div
-              className="retro-logo-box relative w-14 h-14 flex items-center justify-center rounded-xl mb-2 transition-all duration-300"
-              style={{
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.06)",
-              }}
+        {items.map((club, i) => {
+          const isActive = selectedTeam === club.slug;
+          return (
+            <button
+              key={i}
+              onClick={() => onSelectTeam(club.slug)}
+              className="retro-logo-card flex-shrink-0 flex flex-col items-center mx-4 focus:outline-none"
+              style={{ width: "80px", background: "transparent", border: "none", cursor: "pointer" }}
             >
-              <Image
-                src={`/team-logos/${club.slug}.png`}
-                alt={club.name}
-                width={44}
-                height={44}
-                className="retro-logo-img object-contain pointer-events-none"
+              {/* Logo box */}
+              <div
+                className="retro-logo-box relative w-16 h-16 flex items-center justify-center rounded-2xl mb-2 transition-all duration-300"
                 style={{
-                  maxWidth: "44px",
-                  maxHeight: "44px",
+                  background: isActive ? "rgba(200,240,0,0.1)" : "rgba(255,255,255,0.03)",
+                  border: isActive ? "2px solid rgba(200,240,0,0.5)" : "1px solid rgba(255,255,255,0.07)",
+                  boxShadow: isActive ? "0 0 16px rgba(200,240,0,0.15)" : "none",
                 }}
-                draggable={false}
-              />
-            </div>
-            <span
-              className="retro-logo-name text-center leading-tight"
-              style={{
-                fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
-                fontSize: "9px",
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "1.5px",
-                color: "rgba(255,255,255,0.3)",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {club.name}
-            </span>
-          </Link>
-        ))}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={club.retroLogo}
+                  alt={club.name}
+                  width={46}
+                  height={46}
+                  className="retro-logo-img object-contain pointer-events-none select-none"
+                  style={{ maxWidth: "46px", maxHeight: "46px" }}
+                  draggable={false}
+                  onError={(e) => {
+                    // Fallback to modern logo if vintage not available
+                    (e.target as HTMLImageElement).src = `/team-logos/${club.slug}.png`;
+                  }}
+                />
+                {/* Active dot */}
+                {isActive && (
+                  <span
+                    className="absolute -top-1 -right-1 w-3 h-3 rounded-full"
+                    style={{ background: "#c8f000", border: "2px solid #0a0a0a" }}
+                  />
+                )}
+              </div>
+              <span
+                className="retro-logo-name text-center leading-tight"
+                style={{
+                  fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
+                  fontSize: "9px",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: "1.5px",
+                  color: isActive ? "rgba(200,240,0,0.85)" : "rgba(255,255,255,0.3)",
+                  whiteSpace: "nowrap",
+                  transition: "color 0.2s",
+                }}
+              >
+                {club.name}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       <style jsx global>{`
@@ -127,22 +183,26 @@ function RetroLogoStrip() {
           @keyframes retroMarquee { 0%, 100% { transform: translateX(0); } }
         }
         .retro-logo-img {
-          filter: grayscale(0.6) sepia(0.25) contrast(1.15);
-          opacity: 0.65;
-          transition: filter 0.3s, opacity 0.3s;
+          filter: sepia(0.4) contrast(1.1) brightness(0.9);
+          opacity: 0.7;
+          transition: filter 0.3s, opacity 0.3s, transform 0.3s;
         }
         @media (hover: hover) and (pointer: fine) {
           .retro-logo-card:hover .retro-logo-img {
-            filter: grayscale(0) sepia(0) contrast(1);
+            filter: sepia(0) contrast(1) brightness(1);
             opacity: 1;
+            transform: scale(1.08);
           }
           .retro-logo-card:hover .retro-logo-box {
-            background: rgba(200,240,0,0.05) !important;
-            border-color: rgba(200,240,0,0.2) !important;
+            background: rgba(200,240,0,0.06) !important;
+            border-color: rgba(200,240,0,0.25) !important;
           }
           .retro-logo-card:hover .retro-logo-name {
-            color: rgba(200,240,0,0.7) !important;
+            color: rgba(200,240,0,0.75) !important;
           }
+        }
+        .retro-strip-inner:hover {
+          animation-play-state: paused;
         }
       `}</style>
     </div>
@@ -206,11 +266,33 @@ const GRAIN_SVG = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/
 // ─── Main component ────────────────────────────────────────
 export default function RetroClient({ products }: { products: RetroProduct[] }) {
   const [activeFilter, setActiveFilter] = useState<"all" | "nationals" | "serieA" | "europe">("all");
+  const [teamFilter, setTeamFilter] = useState<string | null>(null); // slug of selected club
+
+  // When a logo is clicked: set team filter + scroll to products
+  function handleSelectTeam(slug: string) {
+    const newSlug = teamFilter === slug ? null : slug;
+    setTeamFilter(newSlug);
+    setActiveFilter("all"); // reset category filter
+    setTimeout(() => {
+      document.getElementById("retro-products")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 80);
+  }
+
+  // Keyword for current team filter
+  const teamKeyword = teamFilter
+    ? RETRO_CLUBS.find(c => c.slug === teamFilter)?.filterKey ?? null
+    : null;
+
+  // Apply team filter first, then partition
+  const visibleProducts = useMemo(() => {
+    if (!teamKeyword) return products;
+    return products.filter(p => p.name.toLowerCase().includes(teamKeyword.toLowerCase()));
+  }, [products, teamKeyword]);
 
   // Partition products
   const { hof, categorised } = useMemo(() => {
-    const hof = products.filter((p) => HOF_SLUGS.has(p.slug));
-    const rest = products.filter((p) => !HOF_SLUGS.has(p.slug));
+    const hof = visibleProducts.filter((p) => HOF_SLUGS.has(p.slug));
+    const rest = visibleProducts.filter((p) => !HOF_SLUGS.has(p.slug));
 
     const categorised = {
       nationals: rest.filter((p) => getSection(p.name) === "nationals"),
@@ -218,17 +300,17 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
       europe:    rest.filter((p) => getSection(p.name) === "europe"),
     };
     return { hof, categorised };
-  }, [products]);
+  }, [visibleProducts]);
 
   // Filtered view (when pill selected)
   const filteredFlat = useMemo(() => {
     if (activeFilter === "all") return [];
     const all = [
-      ...products.filter((p) => HOF_SLUGS.has(p.slug)),
-      ...products.filter((p) => !HOF_SLUGS.has(p.slug)),
+      ...visibleProducts.filter((p) => HOF_SLUGS.has(p.slug)),
+      ...visibleProducts.filter((p) => !HOF_SLUGS.has(p.slug)),
     ];
     return all.filter((p) => getSection(p.name) === activeFilter);
-  }, [activeFilter, products]);
+  }, [activeFilter, visibleProducts]);
 
   const FILTER_PILLS = [
     { key: "all",       label: "Tutta la Collezione" },
@@ -372,12 +454,50 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
           style={{ background: "linear-gradient(to left, #0a0a0a, transparent)" }}
         />
 
-        <RetroLogoStrip />
+        <RetroLogoStrip selectedTeam={teamFilter} onSelectTeam={handleSelectTeam} />
       </section>
+
+      {/* ── TEAM FILTER BANNER ────────────────────────── */}
+      {teamFilter && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-6" id="retro-products">
+          <div
+            className="flex items-center justify-between gap-4 px-5 py-3.5 rounded-2xl"
+            style={{ background: "rgba(200,240,0,0.06)", border: "1px solid rgba(200,240,0,0.18)" }}
+          >
+            <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={RETRO_CLUBS.find(c => c.slug === teamFilter)?.retroLogo ?? `/team-logos/${teamFilter}.png`}
+                alt={teamFilter}
+                width={32}
+                height={32}
+                className="object-contain"
+                style={{ filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.5))" }}
+                onError={(e) => { (e.target as HTMLImageElement).src = `/team-logos/${teamFilter}.png`; }}
+              />
+              <div>
+                <p className="text-[9px] uppercase tracking-[3px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}>
+                  // Filtrando per
+                </p>
+                <p className="font-black uppercase text-white text-sm" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+                  {RETRO_CLUBS.find(c => c.slug === teamFilter)?.name} · {visibleProducts.length} maglie
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setTeamFilter(null)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all active:scale-95"
+              style={{ border: "1px solid rgba(200,240,0,0.25)", color: "rgba(200,240,0,0.7)" }}
+            >
+              × Tutte
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ── HALL OF FAME ──────────────────────────────── */}
       {hof.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 mb-16">
+        <section id={!teamFilter ? "retro-products" : undefined} className="max-w-7xl mx-auto px-4 sm:px-6 mb-16">
           {/* Section header */}
           <div className="flex items-center gap-4 mb-6">
             <div
