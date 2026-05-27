@@ -35,7 +35,7 @@ const HOF_SLUGS = new Set([
 // ─── Retro club logos — vintage badges stored locally in /public/retro-logos/ ──
 const RETRO_CLUBS = [
   { name: "Napoli",     slug: "napoli",      filterKey: "napoli",      retroLogo: "/retro-logos/napoli.png"     },
-  { name: "Inter",      slug: "inter",       filterKey: "inter",       retroLogo: "/retro-logos/inter.svg"      },
+  { name: "Inter",      slug: "inter",       filterKey: "inter",       retroLogo: "/retro-logos/inter_2014.svg" },
   { name: "Milan",      slug: "milan",       filterKey: "milan",       retroLogo: "/retro-logos/milan.png"      },
   // Vintage oval badge (1970-2004) — served locally from /public/retro-logos/
   { name: "Juventus",   slug: "juventus",    filterKey: "juventus",    retroLogo: "/retro-logos/juventus.svg"   },
@@ -45,7 +45,7 @@ const RETRO_CLUBS = [
   { name: "Man United", slug: "man-utd",     filterKey: "manchester",  retroLogo: "/retro-logos/man-utd.png"   },
   { name: "Arsenal",    slug: "arsenal",     filterKey: "arsenal",     retroLogo: "/retro-logos/arsenal.png"    },
   { name: "Ajax",       slug: "ajax",        filterKey: "ajax",        retroLogo: "/retro-logos/ajax.png"       },
-  { name: "Real Madrid",slug: "real-madrid", filterKey: "real madrid", retroLogo: "/retro-logos/real-madrid.png"},
+  { name: "Real Madrid",slug: "real-madrid", filterKey: "real madrid", retroLogo: "/retro-logos/real-madrid-vintage.svg"},
   { name: "Brasile",    slug: "brasile",     filterKey: "brasile",     retroLogo: "/retro-logos/brasile.png"    },
   { name: "Argentina",  slug: "argentina",   filterKey: "argentina",   retroLogo: "/retro-logos/argentina.png"  },
   { name: "Francia",    slug: "francia",     filterKey: "francia",     retroLogo: "/retro-logos/francia.png"    },
