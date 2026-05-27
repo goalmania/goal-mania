@@ -1,318 +1,81 @@
-import dynamic from "next/dynamic";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import HeroSection from "@/components/home/HeroSection";
 import TeamLogoTicker from "@/components/home/TeamLogoTicker";
-import { Product } from "@/lib/types/home";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
-import { getBaseUrl } from "@/lib/utils/baseUrl";
 import TrustSection from "@/components/home/TrustSection";
 import SocialProofSection from "@/components/home/SocialProofSection";
 import FlashSaleSection from "@/components/home/FlashSaleSection";
 import EditorialCommerceSection from "@/components/home/EditorialCommerceSection";
+import ProductModel from "@/lib/models/Product";
 
-// Dynamic imports for below-the-fold components (better performance)
-const NewsSection = dynamic(() => import("@/components/home/NewsSection"), {
-  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
-});
+export const revalidate = 300;
 
-const GuaranteesSection = dynamic(() => import("@/components/home/GuaranteesSection"), {
-  loading: () => <div className="h-64 bg-[#0a0a0a] animate-pulse" />,
-});
-
-const BannerBlock = dynamic(() => import("@/components/home/BannerBlock"));
-
-const TeamCarousel = dynamic(() => import("@/components/home/TeamCarousel").then(mod => mod.TeamCarousel));
-
-const ClientSlider = dynamic(() => import("@/components/home/ClientSlider"));
-
-const FeaturedVideoProducts = dynamic(() => import("@/components/home/FeaturedVideoProducts"), {
-  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
-});
-
-const CallToAction = dynamic(() => import("@/components/home/CallToAction"));
-
-const VideoComp = dynamic(() => import("@/components/home/VideoComp"), {
-  loading: () => <div className="h-96 bg-gray-900 animate-pulse" />,
-});
-
-const LandingCategorySection = dynamic(() => import("@/app/_components/LandingCategorySection"), {
-  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
-});
-// components\home\WorldCupShowCase.tsx
-const WorldCupShowcase = dynamic(() => import("@/components/home/WorldCupShowCase"), {
-  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
-});
-
-const PremierLeagueClient = dynamic(() => import("@/app/_components/PremierLeagueClient"), {
-  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
-});
-
-const SerieATeamsClient = dynamic(() => import("@/app/_components/SerieATeamsClient"), {
-  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
-});
-
-const RestOfWorldClient = dynamic(() => import("@/app/_components/RestOfWorldClient"), {
-  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
-});
-
-const LimitedEditionClient = dynamic(() => import("@/app/_components/LimitedEditionClient"), {
-  loading: () => <div className="h-96 bg-[#0a0a0a] animate-pulse" />,
-});
-
-// Enable caching for better performance
-export const revalidate = 300; // Revalidate every 5 minutes
-
-import ProductModel from "@/lib/models/Product"; // Adjust path to your actual model file
-
-async function getFeaturedProducts(): Promise<Product[]> {
+async function getFeaturedProducts() {
   try {
-    await connectDB(); // Ensure connection is active
-    
-    // Query MongoDB directly
+    await connectDB();
     const products = await ProductModel.find({ isActive: true, feature: true })
       .limit(10)
       .lean();
 
-    // Use JSON.parse/stringify to strip Mongoose-specific metadata
-    return JSON.parse(JSON.stringify(products)).map((product: any) => ({
-      id: product._id.toString(),
-      name: product.title || "Featured Product",
-      price: product.basePrice || 0,
-      image: product.images?.[0] || "/images/placeholder.png",
-      category: product.category || "Uncategorized",
-      team: product.title ? product.title.split(" ")[0] : "Unknown",
-      availablePatches: product.availablePatches || [],
-      isMysteryBox: product.isMysteryBox || false,
+    return JSON.parse(JSON.stringify(products)).map((p: any) => ({
+      id: p._id.toString(),
+      name: p.title || "Featured Product",
+      price: p.basePrice || 0,
+      image: p.images?.[0] || "/images/placeholder.png",
+      category: p.category || "Uncategorized",
+      slug: p.slug || "",
+      team: p.title ? p.title.split(" ")[0] : "Unknown",
+      availablePatches: p.availablePatches || [],
+      isMysteryBox: p.isMysteryBox || false,
     }));
   } catch (error) {
-    console.error("Error fetching products directly:", error);
-    return [];
-  }
-}
-
-// Fetch mystery box products
-async function getMysteryBoxProducts(): Promise<Product[]> {
-  try {
-    await connectDB();
-    const products = await ProductModel.find({ isMysteryBox: true })
-      .limit(3)
-      .lean();
-
-    return JSON.parse(JSON.stringify(products)).map((product: any) => ({
-      id: product._id || "",
-      name: product.title || "Scatola Misteriosa",
-      price: product.basePrice || 0,
-      image: product.images?.[0] || "/images/image.png",
-      category: product.category || "Mystery Box",
-      team: "Mystery Box", // Mystery boxes don't have specific teams
-      isMysteryBox: product.isMysteryBox || false,
-    }));
-  } catch (error) {
-    console.error("Error fetching mystery box products:", error);
-    return [];
-  }
-}
-
-import { getFlagUrl } from "@/lib/utils/flags";
-
-// Fetch World Cup teams (Priority: DB teams, then API rankings, then curated padding)
-async function getWorldCupTeams() {
-  const API_KEY = process.env.FOOTBALL_API;
-  
-  // Curated list of top-ranked / historical World Cup teams for padding
-  const PADDING_TEAMS = [
-    "Brazil", "Germany", "Italy", "Argentina", "France", 
-    "Uruguay", "England", "Spain", "Netherlands", "Portugal", 
-    "Belgium", "Croatia", "Morocco", "USA", "Mexico", 
-    "Japan", "Senegal", "Switzerland", "Denmark", "Nigeria"
-  ];
-
-  try {
-    await connectDB();
-    
-    // 1. Get countries that have jerseys in the database
-    const dbCountriesRaw = await ProductModel.distinct("nationalTeam", { 
-      isWorldCup: true, 
-      isActive: true 
-    });
-    
-    // Fallback check for 'country' field
-    const dbCountriesAlt = await ProductModel.distinct("country", { 
-      isWorldCup: true, 
-      isActive: true 
-    });
-
-    const dbCountries = Array.from(new Set([...dbCountriesRaw, ...dbCountriesAlt]))
-      .filter((c): c is string => typeof c === 'string' && c.length > 0);
-
-    // 2. Fetch live data from Football API (optional)
-    let apiTeams: any[] = [];
-    try {
-      const response = await fetch("https://api.football-data.org/v4/competitions/WC/standings", {
-        headers: { "X-Auth-Token": API_KEY || "" },
-        next: { revalidate: 86400 }, // Cache for 24 hours
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        data.standings?.forEach((group: any) => {
-          group.table.forEach((entry: any) => {
-            apiTeams.push({
-              id: entry.team.name.toLowerCase(),
-              name: entry.team.name,
-              flag: entry.team.crest
-            });
-          });
-        });
-      }
-    } catch (apiErr) {
-      console.warn("Football API fetch failed in World Cup Hub:", apiErr);
-    }
-
-    // Merge logic: Ensure DB teams are present, then API, then padding
-    const teamsMap = new Map();
-    
-    // 1. Add DB teams first (High Priority)
-    dbCountries.forEach((c: string) => {
-      const id = c.toLowerCase().trim();
-      if (!id) return;
-      teamsMap.set(id, {
-        id,
-        name: c,
-        flag: getFlagUrl(id)
-      });
-    });
-
-    // 2. Merge API teams
-    apiTeams.forEach(team => {
-      if (!teamsMap.has(team.id)) {
-        teamsMap.set(team.id, {
-          ...team,
-          flag: getFlagUrl(team.name, team.flag)
-        });
-      } else {
-        const existing = teamsMap.get(team.id);
-        // Enhance with API flag if local is missing/placeholder
-        if (existing.flag.includes('placeholder') && team.flag) {
-          existing.flag = team.flag;
-        }
-      }
-    });
-
-    // 3. Pad with Curated Teams until we reach ~20
-    for (const teamName of PADDING_TEAMS) {
-      if (teamsMap.size >= 20) break;
-      const id = teamName.toLowerCase().trim();
-      if (!teamsMap.has(id)) {
-        teamsMap.set(id, {
-          id,
-          name: teamName,
-          flag: getFlagUrl(id)
-        });
-      }
-    }
-
-    return Array.from(teamsMap.values()).slice(0, 24); // Return a bit more for the slider if needed
-  } catch (error) {
-    console.error("❌ Error fetching World Cup teams:", error);
-    return [];
-  }
-}
-
-// Fetch products with videos
-async function getVideoProducts(): Promise<Product[]> {
-  try {
-    await connectDB();
-    const products = await ProductModel.find({
-      videos: { $exists: true, $not: { $size: 0 } },
-      isActive: true,
-    })
-      .sort({ createdAt: -1 })
-      .limit(4)
-      .lean();
-
-    const productsWithVideos = JSON.parse(JSON.stringify(products))
-      .map((product: any) => ({
-        id: product._id || "",
-        name: product.title || "Video Product",
-        price: product.basePrice || 0,
-        image: product.images?.[0] || "/images/image.png",
-        category: product.category || "Video",
-        team: product.title ? product.title.split(" ")[0] : "Unknown",
-        availablePatches: product.availablePatches || [],
-        isMysteryBox: product.isMysteryBox || false,
-        videos: product.videos || [],
-      }));
-
-    return productsWithVideos;
-  } catch (error) {
-    console.error("❌ Error fetching video products:", error);
+    console.error("Error fetching featured products:", error);
     return [];
   }
 }
 
 export default async function Home() {
-  // Fetch articles only
   const featuredArticles = await (async () => {
     try {
       await connectDB();
-      const articles = await Article.find({
-        status: "published",
-        featured: true,
-      })
+      const articles = await Article.find({ status: "published", featured: true })
         .sort({ publishedAt: -1 })
         .limit(20)
-        .lean(); // This returns plain objects
-
-      // Convert to plain JSON to remove any Mongoose-specific properties
+        .lean();
       return JSON.parse(JSON.stringify(articles));
-    } catch (error) {
-      console.error("Error fetching articles:", error);
+    } catch {
       return [];
     }
   })();
 
   const featuredProducts = await getFeaturedProducts();
-  const videoProducts = await getVideoProducts();
-  const worldCupTeams = await getWorldCupTeams();
 
   return (
     <div className="bg-[#0a0a0a] min-h-screen relative font-munish">
-      {/* Hero — full-screen conversion machine */}
-      <HeroSection />
+      {/* Hero — full-screen, rotating real jerseys */}
+      <HeroSection products={featuredProducts} />
 
-      {/* Trust pillars strip — right below the hero */}
+      {/* Trust pillars strip */}
       <TrustSection />
 
       {/* Team logo ticker */}
       <TeamLogoTicker />
 
-      {/* Flash sale section — urgency + conversion */}
-      <FlashSaleSection />
+      {/* Flash sale — real featured product, urgency */}
+      <FlashSaleSection product={featuredProducts[0]} />
 
-      {/* Featured products */}
+      {/* Featured products grid */}
       <FeaturedProducts products={featuredProducts} />
 
-      {/* Editorial-commerce hybrid: news + matching jerseys alternating */}
-      <EditorialCommerceSection articles={featuredArticles.slice(0, 3)} products={featuredProducts.slice(0, 3)} />
+      {/* Editorial-commerce hybrid */}
+      <EditorialCommerceSection
+        articles={featuredArticles.slice(0, 3)}
+        products={featuredProducts.slice(0, 3)}
+      />
 
       {/* Social proof / testimonials */}
       <SocialProofSection />
-
-      {/* Existing sections */}
-      <ClientSlider />
-      <WorldCupShowcase teams={worldCupTeams} />
-      <PremierLeagueClient />
-      <SerieATeamsClient />
-      <NewsSection articles={featuredArticles} />
-      <FeaturedVideoProducts products={featuredProducts} />
-      <VideoComp products={videoProducts} />
-      <LandingCategorySection title="Serie A" category="Serie A" />
-      <RestOfWorldClient />
-      <LimitedEditionClient />
-      <LandingCategorySection title="Jackets" category="Jackets" />
-      <LandingCategorySection title="Maglie Retro" category="Retro" />
     </div>
   );
 }
