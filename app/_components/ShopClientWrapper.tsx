@@ -72,6 +72,26 @@ async function fetchFeaturedProducts(): Promise<Product[]> {
   }
 }
 
+async function fetch2627Products(): Promise<Product[]> {
+  try {
+    await connectDB();
+    const products = await ProductModel.find({
+      $or: [
+        { category: "2026/27" },
+        { title: { $regex: "2026[-/]27", $options: "i" } },
+      ],
+      isActive: true,
+    })
+      .sort({ feature: -1, createdAt: -1 })
+      .limit(30)
+      .lean();
+    return JSON.parse(JSON.stringify(products)).map(mapProduct);
+  } catch (error) {
+    console.error("Error fetching 2026/27 products:", error);
+    return [];
+  }
+}
+
 async function fetchMysteryBoxProducts(): Promise<Product[]> {
   try {
     await connectDB();
@@ -172,7 +192,7 @@ async function fetchWorldCupTeams() {
 }
 
 export default async function ShopClientWrapper() {
-  const [latestProducts, bestSellingProducts, featuredProducts, mysteryBoxProducts, videoProducts, worldCupTeams] =
+  const [latestProducts, bestSellingProducts, featuredProducts, mysteryBoxProducts, videoProducts, worldCupTeams, products2627] =
     await Promise.all([
       fetchLatestProducts(),
       fetchBestSellingProducts(),
@@ -180,6 +200,7 @@ export default async function ShopClientWrapper() {
       fetchMysteryBoxProducts(),
       fetchVideoProducts(),
       fetchWorldCupTeams(),
+      fetch2627Products(),
     ]);
   return (
     <ShopClient
@@ -189,6 +210,7 @@ export default async function ShopClientWrapper() {
       mysteryBoxProducts={mysteryBoxProducts}
       videoProducts={videoProducts}
       worldCupTeams={worldCupTeams}
+      products2627={products2627}
     />
   );
 }

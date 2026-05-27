@@ -54,6 +54,7 @@ const NAV_ITEMS = [
   { label: "Tutto", href: "#top" },
   { label: "Nuovi Arrivi", href: "#nuovi-arrivi" },
   { label: "Bestseller", href: "#bestseller" },
+  { label: "26/27", href: "#stagione-2627" },
   { label: "Serie A", href: "#serie-a-section" },
   { label: "Premier League", href: "#premier-section" },
   { label: "Nazionali", href: "#nazionali-section" },
@@ -670,6 +671,68 @@ function NuoviArrivi({ products }: { products: Product[] }) {
 }
 
 // ─────────────────────────────────────────────────────────────
+// Stagione 2026/27 section
+// ─────────────────────────────────────────────────────────────
+
+function Section2627({ products }: { products: Product[] }) {
+  if (products.length === 0) return null;
+
+  return (
+    <section
+      id="stagione-2627"
+      className="py-14 md:py-16 relative overflow-hidden"
+      style={{ background: "#0a0a0a", borderTop: "0.5px solid rgba(255,255,255,0.05)" }}
+    >
+      {/* Edge fades */}
+      <div className="absolute inset-y-0 left-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(to right, #0a0a0a, transparent)" }} />
+      <div className="absolute inset-y-0 right-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(to left, #0a0a0a, transparent)" }} />
+
+      {/* Header */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-6 relative z-0">
+        <div className="flex items-end justify-between flex-wrap gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-4 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
+              <span className="text-[9px] uppercase tracking-[3px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}>
+                // Stagione in corso
+              </span>
+            </div>
+            <h2
+              className="font-black uppercase text-white"
+              style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", letterSpacing: "-0.5px" }}
+            >
+              Maglie 2026/27
+            </h2>
+          </div>
+          <div className="flex items-center gap-3">
+            {/* NEW badge */}
+            <span
+              className="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest"
+              style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", border: "1px solid rgba(200,240,0,0.2)", fontFamily: "var(--font-mono, monospace)" }}
+            >
+              ✦ Nuova Stagione
+            </span>
+            <Link
+              href="/shop/2026/27"
+              className="text-xs font-bold uppercase tracking-widest transition-colors hover:text-white flex items-center gap-1.5"
+              style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.35)" }}
+            >
+              Vedi tutto <ArrowRight size={12} />
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <ProductCarousel products={products} badge="✦ 26/27" />
+
+      <p className="text-center mt-3 text-[9px] uppercase tracking-[2px] relative z-20" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.15)" }}>
+        ← trascina per scorrere • clicca per vedere la maglia →
+      </p>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
 // Nazionali section (local logos, same card style as homepage)
 // ─────────────────────────────────────────────────────────────
 
@@ -856,13 +919,15 @@ export default function ShopClient({
   mysteryBoxProducts = [],
   videoProducts = [],
   worldCupTeams = [],
+  products2627 = [],
 }: {
   latestProducts: Product[];
   bestSellingProducts: Product[];
   featuredProducts: Product[];
   mysteryBoxProducts: Product[];
   videoProducts?: Product[];
-  worldCupTeams?: any[]; // kept for API compatibility, not used
+  worldCupTeams?: any[];
+  products2627?: Product[];
 }) {
   // Use feature-flagged products for hero; fall back to latest if none
   const heroProducts = (featuredProducts.length > 0 ? featuredProducts : latestProducts).slice(0, 8);
@@ -892,6 +957,9 @@ export default function ShopClient({
 
       {/* Nuovi Arrivi */}
       <NuoviArrivi products={latestProducts} />
+
+      {/* Stagione 2026/27 */}
+      <Section2627 products={products2627} />
 
       {/* Social proof numbers */}
       <SocialProofBand />
