@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { X, Share2, CheckCircle2, AlertCircle, Loader2, Copy, ExternalLink } from "lucide-react";
+import { X, Share2, Copy, CheckCircle2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -43,52 +43,45 @@ function buildTweetText(title: string, slug: string, category?: string): string 
   return base.length <= 280 ? base : base.slice(0, 277) + "...";
 }
 
-type ApiState = "idle" | "loading" | "success" | "error";
-
 export default function SocialSharePanel({ article, onClose }: SocialSharePanelProps) {
   const [fbText, setFbText] = useState("");
   const [twText, setTwText] = useState("");
   const [fbCopied, setFbCopied] = useState(false);
-  const [twState, setTwState] = useState<ApiState>("idle");
-  const [twError, setTwError] = useState("");
-  const fbCopyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [twOpened, setTwOpened] = useState(false);
+  const fbTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const twTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setFbText(buildFbText(article.title, article.summary, article.slug, article.category));
     setTwText(buildTweetText(article.title, article.slug, article.category));
   }, [article]);
 
-  // Cleanup timer on unmount
-  useEffect(() => () => { if (fbCopyTimer.current) clearTimeout(fbCopyTimer.current); }, []);
+  useEffect(() => () => {
+    if (fbTimer.current) clearTimeout(fbTimer.current);
+    if (twTimer.current) clearTimeout(twTimer.current);
+  }, []);
 
   const copyFbText = async () => {
     try {
       await navigator.clipboard.writeText(fbText);
       setFbCopied(true);
-      if (fbCopyTimer.current) clearTimeout(fbCopyTimer.current);
-      fbCopyTimer.current = setTimeout(() => setFbCopied(false), 2500);
-    } catch {
-      // Fallback: select textarea
-    }
+      if (fbTimer.current) clearTimeout(fbTimer.current);
+      fbTimer.current = setTimeout(() => setFbCopied(false), 2500);
+    } catch { /* silent */ }
   };
 
-  const shareToTwitter = async () => {
-    setTwState("loading");
-    setTwError("");
-    try {
-      const res = await fetch("/api/social/twitter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: twText }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Errore Twitter/X");
-      setTwState("success");
-    } catch (e) {
-      setTwState("error");
-      setTwError(e instanceof Error ? e.message : "Errore sconosciuto");
-    }
+  const openTwitter = () => {
+    window.open(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(twText)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+    setTwOpened(true);
+    if (twTimer.current) clearTimeout(twTimer.current);
+    twTimer.current = setTimeout(() => setTwOpened(false), 3000);
   };
+
+  const isOver280 = twText.length > 280;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
@@ -110,10 +103,7 @@ export default function SocialSharePanel({ article, onClose }: SocialSharePanelP
               Condividi articolo
             </span>
           </div>
-          <button
-            onClick={onClose}
-            className="text-white/40 hover:text-white transition-colors"
-          >
+          <button onClick={onClose} className="text-white/40 hover:text-white transition-colors">
             <X size={18} />
           </button>
         </div>
@@ -125,17 +115,14 @@ export default function SocialSharePanel({ article, onClose }: SocialSharePanelP
         >
           {article.image && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={article.image}
-              alt=""
-              className="w-10 h-10 rounded object-cover flex-shrink-0"
-            />
+            <img src={article.image} alt="" className="w-10 h-10 rounded object-cover flex-shrink-0" />
           )}
           <p className="text-white/80 text-xs leading-snug line-clamp-2">{article.title}</p>
         </div>
 
         <div className="px-5 py-4 space-y-5">
-          {/* ── Facebook (manual copy+paste) ── */}
+
+          {/* ── Facebook ── */}
           <div
             className="rounded-xl p-4 space-y-3"
             style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
@@ -154,7 +141,6 @@ export default function SocialSharePanel({ article, onClose }: SocialSharePanelP
             />
 
             <div className="flex items-center gap-2">
-              {/* Copy button */}
               <button
                 onClick={copyFbText}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all border"
@@ -164,111 +150,71 @@ export default function SocialSharePanel({ article, onClose }: SocialSharePanelP
                   background: fbCopied ? "rgba(52,211,153,0.08)" : "transparent",
                 }}
               >
-                {fbCopied ? (
-                  <><CheckCircle2 size={11} /> Copiato!</>
-                ) : (
-                  <><Copy size={11} /> Copia testo</>
-                )}
+                {fbCopied ? <><CheckCircle2 size={11} /> Copiato!</> : <><Copy size={11} /> Copia testo</>}
               </button>
 
-              {/* Open page button */}
               <a
                 href={FB_PAGE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all ml-auto"
-                style={{
-                  background: "#1877F2",
-                  color: "#fff",
-                  fontFamily: "var(--font-mono, monospace)",
-                }}
+                className="ml-auto flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest"
+                style={{ background: "#1877F2", color: "#fff", fontFamily: "var(--font-mono, monospace)" }}
               >
                 <ExternalLink size={11} /> Apri pagina
               </a>
             </div>
-
-            <p className="text-[10px] text-white/25 leading-relaxed">
-              Copia il testo → apri la pagina → crea nuovo post → incolla.
-            </p>
+            <p className="text-[10px] text-white/25">Copia il testo → apri la pagina → crea nuovo post → incolla.</p>
           </div>
 
-          {/* ── Twitter/X (API) ── */}
+          {/* ── Twitter / X ── */}
           <div
             className="rounded-xl p-4 space-y-3"
             style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span style={{ color: "#fff" }}><XIcon /></span>
-                <span className="text-sm font-bold text-white">X (Twitter)</span>
-              </div>
-              {twState === "success" && (
-                <span className="flex items-center gap-1 text-xs text-emerald-400 font-bold">
-                  <CheckCircle2 size={12} /> Pubblicato!
-                </span>
-              )}
+            <div className="flex items-center gap-2">
+              <span style={{ color: "#fff" }}><XIcon /></span>
+              <span className="text-sm font-bold text-white">X (Twitter)</span>
             </div>
 
-            {twState !== "success" && (
-              <>
-                <Textarea
-                  value={twText}
-                  onChange={(e) => setTwText(e.target.value)}
-                  rows={4}
-                  className="text-xs resize-none bg-black/20 border-white/10 text-white/80 placeholder-white/20"
-                  placeholder="Testo del tweet..."
-                />
-                <div className="flex items-center justify-between">
-                  <span className={`text-[10px] font-mono ${twText.length > 280 ? "text-red-400" : "text-white/30"}`}>
-                    {twText.length}/280
-                  </span>
-                  <button
-                    onClick={shareToTwitter}
-                    disabled={twState === "loading" || twText.length > 280 || !twText.trim()}
-                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all disabled:opacity-40"
-                    style={{
-                      background: twState === "loading" ? "rgba(200,240,0,0.4)" : "#c8f000",
-                      color: "#0a0a0a",
-                      fontFamily: "var(--font-mono, monospace)",
-                    }}
-                  >
-                    {twState === "loading" ? (
-                      <><Loader2 size={11} className="animate-spin" /> Invio...</>
-                    ) : (
-                      <>Pubblica su X</>
-                    )}
-                  </button>
-                </div>
-                {twState === "error" && (
-                  <div className="flex items-start gap-1.5 text-xs text-red-400">
-                    <AlertCircle size={12} className="flex-shrink-0 mt-0.5" />
-                    <span>{twError}</span>
-                  </div>
-                )}
-              </>
-            )}
+            <Textarea
+              value={twText}
+              onChange={(e) => setTwText(e.target.value)}
+              rows={3}
+              className="text-xs resize-none bg-black/20 border-white/10 text-white/80 placeholder-white/20"
+              placeholder="Testo del tweet..."
+            />
 
-            {twState === "success" && (
-              <div
-                className="rounded-lg px-3 py-2 text-xs text-emerald-400"
-                style={{ background: "rgba(52,211,153,0.07)" }}
+            <div className="flex items-center justify-between">
+              <span className={`text-[10px] font-mono ${isOver280 ? "text-red-400" : "text-white/30"}`}>
+                {twText.length}/280
+              </span>
+
+              <button
+                onClick={openTwitter}
+                disabled={isOver280 || !twText.trim()}
+                className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all disabled:opacity-40"
+                style={{
+                  background: twOpened ? "rgba(200,240,0,0.5)" : "#c8f000",
+                  color: "#0a0a0a",
+                  fontFamily: "var(--font-mono, monospace)",
+                }}
               >
-                Tweet pubblicato con successo su X.
-              </div>
-            )}
+                {twOpened
+                  ? <><CheckCircle2 size={11} /> Aperto!</>
+                  : <><ExternalLink size={11} /> Pubblica su X</>
+                }
+              </button>
+            </div>
+            <p className="text-[10px] text-white/25">Apre X con il testo precompilato — clicca Tweet per pubblicare.</p>
           </div>
+
         </div>
 
         <div
           className="px-5 py-3 border-t flex justify-end"
           style={{ borderColor: "rgba(255,255,255,0.08)" }}
         >
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="text-white/40 hover:text-white text-xs"
-          >
+          <Button variant="ghost" size="sm" onClick={onClose} className="text-white/40 hover:text-white text-xs">
             Chiudi
           </Button>
         </div>
