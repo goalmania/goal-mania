@@ -54,8 +54,23 @@ export async function generateMetadata({
   const { team } = await params;
   const teamName = teamNameMap[team.toLowerCase()] || team;
   return {
-    title: `Maglie ${teamName}`,
-    description: `Acquista le maglie ${teamName} 2025-26. Spedizione gratuita in Italia.`,
+    title: `Maglia ${teamName} 2025/26 | Acquista Online — Goal Mania`,
+    description: `Acquista la maglia ${teamName} 2025/26 a partire da 30€. Home, away e third kit. Spedizione gratuita in Italia.`,
+    keywords: [
+      `maglia ${teamName}`,
+      `maglie ${teamName}`,
+      `maglia ${teamName} 2025`,
+      `acquista maglia ${teamName}`,
+    ],
+    alternates: {
+      canonical: `https://goal-mania.it/shop/premier-league/${team.toLowerCase()}`,
+    },
+    openGraph: {
+      title: `Maglia ${teamName} 2025/26 | Goal Mania`,
+      description: `Home, away e third kit ${teamName} 2025/26. Da 30€, spedizione gratuita.`,
+      url: `https://goal-mania.it/shop/premier-league/${team.toLowerCase()}`,
+      type: "website",
+    },
   };
 }
 

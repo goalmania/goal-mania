@@ -1,10 +1,36 @@
+import { Metadata } from "next";
 import SerieAClient from "@/app/_components/SerieAClient";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { IProduct } from "@/lib/types/product";
 
-// Enable ISR for Serie A shop listing
 export const revalidate = 300;
+
+export const metadata: Metadata = {
+  title: "Maglie Serie A 2025/26 | Inter, Milan, Juventus, Napoli — Goal Mania",
+  description:
+    "Acquista le maglie della Serie A 2025/26 a partire da 30€. Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre. Spedizione gratuita in Italia.",
+  keywords: [
+    "maglie Serie A",
+    "maglia Inter",
+    "maglia Milan",
+    "maglia Juventus",
+    "maglia Napoli",
+    "maglia Roma",
+    "maglia Lazio",
+    "maglie calcio Serie A 2025",
+  ],
+  alternates: {
+    canonical: "https://goal-mania.it/shop/serieA",
+  },
+  openGraph: {
+    title: "Maglie Serie A 2025/26 | Goal Mania",
+    description:
+      "Inter, Milan, Juventus, Napoli, Roma, Lazio e tutte le squadre di Serie A. Da 30€.",
+    url: "https://goal-mania.it/shop/serieA",
+    type: "website",
+  },
+};
 
 async function getSerieAProducts() {
   await connectDB();

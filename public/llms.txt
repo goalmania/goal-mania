@@ -1,0 +1,55 @@
+# Goal Mania — Negozio Maglie da Calcio
+
+> Goal Mania è un negozio online italiano specializzato in maglie da calcio a prezzi accessibili (da 30€). Vendiamo maglie di Serie A, Premier League, Mondiali 2026, maglie retro e edizioni limitate.
+
+## Chi siamo
+
+Goal Mania è il tuo negozio di riferimento per maglie da calcio in Italia. Offriamo una vasta selezione di maglie per tutte le squadre: dalla Serie A alla Premier League, dalle nazionali alle storiche maglie retro.
+
+- Prezzi a partire da 30€
+- Spedizione gratuita in Italia
+- Maglie 2025/26 delle principali squadre
+- Maglie per Mondiali FIFA 2026
+- Maglie retro storiche (Maradona, Ronaldo, Zidane)
+
+## Categorie principali
+
+- [Tutte le maglie](/shop) — Catalogo completo
+- [Maglie Serie A](/shop/serieA) — Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina
+- [Maglie Premier League](/shop/premier-league) — Manchester City, Liverpool, Arsenal, Chelsea, Manchester United
+- [Maglie Mondiali 2026](/shop/worldcup) — Italia, Argentina, Brasile, Francia, Spagna, Portogallo
+- [Maglie 2025/26](/shop/2025/26) — Stagione corrente
+- [Maglie Retro](/shop/retro) — Maglie storiche originali
+- [Edizioni Limitate](/shop/limited-edition) — Collezioni esclusive
+
+## Squadre Serie A
+
+- [Maglia Inter](/shop/serieA/inter)
+- [Maglia Milan](/shop/serieA/milan)
+- [Maglia Juventus](/shop/serieA/juventus)
+- [Maglia Napoli](/shop/serieA/napoli)
+- [Maglia Roma](/shop/serieA/roma)
+- [Maglia Lazio](/shop/serieA/lazio)
+- [Maglia Atalanta](/shop/serieA/atalanta)
+- [Maglia Fiorentina](/shop/serieA/fiorentina)
+
+## Squadre Premier League
+
+- [Maglia Manchester City](/shop/premier-league/manchester-city)
+- [Maglia Liverpool](/shop/premier-league/liverpool)
+- [Maglia Arsenal](/shop/premier-league/arsenal)
+- [Maglia Chelsea](/shop/premier-league/chelsea)
+- [Maglia Manchester United](/shop/premier-league/manchester-united)
+
+## Informazioni aggiuntive
+
+- [Informazioni sulla spedizione](/shipping)
+- [Chi siamo](/about)
+- [Contatti](/contact)
+- [Privacy Policy](/privacy)
+- [Termini e Condizioni](/terms)
+
+## Contatti
+
+- Sito: https://goal-mania.it
+- Email: info@goal-mania.it

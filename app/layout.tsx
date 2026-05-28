@@ -55,34 +55,53 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Goal Mania - Maglie da Calcio",
+    default: "Goal Mania — Maglie da Calcio a 30€",
     template: "%s | Goal Mania",
   },
   manifest: "/site.webmanifest",
-  description: "Il tuo negozio di maglie da calcio. Trova le migliori maglie delle tue squadre preferite.",
-  keywords: ["maglie calcio", "jersey", "football shirts", "Goal Mania", "maglie calcio", "calcio"],
+  description:
+    "Goal Mania: negozio online di maglie da calcio a partire da 30€. Serie A, Premier League, Mondiali 2026, maglie retro. Spedizione gratuita in Italia.",
+  keywords: [
+    "maglie da calcio",
+    "maglie calcio a prezzi bassi",
+    "maglie calcio 30 euro",
+    "maglie Serie A",
+    "maglie Premier League",
+    "maglie Mondiali 2026",
+    "negozio maglie calcio online",
+    "maglia Inter",
+    "maglia Juventus",
+    "maglia Napoli",
+    "maglia Milan",
+    "maglia Liverpool",
+    "maglia Arsenal",
+    "maglie calcio retro",
+    "football shirts",
+  ],
   authors: [{ name: "Goal Mania" }],
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it"),
   openGraph: {
     type: "website",
     locale: "it_IT",
-    url: "/",
+    url: "https://goal-mania.it",
     siteName: "Goal Mania",
-    title: "Goal Mania - Maglie da Calcio",
-    description: "Le migliori maglie da calcio",
+    title: "Goal Mania — Maglie da Calcio a 30€",
+    description:
+      "Negozio online di maglie da calcio a partire da 30€. Serie A, Premier League, Mondiali 2026 e maglie retro. Spedizione gratuita in Italia.",
     images: [
       {
         url: "/favicon-for-public/web-app-manifest-512x512.png",
         width: 512,
         height: 512,
-        alt: "Goal Mania Logo",
+        alt: "Goal Mania — Maglie da Calcio",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Goal Mania - Maglie da Calcio",
-    description: "Le migliori maglie da calcio",
+    title: "Goal Mania — Maglie da Calcio a 30€",
+    description:
+      "Negozio online di maglie da calcio a partire da 30€. Serie A, Premier League, Mondiali 2026.",
     images: ["/favicon-for-public/web-app-manifest-512x512.png"],
   },
   robots: {
@@ -138,19 +157,47 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              name: "Goal Mania",
-              url: process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it",
-              logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it"}/favicon-for-public/web-app-manifest-512x512.png`,
-              description: "Le migliori maglie da calcio",
-              sameAs: [
-                "https://www.facebook.com/goalmania",
-                "https://www.instagram.com/goalmania",
-                "https://twitter.com/goalmania",
-              ],
-            }),
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                name: "Goal Mania",
+                url: process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it",
+                logo: {
+                  "@type": "ImageObject",
+                  url: `${process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it"}/favicon-for-public/web-app-manifest-512x512.png`,
+                  width: 512,
+                  height: 512,
+                },
+                description:
+                  "Negozio online italiano di maglie da calcio a partire da 30€. Serie A, Premier League, Mondiali 2026 e maglie retro.",
+                contactPoint: {
+                  "@type": "ContactPoint",
+                  contactType: "customer service",
+                  availableLanguage: "Italian",
+                  email: "info@goal-mania.it",
+                },
+                sameAs: [
+                  "https://www.facebook.com/goalmania",
+                  "https://www.instagram.com/goalmania",
+                  "https://twitter.com/goalmania",
+                ],
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                name: "Goal Mania",
+                url: process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it",
+                potentialAction: {
+                  "@type": "SearchAction",
+                  target: {
+                    "@type": "EntryPoint",
+                    urlTemplate: `${process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it"}/search?q={search_term_string}`,
+                  },
+                  "query-input": "required name=search_term_string",
+                },
+              },
+            ]),
           }}
         />
         {/* Favicon with cache busting */}

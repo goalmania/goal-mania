@@ -78,8 +78,24 @@ export async function generateMetadata({
     TEAM_DISPLAY_NAMES[team.toLowerCase()] ||
     team.charAt(0).toUpperCase() + team.slice(1);
   return {
-    title: `Maglie ${teamName}`,
-    description: `Acquista le maglie ${teamName} 2025-26. Spedizione gratuita in Italia.`,
+    title: `Maglia ${teamName} 2025/26 | Acquista Online — Goal Mania`,
+    description: `Acquista la maglia ${teamName} 2025/26 a partire da 30€. Home, away e third kit. Spedizione gratuita in Italia.`,
+    keywords: [
+      `maglia ${teamName}`,
+      `maglie ${teamName}`,
+      `maglia ${teamName} 2025`,
+      `acquista maglia ${teamName}`,
+      `maglia calcio ${teamName}`,
+    ],
+    alternates: {
+      canonical: `https://goal-mania.it/shop/serieA/${team.toLowerCase()}`,
+    },
+    openGraph: {
+      title: `Maglia ${teamName} 2025/26 | Goal Mania`,
+      description: `Home, away e third kit ${teamName} 2025/26. Da 30€, spedizione gratuita.`,
+      url: `https://goal-mania.it/shop/serieA/${team.toLowerCase()}`,
+      type: "website",
+    },
   };
 }
 

@@ -6,8 +6,28 @@ import type { Metadata } from "next";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Maglie Retro | Goal Mania",
-  description: "Rivivi la storia del calcio. Napoli di Maradona, Brasile 2002, Milan anni '90 e tutte le maglie che hanno scritto la storia.",
+  title: "Maglie Calcio Retro | Storiche, Vintage, Anni 90 — Goal Mania",
+  description:
+    "Acquista maglie retro storiche del calcio. Napoli di Maradona, Brasile 2002, Milan anni '90, Juventus, Argentina, France 98. Da 30€. Spedizione gratuita in Italia.",
+  keywords: [
+    "maglie calcio retro",
+    "maglie calcio vintage",
+    "maglie calcio storiche",
+    "maglia Napoli Maradona",
+    "maglia Brasile 2002",
+    "maglie anni 90 calcio",
+    "maglie calcio anni 2000",
+  ],
+  alternates: {
+    canonical: "https://goal-mania.it/shop/retro",
+  },
+  openGraph: {
+    title: "Maglie Calcio Retro | Goal Mania",
+    description:
+      "Napoli di Maradona, Brasile 2002, Milan anni '90 e tutte le maglie che hanno scritto la storia. Da 30€.",
+    url: "https://goal-mania.it/shop/retro",
+    type: "website",
+  },
 };
 
 async function getRetroProducts() {

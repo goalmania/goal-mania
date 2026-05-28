@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const PAGE_ID    = process.env.FACEBOOK_PAGE_ID;
-  const PAGE_TOKEN = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
+  const WEBHOOK_URL = process.env.MAKE_FACEBOOK_WEBHOOK_URL;
 
-  if (!PAGE_ID || !PAGE_TOKEN) {
+  if (!WEBHOOK_URL) {
     return NextResponse.json(
-      { error: "Facebook non configurato. Aggiungi FACEBOOK_PAGE_ID e FACEBOOK_PAGE_ACCESS_TOKEN in .env.local" },
+      { error: "Facebook non configurato. Aggiungi MAKE_FACEBOOK_WEBHOOK_URL in .env.local" },
       { status: 503 }
     );
   }
@@ -19,23 +18,21 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const res = await fetch(
-      `https://graph.facebook.com/v19.0/${PAGE_ID}/feed`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, link, access_token: PAGE_TOKEN }),
-      }
-    );
+    const res = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, link }),
+    });
 
-    const data = await res.json();
-
-    if (!res.ok || data.error) {
-      const msg = data.error?.message || `Facebook API error ${res.status}`;
-      return NextResponse.json({ error: msg }, { status: 400 });
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      return NextResponse.json(
+        { error: `Make webhook error ${res.status}: ${text}` },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json({ success: true, postId: data.id });
+    return NextResponse.json({ success: true });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Errore sconosciuto";
     return NextResponse.json({ error: msg }, { status: 500 });

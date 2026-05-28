@@ -5,8 +5,12 @@ import SerieAClient from "@/app/_components/SerieAClient";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Edizioni Limitate",
-  description: "Scopri le nostre maglie in edizione limitata",
+  title: "Maglie Edizione Limitata | Collezioni Esclusive — Goal Mania",
+  description:
+    "Maglie da calcio in edizione limitata e collezioni esclusive. Pezzi unici difficili da trovare altrove. Spedizione gratuita in Italia.",
+  alternates: {
+    canonical: "https://goal-mania.it/shop/limited-edition",
+  },
 };
 
 // Enable ISR

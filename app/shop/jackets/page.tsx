@@ -5,8 +5,12 @@ import SerieAClient from "@/app/_components/SerieAClient";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Giacche",
-  description: "Scopri le nostre giacche sportive",
+  title: "Giacche Calcio | Felpe e Giacche Sportive — Goal Mania",
+  description:
+    "Giacche e felpe sportive delle migliori squadre di calcio. Inter, Juventus, Milan, Liverpool e altre. Spedizione gratuita in Italia.",
+  alternates: {
+    canonical: "https://goal-mania.it/shop/jackets",
+  },
 };
 
 // Enable ISR

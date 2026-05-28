@@ -1,10 +1,25 @@
+import { Metadata } from "next";
 import Season2024Client from "@/app/_components/Season2024Client";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { IProduct } from "@/lib/types/product";
 
-// Enable ISR for season 2024/25 listing
 export const revalidate = 300;
+
+export const metadata: Metadata = {
+  title: "Maglie Calcio 2024/25 | Kit Stagione Scorsa — Goal Mania",
+  description:
+    "Maglie da calcio della stagione 2024/25 a prezzi scontati. Home e away kit delle migliori squadre europee da 30€. Spedizione gratuita in Italia.",
+  alternates: {
+    canonical: "https://goal-mania.it/shop/2024/25",
+  },
+  openGraph: {
+    title: "Maglie Calcio 2024/25 | Goal Mania",
+    description: "Kit stagione 2024/25 a prezzi scontati. Da 30€.",
+    url: "https://goal-mania.it/shop/2024/25",
+    type: "website",
+  },
+};
 
 async function get2024Products() {
   await connectDB();
