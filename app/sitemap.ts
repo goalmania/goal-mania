@@ -73,25 +73,40 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       Article.find({ status: "published" }).select("slug category updatedAt").lean(),
     ]);
 
-    const productRoutes: MetadataRoute.Sitemap = (products as any[]).map((p) => ({
-      url: `${BASE_URL}/products/${p.slug || p._id.toString()}`,
-      lastModified: p.updatedAt ?? new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.8,
-    }));
+    const MAX_URL_LENGTH = 200;
 
-    const articleRoutes: MetadataRoute.Sitemap = (articles as any[]).map((a) => {
-      const section =
-        a.category === "news" ? "news" :
-        a.category === "transferMarket" ? "transfer" :
-        a.category === "serieA" ? "serieA" : "news";
-      return {
-        url: `${BASE_URL}/${section}/${a.slug}`,
-        lastModified: a.updatedAt ?? new Date(),
+    const productRoutes: MetadataRoute.Sitemap = (products as any[])
+      .filter((p) => {
+        const slug = p.slug || p._id.toString();
+        return `${BASE_URL}/products/${slug}`.length <= MAX_URL_LENGTH;
+      })
+      .map((p) => ({
+        url: `${BASE_URL}/products/${p.slug || p._id.toString()}`,
+        lastModified: p.updatedAt ?? new Date(),
         changeFrequency: "weekly" as const,
-        priority: 0.7,
-      };
-    });
+        priority: 0.8,
+      }));
+
+    const articleRoutes: MetadataRoute.Sitemap = (articles as any[])
+      .filter((a) => {
+        const section =
+          a.category === "news" ? "news" :
+          a.category === "transferMarket" ? "transfer" :
+          a.category === "serieA" ? "serieA" : "news";
+        return `${BASE_URL}/${section}/${a.slug}`.length <= MAX_URL_LENGTH;
+      })
+      .map((a) => {
+        const section =
+          a.category === "news" ? "news" :
+          a.category === "transferMarket" ? "transfer" :
+          a.category === "serieA" ? "serieA" : "news";
+        return {
+          url: `${BASE_URL}/${section}/${a.slug}`,
+          lastModified: a.updatedAt ?? new Date(),
+          changeFrequency: "weekly" as const,
+          priority: 0.7,
+        };
+      });
 
     return [...staticRoutes, ...productRoutes, ...articleRoutes];
   } catch {
