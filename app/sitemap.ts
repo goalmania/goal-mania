@@ -33,6 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/shop/serieA`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/shop/premier-league`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/shop/worldcup`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/shop/2026/27`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/shop/2025/26`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/shop/2024/25`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.6 },
     { url: `${BASE_URL}/shop/retro`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
@@ -63,6 +64,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: 0.75,
     })),
+    // Top European club product pages 2026/27 (direct product links)
+    ...[
+      "real-madrid", "barcelona", "bayern-monaco",
+      "psg", "borussia-dortmund",
+    ].flatMap((team) =>
+      ["home", "away", "third"].map((kit) => ({
+        url: `${BASE_URL}/products/maglia-${team}-${kit}-2026-27`,
+        lastModified: new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.85,
+      }))
+    ),
   ];
 
   try {

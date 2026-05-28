@@ -6,8 +6,29 @@ import Season2627Client from "@/app/_components/Season2627Client";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Maglie 2026/27 | Goal Mania",
-  description: "Le nuove maglie della stagione 2026/27: Serie A, Premier League, La Liga e Nazionali. Spedizione gratuita.",
+  title: "Maglie Calcio 2026/27 | Nuova Stagione — Goal Mania",
+  description:
+    "Acquista le maglie calcio della stagione 2026/27 a partire da €30. Inter, Milan, Juventus, Napoli, Liverpool, Real Madrid, Bayern Monaco e altri. Spedizione gratuita in Italia.",
+  keywords: [
+    "maglie calcio 2026/27",
+    "maglie 2026 27",
+    "nuove maglie calcio",
+    "maglie stagione 2026",
+    "maglie Serie A 2026/27",
+    "maglie Premier League 2026/27",
+    "maglie Real Madrid 2026/27",
+    "maglie Bayern Monaco 2026/27",
+  ],
+  alternates: {
+    canonical: "https://goal-mania.it/shop/2026/27",
+  },
+  openGraph: {
+    title: "Maglie Calcio 2026/27 | Goal Mania",
+    description:
+      "Le nuove maglie della stagione 2026/27. Inter, Milan, Liverpool, Real Madrid, Bayern, PSG a partire da €30. Spedizione gratuita.",
+    url: "https://goal-mania.it/shop/2026/27",
+    type: "website",
+  },
 };
 
 async function getCurrentSeasonProducts() {
