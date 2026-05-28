@@ -1,6 +1,14 @@
 import { Metadata } from "next";
 import PremierLeagueClient from "@/app/_components/PremierLeagueClient";
 
+const collectionSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Maglie Premier League 2025/26",
+  url: "https://goal-mania.it/shop/premier-league",
+  description: "Acquista le maglie della Premier League 2025/26 a partire da 30€. Manchester City, Liverpool, Arsenal, Chelsea, Manchester United. Spedizione gratuita in Italia.",
+};
+
 export const revalidate = 300;
 
 export const metadata: Metadata = {
@@ -29,5 +37,23 @@ export const metadata: Metadata = {
 };
 
 export default async function PremierLeagueShopPage() {
-  return <PremierLeagueClient />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
+      <section className="pt-24 pb-4 px-4 max-w-7xl mx-auto">
+        <h1 className="text-3xl font-black uppercase mb-2" style={{ fontFamily: "var(--font-barlow-condensed, sans-serif)", color: "#fff" }}>
+          Maglie Premier League 2025/26
+        </h1>
+        <p className="text-gray-400 text-sm max-w-2xl">
+          Acquista le maglie della Premier League 2025/26 a partire da 30€.
+          Manchester City, Liverpool, Arsenal, Chelsea, Manchester United e tutte le squadre inglesi.
+          Spedizione gratuita in Italia.
+        </p>
+      </section>
+      <PremierLeagueClient />
+    </>
+  );
 }

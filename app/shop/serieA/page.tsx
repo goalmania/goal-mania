@@ -49,6 +49,22 @@ async function getSerieAProducts() {
   return JSON.parse(JSON.stringify(products)); // Serialize the Mongoose documents
 }
 
+function buildCollectionSchema(products: any[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Maglie Serie A 2025/26",
+    url: "https://goal-mania.it/shop/serieA",
+    description: "Acquista le maglie delle squadre di Serie A 2025/26 a partire da 30€. Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre.",
+    hasPart: products.slice(0, 10).map((p: any) => ({
+      "@type": "Product",
+      name: p.title,
+      url: `https://goal-mania.it/products/${p.slug || p._id}`,
+      offers: { "@type": "Offer", price: p.basePrice ?? 30, priceCurrency: "EUR" },
+    })),
+  };
+}
+
 export default async function SerieAShopPage() {
   const serverProducts = await getSerieAProducts();
 
@@ -81,5 +97,25 @@ export default async function SerieAShopPage() {
     videos: product.videos || [], // Include videos for showcase
   }));
 
-  return <SerieAClient products={products} />;
+  const collectionSchema = buildCollectionSchema(serverProducts);
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
+      <section className="pt-24 pb-4 px-4 max-w-7xl mx-auto">
+        <h1 className="text-3xl font-black uppercase mb-2" style={{ fontFamily: "var(--font-barlow-condensed, sans-serif)", color: "#fff" }}>
+          Maglie Serie A 2025/26
+        </h1>
+        <p className="text-gray-400 text-sm max-w-2xl">
+          Acquista le maglie delle squadre di Serie A 2025/26 a partire da 30€.
+          Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre.
+          Spedizione gratuita in Italia.
+        </p>
+      </section>
+      <SerieAClient products={products} />
+    </>
+  );
 }

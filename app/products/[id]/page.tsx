@@ -33,10 +33,24 @@ export async function generateMetadata({
     const image = p.images?.[0];
     const slug = p.slug || id;
 
+    const titleWords = (p.title || "").split(" ");
+    const teamWord = titleWords[1] || "";
+    const keywords = [
+      p.title,
+      `maglia ${teamWord}`,
+      `maglia ${teamWord} 2025/26`,
+      `maglia ${teamWord} 2025`,
+      `nuova maglia ${teamWord}`,
+      `acquista maglia ${teamWord}`,
+      "maglia calcio",
+      "acquista online",
+      "spedizione gratuita",
+    ].filter(Boolean);
+
     return {
       title,
       description,
-      keywords: [p.title, "maglia calcio", "acquista online", "spedizione gratuita"],
+      keywords,
       alternates: {
         canonical: `https://goal-mania.it/products/${slug}`,
       },

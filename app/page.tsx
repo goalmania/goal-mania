@@ -13,6 +13,45 @@ import ProductModel from "@/lib/models/Product";
 
 export const revalidate = 300;
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Quanto costano le maglie da calcio su Goal Mania?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Su Goal Mania le maglie da calcio partono da 30€. Trovi maglie di Serie A (Inter, Milan, Juventus, Napoli), Premier League (Liverpool, Arsenal, Manchester City), Mondiali 2026 e maglie retro storiche. Spedizione gratuita in Italia.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Goal Mania spedisce in Italia gratuitamente?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Sì, Goal Mania offre spedizione gratuita su tutti gli ordini in Italia.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Goal Mania vende maglie di quale squadra?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Goal Mania vende maglie di tutte le principali squadre: Inter, Milan, Juventus, Napoli, Roma, Lazio per la Serie A; Liverpool, Manchester City, Arsenal, Chelsea, Manchester United per la Premier League; più le nazionali per i Mondiali 2026.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Dove posso comprare maglie da calcio a prezzi bassi in Italia?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Goal Mania è il negozio online italiano specializzato in maglie da calcio a prezzi bassi. Con prezzi a partire da 30€ trovi maglie di Serie A, Premier League, Mondiali 2026 e maglie retro vintage.",
+      },
+    },
+  ],
+};
+
 export const metadata: Metadata = {
   title: "Maglie da Calcio a 30€ | Goal Mania — Serie A, Premier League, Mondiali",
   description:
@@ -84,6 +123,13 @@ export default async function Home() {
 
   return (
     <div className="bg-[#070707] min-h-screen relative font-munish">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <h1 className="sr-only">
+        Maglie da Calcio a 30€ — Goal Mania: Serie A, Premier League, Mondiali 2026
+      </h1>
 
       {/* 1. HERO — "MAGLIE DA CALCIO A 30€" + maglie reali rotanti */}
       <HeroSection products={featuredProducts} />

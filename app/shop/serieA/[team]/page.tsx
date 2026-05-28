@@ -166,8 +166,35 @@ export default async function TeamShopPage({ params }: TeamPageProps) {
 
   const teamDisplayName = TEAM_DISPLAY_NAMES[team.toLowerCase()] || team.charAt(0).toUpperCase() + team.slice(1);
 
+  const teamCollectionSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `Maglie ${teamDisplayName} 2025/26`,
+    url: `https://goal-mania.it/shop/serieA/${team.toLowerCase()}`,
+    description: `Acquista la maglia ${teamDisplayName} 2025/26 a partire da 30€. Home, away e third kit. Spedizione gratuita in Italia.`,
+    hasPart: products.slice(0, 6).map((p: any) => ({
+      "@type": "Product",
+      name: p.name,
+      url: `https://goal-mania.it/products/${p.slug || p.id}`,
+      offers: { "@type": "Offer", price: p.price ?? 30, priceCurrency: "EUR" },
+    })),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(teamCollectionSchema) }}
+      />
+      <section className="pt-24 pb-4 px-4 max-w-7xl mx-auto">
+        <h1 className="text-3xl font-black uppercase mb-2" style={{ fontFamily: "var(--font-barlow-condensed, sans-serif)", color: "#fff" }}>
+          Maglia {teamDisplayName} 2025/26
+        </h1>
+        <p className="text-gray-400 text-sm max-w-2xl">
+          Acquista la maglia {teamDisplayName} 2025/26 a partire da 30€.
+          Home, away e third kit disponibili. Spedizione gratuita in Italia.
+        </p>
+      </section>
       <SerieAClient products={products} teamSlug={team} />
 
       {relatedArticles.length > 0 && (
