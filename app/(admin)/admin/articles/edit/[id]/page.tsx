@@ -19,6 +19,8 @@ import { IArticle } from "@/lib/models/Article";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import DraggableImageGallery, { ArticleImage } from "@/components/admin/DraggableImageGallery";
 import { getCloudinaryUrl } from "@/lib/constants";
+import SocialSharePanel from "@/components/admin/SocialSharePanel";
+import { Share2 } from "lucide-react";
 
 const CATEGORY_OPTIONS = [
   { value: "news", label: "Main News" },
@@ -75,6 +77,8 @@ export default function EditArticlePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(!isNewArticle);
   const [jerseys, setJerseys] = useState<Array<{ id: string; title: string }>>([]);
+  const [savedSlug, setSavedSlug] = useState<string>("");
+  const [showSharePanel, setShowSharePanel] = useState(false);
 
   // Fetch article data if editing
   useEffect(() => {
@@ -375,13 +379,21 @@ export default function EditArticlePage() {
         throw new Error(`Failed to ${isNewArticle ? 'create' : 'update'} article`);
       }
 
+      const saved = await response.json();
       toast.success(`Article ${isNewArticle ? 'created' : 'updated'} successfully`);
-      
+
       // Update original form data to reflect saved state
       setOriginalFormData(articleData);
       setHasUnsavedChanges(false);
-      
-      router.push("/admin/articles");
+
+      // If published, offer social sharing instead of immediately navigating away
+      const slug = saved?.slug || saved?.article?.slug || "";
+      if (articleData.status === "published" && slug) {
+        setSavedSlug(slug);
+        setShowSharePanel(true);
+      } else {
+        router.push("/admin/articles");
+      }
     } catch (error) {
       console.error("Error saving article:", error);
       toast.error(`Failed to ${isNewArticle ? 'create' : 'update'} article`);
@@ -415,6 +427,20 @@ export default function EditArticlePage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Social Share Panel */}
+      {showSharePanel && savedSlug && (
+        <SocialSharePanel
+          article={{
+            title: formData.title,
+            summary: formData.summary,
+            slug: savedSlug,
+            image: formData.image,
+            category: formData.category,
+          }}
+          onClose={() => { setShowSharePanel(false); router.push("/admin/articles"); }}
+        />
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex justify-between w-full items-start space-x-4">

@@ -6,16 +6,18 @@ export const dynamic = 'force-dynamic';
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { 
-  PencilIcon, 
-  TrashIcon, 
-  PlusIcon, 
+import {
+  PencilIcon,
+  TrashIcon,
+  PlusIcon,
   MagnifyingGlassIcon,
   EyeIcon,
   EyeSlashIcon,
   ArrowPathIcon
 } from "@heroicons/react/24/outline";
+import { Share2 } from "lucide-react";
 import Image from "next/image";
+import SocialSharePanel from "@/components/admin/SocialSharePanel";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -129,12 +131,13 @@ function DraggableRow({ row }: { row: Row<IArticle> }) {
   );
 }
 
-function ArticleDataTable({ 
-  articles, 
-  onEdit, 
-  onDelete, 
-  onToggleStatus, 
-  showDrafts, 
+function ArticleDataTable({
+  articles,
+  onEdit,
+  onDelete,
+  onToggleStatus,
+  onShare,
+  showDrafts,
   onShowDraftsChange,
   pagination,
   onPageChange,
@@ -153,6 +156,7 @@ function ArticleDataTable({
   onEdit: (articleId: string) => void;
   onDelete: (articleId: string) => void;
   onToggleStatus: (articleId: string, status: string) => void;
+  onShare: (article: IArticle) => void;
   showDrafts: boolean;
   onShowDraftsChange: (show: boolean) => void;
   pagination: any;
@@ -337,6 +341,17 @@ function ArticleDataTable({
       header: "Actions",
       cell: ({ row }) => (
         <div className="flex items-center justify-end space-x-2">
+          {row.original.status === "published" && row.original.slug && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onShare(row.original)}
+              className="h-8 w-8 p-0 text-[#c8f000] hover:text-[#c8f000]"
+              title="Condividi sui social"
+            >
+              <Share2 className="h-4 w-4" />
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="sm"
@@ -678,6 +693,7 @@ export default function ArticlesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [shareArticle, setShareArticle] = useState<IArticle | null>(null);
   const [optimisticArticles, setOptimisticArticles] = useState<IArticle[]>([]);
 
   // Use the optimized articles hook
@@ -907,12 +923,27 @@ export default function ArticlesPage() {
         </div>
       )}
 
+      {/* Social Share Panel */}
+      {shareArticle && (
+        <SocialSharePanel
+          article={{
+            title: shareArticle.title,
+            summary: shareArticle.summary || "",
+            slug: shareArticle.slug,
+            image: shareArticle.image,
+            category: shareArticle.category,
+          }}
+          onClose={() => setShareArticle(null)}
+        />
+      )}
+
       {/* Articles DataTable */}
       <ArticleDataTable
         articles={displayArticles}
         onEdit={handleEditArticle}
         onDelete={handleDeleteArticle}
         onToggleStatus={handleToggleStatus}
+        onShare={(article) => setShareArticle(article)}
         showDrafts={showDrafts}
         onShowDraftsChange={handleShowDraftsChange}
         pagination={pagination}

@@ -143,9 +143,7 @@ export function JerseyAdBlock({ jerseyId, teamHint }: JerseyAdBlockProps) {
 
   if (isLoading) {
     return (
-      <div className="w-full bg-[#0a0a0a] rounded-lg shadow-md p-6 my-8 text-center">
-        <p className="text-white">Caricamento maglia...</p>
-      </div>
+      <div className="w-full my-8 rounded-xl overflow-hidden border border-white/10 bg-[#111111] h-[160px] animate-pulse" />
     );
   }
 
@@ -154,70 +152,54 @@ export function JerseyAdBlock({ jerseyId, teamHint }: JerseyAdBlockProps) {
   }
 
   return (
-    <div className="w-full bg-gradient-to-r from-orange-50 to-orange-100 border-l-4 border-orange-500 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 p-6 my-8 relative overflow-hidden">
-      {/* Decorative background element */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-orange-200 to-orange-300 opacity-20 rounded-full -translate-y-16 translate-x-16"></div>
-      
-      <div className="flex flex-col md:flex-row items-center relative z-10">
-        <div className="relative w-full md:w-1/3 h-64 md:h-72 mb-4 md:mb-0">
-          {/* Enhanced image container with subtle shadow and border */}
-          <div className="relative w-full h-full bg-[#0a0a0a] rounded-lg shadow-md border-2 border-orange-200 overflow-hidden">
+    <div className="w-full my-8 rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-[#111111]">
+      <div className="flex flex-col sm:flex-row">
+        {/* Image column */}
+        <div className="relative sm:w-[220px] shrink-0 bg-[#0a0a0a] flex items-center justify-center min-h-[220px]">
+          <div className="absolute top-3 left-3 bg-[#c8f000] text-black text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full z-10">
+            In evidenza
+          </div>
+          <div className="relative w-full h-full min-h-[220px]">
             <Image
               src={jersey.image}
               alt={jersey.title}
               fill
-              className="object-contain p-2"
-              sizes="(max-width: 768px) 100vw, 33vw"
+              className="object-contain p-4"
+              sizes="(max-width: 640px) 100vw, 220px"
               priority
             />
           </div>
-          {/* "Featured" badge */}
-          <div className="absolute top-2 left-2 bg-[#c8f000] text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">
-            IN EVIDENZA
-          </div>
         </div>
-        
-        <div className="w-full md:w-2/3 p-4 md:p-6 flex flex-col">
-          {/* Enhanced title with orange accent */}
-          <div className="mb-3">
-            <span className="text-[#c8f000] text-sm font-semibold uppercase tracking-wide">
-              Offerta Esclusiva
-            </span>
-            <h3 className="text-xl md:text-2xl font-bold text-white mb-2 leading-tight">
+
+        {/* Content column */}
+        <div className="flex flex-col justify-between p-5 flex-1 gap-4">
+          <div>
+            <p className="text-[#c8f000] text-xs font-bold uppercase tracking-widest mb-1">
+              Offerta esclusiva
+            </p>
+            <h3 className="text-white text-lg sm:text-xl font-bold leading-snug">
               {jersey.title}
             </h3>
+            <p className="text-white/50 text-sm mt-2">
+              Mostra la tua passione — spedizione gratuita inclusa.
+            </p>
           </div>
-          
-          {/* Enhanced description */}
-          <p className="text-white/70 mb-3 font-medium">
-            🔥 Acquista la maglia più recente e mostra la tua passione per il calcio!
-          </p>
-          
-          {/* Enhanced price with orange styling */}
-          <div className="mb-4">
-            <span className="text-3xl font-bold text-[#c8f000]">
-              €{jersey.basePrice}
-            </span>
-            <span className="text-white/50 ml-2 line-through text-lg">
-              €{Math.round(jersey.basePrice * 1.2)}
-            </span>
+
+          <div className="flex items-end justify-between gap-4 flex-wrap">
+            <div className="flex items-baseline gap-2">
+              <span className="text-[#c8f000] text-3xl font-black">€{jersey.basePrice}</span>
+              <span className="text-white/30 text-sm line-through">€{Math.round(jersey.basePrice * 1.2)}</span>
+            </div>
+            <Link
+              href={`/products/${jersey.slug}`}
+              className="bg-[#c8f000] hover:bg-[#d4ff00] active:scale-95 text-black text-sm font-black uppercase tracking-wide px-5 py-2.5 rounded-lg transition-all duration-150 flex items-center gap-2 whitespace-nowrap"
+            >
+              Acquista ora
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </Link>
           </div>
-          
-          {/* Enhanced call-to-action button with orange theme */}
-          <Link
-            href={`/products/${jersey.slug}`}
-            className="mt-auto bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 text-center shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105 flex items-center justify-center gap-2"
-          >
-            <span>🛒 Acquista Ora</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </Link>
-          
-          {/* Additional incentive text */}
-          <p className="text-xs text-[#c8f000] mt-2 text-center font-medium">
-            ⚡ Offerta a tempo limitato • Spedizione gratuita
-          </p>
         </div>
       </div>
     </div>

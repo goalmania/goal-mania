@@ -72,6 +72,20 @@ async function fetchFeaturedProducts(): Promise<Product[]> {
   }
 }
 
+async function fetchRetroProducts(): Promise<Product[]> {
+  try {
+    await connectDB();
+    const products = await ProductModel.find({ category: "Retro", isActive: true })
+      .sort({ feature: -1, createdAt: -1 })
+      .limit(30)
+      .lean();
+    return JSON.parse(JSON.stringify(products)).map(mapProduct);
+  } catch (error) {
+    console.error("Error fetching retro products:", error);
+    return [];
+  }
+}
+
 async function fetch2627Products(): Promise<Product[]> {
   try {
     await connectDB();
@@ -192,7 +206,7 @@ async function fetchWorldCupTeams() {
 }
 
 export default async function ShopClientWrapper() {
-  const [latestProducts, bestSellingProducts, featuredProducts, mysteryBoxProducts, videoProducts, worldCupTeams, products2627] =
+  const [latestProducts, bestSellingProducts, featuredProducts, mysteryBoxProducts, videoProducts, worldCupTeams, products2627, retroProducts] =
     await Promise.all([
       fetchLatestProducts(),
       fetchBestSellingProducts(),
@@ -201,6 +215,7 @@ export default async function ShopClientWrapper() {
       fetchVideoProducts(),
       fetchWorldCupTeams(),
       fetch2627Products(),
+      fetchRetroProducts(),
     ]);
   return (
     <ShopClient
@@ -211,6 +226,7 @@ export default async function ShopClientWrapper() {
       videoProducts={videoProducts}
       worldCupTeams={worldCupTeams}
       products2627={products2627}
+      retroProducts={retroProducts}
     />
   );
 }
