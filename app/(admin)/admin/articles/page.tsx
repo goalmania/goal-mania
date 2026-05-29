@@ -152,6 +152,7 @@ function ArticleDataTable({
   onStatusFilterChange,
   router,
   canDelete,
+  canViewStats,
 }: {
   articles: IArticle[];
   onEdit: (articleId: string) => void;
@@ -172,6 +173,7 @@ function ArticleDataTable({
   onStatusFilterChange: (status: string) => void;
   router: any;
   canDelete: boolean;
+  canViewStats: boolean;
 }) {
   const [data, setData] = useState(() => articles);
   const [rowSelection, setRowSelection] = useState({});
@@ -207,7 +209,7 @@ function ArticleDataTable({
   }, [globalFilter, onSearchChange]);
 
   // Define columns for the article table
-  const columns: ColumnDef<IArticle>[] = [
+  const allColumns: ColumnDef<IArticle>[] = [
     {
       id: "drag",
       header: () => null,
@@ -414,6 +416,10 @@ function ArticleDataTable({
       enableSorting: false,
     },
   ];
+
+  const columns = canViewStats
+    ? allColumns
+    : allColumns.filter((c) => (c as any).accessorKey !== "views");
 
   const table = useReactTable({
     data,
@@ -797,6 +803,7 @@ function TopViewsCard() {
 export default function ArticlesPage() {
   const router = useRouter();
   const { data: session } = useSession();
+  const isAdmin = session?.user?.role === "admin";
   const [showDrafts, setShowDrafts] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
@@ -983,7 +990,7 @@ export default function ArticlesPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div className={`grid grid-cols-1 gap-4 ${isAdmin ? "md:grid-cols-5" : "md:grid-cols-4"}`}>
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">{stats.total}</div>
@@ -1014,18 +1021,20 @@ export default function ArticlesPage() {
             <p className="text-xs text-muted-foreground">Featured</p>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-blue-500">
-              {stats.totalViews.toLocaleString("it-IT")}
-            </div>
-            <p className="text-xs text-muted-foreground">Views (pagina corrente)</p>
-          </CardContent>
-        </Card>
+        {isAdmin && (
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-2xl font-bold text-blue-500">
+                {stats.totalViews.toLocaleString("it-IT")}
+              </div>
+              <p className="text-xs text-muted-foreground">Views (pagina corrente)</p>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
-      {/* Top Views */}
-      <TopViewsCard />
+      {/* Top Views — solo admin */}
+      {isAdmin && <TopViewsCard />}
 
       {/* Error State */}
       {error && (
@@ -1078,7 +1087,8 @@ export default function ArticlesPage() {
         statusFilter={statusFilter}
         onStatusFilterChange={handleStatusFilterChange}
         router={router}
-        canDelete={session?.user?.role === "admin"}
+        canDelete={isAdmin}
+        canViewStats={isAdmin}
       />
 
     </>
