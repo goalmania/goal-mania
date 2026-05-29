@@ -8,7 +8,7 @@ import Product from "@/lib/models/Product";
 
 // Cron ogni ora su Vercel → 24 articoli/giorno. Con ARTICLES_PER_RUN=1 non si supera
 // il rate limit di Gemini Flash (10 req/min sul piano gratuito).
-const ARTICLES_PER_RUN = 1;
+const ARTICLES_PER_RUN = 5;
 
 // Feed verificati al 29/05/2026: freschi + includono immagini proprie
 const RSS_FEEDS = [

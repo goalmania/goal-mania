@@ -110,6 +110,72 @@ const getStatusIcon = (status: string) => {
   }
 };
 
+function GenerateArticlesButton() {
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<{ published: number; log?: string[] } | null>(null);
+
+  const handleGenerate = async () => {
+    if (!confirm("Generare 5 articoli AI adesso? Ci vorranno circa 2-3 minuti.")) return;
+    setLoading(true);
+    setResult(null);
+    try {
+      const res = await fetch("/api/cron/generate-article", {
+        headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET || "goalmania2026"}` },
+      });
+      const data = await res.json();
+      setResult({ published: data.published ?? 0, log: data.log });
+      if (data.published > 0) {
+        toast.success(`✅ ${data.published} articoli pubblicati!`);
+      } else {
+        toast.error("Nessun articolo generato. Controlla i log.");
+      }
+    } catch {
+      toast.error("Errore durante la generazione");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div
+      className="rounded-2xl p-5 flex items-center justify-between gap-4 flex-wrap"
+      style={{ background: "#111", border: "1px solid rgba(200,240,0,0.15)" }}
+    >
+      <div>
+        <div
+          className="text-xs font-black uppercase tracking-widest mb-1"
+          style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
+        >
+          // Generatore Articoli AI
+        </div>
+        <p className="text-sm text-white/50">
+          Cron automatico: 5 articoli ogni giorno alle 06:00.
+          {result && <span className="ml-2 text-[#c8f000]">{result.published} pubblicati nell&apos;ultimo run.</span>}
+        </p>
+      </div>
+      <button
+        onClick={handleGenerate}
+        disabled={loading}
+        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-black uppercase tracking-wider transition-all disabled:opacity-50"
+        style={{
+          background: loading ? "rgba(200,240,0,0.3)" : "#c8f000",
+          color: "#0a0a0a",
+          fontFamily: "var(--font-mono, monospace)",
+        }}
+      >
+        {loading ? (
+          <>
+            <span className="animate-spin inline-block w-3 h-3 border-2 border-black/30 border-t-black rounded-full" />
+            Generando...
+          </>
+        ) : (
+          "⚡ Genera 5 articoli ora"
+        )}
+      </button>
+    </div>
+  );
+}
+
 export default function AdminDashboard() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -239,6 +305,9 @@ export default function AdminDashboard() {
           Welcome back! Here&apos;s an overview of your store performance and insights.
         </p>
       </div>
+
+      {/* Genera Articoli AI */}
+      <GenerateArticlesButton />
 
       {/* Cache Control Section */}
       <AdminCacheControl />
