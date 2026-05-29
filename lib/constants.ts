@@ -1,13 +1,7 @@
 export const getCloudinaryUrl = (type: 'image' | 'video' = 'image'): string => {
-    // Primary configuration from environment variables
-    let url = process.env.NEXT_PUBLIC_CLOUDINARY_URL;
-    
-    // Fallback configuration based on curl commands if env vars are missing
-    if (!url) {
-        console.warn("NEXT_PUBLIC_CLOUDINARY_URL not found, using fallback configuration");
-        url = "https://api.cloudinary.com/v1_1/dj5p3cwir";
-    }
-    
+    let url = process.env.NEXT_PUBLIC_CLOUDINARY_URL || "https://api.cloudinary.com/v1_1/dj5p3cwir";
+    // Strip any trailing /image/upload or /video/upload already present in the env var
+    url = url.replace(/\/(image|video)\/upload\/?$/, "");
     return `${url}/${type}/upload`;
 };
 
