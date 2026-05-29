@@ -48,10 +48,30 @@ export async function generateMetadata({
       };
     }
 
+    const canonicalUrl = `https://goal-mania.it/serieA/${slug}`;
+    const publishedAt = article.publishedAt ? new Date(article.publishedAt).toISOString() : undefined;
+
     return {
-      title: article.title,
+      title: `${article.title} | Goal Mania`,
       description: article.summary,
+      keywords: article.seoKeywords?.join(", ") ?? undefined,
+      authors: [{ name: article.author ?? "Redazione Goalmania", url: "https://goal-mania.it" }],
+      robots: { index: true, follow: true },
+      alternates: { canonical: canonicalUrl },
       openGraph: {
+        title: article.title,
+        description: article.summary,
+        url: canonicalUrl,
+        siteName: "Goal Mania",
+        images: [{ url: article.image, width: 1200, height: 630, alt: article.title }],
+        type: "article",
+        publishedTime: publishedAt,
+        authors: ["https://goal-mania.it"],
+        section: "Serie A",
+      },
+      twitter: {
+        card: "summary_large_image",
+        site: "@goalmania",
         title: article.title,
         description: article.summary,
         images: [article.image],
@@ -61,7 +81,7 @@ export async function generateMetadata({
     console.error("Error generating metadata:", error);
     return {
       title: "Goal Mania",
-      description: "Latest Serie A news and updates",
+      description: "Ultime notizie Serie A",
     };
   }
 }
@@ -121,14 +141,57 @@ export default async function SerieAArticlePage({
   const relatedArticles = await getRelatedArticles(article._id);
   const teamHint = extractTeamFromTitle(article.title);
 
+  const articleUrl = `https://goal-mania.it/serieA/${article.slug}`;
+  const newsArticleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: article.title,
+    description: article.summary,
+    image: article.image ? [article.image] : [],
+    datePublished: article.publishedAt ? new Date(article.publishedAt).toISOString() : undefined,
+    dateModified: article.updatedAt
+      ? new Date(article.updatedAt).toISOString()
+      : article.publishedAt
+      ? new Date(article.publishedAt).toISOString()
+      : undefined,
+    author: {
+      "@type": "Organization",
+      name: article.author ?? "Redazione Goalmania",
+      url: "https://goal-mania.it",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Goal Mania",
+      url: "https://goal-mania.it",
+      logo: { "@type": "ImageObject", url: "https://goal-mania.it/logo.png" },
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl },
+    keywords: article.seoKeywords?.join(", ") ?? "serie a, calcio italiano, notizie",
+    articleSection: "Serie A",
+    inLanguage: "it-IT",
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://goal-mania.it" },
+      { "@type": "ListItem", position: 2, name: "Serie A", item: "https://goal-mania.it/serieA" },
+      { "@type": "ListItem", position: 3, name: article.title, item: articleUrl },
+    ],
+  };
+
   return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(newsArticleJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
     <div className="container mx-auto px-4 py-8 bg-[#0a0a0a]">
       <article className="max-w-3xl mx-auto text-white">
         {/* Article Header */}
         <header className="mb-8">
           <div className="flex items-center text-sm text-white/70 mb-3">
             <time dateTime={article.publishedAt}>
-              {new Date(article.publishedAt).toLocaleDateString("en-US", {
+              {new Date(article.publishedAt).toLocaleDateString("it-IT", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
@@ -220,5 +283,6 @@ export default async function SerieAArticlePage({
         </section>
       )}
     </div>
+    </>
   );
 }

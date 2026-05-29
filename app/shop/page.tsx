@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import ShopClientWrapper from "@/app/_components/ShopClientWrapper";
 
-export const dynamic = "force-dynamic";
 export const revalidate = 300;
 
 export const metadata: Metadata = {

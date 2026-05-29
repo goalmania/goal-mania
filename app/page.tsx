@@ -106,20 +106,21 @@ async function getFeaturedProducts() {
 }
 
 export default async function Home() {
-  const featuredArticles = await (async () => {
-    try {
-      await connectDB();
-      const articles = await Article.find({ status: "published", featured: true })
-        .sort({ publishedAt: -1 })
-        .limit(20)
-        .lean();
-      return JSON.parse(JSON.stringify(articles));
-    } catch {
-      return [];
-    }
-  })();
-
-  const featuredProducts = await getFeaturedProducts();
+  const [featuredProducts, featuredArticles] = await Promise.all([
+    getFeaturedProducts(),
+    (async () => {
+      try {
+        await connectDB();
+        const articles = await Article.find({ status: "published", featured: true })
+          .sort({ publishedAt: -1 })
+          .limit(20)
+          .lean();
+        return JSON.parse(JSON.stringify(articles));
+      } catch {
+        return [];
+      }
+    })(),
+  ]);
 
   return (
     <div className="bg-[#070707] min-h-screen relative font-munish">

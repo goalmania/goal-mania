@@ -100,24 +100,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
       }));
 
+    const categoryToSection = (cat: string) => {
+      if (cat === "news") return "news";
+      if (cat === "transferMarket") return "transfer";
+      if (cat === "serieA") return "serieA";
+      if (cat === "internationalTeams") return "international";
+      return "news";
+    };
+
+    const now = Date.now();
+    const oneDayMs = 24 * 60 * 60 * 1000;
+
     const articleRoutes: MetadataRoute.Sitemap = (articles as any[])
       .filter((a) => {
-        const section =
-          a.category === "news" ? "news" :
-          a.category === "transferMarket" ? "transfer" :
-          a.category === "serieA" ? "serieA" : "news";
+        const section = categoryToSection(a.category);
         return `${BASE_URL}/${section}/${a.slug}`.length <= MAX_URL_LENGTH;
       })
       .map((a) => {
-        const section =
-          a.category === "news" ? "news" :
-          a.category === "transferMarket" ? "transfer" :
-          a.category === "serieA" ? "serieA" : "news";
+        const section = categoryToSection(a.category);
+        const publishedAt = a.updatedAt ?? a.publishedAt ?? new Date();
+        const ageMs = now - new Date(publishedAt).getTime();
+        // Articoli delle ultime 48h → alta priorità e changeFrequency daily
+        const isRecent = ageMs < 2 * oneDayMs;
         return {
           url: `${BASE_URL}/${section}/${a.slug}`,
-          lastModified: a.updatedAt ?? new Date(),
-          changeFrequency: "weekly" as const,
-          priority: 0.7,
+          lastModified: publishedAt,
+          changeFrequency: isRecent ? ("daily" as const) : ("weekly" as const),
+          priority: isRecent ? 0.85 : 0.65,
         };
       });
 

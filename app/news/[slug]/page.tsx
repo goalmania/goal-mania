@@ -23,24 +23,38 @@ export async function generateMetadata({
     await connectDB();
     const article = await Article.findOne({ slug, category: "news" });
     if (!article) return { title: "Article Not Found" };
+
+    const canonicalUrl = `https://goal-mania.it/news/${slug}`;
+    const publishedAt = article.publishedAt ? new Date(article.publishedAt).toISOString() : undefined;
+
     return {
       title: `${article.title} | Goal Mania`,
       description: article.summary,
+      keywords: article.seoKeywords?.join(", ") ?? undefined,
+      authors: [{ name: article.author ?? "Redazione Goalmania", url: "https://goal-mania.it" }],
+      robots: { index: true, follow: true },
+      alternates: { canonical: canonicalUrl },
       openGraph: {
         title: article.title,
         description: article.summary,
-        images: [article.image],
+        url: canonicalUrl,
+        siteName: "Goal Mania",
+        images: [{ url: article.image, width: 1200, height: 630, alt: article.title }],
         type: "article",
+        publishedTime: publishedAt,
+        authors: ["https://goal-mania.it"],
+        section: "News Calcio",
       },
       twitter: {
         card: "summary_large_image",
+        site: "@goalmania",
         title: article.title,
         description: article.summary,
         images: [article.image],
       },
     };
   } catch {
-    return { title: "Goal Mania", description: "Latest football news" };
+    return { title: "Goal Mania", description: "Ultime notizie calcio" };
   }
 }
 
@@ -148,6 +162,54 @@ export default async function ArticlePage({
   const readingTime = estimateReadingTime(article.content);
 
   const articleUrl = `https://goal-mania.it/news/${article.slug}`;
+
+  // JSON-LD NewsArticle schema — critico per Google Rich Results e AI search (GEO)
+  const newsArticleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: article.title,
+    description: article.summary,
+    image: article.image ? [article.image] : [],
+    datePublished: article.publishedAt ? new Date(article.publishedAt).toISOString() : undefined,
+    dateModified: article.updatedAt
+      ? new Date(article.updatedAt).toISOString()
+      : article.publishedAt
+      ? new Date(article.publishedAt).toISOString()
+      : undefined,
+    author: {
+      "@type": "Organization",
+      name: article.author ?? "Redazione Goalmania",
+      url: "https://goal-mania.it",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Goal Mania",
+      url: "https://goal-mania.it",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://goal-mania.it/logo.png",
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": articleUrl,
+    },
+    keywords: article.seoKeywords?.join(", ") ?? "calcio, serie a, notizie calcio",
+    articleSection: "News Calcio",
+    inLanguage: "it-IT",
+  };
+
+  // BreadcrumbList schema
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://goal-mania.it" },
+      { "@type": "ListItem", position: 2, name: "News", item: "https://goal-mania.it/news" },
+      { "@type": "ListItem", position: 3, name: article.title, item: articleUrl },
+    ],
+  };
+
   const shareLinks = {
     twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(articleUrl)}`,
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(articleUrl)}`,
@@ -157,6 +219,16 @@ export default async function ArticlePage({
 
   return (
     <div style={{ background: "#0a0a0a", color: "#f5f5f5", minHeight: "100vh" }}>
+      {/* JSON-LD structured data — NewsArticle + BreadcrumbList */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(newsArticleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
       {/* Reading progress bar */}
       <ReadingProgressBar />
 

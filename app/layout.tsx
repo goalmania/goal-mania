@@ -1,18 +1,10 @@
-export const dynamic = "force-dynamic";
-
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Inter, Italianno, Mulish, Barlow_Condensed, Barlow, Space_Mono } from "next/font/google";
 import { Metadata, Viewport } from "next";
 import { Providers } from "@/components/providers";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { ToastProvider } from "@/components/ToastProvider";
 import "./globals.css";
-import Container from "./_sections/container";
 import Script from "next/script";
-import PromoToast from "@/components/PromoToast";
-import WhatsAppButton from "@/components/shared/WhatsAppButton";
-import UrgencyFloat from "@/components/UrgencyFloat";
+import SiteShell from "@/app/_components/SiteShell";
 
 const PIXEL_ID = "1059199992701994";
 
@@ -296,12 +288,7 @@ export default function RootLayout({
         )}
 
         <Providers>
-          <div className="min-h-screen flex flex-col">
-            {children}
-            <ToastProvider />
-            <WhatsAppButton />
-            <UrgencyFloat />
-          </div>
+          <SiteShell>{children}</SiteShell>
         </Providers>
       </body>
     </html>

@@ -1,38 +1,28 @@
 import { createInstance } from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import resourcesToBackend from 'i18next-resources-to-backend'
 
-let i18nInstance: any = null
+// Translations bundled at compile time — no async load, always available immediately
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const itTranslations = require('../messages/it.json')
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const enTranslations = require('../messages/en.json')
 
-const initI18next = async (locale: string, ns: string = 'common') => {
-  if (i18nInstance) {
-    // If instance exists, just change language
-    await i18nInstance.changeLanguage(locale)
-    return i18nInstance
-  }
+const i18nInstance = createInstance()
 
-  i18nInstance = createInstance()
-  await i18nInstance
-    .use(initReactI18next)
-    .use(resourcesToBackend((language: string, namespace: string) => 
-      import(`../messages/${language}.json`)
-    ))
-    .init({
-      lng: locale,
-      fallbackLng: 'it',
-      supportedLngs: ['en', 'it'],
-      ns: ['common'],
-      defaultNS: 'common',
-      fallbackNS: 'common',
-      debug: false,
-      interpolation: {
-        escapeValue: false,
-      },
-      react: {
-        useSuspense: false,
-      },
-    })
-  return i18nInstance
-}
+i18nInstance
+  .use(initReactI18next)
+  .init({
+    lng: 'it',
+    fallbackLng: 'it',
+    supportedLngs: ['en', 'it'],
+    ns: ['common'],
+    defaultNS: 'common',
+    resources: {
+      it: { common: itTranslations },
+      en: { common: enTranslations },
+    },
+    interpolation: { escapeValue: false },
+    react: { useSuspense: false },
+  })
 
-export default initI18next 
+export default i18nInstance

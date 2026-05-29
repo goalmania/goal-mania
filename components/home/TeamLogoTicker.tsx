@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const L = (slug: string) => `/team-logos/${slug}.png`;
 
@@ -20,12 +20,12 @@ const SERIE_A = [
 ];
 
 const PREMIER = [
-  { name: "Arsenal",     slug: "arsenal",    logo: L("arsenal"),    href: "/shop/premier-league/arsenal" },
-  { name: "Man City",    slug: "man-city",   logo: L("man-city"),   href: "/shop/premier-league/manchester-city" },
-  { name: "Man United",  slug: "man-utd",    logo: L("man-utd"),    href: "/shop/premier-league/manchester-united" },
-  { name: "Chelsea",     slug: "chelsea",    logo: L("chelsea"),    href: "/shop/premier-league/chelsea" },
-  { name: "Liverpool",   slug: "liverpool",  logo: L("liverpool"),  href: "/shop/premier-league/liverpool" },
-  { name: "Tottenham",   slug: "tottenham",  logo: L("tottenham"),  href: "/shop/premier-league/tottenham" },
+  { name: "Arsenal",     slug: "arsenal",     logo: L("arsenal"),     href: "/shop/premier-league/arsenal" },
+  { name: "Man City",    slug: "man-city",    logo: L("man-city"),    href: "/shop/premier-league/manchester-city" },
+  { name: "Man United",  slug: "man-utd",     logo: L("man-utd"),     href: "/shop/premier-league/manchester-united" },
+  { name: "Chelsea",     slug: "chelsea",     logo: L("chelsea"),     href: "/shop/premier-league/chelsea" },
+  { name: "Liverpool",   slug: "liverpool",   logo: L("liverpool"),   href: "/shop/premier-league/liverpool" },
+  { name: "Tottenham",   slug: "tottenham",   logo: L("tottenham"),   href: "/shop/premier-league/tottenham" },
   { name: "Aston Villa", slug: "aston-villa", logo: L("aston-villa"), href: "/shop/premier-league/aston-villa" },
 ];
 
@@ -65,19 +65,17 @@ function TeamCard({ team }: { team: Team }) {
 
   return (
     <div
-      data-href={team.href}
-      className="team-card group flex-shrink-0 flex flex-col items-center gap-2 mx-2"
-      style={{ width: "88px", cursor: "pointer" }}
+      className="team-card flex-shrink-0 flex flex-col items-center gap-2 mx-2"
+      style={{ width: "88px" }}
       draggable={false}
     >
       <div
-        className="relative w-full flex items-center justify-center rounded-2xl overflow-hidden"
+        className="w-full flex items-center justify-center rounded-2xl overflow-hidden"
         style={{
           height: "108px",
           background: "rgba(255,255,255,0.03)",
           border: "1px solid rgba(255,255,255,0.07)",
-          transition: "transform 200ms cubic-bezier(0.23,1,0.32,1), box-shadow 200ms cubic-bezier(0.23,1,0.32,1), border-color 200ms",
-          pointerEvents: "none",
+          transition: "transform 200ms cubic-bezier(0.23,1,0.32,1), box-shadow 200ms, border-color 200ms",
         }}
       >
         {!imgError ? (
@@ -98,7 +96,6 @@ function TeamCard({ team }: { team: Team }) {
               fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
               color: "rgba(200,240,0,0.5)",
               letterSpacing: "1px",
-              pointerEvents: "none",
             }}
           >
             {team.name.slice(0, 2).toUpperCase()}
@@ -113,7 +110,6 @@ function TeamCard({ team }: { team: Team }) {
           color: "rgba(255,255,255,0.55)",
           textTransform: "uppercase",
           transition: "color 200ms",
-          pointerEvents: "none",
         }}
       >
         {team.name}
@@ -133,7 +129,7 @@ function TeamCard({ team }: { team: Team }) {
   );
 }
 
-// ─── Scrolling strip ─────────────────────────────────────────
+// ─── CSS-animated strip (no RAF, no scrollLeft — GPU only) ────
 function Strip({
   teams,
   direction,
@@ -143,141 +139,49 @@ function Strip({
   direction: "left" | "right";
   duration: number;
 }) {
-  const router = useRouter();
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number>(0);
-  const posRef = useRef(0);
-  const isDragging = useRef(false);
-  const dragStartX = useRef(0);
-  const scrollAtDragStart = useRef(0);
-  const lastTs = useRef(0);
-  const isPaused = useRef(false);
-  // Track total movement to distinguish tap vs drag
-  const dragMoved = useRef(0);
-
-  const doubled = [...teams, ...teams];
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    // Init scroll position
-    const init = () => {
-      const halfWidth = el.scrollWidth / 2;
-      if (direction === "right") {
-        el.scrollLeft = halfWidth;
-        posRef.current = halfWidth;
-      } else {
-        el.scrollLeft = 0;
-        posRef.current = 0;
-      }
-    };
-    requestAnimationFrame(init);
-
-    // Auto-scroll rAF loop
-    function tick(ts: number) {
-      const el = scrollRef.current;
-      if (!el) { rafRef.current = requestAnimationFrame(tick); return; }
-
-      if (!isDragging.current && !isPaused.current) {
-        if (lastTs.current === 0) lastTs.current = ts;
-        const dt = Math.min(ts - lastTs.current, 64);
-        lastTs.current = ts;
-        const halfWidth = el.scrollWidth / 2;
-        const speed = halfWidth / duration;
-        const delta = speed * (dt / 1000);
-
-        if (direction === "left") {
-          posRef.current += delta;
-          if (posRef.current >= halfWidth) posRef.current -= halfWidth;
-        } else {
-          posRef.current -= delta;
-          if (posRef.current <= 0) posRef.current += halfWidth;
-        }
-        el.scrollLeft = posRef.current;
-      } else {
-        lastTs.current = ts;
-      }
-      rafRef.current = requestAnimationFrame(tick);
-    }
-    rafRef.current = requestAnimationFrame(tick);
-
-    // ── Document-level drag handlers ──────────────────────────
-    // Using document listeners instead of setPointerCapture so that
-    // onClick fires correctly on the actual target element.
-    const handlePointerMove = (e: PointerEvent) => {
-      if (!isDragging.current || !scrollRef.current) return;
-      const el = scrollRef.current;
-      const delta = dragStartX.current - e.clientX;
-      dragMoved.current = Math.abs(delta);
-      const halfWidth = el.scrollWidth / 2;
-      let newPos = scrollAtDragStart.current + delta;
-      if (newPos < 0) newPos += halfWidth;
-      if (newPos >= halfWidth * 2) newPos -= halfWidth;
-      el.scrollLeft = newPos;
-      posRef.current = newPos;
-    };
-
-    const handlePointerUp = () => {
-      if (!isDragging.current) return;
-      isDragging.current = false;
-      if (scrollRef.current) scrollRef.current.style.cursor = "grab";
-    };
-
-    document.addEventListener("pointermove", handlePointerMove);
-    document.addEventListener("pointerup", handlePointerUp);
-    document.addEventListener("pointercancel", handlePointerUp);
-
-    return () => {
-      cancelAnimationFrame(rafRef.current);
-      document.removeEventListener("pointermove", handlePointerMove);
-      document.removeEventListener("pointerup", handlePointerUp);
-      document.removeEventListener("pointercancel", handlePointerUp);
-    };
-  }, [direction, duration]);
-
-  function onMouseEnter() { isPaused.current = true; lastTs.current = 0; }
-  function onMouseLeave() { isPaused.current = false; }
-
-  function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
-    isDragging.current = true;
-    dragMoved.current = 0;
-    dragStartX.current = e.clientX;
-    scrollAtDragStart.current = scrollRef.current?.scrollLeft ?? 0;
-    e.currentTarget.style.cursor = "grabbing";
-    // No setPointerCapture — document-level handlers manage the drag
-  }
-
-  // onClick fires reliably because there's no pointer capture redirecting events
-  function handleClick(e: React.MouseEvent<HTMLDivElement>) {
-    if (dragMoved.current >= 8) return; // was a drag, not a tap
-    const card = (e.target as HTMLElement).closest("[data-href]") as HTMLElement | null;
-    const href = card?.dataset?.href;
-    if (href) router.push(href);
-  }
+  // Triple the array so the seamless loop has enough content
+  const tripled = [...teams, ...teams, ...teams];
+  const animName = direction === "left" ? "ticker-scroll-left" : "ticker-scroll-right";
 
   return (
-    <div
-      ref={scrollRef}
-      className="overflow-x-scroll"
-      style={{
-        scrollbarWidth: "none",
-        msOverflowStyle: "none",
-        cursor: "grab",
-        userSelect: "none",
-        WebkitOverflowScrolling: "touch",
-      } as React.CSSProperties}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onPointerDown={onPointerDown}
-      onClick={handleClick}
-    >
-      <div className="flex" style={{ width: "max-content" }}>
-        {doubled.map((team, i) => (
-          <TeamCard key={`${team.slug}-${i}`} team={team} />
+    <div className="ticker-strip overflow-hidden" style={{ cursor: "default" }}>
+      <div
+        className="flex"
+        style={{
+          width: "max-content",
+          animation: `${animName} ${duration}s linear infinite`,
+          willChange: "transform",
+        }}
+      >
+        {tripled.map((team, i) => (
+          <Link
+            key={`${team.slug}-${i}`}
+            href={team.href}
+            prefetch={false}
+            draggable={false}
+            style={{ textDecoration: "none" }}
+          >
+            <TeamCard team={team} />
+          </Link>
         ))}
       </div>
-      <style jsx>{`div::-webkit-scrollbar { display: none; }`}</style>
+
+      <style jsx>{`
+        @keyframes ticker-scroll-left {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(calc(-100% / 3)); }
+        }
+        @keyframes ticker-scroll-right {
+          0%   { transform: translateX(calc(-100% / 3)); }
+          100% { transform: translateX(0); }
+        }
+        /* Pause on desktop hover */
+        @media (hover: hover) and (pointer: fine) {
+          .ticker-strip:hover > div {
+            animation-play-state: paused;
+          }
+        }
+      `}</style>
     </div>
   );
 }
@@ -343,13 +247,6 @@ export default function TeamLogoTicker() {
         <SectionLabel label="Nazionali" />
         <Strip teams={NAZIONALI} direction="right" duration={30} />
       </div>
-
-      <p
-        className="text-center mt-5 text-[9px] uppercase tracking-[2px]"
-        style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.18)" }}
-      >
-        ← trascina per scorrere • clicca per visitare →
-      </p>
     </section>
   );
 }

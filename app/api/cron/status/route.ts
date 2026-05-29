@@ -8,12 +8,12 @@ export async function GET() {
   try {
     await connectDB();
 
-    const aiArticles = await Article.find({ author: "Goal Mania AI" })
+    const aiArticles = await Article.find({ author: "Redazione Goalmania" })
       .sort({ createdAt: -1 })
       .limit(10)
       .select("title category status publishedAt createdAt slug");
 
-    const total = await Article.countDocuments({ author: "Goal Mania AI" });
+    const total = await Article.countDocuments({ author: "Redazione Goalmania" });
 
     return NextResponse.json({
       ok: true,

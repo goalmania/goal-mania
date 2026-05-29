@@ -6,23 +6,40 @@ import Product from "@/lib/models/Product";
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
-const ARTICLES_PER_RUN = 2;
+// Cron ogni ora su Vercel → 24 articoli/giorno. Con ARTICLES_PER_RUN=1 non si supera
+// il rate limit di Gemini Flash (10 req/min sul piano gratuito).
+const ARTICLES_PER_RUN = 1;
 
+// Feed verificati al 29/05/2026: freschi + includono immagini proprie
 const RSS_FEEDS = [
-  { url: "https://www.gazzetta.it/rss/home.xml",          source: "Gazzetta dello Sport", category: "serieA" },
-  { url: "https://www.corrieredellosport.it/rss",          source: "Corriere dello Sport", category: "news" },
-  { url: "https://www.tuttosport.com/rss/calcio",          source: "Tuttosport",           category: "serieA" },
-  { url: "https://www.calciomercato.com/rss",              source: "CalcioMercato",        category: "transferMarket" },
-  { url: "https://www.goal.com/feeds/it/news",             source: "Goal.com",             category: "news" },
+  {
+    url: "https://www.tuttosport.com/rss/calcio",
+    source: "Tuttosport",
+    category: "serieA",
+  },
+  {
+    url: "https://www.calciomercato.it/feed/",
+    source: "CalcioMercato.it",
+    category: "transferMarket",
+  },
+  {
+    url: "https://www.calcionews24.com/feed/",
+    source: "CalcioNews24",
+    category: "news",
+  },
+  {
+    url: "https://www.calcioefinanza.it/feed/",
+    source: "Calcio e Finanza",
+    category: "news",
+  },
 ];
 
-// Immagini di fallback verificate (URL attivi, maggio 2026)
+// Fallback solo se tutto il resto fallisce (immagine generica calcio)
 const FALLBACK_IMAGES = [
   "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=1200&q=80",
   "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1200&q=80",
   "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80",
   "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1200&q=80",
-  "https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=1200&q=80",
 ];
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -32,19 +49,21 @@ interface NewsItem {
   description: string;
   source: string;
   hintCategory: string;
+  pubDate?: Date;
+  rssImage?: string; // immagine estratta direttamente dall'RSS
 }
 
 interface GeneratedArticle {
   title: string;
-  summary: string;           // usato anche come meta description SEO (max 160 char)
-  content: string;           // HTML ottimizzato SEO/GEO
+  summary: string;
+  content: string;
   category: "news" | "transferMarket" | "serieA" | "internationalTeams";
   league?: string;
   mainTeam: string;
   secondaryTeams: string[];
-  mainPerson: string;        // persona principale (es. "Flavio Briatore") — per la foto
-  seoKeywords: string[];     // 5-7 keyword SEO
-  imageSearchQuery: string;  // query ottimale per trovare foto reale
+  mainPerson: string;
+  seoKeywords: string[];
+  imageSearchQuery: string;
 }
 
 interface RunResult {
@@ -71,32 +90,132 @@ function extractTag(xml: string, tag: string): string {
 
 function decodeHtmlEntities(str: string): string {
   return str
-    .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&apos;/g, "'")
-    .replace(/&nbsp;/g, " ");
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&#\d+;/g, "");
 }
 
-function parseRssItems(xml: string, source: string, hintCategory: string): NewsItem[] {
-  const items: NewsItem[] = [];
-  for (const item of (xml.match(/<item>([\s\S]*?)<\/item>/g) ?? [])) {
-    const title = decodeHtmlEntities(extractTag(item, "title"));
-    const description = decodeHtmlEntities(
-      extractTag(item, "description").replace(/<[^>]+>/g, "").slice(0, 400)
-    );
-    if (title.length > 5) items.push({ title, description, source, hintCategory });
+/**
+ * Estrae l'URL immagine da un item RSS.
+ * Cerca in ordine: media:content, enclosure, img nel description/content.
+ * Restituisce la prima URL valida trovata.
+ */
+function extractRssImage(itemXml: string): string | undefined {
+  // 1. <media:content url="...">
+  const mediaMatch = itemXml.match(/<media:content[^>]+url=["']([^"']+)["']/i);
+  if (mediaMatch?.[1] && mediaMatch[1].match(/\.(jpe?g|png|webp)/i)) {
+    return mediaMatch[1];
   }
-  return items.slice(0, 8);
+
+  // 2. <enclosure url="..." type="image/...">
+  const enclosureMatch = itemXml.match(/<enclosure[^>]+url=["']([^"']+)["'][^>]+type=["']image/i);
+  if (enclosureMatch?.[1]) return enclosureMatch[1];
+
+  // 3. <img src="..."> nel description/content (WordPress feed, CalcioNews24, ecc.)
+  const imgMatch = itemXml.match(/<img[^>]+src=["']([^"']+\.(?:jpe?g|png|webp)(?:\?[^"']*)?)["']/i);
+  if (imgMatch?.[1] && !imgMatch[1].includes("logo") && !imgMatch[1].includes("icon")) {
+    return imgMatch[1];
+  }
+
+  return undefined;
+}
+
+// Parole chiave che indicano CALCIO — almeno una deve essere presente
+const FOOTBALL_KEYWORDS = [
+  "calcio", "serie a", "champions", "europa league", "conference league",
+  "premier league", "liga", "bundesliga", "ligue 1", "calciomercato", "mercato",
+  "maglia", "allenatore", "gol", "partita", "match", "stadio", "tifosi",
+  "milan", "inter", "juventus", "juve", "napoli", "roma", "lazio", "atalanta",
+  "fiorentina", "torino", "bologna", "real madrid", "barcelona", "manchester",
+  "arsenal", "chelsea", "liverpool", "psg", "bayern", "porto", "ajax",
+  "nazionale", "ct", "spalletti", "conte", "mourinho", "ancelotti",
+  "fantacalcio", "serie b", "coppa italia", "supercoppa",
+];
+
+// Parole chiave che indicano sport NON-calcio — se presenti senza calcio, scarta
+const NON_FOOTBALL_KEYWORDS = [
+  "sci ", "sciatore", "sciatrice", "slalom", "superg", "discesa libera",
+  "formula 1", "f1", "motogp", "moto gp", "tennis", "wimbledon", "roland garros",
+  "basket", "nba", "volley", "nuoto", "atletica", "ciclismo", "giro d'italia",
+  "tour de france", "boxe", "pugilato", "mma", "ufc", "golf",
+  "hockey", "rugby", "baseball", "softball", "polo", "equitazione",
+  "goggia", "brignone", "federica pellegrini", "marcell jacobs",
+];
+
+function isFootballNews(title: string, description: string): boolean {
+  const text = (title + " " + description).toLowerCase();
+  const hasFootball = FOOTBALL_KEYWORDS.some((kw) => text.includes(kw));
+  if (hasFootball) return true;
+  // Se non c'è calcio ma c'è altro sport → scarta
+  const hasOtherSport = NON_FOOTBALL_KEYWORDS.some((kw) => text.includes(kw));
+  return !hasOtherSport;
+}
+
+function parseRssItems(
+  xml: string,
+  source: string,
+  hintCategory: string
+): NewsItem[] {
+  const items: NewsItem[] = [];
+  const now = Date.now();
+  const maxAgeMs = 36 * 60 * 60 * 1000; // 36 ore
+
+  for (const item of xml.match(/<item>([\s\S]*?)<\/item>/g) ?? []) {
+    const title = decodeHtmlEntities(extractTag(item, "title"));
+    if (title.length < 10) continue;
+
+    const description = decodeHtmlEntities(
+      extractTag(item, "description")
+        .replace(/<[^>]+>/g, "")
+        .trim()
+        .slice(0, 400)
+    );
+
+    // Filtra: solo notizie di calcio
+    if (!isFootballNews(title, description)) continue;
+
+    // Filtra per data: solo notizie delle ultime 36h
+    const pubDateRaw = extractTag(item, "pubDate");
+    let pubDate: Date | undefined;
+    if (pubDateRaw) {
+      const parsed = new Date(pubDateRaw);
+      if (!isNaN(parsed.getTime())) {
+        pubDate = parsed;
+        if (now - pubDate.getTime() > maxAgeMs) continue; // troppo vecchio
+      }
+    }
+
+    // Estrai immagine dall'RSS item
+    const rssImage = extractRssImage(item);
+
+    items.push({ title, description, source, hintCategory, pubDate, rssImage });
+  }
+
+  // Ordina per data decrescente (più recenti prima)
+  items.sort((a, b) => (b.pubDate?.getTime() ?? 0) - (a.pubDate?.getTime() ?? 0));
+  return items.slice(0, 12);
 }
 
 async function fetchAllNews(): Promise<NewsItem[]> {
   const results = await Promise.allSettled(
     RSS_FEEDS.map(async ({ url, source, category }) => {
       const res = await axios.get(url, {
-        timeout: 8000,
-        headers: { "User-Agent": "Mozilla/5.0 (compatible; GoalMania/1.0)" },
+        timeout: 10000,
+        headers: { "User-Agent": "Mozilla/5.0 (compatible; GoalMania/2.0; +https://goal-mania.it)" },
         responseType: "text",
       });
-      return parseRssItems(res.data as string, source, category);
+      // Controlla che sia XML e non HTML
+      const body = res.data as string;
+      if (body.trim().startsWith("<!DOCTYPE") || body.trim().startsWith("<html")) {
+        console.warn(`[RSS] ${source}: risposta HTML, feed non valido`);
+        return [];
+      }
+      return parseRssItems(body, source, category);
     })
   );
 
@@ -104,60 +223,32 @@ async function fetchAllNews(): Promise<NewsItem[]> {
   for (const r of results) {
     if (r.status === "fulfilled") all.push(...r.value);
   }
-  // Shuffle per varietà ma mantieni notizie recenti
-  return all.sort(() => Math.random() - 0.5);
+
+  // Ordina per data, poi mescola leggermente le prime 30 per varietà di fonti
+  all.sort((a, b) => (b.pubDate?.getTime() ?? 0) - (a.pubDate?.getTime() ?? 0));
+  const top = all.slice(0, 30).sort(() => Math.random() - 0.5);
+  return [...top, ...all.slice(30)];
 }
 
-// ─── Helper: Wikipedia image ──────────────────────────────────────────────────
+// ─── Helper: leggi titoli degli articoli già pubblicati nelle ultime 48h ──────
+// Serve per evitare che Gemini generi articoli sullo stesso argomento
 
-async function fetchWikipediaImage(entity: string): Promise<string | null> {
-  if (!entity || entity.trim().length < 2) return null;
-
-  for (const lang of ["it", "en"]) {
-    try {
-      // Step 1: cerca il titolo esatto della pagina
-      const searchRes = await axios.get(`https://${lang}.wikipedia.org/w/api.php`, {
-        params: {
-          action: "query",
-          list: "search",
-          srsearch: entity,
-          srlimit: 1,
-          format: "json",
-          origin: "*",
-        },
-        timeout: 6000,
-      });
-      const pages = searchRes.data?.query?.search;
-      if (!pages || pages.length === 0) continue;
-
-      const pageTitle = pages[0].title as string;
-
-      // Step 2: recupera l'immagine principale della pagina
-      const imgRes = await axios.get(`https://${lang}.wikipedia.org/w/api.php`, {
-        params: {
-          action: "query",
-          titles: pageTitle,
-          prop: "pageimages",
-          pithumbsize: 1200,
-          format: "json",
-          origin: "*",
-        },
-        timeout: 6000,
-      });
-
-      const pagesData = imgRes.data?.query?.pages ?? {};
-      const page = Object.values(pagesData)[0] as { thumbnail?: { source: string } };
-      if (page?.thumbnail?.source) {
-        return page.thumbnail.source;
-      }
-    } catch {
-      continue;
-    }
+async function getRecentArticleTitles(): Promise<string[]> {
+  try {
+    const since = new Date(Date.now() - 48 * 60 * 60 * 1000);
+    const recent = await Article.find(
+      { publishedAt: { $gte: since }, author: "Redazione Goalmania" },
+      { title: 1 }
+    )
+      .lean()
+      .limit(50);
+    return (recent as { title: string }[]).map((a) => a.title);
+  } catch {
+    return [];
   }
-  return null;
 }
 
-// ─── Helper: Unsplash (fallback) ──────────────────────────────────────────────
+// ─── Helper: Unsplash (fallback sport generico) ───────────────────────────────
 
 async function fetchUnsplashImage(query: string): Promise<string> {
   const fallback = FALLBACK_IMAGES[Math.floor(Math.random() * FALLBACK_IMAGES.length)];
@@ -181,106 +272,192 @@ async function fetchUnsplashImage(query: string): Promise<string> {
   return fallback;
 }
 
-// ─── Helper: smart image (Wikipedia first, then Unsplash) ────────────────────
+// ─── Helper: Wikipedia (fallback persona) ────────────────────────────────────
+
+async function fetchWikipediaImage(entity: string): Promise<string | null> {
+  if (!entity || entity.trim().length < 2) return null;
+
+  for (const lang of ["it", "en"]) {
+    try {
+      const searchRes = await axios.get(`https://${lang}.wikipedia.org/w/api.php`, {
+        params: { action: "query", list: "search", srsearch: entity, srlimit: 1, format: "json", origin: "*" },
+        timeout: 5000,
+      });
+      const pages = searchRes.data?.query?.search;
+      if (!pages?.length) continue;
+
+      const imgRes = await axios.get(`https://${lang}.wikipedia.org/w/api.php`, {
+        params: { action: "query", titles: pages[0].title, prop: "pageimages", pithumbsize: 1200, format: "json", origin: "*" },
+        timeout: 5000,
+      });
+      const pagesData = imgRes.data?.query?.pages ?? {};
+      const page = Object.values(pagesData)[0] as { thumbnail?: { source: string } };
+      if (page?.thumbnail?.source) return page.thumbnail.source;
+    } catch {
+      continue;
+    }
+  }
+  return null;
+}
+
+// ─── Helper: Bing Image Search (immagini giornalistiche recenti) ──────────────
+// Richiede BING_IMAGE_SEARCH_KEY nelle env Vercel (piano gratuito: 1000 req/mese)
+
+async function fetchBingImage(query: string): Promise<string | null> {
+  const apiKey = process.env.BING_IMAGE_SEARCH_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const res = await axios.get("https://api.bing.microsoft.com/v7.0/images/search", {
+      params: { q: query, count: 10, imageType: "Photo", size: "Large", freshness: "Month", safeSearch: "Strict" },
+      headers: { "Ocp-Apim-Subscription-Key": apiKey },
+      timeout: 6000,
+    });
+    const items = res.data?.value ?? [];
+    if (items.length > 0) {
+      const pick = items[Math.floor(Math.random() * Math.min(items.length, 5))];
+      return pick.contentUrl as string;
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
+// ─── Helper: smart image ─────────────────────────────────────────────────────
+// Priorità:
+//   1. Immagine estratta direttamente dall'RSS → sempre attinente alla notizia ✅
+//   2. Bing Image Search recente (se BING_IMAGE_SEARCH_KEY disponibile)
+//   3. Wikipedia per persona (foto profilo)
+//   4. Unsplash con query specifica (nome persona / squadra)
+//   5. Fallback generico calcio
 
 async function fetchSmartImage(
+  rssImage: string | undefined,
   mainPerson: string,
   mainTeam: string,
   imageSearchQuery: string,
   log: string[]
 ): Promise<{ url: string; source: string }> {
-  // 1. Persona reale → Wikipedia
+
+  // 1. Immagine RSS — la più rilevante perché è quella della notizia originale
+  if (rssImage && rssImage.startsWith("http")) {
+    log.push(`🖼️  Immagine RSS (dalla fonte originale): ${rssImage.slice(0, 80)}...`);
+    return { url: rssImage, source: "rss-original" };
+  }
+
+  // 2. Bing recente (persona/squadra + anno)
+  const bingQuery = mainPerson
+    ? `${mainPerson} calcio 2026`
+    : `${mainTeam} calcio 2026`;
+  const bingUrl = await fetchBingImage(bingQuery);
+  if (bingUrl) {
+    log.push(`🖼️  Bing recente: "${bingQuery}"`);
+    return { url: bingUrl, source: "bing-recent" };
+  }
+
+  // 3. Wikipedia per persona
   if (mainPerson && mainPerson.trim().length > 2) {
     const wikiUrl = await fetchWikipediaImage(mainPerson);
     if (wikiUrl) {
-      log.push(`🖼️  Foto Wikipedia per "${mainPerson}": OK`);
+      log.push(`🖼️  Wikipedia persona: "${mainPerson}"`);
       return { url: wikiUrl, source: "wikipedia-person" };
     }
     log.push(`⚠️  Wikipedia: nessuna foto per "${mainPerson}"`);
   }
 
-  // 2. Squadra → Wikipedia
-  if (mainTeam && mainTeam.trim().length > 2) {
-    const wikiUrl = await fetchWikipediaImage(mainTeam + " football club");
-    if (wikiUrl) {
-      log.push(`🖼️  Foto Wikipedia per "${mainTeam}": OK`);
-      return { url: wikiUrl, source: "wikipedia-team" };
-    }
-  }
-
-  // 3. Unsplash con la query suggerita da Gemini
-  const query = imageSearchQuery || mainTeam || "football";
-  const unsplashUrl = await fetchUnsplashImage(query);
-  log.push(`🖼️  Immagine Unsplash: "${query}"`);
+  // 4. Unsplash con query specifica
+  const unsplashQuery = imageSearchQuery || mainPerson || mainTeam || "football";
+  const unsplashUrl = await fetchUnsplashImage(unsplashQuery);
+  log.push(`🖼️  Unsplash: "${unsplashQuery}"`);
   return { url: unsplashUrl, source: "unsplash" };
 }
 
-// ─── Helper: genera articolo con Google Gemini (SEO + GEO ottimizzato) ────────
+// ─── Helper: genera articolo con Google Gemini ────────────────────────────────
 
 async function generateArticleWithGemini(
   news: NewsItem[],
   usedTitles: string[],
+  recentDbTitles: string[],
   articleIndex: number
-): Promise<GeneratedArticle> {
+): Promise<{ article: GeneratedArticle; sourceNews: NewsItem }> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("GEMINI_API_KEY non configurata");
 
-  const freshNews = news
-    .filter((n) => !usedTitles.some((t) => n.title.slice(0, 30) === t.slice(0, 30)))
-    .slice(0, 5);
+  // Combina titoli già usati in questo run + articoli recenti del DB
+  const allUsedTitles = [...usedTitles, ...recentDbTitles];
 
-  if (freshNews.length === 0) throw new Error("Nessuna notizia disponibile");
+  // Filtra notizie non ancora coperte
+  const freshNews = news.filter(
+    (n) => !allUsedTitles.some((t) => {
+      const a = n.title.toLowerCase().slice(0, 40);
+      const b = t.toLowerCase().slice(0, 40);
+      return a === b || (a.length > 20 && b.includes(a.slice(0, 20)));
+    })
+  );
 
-  // Scegli la notizia in base all'indice per varietà
+  if (freshNews.length === 0) throw new Error("Nessuna notizia nuova disponibile");
+
   const targetNews = freshNews[articleIndex % freshNews.length];
   const contextNews = freshNews.filter((n) => n !== targetNews).slice(0, 3);
 
+  const today = new Date();
+  const dateLabel = today.toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
+
   const newsDigest = [targetNews, ...contextNews]
-    .map((n, i) => `[${i === 0 ? "NOTIZIA PRINCIPALE" : `Notizia ${i + 1}`} — ${n.source}]\n${n.title}\n${n.description}`)
+    .map((n, i) => {
+      const dateStr = n.pubDate
+        ? n.pubDate.toLocaleString("it-IT", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })
+        : "oggi";
+      const label = i === 0 ? "NOTIZIA PRINCIPALE" : `Contesto ${i}`;
+      return `[${label} — ${n.source}, ${dateStr}]\nTitolo: ${n.title}\nDescrizione: ${n.description}`;
+    })
     .join("\n\n");
 
-  const prompt = `Sei un giornalista sportivo senior per Goal-Mania.it, uno dei principali portali calcistici italiani.
+  // Lista argomenti già coperti di recente (per evitare ripetizioni)
+  const recentTopics = recentDbTitles.slice(0, 20).join("\n- ");
 
-NOTIZIE REALI dalle principali testate sportive italiane (16 Maggio 2026):
+  const prompt = `Sei un giornalista sportivo senior per Goal-Mania.it, portale calcistico italiano.
 
+DATA ODIERNA: ${dateLabel}
+
+NOTIZIE REALI DELLE ULTIME ORE:
 ${newsDigest}
 
-**OBIETTIVO**: Scrivi un articolo giornalistico approfondito basato sulla NOTIZIA PRINCIPALE.
-L'articolo deve essere:
-1. **SEO-ottimizzato**: usa keyword naturali, titolo H1 chiaro, sottotitoli H2/H3, lista puntata dove utile
-2. **GEO-ottimizzato** (AI search): rispondi direttamente alle domande, usa frasi complete e fattuali, cita nomi e cifre reali
-3. **Originale**: non copiare il testo delle fonti, rielaboralo con valore aggiunto
-4. **Lungo e approfondito**: minimo 800 parole
+${recentDbTitles.length > 0 ? `ARGOMENTI GIÀ TRATTATI NELLE ULTIME 48H (NON RIPETERE):
+- ${recentTopics}
+
+` : ""}**REGOLA ASSOLUTA #1**: Scrivi SOLO ed ESCLUSIVAMENTE basandoti sulle notizie fornite. NON usare conoscenze pregresse su allenatori, rose, dirigenti, classifiche — queste informazioni cambiano. Se la notizia non menziona esplicitamente il nome dell'allenatore, non citarlo.
+**REGOLA ASSOLUTA #2**: Non trattare argomenti già coperti di recente — scegli un angolo diverso.
+**REGOLA ASSOLUTA #3**: L'articolo deve riguardare la NOTIZIA PRINCIPALE. Le altre notizie servono solo per contesto.
+
+**OBIETTIVO**: Articolo giornalistico approfondito, minimo 800 parole.
+1. SEO-ottimizzato: keyword naturali, H2/H3, liste puntate
+2. GEO-ottimizzato: risposte dirette, fatti concreti, nomi e cifre reali
+3. Originale: rielabora, non copiare
+4. Tone of voice: appassionato, professionale, italiano
 
 Struttura HTML richiesta:
-- <p class="lead"><strong>Occhiello di apertura</strong> (2-3 frasi che riassumono il fatto principale)</p>
-- <h2>Titolo sezione 1</h2><p>...</p>
-- <h2>Titolo sezione 2</h2><p>...</p>
-- <h2>Analisi e Prospettive</h2><p>...</p>
-- <h2>Conclusioni</h2><p>...</p>
+<p class="lead"><strong>Occhiello</strong> (2-3 frasi che riassumono il fatto)</p>
+<h2>Sezione 1</h2><p>...</p>
+<h2>Sezione 2</h2><p>...</p>
+<h2>Analisi e Prospettive</h2><p>...</p>
+<h2>Conclusioni</h2><p>...</p>
 
-Rispondi SOLO con JSON valido, senza markdown né testo extra:
+Rispondi SOLO con JSON valido, zero markdown, zero testo extra:
 {
-  "title": "Titolo accattivante originale (60-80 caratteri, include nome persona/squadra principale)",
-  "summary": "Meta description SEO: riassunto in 140-160 caratteri, include keyword principale, risponde alla domanda principale dell'articolo",
-  "content": "HTML completo dell'articolo (minimo 800 parole) con struttura <p class=lead>, <h2>, <p>, <strong>, <ul>, <li>",
+  "title": "Titolo accattivante (60-80 caratteri, include nome persona/squadra principale)",
+  "summary": "Meta description SEO: 140-160 caratteri, keyword principale, risponde alla domanda principale",
+  "content": "HTML completo minimo 800 parole con struttura indicata",
   "category": "serieA | transferMarket | news | internationalTeams",
-  "league": "Solo se category=internationalTeams: LaLiga | Premier League | Bundesliga | Ligue 1 | Champions League | Europa League",
-  "mainTeam": "Nome esatto squadra principale (es: Juventus, Real Madrid, Napoli, Inter, Milan, Roma, Lazio, Arsenal, Barcelona)",
-  "secondaryTeams": ["Max 3 squadre secondarie citate"],
-  "mainPerson": "Nome e cognome della persona principale dell'articolo (es: Flavio Briatore, Claudio Lotito, Aurelio De Laurentiis). Stringa vuota se l'articolo riguarda solo una squadra senza protagonista umano specifico.",
-  "seoKeywords": ["5-7 keyword rilevanti per SEO, dalla più importante alla meno importante"],
-  "imageSearchQuery": "Query ottimale in italiano per trovare una foto giornalistica rilevante (es: 'Flavio Briatore Milan 2026' oppure 'Juventus allenamento 2026')"
-}
+  "league": "Solo se internationalTeams: LaLiga | Premier League | Bundesliga | Ligue 1 | Champions League | Europa League",
+  "mainTeam": "Nome breve squadra (Milan NON AC Milan, Inter NON Internazionale, Juve o Juventus, ecc.)",
+  "secondaryTeams": ["Max 3 squadre secondarie"],
+  "mainPerson": "Nome e cognome protagonista (allenatore, presidente, giocatore, dirigente). Stringa vuota se non c'è un protagonista umano specifico citato.",
+  "seoKeywords": ["5-7 keyword dalla più importante"],
+  "imageSearchQuery": "Query per trovare foto recente del protagonista (es: 'Luciano Spalletti conferenza stampa 2026' o 'Maurizio Sarri Lazio 2026')"
+}`;
 
-Regole rigide:
-- mainTeam: usa nome breve della maglia (Milan NON AC Milan, Inter NON Internazionale, ecc.)
-- mainPerson: se c'è un presidente, allenatore, giocatore o dirigente protagonista, inseriscilo qui — questa info viene usata per trovare la sua foto reale
-- seoKeywords: prima keyword = keyword principale dell'articolo (es. "Briatore Milan" o "Juventus calciomercato")
-- content: MINIMO 800 parole, struttura giornalistica professionale
-- Non inventare fatti non presenti nelle notizie fornite`;
-
-  // Retry con backoff per gestire 429 (rate limit)
   let response;
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
@@ -288,16 +465,15 @@ Regole rigide:
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
         {
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.75, maxOutputTokens: 8000 },
+          generationConfig: { temperature: 0.7, maxOutputTokens: 8000 },
         },
         { headers: { "content-type": "application/json" }, timeout: 90000 }
       );
-      break; // successo
+      break;
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response?.status;
       if (status === 429 && attempt < 3) {
-        const waitMs = attempt * 15000; // 15s → 30s
-        await new Promise((r) => setTimeout(r, waitMs));
+        await new Promise((r) => setTimeout(r, attempt * 20000));
         continue;
       }
       throw err;
@@ -308,31 +484,20 @@ Regole rigide:
   const rawText: string = response.data.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
   if (!rawText) throw new Error("Gemini risposta vuota");
 
-  // Pulizia robusta del JSON: rimuovi markdown, isola il blocco JSON
-  let cleaned = rawText
-    .replace(/```json\n?/gi, "")
-    .replace(/```\n?/g, "")
-    .trim();
-
+  let cleaned = rawText.replace(/```json\n?/gi, "").replace(/```\n?/g, "").trim();
   const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error("JSON non trovato nella risposta Gemini");
 
-  // Sanitizzazione avanzata: rimuovi caratteri di controllo non validi nel JSON
-  // Sostituisci newline/tab raw dentro stringhe JSON con versioni escaped
   let rawJson = jsonMatch[0]
-    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "") // caratteri controllo non validi
-    .replace(/\n/g, "\\n")                               // newline → \n escaped
-    .replace(/\r/g, "\\r")                               // carriage return
-    .replace(/\t/g, "\\t");                              // tab
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "")
+    .replace(/\n/g, "\\n")
+    .replace(/\r/g, "\\r")
+    .replace(/\t/g, "\\t");
 
-  // Dopo il replace dei newline, ripristina i newline strutturali del JSON
-  // (quelli fuori dalle stringhe — tra le chiavi del JSON)
-  // Approccio più sicuro: usa JSON5/jsonrepair se disponibile, altrimenti try/catch
   let parsed: GeneratedArticle;
   try {
     parsed = JSON.parse(rawJson) as GeneratedArticle;
   } catch {
-    // Fallback: prova col testo originale senza escape newline
     try {
       parsed = JSON.parse(jsonMatch[0]) as GeneratedArticle;
     } catch (e2) {
@@ -340,17 +505,15 @@ Regole rigide:
     }
   }
 
-  // Validazione campi
   if (!parsed.title || !parsed.content || !parsed.summary) {
     throw new Error("Gemini ha restituito dati incompleti");
   }
 
-  // Assicurati che mainPerson e seoKeywords esistano
   parsed.mainPerson = parsed.mainPerson ?? "";
   parsed.seoKeywords = Array.isArray(parsed.seoKeywords) ? parsed.seoKeywords : [];
-  parsed.imageSearchQuery = parsed.imageSearchQuery ?? parsed.mainTeam ?? "calcio italiano";
+  parsed.imageSearchQuery = parsed.imageSearchQuery ?? (parsed.mainPerson || parsed.mainTeam || "calcio italiano");
 
-  return parsed;
+  return { article: parsed, sourceNews: targetNews };
 }
 
 // ─── Helper: trova maglia nel DB ─────────────────────────────────────────────
@@ -359,11 +522,8 @@ async function findJerseyForTeam(
   mainTeam: string,
   secondaryTeams: string[]
 ): Promise<{ id: string; imageUrl: string } | null> {
-  const teamsToTry = [mainTeam, ...secondaryTeams].filter(Boolean);
-
-  for (const team of teamsToTry) {
-    if (!team || team.length < 2) continue;
-
+  for (const team of [mainTeam, ...secondaryTeams].filter(Boolean)) {
+    if (team.length < 2) continue;
     const product = await Product.findOne({
       isActive: true,
       $or: [
@@ -376,8 +536,8 @@ async function findJerseyForTeam(
       .lean();
 
     if (product) {
-      const prod = product as { _id: unknown; images?: string[]; title: string };
-      return { id: String(prod._id), imageUrl: prod.images?.[0] ?? "" };
+      const p = product as { _id: unknown; images?: string[] };
+      return { id: String(p._id), imageUrl: p.images?.[0] ?? "" };
     }
   }
   return null;
@@ -413,32 +573,44 @@ export async function GET(req: NextRequest) {
   const results: RunResult[] = [];
 
   try {
-    log.push(`🔄 Avvio generazione ${ARTICLES_PER_RUN} articoli (SEO+GEO ottimizzati)...`);
+    log.push(`🔄 Avvio generazione ${ARTICLES_PER_RUN} articolo/i...`);
     await connectDB();
     log.push("✅ DB connesso");
 
-    log.push("📰 Lettura feed RSS (Gazzetta, Corriere, Tuttosport, CalcioMercato, Goal.com)...");
+    // Leggi notizie RSS fresche
+    log.push("📰 Lettura feed RSS (ultimi 36h, feeds verificati)...");
     const allNews = await fetchAllNews();
-    log.push(`✅ ${allNews.length} notizie recuperate dai feed`);
+    const withImage = allNews.filter((n) => n.rssImage).length;
+    log.push(`✅ ${allNews.length} notizie recenti (${withImage} con immagine RSS)`);
 
     if (allNews.length < 2) {
       return NextResponse.json(
-        { success: false, message: "Feed RSS non raggiungibili", log },
+        { success: false, message: "Nessuna notizia recente disponibile", log },
         { status: 200 }
       );
     }
+
+    // Leggi articoli già pubblicati di recente per evitare ripetizioni
+    const recentDbTitles = await getRecentArticleTitles();
+    log.push(`📋 ${recentDbTitles.length} articoli già pubblicati nelle ultime 48h (da escludere)`);
 
     const usedTitles: string[] = [];
 
     for (let i = 0; i < ARTICLES_PER_RUN; i++) {
       log.push(`\n── Articolo ${i + 1}/${ARTICLES_PER_RUN} ──`);
       try {
-        // 1. Genera con Gemini (SEO+GEO ottimizzato)
-        const generated = await generateArticleWithGemini(allNews, usedTitles, i);
+        // 1. Genera con Gemini
+        const { article: generated, sourceNews } = await generateArticleWithGemini(
+          allNews,
+          usedTitles,
+          recentDbTitles,
+          i
+        );
         log.push(`✏️  "${generated.title}" [${generated.category}]`);
-        if (generated.mainPerson) log.push(`👤 Persona principale: ${generated.mainPerson}`);
-        log.push(`🏆 Squadra principale: ${generated.mainTeam}`);
-        log.push(`🔑 Keywords SEO: ${generated.seoKeywords.slice(0, 3).join(", ")}`);
+        if (generated.mainPerson) log.push(`👤 Protagonista: ${generated.mainPerson}`);
+        log.push(`🏆 Squadra: ${generated.mainTeam}`);
+        log.push(`📰 Fonte notizia: ${sourceNews.source}`);
+        log.push(`🔍 Image query: ${generated.imageSearchQuery}`);
 
         // 2. Controlla slug duplicato
         const slug = buildSlug(generated.title);
@@ -448,28 +620,20 @@ export async function GET(req: NextRequest) {
           continue;
         }
 
-        // 3. Trova maglia nel DB
+        // 3. Trova maglia collegata
         const jersey = await findJerseyForTeam(generated.mainTeam, generated.secondaryTeams ?? []);
-        let featuredJerseyId: string | undefined;
-        if (jersey) {
-          featuredJerseyId = jersey.id;
-          log.push(`✅ Maglia trovata! ID: ${jersey.id}`);
-        } else {
-          log.push(`ℹ️  Nessuna maglia per "${generated.mainTeam}"`);
-        }
+        if (jersey) log.push(`✅ Maglia trovata: ${jersey.id}`);
 
-        // 4. Immagine smart: Wikipedia (persona/squadra) → Unsplash
+        // 4. Immagine smart — priorità: RSS > Bing > Wikipedia > Unsplash
         const { url: imageUrl, source: imgSource } = await fetchSmartImage(
+          sourceNews.rssImage,        // immagine estratta dal feed della notizia
           generated.mainPerson,
           generated.mainTeam,
           generated.imageSearchQuery,
           log
         );
 
-        // 5. Salva articolo su MongoDB
-        // I primi 2 articoli del run sono "featured" → appaiono in homepage e In Primo Piano
-        const isFeatured = i < 2;
-
+        // 5. Salva su MongoDB
         const articleData: Record<string, unknown> = {
           title: generated.title,
           summary: generated.summary,
@@ -484,53 +648,53 @@ export async function GET(req: NextRequest) {
             isMain: true,
           }],
           category: generated.category,
-          author: "Goal Mania AI",
+          author: "Redazione Goalmania",
           status: "published",
           publishedAt: new Date(),
-          featured: isFeatured,
+          featured: i < 2,
+          slug,
         };
 
         if (generated.league) articleData.league = generated.league;
-        if (featuredJerseyId) articleData.featuredJerseyId = featuredJerseyId;
+        if (jersey?.id) articleData.featuredJerseyId = jersey.id;
 
         const article = await Article.create(articleData);
         usedTitles.push(generated.title);
+        recentDbTitles.push(generated.title); // aggiorna per il prossimo ciclo
 
-        const routePath = generated.category === "serieA" ? "/serieA"
+        const routePath =
+          generated.category === "serieA" ? "/serieA"
           : generated.category === "transferMarket" ? "/transfer"
           : generated.category === "internationalTeams" ? "/international"
           : "/news";
 
-        log.push(`✅ Pubblicato — ${routePath}/${article.slug} (featured=${isFeatured}, img=${imgSource})`);
+        log.push(`✅ Pubblicato — ${routePath}/${article.slug || slug} (img=${imgSource})`);
         results.push({
           success: true,
           title: generated.title,
-          slug: article.slug,
+          slug: article.slug || slug,
           category: generated.category,
-          jerseyFound: !!featuredJerseyId,
+          jerseyFound: !!jersey,
           imageSource: imgSource,
         });
 
-        // Pausa tra articoli per non stressare Gemini
-        if (i < ARTICLES_PER_RUN - 1) await new Promise((r) => setTimeout(r, 2500));
+        if (i < ARTICLES_PER_RUN - 1) await new Promise((r) => setTimeout(r, 3000));
       } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : "Errore";
-        log.push(`❌ Errore: ${msg}`);
+        const msg = err instanceof Error ? err.message : "Errore sconosciuto";
+        log.push(`❌ Errore articolo ${i + 1}: ${msg}`);
         results.push({ success: false, error: msg });
       }
     }
 
     const published = results.filter((r) => r.success).length;
     const withJersey = results.filter((r) => r.jerseyFound).length;
-    const featured = results.filter((r) => r.success).slice(0, 2).length;
     const duration = ((Date.now() - startTime) / 1000).toFixed(1);
 
-    log.push(`\n🎉 ${published}/${ARTICLES_PER_RUN} pubblicati (${featured} featured, ${withJersey} con maglia) in ${duration}s`);
+    log.push(`\n🎉 ${published}/${ARTICLES_PER_RUN} pubblicati (${withJersey} con maglia) in ${duration}s`);
 
     return NextResponse.json({
       success: true,
       published,
-      featured,
       withJersey,
       total: ARTICLES_PER_RUN,
       duration: `${duration}s`,
