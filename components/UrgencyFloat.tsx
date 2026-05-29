@@ -72,27 +72,35 @@ export default function UrgencyFloat() {
   const [animating, setAnimating] = useState(false);
   const fetchedRef = useRef(false);
 
-  // Fetch real products once
+  // Fetch real products once — mix attuali + retro + mondiali
   useEffect(() => {
     if (fetchedRef.current) return;
     fetchedRef.current = true;
 
-    fetch("/api/products?limit=50&sortBy=feature&sortOrder=desc")
+    const shuffle = (arr: any[]) =>
+      arr.map((p) => ({ p, s: Math.random() })).sort((a, b) => a.s - b.s).map(({ p }) => p);
+
+    fetch("/api/products?limit=100")
       .then((r) => r.json())
       .then((data) => {
-        const prods: any[] = data.products || [];
-        // Only products with images
-        const withImages = prods.filter((p: any) => p.images?.[0] && p.slug);
-        if (withImages.length === 0) return;
+        const prods: any[] = (data.products || []).filter((p: any) => p.images?.[0] && p.slug);
+        if (prods.length === 0) return;
 
-        // Shuffle and take up to 8
-        const shuffled = withImages
-          .map((p: any) => ({ p, sort: Math.random() }))
-          .sort((a, b) => a.sort - b.sort)
-          .slice(0, 8)
-          .map(({ p }) => p);
+        const worldCup = prods.filter((p) => p.isWorldCup);
+        const retro    = prods.filter((p) => p.isRetro && !p.isWorldCup);
+        const current  = prods.filter((p) => !p.isRetro && !p.isWorldCup);
 
-        const mapped: Deal[] = shuffled.map((p: any, i: number) => ({
+        // 3 da ogni categoria (o meno se non ne ha abbastanza), poi shuffle
+        const pool = [
+          ...shuffle(current).slice(0, 3),
+          ...shuffle(retro).slice(0, 3),
+          ...shuffle(worldCup).slice(0, 3),
+        ];
+
+        const mixed = shuffle(pool.length >= 3 ? pool : shuffle(prods).slice(0, 9)).slice(0, 9);
+        if (mixed.length === 0) return;
+
+        const mapped: Deal[] = mixed.map((p: any, i: number) => ({
           id: p._id,
           image: p.images[0],
           team: extractTeamName(p.title),
