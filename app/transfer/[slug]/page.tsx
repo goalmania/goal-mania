@@ -7,6 +7,7 @@ import Article from "@/lib/models/Article";
 import ArticleContent from "@/app/_components/ArticleContent";
 import { JerseyAdBlock } from "@/app/_components/JerseyAdBlock";
 import { Separator } from "@/components/ui/separator";
+import ViewTracker from "@/app/_components/ViewTracker";
 
 export const revalidate = 300;
 
@@ -230,6 +231,7 @@ export default async function TransferArticlePage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(newsArticleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <ViewTracker articleId={article._id as string} />
     <div className="container mx-auto px-4 py-8">
       <article className="max-w-3xl mx-auto">
         <header className="mb-8">

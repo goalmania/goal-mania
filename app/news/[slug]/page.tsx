@@ -7,6 +7,7 @@ import Article from "@/lib/models/Article";
 import { JerseyAdBlock } from "@/app/_components/JerseyAdBlock";
 import ArticleContent from "@/app/_components/ArticleContent";
 import ReadingProgressBar from "@/app/_components/ReadingProgressBar";
+import ViewTracker from "@/app/_components/ViewTracker";
 import ArticleCard from "@/components/news/ArticleCard";
 import { NewsArticle } from "@/types/news";
 import { Calendar, Clock, BookOpen, Share2, Bookmark, ChevronLeft } from "lucide-react";
@@ -78,8 +79,6 @@ async function getArticle(slug: string) {
       }
       return null;
     }
-    // Increment view count asynchronously (fire-and-forget)
-    Article.findByIdAndUpdate(article._id, { $inc: { views: 1 } }).exec();
     return JSON.parse(JSON.stringify(article));
   } catch {
     return null;
@@ -245,6 +244,9 @@ export default async function ArticlePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
+
+      {/* View tracker — client-side per evitare blocco ISR */}
+      <ViewTracker articleId={article._id as string} />
 
       {/* Reading progress bar */}
       <ReadingProgressBar />

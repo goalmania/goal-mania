@@ -6,6 +6,7 @@ import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import ArticleContent from "@/app/_components/ArticleContent";
 import { JerseyAdBlock } from "@/app/_components/JerseyAdBlock";
+import ViewTracker from "@/app/_components/ViewTracker";
 
 const INTL_TEAMS = [
   "Arsenal", "Chelsea", "Liverpool", "Manchester City", "Manchester United",
@@ -201,6 +202,7 @@ export default async function InternationalArticlePage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(newsArticleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <ViewTracker articleId={article._id as string} />
     <div className="container mx-auto px-4 py-8 bg-[#0a0a0a]">
       <article className="max-w-3xl mx-auto text-white">
         {/* Article Header */}
