@@ -77,6 +77,7 @@ import {
 } from "@tanstack/react-table";
 import { IArticle } from "@/lib/models/Article";
 import { useArticles } from "@/hooks/useArticles";
+import { BarChart2 } from "lucide-react";
 
 
 const CATEGORY_OPTIONS = [
@@ -338,12 +339,41 @@ function ArticleDataTable({
     },
     {
       accessorKey: "views",
-      header: "Views",
-      cell: ({ row }) => (
-        <div className="text-sm font-medium tabular-nums">
-          {(row.original.views ?? 0).toLocaleString("it-IT")}
-        </div>
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="-ml-3 h-8"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Views
+          <IconChevronDown
+            className={`ml-1 h-3 w-3 transition-transform ${
+              column.getIsSorted() === "asc" ? "rotate-180" : column.getIsSorted() === "desc" ? "" : "opacity-40"
+            }`}
+          />
+        </Button>
       ),
+      cell: ({ row, table }) => {
+        const views = row.original.views ?? 0;
+        const allRows = table.getRowModel().rows;
+        const maxViews = Math.max(...allRows.map(r => r.original.views ?? 0), 1);
+        const pct = Math.round((views / maxViews) * 100);
+        return (
+          <div className="min-w-[80px]">
+            <div className="text-sm font-medium tabular-nums">
+              {views.toLocaleString("it-IT")}
+            </div>
+            <div className="mt-1 h-1.5 w-full rounded-full bg-white/10">
+              <div
+                className="h-1.5 rounded-full bg-[#c8f000]"
+                style={{ width: `${pct}%` }}
+              />
+            </div>
+          </div>
+        );
+      },
+      enableSorting: true,
     },
     {
       id: "actions",
@@ -696,6 +726,74 @@ function ArticleDataTable({
   );
 }
 
+function TopViewsCard() {
+  const [topArticles, setTopArticles] = useState<IArticle[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/articles?sortBy=views&limit=10&status=published")
+      .then((r) => r.json())
+      .then((d) => {
+        setTopArticles(d.articles ?? []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const maxViews = Math.max(...topArticles.map((a) => a.views ?? 0), 1);
+
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex items-center gap-2">
+          <BarChart2 className="h-4 w-4 text-[#c8f000]" />
+          <CardTitle className="text-base">Top 10 articoli per views</CardTitle>
+        </div>
+        <CardDescription>Articoli pubblicati con più visite</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {loading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-8 w-full" />
+            ))}
+          </div>
+        ) : topArticles.length === 0 ? (
+          <p className="text-sm text-muted-foreground">Nessun dato ancora.</p>
+        ) : (
+          <div className="space-y-3">
+            {topArticles.map((article, i) => {
+              const views = article.views ?? 0;
+              const pct = Math.round((views / maxViews) * 100);
+              return (
+                <div key={(article._id as string) || article.slug} className="flex items-center gap-3">
+                  <span className="w-5 text-right text-xs font-bold text-muted-foreground">{i + 1}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-medium truncate max-w-[70%]" title={article.title}>
+                        {article.title}
+                      </span>
+                      <span className="text-xs tabular-nums font-bold text-[#c8f000] ml-2 shrink-0">
+                        {views.toLocaleString("it-IT")}
+                      </span>
+                    </div>
+                    <div className="h-1.5 w-full rounded-full bg-white/10">
+                      <div
+                        className="h-1.5 rounded-full bg-[#c8f000] transition-all"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function ArticlesPage() {
   const router = useRouter();
   const { data: session } = useSession();
@@ -925,6 +1023,9 @@ export default function ArticlesPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Top Views */}
+      <TopViewsCard />
 
       {/* Error State */}
       {error && (

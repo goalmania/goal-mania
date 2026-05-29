@@ -40,8 +40,12 @@ export async function GET(req: NextRequest) {
       ];
     }
 
+    const sortBy = url.searchParams.get("sortBy");
+    const sortOrder: Record<string, any> =
+      sortBy === "views" ? { views: -1, createdAt: -1 } : { createdAt: -1 };
+
     const articles = await Article.find(query)
-      .sort({ createdAt: -1 })
+      .sort(sortOrder)
       .limit(limit)
       .skip((page - 1) * limit);
 
