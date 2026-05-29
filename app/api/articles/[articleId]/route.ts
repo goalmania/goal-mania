@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import { getServerSession } from "next-auth";
@@ -68,6 +69,23 @@ export async function PUT(
     const updatedArticle = await Article.findByIdAndUpdate(articleId, data, {
       new: true,
     });
+
+    // Revalidate listing pages and the article's own page immediately
+    if (data.status === "published" || article.status === "published") {
+      const categoryToPath: Record<string, string> = {
+        news: "/news",
+        transferMarket: "/transfer",
+        serieA: "/serieA",
+        internationalTeams: "/international",
+      };
+      const category = data.category ?? article.category;
+      const listPath = categoryToPath[category] ?? "/news";
+      const slug = updatedArticle?.slug ?? article.slug;
+      revalidatePath(listPath);
+      revalidatePath(`${listPath}/${slug}`);
+      revalidatePath("/news"); // homepage news section
+      revalidatePath("/");
+    }
 
     return NextResponse.json(updatedArticle);
   } catch (error) {

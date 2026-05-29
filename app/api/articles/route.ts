@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import connectDB from "@/lib/db";
 import Article, { IArticle } from "@/lib/models/Article";
 import { getServerSession } from "next-auth";
@@ -83,21 +84,20 @@ export async function POST(req: NextRequest) {
     await connectDB();
 
     // Validate required fields
-    const requiredFields = [
-      "title",
-      "content",
-      "summary",
-      "image",
-      "category",
-      "author",
-    ];
+    const requiredFields = ["title", "content", "summary", "category", "author"];
     for (const field of requiredFields) {
       if (!data[field]) {
         return NextResponse.json(
-          { error: `Field '${field}' is required` },
+          { error: `Il campo '${field}' è obbligatorio` },
           { status: 400 }
         );
       }
+    }
+
+    // image is backward-compat: derive from images[] if not set
+    if (!data.image) {
+      const mainImg = (data.images ?? []).find((img: any) => img.isMain) ?? data.images?.[0];
+      data.image = mainImg?.url ?? "/images/image.png";
     }
 
     // Create article
@@ -105,6 +105,20 @@ export async function POST(req: NextRequest) {
       ...data,
       publishedAt: data.status === "published" ? new Date() : null,
     });
+
+    // Revalidate listing pages immediately so the new article appears at once
+    if (data.status === "published") {
+      const categoryToPath: Record<string, string> = {
+        news: "/news",
+        transferMarket: "/transfer",
+        serieA: "/serieA",
+        internationalTeams: "/international",
+      };
+      const listPath = categoryToPath[data.category] ?? "/news";
+      revalidatePath(listPath);
+      revalidatePath("/news"); // homepage news feed always refreshed
+      revalidatePath("/");
+    }
 
     return NextResponse.json(article, { status: 201 });
   } catch (error) {
