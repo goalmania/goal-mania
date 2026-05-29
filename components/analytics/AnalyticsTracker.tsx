@@ -101,15 +101,15 @@ export default function AnalyticsTracker() {
     [pathname]
   );
 
-  // Initialise session id once on mount
-  useEffect(() => {
-    sessionIdRef.current = getSessionId();
-  }, []);
-
   // Track page views and heartbeat on route change
   useEffect(() => {
     // Skip admin pages
     if (pathname.startsWith("/admin")) return;
+
+    // Ensure session id is set before sending
+    if (!sessionIdRef.current) {
+      sessionIdRef.current = getSessionId();
+    }
 
     sendHeartbeat(pathname);
     sendEvent("page_view");
