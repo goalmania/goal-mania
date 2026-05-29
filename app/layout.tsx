@@ -4,13 +4,8 @@ import { Metadata, Viewport } from "next";
 import { Providers } from "@/components/providers";
 import "./globals.css";
 import Script from "next/script";
-import dynamic from "next/dynamic";
 import SiteShell from "@/app/_components/SiteShell";
-
-const AnalyticsTracker = dynamic(
-  () => import("@/components/analytics/AnalyticsTracker"),
-  { ssr: false }
-);
+import AnalyticsTrackerLoader from "@/components/analytics/AnalyticsTrackerLoader";
 
 const PIXEL_ID = "1059199992701994";
 
@@ -295,7 +290,7 @@ export default function RootLayout({
 
         <Providers>
           <SiteShell>{children}</SiteShell>
-          <AnalyticsTracker />
+          <AnalyticsTrackerLoader />
         </Providers>
       </body>
     </html>
