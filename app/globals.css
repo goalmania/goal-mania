@@ -61,28 +61,15 @@
   --gm-lime-dim:    rgba(200, 240, 0, 0.12);
   --gm-lime-glow:   rgba(200, 240, 0, 0.25);
   --gm-black:       #0a0a0a;
-  --gm-surface:     #f0f0f0;
-  --gm-surface-2:   #e8e8e8;
-  --gm-surface-3:   #dddddd;
-  --gm-white:       #0a0a0a;
-  --gm-gray:        #666666;
-  --gm-border:      rgba(200, 240, 0, 0.25);
-  --gm-border-sub:  rgba(0, 0, 0, 0.08);
+  --gm-surface:     #111111;
+  --gm-surface-2:   #1a1a1a;
+  --gm-surface-3:   #222222;
+  --gm-white:       #f5f5f5;
+  --gm-gray:        #888888;
+  --gm-border:      rgba(200, 240, 0, 0.15);
+  --gm-border-sub:  rgba(255, 255, 255, 0.06);
   --gm-red:         #ff4444;
   --gm-teal:        #00c8a0;
-  /* ── header/footer adaptive bg ── */
-  --gm-header-bg:          rgba(255,255,255,0.92);
-  --gm-header-bg-scrolled: rgba(255,255,255,0.98);
-  --gm-header-border:      rgba(200,240,0,0.18);
-  --gm-section-bg:         #ffffff;
-  --gm-section-bg-alt:     #f5f5f5;
-  --gm-text-muted:         rgba(0,0,0,0.45);
-  --gm-text-subtle:        rgba(0,0,0,0.28);
-  --gm-text-dim:           rgba(0,0,0,0.2);
-  --gm-social-border:      rgba(0,0,0,0.1);
-  --gm-social-color:       rgba(0,0,0,0.4);
-  --gm-input-bg:           #eeeeee;
-  --gm-nav-divider:        rgba(0,0,0,0.06);
 
   /* ── Font Stack ── */
   --font-display:   var(--font-barlow-condensed, 'Barlow Condensed', sans-serif);
@@ -92,64 +79,44 @@
   /* ── Radius (rounded but purposeful) ── */
   --radius: 0.75rem;
 
-  /* ── Shadcn tokens — LIGHT MODE ── */
-  --background:                #ffffff;
-  --foreground:                #0a0a0a;
-  --card:                      #f5f5f5;
-  --card-foreground:           #0a0a0a;
-  --popover:                   #f0f0f0;
-  --popover-foreground:        #0a0a0a;
+  /* ── Shadcn token overrides → new palette ── */
+  --background:                #0a0a0a;
+  --foreground:                #f5f5f5;
+  --card:                      #111111;
+  --card-foreground:           #f5f5f5;
+  --popover:                   #1a1a1a;
+  --popover-foreground:        #f5f5f5;
   --primary:                   #c8f000;
   --primary-foreground:        #0a0a0a;
   --brand-lime:                #c8f000;
   --brand-lime-foreground:     #0a0a0a;
-  --secondary:                 #ebebeb;
-  --secondary-foreground:      #0a0a0a;
-  --muted:                     #ebebeb;
-  --muted-foreground:          #666666;
+  --secondary:                 #1a1a1a;
+  --secondary-foreground:      #f5f5f5;
+  --muted:                     #1a1a1a;
+  --muted-foreground:          #888888;
   --accent:                    #c8f000;
   --accent-foreground:         #0a0a0a;
   --destructive:               #ff4444;
-  --border:                    rgba(0, 0, 0, 0.1);
-  --input:                     #ebebeb;
-  --ring:                      rgba(200, 240, 0, 0.5);
+  --border:                    rgba(255, 255, 255, 0.08);
+  --input:                     #1a1a1a;
+  --ring:                      rgba(200, 240, 0, 0.4);
   --chart-1:                   #c8f000;
   --chart-2:                   #00c8a0;
-  --chart-3:                   #666666;
+  --chart-3:                   #888888;
   --chart-4:                   #ff8c00;
   --chart-5:                   #ff4444;
-  --sidebar:                   #f5f5f5;
-  --sidebar-foreground:        #0a0a0a;
+  --sidebar:                   #111111;
+  --sidebar-foreground:        #f5f5f5;
   --sidebar-primary:           #c8f000;
   --sidebar-primary-foreground:#0a0a0a;
-  --sidebar-accent:            #ebebeb;
-  --sidebar-accent-foreground: #0a0a0a;
-  --sidebar-border:            rgba(0, 0, 0, 0.1);
-  --sidebar-ring:              rgba(200, 240, 0, 0.5);
+  --sidebar-accent:            #1a1a1a;
+  --sidebar-accent-foreground: #f5f5f5;
+  --sidebar-border:            rgba(255, 255, 255, 0.08);
+  --sidebar-ring:              rgba(200, 240, 0, 0.4);
 }
 
-/* ── DARK MODE ── */
+/* Dark mode = same as root (always dark) */
 .dark {
-  --gm-surface:     #111111;
-  --gm-surface-2:   #1a1a1a;
-  --gm-surface-3:   #222222;
-  --gm-white:       #f5f5f5;
-  --gm-gray:        #888888;
-  --gm-border:      rgba(200, 240, 0, 0.15);
-  --gm-border-sub:  rgba(255, 255, 255, 0.06);
-  --gm-header-bg:          rgba(10,10,10,0.92);
-  --gm-header-bg-scrolled: rgba(10,10,10,0.98);
-  --gm-header-border:      rgba(200,240,0,0.12);
-  --gm-section-bg:         #0a0a0a;
-  --gm-section-bg-alt:     #0d0d0d;
-  --gm-text-muted:         rgba(245,245,245,0.45);
-  --gm-text-subtle:        rgba(245,245,245,0.28);
-  --gm-text-dim:           rgba(255,255,255,0.2);
-  --gm-social-border:      rgba(255,255,255,0.08);
-  --gm-social-color:       rgba(255,255,255,0.35);
-  --gm-input-bg:           #1a1a1a;
-  --gm-nav-divider:        rgba(200,240,0,0.1);
-
   --background:                #0a0a0a;
   --foreground:                #f5f5f5;
   --card:                      #111111;
@@ -179,26 +146,6 @@
   --sidebar-border:            rgba(255, 255, 255, 0.08);
   --sidebar-ring:              rgba(200, 240, 0, 0.4);
 }
-
-/* ── LIGHT MODE: override hardcoded Tailwind color classes ── */
-html:not(.dark) .text-white { color: #0a0a0a !important; }
-html:not(.dark) .text-white\/70 { color: rgba(10,10,10,0.7) !important; }
-html:not(.dark) .text-white\/60 { color: rgba(10,10,10,0.6) !important; }
-html:not(.dark) .text-white\/50 { color: rgba(10,10,10,0.5) !important; }
-html:not(.dark) .text-white\/40 { color: rgba(10,10,10,0.4) !important; }
-html:not(.dark) .text-white\/30 { color: rgba(10,10,10,0.3) !important; }
-html:not(.dark) .text-white\/20 { color: rgba(10,10,10,0.2) !important; }
-html:not(.dark) .text-white\/10 { color: rgba(10,10,10,0.1) !important; }
-html:not(.dark) .border-white\/10 { border-color: rgba(0,0,0,0.1) !important; }
-html:not(.dark) .border-white\/20 { border-color: rgba(0,0,0,0.15) !important; }
-html:not(.dark) .border-white\/30 { border-color: rgba(0,0,0,0.2) !important; }
-html:not(.dark) .bg-white\/3 { background-color: rgba(0,0,0,0.04) !important; }
-html:not(.dark) .bg-white\/5 { background-color: rgba(0,0,0,0.05) !important; }
-html:not(.dark) .bg-white\/8 { background-color: rgba(0,0,0,0.08) !important; }
-html:not(.dark) .placeholder-white\/25::placeholder { color: rgba(0,0,0,0.3) !important; }
-html:not(.dark) .bg-\[\#0a0a0a\] { background-color: #ffffff !important; }
-html:not(.dark) .bg-\[\#111111\] { background-color: #f5f5f5 !important; }
-html:not(.dark) .bg-\[\#1a1a1a\] { background-color: #ebebeb !important; }
 
 @layer base {
   * {

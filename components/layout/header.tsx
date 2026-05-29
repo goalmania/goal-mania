@@ -38,7 +38,6 @@ import {
   Zap,
   Star,
 } from "lucide-react";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 export interface User {
   id: string;
@@ -209,9 +208,9 @@ export function Header() {
         className="fixed left-0 right-0 z-50 transition-all duration-300"
         style={{
           top: ANNOUNCEMENT_BAR_HEIGHT,
-          background: scrolled ? "var(--gm-header-bg-scrolled)" : "var(--gm-header-bg)",
+          background: scrolled ? "rgba(10,10,10,0.98)" : "rgba(10,10,10,0.92)",
           backdropFilter: "blur(20px)",
-          borderBottom: "0.5px solid var(--gm-header-border)",
+          borderBottom: "0.5px solid rgba(200,240,0,0.12)",
           boxShadow: scrolled ? "0 4px 30px rgba(0,0,0,0.4)" : "none",
         }}
       >
@@ -364,9 +363,6 @@ export function Header() {
               {languageNames[language] || language}
             </button>
 
-            {/* Theme toggle */}
-            <ThemeToggle />
-
             {/* Wishlist */}
             <Link href="/wishlist" className="relative">
               <button
@@ -473,10 +469,10 @@ export function Header() {
             className="absolute left-0 right-0 shadow-2xl border-t transition-all duration-200"
             style={{
               top: "100%",
-              background: "var(--gm-header-bg-scrolled)",
+              background: "rgba(10,10,10,0.98)",
               backdropFilter: "blur(24px)",
-              borderColor: "var(--gm-nav-divider)",
-              borderBottom: "0.5px solid var(--gm-header-border)",
+              borderColor: "rgba(200,240,0,0.1)",
+              borderBottom: "0.5px solid rgba(200,240,0,0.12)",
             }}
             onMouseEnter={keepMega}
             onMouseLeave={closeMega}
@@ -558,10 +554,10 @@ export function Header() {
             className="absolute left-0 right-0 shadow-2xl border-t transition-all duration-200"
             style={{
               top: "100%",
-              background: "var(--gm-header-bg-scrolled)",
+              background: "rgba(10,10,10,0.98)",
               backdropFilter: "blur(24px)",
-              borderColor: "var(--gm-nav-divider)",
-              borderBottom: "0.5px solid var(--gm-header-border)",
+              borderColor: "rgba(200,240,0,0.1)",
+              borderBottom: "0.5px solid rgba(200,240,0,0.12)",
             }}
             onMouseEnter={keepMega}
             onMouseLeave={closeMega}
@@ -682,7 +678,7 @@ export function Header() {
       {searchOpen && (
         <div
           className="fixed inset-0 z-[200] flex flex-col"
-          style={{ background: "var(--gm-header-bg-scrolled)", backdropFilter: "blur(24px)" }}
+          style={{ background: "rgba(10,10,10,0.97)", backdropFilter: "blur(24px)" }}
         >
           <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
             <div
@@ -764,7 +760,7 @@ export function Header() {
           />
           <div
             className="absolute top-0 left-0 w-80 max-w-[85vw] h-full flex flex-col"
-            style={{ background: "var(--background)", borderRight: "0.5px solid var(--gm-header-border)" }}
+            style={{ background: "#0a0a0a", borderRight: "0.5px solid rgba(200,240,0,0.15)" }}
           >
             {/* Header */}
             <div className="flex items-center justify-between p-5 border-b" style={{ borderColor: "rgba(200,240,0,0.1)" }}>
@@ -857,17 +853,14 @@ export function Header() {
 
             {/* Bottom: Auth + Language */}
             <div className="p-4 border-t flex flex-col gap-3" style={{ borderColor: "rgba(200,240,0,0.1)" }}>
-              <div className="flex gap-2">
-                <button
-                  onClick={toggleLanguage}
-                  className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border text-white/60 text-xs font-bold uppercase tracking-wider transition-all hover:border-[#c8f000]/30 hover:text-[#c8f000]"
-                  style={{ borderColor: "rgba(255,255,255,0.1)", fontFamily: "var(--font-mono, monospace)" }}
-                >
-                  <Globe className="w-3.5 h-3.5" />
-                  {language === "it" ? "Italiano" : "English"}
-                </button>
-                <ThemeToggle />
-              </div>
+              <button
+                onClick={toggleLanguage}
+                className="flex items-center justify-center gap-2 py-2.5 rounded-xl border text-white/60 text-xs font-bold uppercase tracking-wider transition-all hover:border-[#c8f000]/30 hover:text-[#c8f000]"
+                style={{ borderColor: "rgba(255,255,255,0.1)", fontFamily: "var(--font-mono, monospace)" }}
+              >
+                <Globe className="w-3.5 h-3.5" />
+                {language === "it" ? "Italiano" : "English"}
+              </button>
               {!session && (
                 <div className="flex gap-2">
                   <Link

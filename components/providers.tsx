@@ -22,7 +22,7 @@ function LanguageSync() {
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
-      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
         <I18nextProvider i18n={i18nInstance}>
           <LanguageSync />
           {children}

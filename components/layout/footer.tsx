@@ -68,14 +68,14 @@ export function Footer() {
   return (
     <footer
       style={{
-        background: "var(--gm-section-bg)",
-        borderTop: "0.5px solid var(--gm-header-border)",
+        background: "#0a0a0a",
+        borderTop: "0.5px solid rgba(200,240,0,0.12)",
       }}
     >
       {/* ── Newsletter bar ── */}
       <div
         className="border-b"
-        style={{ borderColor: "var(--gm-border-sub)", background: "var(--gm-section-bg-alt)" }}
+        style={{ borderColor: "rgba(255,255,255,0.05)", background: "#0d0d0d" }}
       >
         <div className="max-w-5xl mx-auto px-6 py-14 text-center">
           <div
@@ -100,7 +100,7 @@ export function Footer() {
           <p
             className="mb-8 max-w-lg mx-auto text-sm"
             style={{
-              color: "var(--gm-text-muted)",
+              color: "rgba(245,245,245,0.45)",
               fontFamily: "var(--font-body, sans-serif)",
               lineHeight: "1.7",
             }}
@@ -112,7 +112,7 @@ export function Footer() {
             <div
               className="flex items-center gap-2 p-2 rounded-full w-full max-w-md"
               style={{
-                background: "var(--gm-input-bg)",
+                background: "#1a1a1a",
                 border: "1px solid rgba(200,240,0,0.2)",
               }}
             >
@@ -140,7 +140,7 @@ export function Footer() {
 
           <p
             className="mt-4 text-[10px] uppercase tracking-widest"
-            style={{ fontFamily: "var(--font-mono, monospace)", color: "var(--gm-text-dim)" }}
+            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.2)" }}
           >
             Nessuno spam. Cancellati quando vuoi.
           </p>
@@ -150,7 +150,7 @@ export function Footer() {
       {/* ── Trust badges strip ── */}
       <div
         className="border-b"
-        style={{ borderColor: "var(--gm-border-sub)" }}
+        style={{ borderColor: "rgba(255,255,255,0.04)" }}
       >
         <div className="max-w-6xl mx-auto px-6 py-7">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
@@ -204,7 +204,7 @@ export function Footer() {
             </Link>
             <p
               className="text-xs max-w-[180px] mb-6"
-              style={{ color: "var(--gm-text-subtle)", fontFamily: "var(--font-mono, monospace)", lineHeight: "1.7" }}
+              style={{ color: "rgba(255,255,255,0.28)", fontFamily: "var(--font-mono, monospace)", lineHeight: "1.7" }}
             >
               // The football universe
               <br />
@@ -223,8 +223,8 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="w-8 h-8 rounded-lg flex items-center justify-center border transition-all duration-200 hover:border-[#c8f000]/40 hover:text-[#c8f000] hover:-translate-y-0.5"
                   style={{
-                    border: "1px solid var(--gm-social-border)",
-                    color: "var(--gm-social-color)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    color: "rgba(255,255,255,0.35)",
                   }}
                 >
                   <Icon size={15} />
@@ -247,7 +247,7 @@ export function Footer() {
                   <Link
                     href={l.href}
                     className="text-xs transition-colors hover:text-[#c8f000]"
-                    style={{ fontFamily: "var(--font-body, sans-serif)", color: "var(--gm-text-subtle)" }}
+                    style={{ fontFamily: "var(--font-body, sans-serif)", color: "rgba(255,255,255,0.38)" }}
                   >
                     {l.label}
                   </Link>
@@ -270,7 +270,7 @@ export function Footer() {
                   <Link
                     href={l.href}
                     className="text-xs transition-colors hover:text-[#c8f000]"
-                    style={{ fontFamily: "var(--font-body, sans-serif)", color: "var(--gm-text-subtle)" }}
+                    style={{ fontFamily: "var(--font-body, sans-serif)", color: "rgba(255,255,255,0.38)" }}
                   >
                     {l.label}
                   </Link>
@@ -293,7 +293,7 @@ export function Footer() {
                   <Link
                     href={l.href}
                     className="text-xs transition-colors hover:text-[#c8f000]"
-                    style={{ fontFamily: "var(--font-body, sans-serif)", color: "var(--gm-text-subtle)" }}
+                    style={{ fontFamily: "var(--font-body, sans-serif)", color: "rgba(255,255,255,0.38)" }}
                   >
                     {l.label}
                   </Link>
@@ -359,7 +359,7 @@ export function Footer() {
                   key={l.href + l.label}
                   href={l.href}
                   className="text-[10px] uppercase tracking-widest hover:text-[#c8f000] transition-colors"
-                  style={{ fontFamily: "var(--font-mono, monospace)", color: "var(--gm-text-dim)" }}
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.2)" }}
                 >
                   {l.label}
                 </Link>
