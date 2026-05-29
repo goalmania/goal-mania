@@ -11,7 +11,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "react-hot-toast";
 import { IArticle } from "@/lib/models/Article";
-import { getCloudinaryUrl } from "@/lib/constants";
 
 const CATEGORY_OPTIONS = [
   { value: "news", label: "Main News" },
@@ -124,27 +123,24 @@ export default function ArticleModal({
     setIsUploading(true);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append(
-        "upload_preset",
-        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
-      );
+      const uploadData = new FormData();
+      uploadData.append("file", file);
 
-      const response = await fetch(getCloudinaryUrl(), {
+      const response = await fetch("/api/upload", {
         method: "POST",
-        body: formData,
+        body: uploadData,
       });
 
       if (!response.ok) {
-        throw new Error(`Upload failed: ${response.status}`);
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error || `Upload failed: ${response.status}`);
       }
 
       const result = await response.json();
-      
+
       setFormData((prev) => ({
         ...prev,
-        image: result.secure_url,
+        image: result.url,
       }));
 
       toast.success("Image uploaded successfully");

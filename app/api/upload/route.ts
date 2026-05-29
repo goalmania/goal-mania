@@ -1,12 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+// Configure Cloudinary — support both CLOUDINARY_URL and individual vars
+if (process.env.CLOUDINARY_URL) {
+  // CLOUDINARY_URL format: cloudinary://api_key:api_secret@cloud_name
+  try {
+    const url = new URL(process.env.CLOUDINARY_URL.replace("cloudinary://", "https://"));
+    cloudinary.config({
+      cloud_name: url.hostname,
+      api_key: url.username,
+      api_secret: url.password,
+    });
+  } catch {
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
+  }
+} else {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -47,15 +65,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if Cloudinary is configured
-    if (!process.env.CLOUDINARY_CLOUD_NAME || 
-        !process.env.CLOUDINARY_API_KEY || 
-        !process.env.CLOUDINARY_API_SECRET) {
+    const cfg = cloudinary.config();
+    if (!cfg.cloud_name || !cfg.api_key || !cfg.api_secret) {
       console.error("❌ Cloudinary credentials not configured");
       return NextResponse.json(
-        { 
-          error: "Cloudinary not configured. Please set environment variables.",
-          details: "CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET are required"
-        },
+        { error: "Cloudinary not configured. Set CLOUDINARY_URL or CLOUDINARY_CLOUD_NAME/API_KEY/API_SECRET." },
         { status: 500 }
       );
     }
