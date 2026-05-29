@@ -143,7 +143,7 @@ export default function RootLayout({
     <html
       lang="it"
       suppressHydrationWarning
-      className={`${italianno.variable} ${mulish.variable} ${barlowCondensed.variable} ${barlow.variable} ${spaceMono.variable} text-base dark`}
+      className={`${italianno.variable} ${mulish.variable} ${barlowCondensed.variable} ${barlow.variable} ${spaceMono.variable} text-base`}
     >
       <head>
         {/* Structured Data for Google */}
