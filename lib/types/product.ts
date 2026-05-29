@@ -58,6 +58,7 @@ export interface Review {
 
 export interface IProduct {
   _id: string;
+  slug?: string;
   title: string;
   description: string;
   basePrice: number;
