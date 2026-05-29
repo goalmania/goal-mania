@@ -4,6 +4,7 @@ import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { notifySearchEngines } from "@/lib/google-indexing";
 
 // GET /api/articles/[articleId]
 export async function GET(
@@ -85,6 +86,12 @@ export async function PUT(
       revalidatePath(`${listPath}/${slug}`);
       revalidatePath("/news"); // homepage news section
       revalidatePath("/");
+
+      // Notifica Google + Bing/IndexNow quando un articolo viene pubblicato/modificato
+      if (data.status === "published") {
+        const publicUrl = `https://goal-mania.it${listPath}/${slug}`;
+        notifySearchEngines(publicUrl).catch(() => {});
+      }
     }
 
     return NextResponse.json(updatedArticle);

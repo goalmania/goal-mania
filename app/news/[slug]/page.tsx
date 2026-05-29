@@ -78,6 +78,8 @@ async function getArticle(slug: string) {
       }
       return null;
     }
+    // Increment view count asynchronously (fire-and-forget)
+    Article.findByIdAndUpdate(article._id, { $inc: { views: 1 } }).exec();
     return JSON.parse(JSON.stringify(article));
   } catch {
     return null;

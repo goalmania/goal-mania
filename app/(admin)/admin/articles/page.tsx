@@ -337,6 +337,15 @@ function ArticleDataTable({
       ),
     },
     {
+      accessorKey: "views",
+      header: "Views",
+      cell: ({ row }) => (
+        <div className="text-sm font-medium tabular-nums">
+          {(row.original.views ?? 0).toLocaleString("it-IT")}
+        </div>
+      ),
+    },
+    {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => (
@@ -575,6 +584,7 @@ function ArticleDataTable({
                           <Skeleton className="h-3 w-[150px]" />
                         </div>
                       </TableCell>
+                      <TableCell><Skeleton className="h-4 w-[60px]" /></TableCell>
                       <TableCell><Skeleton className="h-4 w-[60px]" /></TableCell>
                       <TableCell><Skeleton className="h-4 w-[60px]" /></TableCell>
                       <TableCell><Skeleton className="h-4 w-[60px]" /></TableCell>
@@ -851,12 +861,14 @@ export default function ArticlesPage() {
     const publishedArticles = articles.filter(a => a.status === "published").length;
     const draftArticles = articles.filter(a => a.status === "draft").length;
     const featuredArticles = articles.filter(a => a.featured).length;
-    
+    const totalViews = articles.reduce((sum, a) => sum + (a.views ?? 0), 0);
+
     return {
       total: pagination.total,
       published: publishedArticles,
       drafts: draftArticles,
       featured: featuredArticles,
+      totalViews,
     };
   }, [articles, pagination.total]);
 
@@ -873,7 +885,7 @@ export default function ArticlesPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">{stats.total}</div>
@@ -902,6 +914,14 @@ export default function ArticlesPage() {
               {stats.featured}
             </div>
             <p className="text-xs text-muted-foreground">Featured</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-2xl font-bold text-blue-500">
+              {stats.totalViews.toLocaleString("it-IT")}
+            </div>
+            <p className="text-xs text-muted-foreground">Views (pagina corrente)</p>
           </CardContent>
         </Card>
       </div>

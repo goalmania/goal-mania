@@ -24,6 +24,7 @@ export interface IArticle extends Document {
   featured: boolean;
   featuredJerseyId?: string; // ID of a jersey to feature in this article
   seoKeywords?: string[]; // Keyword SEO generate da Gemini
+  views?: number;
 }
 
 const ArticleImageSchema = new Schema<ArticleImage>({
@@ -58,6 +59,7 @@ const ArticleSchema = new Schema<IArticle>(
     featured: { type: Boolean, default: false },
     featuredJerseyId: { type: String },
     seoKeywords: { type: [String], default: [] },
+    views: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

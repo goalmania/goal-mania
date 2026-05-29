@@ -3,6 +3,7 @@ import axios from "axios";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import Product from "@/lib/models/Product";
+import { notifySearchEngines } from "@/lib/google-indexing";
 
 // Vercel max duration (seconds) — 300s on Hobby/Pro serverless
 export const maxDuration = 300;
@@ -670,6 +671,10 @@ export async function GET(req: NextRequest) {
           : generated.category === "transferMarket" ? "/transfer"
           : generated.category === "internationalTeams" ? "/international"
           : "/news";
+
+        // Notifica Google + Bing/IndexNow (fire-and-forget, non blocca)
+        const publicUrl = `https://goal-mania.it${routePath}/${article.slug || slug}`;
+        notifySearchEngines(publicUrl).catch(() => {});
 
         log.push(`✅ Pubblicato — ${routePath}/${article.slug || slug} (img=${imgSource})`);
         results.push({
