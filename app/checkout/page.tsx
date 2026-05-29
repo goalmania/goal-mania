@@ -37,6 +37,7 @@ import {
 import { refreshUserSession } from "@/lib/utils/session";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 import React from "react";
+import { useTrackEvent } from "@/components/analytics/AnalyticsTracker";
 
 const PaymentStep = dynamic(() => import("./PaymentStep"), { ssr: false });
 
@@ -59,6 +60,7 @@ export default function CheckoutPage() {
   const { data: session, status, update: updateSession } = useSession();
   const router = useRouter();
   const { items, getTotal, clearCart, appliedDiscountRules, applyDiscountRules } = useCartStore();
+  const trackEvent = useTrackEvent();
   // Create the ref at component level
   const hasRefreshedRef = useRef(false);
   const [sessionRefreshed, setSessionRefreshed] = useState(false);
@@ -271,6 +273,8 @@ export default function CheckoutPage() {
 
       setClientSecret(data.clientSecret);
       setStep("payment");
+      // Track checkout_start — user reached the payment step
+      trackEvent("checkout_start", { value: getTotal() });
     } catch (error) {
       console.error("Checkout error:", error);
       toast.error("Failed to proceed to payment");
@@ -397,6 +401,9 @@ export default function CheckoutPage() {
         })
         .then((data) => {
           console.log("Order created successfully:", data.orderId);
+
+          // Track successful purchase
+          trackEvent("purchase", { value: total });
 
           // Clear cart
           clearCart();

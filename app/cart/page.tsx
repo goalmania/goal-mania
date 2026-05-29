@@ -9,6 +9,7 @@ import { TrashIcon, ShoppingBagIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { ShieldCheck, Truck, RotateCcw, BadgeCheck, Zap, Star, ArrowRight, Package } from "lucide-react";
+import { useTrackEvent } from "@/components/analytics/AnalyticsTracker";
 
 const FREE_SHIPPING_THRESHOLD = 89;
 
@@ -57,6 +58,7 @@ export default function CartPage() {
   const { t } = useTranslation();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const router = useRouter();
+  const trackEvent = useTrackEvent();
 
   const total = getTotal();
 
@@ -71,6 +73,7 @@ export default function CartPage() {
   const handleCheckout = async () => {
     setIsCheckingOut(true);
     try {
+      trackEvent("checkout_start", { value: getTotal() });
       router.push("/checkout");
     } catch (error) {
       console.error("Checkout failed:", error);

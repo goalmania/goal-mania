@@ -18,6 +18,7 @@ import { Label } from "@/components/ui/label";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import { useI18n } from "@/lib/hooks/useI18n";
+import { useTrackEvent } from "@/components/analytics/AnalyticsTracker";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface PatchObject {
@@ -252,6 +253,7 @@ export default function ProductDetailClient({
   const { t } = useI18n();
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
   const { addItem: addToCart } = useCartStore();
+  const trackEvent = useTrackEvent();
 
   const [customization, setCustomization] = useState({
     name: "",
@@ -308,7 +310,17 @@ export default function ProductDetailClient({
     return () => clearInterval(id);
   }, []);
 
-  useEffect(() => { setMounted(true); if (product.reviews) setReviews(product.reviews); }, [product.reviews]);
+  useEffect(() => {
+    setMounted(true);
+    if (product.reviews) setReviews(product.reviews);
+    // Track product view once on mount
+    trackEvent("product_view", {
+      productId: product._id,
+      productSlug: product.slug || product._id,
+      value: Number(product.basePrice) || 0,
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product._id]);
 
   if (!mounted) return null;
 
@@ -352,6 +364,11 @@ export default function ProductDetailClient({
       },
       quantity,
     });
+    trackEvent("add_to_cart", {
+      productId: product._id,
+      productSlug: product.slug || product._id,
+      value: totalPrice,
+    });
   };
 
   const handleBuyNow = () => {
@@ -362,6 +379,11 @@ export default function ProductDetailClient({
       return;
     }
     handleAddToCart();
+    trackEvent("checkout_start", {
+      productId: product._id,
+      productSlug: product.slug || product._id,
+      value: totalPrice,
+    });
     router.push("/checkout");
   };
 
