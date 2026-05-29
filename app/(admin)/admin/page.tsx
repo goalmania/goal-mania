@@ -25,6 +25,7 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import LiveAnalyticsPanel from "@/components/admin/LiveAnalyticsPanel";
 
 interface Stat {
   name: string;
@@ -228,6 +229,9 @@ export default function AdminDashboard() {
 
   return (
     <>
+      {/* Live Analytics */}
+      <LiveAnalyticsPanel />
+
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-[#0a0a0a] tracking-tight">Dashboard</h1>
