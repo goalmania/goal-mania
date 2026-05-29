@@ -4,10 +4,13 @@ import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import Product from "@/lib/models/Product";
 
+// Vercel max duration (seconds) — 300s on Hobby/Pro serverless
+export const maxDuration = 300;
+
 // ─── Config ───────────────────────────────────────────────────────────────────
 
-// Cron ogni ora su Vercel → 24 articoli/giorno. Con ARTICLES_PER_RUN=1 non si supera
-// il rate limit di Gemini Flash (10 req/min sul piano gratuito).
+// 4 cron giornalieri × 5 articoli = 20 articoli/giorno
+// Orari: 06:00, 10:00, 14:00, 18:00 (UTC)
 const ARTICLES_PER_RUN = 5;
 
 // Feed verificati al 29/05/2026: freschi + includono immagini proprie
