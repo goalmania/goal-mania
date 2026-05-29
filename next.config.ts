@@ -69,6 +69,24 @@ const nextConfig: NextConfig = {
         hostname: "media.api-sports.io",
         pathname: "/**",
       },
+      // Feed RSS — immagini articoli generati da AI
+      { protocol: "https", hostname: "www.calcionews24.com", pathname: "/**" },
+      { protocol: "https", hostname: "cdn.tuttosport.com", pathname: "/**" },
+      { protocol: "https", hostname: "www.calciomercato.it", pathname: "/**" },
+      { protocol: "https", hostname: "www.calcioefinanza.it", pathname: "/**" },
+      { protocol: "https", hostname: "images.calciomercato.it", pathname: "/**" },
+      { protocol: "https", hostname: "static.calcionews24.com", pathname: "/**" },
+      { protocol: "https", hostname: "wp.tuttosport.com", pathname: "/**" },
+      // Bing Image Search (se attivato)
+      { protocol: "https", hostname: "*.bing.com", pathname: "/**" },
+      { protocol: "https", hostname: "tse*.mm.bing.net", pathname: "/**" },
+      // Wildcard per qualsiasi CDN WordPress dei feed (sicuro perché solo articoli nostri)
+      { protocol: "https", hostname: "*.wp.com", pathname: "/**" },
+      { protocol: "https", hostname: "i0.wp.com", pathname: "/**" },
+      { protocol: "https", hostname: "i1.wp.com", pathname: "/**" },
+      { protocol: "https", hostname: "i2.wp.com", pathname: "/**" },
+      // Wildcard globale per immagini articoli da feed RSS (qualsiasi CDN)
+      { protocol: "https", hostname: "**" },
     ],
   },
 };
