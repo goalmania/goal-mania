@@ -30,15 +30,27 @@ function defaultHashtags(category?: string): string {
   return HASHTAGS[category ?? "news"] ?? "#Calcio #GoalMania";
 }
 
+const CATEGORY_PATH: Record<string, string> = {
+  transferMarket:     "transfer",
+  serieA:             "serieA",
+  internationalTeams: "international",
+  news:               "news",
+};
+
+function articleUrl(slug: string, category?: string): string {
+  const section = CATEGORY_PATH[category ?? "news"] ?? "news";
+  return `${BASE_URL}/${section}/${slug}`;
+}
+
 function buildFbText(title: string, summary: string, slug: string, category?: string): string {
   const tags = defaultHashtags(category);
-  const link = `${BASE_URL}/news/${slug}`;
+  const link = articleUrl(slug, category);
   return `${title}\n\n${summary}\n\n${link}\n\n${tags}`;
 }
 
 function buildTweetText(title: string, slug: string, category?: string): string {
   const tags = defaultHashtags(category);
-  const link = `${BASE_URL}/news/${slug}`;
+  const link = articleUrl(slug, category);
   const base = `${title} ${link} ${tags}`;
   return base.length <= 280 ? base : base.slice(0, 277) + "...";
 }
