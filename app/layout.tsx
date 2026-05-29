@@ -72,6 +72,9 @@ export const metadata: Metadata = {
     "football shirts",
   ],
   authors: [{ name: "Goal Mania" }],
+  verification: {
+    google: "NgWEwSj9CLxYPIR8GMiEMo0f-edOghZzGqw7_9P2u-E",
+  },
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it"),
   openGraph: {
     type: "website",
