@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import { JerseyAdBlock } from "@/app/_components/JerseyAdBlock";
@@ -58,11 +58,26 @@ export async function generateMetadata({
   }
 }
 
+const CATEGORY_TO_PATH: Record<string, string> = {
+  transferMarket: "transfer",
+  serieA: "serieA",
+  internationalTeams: "international",
+  news: "news",
+};
+
 async function getArticle(slug: string) {
   try {
     await connectDB();
     const article = await Article.findOne({ slug, category: "news", status: "published" });
-    if (!article) return null;
+    if (!article) {
+      // Cross-category fallback: article may have been shared with wrong URL
+      const anyArticle = await Article.findOne({ slug, status: "published" });
+      if (anyArticle) {
+        const section = CATEGORY_TO_PATH[anyArticle.category] ?? "news";
+        if (section !== "news") redirect(`/${section}/${slug}`);
+      }
+      return null;
+    }
     return JSON.parse(JSON.stringify(article));
   } catch {
     return null;

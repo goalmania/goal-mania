@@ -2,7 +2,7 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import ArticleContent from "@/app/_components/ArticleContent";
@@ -86,6 +86,13 @@ export async function generateMetadata({
   }
 }
 
+const CATEGORY_TO_PATH: Record<string, string> = {
+  transferMarket: "transfer",
+  serieA: "serieA",
+  internationalTeams: "international",
+  news: "news",
+};
+
 // Function to get the article data
 async function getArticle(slug: string) {
   try {
@@ -97,7 +104,14 @@ async function getArticle(slug: string) {
       status: "published",
     });
 
-    if (!article) return null;
+    if (!article) {
+      const anyArticle = await Article.findOne({ slug, status: "published" });
+      if (anyArticle) {
+        const section = CATEGORY_TO_PATH[anyArticle.category] ?? "news";
+        if (section !== "serieA") redirect(`/${section}/${slug}`);
+      }
+      return null;
+    }
 
     return JSON.parse(JSON.stringify(article));
   } catch (error) {
