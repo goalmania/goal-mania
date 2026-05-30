@@ -229,30 +229,30 @@ export function Header() {
               <MenuIcon className="h-5 w-5" />
             </button>
 
-            <Link href="/" className="flex items-center gap-2.5 group">
+            <Link href="/" className="flex items-center gap-3 group">
               <div className="relative">
                 <Image
                   src="/images/recentUpdate/gm-shield-v2.png"
                   alt="Goal Mania"
-                  width={44}
-                  height={44}
-                  className="w-10 h-10 object-contain transition-all duration-500 group-hover:drop-shadow-[0_0_12px_rgba(200,240,0,0.6)]"
-                  style={{ filter: "brightness(1.05)" }}
+                  width={52}
+                  height={52}
+                  className="w-12 h-12 object-contain transition-all duration-500 group-hover:drop-shadow-[0_0_14px_rgba(200,240,0,0.7)]"
+                  style={{ filter: "brightness(1.1)" }}
                 />
                 <span className="absolute inset-0 rounded-full border border-[#c8f000]/0 group-hover:border-[#c8f000]/30 transition-all duration-500 scale-110" />
               </div>
               <div className="hidden sm:flex flex-col leading-none">
                 <span
-                  className="text-white font-black uppercase tracking-wider text-[15px]"
-                  style={{ fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)", letterSpacing: "3px" }}
+                  className="font-black italic uppercase leading-none"
+                  style={{ fontFamily: "var(--font-mulish, 'Mulish', sans-serif)", fontSize: "22px", letterSpacing: "1px", fontWeight: 900 }}
                 >
-                  GOAL<span style={{ color: "#c8f000" }}>MANIA</span>
+                  <span style={{ color: "#ffffff" }}>GOAL</span><span style={{ color: "#c8f000" }}>MANIA</span>
                 </span>
                 <span
-                  className="text-[9px] tracking-[3px] uppercase"
+                  className="text-[9px] tracking-[2px]"
                   style={{ fontFamily: "var(--font-mono, monospace)", color: "#666" }}
                 >
-                  // football universe
+                  La tua dose quotidiana di calcio
                 </span>
               </div>
             </Link>
@@ -818,9 +818,6 @@ export function Header() {
                 { name: "2026/27", href: "/shop/2026/27", isNew: true },
                 { name: "Maglie Retro", href: "/shop/retro", isRetro: true },
                 { name: "World Cup 2026", href: "/shop/worldcup", isSpecial: true },
-                { name: "Serie A", href: "/international/serieA" },
-                { name: "Premier League", href: "/international/premierLeague" },
-                { name: "La Liga", href: "/international/laliga" },
                 { name: "Notizie", href: "/news" },
                 { name: "Contatti", href: "/contact" },
               ].map((item) => (

@@ -240,7 +240,7 @@ export default async function ArticlePage({
   return (
     <div style={{ background: "#0a0a0a", color: "#f5f5f5", minHeight: "100vh" }}>
       {/* AdSense script — solo nelle pagine articolo, non nello shop */}
-      {publisherId && !publisherId.includes("XXXXXXXX") && (
+      {true && (
         <Script
           async
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`}

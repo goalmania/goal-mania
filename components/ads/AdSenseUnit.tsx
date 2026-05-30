@@ -7,13 +7,15 @@ import { useEffect, useRef } from "react";
 //   Publisher ID → https://adsense.google.com → Account → Informazioni account
 //   Ad Slot ID   → AdSense → Annunci → Per annuncio → crea unità annuncio
 
-const PUBLISHER_ID = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID ?? "ca-pub-XXXXXXXXXXXXXXXX";
+// Publisher ID reale — account Google AdSense goal-mania.it
+const PUBLISHER_ID = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID ?? "ca-pub-1255454616752120";
 
-// Slot IDs per tipo di posizione
+// Slot IDs — crea 3 unità annuncio su AdSense → Annunci → Per annuncio → Nuovo
+// e sostituisci i placeholder con gli ID reali nelle env Vercel
 const AD_SLOTS: Record<AdPosition, string> = {
-  "in-article":  process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE  ?? "1234567890",
-  "bottom":      process.env.NEXT_PUBLIC_ADSENSE_SLOT_BOTTOM       ?? "0987654321",
-  "list-banner": process.env.NEXT_PUBLIC_ADSENSE_SLOT_LIST_BANNER  ?? "1122334455",
+  "in-article":  process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE  ?? "SLOT_IN_ARTICLE",
+  "bottom":      process.env.NEXT_PUBLIC_ADSENSE_SLOT_BOTTOM       ?? "SLOT_BOTTOM",
+  "list-banner": process.env.NEXT_PUBLIC_ADSENSE_SLOT_LIST_BANNER  ?? "SLOT_LIST_BANNER",
 };
 
 export type AdPosition = "in-article" | "bottom" | "list-banner";
@@ -27,7 +29,7 @@ export default function AdSenseUnit({ position, className = "" }: Props) {
   const adRef = useRef<HTMLModElement>(null);
   const pushed = useRef(false);
 
-  const isPlaceholder = PUBLISHER_ID.includes("XXXXXXXX");
+  const isPlaceholder = AD_SLOTS[position].startsWith("SLOT_");
 
   useEffect(() => {
     if (isPlaceholder || pushed.current) return;
@@ -55,7 +57,7 @@ export default function AdSenseUnit({ position, className = "" }: Props) {
           className="text-center text-xs"
           style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.4)" }}
         >
-          // AdSense — imposta NEXT_PUBLIC_ADSENSE_PUBLISHER_ID in Vercel
+          // AdSense — crea unità annuncio su AdSense e imposta NEXT_PUBLIC_ADSENSE_SLOT_* in Vercel
         </p>
       </div>
     );

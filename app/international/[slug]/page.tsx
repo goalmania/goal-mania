@@ -204,7 +204,7 @@ export default async function InternationalArticlePage({
 
   return (
     <>
-      {publisherId && !publisherId.includes("XXXXXXXX") && (
+      {true && (
         <Script
           async
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`}

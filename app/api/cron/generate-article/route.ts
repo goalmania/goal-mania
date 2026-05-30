@@ -167,7 +167,7 @@ function parseRssItems(
 ): NewsItem[] {
   const items: NewsItem[] = [];
   const now = Date.now();
-  const maxAgeMs = 36 * 60 * 60 * 1000; // 36 ore
+  const maxAgeMs = 12 * 60 * 60 * 1000; // 12 ore — evita notizie di mercato già superate
 
   for (const item of xml.match(/<item>([\s\S]*?)<\/item>/g) ?? []) {
     const title = decodeHtmlEntities(extractTag(item, "title"));
@@ -431,9 +431,11 @@ ${newsDigest}
 ${recentDbTitles.length > 0 ? `ARGOMENTI GIÀ TRATTATI NELLE ULTIME 48H (NON RIPETERE):
 - ${recentTopics}
 
-` : ""}**REGOLA ASSOLUTA #1**: Scrivi SOLO ed ESCLUSIVAMENTE basandoti sulle notizie fornite. NON usare conoscenze pregresse su allenatori, rose, dirigenti, classifiche — queste informazioni cambiano. Se la notizia non menziona esplicitamente il nome dell'allenatore, non citarlo.
+` : ""}**REGOLA ASSOLUTA #1 — FACT-CHECK OBBLIGATORIO**: Prima di scrivere, valida ogni notizia con le tue conoscenze aggiornate. Se la notizia RSS parla di un trasferimento o di un'offerta per un giocatore che TU SAI essere già in quella squadra da mesi, quella notizia è OBSOLETA — NON scriverla, segnalala come "OBSOLETA" nel JSON con {"skip": true, "reason": "..."}. I feed RSS pubblicano spesso notizie riciclate o vecchie indiscrezioni come se fossero nuove.
 **REGOLA ASSOLUTA #2**: Non trattare argomenti già coperti di recente — scegli un angolo diverso.
 **REGOLA ASSOLUTA #3**: L'articolo deve riguardare la NOTIZIA PRINCIPALE. Le altre notizie servono solo per contesto.
+**REGOLA ASSOLUTA #4 — MERCATO**: Per voci di mercato non ancora confermate usa il condizionale: "secondo le indiscrezioni", "sarebbe in corso una trattativa". Se invece il trasferimento è già avvenuto (lo sai dalle tue conoscenze), NON scrivere come se fosse ancora in trattativa.
+**REGOLA ASSOLUTA #5 — NESSUNA FONTE**: NON citare mai la fonte della notizia nell'articolo. Non scrivere mai "secondo Tuttosport", "come riporta Calciomercato.it", "stando a La Gazzetta", "secondo Sky Sport" o qualsiasi altro media. Goal-Mania.it è la voce narrante: scrivi in prima persona editoriale, come se la notizia fosse di proprietà della redazione.
 
 **OBIETTIVO**: Articolo giornalistico approfondito, minimo 800 parole.
 1. SEO-ottimizzato: keyword naturali, H2/H3, liste puntate
@@ -507,6 +509,12 @@ Rispondi SOLO con JSON valido, zero markdown, zero testo extra:
     } catch (e2) {
       throw new Error(`JSON non valido da Gemini: ${(e2 as Error).message}`);
     }
+  }
+
+  // Gemini ha riconosciuto la notizia come obsoleta
+  if ((parsed as unknown as { skip?: boolean }).skip) {
+    const reason = (parsed as unknown as { reason?: string }).reason ?? "notizia obsoleta";
+    throw new Error(`SKIP: ${reason}`);
   }
 
   if (!parsed.title || !parsed.content || !parsed.summary) {

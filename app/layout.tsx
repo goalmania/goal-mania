@@ -75,6 +75,9 @@ export const metadata: Metadata = {
   verification: {
     google: "NgWEwSj9CLxYPIR8GMiEMo0f-edOghZzGqw7_9P2u-E",
   },
+  other: {
+    "google-adsense-account": "ca-pub-1255454616752120",
+  },
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it"),
   openGraph: {
     type: "website",
