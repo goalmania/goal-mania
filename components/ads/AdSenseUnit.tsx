@@ -13,9 +13,9 @@ const PUBLISHER_ID = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID ?? "ca-pub-125
 // Slot IDs — crea 3 unità annuncio su AdSense → Annunci → Per annuncio → Nuovo
 // e sostituisci i placeholder con gli ID reali nelle env Vercel
 const AD_SLOTS: Record<AdPosition, string> = {
-  "in-article":  process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE  ?? "SLOT_IN_ARTICLE",
-  "bottom":      process.env.NEXT_PUBLIC_ADSENSE_SLOT_BOTTOM       ?? "SLOT_BOTTOM",
-  "list-banner": process.env.NEXT_PUBLIC_ADSENSE_SLOT_LIST_BANNER  ?? "SLOT_LIST_BANNER",
+  "in-article":  process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE  ?? "9883556030",
+  "bottom":      process.env.NEXT_PUBLIC_ADSENSE_SLOT_BOTTOM       ?? "4160986290",
+  "list-banner": process.env.NEXT_PUBLIC_ADSENSE_SLOT_LIST_BANNER  ?? "4160986290",
 };
 
 export type AdPosition = "in-article" | "bottom" | "list-banner";
@@ -29,7 +29,7 @@ export default function AdSenseUnit({ position, className = "" }: Props) {
   const adRef = useRef<HTMLModElement>(null);
   const pushed = useRef(false);
 
-  const isPlaceholder = AD_SLOTS[position].startsWith("SLOT_");
+  const isPlaceholder = false;
 
   useEffect(() => {
     if (isPlaceholder || pushed.current) return;
