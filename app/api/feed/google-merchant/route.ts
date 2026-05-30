@@ -25,7 +25,7 @@ function productToItems(product: any): string {
   const description = escapeXml(
     (product.description ?? product.title).slice(0, 5000)
   );
-  const imageLink = product.images?.[0] ?? "";
+  const imageLink = (product.images ?? []).find((img: string) => img && img.startsWith("http")) ?? "";
   const additionalImages = (product.images ?? []).slice(1, 10);
 
   const basePrice = product.basePrice ?? 30;
@@ -60,6 +60,16 @@ function productToItems(product: any): string {
   const productId = String(product._id);
   const itemGroupId = productId; // 24 chars, always within limit
 
+  // Skip products with no valid image — Google rejects them anyway
+  if (!imageLink) return "";
+
+  // Shipping entries for all active countries
+  const shippingXml = ["IT", "DE", "GB", "ES", "FR"].map(country => `    <g:shipping>
+      <g:country>${country}</g:country>
+      <g:service>Standard</g:service>
+      <g:price>${shippingPrice.toFixed(2)} EUR</g:price>
+    </g:shipping>`).join("\n");
+
   return allSizes
     .map(({ size, ageGroup }) => {
       // e.g. "507f1f77bcf86cd799439011-XL" = 24+1+5 = 30 chars max
@@ -80,11 +90,7 @@ function productToItems(product: any): string {
     <g:condition>${condition}</g:condition>
     <g:availability>${availability}</g:availability>
     <g:price>${price.toFixed(2)} EUR</g:price>
-    <g:shipping>
-      <g:country>IT</g:country>
-      <g:service>Standard</g:service>
-      <g:price>${shippingPrice.toFixed(2)} EUR</g:price>
-    </g:shipping>
+${shippingXml}
     <g:brand>${brand}</g:brand>
     <g:google_product_category>${escapeXml(GOOGLE_CATEGORY)}</g:google_product_category>
     <g:product_type>${escapeXml(productType)}</g:product_type>
@@ -109,7 +115,7 @@ export async function GET() {
       .select("_id slug title description images basePrice retroPrice isRetro isWorldCup shippingPrice stockQuantity adultSizes kidsSizes country nationalTeam category")
       .lean();
 
-    const items = (products as any[]).map(productToItems).join("\n");
+    const items = (products as any[]).map(productToItems).filter(Boolean).join("\n");
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
