@@ -9,6 +9,7 @@ import FlashSaleSection from "@/components/home/FlashSaleSection";
 import EditorialCommerceSection from "@/components/home/EditorialCommerceSection";
 import HomeCategoryCards from "@/app/_components/HomeCategoryCards";
 import ReviewsStrip from "@/components/home/ReviewsStrip";
+import HomeNewsStrip from "@/components/home/HomeNewsStrip";
 import ProductModel from "@/lib/models/Product";
 
 export const revalidate = 300;
@@ -106,7 +107,7 @@ async function getFeaturedProducts() {
 }
 
 export default async function Home() {
-  const [featuredProducts, featuredArticles] = await Promise.all([
+  const [featuredProducts, featuredArticles, latestArticles] = await Promise.all([
     getFeaturedProducts(),
     (async () => {
       try {
@@ -114,6 +115,19 @@ export default async function Home() {
         const articles = await Article.find({ status: "published", featured: true })
           .sort({ publishedAt: -1 })
           .limit(20)
+          .lean();
+        return JSON.parse(JSON.stringify(articles));
+      } catch {
+        return [];
+      }
+    })(),
+    (async () => {
+      try {
+        await connectDB();
+        const articles = await Article.find({ status: "published" })
+          .sort({ publishedAt: -1 })
+          .limit(6)
+          .select("_id slug title summary image category publishedAt")
           .lean();
         return JSON.parse(JSON.stringify(articles));
       } catch {
@@ -160,6 +174,9 @@ export default async function Home() {
 
       {/* 6. RECENSIONI */}
       <SocialProofSection />
+
+      {/* 7. ULTIME NOTIZIE — link agli articoli del blog (dopo il funnel acquisto) */}
+      <HomeNewsStrip articles={latestArticles} />
     </div>
   );
 }
