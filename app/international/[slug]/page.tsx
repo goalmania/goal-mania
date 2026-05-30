@@ -4,9 +4,11 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
+import Script from "next/script";
 import ArticleContent from "@/app/_components/ArticleContent";
 import { JerseyAdBlock } from "@/app/_components/JerseyAdBlock";
 import ViewTracker from "@/app/_components/ViewTracker";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
 
 const INTL_TEAMS = [
   "Arsenal", "Chelsea", "Liverpool", "Manchester City", "Manchester United",
@@ -198,8 +200,18 @@ export default async function InternationalArticlePage({
     ],
   };
 
+  const publisherId = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
+
   return (
     <>
+      {publisherId && !publisherId.includes("XXXXXXXX") && (
+        <Script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`}
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+      )}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(newsArticleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <ViewTracker articleId={article._id as string} />
@@ -244,6 +256,9 @@ export default async function InternationalArticlePage({
 
         {/* Jersey popup — maglia della squadra dell'articolo */}
         <JerseyAdBlock jerseyId={article.featuredJerseyId} teamHint={teamHint} />
+
+        {/* AdSense — in-article */}
+        <AdSenseUnit position="in-article" className="my-8" />
 
         {/* Article Footer */}
         <footer className="border-t border-white/8 pt-6 mt-8">
