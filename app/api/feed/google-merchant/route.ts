@@ -56,11 +56,14 @@ function productToItems(product: any): string {
     allSizes.push({ size: "M", ageGroup: "adult" });
   }
 
-  const itemGroupId = `gm-${slug}`;
+  // Google max ID length = 50 chars — use MongoDB _id (24 chars) as base
+  const productId = String(product._id);
+  const itemGroupId = productId; // 24 chars, always within limit
 
   return allSizes
     .map(({ size, ageGroup }) => {
-      const itemId = `${itemGroupId}-${size}`.toLowerCase().replace(/\s+/g, "-");
+      // e.g. "507f1f77bcf86cd799439011-XL" = 24+1+5 = 30 chars max
+      const itemId = `${productId}-${size}`.toLowerCase().replace(/\s+/g, "-");
       const sizeLabel = escapeXml(size);
       const additionalImagesXml = additionalImages
         .map((img: string) => `<g:additional_image_link>${escapeXml(img)}</g:additional_image_link>`)
