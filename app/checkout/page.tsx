@@ -850,6 +850,8 @@ export default function CheckoutPage() {
                     items={items}
                     addressId={selectedAddressId || ""}
                     coupon={appliedCoupon}
+                    guestEmail={checkoutMode === "guest" ? guestEmail : undefined}
+                    shippingAddress={checkoutMode === "guest" ? guestAddress : addresses.find(a => a._id === selectedAddressId)}
                   />
                   <button
                     type="button"

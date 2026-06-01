@@ -91,10 +91,11 @@ export async function POST(req: NextRequest) {
 
       const stripe = getStripe();
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(finalAmount * 100), // Convert to cents
+        amount: Math.round(finalAmount * 100),
         currency: "eur",
         automatic_payment_methods: {
           enabled: true,
+          allow_redirects: "always", // abilita Klarna, Amazon Pay, Bancontact, ecc.
         },
         metadata: {
           userId: session?.user?.id || "guest",
@@ -105,7 +106,7 @@ export async function POST(req: NextRequest) {
           total: total.toString(),
           final: finalAmount.toString(),
         },
-        setup_future_usage: "off_session",
+        // setup_future_usage rimosso: bloccava Klarna, Amazon Pay e altri BNPL
       });
 
       // Store the full cart data with customizations in the database
