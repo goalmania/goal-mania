@@ -1,103 +1,76 @@
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+
+const PAYPAL_BASE_URL =
+  process.env.PAYPAL_MODE === "live"
+    ? "https://api-m.paypal.com"
+    : "https://api-m.sandbox.paypal.com";
+
+async function getPayPalAccessToken(): Promise<string> {
+  const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!;
+  const secret = process.env.PAYPAL_CLIENT_SECRET!;
+
+  const res = await fetch(`${PAYPAL_BASE_URL}/v1/oauth2/token`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: `Basic ${Buffer.from(`${clientId}:${secret}`).toString("base64")}`,
+    },
+    body: "grant_type=client_credentials",
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`PayPal auth failed: ${err}`);
+  }
+
+  const data = await res.json();
+  return data.access_token;
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session || !session.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const body = await req.json();
-    const { orderID } = body;
+    const { orderID } = await req.json();
 
     if (!orderID) {
-      return NextResponse.json(
-        { error: "Missing order ID" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "orderID mancante" }, { status: 400 });
     }
 
-    // PayPal API configuration
-    const paypalMode = process.env.PAYPAL_MODE || "sandbox";
-    const paypalBaseUrl = paypalMode === "live" 
-      ? "https://api-m.paypal.com" 
-      : "https://api-m.sandbox.paypal.com";
+    const accessToken = await getPayPalAccessToken();
 
-    // Debug logging
-    console.log("PayPal capture API configuration:", {
-      mode: paypalMode,
-      baseUrl: paypalBaseUrl,
-      clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ? "✅ Set" : "❌ Missing",
-      clientSecret: process.env.PAYPAL_CLIENT_SECRET ? "✅ Set" : "❌ Missing"
-    });
+    const captureRes = await fetch(
+      `${PAYPAL_BASE_URL}/v2/checkout/orders/${orderID}/capture`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
 
-    // Get access token
-    const authResponse = await fetch(`${paypalBaseUrl}/v1/oauth2/token`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Authorization": `Basic ${Buffer.from(
-          `${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`
-        ).toString("base64")}`,
-      },
-      body: "grant_type=client_credentials",
-    });
-
-    if (!authResponse.ok) {
-      const errorText = await authResponse.text();
-      console.error("PayPal capture auth error:", errorText);
-      console.error("PayPal capture auth response status:", authResponse.status);
-      console.error("PayPal capture auth response headers:", Object.fromEntries(authResponse.headers.entries()));
-      return NextResponse.json(
-        { error: "Failed to authenticate with PayPal", details: errorText },
-        { status: 500 }
-      );
+    if (!captureRes.ok) {
+      const errText = await captureRes.text();
+      console.error("PayPal capture error:", errText);
+      return NextResponse.json({ error: "Errore conferma PayPal", details: errText }, { status: 500 });
     }
 
-    const authData = await authResponse.json();
-    const accessToken = authData.access_token;
+    const result = await captureRes.json();
 
-    // Capture the order
-    const captureResponse = await fetch(`${paypalBaseUrl}/v2/checkout/orders/${orderID}/capture`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`,
-      },
-    });
-
-    if (!captureResponse.ok) {
-      console.error("PayPal capture error:", await captureResponse.text());
-      return NextResponse.json(
-        { error: "Failed to capture PayPal payment" },
-        { status: 500 }
-      );
-    }
-
-    const captureResult = await captureResponse.json();
-
-    // Check if payment was successful
-    if (captureResult.status === "COMPLETED") {
+    if (result.status === "COMPLETED") {
       return NextResponse.json({
         success: true,
-        transactionId: captureResult.purchase_units[0]?.payments?.captures?.[0]?.id,
-        status: captureResult.status,
-        captureData: captureResult,
+        transactionId: result.purchase_units?.[0]?.payments?.captures?.[0]?.id,
+        status: result.status,
       });
-    } else {
-      return NextResponse.json(
-        { error: "Payment not completed", status: captureResult.status },
-        { status: 400 }
-      );
     }
 
+    return NextResponse.json({ error: "Pagamento non completato", status: result.status }, { status: 400 });
   } catch (error) {
-    console.error("Error capturing PayPal order:", error);
+    console.error("PayPal capture:", error);
     return NextResponse.json(
-      { error: "Failed to capture PayPal order" },
+      { error: error instanceof Error ? error.message : "Errore PayPal" },
       { status: 500 }
     );
   }

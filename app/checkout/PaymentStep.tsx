@@ -195,7 +195,7 @@ function PaymentMethods({ clientSecret, total, onSuccess, items, addressId, coup
   const [selectedMethod, setSelectedMethod] = useState<"stripe" | "paypal" | "scalapay">(clientSecret ? "stripe" : "paypal");
 
   const methods = [
-    clientSecret && { id: "stripe" as const, label: "💳 Carta / Link", sub: "Visa, MC, Amex, Klarna, Amazon Pay" },
+    clientSecret && { id: "stripe" as const, label: "💳 Carta / Klarna / Link", sub: "Visa, Mastercard, Amex, Klarna, Apple/Google Pay" },
     { id: "paypal" as const, label: "🅿️ PayPal", sub: "Veloce e sicuro" },
     SCALAPAY_ENABLED && { id: "scalapay" as const, label: "🟣 Scalapay", sub: `3 rate da €${(total / 3).toFixed(2)}` },
   ].filter(Boolean) as { id: "stripe" | "paypal" | "scalapay"; label: string; sub: string }[];
@@ -228,7 +228,7 @@ function PaymentMethods({ clientSecret, total, onSuccess, items, addressId, coup
         ) : selectedMethod === "scalapay" ? (
           <ScalapayButton total={total} items={items} guestEmail={guestEmail} shippingAddress={shippingAddress} />
         ) : (
-          <PayPalButton total={total} items={items} addressId={addressId} coupon={coupon} onSuccess={onSuccess} />
+          <PayPalButton total={total} items={items} addressId={addressId} coupon={coupon} onSuccess={onSuccess} guestEmail={guestEmail} guestAddress={shippingAddress} />
         )}
       </div>
     </div>

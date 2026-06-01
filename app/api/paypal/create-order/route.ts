@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -9,202 +11,133 @@ interface CartItem {
   name: string;
   price: number;
   quantity: number;
-  customization?: {
-    name?: string;
-    number?: string;
-    selectedPatches?: Array<{
-      id: string;
-      name: string;
-      image: string;
-      price?: number;
-    }>;
-    includeShorts?: boolean;
-    includeSocks?: boolean;
-    isPlayerEdition?: boolean;
-    size?: string;
-    isKidSize?: boolean;
-    hasCustomization?: boolean;
-  };
+}
+
+const PAYPAL_BASE_URL =
+  process.env.PAYPAL_MODE === "live"
+    ? "https://api-m.paypal.com"
+    : "https://api-m.sandbox.paypal.com";
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it";
+
+async function getPayPalAccessToken(): Promise<string> {
+  const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!;
+  const secret = process.env.PAYPAL_CLIENT_SECRET!;
+
+  const res = await fetch(`${PAYPAL_BASE_URL}/v1/oauth2/token`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: `Basic ${Buffer.from(`${clientId}:${secret}`).toString("base64")}`,
+    },
+    body: "grant_type=client_credentials",
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`PayPal auth failed: ${err}`);
+  }
+
+  const data = await res.json();
+  return data.access_token;
 }
 
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-
-    if (!session || !session.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     const body = await req.json();
-    const { items, addressId, coupon } = body;
+    const { items, addressId, coupon, guestEmail, guestAddress } = body;
 
-    if (!items || !items.length || !addressId) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+    if (!items?.length) {
+      return NextResponse.json({ error: "Nessun articolo nel carrello" }, { status: 400 });
     }
 
-    // Calculate total amount
-    const total = items.reduce(
+    const isGuest = !session?.user;
+
+    // Recupera indirizzo (utente registrato o guest)
+    let shippingName = "";
+    if (isGuest) {
+      if (!guestAddress) {
+        return NextResponse.json({ error: "Indirizzo spedizione mancante" }, { status: 400 });
+      }
+      shippingName = guestAddress.fullName || "";
+    } else {
+      if (!addressId) {
+        return NextResponse.json({ error: "Indirizzo non selezionato" }, { status: 400 });
+      }
+      await connectDB();
+      const address = await Address.findById(addressId);
+      shippingName = address?.fullName || "";
+    }
+
+    // Calcolo totale
+    const subtotal = items.reduce(
       (sum: number, item: CartItem) => sum + item.price * item.quantity,
       0
     );
+    const discountAmount =
+      coupon?.discountPercentage ? (subtotal * coupon.discountPercentage) / 100 : 0;
+    const finalAmount = subtotal - discountAmount;
 
-    // Apply coupon discount if available
-    let finalAmount = total;
-    let discountAmount = 0;
+    // Ref ordine
+    const reference = `GM-${Date.now()}`;
 
-    if (coupon && coupon.discountPercentage) {
-      discountAmount = (total * coupon.discountPercentage) / 100;
-      finalAmount = total - discountAmount;
-    }
+    const accessToken = await getPayPalAccessToken();
 
-    // Fetch address details
-    await connectDB();
-    const address = await Address.findById(addressId);
-    
-    if (!address) {
-      return NextResponse.json(
-        { error: "Address not found" },
-        { status: 400 }
-      );
-    }
-
-    console.log("Address found:", {
-      fullName: address.fullName,
-      city: address.city,
-      country: address.country,
-      postalCode: address.postalCode
-    });
-
-    // PayPal API configuration
-    const paypalMode = process.env.PAYPAL_MODE || "sandbox";
-    const paypalBaseUrl = paypalMode === "live" 
-      ? "https://api-m.paypal.com" 
-      : "https://api-m.sandbox.paypal.com";
-
-    // Debug logging
-    console.log("PayPal API configuration:", {
-      mode: paypalMode,
-      baseUrl: paypalBaseUrl,
-      clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ? "✅ Set" : "❌ Missing",
-      clientSecret: process.env.PAYPAL_CLIENT_SECRET ? "✅ Set" : "❌ Missing"
-    });
-
-    // Get access token
-    const authResponse = await fetch(`${paypalBaseUrl}/v1/oauth2/token`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Authorization": `Basic ${Buffer.from(
-          `${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`
-        ).toString("base64")}`,
-      },
-      body: "grant_type=client_credentials",
-    });
-
-    if (!authResponse.ok) {
-      const errorText = await authResponse.text();
-      console.error("PayPal auth error:", errorText);
-      console.error("PayPal auth response status:", authResponse.status);
-      console.error("PayPal auth response headers:", Object.fromEntries(authResponse.headers.entries()));
-      return NextResponse.json(
-        { error: "Failed to authenticate with PayPal", details: errorText },
-        { status: 500 }
-      );
-    }
-
-    const authData = await authResponse.json();
-    const accessToken = authData.access_token;
-
-    // Create PayPal order
-    const orderData = {
+    const orderPayload = {
       intent: "CAPTURE",
       purchase_units: [
         {
-          reference_id: `order_${Date.now()}_${session.user.id}`,
-          description: `Goal Mania Order - ${items.length} item(s)`,
-          custom_id: JSON.stringify({
-            userId: session.user.id,
-            addressId,
-            items: items.map((item: CartItem) => ({
-              id: item.id,
-              qty: item.quantity,
-              price: item.price,
-            })),
-            coupon: coupon ? {
-              code: coupon.code,
-              discountPercentage: coupon.discountPercentage,
-              discountAmount: discountAmount,
-            } : null,
-            total: total,
-            final: finalAmount,
-          }),
+          reference_id: reference,
+          description: `Goal Mania — ${items.length} articolo/i`,
+          custom_id: reference,
           amount: {
             currency_code: "EUR",
             value: finalAmount.toFixed(2),
             breakdown: {
-              item_total: {
-                currency_code: "EUR",
-                value: finalAmount.toFixed(2),
-              },
+              item_total: { currency_code: "EUR", value: subtotal.toFixed(2) },
+              discount: { currency_code: "EUR", value: discountAmount.toFixed(2) },
             },
           },
           items: items.map((item: CartItem) => ({
-            name: item.name,
-            unit_amount: {
-              currency_code: "EUR",
-              value: item.price.toFixed(2),
-            },
+            name: item.name.substring(0, 127),
+            unit_amount: { currency_code: "EUR", value: item.price.toFixed(2) },
             quantity: item.quantity.toString(),
             category: "PHYSICAL_GOODS",
           })),
         },
       ],
       application_context: {
-        return_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?payment_method=paypal`,
-        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout?canceled=true`,
         brand_name: "Goal Mania",
-        landing_page: "BILLING",
+        landing_page: "LOGIN",
         user_action: "PAY_NOW",
-        shipping_preference: "NO_SHIPPING", // Changed from SET_PROVIDED_ADDRESS
+        shipping_preference: "NO_SHIPPING",
+        return_url: `${APP_URL}/checkout/success?payment_method=paypal`,
+        cancel_url: `${APP_URL}/checkout?canceled=true`,
       },
     };
 
-    const orderResponse = await fetch(`${paypalBaseUrl}/v2/checkout/orders`, {
+    const orderRes = await fetch(`${PAYPAL_BASE_URL}/v2/checkout/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify(orderData),
+      body: JSON.stringify(orderPayload),
     });
 
-    if (!orderResponse.ok) {
-      const errorText = await orderResponse.text();
-      console.error("PayPal order creation error:", errorText);
-      console.error("PayPal order creation response status:", orderResponse.status);
-      console.error("PayPal order creation response headers:", Object.fromEntries(orderResponse.headers.entries()));
-      console.error("PayPal order data sent:", JSON.stringify(orderData, null, 2));
-      return NextResponse.json(
-        { error: "Failed to create PayPal order", details: errorText },
-        { status: 500 }
-      );
+    if (!orderRes.ok) {
+      const errText = await orderRes.text();
+      console.error("PayPal create-order error:", errText);
+      return NextResponse.json({ error: "Errore creazione ordine PayPal", details: errText }, { status: 500 });
     }
 
-    const orderResult = await orderResponse.json();
-
-    return NextResponse.json({
-      success: true,
-      orderID: orderResult.id,
-      approvalUrl: orderResult.links.find((link: any) => link.rel === "approve")?.href,
-    });
-
+    const result = await orderRes.json();
+    return NextResponse.json({ success: true, orderID: result.id });
   } catch (error) {
-    console.error("Error creating PayPal order:", error);
+    console.error("PayPal create-order:", error);
     return NextResponse.json(
-      { error: "Failed to create PayPal order" },
+      { error: error instanceof Error ? error.message : "Errore PayPal" },
       { status: 500 }
     );
   }
