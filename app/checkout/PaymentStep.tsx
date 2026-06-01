@@ -3,58 +3,73 @@
 import { useState, useEffect } from "react";
 import { Elements, PaymentElement, useStripe, useElements, PaymentRequestButtonElement } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { CheckCircleIcon, CreditCardIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { Card, CardContent } from "@/components/ui/card";
+import { CheckCircleIcon, ExclamationTriangleIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import PayPalButton from "./PayPalButton";
 
-// Stripe configuration - only loads when needed
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "");
 
-// PayPal configuration - completely separate from Stripe
+const stripeAppearance = {
+  theme: "night" as const,
+  variables: {
+    colorPrimary: "#c8f000",
+    colorBackground: "#111111",
+    colorText: "#ffffff",
+    colorTextSecondary: "rgba(255,255,255,0.5)",
+    colorTextPlaceholder: "rgba(255,255,255,0.25)",
+    colorDanger: "#f87171",
+    fontFamily: "system-ui, -apple-system, sans-serif",
+    fontSizeBase: "14px",
+    borderRadius: "12px",
+    spacingUnit: "4px",
+  },
+  rules: {
+    ".Input": {
+      border: "1px solid rgba(255,255,255,0.1)",
+      backgroundColor: "rgba(255,255,255,0.05)",
+      color: "#ffffff",
+    },
+    ".Input:focus": {
+      border: "1px solid #c8f000",
+      boxShadow: "0 0 0 3px rgba(200,240,0,0.1)",
+    },
+    ".Label": {
+      color: "rgba(255,255,255,0.6)",
+      fontSize: "11px",
+      fontWeight: "600",
+      textTransform: "uppercase",
+      letterSpacing: "0.05em",
+    },
+    ".Tab": {
+      border: "1px solid rgba(255,255,255,0.08)",
+      backgroundColor: "rgba(255,255,255,0.03)",
+    },
+    ".Tab:hover": {
+      border: "1px solid rgba(200,240,0,0.3)",
+    },
+    ".Tab--selected": {
+      border: "1px solid #c8f000",
+      backgroundColor: "rgba(200,240,0,0.08)",
+    },
+  },
+};
+
 const paypalOptions = {
   clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "",
   currency: "EUR",
   intent: "capture",
-  // Add additional options to resolve authentication issues
   "enable-funding": "paylater,venmo",
   "disable-funding": "card",
-  "data-client-token": "",
-  "data-page-type": "checkout",
-  // Ensure proper sandbox/live mode
   "data-sdk-integration-source": "button-factory",
-  // Add debugging
   debug: process.env.NODE_ENV === "development",
-  // Add additional options to help with authentication
   "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "",
   "merchant-id": process.env.NEXT_PUBLIC_PAYPAL_MERCHANT_ID || "",
 };
 
-// Log PayPal configuration for debugging
-if (process.env.NODE_ENV === "development") {
-  console.log("PayPal configuration:", {
-    clientId: paypalOptions.clientId ? "✅ Set" : "❌ Missing",
-    currency: paypalOptions.currency,
-    intent: paypalOptions.intent,
-    mode: process.env.PAYPAL_MODE || "sandbox",
-    merchantId: process.env.NEXT_PUBLIC_PAYPAL_MERCHANT_ID ? "✅ Set" : "❌ Missing"
-  });
-}
-
-// Stripe-specific payment component
-function StripePayment({ 
-  clientSecret, 
-  total, 
-  onSuccess 
-}: { 
-  clientSecret: string; 
-  total: number; 
-  onSuccess: () => void;
-}) {
+// ── Stripe form ──────────────────────────────────────────────────────────────
+function StripePayment({ clientSecret, total, onSuccess }: { clientSecret: string; total: number; onSuccess: () => void }) {
   const { t } = useTranslation();
   const stripe = useStripe();
   const elements = useElements();
@@ -65,51 +80,30 @@ function StripePayment({
 
   useEffect(() => {
     if (!stripe || !clientSecret) return;
-    
     const pr = stripe.paymentRequest({
       country: "IT",
       currency: "eur",
-      total: { label: "Goal Mania Order", amount: Math.round(total * 100) },
+      total: { label: "Goal Mania", amount: Math.round(total * 100) },
       requestPayerName: true,
       requestPayerEmail: true,
     });
-    
     pr.canMakePayment().then((result) => {
-      if (result) {
-        setPaymentRequest(pr);
-        setCanMakePayment(true);
-      }
+      if (result) { setPaymentRequest(pr); setCanMakePayment(true); }
     });
-    
     pr.on("paymentmethod", async (e) => {
       setIsLoading(true);
       setError(null);
       try {
-        const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(
-          clientSecret,
-          { payment_method: e.paymentMethod.id },
-          { handleActions: false }
-        );
-        if (confirmError) {
-          e.complete("fail");
-          setError(confirmError.message || "Payment failed");
-          setIsLoading(false);
-          return;
-        }
+        const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, { payment_method: e.paymentMethod.id }, { handleActions: false });
+        if (confirmError) { e.complete("fail"); setError(confirmError.message || "Pagamento fallito"); setIsLoading(false); return; }
         e.complete("success");
         if (paymentIntent?.status === "requires_action") {
           const { error } = await stripe.confirmCardPayment(clientSecret);
-          if (error) setError(error.message || "Payment failed");
-          else {
-            toast.success("Payment successful!");
-            onSuccess();
-          }
-        } else {
-          toast.success("Payment successful!");
-          onSuccess();
-        }
+          if (error) setError(error.message || "Pagamento fallito");
+          else { toast.success("Pagamento completato!"); onSuccess(); }
+        } else { toast.success("Pagamento completato!"); onSuccess(); }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Payment failed");
+        setError(err instanceof Error ? err.message : "Pagamento fallito");
         e.complete("fail");
       }
       setIsLoading(false);
@@ -122,204 +116,151 @@ function StripePayment({
     setIsLoading(true);
     setError(null);
     const { error, paymentIntent } = await stripe.confirmPayment({ elements, redirect: "if_required" });
-    if (error) setError(error.message || "Payment failed");
-    else if (paymentIntent && ["succeeded", "processing"].includes(paymentIntent.status)) {
-      toast.success(paymentIntent.status === "succeeded" ? "Payment successful!" : "Your payment is processing!");
+    if (error) {
+      setError(error.message || "Pagamento fallito");
+    } else if (paymentIntent && ["succeeded", "processing"].includes(paymentIntent.status)) {
+      toast.success(paymentIntent.status === "succeeded" ? "Pagamento completato!" : "Pagamento in elaborazione!");
       onSuccess();
-    } else setError("Something went wrong with the payment");
+    } else {
+      setError("Si è verificato un errore con il pagamento");
+    }
     setIsLoading(false);
   };
 
   return (
-    <div className="space-y-6">
-      {/* Express Checkout (Apple Pay, Google Pay) */}
+    <div className="space-y-4">
+      {/* Express Checkout (Apple Pay / Google Pay) */}
       {canMakePayment && paymentRequest && (
-        <Card className="border-2 border-green-200 bg-green-50">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2 mb-4">
-              <CheckCircleIcon className="h-5 w-5 text-green-600" />
-              <p className="text-sm font-medium text-green-800">Express Checkout Available</p>
-            </div>
-            <PaymentRequestButtonElement options={{ paymentRequest, style: { paymentRequestButton: { theme: "dark", height: "48px" } } }} />
-          </CardContent>
-        </Card>
+        <div className="space-y-2">
+          <p className="text-xs text-white/40 uppercase tracking-wider font-semibold text-center">Pagamento rapido</p>
+          <PaymentRequestButtonElement
+            options={{
+              paymentRequest,
+              style: { paymentRequestButton: { theme: "dark", height: "48px", type: "buy" } },
+            }}
+          />
+          <div className="flex items-center gap-3">
+            <div className="flex-1 h-px bg-white/8" />
+            <span className="text-xs text-white/30">oppure paga con carta</span>
+            <div className="flex-1 h-px bg-white/8" />
+          </div>
+        </div>
       )}
-      
-      {/* Stripe Payment Form */}
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <Card>
-          <CardContent className="pt-6">
-            <PaymentElement className="mb-6" />
-            {error && (
-              <Alert variant="destructive" className="mb-4">
-                <ExclamationTriangleIcon className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-            <Button type="submit" disabled={!stripe || isLoading} className="w-full bg-[#c8f000] hover:bg-[#e0852e] text-white">
-              {isLoading ? t("checkout.processing") : `Pay €${total.toFixed(2)}`}
-            </Button>
-          </CardContent>
-        </Card>
+
+      {/* Stripe Payment Element */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <PaymentElement
+          options={{
+            layout: { type: "tabs", defaultCollapsed: false },
+            paymentMethodOrder: ["card", "apple_pay", "google_pay", "klarna", "paypal"],
+          }}
+        />
+
+        {error && (
+          <div className="flex items-center gap-2 text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-4 py-3">
+            <ExclamationTriangleIcon className="h-4 w-4 flex-shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={!stripe || isLoading}
+          className="w-full flex items-center justify-center gap-2 bg-[#c8f000] hover:bg-[#d4f520] text-black font-black text-base py-4 rounded-2xl active:scale-[0.98] transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? (
+            <><div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />Elaborazione...</>
+          ) : (
+            <><LockClosedIcon className="w-4 h-4" />Paga €{total.toFixed(2)}</>
+          )}
+        </button>
+
+        <p className="text-center text-xs text-white/25 flex items-center justify-center gap-1">
+          <LockClosedIcon className="w-3 h-3" />
+          Pagamento sicuro con crittografia SSL
+        </p>
       </form>
     </div>
   );
 }
 
-// Main payment component with method selection
-function PaymentMethods({ 
-  clientSecret, 
-  total, 
-  onSuccess, 
-  items, 
-  addressId, 
-  coupon 
-}: { 
-  clientSecret: string; 
-  total: number; 
-  onSuccess: () => void;
-  items: any[];
-  addressId: string;
-  coupon: any;
+// ── Metodi di pagamento ──────────────────────────────────────────────────────
+function PaymentMethods({ clientSecret, total, onSuccess, items, addressId, coupon }: {
+  clientSecret: string; total: number; onSuccess: () => void; items: any[]; addressId: string; coupon: any;
 }) {
-  const { t } = useTranslation();
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<"stripe" | "paypal">(
-    clientSecret ? "stripe" : "paypal"
-  );
+  const [selectedMethod, setSelectedMethod] = useState<"stripe" | "paypal">(clientSecret ? "stripe" : "paypal");
 
   return (
-    <div className="space-y-6">
-      {/* Payment Method Selection */}
-      <Card className="border-2 border-white/8">
-        <CardContent className="pt-6">
-          <h3 className="text-lg font-semibold text-[#0a0a0a] mb-4">
-            {t("checkout.choosePaymentMethod")}
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            {/* Stripe Option - only show if clientSecret exists */}
-            {clientSecret && (
-              <button
-                type="button"
-                onClick={() => setSelectedPaymentMethod("stripe")}
-                className={`p-4 border-2 rounded-lg text-left transition-all duration-200 ${
-                  selectedPaymentMethod === "stripe"
-                    ? "border-[#c8f000] bg-orange-50 shadow-md"
-                    : "border-white/8 hover:border-[#c8f000]/30 bg-[#0a0a0a]"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <CreditCardIcon className="h-6 w-6 text-[#c8f000]" />
-                  <div>
-                    <p className="font-medium text-[#0a0a0a]">{t("checkout.payWithCard")}</p>
-                    <p className="text-sm text-white/60">Visa, Mastercard, American Express</p>
-                  </div>
-                </div>
-              </button>
-            )}
+    <div className="space-y-5">
+      {/* Selezione metodo */}
+      <div className="grid grid-cols-2 gap-3">
+        {clientSecret && (
+          <button
+            type="button"
+            onClick={() => setSelectedMethod("stripe")}
+            className={`p-3.5 border rounded-xl text-left transition-all duration-150 ${
+              selectedMethod === "stripe"
+                ? "border-[#c8f000] bg-[#c8f000]/8"
+                : "border-white/10 hover:border-white/20 bg-white/3"
+            }`}
+          >
+            <p className={`font-semibold text-sm ${selectedMethod === "stripe" ? "text-white" : "text-white/60"}`}>
+              💳 Carta / Link
+            </p>
+            <p className="text-[11px] text-white/30 mt-0.5">Visa, MC, Amex, Klarna</p>
+          </button>
+        )}
 
-            {/* PayPal Option - always available */}
-            <button
-              type="button"
-              onClick={() => setSelectedPaymentMethod("paypal")}
-              className={`p-4 border-2 rounded-lg text-left transition-all duration-200 ${
-                selectedPaymentMethod === "paypal"
-                  ? "border-blue-500 bg-blue-50 shadow-md"
-                  : "border-white/8 hover:border-blue-500/30 bg-[#0a0a0a]"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <svg className="h-6 w-6 text-[#c8f000]" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M20.067 8.500c.492.315.844.825.844 1.406 0 .58-.352 1.09-.844 1.406l-3.547 2.266a1.5 1.5 0 0 1-.844.266H7.5c-.828 0-1.5-.672-1.5-1.5V7.5c0-.828.672-1.5 1.5-1.5h8.172c.316 0 .62.105.844.266l3.547 2.266z"/>
-                </svg>
-                <div>
-                  <p className="font-medium text-[#0a0a0a]">{t("checkout.payWithPayPal")}</p>
-                  <p className="text-sm text-white/60">Fast & secure checkout</p>
-                </div>
-              </div>
-            </button>
+        <button
+          type="button"
+          onClick={() => setSelectedMethod("paypal")}
+          className={`p-3.5 border rounded-xl text-left transition-all duration-150 ${
+            selectedMethod === "paypal"
+              ? "border-[#c8f000] bg-[#c8f000]/8"
+              : "border-white/10 hover:border-white/20 bg-white/3"
+          }`}
+        >
+          <p className={`font-semibold text-sm ${selectedMethod === "paypal" ? "text-white" : "text-white/60"}`}>
+            🅿️ PayPal
+          </p>
+          <p className="text-[11px] text-white/30 mt-0.5">Veloce e sicuro</p>
+        </button>
 
-            {/* Scalapay placeholder */}
-            <div className="p-4 border-2 border-dashed border-white/8 rounded-lg opacity-50 cursor-not-allowed">
-              <div className="flex items-center gap-3">
-                <div className="h-6 w-6 rounded bg-[#1a1a1a] flex items-center justify-center text-[9px] font-bold text-white/40">S</div>
-                <div>
-                  <p className="font-medium text-white/40 text-sm">Scalapay — Paga in 3 rate</p>
-                  <p className="text-xs text-white/30 font-mono uppercase tracking-widest">Presto disponibile</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+        {/* Scalapay — presto */}
+        <div className="p-3.5 border border-dashed border-white/6 rounded-xl opacity-40 cursor-not-allowed">
+          <p className="font-semibold text-sm text-white/30">Scalapay</p>
+          <p className="text-[10px] text-white/20 mt-0.5 uppercase tracking-widest font-mono">Presto disponibile</p>
+        </div>
+      </div>
 
-      {/* Render selected payment method */}
-      {selectedPaymentMethod === "stripe" && clientSecret ? (
-        <StripePayment 
-          clientSecret={clientSecret} 
-          total={total} 
-          onSuccess={onSuccess}
-        />
-      ) : (
-        <PayPalButton
-          total={total}
-          items={items}
-          addressId={addressId}
-          coupon={coupon}
-          onSuccess={onSuccess}
-        />
-      )}
+      {/* Form del metodo selezionato */}
+      <div>
+        {selectedMethod === "stripe" && clientSecret ? (
+          <StripePayment clientSecret={clientSecret} total={total} onSuccess={onSuccess} />
+        ) : (
+          <PayPalButton total={total} items={items} addressId={addressId} coupon={coupon} onSuccess={onSuccess} />
+        )}
+      </div>
     </div>
   );
 }
 
-// Main export component - handles provider wrapping
-export default function PaymentStep({ 
-  clientSecret, 
-  total, 
-  onSuccess, 
-  items, 
-  addressId, 
-  coupon 
-}: { 
-  clientSecret: string; 
-  total: number; 
-  onSuccess: () => void;
-  items: any[];
-  addressId: string;
-  coupon: any;
+// ── Export principale ────────────────────────────────────────────────────────
+export default function PaymentStep({ clientSecret, total, onSuccess, items, addressId, coupon }: {
+  clientSecret: string; total: number; onSuccess: () => void; items: any[]; addressId: string; coupon: any;
 }) {
-  // Always wrap with PayPalScriptProvider for PayPal functionality
   return (
-    <PayPalScriptProvider 
-      options={paypalOptions}
-      deferLoading={false} // Ensure script loads immediately
-    >
+    <PayPalScriptProvider options={paypalOptions} deferLoading={false}>
       {clientSecret ? (
-        // If Stripe is available, wrap with Elements provider
-        <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: "stripe" } }}>
-          <PaymentMethods 
-            clientSecret={clientSecret} 
-            total={total} 
-            onSuccess={onSuccess}
-            items={items}
-            addressId={addressId}
-            coupon={coupon}
-          />
+        <Elements
+          stripe={stripePromise}
+          options={{ clientSecret, appearance: stripeAppearance }}
+        >
+          <PaymentMethods clientSecret={clientSecret} total={total} onSuccess={onSuccess} items={items} addressId={addressId} coupon={coupon} />
         </Elements>
       ) : (
-        // If no Stripe, just render PayPal
-        <PaymentMethods 
-          clientSecret="" 
-          total={total} 
-          onSuccess={onSuccess}
-          items={items}
-          addressId={addressId}
-          coupon={coupon}
-        />
+        <PaymentMethods clientSecret="" total={total} onSuccess={onSuccess} items={items} addressId={addressId} coupon={coupon} />
       )}
     </PayPalScriptProvider>
   );
 }
-
-
