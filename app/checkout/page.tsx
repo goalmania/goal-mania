@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { useCartStore } from "@/lib/store/cart";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -315,6 +315,7 @@ export default function CheckoutPage() {
 
   const [clientSecret, setClientSecret] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const prefetchingRef = useRef(false);
 
   const subtotal = getTotal();
   const couponDiscount = appliedCoupon ? (subtotal * appliedCoupon.discountPercentage) / 100 : 0;
@@ -379,6 +380,42 @@ export default function CheckoutPage() {
     }
   };
 
+  // Precrea il PaymentIntent in background appena l'indirizzo è selezionato
+  const prefetchPaymentIntent = useCallback(async (addressId: string | undefined, isGuest: boolean) => {
+    if (prefetchingRef.current || clientSecret) return;
+    if (!isGuest && !addressId) return;
+    prefetchingRef.current = true;
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items,
+          addressId: isGuest ? null : addressId,
+          guestEmail: isGuest ? guestEmail : undefined,
+          guestAddress: isGuest ? guestAddress : undefined,
+          coupon: appliedCoupon ? { id: appliedCoupon.couponId, code: appliedCoupon.code, discountPercentage: appliedCoupon.discountPercentage, discountAmount: couponDiscount } : null,
+          discountRules: appliedDiscountRules.length > 0 ? appliedDiscountRules : null,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.clientSecret) {
+        setClientSecret(data.clientSecret);
+      }
+    } catch {
+      // silenzioso — riprova al click
+    } finally {
+      prefetchingRef.current = false;
+    }
+  }, [items, guestEmail, guestAddress, appliedCoupon, couponDiscount, appliedDiscountRules, clientSecret]);
+
+  // Prefetch appena l'indirizzo è scelto
+  useEffect(() => {
+    if (selectedAddressId && checkoutMode !== "guest") {
+      prefetchPaymentIntent(selectedAddressId, false);
+    }
+  }, [selectedAddressId]);
+
   const handleContinueToPayment = async () => {
     const isGuest = checkoutMode === "guest";
     if (!isGuest && !selectedAddressId) {
@@ -389,6 +426,14 @@ export default function CheckoutPage() {
       toast.error("Compila tutti i campi obbligatori");
       return;
     }
+
+    // Se il clientSecret è già pronto (prefetchato), vai subito al pagamento
+    if (clientSecret) {
+      setStep("payment");
+      trackEvent("checkout_start", { value: getTotal() });
+      return;
+    }
+
     setIsLoading(true);
     try {
       const res = await fetch("/api/checkout", {

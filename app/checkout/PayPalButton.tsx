@@ -22,14 +22,19 @@ export default function PayPalButton({ total, items, addressId, coupon, onSucces
   const [isScriptReady, setIsScriptReady] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Controlla immediatamente, poi ogni 200ms max 5 volte
+    let attempts = 0;
+    const check = () => {
       if (typeof window !== "undefined" && (window as any).paypal) {
         setIsScriptReady(true);
+      } else if (attempts < 5) {
+        attempts++;
+        setTimeout(check, 200);
       } else {
         setError("PayPal non disponibile. Aggiorna la pagina o usa la carta.");
       }
-    }, 1200);
-    return () => clearTimeout(timer);
+    };
+    check();
   }, []);
 
   const Spinner = () => (
