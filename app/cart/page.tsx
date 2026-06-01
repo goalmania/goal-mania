@@ -11,46 +11,23 @@ import { toast } from "react-hot-toast";
 import { ShieldCheck, Truck, RotateCcw, BadgeCheck, Zap, Star, ArrowRight, Package } from "lucide-react";
 import { useTrackEvent } from "@/components/analytics/AnalyticsTracker";
 
-const FREE_SHIPPING_THRESHOLD = 89;
+const FREE_SHIPPING_THRESHOLD = 0; // spedizione sempre gratuita
 
 function ShippingProgressBar({ total }: { total: number }) {
-  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - total);
-  const progress = Math.min(100, (total / FREE_SHIPPING_THRESHOLD) * 100);
-  const reached = total >= FREE_SHIPPING_THRESHOLD;
-
   return (
-    <div className="rounded-2xl p-4 mb-6" style={{ background: reached ? "rgba(200,240,0,0.08)" : "#111", border: "1px solid rgba(200,240,0,0.2)" }}>
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <Truck size={14} className={reached ? "text-[#c8f000]" : "text-white/50"} />
-          <span className="text-xs font-black uppercase tracking-widest" style={{ fontFamily: "var(--font-display, sans-serif)", color: reached ? "#c8f000" : "rgba(255,255,255,0.6)" }}>
-            {reached ? "Spedizione Gratuita Sbloccata!" : `Aggiungi €${remaining.toFixed(2)} per la spedizione gratuita`}
-          </span>
-        </div>
-        {reached && (
-          <BadgeCheck size={16} className="text-[#c8f000]" />
-        )}
-      </div>
-      <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
-        <div
-          className="h-full rounded-full transition-all duration-700"
-          style={{
-            width: `${progress}%`,
-            background: reached ? "#c8f000" : "linear-gradient(90deg, rgba(200,240,0,0.5), #c8f000)",
-          }}
-        />
-      </div>
-      <div className="flex justify-between mt-1">
-        <span className="text-[10px] text-white/30" style={{ fontFamily: "var(--font-mono, monospace)" }}>€0</span>
-        <span className="text-[10px] text-[#c8f000]" style={{ fontFamily: "var(--font-mono, monospace)" }}>€{FREE_SHIPPING_THRESHOLD} gratis</span>
-      </div>
+    <div className="rounded-2xl p-4 mb-6 flex items-center gap-3" style={{ background: "rgba(200,240,0,0.08)", border: "1px solid rgba(200,240,0,0.2)" }}>
+      <Truck size={16} className="text-[#c8f000] flex-shrink-0" />
+      <span className="text-xs font-black uppercase tracking-widest text-[#c8f000]" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+        Spedizione Gratuita su tutti gli ordini!
+      </span>
+      <BadgeCheck size={16} className="text-[#c8f000] ml-auto flex-shrink-0" />
     </div>
   );
 }
 
 const UPSELL_ITEMS = [
-  { name: "Calzettoni da Calcio", price: 12.99, image: "/images/placeholder.png", href: "/shop" },
-  { name: "Patch Champions League", price: 4.99, image: "/images/placeholder.png", href: "/shop" },
+  { name: "Calzettoni da Calcio", price: 12.99, emoji: "🧦", href: "/shop" },
+  { name: "Patch Champions League", price: 4.99, emoji: "⭐", href: "/shop" },
 ];
 
 export default function CartPage() {
@@ -273,8 +250,8 @@ export default function CartPage() {
                     className="flex items-center gap-3 p-3 rounded-xl transition-all hover:border-[#c8f000]/30"
                     style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
                   >
-                    <div className="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[#1a1a1a]">
-                      <Image src={item.image} alt={item.name} fill className="object-cover" />
+                    <div className="w-10 h-10 rounded-lg flex-shrink-0 bg-[#1a1a1a] flex items-center justify-center text-xl">
+                      {item.emoji}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-bold text-white line-clamp-1 leading-tight">{item.name}</p>
@@ -312,9 +289,7 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-white/50">Spedizione</span>
-                    <span className={`font-bold ${total >= FREE_SHIPPING_THRESHOLD ? "text-[#c8f000]" : "text-white"}`}>
-                      {total >= FREE_SHIPPING_THRESHOLD ? "Gratuita" : "€5.99"}
-                    </span>
+                    <span className="font-bold text-[#c8f000]">Gratuita</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-white/50">IVA inclusa</span>
@@ -336,7 +311,7 @@ export default function CartPage() {
                     className="text-2xl font-black text-white"
                     style={{ fontFamily: "var(--font-display, sans-serif)" }}
                   >
-                    €{(total >= FREE_SHIPPING_THRESHOLD ? total : total + 5.99).toFixed(2)}
+                    €{total.toFixed(2)}
                   </span>
                 </div>
 
