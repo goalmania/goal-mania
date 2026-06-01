@@ -4,11 +4,6 @@ import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { refreshUserSession } from "@/lib/utils/session";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Skeleton } from "@/components/ui/skeleton";
 import { 
   SparklesIcon, 
   CheckCircleIcon, 
@@ -327,181 +322,88 @@ export function DiscountRulesForm({
 
   // Show rules to all users
 
+  if (availableRules.length === 0 && appliedDiscounts.length === 0) return null;
+
   return (
-    <Card className="border-2 border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100 hover:border-[#c8f000]/20 transition-all duration-200">
-      <CardContent className="p-4">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="p-1.5 bg-gradient-to-r from-[#c8f000] to-orange-500 rounded-lg">
-            <SparklesIcon className="h-4 w-4 text-white" />
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-[#0a0a0a] flex items-center gap-1">
-              Available Discount Rules
-            </h3>
-            <p className="text-xs text-white/60">
-              Rules are applied automatically when conditions are met
-            </p>
-          </div>
-        </div>
+    <div className="space-y-2">
+      <div className="flex items-center gap-2">
+        <SparklesIcon className="h-3.5 w-3.5 text-[#c8f000]" />
+        <span className="text-xs font-semibold text-white/60 uppercase tracking-wider">Promozioni attive</span>
+      </div>
 
-        {/* Applied Discounts */}
-        {appliedDiscounts.length > 0 && (
-          <div className="space-y-3 mb-4">
-            <h4 className="text-sm font-medium text-green-700">Applied Discounts</h4>
-            {appliedDiscounts.map((discount) => (
-              <div key={discount._id} className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <CheckCircleIcon className="h-4 w-4 text-green-600" />
-                      <h4 className="font-medium text-green-900">{discount.name}</h4>
-                    </div>
-                    <p className="text-sm text-green-700 mb-1">{discount.description}</p>
-                    <div className="text-sm font-medium text-green-800">
-                      {discount.discountPercentage 
-                        ? `${discount.discountPercentage}% off`
-                        : `€${discount.discountAmount.toFixed(2)} off`
-                      }
-                    </div>
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => removeDiscount(discount._id)}
-                    className="text-red-600 hover:text-red-700 border-red-300 hover:border-red-400"
-                  >
-                    <XMarkIcon className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Available Rules */}
-        {availableRules.length > 0 && (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h4 className="text-sm font-medium text-white/70">Available Rules</h4>
-              <div className="text-xs text-white/50">
-                {availableRules.filter(r => r.isApplicable).length} ready to apply
-              </div>
+      {/* Sconti già applicati */}
+      {appliedDiscounts.map((discount) => (
+        <div key={discount._id} className="flex items-center justify-between bg-emerald-400/10 border border-emerald-400/20 rounded-xl px-3 py-2">
+          <div className="flex items-center gap-2">
+            <CheckCircleIcon className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
+            <div>
+              <p className="text-xs font-semibold text-emerald-400">{discount.name}</p>
+              <p className="text-[10px] text-emerald-400/70">
+                {discount.discountPercentage ? `${discount.discountPercentage}% di sconto` : `−€${discount.discountAmount.toFixed(2)}`}
+              </p>
             </div>
-            {availableRules.map((rule) => (
-              <div
-                key={rule._id}
-                className={`p-3 rounded-lg border transition-all duration-200 ${
-                  rule.isApplicable
-                    ? "border-green-300 bg-green-50"
-                    : "border-white/8 bg-[#0a0a0a]"
-                }`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="p-1 bg-gradient-to-r from-[#c8f000] to-orange-500 rounded">
-                        {getRuleIcon(rule.type)}
-                      </div>
-                      <h4 className="font-medium text-white">{rule.name}</h4>
-                      <Badge 
-                        variant={rule.isApplicable ? "default" : "secondary"}
-                        className={`text-xs ${rule.isApplicable ? 'bg-green-600' : 'bg-[#0a0a0a]0'}`}
-                      >
-                        {rule.isApplicable ? "Ready" : "Requirements"}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-white/60 mb-2">{rule.description}</p>
-                    <div className="text-sm font-medium text-[#c8f000] mb-1">
-                      {getRuleDescription(rule)}
-                    </div>
-                    <div className="text-xs text-white/50">
-                      {rule.isApplicable ? (
-                        <div className="flex items-center gap-2">
-                          <span className="text-green-600">Ready to apply - Save €{rule.discountAmount?.toFixed(2)}</span>
-                          <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
-                            Auto-apply
-                          </Badge>
-                        </div>
-                      ) : (
-                        <div className="space-y-1">
-                          <span className="text-white/60">{rule.reason}</span>
-                          {rule.howToQualify && (
-                            <div className="text-[#c8f000] bg-blue-50 p-2 rounded border border-blue-200">
-                              <div className="flex items-start gap-2">
-                                <div className="text-[#c8f000] mt-0.5">💡</div>
-                                <div className="text-xs">
-                                  <div className="font-medium mb-1">How to qualify:</div>
-                                  <div>{rule.howToQualify}</div>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                      {rule.requirements && (
-                        <div className="mt-1 text-xs">
-                          {rule.requirements.minQuantity && (
-                            <span className="block">Min: {rule.requirements.minQuantity} items</span>
-                          )}
-                          {rule.requirements.maxQuantity && (
-                            <span className="block">Max: {rule.requirements.maxQuantity} items</span>
-                          )}
-                          {(rule.requirements as any).buyQuantity && (rule.requirements as any).getFreeQuantity && (
-                            <span className="block">Buy {(rule.requirements as any).buyQuantity}, get {(rule.requirements as any).getFreeQuantity} free</span>
-                          )}
-                          <span className="block">Current: {rule.requirements.currentQuantity} items (€{rule.requirements.currentValue?.toFixed(2)})</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  {rule.isApplicable && (
-                    <Button
-                      size="sm"
-                      onClick={() => handleApplyRule(rule)}
-                      disabled={isLoading}
-                      className="bg-gradient-to-r from-[#c8f000] to-orange-500 hover:from-[#e0852e] hover:to-orange-600 text-white"
-                    >
-                      Apply
-                    </Button>
-                  )}
-                  {!rule.isApplicable && (
-                    <div className="text-xs text-white/50 text-right">
-                      <div className="text-red-500 font-medium">Not Eligible</div>
-                      <div className="text-white/40">Complete requirements to apply</div>
-                    </div>
+          </div>
+          <button onClick={() => removeDiscount(discount._id)} className="text-white/30 hover:text-white/60">
+            <XMarkIcon className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      ))}
+
+      {/* Regole disponibili */}
+      {availableRules.map((rule) => (
+        <div
+          key={rule._id}
+          className={`rounded-xl border px-3 py-2.5 ${
+            rule.isApplicable
+              ? "border-[#c8f000]/30 bg-[#c8f000]/5"
+              : "border-white/8 bg-white/3"
+          }`}
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-0.5">
+                <span className="text-xs font-bold text-white truncate">{rule.name}</span>
+                {rule.isApplicable && (
+                  <span className="text-[9px] bg-[#c8f000]/20 text-[#c8f000] px-1.5 py-0.5 rounded font-bold uppercase tracking-wide flex-shrink-0">Attivo</span>
+                )}
+              </div>
+              {rule.isApplicable ? (
+                <p className="text-[11px] text-emerald-400">Risparmia €{rule.discountAmount?.toFixed(2)} — applicato automaticamente</p>
+              ) : (
+                <div>
+                  <p className="text-[11px] text-white/40">{rule.howToQualify || rule.reason}</p>
+                  {rule.requirements && (
+                    <p className="text-[10px] text-white/30 mt-0.5">
+                      Attuale: {rule.requirements.currentQuantity} articoli (€{rule.requirements.currentValue?.toFixed(2)})
+                    </p>
                   )}
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {error && (
-          <Alert variant="destructive" className="border-red-200 bg-red-50 mt-3">
-            <ExclamationTriangleIcon className="h-4 w-4" />
-            <AlertDescription className="text-red-700">
-              <div className="flex items-center justify-between">
-                <span>{error}</span>
-                <button
-                  onClick={() => setError(null)}
-                  className="text-red-500 hover:text-red-700 transition-colors"
-                >
-                  <XMarkIcon className="h-4 w-4" />
-                </button>
-              </div>
-            </AlertDescription>
-          </Alert>
-        )}
-
-        <div className="mt-3 pt-3 border-t border-white/8">
-          <div className="flex items-center gap-2 text-xs text-white/60">
-            <CheckCircleIcon className="h-3 w-3 text-green-500" />
-            <span>
-              Discount rules are applied automatically when conditions are met. You can also manually apply rules if needed.
-            </span>
+              )}
+            </div>
+            {rule.isApplicable && (
+              <button
+                onClick={() => handleApplyRule(rule)}
+                disabled={isLoading}
+                className="text-xs bg-[#c8f000] hover:bg-[#d4f520] text-black font-bold px-3 py-1.5 rounded-lg flex-shrink-0 disabled:opacity-50"
+              >
+                Applica
+              </button>
+            )}
+            {!rule.isApplicable && (
+              <span className="text-[10px] text-white/30 flex-shrink-0 text-right leading-tight">
+                Non<br/>idoneo
+              </span>
+            )}
           </div>
         </div>
-      </CardContent>
-    </Card>
+      ))}
+
+      {error && (
+        <div className="flex items-center justify-between text-xs text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg px-3 py-2">
+          <span>{error}</span>
+          <button onClick={() => setError(null)}><XMarkIcon className="h-3.5 w-3.5" /></button>
+        </div>
+      )}
+    </div>
   );
 }

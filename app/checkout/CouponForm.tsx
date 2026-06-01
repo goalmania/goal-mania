@@ -2,14 +2,9 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   TicketIcon,
-  ExclamationTriangleIcon,
-  SparklesIcon,
   XMarkIcon
 } from "@heroicons/react/24/outline";
 
@@ -73,80 +68,47 @@ export function CouponForm({
   };
 
   return (
-    <Card className="border-2 border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100 hover:border-[#c8f000]/20 transition-all duration-200">
-      <CardContent className="p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <div className="p-1.5 bg-gradient-to-r from-[#c8f000] to-orange-500 rounded-lg">
-            <TicketIcon className="h-4 w-4 text-white" />
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-[#0a0a0a]">
-              Hai un coupon?
-            </h3>
-            <p className="text-xs text-white/60">Inserisci il tuo codice sconto</p>
-          </div>
-        </div>
+    <div className="space-y-2">
+      <div className="flex items-center gap-2">
+        <TicketIcon className="h-3.5 w-3.5 text-[#c8f000]" />
+        <span className="text-xs font-semibold text-white/60 uppercase tracking-wider">Hai un coupon?</span>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <div className="flex gap-2">
-            <div className="relative flex-1">
-              <Input
-                type="text"
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                placeholder="Inserisci codice coupon"
-                className="pr-10 h-10 border-2 border-white/8 focus:border-[#c8f000] focus:ring-[#c8f000]/20 transition-all duration-200"
-                disabled={isDisabled || isLoading}
-              />
-              {couponCode && (
-                <button
-                  type="button"
-                  onClick={() => setCouponCode("")}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white/60 transition-colors"
-                >
-                  <XMarkIcon className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-            <Button
-              type="submit"
-              disabled={isDisabled || isLoading || !couponCode.trim()}
-              className="h-10 bg-gradient-to-r from-[#c8f000] to-orange-500 hover:from-[#e0852e] hover:to-orange-600 text-white font-medium transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <div className="relative flex-1">
+          <Input
+            type="text"
+            value={couponCode}
+            onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+            placeholder="Inserisci codice sconto"
+            className="h-10 bg-white/5 border border-white/10 text-white placeholder:text-white/25 rounded-xl focus:border-[#c8f000] focus:ring-0 text-sm pr-8"
+            disabled={isDisabled || isLoading}
+          />
+          {couponCode && (
+            <button
+              type="button"
+              onClick={() => setCouponCode("")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60"
             >
-              {isLoading ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Applicando...
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <SparklesIcon className="h-4 w-4" />
-                  Applica
-                </div>
-              )}
-            </Button>
-          </div>
-
-          {error && (
-            <Alert variant="destructive" className="border-red-200 bg-red-50">
-              <ExclamationTriangleIcon className="h-4 w-4" />
-              <AlertDescription className="text-red-700">
-                <div className="flex items-center justify-between">
-                  <span>{error}</span>
-                  <button
-                    onClick={clearError}
-                    className="text-red-500 hover:text-red-700 transition-colors"
-                  >
-                    <XMarkIcon className="h-4 w-4" />
-                  </button>
-                </div>
-              </AlertDescription>
-            </Alert>
+              <XMarkIcon className="h-3.5 w-3.5" />
+            </button>
           )}
-        </form>
+        </div>
+        <button
+          type="submit"
+          disabled={isDisabled || isLoading || !couponCode.trim()}
+          className="h-10 px-4 bg-[#c8f000] hover:bg-[#d4f520] text-black text-sm font-bold rounded-xl disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+        >
+          {isLoading ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : "Applica"}
+        </button>
+      </form>
 
-
-      </CardContent>
-    </Card>
+      {error && (
+        <div className="flex items-center justify-between text-xs text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg px-3 py-2">
+          <span>{error}</span>
+          <button onClick={clearError}><XMarkIcon className="h-3.5 w-3.5" /></button>
+        </div>
+      )}
+    </div>
   );
 }
