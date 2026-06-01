@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCartStore } from "@/lib/store/cart";
@@ -25,17 +25,30 @@ function ShippingProgressBar({ total }: { total: number }) {
   );
 }
 
-const UPSELL_ITEMS = [
-  { name: "Calzettoni da Calcio", price: 12.99, emoji: "🧦", href: "/shop" },
-  { name: "Patch Champions League", price: 4.99, emoji: "⭐", href: "/shop" },
-];
+interface UpsellProduct {
+  _id: string;
+  title: string;
+  basePrice: number;
+  images: string[];
+  slug: string;
+}
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, getTotal } = useCartStore();
   const { t } = useTranslation();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [upsellProducts, setUpsellProducts] = useState<UpsellProduct[]>([]);
   const router = useRouter();
   const trackEvent = useTrackEvent();
+
+  // Carica prodotti correlati (escludi quelli già nel carrello)
+  useEffect(() => {
+    const cartIds = items.map(i => i.id);
+    fetch(`/api/products/upsell?exclude=${cartIds.join(",")}`)
+      .then(r => r.ok ? r.json() : [])
+      .then(data => setUpsellProducts(data.slice(0, 2)))
+      .catch(() => {});
+  }, [items.length]);
 
   const total = getTotal();
 
@@ -243,23 +256,39 @@ export default function CartPage() {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                {UPSELL_ITEMS.map((item) => (
+                {upsellProducts.length > 0 ? upsellProducts.map((item) => (
                   <Link
-                    key={item.name}
-                    href={item.href}
+                    key={item._id}
+                    href={`/products/${item.slug}`}
                     className="flex items-center gap-3 p-3 rounded-xl transition-all hover:border-[#c8f000]/30"
                     style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
                   >
-                    <div className="w-10 h-10 rounded-lg flex-shrink-0 bg-[#1a1a1a] flex items-center justify-center text-xl">
-                      {item.emoji}
+                    <div className="relative w-10 h-10 rounded-lg flex-shrink-0 bg-[#1a1a1a] overflow-hidden">
+                      {item.images?.[0] ? (
+                        <Image src={item.images[0]} alt={item.title} fill className="object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-lg">👕</div>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold text-white line-clamp-1 leading-tight">{item.name}</p>
-                      <p className="text-xs text-[#c8f000] font-black mt-0.5">€{item.price.toFixed(2)}</p>
+                      <p className="text-xs font-bold text-white line-clamp-1 leading-tight">{item.title}</p>
+                      <p className="text-xs text-[#c8f000] font-black mt-0.5">€{item.basePrice?.toFixed(2)}</p>
                     </div>
                     <ArrowRight size={12} className="text-white/30 flex-shrink-0" />
                   </Link>
-                ))}
+                )) : (
+                  // Fallback skeleton mentre carica
+                  [0,1].map(i => (
+                    <div key={i} className="flex items-center gap-3 p-3 rounded-xl animate-pulse"
+                      style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}>
+                      <div className="w-10 h-10 rounded-lg bg-white/5 flex-shrink-0" />
+                      <div className="flex-1 space-y-1.5">
+                        <div className="h-2.5 bg-white/5 rounded w-3/4" />
+                        <div className="h-2 bg-white/5 rounded w-1/2" />
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
