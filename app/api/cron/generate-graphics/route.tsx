@@ -14,22 +14,18 @@ async function generateGraphicBuffer(
   title: string,
   imageUrl: string
 ): Promise<Buffer> {
-  let fontData: ArrayBuffer | undefined;
-  try {
-    const res = await fetch(
-      "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hiJ-Ek-_EeA.woff"
-    );
-    if (res.ok) {
-      const ct = res.headers.get("content-type") ?? "";
-      if (ct.includes("font") || ct.includes("octet-stream")) {
-        fontData = await res.arrayBuffer();
-      }
-    }
-  } catch {
-    // render without custom font
-  }
-
   const titleUpper = (title.length > 110 ? title.slice(0, 107) + "…" : title).toUpperCase();
+
+  // Background dot-ring pattern rows (simulates the subtle circles texture)
+  const DOT_SIZE = 28;
+  const COLS = Math.ceil(1080 / DOT_SIZE) + 1;
+  const ROWS = Math.ceil(1920 / DOT_SIZE) + 1;
+  const dots: { x: number; y: number }[] = [];
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      dots.push({ x: c * DOT_SIZE, y: r * DOT_SIZE });
+    }
+  }
 
   const imageResponse = new ImageResponse(
     (
@@ -37,24 +33,47 @@ async function generateGraphicBuffer(
         style={{
           width: 1080,
           height: 1920,
-          background: "#111111",
+          background: "#0d0d0d",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "flex-start",
-          fontFamily: "Inter, sans-serif",
+          fontFamily: "sans-serif",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
-        {/* Article image */}
+        {/* Background ring texture */}
+        <div style={{ position: "absolute", inset: 0, display: "flex", flexWrap: "wrap" }}>
+          {dots.map((d, i) => (
+            <div
+              key={i}
+              style={{
+                position: "absolute",
+                left: d.x,
+                top: d.y,
+                width: 14,
+                height: 14,
+                borderRadius: "50%",
+                border: "1.5px solid #1f1f1f",
+                background: "transparent",
+                display: "flex",
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Article image — large, rounded, with breathing room */}
         <div
           style={{
-            width: 980,
-            height: 820,
-            marginTop: 80,
-            borderRadius: 40,
+            width: 960,
+            height: 860,
+            marginTop: 100,
+            borderRadius: 48,
             overflow: "hidden",
             display: "flex",
-            boxShadow: "0 8px 40px rgba(0,0,0,0.6)",
+            position: "relative",
+            zIndex: 1,
           }}
         >
           <img
@@ -64,55 +83,57 @@ async function generateGraphicBuffer(
           />
         </div>
 
-        {/* Spacer */}
+        {/* Spacer between image and box */}
         <div style={{ flex: 1, display: "flex" }} />
 
-        {/* Dark olive/green box with lime text */}
+        {/* Dark green box — rounded top corners, flush bottom */}
         <div
           style={{
             width: 1080,
-            background: "#1e3a00",
-            padding: "70px 80px 90px",
+            background: "#243300",
+            borderRadius: "52px 52px 0 0",
+            padding: "72px 80px 60px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center",
-            minHeight: 520,
+            justifyContent: "space-between",
+            minHeight: 560,
+            position: "relative",
+            zIndex: 1,
           }}
         >
+          {/* Title */}
           <p
             style={{
               color: "#c8f000",
-              fontSize: 72,
+              fontSize: 76,
               fontWeight: 900,
-              lineHeight: 1.15,
+              lineHeight: 1.12,
               textAlign: "center",
               margin: 0,
-              letterSpacing: "1px",
-              textTransform: "uppercase",
+              letterSpacing: "2px",
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
             }}
           >
             {titleUpper}
           </p>
 
-          {/* Bottom decorative element */}
+          {/* Decorative line + circle at bottom */}
           <div
             style={{
-              marginTop: 60,
               display: "flex",
               alignItems: "center",
-              gap: 0,
-              width: "60%",
-              position: "relative",
+              width: "55%",
+              marginTop: 52,
             }}
           >
-            {/* Line left */}
-            <div style={{ flex: 1, height: 3, background: "#c8f000", display: "flex" }} />
-            {/* Circle */}
+            <div style={{ flex: 1, height: 3, background: "#c8f000", display: "flex", borderRadius: 2 }} />
             <div
               style={{
-                width: 36,
-                height: 36,
+                width: 40,
+                height: 40,
                 borderRadius: "50%",
                 border: "3px solid #c8f000",
                 background: "transparent",
@@ -120,23 +141,17 @@ async function generateGraphicBuffer(
                 alignItems: "center",
                 justifyContent: "center",
                 flexShrink: 0,
+                margin: "0 4px",
               }}
             >
-              <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#c8f000", display: "flex" }} />
+              <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#c8f000", display: "flex" }} />
             </div>
-            {/* Line right */}
-            <div style={{ flex: 1, height: 3, background: "#c8f000", display: "flex" }} />
+            <div style={{ flex: 1, height: 3, background: "#c8f000", display: "flex", borderRadius: 2 }} />
           </div>
         </div>
       </div>
     ),
-    {
-      width: 1080,
-      height: 1920,
-      fonts: fontData
-        ? [{ name: "Inter", data: fontData, weight: 900 }]
-        : undefined,
-    }
+    { width: 1080, height: 1920 }
   );
 
   const arrayBuffer = await imageResponse.arrayBuffer();
