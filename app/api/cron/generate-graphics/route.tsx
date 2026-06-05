@@ -217,17 +217,21 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const isTest = req.nextUrl.searchParams.get("test") === "1";
+
   try {
     await connectDB();
 
-    // Fetch articles published in the last 3 hours not yet processed
+    // In test mode: pick the most recent published article regardless of time
     const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
+    const dateFilter = isTest ? {} : { publishedAt: { $gte: threeHoursAgo } };
 
     const recentArticles = await Article.find({
       status: "published",
-      publishedAt: { $gte: threeHoursAgo },
+      ...dateFilter,
     })
       .sort({ publishedAt: -1 })
+      .limit(isTest ? 1 : 50)
       .select("_id title image images slug publishedAt")
       .lean();
 
@@ -238,17 +242,17 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // Filter out already processed articles
-    const processedIds = await ProcessedGraphic.find({
+    // Filter out already processed articles (skip in test mode)
+    const processedIds = isTest ? [] : await ProcessedGraphic.find({
       articleId: { $in: recentArticles.map((a) => String(a._id)) },
     })
       .select("articleId")
       .lean();
 
     const processedSet = new Set(processedIds.map((p) => p.articleId));
-    const toProcess = recentArticles.filter(
-      (a) => !processedSet.has(String(a._id))
-    );
+    const toProcess = isTest
+      ? recentArticles.slice(0, 1)
+      : recentArticles.filter((a) => !processedSet.has(String(a._id)));
 
     if (!toProcess.length) {
       return NextResponse.json({
