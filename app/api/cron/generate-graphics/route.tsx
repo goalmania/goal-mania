@@ -16,36 +16,45 @@ async function generateGraphicBuffer(
 ): Promise<Buffer> {
   const titleUpper = (title.length > 110 ? title.slice(0, 107) + "…" : title).toUpperCase();
 
+  // Load Anton font (closest free equivalent to Agharti)
+  let fontData: ArrayBuffer | undefined;
+  try {
+    const res = await fetch("https://fonts.gstatic.com/s/anton/v25/1Ptgg87LROyAm0K08i4gS7lu.woff");
+    if (res.ok) fontData = await res.arrayBuffer();
+  } catch { /* fallback to system font */ }
+
+  // Box dimensions — chamfered corners via SVG polygon
+  const BW = 900;  // box width
+  const BH = 460;  // box height
+  const CUT = 22;  // corner cut size
+
   const imageResponse = new ImageResponse(
     (
       <div
         style={{
           width: 1080,
           height: 1920,
-          background: "#0d0d0d",
-          backgroundImage:
-            "radial-gradient(circle, transparent 5px, #1a1a1a 5px, #1a1a1a 7px, transparent 7px)",
-          backgroundSize: "30px 30px",
+          background: "#1c1c1c",
+          backgroundImage: "radial-gradient(circle, transparent 5px, #242424 5px, #242424 6.5px, transparent 6.5px)",
+          backgroundSize: "32px 32px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "flex-start",
-          fontFamily: "sans-serif",
+          fontFamily: fontData ? "Anton" : "sans-serif",
           position: "relative",
           overflow: "hidden",
         }}
       >
-        {/* Article image — large, rounded, with breathing room */}
+        {/* Article image — large, prominently rounded corners */}
         <div
           style={{
-            width: 960,
+            width: 940,
             height: 860,
-            marginTop: 100,
-            borderRadius: 48,
+            marginTop: 90,
+            borderRadius: 44,
             overflow: "hidden",
             display: "flex",
-            position: "relative",
-            zIndex: 1,
           }}
         >
           <img
@@ -55,75 +64,106 @@ async function generateGraphicBuffer(
           />
         </div>
 
-        {/* Spacer between image and box */}
+        {/* Spacer */}
         <div style={{ flex: 1, display: "flex" }} />
 
-        {/* Dark green box — rounded top corners, flush bottom */}
+        {/* Box with chamfered corners via SVG + text overlay */}
         <div
           style={{
-            width: 1080,
-            background: "#243300",
-            borderRadius: "52px 52px 0 0",
-            padding: "72px 80px 60px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "space-between",
-            minHeight: 560,
+            width: BW,
+            height: BH,
+            marginBottom: 120,
             position: "relative",
-            zIndex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          {/* Title */}
+          {/* SVG polygon — chamfered rectangle with gradient */}
+          <svg
+            width={BW}
+            height={BH}
+            viewBox={`0 0 ${BW} ${BH}`}
+            style={{ position: "absolute", inset: 0 }}
+          >
+            <defs>
+              <linearGradient id="boxGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#7ab800" />
+                <stop offset="100%" stopColor="#2d4800" />
+              </linearGradient>
+            </defs>
+            <polygon
+              points={`
+                ${CUT},0
+                ${BW - CUT},0
+                ${BW},${CUT}
+                ${BW},${BH - CUT}
+                ${BW - CUT},${BH}
+                ${CUT},${BH}
+                0,${BH - CUT}
+                0,${CUT}
+              `}
+              fill="url(#boxGrad)"
+            />
+          </svg>
+
+          {/* Text centered on box */}
           <p
             style={{
-              color: "#c8f000",
-              fontSize: 76,
-              fontWeight: 900,
-              lineHeight: 1.12,
-              textAlign: "center",
-              margin: 0,
-              letterSpacing: "2px",
-              flex: 1,
+              position: "absolute",
+              inset: 0,
               display: "flex",
               alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+              color: "#D2F937",
+              fontSize: 66,
+              fontWeight: 900,
+              lineHeight: 1.15,
+              letterSpacing: "2px",
+              margin: 0,
+              padding: "0 60px",
             }}
           >
             {titleUpper}
           </p>
+        </div>
 
-          {/* Decorative line + circle at bottom */}
+        {/* Bottom decorative element — line + solid circle on dark bg */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: 340,
+            position: "absolute",
+            bottom: 52,
+          }}
+        >
+          <div style={{ flex: 1, height: 2.5, background: "#D2F937", display: "flex" }} />
           <div
             style={{
+              width: 32,
+              height: 32,
+              borderRadius: "50%",
+              border: "2.5px solid #D2F937",
+              background: "transparent",
               display: "flex",
               alignItems: "center",
-              width: "55%",
-              marginTop: 52,
+              justifyContent: "center",
+              flexShrink: 0,
             }}
           >
-            <div style={{ flex: 1, height: 3, background: "#c8f000", display: "flex", borderRadius: 2 }} />
-            <div
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: "50%",
-                border: "3px solid #c8f000",
-                background: "transparent",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-                margin: "0 4px",
-              }}
-            >
-              <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#c8f000", display: "flex" }} />
-            </div>
-            <div style={{ flex: 1, height: 3, background: "#c8f000", display: "flex", borderRadius: 2 }} />
+            <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#D2F937", display: "flex" }} />
           </div>
+          <div style={{ flex: 1, height: 2.5, background: "#D2F937", display: "flex" }} />
         </div>
       </div>
     ),
-    { width: 1080, height: 1920 }
+    {
+      width: 1080,
+      height: 1920,
+      fonts: fontData ? [{ name: "Anton", data: fontData, weight: 400 }] : undefined,
+    }
   );
 
   const arrayBuffer = await imageResponse.arrayBuffer();
