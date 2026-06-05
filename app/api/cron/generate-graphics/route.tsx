@@ -29,102 +29,103 @@ async function generateGraphicBuffer(
     // render without custom font
   }
 
+  const titleUpper = (title.length > 110 ? title.slice(0, 107) + "…" : title).toUpperCase();
+
   const imageResponse = new ImageResponse(
     (
       <div
         style={{
           width: 1080,
           height: 1920,
-          background: "#0a0a0a",
+          background: "#111111",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "flex-start",
           fontFamily: "Inter, sans-serif",
-          position: "relative",
         }}
       >
-        {/* Article image — top 40% */}
+        {/* Article image */}
         <div
           style={{
-            width: 1000,
-            height: 740,
-            marginTop: 60,
-            borderRadius: 32,
+            width: 980,
+            height: 820,
+            marginTop: 80,
+            borderRadius: 40,
             overflow: "hidden",
             display: "flex",
+            boxShadow: "0 8px 40px rgba(0,0,0,0.6)",
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={imageUrl}
             alt=""
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
         </div>
 
         {/* Spacer */}
         <div style={{ flex: 1, display: "flex" }} />
 
-        {/* Green lime box with title */}
+        {/* Dark olive/green box with lime text */}
         <div
           style={{
             width: 1080,
-            background: "#c8f000",
-            padding: "60px 80px",
+            background: "#1e3a00",
+            padding: "70px 80px 90px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            minHeight: 480,
+            minHeight: 520,
           }}
         >
           <p
             style={{
-              color: "#0a0a0a",
-              fontSize: 68,
+              color: "#c8f000",
+              fontSize: 72,
               fontWeight: 900,
               lineHeight: 1.15,
               textAlign: "center",
               margin: 0,
-              letterSpacing: "-1px",
+              letterSpacing: "1px",
+              textTransform: "uppercase",
             }}
           >
-            {title.length > 120 ? title.slice(0, 117) + "…" : title}
+            {titleUpper}
           </p>
 
-          {/* Logo / branding */}
+          {/* Bottom decorative element */}
           <div
             style={{
-              marginTop: 48,
+              marginTop: 60,
               display: "flex",
               alignItems: "center",
-              gap: 16,
+              gap: 0,
+              width: "60%",
+              position: "relative",
             }}
           >
+            {/* Line left */}
+            <div style={{ flex: 1, height: 3, background: "#c8f000", display: "flex" }} />
+            {/* Circle */}
             <div
               style={{
-                background: "#0a0a0a",
-                borderRadius: 12,
-                padding: "10px 28px",
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                border: "3px solid #c8f000",
+                background: "transparent",
                 display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
               }}
             >
-              <span
-                style={{
-                  color: "#c8f000",
-                  fontSize: 36,
-                  fontWeight: 900,
-                  letterSpacing: "-0.5px",
-                }}
-              >
-                GOAL-MANIA.IT
-              </span>
+              <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#c8f000", display: "flex" }} />
             </div>
+            {/* Line right */}
+            <div style={{ flex: 1, height: 3, background: "#c8f000", display: "flex" }} />
           </div>
         </div>
       </div>
