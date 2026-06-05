@@ -10,24 +10,23 @@ export const runtime = "nodejs";
 const TELEGRAM_API = "https://api.telegram.org/bot";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://goal-mania.it";
 
-// Fetch font for ImageResponse
-async function fetchFont(url: string): Promise<ArrayBuffer> {
-  const res = await fetch(url);
-  return res.arrayBuffer();
-}
-
 async function generateGraphicBuffer(
   title: string,
   imageUrl: string
 ): Promise<Buffer> {
-  // Load Inter Bold from Google Fonts
   let fontData: ArrayBuffer | undefined;
   try {
-    fontData = await fetchFont(
+    const res = await fetch(
       "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hiJ-Ek-_EeA.woff"
     );
+    if (res.ok) {
+      const ct = res.headers.get("content-type") ?? "";
+      if (ct.includes("font") || ct.includes("octet-stream")) {
+        fontData = await res.arrayBuffer();
+      }
+    }
   } catch {
-    // fallback — render without custom font
+    // render without custom font
   }
 
   const imageResponse = new ImageResponse(
