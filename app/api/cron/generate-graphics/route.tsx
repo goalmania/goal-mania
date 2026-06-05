@@ -16,17 +16,6 @@ async function generateGraphicBuffer(
 ): Promise<Buffer> {
   const titleUpper = (title.length > 110 ? title.slice(0, 107) + "…" : title).toUpperCase();
 
-  // Background dot-ring pattern rows (simulates the subtle circles texture)
-  const DOT_SIZE = 28;
-  const COLS = Math.ceil(1080 / DOT_SIZE) + 1;
-  const ROWS = Math.ceil(1920 / DOT_SIZE) + 1;
-  const dots: { x: number; y: number }[] = [];
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      dots.push({ x: c * DOT_SIZE, y: r * DOT_SIZE });
-    }
-  }
-
   const imageResponse = new ImageResponse(
     (
       <div
@@ -34,6 +23,9 @@ async function generateGraphicBuffer(
           width: 1080,
           height: 1920,
           background: "#0d0d0d",
+          backgroundImage:
+            "radial-gradient(circle, transparent 5px, #1a1a1a 5px, #1a1a1a 7px, transparent 7px)",
+          backgroundSize: "30px 30px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -43,26 +35,6 @@ async function generateGraphicBuffer(
           overflow: "hidden",
         }}
       >
-        {/* Background ring texture */}
-        <div style={{ position: "absolute", inset: 0, display: "flex", flexWrap: "wrap" }}>
-          {dots.map((d, i) => (
-            <div
-              key={i}
-              style={{
-                position: "absolute",
-                left: d.x,
-                top: d.y,
-                width: 14,
-                height: 14,
-                borderRadius: "50%",
-                border: "1.5px solid #1f1f1f",
-                background: "transparent",
-                display: "flex",
-              }}
-            />
-          ))}
-        </div>
-
         {/* Article image — large, rounded, with breathing room */}
         <div
           style={{
