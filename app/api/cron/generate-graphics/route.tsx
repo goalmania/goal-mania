@@ -16,17 +16,36 @@ async function generateGraphicBuffer(
 ): Promise<Buffer> {
   const titleUpper = (title.length > 110 ? title.slice(0, 107) + "…" : title).toUpperCase();
 
-  // Load Anton font (closest free equivalent to Agharti)
+  // Bebas Neue — identical visual to Agharti (Canva font)
   let fontData: ArrayBuffer | undefined;
   try {
-    const res = await fetch("https://fonts.gstatic.com/s/anton/v25/1Ptgg87LROyAm0K08i4gS7lu.woff");
-    if (res.ok) fontData = await res.arrayBuffer();
-  } catch { /* fallback to system font */ }
+    // Use Google Fonts CSS API to get the actual woff2 URL
+    const cssRes = await fetch(
+      "https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap",
+      { headers: { "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1)" } }
+    );
+    if (cssRes.ok) {
+      const css = await cssRes.text();
+      const match = css.match(/src: url\(([^)]+\.woff2)\)/);
+      if (match) {
+        const fontRes = await fetch(match[1]);
+        if (fontRes.ok) fontData = await fontRes.arrayBuffer();
+      }
+    }
+  } catch { /* fallback */ }
 
-  // Box dimensions — chamfered corners via SVG polygon
-  const BW = 900;  // box width
-  const BH = 460;  // box height
-  const CUT = 22;  // corner cut size
+  // ── Exact measurements from Canva PNG (1080×1920) ──────────────────────────
+  // Card:     1080 × 1920
+  // Photo:    top=80  left=68  w=944  h=756  radius=40
+  // Box:      top=960 left=90  w=900  h=420  cut=20  gradient #7db900→#2b4500
+  // Text:     #D2F937  Bebas Neue  size=68  centered in box
+  // Element:  y=1460  cx=540  line-w=320  circle-r=16  dot-r=7
+  // ───────────────────────────────────────────────────────────────────────────
+  const CUT = 20;
+  const BW  = 900;
+  const BH  = 420;
+  const BL  = 90;   // box left
+  const BT  = 960;  // box top
 
   const imageResponse = new ImageResponse(
     (
@@ -34,25 +53,25 @@ async function generateGraphicBuffer(
         style={{
           width: 1080,
           height: 1920,
-          background: "#1c1c1c",
-          backgroundImage: "radial-gradient(circle, transparent 5px, #242424 5px, #242424 6.5px, transparent 6.5px)",
-          backgroundSize: "32px 32px",
+          background: "#1e1e1e",
+          backgroundImage:
+            "radial-gradient(circle, transparent 4px, #262626 4px, #262626 5.5px, transparent 5.5px)",
+          backgroundSize: "28px 28px",
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "flex-start",
-          fontFamily: fontData ? "Anton" : "sans-serif",
           position: "relative",
           overflow: "hidden",
+          fontFamily: fontData ? "BebasNeue" : "sans-serif",
         }}
       >
-        {/* Article image — large, prominently rounded corners */}
+        {/* ── Photo ─────────────────────────────────────────────────────── */}
         <div
           style={{
-            width: 940,
-            height: 860,
-            marginTop: 90,
-            borderRadius: 44,
+            position: "absolute",
+            top: 80,
+            left: 68,
+            width: 944,
+            height: 756,
+            borderRadius: 40,
             overflow: "hidden",
             display: "flex",
           }}
@@ -64,105 +83,121 @@ async function generateGraphicBuffer(
           />
         </div>
 
-        {/* Spacer */}
-        <div style={{ flex: 1, display: "flex" }} />
+        {/* ── Box (SVG chamfered + gradient) ───────────────────────────── */}
+        <svg
+          style={{ position: "absolute", top: BT, left: BL }}
+          width={BW}
+          height={BH}
+          viewBox={`0 0 ${BW} ${BH}`}
+        >
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#7db900" />
+              <stop offset="100%" stopColor="#2b4500" />
+            </linearGradient>
+          </defs>
+          <polygon
+            points={[
+              `${CUT},0`,
+              `${BW - CUT},0`,
+              `${BW},${CUT}`,
+              `${BW},${BH - CUT}`,
+              `${BW - CUT},${BH}`,
+              `${CUT},${BH}`,
+              `0,${BH - CUT}`,
+              `0,${CUT}`,
+            ].join(" ")}
+            fill="url(#g)"
+          />
+        </svg>
 
-        {/* Box with chamfered corners via SVG + text overlay */}
+        {/* ── Text inside box ───────────────────────────────────────────── */}
         <div
           style={{
+            position: "absolute",
+            top: BT,
+            left: BL,
             width: BW,
             height: BH,
-            marginBottom: 120,
-            position: "relative",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            padding: "0 56px",
           }}
         >
-          {/* SVG polygon — chamfered rectangle with gradient */}
-          <svg
-            width={BW}
-            height={BH}
-            viewBox={`0 0 ${BW} ${BH}`}
-            style={{ position: "absolute", inset: 0 }}
-          >
-            <defs>
-              <linearGradient id="boxGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#7ab800" />
-                <stop offset="100%" stopColor="#2d4800" />
-              </linearGradient>
-            </defs>
-            <polygon
-              points={`
-                ${CUT},0
-                ${BW - CUT},0
-                ${BW},${CUT}
-                ${BW},${BH - CUT}
-                ${BW - CUT},${BH}
-                ${CUT},${BH}
-                0,${BH - CUT}
-                0,${CUT}
-              `}
-              fill="url(#boxGrad)"
-            />
-          </svg>
-
-          {/* Text centered on box */}
           <p
             style={{
-              position: "absolute",
-              inset: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              textAlign: "center",
               color: "#D2F937",
-              fontSize: 66,
-              fontWeight: 900,
-              lineHeight: 1.15,
-              letterSpacing: "2px",
+              fontSize: 68,
+              fontWeight: 400,
+              lineHeight: 1.13,
+              textAlign: "center",
               margin: 0,
-              padding: "0 60px",
+              letterSpacing: "1.5px",
             }}
           >
             {titleUpper}
           </p>
         </div>
 
-        {/* Bottom decorative element — line + solid circle on dark bg */}
+        {/* ── Bottom element: line + circle ─────────────────────────────── */}
+        {/* Left line */}
         <div
           style={{
+            position: "absolute",
+            top: 1468,
+            left: 540 - 160 - 20,
+            width: 160,
+            height: 3,
+            background: "#D2F937",
+            display: "flex",
+          }}
+        />
+        {/* Circle ring */}
+        <div
+          style={{
+            position: "absolute",
+            top: 1452,
+            left: 540 - 18,
+            width: 36,
+            height: 36,
+            borderRadius: "50%",
+            border: "3px solid #D2F937",
             display: "flex",
             alignItems: "center",
-            width: 340,
-            position: "absolute",
-            bottom: 52,
+            justifyContent: "center",
           }}
         >
-          <div style={{ flex: 1, height: 2.5, background: "#D2F937", display: "flex" }} />
           <div
             style={{
-              width: 32,
-              height: 32,
+              width: 14,
+              height: 14,
               borderRadius: "50%",
-              border: "2.5px solid #D2F937",
-              background: "transparent",
+              background: "#D2F937",
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
             }}
-          >
-            <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#D2F937", display: "flex" }} />
-          </div>
-          <div style={{ flex: 1, height: 2.5, background: "#D2F937", display: "flex" }} />
+          />
         </div>
+        {/* Right line */}
+        <div
+          style={{
+            position: "absolute",
+            top: 1468,
+            left: 540 + 20,
+            width: 160,
+            height: 3,
+            background: "#D2F937",
+            display: "flex",
+          }}
+        />
       </div>
     ),
     {
       width: 1080,
       height: 1920,
-      fonts: fontData ? [{ name: "Anton", data: fontData, weight: 400 }] : undefined,
+      fonts: fontData
+        ? [{ name: "BebasNeue", data: fontData, weight: 400 }]
+        : undefined,
     }
   );
 
