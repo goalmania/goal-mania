@@ -158,7 +158,9 @@ async function generateGraphicBuffer(title: string, imageUrl: string): Promise<B
     await page.setViewport({ width: 1080, height: 1920, deviceScaleFactor: 1 });
 
     const html = buildHtml(title, imageUrl);
-    await page.setContent(html, { waitUntil: "networkidle0", timeout: 30000 });
+    await page.setContent(html, { waitUntil: "load", timeout: 30000 });
+    // Extra wait for fonts to load
+    await new Promise((r) => setTimeout(r, 2500));
 
     // Aspetta che il font Bebas Neue sia caricato
     await page.evaluateHandle("document.fonts.ready");
