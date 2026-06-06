@@ -205,9 +205,47 @@ export async function GET(req: NextRequest) {
   if (!isAuthorized) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const isTest = req.nextUrl.searchParams.get("test") === "1";
+  const listPending = req.nextUrl.searchParams.get("list") === "pending";
+  const markDone = req.nextUrl.searchParams.get("markDone") === "1";
 
   try {
     await connectDB();
+
+    // ── Lightweight: mark one article as processed (called by the agent) ──
+    if (markDone) {
+      const body = await req.json().catch(() => ({}));
+      const articleId = body.id as string;
+      if (!articleId) return NextResponse.json({ error: "Missing id" }, { status: 400 });
+      await ProcessedGraphic.updateOne(
+        { articleId },
+        { $setOnInsert: { articleId, sentAt: new Date() } },
+        { upsert: true }
+      );
+      return NextResponse.json({ ok: true });
+    }
+
+    // ── Lightweight: return unprocessed articles from last 3h (for the agent) ──
+    if (listPending) {
+      const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
+      const recent = await Article.find({ status: "published", publishedAt: { $gte: threeHoursAgo } })
+        .sort({ publishedAt: -1 })
+        .limit(20)
+        .select("_id title image images slug")
+        .lean();
+      if (!recent.length) return NextResponse.json([]);
+      const done = await ProcessedGraphic.find({ articleId: { $in: recent.map((a) => String(a._id)) } })
+        .select("articleId").lean();
+      const doneSet = new Set(done.map((d) => d.articleId));
+      const pending = recent
+        .filter((a) => !doneSet.has(String(a._id)))
+        .map((a) => {
+          const img = (a.images as { url: string; isMain?: boolean }[])?.find((i) => i.isMain)?.url
+            || (a.images as { url: string }[])?.[0]?.url
+            || (a.image as string) || "";
+          return { id: String(a._id), title: a.title, imageUrl: img, slug: a.slug };
+        });
+      return NextResponse.json(pending);
+    }
 
     const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
     const dateFilter = isTest ? {} : { publishedAt: { $gte: threeHoursAgo } };
