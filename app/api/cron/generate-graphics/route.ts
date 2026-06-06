@@ -59,7 +59,7 @@ function buildHtml(title: string, imageUrl: string): string {
     left: 90px;
     width: 900px;
     height: 430px;
-    background: linear-gradient(180deg, #5e8f00 0%, #243800 100%);
+    background: linear-gradient(180deg, #3d6200 0%, #1a2e00 100%);
     clip-path: polygon(
       20px 0%, calc(100% - 20px) 0%,
       100% 20px, 100% calc(100% - 20px),
