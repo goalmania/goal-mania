@@ -21,9 +21,26 @@ function articleUrl(slug: string, category: string): string {
   return `${SITE_URL}/${path}/${slug}`;
 }
 
-// ─── HTML template — replica 1:1 del design Canva ────────────────────────────
+// ─── HTML template — replica 1:1 del design Canva GoalMania ─────────────────
+// Design: foto full-bleed, logo GM top-left, gradient overlay bottom, testo
+// bianco uppercase con parole-chiave in lime (#c8f000), stile Bebas Neue.
 function buildHtml(title: string, imageUrl: string): string {
-  const titleUpper = (title.length > 110 ? title.slice(0, 107) + "…" : title).toUpperCase();
+  const MAX = 100;
+  const raw = title.length > MAX ? title.slice(0, MAX - 1) + "…" : title;
+  const titleUpper = raw.toUpperCase();
+
+  // Evidenzia le prime 2-3 parole "forti" in lime, resto in bianco
+  const words = titleUpper.split(" ");
+  // Troviamo lo split: prime parole fino a ~20 char in lime, resto bianco
+  let limeCount = 0;
+  let charCount = 0;
+  for (let i = 0; i < words.length; i++) {
+    charCount += words[i].length + 1;
+    limeCount = i + 1;
+    if (charCount >= 18 || i >= 2) break;
+  }
+  const limePart = words.slice(0, limeCount).join(" ");
+  const whitePart = words.slice(limeCount).join(" ");
 
   return `<!DOCTYPE html>
 <html>
@@ -37,96 +54,97 @@ function buildHtml(title: string, imageUrl: string): string {
 
   body {
     width: 1080px;
-    height: 1920px;
+    height: 1350px;
     overflow: hidden;
-    background-color: #1e1e1e;
-    background-image: radial-gradient(circle, transparent 4px, #262626 4px, #262626 5.5px, transparent 5.5px);
-    background-size: 28px 28px;
+    background: #0a0a0a;
     position: relative;
     font-family: 'Bebas Neue', sans-serif;
   }
 
-  /* ── Photo ── */
+  /* ── Foto full-bleed ── */
   .photo {
     position: absolute;
-    top: 80px;
-    left: 68px;
-    width: 944px;
-    height: 756px;
-    border-radius: 40px;
-    overflow: hidden;
-    object-fit: cover;
+    inset: 0;
+    width: 100%;
+    height: 100%;
   }
   .photo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center top;
     display: block;
   }
 
-  /* ── Box con angoli smussati ── */
-  .box {
+  /* ── Gradient overlay bottom ── */
+  .overlay {
     position: absolute;
-    top: 980px;
-    left: 90px;
-    width: 900px;
-    height: 430px;
-    background: linear-gradient(180deg, #3d6200 0%, #1a2e00 100%);
-    clip-path: polygon(
-      20px 0%, calc(100% - 20px) 0%,
-      100% 20px, 100% calc(100% - 20px),
-      calc(100% - 20px) 100%, 20px 100%,
-      0% calc(100% - 20px), 0% 20px
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 620px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0,0,0,0.55) 25%,
+      rgba(0,0,0,0.88) 55%,
+      rgba(0,0,0,0.97) 100%
     );
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 60px;
   }
 
-  /* ── Testo titolo ── */
-  .title {
-    color: #D2F937;
+  /* ── Logo GM top-left ── */
+  .logo {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    width: 90px;
+    height: 90px;
+  }
+  .logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* ── Contenitore testo bottom ── */
+  .text-block {
+    position: absolute;
+    bottom: 60px;
+    left: 50px;
+    right: 50px;
+  }
+
+  /* ── Label "GOAL-MANIA.IT" ── */
+  .label {
+    display: inline-block;
+    background: #c8f000;
+    color: #000;
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 70px;
-    line-height: 1.12;
-    text-align: center;
-    letter-spacing: 2px;
+    font-size: 22px;
+    letter-spacing: 3px;
+    padding: 4px 14px 2px;
+    margin-bottom: 18px;
+    border-radius: 3px;
+  }
+
+  /* ── Titolo ── */
+  .title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 82px;
+    line-height: 1.05;
+    letter-spacing: 2.5px;
     word-break: break-word;
   }
+  .title .lime { color: #c8f000; }
+  .title .white { color: #ffffff; }
 
-  /* ── Elemento decorativo ── */
-  .deco {
-    position: absolute;
-    top: 1490px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 0;
-    width: 340px;
-  }
+  /* ── Linea decorativa ── */
   .deco-line {
-    flex: 1;
-    height: 3px;
-    background: #D2F937;
+    margin-top: 24px;
+    width: 80px;
+    height: 4px;
+    background: #c8f000;
     border-radius: 2px;
-  }
-  .deco-circle {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 3px solid #D2F937;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .deco-dot {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #D2F937;
   }
 </style>
 </head>
@@ -135,14 +153,16 @@ function buildHtml(title: string, imageUrl: string): string {
     <img src="${imageUrl}" alt="" crossorigin="anonymous" />
   </div>
 
-  <div class="box">
-    <p class="title">${titleUpper}</p>
+  <div class="overlay"></div>
+
+  <div class="logo">
+    <img src="https://goal-mania.it/images/recentUpdate/desktop-logo.png" alt="GM" crossorigin="anonymous" />
   </div>
 
-  <div class="deco">
-    <div class="deco-line"></div>
-    <div class="deco-circle">
-      <div class="deco-dot"></div>
+  <div class="text-block">
+    <div class="label">GOAL-MANIA.IT</div>
+    <div class="title">
+      <span class="lime">${limePart}</span>${whitePart ? ' <span class="white">' + whitePart + '</span>' : ''}
     </div>
     <div class="deco-line"></div>
   </div>
@@ -158,7 +178,7 @@ async function generateGraphicBuffer(title: string, imageUrl: string): Promise<B
 
   const browser = await puppeteer.launch({
     args: chromium.args,
-    defaultViewport: { width: 1080, height: 1920 },
+    defaultViewport: { width: 1080, height: 1350 },
     executablePath: await chromium.executablePath(
       "https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar"
     ),
@@ -167,7 +187,7 @@ async function generateGraphicBuffer(title: string, imageUrl: string): Promise<B
 
   try {
     const page = await browser.newPage();
-    await page.setViewport({ width: 1080, height: 1920, deviceScaleFactor: 1 });
+    await page.setViewport({ width: 1080, height: 1350, deviceScaleFactor: 1 });
 
     const html = buildHtml(title, imageUrl);
     await page.setContent(html, { waitUntil: "load", timeout: 30000 });
@@ -179,7 +199,7 @@ async function generateGraphicBuffer(title: string, imageUrl: string): Promise<B
 
     const screenshot = await page.screenshot({
       type: "png",
-      clip: { x: 0, y: 0, width: 1080, height: 1920 },
+      clip: { x: 0, y: 0, width: 1080, height: 1350 },
     });
 
     return Buffer.from(screenshot);
@@ -265,6 +285,15 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(pending);
     }
 
+    // ── Il flusso Puppeteer è disabilitato. Le grafiche vengono generate
+    // ── esclusivamente tramite Canva MCP dall'agente schedulato.
+    // ── Usa ?list=pending per ottenere gli articoli da processare.
+    return NextResponse.json({
+      ok: false,
+      message: "Direct generation disabled. Use ?list=pending to get articles, then generate via Canva MCP.",
+    });
+
+    // eslint-disable-next-line no-unreachable
     const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
     const dateFilter = isTest ? {} : { publishedAt: { $gte: threeHoursAgo } };
 
