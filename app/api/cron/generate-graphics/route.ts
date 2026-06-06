@@ -9,6 +9,18 @@ export const runtime = "nodejs";
 const TELEGRAM_API = "https://api.telegram.org/bot";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://goal-mania.it";
 
+const CATEGORY_PATH: Record<string, string> = {
+  news: "news",
+  transferMarket: "transfer",
+  serieA: "serieA",
+  internationalTeams: "international",
+};
+
+function articleUrl(slug: string, category: string): string {
+  const path = CATEGORY_PATH[category] ?? "news";
+  return `${SITE_URL}/${path}/${slug}`;
+}
+
 // ─── HTML template — replica 1:1 del design Canva ────────────────────────────
 function buildHtml(title: string, imageUrl: string): string {
   const titleUpper = (title.length > 110 ? title.slice(0, 107) + "…" : title).toUpperCase();
@@ -230,7 +242,7 @@ export async function GET(req: NextRequest) {
       const recent = await Article.find({ status: "published", publishedAt: { $gte: threeHoursAgo } })
         .sort({ publishedAt: -1 })
         .limit(20)
-        .select("_id title image images slug")
+        .select("_id title image images slug category")
         .lean();
       if (!recent.length) return NextResponse.json([]);
       const done = await ProcessedGraphic.find({ articleId: { $in: recent.map((a) => String(a._id)) } })
@@ -242,7 +254,13 @@ export async function GET(req: NextRequest) {
           const img = (a.images as { url: string; isMain?: boolean }[])?.find((i) => i.isMain)?.url
             || (a.images as { url: string }[])?.[0]?.url
             || (a.image as string) || "";
-          return { id: String(a._id), title: a.title, imageUrl: img, slug: a.slug };
+          return {
+            id: String(a._id),
+            title: a.title,
+            imageUrl: img,
+            slug: a.slug,
+            url: articleUrl(a.slug as string, a.category as string),
+          };
         });
       return NextResponse.json(pending);
     }
@@ -253,7 +271,7 @@ export async function GET(req: NextRequest) {
     const recentArticles = await Article.find({ status: "published", ...dateFilter })
       .sort({ publishedAt: -1 })
       .limit(isTest ? 1 : 50)
-      .select("_id title image images slug publishedAt")
+      .select("_id title image images slug category publishedAt")
       .lean();
 
     if (!recentArticles.length) {
@@ -288,8 +306,8 @@ export async function GET(req: NextRequest) {
         const imageUrl = rawImageUrl.startsWith("http") ? rawImageUrl : `${SITE_URL}${rawImageUrl}`;
         const imageBuffer = await generateGraphicBuffer(article.title as string, imageUrl);
 
-        const articleUrl = `${SITE_URL}/news/${article.slug}`;
-        const caption = `⚽ <b>${article.title}</b>\n\n📖 ${articleUrl}`;
+        const artUrl = articleUrl(article.slug as string, article.category as string);
+        const caption = `⚽ <b>${article.title}</b>\n\n📖 ${artUrl}`;
         const messageId = await sendToTelegram(imageBuffer, caption);
 
         if (!isTest) {
