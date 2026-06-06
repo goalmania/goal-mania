@@ -16,36 +16,33 @@ async function generateGraphicBuffer(
 ): Promise<Buffer> {
   const titleUpper = (title.length > 110 ? title.slice(0, 107) + "…" : title).toUpperCase();
 
-  // Bebas Neue — identical visual to Agharti (Canva font)
+  // Bebas Neue — try multiple sources for reliability
   let fontData: ArrayBuffer | undefined;
-  try {
-    // Use Google Fonts CSS API to get the actual woff2 URL
-    const cssRes = await fetch(
-      "https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap",
-      { headers: { "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1)" } }
-    );
-    if (cssRes.ok) {
-      const css = await cssRes.text();
-      const match = css.match(/src: url\(([^)]+\.woff2)\)/);
-      if (match) {
-        const fontRes = await fetch(match[1]);
-        if (fontRes.ok) fontData = await fontRes.arrayBuffer();
-      }
-    }
-  } catch { /* fallback */ }
+  const fontUrls = [
+    // GitHub raw (open source, reliable)
+    "https://raw.githubusercontent.com/dharmatype/Bebas-Neue/master/fonts/BebasNeue-Regular.woff2",
+    // Google gstatic direct
+    "https://fonts.gstatic.com/s/bebasnuee/v14/JTUSjIg69CK48gW7PXoo9WthyyTh89ZNpQ.woff2",
+  ];
+  for (const url of fontUrls) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) { fontData = await res.arrayBuffer(); break; }
+    } catch { /* try next */ }
+  }
 
   // ── Exact measurements from Canva PNG (1080×1920) ──────────────────────────
   // Card:     1080 × 1920
   // Photo:    top=80  left=68  w=944  h=756  radius=40
-  // Box:      top=960 left=90  w=900  h=420  cut=20  gradient #7db900→#2b4500
-  // Text:     #D2F937  Bebas Neue  size=68  centered in box
-  // Element:  y=1460  cx=540  line-w=320  circle-r=16  dot-r=7
+  // Box:      top=980 left=90  w=900  h=430  cut=20  gradient #5a8800→#243800
+  // Text:     #D2F937  Bebas Neue  size=66  centered in box
+  // Element:  y=1490  cx=540  line-w=320  circle-r=16  dot-r=7
   // ───────────────────────────────────────────────────────────────────────────
   const CUT = 20;
   const BW  = 900;
-  const BH  = 420;
+  const BH  = 430;
   const BL  = 90;   // box left
-  const BT  = 960;  // box top
+  const BT  = 980;  // box top
 
   const imageResponse = new ImageResponse(
     (
@@ -64,24 +61,19 @@ async function generateGraphicBuffer(
         }}
       >
         {/* ── Photo ─────────────────────────────────────────────────────── */}
-        <div
+        <img
+          src={imageUrl}
+          alt=""
           style={{
             position: "absolute",
             top: 80,
             left: 68,
             width: 944,
             height: 756,
+            objectFit: "cover",
             borderRadius: 40,
-            overflow: "hidden",
-            display: "flex",
           }}
-        >
-          <img
-            src={imageUrl}
-            alt=""
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          />
-        </div>
+        />
 
         {/* ── Box (SVG chamfered + gradient) ───────────────────────────── */}
         <svg
@@ -92,8 +84,8 @@ async function generateGraphicBuffer(
         >
           <defs>
             <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#7db900" />
-              <stop offset="100%" stopColor="#2b4500" />
+              <stop offset="0%" stopColor="#5a8800" />
+              <stop offset="100%" stopColor="#243800" />
             </linearGradient>
           </defs>
           <polygon
@@ -128,7 +120,7 @@ async function generateGraphicBuffer(
           <p
             style={{
               color: "#D2F937",
-              fontSize: 68,
+              fontSize: 66,
               fontWeight: 400,
               lineHeight: 1.13,
               textAlign: "center",
@@ -142,54 +134,13 @@ async function generateGraphicBuffer(
 
         {/* ── Bottom element: line + circle ─────────────────────────────── */}
         {/* Left line */}
-        <div
-          style={{
-            position: "absolute",
-            top: 1468,
-            left: 540 - 160 - 20,
-            width: 160,
-            height: 3,
-            background: "#D2F937",
-            display: "flex",
-          }}
-        />
-        {/* Circle ring */}
-        <div
-          style={{
-            position: "absolute",
-            top: 1452,
-            left: 540 - 18,
-            width: 36,
-            height: 36,
-            borderRadius: "50%",
-            border: "3px solid #D2F937",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            style={{
-              width: 14,
-              height: 14,
-              borderRadius: "50%",
-              background: "#D2F937",
-              display: "flex",
-            }}
-          />
+        <div style={{ position:"absolute", top:1492, left:540-180, width:160, height:3, background:"#D2F937", display:"flex" }} />
+        {/* Circle ring + dot */}
+        <div style={{ position:"absolute", top:1474, left:540-18, width:36, height:36, borderRadius:"50%", border:"3px solid #D2F937", display:"flex", alignItems:"center", justifyContent:"center" }}>
+          <div style={{ width:14, height:14, borderRadius:"50%", background:"#D2F937", display:"flex" }} />
         </div>
         {/* Right line */}
-        <div
-          style={{
-            position: "absolute",
-            top: 1468,
-            left: 540 + 20,
-            width: 160,
-            height: 3,
-            background: "#D2F937",
-            display: "flex",
-          }}
-        />
+        <div style={{ position:"absolute", top:1492, left:540+20, width:160, height:3, background:"#D2F937", display:"flex" }} />
       </div>
     ),
     {
