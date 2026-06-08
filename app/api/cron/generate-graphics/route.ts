@@ -88,7 +88,7 @@ async function uploadImageToCanva(imageUrl: string, token: string): Promise<stri
 
 async function pollCanvaAssetJob(jobId: string, token: string): Promise<string> {
   for (let i = 0; i < 20; i++) {
-    await new Promise((r) => setTimeout(r, 1500));
+    await new Promise((r) => setTimeout(r, 1000));
     const res = await fetch(`${CANVA_API}/url-asset-uploads/${jobId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -130,7 +130,7 @@ async function createAutofillJob(
 
 async function pollAutofillJob(jobId: string, token: string): Promise<string> {
   for (let i = 0; i < 30; i++) {
-    await new Promise((r) => setTimeout(r, 1500));
+    await new Promise((r) => setTimeout(r, 1000));
     const res = await fetch(`${CANVA_API}/autofills/${jobId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -166,7 +166,7 @@ async function exportDesign(designId: string, token: string): Promise<string> {
 
   // Polling export
   for (let i = 0; i < 30; i++) {
-    await new Promise((r) => setTimeout(r, 1500));
+    await new Promise((r) => setTimeout(r, 1000));
     const poll = await fetch(`${CANVA_API}/exports/${data.job.id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -302,6 +302,11 @@ export async function GET(req: NextRequest) {
           (article.images as { url: string }[])?.[0]?.url ||
           (article.image as string) || "";
         const imageUrl = rawImage.startsWith("http") ? rawImage : `${SITE_URL}${rawImage}`;
+
+        if (!imageUrl || imageUrl === SITE_URL) {
+          results.push({ slug: article.slug as string, status: "error", error: "No valid image URL" });
+          continue;
+        }
 
         // 1. Upload immagine su Canva
         const assetId = await uploadImageToCanva(imageUrl, token);
