@@ -2,8 +2,8 @@ name: Telegram Graphics Cron
 
 on:
   schedule:
-    # Every 3 hours (UTC): 00:00, 03:00, 06:00, 09:00, 12:00, 15:00, 18:00, 21:00
-    - cron: "0 */3 * * *"
+    # Every 30 minutes — 1 article per run, catch up quickly after publishing
+    - cron: "*/30 * * * *"
   workflow_dispatch: # allow manual trigger from GitHub UI
 
 jobs:

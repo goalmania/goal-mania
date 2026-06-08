@@ -70,7 +70,7 @@ async function uploadImageToCanva(imageUrl: string, token: string): Promise<stri
 
 async function pollCanvaAssetJob(jobId: string, token: string): Promise<string> {
   for (let i = 0; i < 20; i++) {
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, 1500));
     const res = await fetch(`${CANVA_API}/url-asset-uploads/${jobId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -112,7 +112,7 @@ async function createAutofillJob(
 
 async function pollAutofillJob(jobId: string, token: string): Promise<string> {
   for (let i = 0; i < 30; i++) {
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, 1500));
     const res = await fetch(`${CANVA_API}/autofills/${jobId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -148,7 +148,7 @@ async function exportDesign(designId: string, token: string): Promise<string> {
 
   // Polling export
   for (let i = 0; i < 30; i++) {
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, 1500));
     const poll = await fetch(`${CANVA_API}/exports/${data.job.id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -214,7 +214,7 @@ export async function GET(req: NextRequest) {
 
     // ── Lista articoli pendenti ──
     if (listPending) {
-      const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
+      const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000); // mantieni 3h per list
       const recent = await Article.find({ status: "published", publishedAt: { $gte: threeHoursAgo } })
         .sort({ publishedAt: -1 })
         .limit(20)
@@ -243,8 +243,9 @@ export async function GET(req: NextRequest) {
     }
 
     // ── Generazione grafica via Canva REST API ──
-    const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
-    const dateFilter = isTest ? {} : { publishedAt: { $gte: threeHoursAgo } };
+    // Cerca articoli nell'ultima ora (cron ogni 30min, finestra doppia per sicurezza)
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+    const dateFilter = isTest ? {} : { publishedAt: { $gte: oneHourAgo } };
 
     const recentArticles = await Article.find({ status: "published", ...dateFilter })
       .sort({ publishedAt: -1 })
@@ -262,9 +263,10 @@ export async function GET(req: NextRequest) {
           .select("articleId").lean();
 
     const processedSet = new Set(processedIds.map((p) => p.articleId));
-    const toProcess = isTest
-      ? recentArticles.slice(0, 1)
-      : recentArticles.filter((a) => !processedSet.has(String(a._id)));
+    // Processa 1 articolo per run per restare dentro i 60s di Vercel
+    const toProcess = recentArticles
+      .filter((a) => !processedSet.has(String(a._id)))
+      .slice(0, 1);
 
     if (!toProcess.length) {
       return NextResponse.json({ ok: true, message: "All recent articles already processed" });
