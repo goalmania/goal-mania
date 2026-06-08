@@ -14,14 +14,18 @@ jobs:
     steps:
       - name: Call generate-graphics endpoint
         run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" \
+          body=$(curl -s -w "\nHTTP_STATUS:%{http_code}" \
             -X GET "https://goal-mania.it/api/cron/generate-graphics" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
 
-          echo "HTTP status: $response"
+          status=$(echo "$body" | grep "HTTP_STATUS:" | cut -d: -f2)
+          body_only=$(echo "$body" | grep -v "HTTP_STATUS:")
 
-          if [ "$response" -ne 200 ]; then
-            echo "❌ Endpoint returned $response"
+          echo "HTTP status: $status"
+          echo "Response: $body_only"
+
+          if [ "$status" -ne 200 ]; then
+            echo "❌ Endpoint returned $status"
             exit 1
           fi
 
