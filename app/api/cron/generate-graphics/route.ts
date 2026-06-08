@@ -272,7 +272,9 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ ok: true, message: "All recent articles already processed" });
     }
 
+    console.log("[generate-graphics] Articoli da processare:", toProcess.length);
     const token = await getCanvaAccessToken();
+    console.log("[generate-graphics] Token Canva OK");
     const results: Array<{ slug: string; status: "sent" | "error"; error?: string }> = [];
 
     for (const article of toProcess) {
@@ -314,7 +316,8 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ ok: true, results });
   } catch (err) {
-    console.error("[generate-graphics] Fatal error:", err);
-    return NextResponse.json({ error: "Internal server error", details: String(err) }, { status: 500 });
+    const errMsg = err instanceof Error ? err.message : String(err);
+    console.error("[generate-graphics] Fatal error:", errMsg);
+    return NextResponse.json({ error: "Internal server error", details: errMsg }, { status: 500 });
   }
 }
