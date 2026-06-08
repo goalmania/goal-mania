@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 
   const clientId = process.env.CANVA_CLIENT_ID;
   const clientSecret = process.env.CANVA_CLIENT_SECRET;
-  const redirectUri = `${process.env.NEXT_PUBLIC_SITE_URL}/api/canva/callback`;
+  const redirectUri = "https://goal-mania.it/api/canva/callback";
 
   if (!clientId || !clientSecret) {
     return NextResponse.json(
