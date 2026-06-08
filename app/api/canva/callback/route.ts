@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import connectDB from "@/lib/db";
+import OAuthToken from "@/lib/models/OAuthToken";
 
 // Endpoint usato UNA SOLA VOLTA per ottenere il refresh_token Canva via PKCE OAuth.
 // Flusso:
@@ -54,9 +56,20 @@ export async function GET(req: NextRequest) {
     );
   }
 
+  // Salva il refresh_token in MongoDB per gestire la rotation automatica
+  try {
+    await connectDB();
+    await OAuthToken.findOneAndUpdate(
+      { provider: "canva" },
+      { refreshToken: data.refresh_token, updatedAt: new Date() },
+      { upsert: true }
+    );
+  } catch (dbErr) {
+    console.error("Failed to save token to DB:", dbErr);
+  }
+
   return NextResponse.json({
-    message:
-      "✅ OAuth completato! Salva CANVA_REFRESH_TOKEN su Vercel, poi elimina questo endpoint.",
+    message: "✅ OAuth completato! Token salvato in MongoDB per rotation automatica.",
     refresh_token: data.refresh_token,
     access_token: data.access_token,
     expires_in: data.expires_in,

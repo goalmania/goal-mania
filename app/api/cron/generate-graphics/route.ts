@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import ProcessedGraphic from "@/lib/models/ProcessedGraphic";
+import OAuthToken from "@/lib/models/OAuthToken";
 
 export const maxDuration = 60;
 export const runtime = "nodejs";
@@ -23,14 +24,21 @@ function articleUrl(slug: string, category: string): string {
   return `${SITE_URL}/${path}/${slug}`;
 }
 
-// ─── Canva OAuth: ottieni access token dal refresh token ──────────────────────
+// ─── Canva OAuth: ottieni access token dal refresh token (con rotation) ───────
 async function getCanvaAccessToken(): Promise<string> {
   const clientId = process.env.CANVA_CLIENT_ID;
   const clientSecret = process.env.CANVA_CLIENT_SECRET;
-  const refreshToken = process.env.CANVA_REFRESH_TOKEN;
 
-  if (!clientId || !clientSecret || !refreshToken) {
-    throw new Error("Canva credentials missing: CANVA_CLIENT_ID, CANVA_CLIENT_SECRET, CANVA_REFRESH_TOKEN");
+  if (!clientId || !clientSecret) {
+    throw new Error("Canva credentials missing: CANVA_CLIENT_ID, CANVA_CLIENT_SECRET");
+  }
+
+  // Leggi il refresh_token corrente da MongoDB (gestisce la rotation)
+  const tokenDoc = await OAuthToken.findOne({ provider: "canva" });
+  const refreshToken = tokenDoc?.refreshToken || process.env.CANVA_REFRESH_TOKEN;
+
+  if (!refreshToken) {
+    throw new Error("CANVA_REFRESH_TOKEN not found in DB or env");
   }
 
   const res = await fetch(`${CANVA_API}/oauth/token`, {
@@ -46,6 +54,16 @@ async function getCanvaAccessToken(): Promise<string> {
 
   const data = await res.json();
   if (!data.access_token) throw new Error(`Canva token error: ${JSON.stringify(data)}`);
+
+  // Salva il nuovo refresh_token (Canva fa rotation ad ogni uso)
+  if (data.refresh_token) {
+    await OAuthToken.findOneAndUpdate(
+      { provider: "canva" },
+      { refreshToken: data.refresh_token, updatedAt: new Date() },
+      { upsert: true }
+    );
+  }
+
   return data.access_token;
 }
 
