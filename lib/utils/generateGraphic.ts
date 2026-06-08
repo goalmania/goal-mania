@@ -1,6 +1,7 @@
 /**
- * Genera una grafica story 450×800 che replica il template Canva GoalMania.
- * Sfondo #0f0f0f, foto con angoli arrotondati, box olive con titolo bold uppercase.
+ * Genera grafica GoalMania story 1080×1920 pixel-perfect 1:1 rispetto al template Canva.
+ * Strategia: usa il PNG base esportato da Canva (sfondo+green box+decorazioni) come layer fisso,
+ * poi composita dinamicamente la foto articolo e il titolo alle coordinate native Canva.
  */
 
 import sharp from "sharp";
@@ -8,32 +9,25 @@ import satori from "satori";
 import fs from "fs";
 import path from "path";
 
-const W = 450;
-const H = 800;
+// ─── Dimensioni native template Canva (1080×1920) ───────────────────────────
+const W = 1080;
+const H = 1920;
 
-const PHOTO_X = 22;
-const PHOTO_Y = 28;
-const PHOTO_W = 406;
-const PHOTO_H = 460;
-const PHOTO_RADIUS = 18;
+// Coordinate esatte dalla transazione MCP su design DAHL_KIbVXc
+const PHOTO_LEFT = Math.round(60.75);     // 61
+const PHOTO_TOP  = Math.round(268.19);    // 268
+const PHOTO_W    = Math.round(958.49);    // 958
+const PHOTO_H    = Math.round(725.20);    // 725
+const PHOTO_RADIUS = 24;                  // border-radius visibile nel template
 
-const BOX_X = 25;
-const BOX_Y = 508;
-const BOX_W = 400;
-const BOX_H = 242;
+const TEXT_LEFT  = Math.round(169.97);   // 170
+const TEXT_TOP   = Math.round(1316.50);  // 1317
+const TEXT_W     = Math.round(740.07);   // 740
+const TEXT_H     = Math.round(342.31);   // 342
 
-const LINE_Y = 772;
-const LINE_X1 = 32;
-const LINE_X2 = W - 32;
-const DOT_CX = 50;
-const DOT_CY = LINE_Y;
-const DOT_R = 7;
-
-const BG = "#0f0f0f";
-const BOX_COLOR = "#5c6234";
 const TEXT_COLOR = "#ffffff";
-const LINE_COLOR = "#5c6234";
 
+// ─── Font cache ─────────────────────────────────────────────────────────────
 let _fontCache: ArrayBuffer | null = null;
 function getOswaldFont(): ArrayBuffer {
   if (_fontCache) return _fontCache;
@@ -46,30 +40,30 @@ function getOswaldFont(): ArrayBuffer {
   return _fontCache;
 }
 
-function wrapText(text: string, maxCharsPerLine: number): string[] {
-  const words = text.split(" ");
-  const lines: string[] = [];
-  let current = "";
-  for (const word of words) {
-    const test = current ? `${current} ${word}` : word;
-    if (test.length > maxCharsPerLine && current) {
-      lines.push(current);
-      current = word;
-    } else {
-      current = test;
-    }
-  }
-  if (current) lines.push(current);
-  return lines;
+// ─── Auto font-size: massimizza la dimensione che non sfora il box ───────────
+// Usa una griglia empirica basata sulla lunghezza del testo uppercase
+function calcFontSize(text: string): number {
+  const len = text.length;
+  if (len <= 30)  return 80;
+  if (len <= 45)  return 70;
+  if (len <= 60)  return 62;
+  if (len <= 80)  return 54;
+  if (len <= 100) return 46;
+  return 40;
 }
 
+// ─── Generatore principale ───────────────────────────────────────────────────
 export async function generateGraphic(
   title: string,
   articleImageUrl: string
 ): Promise<Buffer> {
   const font = getOswaldFont();
 
-  // 1. Foto articolo resized + crop
+  // 1. Carica il template base Canva (sfondo texture + green box + decorazioni)
+  const templatePath = path.join(process.cwd(), "public/templates/goalmania-base.png");
+  const templateBuf = fs.readFileSync(templatePath);
+
+  // 2. Scarica e ridimensiona la foto articolo alle dimensioni native Canva
   const imgRes = await fetch(articleImageUrl);
   if (!imgRes.ok) throw new Error(`Image fetch failed: ${imgRes.status} ${articleImageUrl}`);
   const imgBuf = Buffer.from(await imgRes.arrayBuffer());
@@ -79,7 +73,7 @@ export async function generateGraphic(
     .png()
     .toBuffer();
 
-  // 2. Angoli arrotondati sulla foto tramite maschera SVG
+  // 3. Maschera angoli arrotondati sulla foto (radius 24px come nel template)
   const roundedMask = Buffer.from(
     `<svg width="${PHOTO_W}" height="${PHOTO_H}">
       <rect x="0" y="0" width="${PHOTO_W}" height="${PHOTO_H}"
@@ -91,135 +85,75 @@ export async function generateGraphic(
     .png()
     .toBuffer();
 
-  // 3. Calcola font size e wrapping del titolo
+  // 4. Genera il layer testo con Satori (trasparente + testo bianco Oswald Bold)
   const titleUpper = title.toUpperCase();
-  const fontSize = titleUpper.length > 70 ? 24 : titleUpper.length > 50 ? 26 : titleUpper.length > 35 ? 28 : 30;
-  const charsPerLine = Math.floor(352 / (fontSize * 0.52));
-  const lines = wrapText(titleUpper, charsPerLine);
+  const fontSize = calcFontSize(titleUpper);
+  const lineHeight = 1.25;
 
-  // 4. Genera overlay (box + testo + decorazioni) con Satori
-  // Satori richiede display:flex su ogni nodo con children
-  const overlaySvg = await satori(
+  const textSvg = await satori(
     {
       type: "div",
       props: {
         style: {
-          width: W,
-          height: H,
+          width: TEXT_W,
+          height: TEXT_H,
           display: "flex",
-          flexDirection: "column",
-          position: "relative",
+          alignItems: "center",
+          justifyContent: "center",
           background: "transparent",
         },
         children: [
-          // Box verde/olive con testo
           {
             type: "div",
             props: {
               style: {
-                position: "absolute",
-                left: BOX_X,
-                top: BOX_Y,
-                width: BOX_W,
-                height: BOX_H,
-                background: BOX_COLOR,
-                borderRadius: 10,
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                paddingLeft: 20,
-                paddingRight: 20,
-                paddingTop: 16,
-                paddingBottom: 16,
+                width: "100%",
+                color: TEXT_COLOR,
+                fontSize,
+                fontWeight: 700,
+                fontFamily: "Oswald",
+                textAlign: "center",
+                lineHeight,
+                letterSpacing: "0.02em",
+                wordBreak: "break-word",
+                padding: "0 16px",
               },
-              children: [
-                {
-                  type: "div",
-                  props: {
-                    style: {
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "100%",
-                    },
-                    children: lines.map((line, i) => ({
-                      type: "div",
-                      props: {
-                        key: i,
-                        style: {
-                          display: "flex",
-                          justifyContent: "center",
-                          width: "100%",
-                          color: TEXT_COLOR,
-                          fontSize,
-                          fontWeight: 700,
-                          fontFamily: "Oswald",
-                          textAlign: "center",
-                          lineHeight: 1.3,
-                          letterSpacing: "0.03em",
-                        },
-                        children: line,
-                      },
-                    })),
-                  },
-                },
-              ],
-            },
-          },
-          // Linea decorativa
-          {
-            type: "div",
-            props: {
-              style: {
-                position: "absolute",
-                left: LINE_X1,
-                top: LINE_Y - 1,
-                width: LINE_X2 - LINE_X1,
-                height: 2,
-                background: LINE_COLOR,
-                display: "flex",
-              },
-              children: [],
-            },
-          },
-          // Cerchio decorativo
-          {
-            type: "div",
-            props: {
-              style: {
-                position: "absolute",
-                left: DOT_CX - DOT_R,
-                top: DOT_CY - DOT_R,
-                width: DOT_R * 2,
-                height: DOT_R * 2,
-                borderRadius: "50%",
-                background: LINE_COLOR,
-                border: `2px solid ${BG}`,
-                display: "flex",
-              },
-              children: [],
+              children: titleUpper,
             },
           },
         ],
       },
     },
     {
-      width: W,
-      height: H,
+      width: TEXT_W,
+      height: TEXT_H,
       fonts: [{ name: "Oswald", data: font, weight: 700, style: "normal" }],
     }
   );
 
-  const overlayPng = await sharp(Buffer.from(overlaySvg)).png().toBuffer();
+  const textPng = await sharp(Buffer.from(textSvg)).png().toBuffer();
 
-  // 5. Compositing finale: sfondo nero → foto → overlay
-  return sharp({
-    create: { width: W, height: H, channels: 4, background: BG },
-  })
+  // 5. Compositing finale:
+  //    [template base] → [foto articolo] → [testo titolo]
+  return sharp(templateBuf)
+    .resize(W, H, { fit: "fill" }) // normalizza se necessario
     .composite([
-      { input: photoRounded, left: PHOTO_X, top: PHOTO_Y },
-      { input: overlayPng, left: 0, top: 0 },
+      {
+        input: photoRounded,
+        left: PHOTO_LEFT,
+        top: PHOTO_TOP,
+        blend: "over",
+      },
+      {
+        input: textPng,
+        left: TEXT_LEFT,
+        top: TEXT_TOP,
+        blend: "over",
+      },
     ])
     .png()
     .toBuffer();
