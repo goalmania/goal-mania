@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions",
-  description: "Terms and conditions for Goal Mania football jersey purchases and services.",
+  title: "GoalMania Terms of Service",
+  description: "Terms of service for GoalMania football jersey purchases and services.",
 };
 
 export default function TermsPage() {
@@ -11,9 +11,12 @@ export default function TermsPage() {
       <div className="container mx-auto px-6 sm:px-10 lg:px-20 pt-12 pb-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-serif font-bold mb-6 text-white">Terms & Conditions</h1>
+          <div className="flex justify-center mb-6">
+            <img src="/favicon-192x192.png" alt="GoalMania" className="w-16 h-16 rounded-xl" />
+          </div>
+          <h1 className="text-5xl font-serif font-bold mb-6 text-white">GoalMania Terms of Service</h1>
           <p className="text-xl text-white/60 max-w-3xl mx-auto">
-            Please read these terms and conditions carefully before using our website or making a purchase.
+            Please read these terms carefully before using GoalMania website or making a purchase.
           </p>
         </div>
 

@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description: "Privacy policy and data protection information for Goal Mania customers.",
+  title: "GoalMania Privacy Policy",
+  description: "Privacy policy and data protection information for GoalMania customers.",
 };
 
 export default function PrivacyPage() {
@@ -11,9 +11,12 @@ export default function PrivacyPage() {
       <div className="container mx-auto px-6 sm:px-10 lg:px-20 pt-12 pb-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-serif font-bold mb-6 text-white">Privacy Policy</h1>
+          <div className="flex justify-center mb-6">
+            <img src="/favicon-192x192.png" alt="GoalMania" className="w-16 h-16 rounded-xl" />
+          </div>
+          <h1 className="text-5xl font-serif font-bold mb-6 text-white">GoalMania Privacy Policy</h1>
           <p className="text-xl text-white/60 max-w-3xl mx-auto">
-            Your privacy is important to us. This policy explains how we collect, use, and protect your personal information.
+            Your privacy is important to us. This policy explains how GoalMania collects, uses, and protects your personal information.
           </p>
         </div>
 
