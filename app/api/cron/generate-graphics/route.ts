@@ -6,6 +6,8 @@ import ProcessedGraphic from "@/lib/models/ProcessedGraphic";
 export const maxDuration = 60;
 export const runtime = "nodejs";
 
+const CANVA_API = "https://api.canva.com/rest/v1";
+const CANVA_TEMPLATE_ID = process.env.CANVA_BRAND_TEMPLATE_ID || "DAHFzVWbliw";
 const TELEGRAM_API = "https://api.telegram.org/bot";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://goal-mania.it";
 
@@ -21,210 +23,172 @@ function articleUrl(slug: string, category: string): string {
   return `${SITE_URL}/${path}/${slug}`;
 }
 
-// ─── HTML template — replica 1:1 del design Canva GoalMania ─────────────────
-// Design: foto full-bleed, logo GM top-left, gradient overlay bottom, testo
-// bianco uppercase con parole-chiave in lime (#c8f000), stile Bebas Neue.
-function buildHtml(title: string, imageUrl: string): string {
-  const MAX = 100;
-  const raw = title.length > MAX ? title.slice(0, MAX - 1) + "…" : title;
-  const titleUpper = raw.toUpperCase();
+// ─── Canva OAuth: ottieni access token dal refresh token ──────────────────────
+async function getCanvaAccessToken(): Promise<string> {
+  const clientId = process.env.CANVA_CLIENT_ID;
+  const clientSecret = process.env.CANVA_CLIENT_SECRET;
+  const refreshToken = process.env.CANVA_REFRESH_TOKEN;
 
-  // Evidenzia le prime 2-3 parole "forti" in lime, resto in bianco
-  const words = titleUpper.split(" ");
-  // Troviamo lo split: prime parole fino a ~20 char in lime, resto bianco
-  let limeCount = 0;
-  let charCount = 0;
-  for (let i = 0; i < words.length; i++) {
-    charCount += words[i].length + 1;
-    limeCount = i + 1;
-    if (charCount >= 18 || i >= 2) break;
-  }
-  const limePart = words.slice(0, limeCount).join(" ");
-  const whitePart = words.slice(limeCount).join(" ");
-
-  return `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=block" rel="stylesheet">
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    width: 1080px;
-    height: 1350px;
-    overflow: hidden;
-    background: #0a0a0a;
-    position: relative;
-    font-family: 'Bebas Neue', sans-serif;
+  if (!clientId || !clientSecret || !refreshToken) {
+    throw new Error("Canva credentials missing: CANVA_CLIENT_ID, CANVA_CLIENT_SECRET, CANVA_REFRESH_TOKEN");
   }
 
-  /* ── Foto full-bleed ── */
-  .photo {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
-  .photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    display: block;
-  }
-
-  /* ── Gradient overlay bottom ── */
-  .overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 620px;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(0,0,0,0.55) 25%,
-      rgba(0,0,0,0.88) 55%,
-      rgba(0,0,0,0.97) 100%
-    );
-  }
-
-  /* ── Logo GM top-left ── */
-  .logo {
-    position: absolute;
-    top: 40px;
-    left: 40px;
-    width: 90px;
-    height: 90px;
-  }
-  .logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  /* ── Contenitore testo bottom ── */
-  .text-block {
-    position: absolute;
-    bottom: 60px;
-    left: 50px;
-    right: 50px;
-  }
-
-  /* ── Label "GOAL-MANIA.IT" ── */
-  .label {
-    display: inline-block;
-    background: #c8f000;
-    color: #000;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 3px;
-    padding: 4px 14px 2px;
-    margin-bottom: 18px;
-    border-radius: 3px;
-  }
-
-  /* ── Titolo ── */
-  .title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 82px;
-    line-height: 1.05;
-    letter-spacing: 2.5px;
-    word-break: break-word;
-  }
-  .title .lime { color: #c8f000; }
-  .title .white { color: #ffffff; }
-
-  /* ── Linea decorativa ── */
-  .deco-line {
-    margin-top: 24px;
-    width: 80px;
-    height: 4px;
-    background: #c8f000;
-    border-radius: 2px;
-  }
-</style>
-</head>
-<body>
-  <div class="photo">
-    <img src="${imageUrl}" alt="" crossorigin="anonymous" />
-  </div>
-
-  <div class="overlay"></div>
-
-  <div class="logo">
-    <img src="https://goal-mania.it/images/recentUpdate/desktop-logo.png" alt="GM" crossorigin="anonymous" />
-  </div>
-
-  <div class="text-block">
-    <div class="label">GOAL-MANIA.IT</div>
-    <div class="title">
-      <span class="lime">${limePart}</span>${whitePart ? ' <span class="white">' + whitePart + '</span>' : ''}
-    </div>
-    <div class="deco-line"></div>
-  </div>
-</body>
-</html>`;
-}
-
-// ─── Genera PNG con Puppeteer ─────────────────────────────────────────────────
-async function generateGraphicBuffer(title: string, imageUrl: string): Promise<Buffer> {
-  // Dynamic import per compatibilità Vercel serverless
-  const chromium = (await import("@sparticuz/chromium-min")).default;
-  const puppeteer = (await import("puppeteer-core")).default;
-
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: { width: 1080, height: 1350 },
-    executablePath: await chromium.executablePath(
-      "https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar"
-    ),
-    headless: true,
+  const res = await fetch(`${CANVA_API}/oauth/token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token: refreshToken,
+      client_id: clientId,
+      client_secret: clientSecret,
+    }),
   });
 
-  try {
-    const page = await browser.newPage();
-    await page.setViewport({ width: 1080, height: 1350, deviceScaleFactor: 1 });
-
-    const html = buildHtml(title, imageUrl);
-    await page.setContent(html, { waitUntil: "load", timeout: 30000 });
-    // Extra wait for fonts to load
-    await new Promise((r) => setTimeout(r, 2500));
-
-    // Aspetta che il font Bebas Neue sia caricato
-    await page.evaluateHandle("document.fonts.ready");
-
-    const screenshot = await page.screenshot({
-      type: "png",
-      clip: { x: 0, y: 0, width: 1080, height: 1350 },
-    });
-
-    return Buffer.from(screenshot);
-  } finally {
-    await browser.close();
-  }
+  const data = await res.json();
+  if (!data.access_token) throw new Error(`Canva token error: ${JSON.stringify(data)}`);
+  return data.access_token;
 }
 
-// ─── Invia su Telegram ────────────────────────────────────────────────────────
-async function sendToTelegram(imageBuffer: Buffer, caption: string): Promise<number | undefined> {
+// ─── Canva: carica immagine come asset ────────────────────────────────────────
+async function uploadImageToCanva(imageUrl: string, token: string): Promise<string> {
+  const imgRes = await fetch(imageUrl);
+  if (!imgRes.ok) throw new Error(`Failed to fetch image: ${imageUrl}`);
+  const imgBuffer = await imgRes.arrayBuffer();
+  const contentType = imgRes.headers.get("content-type") || "image/jpeg";
+
+  const res = await fetch(`${CANVA_API}/assets`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": contentType,
+      "Asset-Name": "article-photo",
+    },
+    body: imgBuffer,
+  });
+
+  const data = await res.json();
+  // Canva può rispondere con job asincrono — aspettiamo se necessario
+  if (data.asset?.id) return data.asset.id;
+  if (data.job?.id) {
+    // Polling fino a completamento
+    return await pollCanvaAssetJob(data.job.id, token);
+  }
+  throw new Error(`Canva upload error: ${JSON.stringify(data)}`);
+}
+
+async function pollCanvaAssetJob(jobId: string, token: string): Promise<string> {
+  for (let i = 0; i < 20; i++) {
+    await new Promise((r) => setTimeout(r, 1500));
+    const res = await fetch(`${CANVA_API}/assets/${jobId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    if (data.asset?.id) return data.asset.id;
+    if (data.job?.status === "failed") throw new Error("Canva asset upload failed");
+  }
+  throw new Error("Canva asset upload timed out");
+}
+
+// ─── Canva: crea design via autofill dal brand template ───────────────────────
+async function createAutofillJob(
+  title: string,
+  assetId: string,
+  token: string
+): Promise<string> {
+  const res = await fetch(`${CANVA_API}/autofills`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      brand_template_id: CANVA_TEMPLATE_ID,
+      title: `GoalMania - ${title.slice(0, 50)}`,
+      data: {
+        // I nomi "title" e "photo" devono corrispondere alle etichette
+        // "Connected Data" configurate nel template Canva
+        title: { type: "text", text: title.toUpperCase() },
+        photo: { type: "image", asset_id: assetId },
+      },
+    }),
+  });
+
+  const data = await res.json();
+  if (!data.job?.id) throw new Error(`Canva autofill error: ${JSON.stringify(data)}`);
+  return data.job.id;
+}
+
+async function pollAutofillJob(jobId: string, token: string): Promise<string> {
+  for (let i = 0; i < 30; i++) {
+    await new Promise((r) => setTimeout(r, 2000));
+    const res = await fetch(`${CANVA_API}/autofills/${jobId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    if (data.job?.status === "success" && data.job?.result?.design?.id) {
+      return data.job.result.design.id;
+    }
+    if (data.job?.status === "failed") throw new Error(`Canva autofill job failed: ${JSON.stringify(data)}`);
+  }
+  throw new Error("Canva autofill job timed out");
+}
+
+// ─── Canva: esporta design come PNG ──────────────────────────────────────────
+async function exportDesign(designId: string, token: string): Promise<string> {
+  const res = await fetch(`${CANVA_API}/exports`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      design_id: designId,
+      format: {
+        type: "png",
+        export_quality: "regular",
+        pages: [1],
+      },
+    }),
+  });
+
+  const data = await res.json();
+  if (!data.job?.id) throw new Error(`Canva export error: ${JSON.stringify(data)}`);
+
+  // Polling export
+  for (let i = 0; i < 30; i++) {
+    await new Promise((r) => setTimeout(r, 2000));
+    const poll = await fetch(`${CANVA_API}/exports/${data.job.id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const pollData = await poll.json();
+    if (pollData.job?.status === "success") {
+      const url = pollData.job?.result?.urls?.[0];
+      if (url) return url;
+    }
+    if (pollData.job?.status === "failed") throw new Error("Canva export failed");
+  }
+  throw new Error("Canva export timed out");
+}
+
+// ─── Telegram: scarica PNG e invia ───────────────────────────────────────────
+async function sendToTelegram(pngUrl: string, caption: string): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID || "594028829";
-
   if (!token) throw new Error("TELEGRAM_BOT_TOKEN not set");
+
+  // Scarica il PNG da Canva
+  const imgRes = await fetch(pngUrl);
+  const imgBuffer = await imgRes.arrayBuffer();
 
   const formData = new FormData();
   formData.append("chat_id", chatId);
   formData.append("caption", caption);
   formData.append("parse_mode", "HTML");
-  formData.append("photo", new Blob([imageBuffer], { type: "image/png" }), "graphic.png");
+  formData.append("photo", new Blob([imgBuffer], { type: "image/png" }), "graphic.png");
 
   const res = await fetch(`${TELEGRAM_API}${token}/sendPhoto`, { method: "POST", body: formData });
   const data = await res.json();
-  if (!data.ok) throw new Error(`Telegram API error: ${JSON.stringify(data)}`);
-  return data.result?.message_id;
+  if (!data.ok) throw new Error(`Telegram error: ${JSON.stringify(data)}`);
 }
 
 // ─── Handler principale ───────────────────────────────────────────────────────
@@ -243,7 +207,7 @@ export async function GET(req: NextRequest) {
   try {
     await connectDB();
 
-    // ── Lightweight: mark one article as processed (called by the agent) ──
+    // ── Mark article as processed ──
     if (markDone) {
       const body = await req.json().catch(() => ({}));
       const articleId = body.id as string;
@@ -256,7 +220,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ ok: true });
     }
 
-    // ── Lightweight: return unprocessed articles from last 3h (for the agent) ──
+    // ── Lista articoli pendenti ──
     if (listPending) {
       const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
       const recent = await Article.find({ status: "published", publishedAt: { $gte: threeHoursAgo } })
@@ -271,9 +235,10 @@ export async function GET(req: NextRequest) {
       const pending = recent
         .filter((a) => !doneSet.has(String(a._id)))
         .map((a) => {
-          const img = (a.images as { url: string; isMain?: boolean }[])?.find((i) => i.isMain)?.url
-            || (a.images as { url: string }[])?.[0]?.url
-            || (a.image as string) || "";
+          const img =
+            (a.images as { url: string; isMain?: boolean }[])?.find((i) => i.isMain)?.url ||
+            (a.images as { url: string }[])?.[0]?.url ||
+            (a.image as string) || "";
           return {
             id: String(a._id),
             title: a.title,
@@ -285,15 +250,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(pending);
     }
 
-    // ── Il flusso Puppeteer è disabilitato. Le grafiche vengono generate
-    // ── esclusivamente tramite Canva MCP dall'agente schedulato.
-    // ── Usa ?list=pending per ottenere gli articoli da processare.
-    return NextResponse.json({
-      ok: false,
-      message: "Direct generation disabled. Use ?list=pending to get articles, then generate via Canva MCP.",
-    });
-
-    // eslint-disable-next-line no-unreachable
+    // ── Generazione grafica via Canva REST API ──
     const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
     const dateFilter = isTest ? {} : { publishedAt: { $gte: threeHoursAgo } };
 
@@ -304,14 +261,13 @@ export async function GET(req: NextRequest) {
       .lean();
 
     if (!recentArticles.length) {
-      return NextResponse.json({ ok: true, message: "No new articles in the last 3 hours" });
+      return NextResponse.json({ ok: true, message: "No new articles" });
     }
 
     const processedIds = isTest
       ? []
       : await ProcessedGraphic.find({ articleId: { $in: recentArticles.map((a) => String(a._id)) } })
-          .select("articleId")
-          .lean();
+          .select("articleId").lean();
 
     const processedSet = new Set(processedIds.map((p) => p.articleId));
     const toProcess = isTest
@@ -322,29 +278,37 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ ok: true, message: "All recent articles already processed" });
     }
 
+    const token = await getCanvaAccessToken();
     const results: Array<{ slug: string; status: "sent" | "error"; error?: string }> = [];
 
     for (const article of toProcess) {
       try {
-        const rawImageUrl: string =
+        const rawImage: string =
           (article.images as { url: string; isMain?: boolean }[])?.find((img) => img.isMain)?.url ||
           (article.images as { url: string }[])?.[0]?.url ||
-          (article.image as string) ||
-          "";
+          (article.image as string) || "";
+        const imageUrl = rawImage.startsWith("http") ? rawImage : `${SITE_URL}${rawImage}`;
 
-        const imageUrl = rawImageUrl.startsWith("http") ? rawImageUrl : `${SITE_URL}${rawImageUrl}`;
-        const imageBuffer = await generateGraphicBuffer(article.title as string, imageUrl);
+        // 1. Upload immagine su Canva
+        const assetId = await uploadImageToCanva(imageUrl, token);
 
+        // 2. Crea design via autofill
+        const autofillJobId = await createAutofillJob(article.title as string, assetId, token);
+        const designId = await pollAutofillJob(autofillJobId, token);
+
+        // 3. Esporta PNG
+        const pngUrl = await exportDesign(designId, token);
+
+        // 4. Invia su Telegram
         const artUrl = articleUrl(article.slug as string, article.category as string);
-        const caption = `⚽ <b>${article.title}</b>\n\n📖 ${artUrl}`;
-        const messageId = await sendToTelegram(imageBuffer, caption);
+        await sendToTelegram(pngUrl, `⚽ <b>${article.title}</b>\n\n📖 ${artUrl}`);
 
+        // 5. Segna come processato
         if (!isTest) {
           await ProcessedGraphic.create({
             articleId: String(article._id),
             articleSlug: article.slug,
             sentAt: new Date(),
-            telegramMessageId: messageId,
           });
         }
 
