@@ -7,7 +7,7 @@ export const maxDuration = 60;
 export const runtime = "nodejs";
 
 const CANVA_API = "https://api.canva.com/rest/v1";
-const CANVA_TEMPLATE_ID = process.env.CANVA_BRAND_TEMPLATE_ID || "DAHFzVWbliw";
+const CANVA_TEMPLATE_ID = process.env.CANVA_BRAND_TEMPLATE_ID || "EAHL-NtrmqE";
 const TELEGRAM_API = "https://api.telegram.org/bot";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://goal-mania.it";
 
@@ -49,42 +49,34 @@ async function getCanvaAccessToken(): Promise<string> {
   return data.access_token;
 }
 
-// ─── Canva: carica immagine come asset ────────────────────────────────────────
+// ─── Canva: carica immagine come asset da URL pubblico ───────────────────────
 async function uploadImageToCanva(imageUrl: string, token: string): Promise<string> {
-  const imgRes = await fetch(imageUrl);
-  if (!imgRes.ok) throw new Error(`Failed to fetch image: ${imageUrl}`);
-  const imgBuffer = await imgRes.arrayBuffer();
-  const contentType = imgRes.headers.get("content-type") || "image/jpeg";
+  const fileName = imageUrl.split("/").pop()?.split("?")[0]?.slice(0, 50) || "article-photo.jpg";
 
-  const res = await fetch(`${CANVA_API}/assets`, {
+  const res = await fetch(`${CANVA_API}/url-asset-uploads`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": contentType,
-      "Asset-Name": "article-photo",
+      "Content-Type": "application/json",
     },
-    body: imgBuffer,
+    body: JSON.stringify({ name: fileName, url: imageUrl }),
   });
 
   const data = await res.json();
-  // Canva può rispondere con job asincrono — aspettiamo se necessario
-  if (data.asset?.id) return data.asset.id;
-  if (data.job?.id) {
-    // Polling fino a completamento
-    return await pollCanvaAssetJob(data.job.id, token);
-  }
-  throw new Error(`Canva upload error: ${JSON.stringify(data)}`);
+  if (!data.job?.id) throw new Error(`Canva upload error: ${JSON.stringify(data)}`);
+
+  return await pollCanvaAssetJob(data.job.id, token);
 }
 
 async function pollCanvaAssetJob(jobId: string, token: string): Promise<string> {
   for (let i = 0; i < 20; i++) {
-    await new Promise((r) => setTimeout(r, 1500));
-    const res = await fetch(`${CANVA_API}/assets/${jobId}`, {
+    await new Promise((r) => setTimeout(r, 2000));
+    const res = await fetch(`${CANVA_API}/url-asset-uploads/${jobId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();
-    if (data.asset?.id) return data.asset.id;
-    if (data.job?.status === "failed") throw new Error("Canva asset upload failed");
+    if (data.job?.status === "success" && data.job?.asset?.id) return data.job.asset.id;
+    if (data.job?.status === "failed") throw new Error(`Canva asset upload failed: ${JSON.stringify(data)}`);
   }
   throw new Error("Canva asset upload timed out");
 }
