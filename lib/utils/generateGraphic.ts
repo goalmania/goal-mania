@@ -90,44 +90,47 @@ export async function generateGraphic(
   const fontSize = calcFontSize(titleUpper);
   const lineHeight = 1.25;
 
-  const textSvg = await satori(
-    {
-      type: "div",
-      props: {
-        style: {
-          width: TEXT_W,
-          height: TEXT_H,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "transparent",
-        },
-        children: [
-          {
-            type: "div",
-            props: {
-              style: {
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "100%",
-                color: TEXT_COLOR,
-                fontSize,
-                fontWeight: 700,
-                fontFamily: "Oswald",
-                textAlign: "center",
-                lineHeight,
-                letterSpacing: "0.02em",
-                wordBreak: "break-word",
-                padding: "0 16px",
-              },
-              children: titleUpper,
-            },
-          },
-        ],
+  // satori accetta VDOM grezzo ma TypeScript vuole ReactNode — cast necessario
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const satoriNode = {
+    type: "div",
+    props: {
+      style: {
+        width: TEXT_W,
+        height: TEXT_H,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "transparent",
       },
+      children: [
+        {
+          type: "div",
+          props: {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              color: TEXT_COLOR,
+              fontSize,
+              fontWeight: 700,
+              fontFamily: "Oswald",
+              textAlign: "center",
+              lineHeight,
+              letterSpacing: "0.02em",
+              wordBreak: "break-word",
+              padding: "0 16px",
+            },
+            children: titleUpper,
+          },
+        },
+      ],
     },
+  } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  const textSvg = await satori(
+    satoriNode,
     {
       width: TEXT_W,
       height: TEXT_H,
