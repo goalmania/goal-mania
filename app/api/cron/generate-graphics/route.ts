@@ -81,12 +81,13 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(pending);
     }
 
-    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-    const dateFilter = isTest ? {} : { publishedAt: { $gte: oneHourAgo } };
+    // Finestra 24h per recuperare articoli anche se il cron ha saltato dei run
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const dateFilter = isTest ? {} : { publishedAt: { $gte: oneDayAgo } };
 
     const recentArticles = await Article.find({ status: "published", ...dateFilter })
       .sort({ publishedAt: -1 })
-      .limit(isTest ? 5 : 50)
+      .limit(isTest ? 5 : 100)
       .select("_id title image images slug category publishedAt")
       .lean();
 
@@ -112,7 +113,7 @@ export async function GET(req: NextRequest) {
         const imgUrl = rawImg.startsWith("http") ? rawImg : `${SITE_URL}${rawImg}`;
         return imgUrl.startsWith("http") && !imgUrl.endsWith("/images/image.png");
       })
-      .slice(0, 1);
+      .slice(0, isTest ? 1 : 3);
 
     if (!toProcess.length) {
       return NextResponse.json({ ok: true, message: "No processable articles (missing valid image)" });
