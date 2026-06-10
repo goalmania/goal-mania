@@ -46,3 +46,4 @@ next-env.d.ts
 
 # Local uploads
 /public/uploads
+.env*

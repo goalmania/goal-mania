@@ -19,6 +19,7 @@ import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import { useI18n } from "@/lib/hooks/useI18n";
 import { useTrackEvent } from "@/components/analytics/AnalyticsTracker";
+import { trackFbq } from "@/lib/utils/fbq";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface PatchObject {
@@ -369,6 +370,13 @@ export default function ProductDetailClient({
       productSlug: product.slug || product._id,
       value: totalPrice,
     });
+    trackFbq("AddToCart", {
+      content_ids: [product._id],
+      content_name: product.title,
+      content_type: "product",
+      value: totalPrice,
+      currency: "EUR",
+    });
   };
 
   const handleBuyNow = () => {
@@ -383,6 +391,13 @@ export default function ProductDetailClient({
       productId: product._id,
       productSlug: product.slug || product._id,
       value: totalPrice,
+    });
+    trackFbq("InitiateCheckout", {
+      content_ids: [product._id],
+      content_name: product.title,
+      value: totalPrice,
+      currency: "EUR",
+      num_items: 1,
     });
     router.push("/checkout");
   };

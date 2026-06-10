@@ -248,14 +248,12 @@ export default async function InternationalArticlePage({
           />
         </div>
 
-        {/* Article content */}
+        {/* Article content with jersey ad after first paragraph */}
         <ArticleContent
           content={article.content}
           className="prose prose-lg max-w-none mb-8 text-white"
+          adSlot={<JerseyAdBlock jerseyId={article.featuredJerseyId} teamHint={teamHint} />}
         />
-
-        {/* Jersey popup — maglia della squadra dell'articolo */}
-        <JerseyAdBlock jerseyId={article.featuredJerseyId} teamHint={teamHint} />
 
         {/* AdSense — in-article */}
         <AdSenseUnit position="in-article" className="my-8" />

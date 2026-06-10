@@ -202,9 +202,9 @@ export default function RootLayout({
         {/* Google AdSense — verifica proprietà sito */}
         <meta name="google-adsense-account" content="ca-pub-1255454616752120" />
         {/* Favicon with cache busting */}
-        <link rel="icon" type="image/png" sizes="192x192" href="/icon.png?v=2" />
-        <link rel="shortcut icon" href="/icon.png?v=2" />
-        <link rel="apple-touch-icon" sizes="192x192" href="/apple-icon.png?v=2" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icon.png?v=3" />
+        <link rel="shortcut icon" href="/icon.png?v=3" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/apple-icon.png?v=3" />
         {/* Resource hints to improve LCP/FCP */}
         {/* Facebook Pixel */}
         <link rel="preconnect" href="https://connect.facebook.net" />

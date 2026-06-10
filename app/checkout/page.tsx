@@ -38,6 +38,7 @@ import { refreshUserSession } from "@/lib/utils/session";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 import React from "react";
 import { useTrackEvent } from "@/components/analytics/AnalyticsTracker";
+import { trackFbq } from "@/lib/utils/fbq";
 
 const PaymentStep = dynamic(() => import("./PaymentStep"), { ssr: false });
 
@@ -278,6 +279,7 @@ export default function CheckoutPage() {
   const trackEvent = useTrackEvent();
   const hasRefreshedRef = useRef(false);
   const [sessionRefreshed, setSessionRefreshed] = useState(false);
+  const [cartMounted, setCartMounted] = useState(false);
 
   const cartItems = useMemo(
     () =>
@@ -331,9 +333,12 @@ export default function CheckoutPage() {
     }
   }, [session?.user?.id, updateSession]);
 
+  useEffect(() => { setCartMounted(true); }, []);
+
   useEffect(() => {
+    if (!cartMounted) return;
     if (items.length === 0 && !paymentSuccess) router.push("/cart");
-  }, [items.length, router, paymentSuccess]);
+  }, [cartMounted, items.length, router, paymentSuccess]);
 
   useEffect(() => {
     if (session?.user) fetchAddresses();
@@ -504,6 +509,12 @@ export default function CheckoutPage() {
       .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
       .then((data) => {
         trackEvent("purchase", { value: total });
+        trackFbq("Purchase", {
+          value: total,
+          currency: "EUR",
+          content_ids: items.map((i) => i.id),
+          num_items: items.reduce((n, i) => n + i.quantity, 0),
+        });
         clearCart();
         if (appliedCoupon) {
           return fetch("/api/coupons/apply", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ couponId: appliedCoupon.couponId }) });

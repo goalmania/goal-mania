@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { ShieldCheck, Truck, RotateCcw, BadgeCheck, Zap, Star, ArrowRight, Package } from "lucide-react";
 import { useTrackEvent } from "@/components/analytics/AnalyticsTracker";
+import { trackFbq } from "@/lib/utils/fbq";
 
 const FREE_SHIPPING_THRESHOLD = 0; // spedizione sempre gratuita
 
@@ -64,6 +65,12 @@ export default function CartPage() {
     setIsCheckingOut(true);
     try {
       trackEvent("checkout_start", { value: getTotal() });
+      trackFbq("InitiateCheckout", {
+        value: getTotal(),
+        currency: "EUR",
+        num_items: items.reduce((n, i) => n + i.quantity, 0),
+        content_ids: items.map((i) => i.id),
+      });
       router.push("/checkout");
     } catch (error) {
       console.error("Checkout failed:", error);

@@ -8,17 +8,30 @@ export interface User {
   updatedAt: Date;
 }
 
+// Matches the Mongoose Product model and IProduct in lib/types/product.ts
 export interface Product {
-  id: string;
-  name: string;
+  _id: string;
+  slug?: string;
+  title: string;
   description: string;
-  price: number;
+  basePrice: number;
+  retroPrice?: number;
+  shippingPrice: number;
+  stockQuantity: number;
   images: string[];
+  videos?: string[];
   category: string;
-  vendor: string;
-  stock: number;
-  ratings: Rating[];
-  reviews: Review[];
+  isActive: boolean;
+  feature: boolean;
+  isRetro: boolean;
+  isMysteryBox: boolean;
+  isWorldCup: boolean;
+  nationalTeam?: string;
+  hasLongSleeve: boolean;
+  longSleevePriceAddon: number;
+  allowsNameOnShirt: boolean;
+  allowsNumberOnShirt: boolean;
+  averageRating: number;
   createdAt: Date;
   updatedAt: Date;
 }

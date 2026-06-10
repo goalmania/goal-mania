@@ -124,15 +124,13 @@ function extractTeamFromTitle(title: string): string | undefined {
 function splitContentForAd(content: string): string[] {
   const isHtml = content.trim().startsWith("<");
   if (isHtml) {
-    const parts = content.split(/(?<=<\/p>)/);
-    if (parts.length <= 2) return [content, ""];
-    const mid = Math.floor(parts.length / 2);
-    return [parts.slice(0, mid).join(""), parts.slice(mid).join("")];
+    const firstPEnd = content.indexOf("</p>");
+    if (firstPEnd === -1) return [content, ""];
+    return [content.slice(0, firstPEnd + 4), content.slice(firstPEnd + 4)];
   }
   const paragraphs = content.split("\n\n");
-  if (paragraphs.length <= 2) return [content, ""];
-  const mid = Math.floor(paragraphs.length / 2);
-  return [paragraphs.slice(0, mid).join("\n\n"), paragraphs.slice(mid).join("\n\n")];
+  if (paragraphs.length <= 1) return [content, ""];
+  return [paragraphs[0], paragraphs.slice(1).join("\n\n")];
 }
 
 async function getRelatedArticles(articleId: string, title: string) {
