@@ -103,7 +103,8 @@ const formatDate = (dateString: string) => {
 // Schema for order data
 const orderSchema = z.object({
   _id: z.string(),
-  userId: z.string(),
+  userId: z.string().optional(),
+  guestEmail: z.string().optional(),
   items: z.array(z.object({
     name: z.string(),
     price: z.number(),
@@ -1303,11 +1304,19 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label className="text-sm font-medium text-white/70">Name</Label>
-                      <p className="text-sm">{users[selectedOrder.userId]?.name || 'Loading...'}</p>
+                      <p className="text-sm">
+                        {selectedOrder.userId
+                          ? (users[selectedOrder.userId]?.name || 'Loading...')
+                          : (selectedOrder.shippingAddress?.fullName || 'Ospite')}
+                      </p>
                     </div>
                     <div>
                       <Label className="text-sm font-medium text-white/70">Email</Label>
-                      <p className="text-sm">{users[selectedOrder.userId]?.email || 'Loading...'}</p>
+                      <p className="text-sm">
+                        {selectedOrder.userId
+                          ? (users[selectedOrder.userId]?.email || 'Loading...')
+                          : (selectedOrder.guestEmail || '-')}
+                      </p>
                     </div>
                                          <div>
                        <Label className="text-sm font-medium text-white/70">Order Date</Label>

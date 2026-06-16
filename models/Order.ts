@@ -25,17 +25,20 @@ export interface OrderItem {
 }
 
 export interface IOrder extends Document {
-  userId: string;
+  userId?: string;
+  guestEmail?: string;
   items: OrderItem[];
   amount: number;
   status: string;
   createdAt: Date;
   shippingAddress?: {
-    street: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    country: string;
+    street?: string;
+    city?: string;
+    state?: string;
+    postalCode?: string;
+    country?: string;
+    fullName?: string;
+    phone?: string;
   };
   paymentIntentId?: string;
   cancelledAt?: Date;
@@ -53,7 +56,8 @@ export interface IOrder extends Document {
 }
 
 const OrderSchema = new Schema<IOrder>({
-  userId: { type: String, required: true },
+  userId: { type: String, required: false },
+  guestEmail: { type: String },
   items: [
     {
       name: { type: String, required: true },
@@ -95,6 +99,8 @@ const OrderSchema = new Schema<IOrder>({
     state: String,
     postalCode: String,
     country: String,
+    fullName: String,
+    phone: String,
   },
   paymentIntentId: { type: String },
   cancelledAt: { type: Date },

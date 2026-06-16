@@ -90,88 +90,92 @@ export async function POST(req: NextRequest) {
 // Helper function to handle successful payments
 async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
   try {
-    // Connect to the database
     await connectDB();
 
-    // Extract metadata from the payment intent
-    const { userId, addressId } = paymentIntent.metadata || {};
+    const { userId, addressId, guestEmail } = paymentIntent.metadata || {};
 
     if (!userId || !addressId) {
-      console.error(
-        "Missing required metadata in payment intent",
-        paymentIntent.metadata
-      );
+      console.error("Missing required metadata in payment intent", paymentIntent.metadata);
       return;
     }
 
-    // Get the full order details from our database
-    const orderDetails = await OrderDetails.findOne({
-      paymentIntentId: paymentIntent.id,
-    });
+    const isGuest = userId === "guest" || addressId === "guest";
 
+    const orderDetails = await OrderDetails.findOne({ paymentIntentId: paymentIntent.id });
     if (!orderDetails) {
-      console.error(
-        "Order details not found for payment intent:",
-        paymentIntent.id
-      );
+      console.error("Order details not found for payment intent:", paymentIntent.id);
       return;
     }
 
-    // Get items with full customization details
     const items = orderDetails.fullItems;
 
-    // Process items to ensure proper format for selectedPatches
     const processedItems = items.map((item: OrderItem) => {
-      // Deep clone the item to avoid mutations
       const processedItem = JSON.parse(JSON.stringify(item));
-
-      // If customization exists and has selectedPatches
-      if (
-        processedItem.customization &&
-        processedItem.customization.selectedPatches
-      ) {
-        // If selectedPatches is an array of strings, convert to proper objects
+      if (processedItem.customization?.selectedPatches) {
         processedItem.customization.selectedPatches =
           processedItem.customization.selectedPatches.map(
-            (
-              patch:
-                | string
-                | { id: string; name: string; image: string; price?: number }
-            ) => {
+            (patch: string | { id: string; name: string; image: string; price?: number }) => {
               if (typeof patch === "string") {
-                return {
-                  id: patch,
-                  name: patch,
-                  image: `/patches/${patch}.png`,
-                };
+                return { id: patch, name: patch, image: `/patches/${patch}.png` };
               }
               return patch;
             }
           );
       }
-
       return processedItem;
     });
 
-    // Get coupon data
     const coupon = orderDetails.couponData;
 
-    // Get user information (ensure plain object with expected fields)
-    const userDoc = await User.findById(userId).select("email name language");
-    const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
-    if (!user) {
-      console.error("User not found:", userId);
-      return;
+    // Resolve user/address differently for guest vs registered
+    let userEmail: string | null = null;
+    let userName: string | undefined;
+    let userLanguage = "it";
+    let shippingAddress: Record<string, string>;
+
+    if (isGuest) {
+      const guestAddr = orderDetails.guestAddress;
+      if (!guestAddr) {
+        console.error("Guest address not found in order details:", paymentIntent.id);
+        return;
+      }
+      userEmail = orderDetails.guestEmail || guestEmail || null;
+      userName = guestAddr.fullName;
+      shippingAddress = {
+        street: guestAddr.addressLine1 + (guestAddr.addressLine2 ? `, ${guestAddr.addressLine2}` : ""),
+        city: guestAddr.city || "",
+        state: guestAddr.state || "",
+        postalCode: guestAddr.postalCode || "",
+        country: guestAddr.country || "",
+        fullName: guestAddr.fullName || "",
+        phone: guestAddr.phone || "",
+      };
+    } else {
+      const userDoc = await User.findById(userId).select("email name language");
+      const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
+      if (!user) {
+        console.error("User not found:", userId);
+        return;
+      }
+      userEmail = user.email;
+      userName = user.name;
+      userLanguage = user.language || "it";
+
+      const address = await Address.findOne({ _id: addressId, userId }) as AddressType | null;
+      if (!address) {
+        console.error("Address not found for user:", addressId);
+        return;
+      }
+      shippingAddress = {
+        street: address.addressLine1 + (address.addressLine2 ? `, ${address.addressLine2}` : ""),
+        city: address.city,
+        state: address.state,
+        postalCode: address.postalCode,
+        country: address.country,
+      };
     }
 
-    // Get address directly from Address model
-    const address = await Address.findOne({ _id: addressId, userId });
-    if (!address) {
-      console.error("Address not found for user:", addressId);
-      return;
-    }
-
-    // Update product stock quantities
+    // Update product stock
     for (const item of processedItems) {
       if (item.productId) {
         await Product.findByIdAndUpdate(
@@ -182,81 +186,56 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
       }
     }
 
-    // Create new order
     const newOrder = new Order({
-      userId,
+      userId: isGuest ? null : userId,
+      guestEmail: isGuest ? userEmail : null,
       items: processedItems,
-      amount: paymentIntent.amount / 100, // Convert from cents to dollars/euros
-      status: "pending", // Default status is pending
-      shippingAddress: {
-        street:
-          address.addressLine1 +
-          (address.addressLine2 ? `, ${address.addressLine2}` : ""),
-        city: address.city,
-        state: address.state,
-        postalCode: address.postalCode,
-        country: address.country,
-      },
+      amount: paymentIntent.amount / 100,
+      status: "pending",
+      shippingAddress,
       paymentIntentId: paymentIntent.id,
-      coupon: coupon,
+      coupon,
     });
 
     await newOrder.save();
-    console.log("Order created successfully:", newOrder._id);
+    console.log("Order created successfully:", newOrder._id, isGuest ? "(guest)" : "(user)");
 
-    // Send order confirmation email
-    if (user && user.email) {
-      // Get user's preferred language (you can add this to user model later)
-      const userLanguage = user.language || 'it'; // Default to Italian
-      
-      const { subject, text, html } = await orderConfirmationTemplate({
-        userName: user.name,
-        orderId: newOrder._id.toString(),
-        amount: newOrder.amount,
-        items: processedItems,
-        language: userLanguage as 'it' | 'en',
-      });
-      await sendEmail({
-        to: user.email,
-        subject,
-        text,
-        html,
-      });
+    if (userEmail) {
+      try {
+        const { subject, text, html } = await orderConfirmationTemplate({
+          userName,
+          orderId: newOrder._id.toString(),
+          amount: newOrder.amount,
+          items: processedItems,
+          language: userLanguage as "it" | "en",
+        });
+        await sendEmail({ to: userEmail, subject, text, html });
+        console.log(`Order confirmation email sent to ${userEmail}`);
+      } catch (emailError) {
+        console.error("Error sending confirmation email:", emailError);
+      }
 
-      console.log(`Order confirmation email sent to ${user.email} for order ${newOrder._id}`);
-
-      // Send invoice email
       try {
         const invoiceNumber = `INV-${newOrder._id.toString().slice(-8).toUpperCase()}`;
-        const invoiceDate = new Date().toLocaleDateString('en-GB');
-
-        const { subject: invoiceSubject, text: invoiceText, html: invoiceHtml } = await invoiceTemplate({
-          userName: user.name,
+        const invoiceDate = new Date().toLocaleDateString("en-GB");
+        const { subject, text, html } = await invoiceTemplate({
+          userName,
           orderId: newOrder._id.toString(),
           amount: newOrder.amount,
           items: processedItems,
           invoiceNumber,
           invoiceDate,
           paymentMethod: "Credit Card",
-          language: userLanguage as 'it' | 'en',
+          language: userLanguage as "it" | "en",
         });
-
-        await sendEmail({
-          to: user.email,
-          subject: invoiceSubject,
-          text: invoiceText,
-          html: invoiceHtml,
-        });
-
-        console.log(`Invoice email sent to ${user.email} for order ${newOrder._id}`);
+        await sendEmail({ to: userEmail, subject, text, html });
+        console.log(`Invoice email sent to ${userEmail}`);
       } catch (invoiceError) {
         console.error("Error sending invoice email:", invoiceError);
-        // Don't fail the request if invoice email fails
       }
     }
   } catch (error) {
     console.error("Error handling successful payment:", error);
-    // Log the payment intent ID for debugging
     console.error("Failed payment intent ID:", paymentIntent.id);
   }
 }
