@@ -123,7 +123,12 @@ export async function POST(request: Request) {
       items: processedItems,
       amount: data.amount,
       status: "pending",
-      shippingAddress: data.shippingAddress || {},
+      shippingAddress: data.shippingAddress
+        ? {
+            ...data.shippingAddress,
+            street: data.shippingAddress.street || data.shippingAddress.addressLine1 || "",
+          }
+        : {},
       coupon: data.coupon || null,
     });
 

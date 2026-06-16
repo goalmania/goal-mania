@@ -130,11 +130,15 @@ const orderSchema = z.object({
   status: z.enum(["pending", "processing", "shipped", "delivered", "cancelled"]),
   createdAt: z.string(),
   shippingAddress: z.object({
-    street: z.string(),
-    city: z.string(),
-    state: z.string(),
-    postalCode: z.string(),
-    country: z.string(),
+    street: z.string().optional(),
+    addressLine1: z.string().optional(),
+    addressLine2: z.string().optional(),
+    fullName: z.string().optional(),
+    city: z.string().optional(),
+    state: z.string().optional(),
+    postalCode: z.string().optional(),
+    country: z.string().optional(),
+    phone: z.string().optional(),
   }).optional(),
   cancelledAt: z.string().optional(),
   cancelledBy: z.string().optional(),
@@ -1334,9 +1338,14 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                   </CardHeader>
                   <CardContent>
                     <address className="not-italic text-sm">
-                      {selectedOrder.shippingAddress.street}<br />
+                      {selectedOrder.shippingAddress.fullName && <>{selectedOrder.shippingAddress.fullName}<br /></>}
+                      {(selectedOrder.shippingAddress.street || selectedOrder.shippingAddress.addressLine1) && (
+                        <>{selectedOrder.shippingAddress.street || selectedOrder.shippingAddress.addressLine1}<br /></>
+                      )}
+                      {selectedOrder.shippingAddress.addressLine2 && <>{selectedOrder.shippingAddress.addressLine2}<br /></>}
                       {selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state} {selectedOrder.shippingAddress.postalCode}<br />
                       {selectedOrder.shippingAddress.country}
+                      {selectedOrder.shippingAddress.phone && <><br />{selectedOrder.shippingAddress.phone}</>}
                     </address>
                   </CardContent>
                 </Card>
