@@ -1,8 +1,41 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { NewsArticle } from "@/types/news";
 import { Calendar, Clock } from "lucide-react";
+
+const PLACEHOLDER = "/images/news-placeholder.jpg";
+
+function SafeImage({
+  src,
+  alt,
+  fill,
+  className,
+  sizes,
+  priority,
+}: {
+  src: string;
+  alt: string;
+  fill?: boolean;
+  className?: string;
+  sizes?: string;
+  priority?: boolean;
+}) {
+  const [imgSrc, setImgSrc] = useState(src || PLACEHOLDER);
+  return (
+    <Image
+      src={imgSrc}
+      alt={alt}
+      fill={fill}
+      className={className}
+      sizes={sizes}
+      priority={priority}
+      onError={() => setImgSrc(PLACEHOLDER)}
+    />
+  );
+}
 
 export type ArticleCardVariant = "hero" | "standard" | "compact" | "featured";
 
@@ -80,7 +113,7 @@ function HeroCard({ article, priority }: { article: NewsArticle; priority?: bool
       style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)", minHeight: "440px" }}
     >
       <div className="absolute inset-0">
-        <Image
+        <SafeImage
           src={article.image}
           alt={article.title}
           fill
@@ -148,7 +181,7 @@ function StandardCard({ article, priority }: { article: NewsArticle; priority?: 
       style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
     >
       <div className="relative overflow-hidden" style={{ height: "200px" }}>
-        <Image
+        <SafeImage
           src={article.image}
           alt={article.title}
           fill
@@ -211,7 +244,7 @@ function CompactCard({ article }: { article: NewsArticle }) {
       style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
     >
       <div className="relative w-20 h-16 rounded-lg overflow-hidden flex-shrink-0">
-        <Image
+        <SafeImage
           src={article.image}
           alt={article.title}
           fill
@@ -247,7 +280,7 @@ function FeaturedCard({ article, priority }: { article: NewsArticle; priority?: 
       style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
     >
       <div className="relative overflow-hidden" style={{ height: "280px" }}>
-        <Image
+        <SafeImage
           src={article.image}
           alt={article.title}
           fill
