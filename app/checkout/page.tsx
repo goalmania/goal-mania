@@ -289,7 +289,7 @@ export default function CheckoutPage() {
         price: item.price,
         quantity: item.quantity,
         image: item.image,
-        category: undefined,
+        category: item.category,
       })),
     [items]
   );
@@ -319,7 +319,8 @@ export default function CheckoutPage() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const prefetchingRef = useRef(false);
 
-  const subtotal = getTotal();
+  // Subtotale lordo — NON usare getTotal() che già sottrae i discount rules
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const couponDiscount = appliedCoupon ? (subtotal * appliedCoupon.discountPercentage) / 100 : 0;
   const discountRulesAmount = appliedDiscountRules.reduce((sum: number, rule: any) => sum + rule.discountAmount, 0);
   const totalDiscountAmount = couponDiscount + discountRulesAmount;
@@ -532,6 +533,9 @@ export default function CheckoutPage() {
 
   const handleApplyCoupon = (discountPercentage: number, couponId: string, code: string) => {
     setAppliedCoupon({ discountPercentage, couponId, code });
+    // Reset Stripe client secret — il totale è cambiato, il prefetch è stale
+    setClientSecret("");
+    prefetchingRef.current = false;
   };
 
   // ── Loading state ──────────────────────────────────────────────────────────
@@ -906,6 +910,7 @@ export default function CheckoutPage() {
                     items={items}
                     addressId={selectedAddressId || ""}
                     coupon={appliedCoupon}
+                    discountRules={appliedDiscountRules}
                     guestEmail={checkoutMode === "guest" ? guestEmail : undefined}
                     shippingAddress={checkoutMode === "guest" ? guestAddress : addresses.find(a => a._id === selectedAddressId)}
                   />
@@ -943,7 +948,11 @@ export default function CheckoutPage() {
                 cartItems={cartItems}
                 isLoading={isLoading}
                 step={step}
-                onApplyDiscounts={applyDiscountRules}
+                onApplyDiscounts={(rules: any[]) => {
+                  applyDiscountRules(rules);
+                  setClientSecret("");
+                  prefetchingRef.current = false;
+                }}
                 onApplyCoupon={handleApplyCoupon}
               />
 

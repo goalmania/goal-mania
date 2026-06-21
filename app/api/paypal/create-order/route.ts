@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     const body = await req.json();
-    const { items, addressId, coupon, guestEmail, guestAddress } = body;
+    const { items, addressId, coupon, discountRules, guestEmail, guestAddress } = body;
 
     if (!items?.length) {
       return NextResponse.json({ error: "Nessun articolo nel carrello" }, { status: 400 });
@@ -75,9 +75,13 @@ export async function POST(req: NextRequest) {
       (sum: number, item: CartItem) => sum + item.price * item.quantity,
       0
     );
-    const discountAmount =
+    const couponDiscount =
       coupon?.discountPercentage ? (subtotal * coupon.discountPercentage) / 100 : 0;
-    const finalAmount = subtotal - discountAmount;
+    const discountRulesAmount = Array.isArray(discountRules)
+      ? discountRules.reduce((sum: number, r: { discountAmount: number }) => sum + (r.discountAmount || 0), 0)
+      : 0;
+    const discountAmount = couponDiscount + discountRulesAmount;
+    const finalAmount = Math.max(0, subtotal - discountAmount);
 
     // Ref ordine
     const reference = `GM-${Date.now()}`;

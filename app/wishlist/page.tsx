@@ -40,12 +40,14 @@ export default function WishlistPage() {
     name: string;
     price: number;
     image: string;
+    category?: string;
   }) => {
     addItem({
       id: item.id,
       name: item.name,
       price: item.price,
       image: item.image,
+      category: item.category,
     });
     removeItem(item.id);
     toast.success(`${item.name} moved to your cart`);

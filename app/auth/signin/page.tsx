@@ -53,7 +53,7 @@ function SignInContent() {
   }
 
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 p-10 gap-10 lg:gap-0 font-munish">
+    <div className="min-h-screen bg-[#0a0a0a] grid grid-cols-1 lg:grid-cols-2 p-10 gap-10 lg:gap-0 font-munish">
       {/* Image Left */}
       <div className="relative h-[60vh] lg:h-auto rounded-2xl">
         <div className="absolute   inset-0">
@@ -72,8 +72,8 @@ function SignInContent() {
           <h2 className=" text-start text-[57px] font-medium tracking-tight text-white">
             {t("auth.signIn")}
           </h2>
-          <p className=" text-[#131228] text-[22px] ">
-            Inserisci il numero di cellulare (most common)
+          <p className="text-white/50 text-[18px]">
+            Inserisci le tue credenziali per accedere
           </p>
         </div>
 
@@ -113,7 +113,7 @@ function SignInContent() {
                     type="email"
                     autoComplete="email"
                     required
-                    className="bg-[#0a0a0a] border-0 w-full py-2 border-b border-white/10  font-light rounded-none shadow-none pl-0 placeholder:text-white/30 text-white"
+                    className="bg-[#0a0a0a] border-0 w-full py-2 border-b border-white/20 font-light rounded-none shadow-none pl-0 placeholder:text-white/40 text-white focus:border-[#c8f000] focus:outline-none transition-colors"
                     placeholder={t("auth.emailPlaceholder")}
                   />
                 </div>
@@ -127,7 +127,7 @@ function SignInContent() {
                     type="password"
                     autoComplete="current-password"
                     required
-                    className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/10  placeholder:text-white/30 text-white font-light rounded-none shadow-none pl-0"
+                    className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/20 placeholder:text-white/40 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
                     placeholder={t("auth.passwordPlaceholder")}
                   />
                 </div>
@@ -170,7 +170,7 @@ function SignInContent() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="flex w-full justify-center rounded-full bg-[#c8f000] px-3 gap-1.5 py-2 text-sm font-medium  items-center text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c8f000] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex w-full justify-center rounded-full bg-[#c8f000] px-3 gap-1.5 py-2.5 text-sm font-semibold items-center text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c8f000] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? t("common.processing") : t("auth.signIn")}
                   <ArrowRight size={15} />
@@ -179,16 +179,18 @@ function SignInContent() {
             </form>
 
             <div className="mt-6">
-              <div className="relative flex justify-center text-sm">
-                <span className="bg-[#0a0a0a] px-2 text-white/50">
+              <div className="relative flex items-center text-sm">
+                <div className="flex-1 border-t border-white/10" />
+                <span className="bg-[#0a0a0a] px-3 text-white/40 whitespace-nowrap">
                   {t("auth.orContinueWith")}
                 </span>
+                <div className="flex-1 border-t border-white/10" />
               </div>
 
               <div className="mt-6">
                 <button
                   onClick={() => signIn("google", { callbackUrl: "/" })}
-                  className="flex w-full items-center justify-center gap-3 rounded-md bg-[#0a0a0a] px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-[#0a0a0a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c8f000] transition-colors"
+                  className="flex w-full items-center justify-center gap-3 rounded-md bg-[#1a1a1a] px-3 py-2.5 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-white/20 hover:bg-[#222222] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c8f000] transition-colors"
                 >
                   <Image
                     src="/images/contactImages/google.png"

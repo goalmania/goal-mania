@@ -10,12 +10,13 @@ interface PayPalButtonProps {
   items: any[];
   addressId: string;
   coupon: any;
+  discountRules?: any[];
   onSuccess: () => void;
   guestEmail?: string;
   guestAddress?: any;
 }
 
-export default function PayPalButton({ total, items, addressId, coupon, onSuccess, guestEmail, guestAddress }: PayPalButtonProps) {
+export default function PayPalButton({ total, items, addressId, coupon, discountRules, onSuccess, guestEmail, guestAddress }: PayPalButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [{ isPending, isRejected }] = usePayPalScriptReducer();
@@ -73,7 +74,7 @@ export default function PayPalButton({ total, items, addressId, coupon, onSucces
       const res = await fetch("/api/paypal/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, addressId, coupon, guestEmail, guestAddress }),
+        body: JSON.stringify({ items, addressId, coupon, discountRules, guestEmail, guestAddress }),
       });
       if (!res.ok) {
         const err = await res.json();

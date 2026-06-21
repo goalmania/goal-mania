@@ -188,8 +188,8 @@ function StripePayment({ clientSecret, total, onSuccess }: { clientSecret: strin
 // ── Metodi di pagamento ──────────────────────────────────────────────────────
 const SCALAPAY_ENABLED = !!process.env.NEXT_PUBLIC_SCALAPAY_ENABLED;
 
-function PaymentMethods({ clientSecret, total, onSuccess, items, addressId, coupon, guestEmail, shippingAddress }: {
-  clientSecret: string; total: number; onSuccess: () => void; items: any[]; addressId: string; coupon: any;
+function PaymentMethods({ clientSecret, total, onSuccess, items, addressId, coupon, discountRules, guestEmail, shippingAddress }: {
+  clientSecret: string; total: number; onSuccess: () => void; items: any[]; addressId: string; coupon: any; discountRules?: any[];
   guestEmail?: string; shippingAddress?: any;
 }) {
   const [selectedMethod, setSelectedMethod] = useState<"stripe" | "paypal" | "scalapay">(clientSecret ? "stripe" : "paypal");
@@ -228,7 +228,7 @@ function PaymentMethods({ clientSecret, total, onSuccess, items, addressId, coup
         ) : selectedMethod === "scalapay" ? (
           <ScalapayButton total={total} items={items} guestEmail={guestEmail} shippingAddress={shippingAddress} />
         ) : (
-          <PayPalButton total={total} items={items} addressId={addressId} coupon={coupon} onSuccess={onSuccess} guestEmail={guestEmail} guestAddress={shippingAddress} />
+          <PayPalButton total={total} items={items} addressId={addressId} coupon={coupon} discountRules={discountRules} onSuccess={onSuccess} guestEmail={guestEmail} guestAddress={shippingAddress} />
         )}
       </div>
     </div>
@@ -236,18 +236,18 @@ function PaymentMethods({ clientSecret, total, onSuccess, items, addressId, coup
 }
 
 // ── Export principale ────────────────────────────────────────────────────────
-export default function PaymentStep({ clientSecret, total, onSuccess, items, addressId, coupon, guestEmail, shippingAddress }: {
-  clientSecret: string; total: number; onSuccess: () => void; items: any[]; addressId: string; coupon: any;
+export default function PaymentStep({ clientSecret, total, onSuccess, items, addressId, coupon, discountRules, guestEmail, shippingAddress }: {
+  clientSecret: string; total: number; onSuccess: () => void; items: any[]; addressId: string; coupon: any; discountRules?: any[];
   guestEmail?: string; shippingAddress?: any;
 }) {
   return (
     <PayPalScriptProvider options={paypalOptions} deferLoading={false}>
       {clientSecret ? (
         <Elements stripe={stripePromise} options={{ clientSecret, appearance: stripeAppearance }}>
-          <PaymentMethods clientSecret={clientSecret} total={total} onSuccess={onSuccess} items={items} addressId={addressId} coupon={coupon} guestEmail={guestEmail} shippingAddress={shippingAddress} />
+          <PaymentMethods clientSecret={clientSecret} total={total} onSuccess={onSuccess} items={items} addressId={addressId} coupon={coupon} discountRules={discountRules} guestEmail={guestEmail} shippingAddress={shippingAddress} />
         </Elements>
       ) : (
-        <PaymentMethods clientSecret="" total={total} onSuccess={onSuccess} items={items} addressId={addressId} coupon={coupon} guestEmail={guestEmail} shippingAddress={shippingAddress} />
+        <PaymentMethods clientSecret="" total={total} onSuccess={onSuccess} items={items} addressId={addressId} coupon={coupon} discountRules={discountRules} guestEmail={guestEmail} shippingAddress={shippingAddress} />
       )}
     </PayPalScriptProvider>
   );

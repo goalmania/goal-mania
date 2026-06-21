@@ -350,6 +350,7 @@ export default function ProductDetailClient({
       name: product.title,
       price: totalPrice,
       image: product.images[selectedImage],
+      category: product.category,
       customization: {
         name: customization.name,
         number: customization.number,

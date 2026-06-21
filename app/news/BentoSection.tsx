@@ -1,7 +1,41 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { NewsArticle } from "@/types/news";
 import { Calendar, Clock, ArrowRight } from "lucide-react";
+
+const PLACEHOLDER = "/images/news-placeholder.jpg";
+
+function SafeImage({
+  src,
+  alt,
+  fill,
+  className,
+  sizes,
+  priority,
+}: {
+  src: string;
+  alt: string;
+  fill?: boolean;
+  className?: string;
+  sizes?: string;
+  priority?: boolean;
+}) {
+  const [imgSrc, setImgSrc] = useState(src || PLACEHOLDER);
+  return (
+    <Image
+      src={imgSrc}
+      alt={alt}
+      fill={fill}
+      className={className}
+      sizes={sizes}
+      priority={priority}
+      onError={() => setImgSrc(PLACEHOLDER)}
+    />
+  );
+}
 
 function getArticleUrl(article: NewsArticle): string {
   const slug = article.slug;
@@ -91,7 +125,7 @@ export default function BentoSection({ articles, reverse = false }: BentoSection
               minHeight: "400px",
             }}
           >
-            <Image
+            <SafeImage
               src={hero.image}
               alt={hero.title}
               fill
@@ -168,7 +202,7 @@ export default function BentoSection({ articles, reverse = false }: BentoSection
             >
               {/* Thumbnail */}
               <div className="relative w-28 rounded-lg overflow-hidden flex-shrink-0 bg-[#1a1a1a]">
-                <Image
+                <SafeImage
                   src={article.image}
                   alt={article.title}
                   fill
@@ -227,7 +261,7 @@ export default function BentoSection({ articles, reverse = false }: BentoSection
               style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
             >
               <div className="relative overflow-hidden" style={{ height: "170px" }}>
-                <Image
+                <SafeImage
                   src={article.image}
                   alt={article.title}
                   fill

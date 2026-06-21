@@ -144,7 +144,7 @@ export default function SignUp() {
   }
 
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 p-6 lg:p-10 gap-10 lg:gap-0">
+    <div className="min-h-screen bg-[#0a0a0a] grid grid-cols-1 lg:grid-cols-2 p-6 lg:p-10 gap-10 lg:gap-0">
       {/* Image Left */}
       <div className="relative h-[60vh] lg:h-auto rounded-2xl">
         <div className="absolute inset-0">
@@ -193,7 +193,7 @@ export default function SignUp() {
                     name="phone"
                     type="tel"
                     required
-                    className="bg-[#0a0a0a] border-0 flex-1 border-b py-2 border-white/10 placeholder:text-white/30 text-white font-light rounded-none shadow-none pl-0"
+                    className="bg-[#0a0a0a] border-0 flex-1 border-b py-2 border-white/20 placeholder:text-white/40 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
                     placeholder="xxxxxxxxxx"
                   />
                 </div>
@@ -225,7 +225,7 @@ export default function SignUp() {
                 name="name"
                 type="text"
                 required
-                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/10 placeholder:text-white/30 text-white font-light rounded-none shadow-none pl-0"
+                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/20 placeholder:text-white/40 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
                 placeholder="Nome completo"
               />
               {validationErrors.name && (
@@ -240,7 +240,7 @@ export default function SignUp() {
                 name="email"
                 type="email"
                 required
-                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/10 placeholder:text-white/30 text-white font-light rounded-none shadow-none pl-0"
+                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/20 placeholder:text-white/40 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
                 placeholder="Indirizzo email"
               />
               {validationErrors.email && (
@@ -289,7 +289,7 @@ export default function SignUp() {
                 name="password"
                 type="password"
                 required
-                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/10 placeholder:text-white/30 text-white font-light rounded-none shadow-none pl-0"
+                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/20 placeholder:text-white/40 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
                 placeholder="Crea una password"
               />
               {validationErrors.password && (
@@ -304,7 +304,7 @@ export default function SignUp() {
                 name="confirmPassword"
                 type="password"
                 required
-                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/10 placeholder:text-white/30 text-white font-light rounded-none shadow-none pl-0"
+                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/20 placeholder:text-white/40 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
                 placeholder="Conferma la password"
               />
               {validationErrors.confirmPassword && (
@@ -324,7 +324,7 @@ export default function SignUp() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="flex w-full justify-center rounded-full bg-[#c8f000] px-3 gap-1.5 py-2 text-sm font-medium items-center text-white shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#c8f000]/90"
+                  className="flex w-full justify-center rounded-full bg-[#c8f000] px-3 gap-1.5 py-2.5 text-sm font-semibold items-center text-black shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#b8e000]"
                 >
                   {isLoading ? "Creazione account..." : "Crea account →"}
                 </Button>

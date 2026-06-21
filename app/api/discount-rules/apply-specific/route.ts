@@ -347,26 +347,29 @@ function applyBuyXGetYDiscount(rule: any, applicableItems: CartItem[]) {
 
   console.log('✅ Rule can be applied:', { ruleApplications, freeQuantity });
 
-  // Calculate discount amount (value of free items)
+  // Calculate discount amount (value of free items) — cheapest item(s) are free
   let discountAmount = 0;
+  const freeItemsResult: Array<{ productId: string; quantity: number; name: string }> = [];
+
   if (rule.freeProductIds && rule.freeProductIds.length > 0) {
-    // Specific products are free
     for (const productId of rule.freeProductIds) {
       const item = applicableItems.find(item => item.id === productId);
       if (item) {
         const itemFreeQuantity = Math.min(freeQuantity, item.quantity);
         discountAmount += item.price * itemFreeQuantity;
+        freeItemsResult.push({ productId: item.id, quantity: itemFreeQuantity, name: item.name });
       }
     }
   } else {
-    // Cheapest applicable items are free
+    // Sort by unit price ascending → cheapest first
     const sortedItems = [...applicableItems].sort((a, b) => a.price - b.price);
     let remainingFreeQuantity = freeQuantity;
-    
+
     for (const item of sortedItems) {
       if (remainingFreeQuantity <= 0) break;
       const itemFreeQuantity = Math.min(remainingFreeQuantity, item.quantity);
       discountAmount += item.price * itemFreeQuantity;
+      freeItemsResult.push({ productId: item.id, quantity: itemFreeQuantity, name: item.name });
       remainingFreeQuantity -= itemFreeQuantity;
     }
   }
@@ -374,11 +377,7 @@ function applyBuyXGetYDiscount(rule: any, applicableItems: CartItem[]) {
   return {
     discountAmount,
     appliedToItems: applicableItems.map(item => item.id),
-    freeItems: [{
-      productId: applicableItems[0]?.id || "",
-      quantity: freeQuantity,
-      name: `Buy ${rule.buyQuantity}, get ${rule.getFreeQuantity} free`
-    }]
+    freeItems: freeItemsResult,
   };
 }
 

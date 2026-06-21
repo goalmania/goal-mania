@@ -36,6 +36,7 @@ export default function MysteryBoxPageClient({
         name: product.name,
         price: product.price,
         image: product.image,
+        category: product.category,
         customization: {
           size: "M", // Default size for mystery box
           selectedPatches: [],

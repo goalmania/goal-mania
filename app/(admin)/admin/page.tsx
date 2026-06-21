@@ -300,7 +300,7 @@ export default function AdminDashboard() {
 
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-[#0a0a0a] tracking-tight">Dashboard</h1>
+        <h1 className="text-3xl font-bold text-white tracking-tight">Dashboard</h1>
         <p className="mt-2 text-base text-white/70 max-w-2xl">
           Welcome back! Here&apos;s an overview of your store performance and insights.
         </p>
@@ -323,7 +323,7 @@ export default function AdminDashboard() {
               <stat.icon className="h-5 w-5 text-[#c8f000]" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-[#0a0a0a]">{stat.value}</div>
+              <div className="text-2xl font-bold text-white">{stat.value}</div>
               {stat.description && (
                 <p className="text-xs text-white/50 mt-1">{stat.description}</p>
               )}
@@ -418,7 +418,7 @@ export default function AdminDashboard() {
                 <CardTitle className="text-sm font-medium">Average Order Value</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-[#0a0a0a]">
+                <div className="text-2xl font-bold text-white">
                   {formatCurrency(data.revenue.average)}
                 </div>
                 <p className="text-xs text-white/50 mt-1">Per order</p>
@@ -430,7 +430,7 @@ export default function AdminDashboard() {
                 <CardTitle className="text-sm font-medium">Mystery Box Orders</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-[#0a0a0a]">
+                <div className="text-2xl font-bold text-white">
                   {data.mysteryBoxOrders}
                 </div>
                 <p className="text-xs text-white/50 mt-1">Special orders</p>
@@ -442,7 +442,7 @@ export default function AdminDashboard() {
                 <CardTitle className="text-sm font-medium">Published Articles</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-[#0a0a0a]">
+                <div className="text-2xl font-bold text-white">
                   {data.stats.articles.value}
                 </div>
                 <p className="text-xs text-white/50 mt-1">Content pieces</p>

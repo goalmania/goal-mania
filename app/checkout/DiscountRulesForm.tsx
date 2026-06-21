@@ -339,7 +339,11 @@ export function DiscountRulesForm({
             <div>
               <p className="text-xs font-semibold text-emerald-400">{discount.name}</p>
               <p className="text-[10px] text-emerald-400/70">
-                {discount.discountPercentage ? `${discount.discountPercentage}% di sconto` : `−€${discount.discountAmount.toFixed(2)}`}
+                {discount.type === "buy_x_get_y" && discount.freeItems?.length
+                  ? `${discount.freeItems[0].name} in omaggio — −€${discount.discountAmount.toFixed(2)}`
+                  : discount.discountPercentage
+                  ? `${discount.discountPercentage}% di sconto`
+                  : `−€${discount.discountAmount.toFixed(2)}`}
               </p>
             </div>
           </div>
@@ -368,7 +372,12 @@ export function DiscountRulesForm({
                 )}
               </div>
               {rule.isApplicable ? (
-                <p className="text-[11px] text-emerald-400">Risparmia €{rule.discountAmount?.toFixed(2)} — applicato automaticamente</p>
+                <p className="text-[11px] text-emerald-400">
+                  {rule.type === "buy_x_get_y"
+                    ? `L'articolo meno caro è gratis — risparmia €${rule.discountAmount?.toFixed(2)}`
+                    : `Risparmia €${rule.discountAmount?.toFixed(2)}`
+                  } — applicato automaticamente
+                </p>
               ) : (
                 <div>
                   <p className="text-[11px] text-white/40">{rule.howToQualify || rule.reason}</p>
