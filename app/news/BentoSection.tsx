@@ -32,6 +32,7 @@ function SafeImage({
       className={className}
       sizes={sizes}
       priority={priority}
+      unoptimized
       onError={() => setImgSrc(PLACEHOLDER)}
     />
   );
