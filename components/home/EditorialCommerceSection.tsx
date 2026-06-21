@@ -2,8 +2,40 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 import { ArrowRight, ShoppingBag, Tag } from "lucide-react";
 import { Article, Product } from "@/lib/types/home";
+
+const NEWS_PLACEHOLDER = "/images/news-placeholder.jpg";
+
+function SafeImage({
+  src,
+  alt,
+  fill,
+  className,
+  sizes,
+  priority,
+}: {
+  src: string;
+  alt: string;
+  fill?: boolean;
+  className?: string;
+  sizes?: string;
+  priority?: boolean;
+}) {
+  const [imgSrc, setImgSrc] = useState(src || NEWS_PLACEHOLDER);
+  return (
+    <Image
+      src={imgSrc}
+      alt={alt}
+      fill={fill}
+      className={className}
+      sizes={sizes}
+      priority={priority}
+      onError={() => setImgSrc(NEWS_PLACEHOLDER)}
+    />
+  );
+}
 
 // ─────────────────────────────────────────────────────────────
 // Helpers
@@ -35,7 +67,7 @@ function NewsCard({ article }: { article: Article }) {
     >
       {/* Image */}
       <div className="relative w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
-        <Image
+        <SafeImage
           src={article.image}
           alt={article.title}
           fill
