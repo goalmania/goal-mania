@@ -208,6 +208,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState<Record<string, User>>({});
+  const loadingUsersRef = React.useRef<Set<string>>(new Set());
   const [isRefunding, setIsRefunding] = useState(false);
   const [trackingCode, setTrackingCode] = useState("");
   const [isSavingTracking, setIsSavingTracking] = useState(false);
@@ -216,7 +217,8 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
 
   // Load user data for orders
   const loadUserData = useCallback(async (userId: string) => {
-    if (users[userId]) return;
+    if (loadingUsersRef.current.has(userId)) return;
+    loadingUsersRef.current.add(userId);
 
     try {
       const response = await fetch(`/api/users/${userId}`);
@@ -255,16 +257,16 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
         [userId]: { id: userId, name: "Unknown User", email: "Not Available" },
       }));
     }
-  }, [users]);
+  }, []);
 
   // Load user data for visible orders
-  useMemo(() => {
-  orders.forEach((order) => {
-    if (!users[order.userId]) {
-      loadUserData(order.userId);
-    }
-  });
-  }, [orders, users, loadUserData]);
+  React.useEffect(() => {
+    orders.forEach((order) => {
+      if (order.userId && !loadingUsersRef.current.has(order.userId as string)) {
+        loadUserData(order.userId as string);
+      }
+    });
+  }, [orders, loadUserData]);
 
   const handleStatusChange = async (
     orderId: string,
@@ -773,8 +775,8 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                   </div>
                   <div class="detail-section">
                     <h3>Customer Information</h3>
-                    <p><strong>Name:</strong> ${users[selectedOrder.userId]?.name || 'Unknown'}</p>
-                    <p><strong>Email:</strong> ${users[selectedOrder.userId]?.email || 'Not Available'}</p>
+                    <p><strong>Name:</strong> ${selectedOrder.userId ? users[selectedOrder.userId as string]?.name || 'Unknown' : 'Guest'}</p>
+                    <p><strong>Email:</strong> ${selectedOrder.userId ? users[selectedOrder.userId as string]?.email || 'Not Available' : selectedOrder.guestEmail || 'Not Available'}</p>
                     ${selectedOrder.shippingAddress ? `
                       <p><strong>Address:</strong></p>
                       <p style="font-size: 0.875rem; color: #6b7280; margin-top: 4px;">
@@ -894,9 +896,9 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
       accessorKey: "userId",
       header: "Customer",
       cell: ({ row }) => {
-        const user = users[row.original.userId];
-        if (!user) {
-          loadUserData(row.original.userId);
+        const user = row.original.userId ? users[row.original.userId as string] : null;
+        if (!user && row.original.userId) {
+          loadUserData(row.original.userId as string);
       return (
         <div className="flex items-center">
           <div className="h-4 w-4 mr-2 rounded-full animate-pulse bg-[#1a1a1a]"></div>
@@ -906,8 +908,8 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
     }
     return (
       <div>
-            <div className="font-medium text-sm">{user.name}</div>
-            <div className="text-white/50 text-xs">{user.email}</div>
+            <div className="font-medium text-sm">{user?.name || 'Ospite'}</div>
+            <div className="text-white/50 text-xs">{user?.email || row.original.guestEmail || '-'}</div>
       </div>
     );
       },
@@ -1306,7 +1308,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                       <Label className="text-sm font-medium text-white/70">Name</Label>
                       <p className="text-sm">
                         {selectedOrder.userId
-                          ? (users[selectedOrder.userId]?.name || 'Loading...')
+                          ? (users[selectedOrder.userId as string]?.name || 'Loading...')
                           : (selectedOrder.shippingAddress?.fullName || 'Ospite')}
                       </p>
                     </div>
@@ -1314,7 +1316,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                       <Label className="text-sm font-medium text-white/70">Email</Label>
                       <p className="text-sm">
                         {selectedOrder.userId
-                          ? (users[selectedOrder.userId]?.email || 'Loading...')
+                          ? (users[selectedOrder.userId as string]?.email || 'Loading...')
                           : (selectedOrder.guestEmail || '-')}
                       </p>
                     </div>
