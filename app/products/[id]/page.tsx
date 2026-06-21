@@ -84,10 +84,10 @@ export async function generateMetadata({
   const { id } = await params;
   try {
     await connectDB();
-    const isValidObjectId = mongoose.Types.ObjectId.isValid(id);
-    const product = isValidObjectId
-      ? await Product.findById(id).select("title description images basePrice slug isRetro isWorldCup country nationalTeam category").lean()
-      : await Product.findOne({ slug: id }).select("title description images basePrice slug isRetro isWorldCup country nationalTeam category").lean();
+    let product = await Product.findOne({ slug: id }).select("title description images basePrice slug isRetro isWorldCup country nationalTeam category").lean();
+    if (!product && mongoose.Types.ObjectId.isValid(id)) {
+      product = await Product.findById(id).select("title description images basePrice slug isRetro isWorldCup country nationalTeam category").lean();
+    }
 
     if (!product) return { title: "Prodotto non trovato" };
 
@@ -147,15 +147,10 @@ async function getProduct(id: string) {
 
     let product;
 
-    // Check if the ID is a valid MongoDB ObjectId
-    const isValidObjectId = mongoose.Types.ObjectId.isValid(id);
-
-    if (isValidObjectId) {
-      // If it's a valid ObjectId, search by _id
+    // Try by slug first (most common case), then fallback to ObjectId
+    product = await Product.findOne({ slug: id });
+    if (!product && mongoose.Types.ObjectId.isValid(id)) {
       product = await Product.findById(id);
-    } else {
-      // If not a valid ObjectId, try looking up by slug
-      product = await Product.findOne({ slug: id });
     }
 
     if (!product) {
