@@ -95,7 +95,7 @@ export default function FlashSaleSection({ products, product }: Props) {
 
   // ── Current product ────────────────────────────────────────────
   const current = list[currentIndex] ?? null;
-  const href = current?.slug ? `/shop/${current.slug}` : "/shop";
+  const href = current?.slug ? `/products/${current.slug}` : "/shop";
   const fullTitle = current ? cleanTitle(current.name) : "Maglia in Evidenza";
   const price = current?.price ?? 79.9;
 

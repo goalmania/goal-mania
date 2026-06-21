@@ -231,7 +231,7 @@ export default function HeroSection({ products = [] }: Props) {
               {current ? (
                 <div style={{ opacity: visible ? 1 : 0, transition: "opacity 0.35s ease-in-out" }}>
                   {/* Image */}
-                  <Link href={current.slug ? `/shop/${current.slug}` : "/shop"}>
+                  <Link href={current.slug ? `/products/${current.slug}` : "/shop"}>
                     <div className="relative h-60 lg:h-72 overflow-hidden" style={{ background: "rgba(200,240,0,0.03)" }}>
                       <Image
                         src={current.image}
@@ -276,7 +276,7 @@ export default function HeroSection({ products = [] }: Props) {
                         </div>
                       </div>
                       <Link
-                        href={current.slug ? `/shop/${current.slug}` : "/shop"}
+                        href={current.slug ? `/products/${current.slug}` : "/shop"}
                         className="flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 hover:scale-110"
                         style={{ background: "#c8f000" }}
                       >
