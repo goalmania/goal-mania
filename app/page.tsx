@@ -82,32 +82,59 @@ export const metadata: Metadata = {
   },
 };
 
+function shuffleArray<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function mapProduct(p: any) {
+  return {
+    id: p._id.toString(),
+    name: p.title || "Featured Product",
+    price: p.basePrice || 0,
+    image: p.images?.[0] || "/images/placeholder.png",
+    category: p.category || "Uncategorized",
+    slug: p.slug || "",
+    team: p.title ? p.title.split(" ")[0] : "Unknown",
+    availablePatches: p.availablePatches || [],
+    isMysteryBox: p.isMysteryBox || false,
+  };
+}
+
 async function getFeaturedProducts() {
   try {
     await connectDB();
     const products = await ProductModel.find({ isActive: true, feature: true })
       .limit(10)
       .lean();
-
-    return JSON.parse(JSON.stringify(products)).map((p: any) => ({
-      id: p._id.toString(),
-      name: p.title || "Featured Product",
-      price: p.basePrice || 0,
-      image: p.images?.[0] || "/images/placeholder.png",
-      category: p.category || "Uncategorized",
-      slug: p.slug || "",
-      team: p.title ? p.title.split(" ")[0] : "Unknown",
-      availablePatches: p.availablePatches || [],
-      isMysteryBox: p.isMysteryBox || false,
-    }));
+    return JSON.parse(JSON.stringify(products)).map(mapProduct);
   } catch (error) {
     console.error("Error fetching featured products:", error);
     return [];
   }
 }
 
+async function getRandomProducts(count: number) {
+  try {
+    await connectDB();
+    const total = await ProductModel.countDocuments({ isActive: true });
+    const skip = Math.max(0, Math.floor(Math.random() * Math.max(1, total - count)));
+    const products = await ProductModel.find({ isActive: true })
+      .skip(skip)
+      .limit(count * 3)
+      .lean();
+    return shuffleArray(JSON.parse(JSON.stringify(products)).map(mapProduct)).slice(0, count);
+  } catch {
+    return [];
+  }
+}
+
 export default async function Home() {
-  const [featuredProducts, featuredArticles, latestArticles] = await Promise.all([
+  const [featuredProducts, featuredArticles, latestArticles, editorialProducts] = await Promise.all([
     getFeaturedProducts(),
     (async () => {
       try {
@@ -134,6 +161,7 @@ export default async function Home() {
         return [];
       }
     })(),
+    getRandomProducts(3),
   ]);
 
   return (
@@ -169,7 +197,7 @@ export default async function Home() {
       {/* 5. NOTIZIE + MAGLIE — editoriale ibrido */}
       <EditorialCommerceSection
         articles={featuredArticles.slice(0, 3)}
-        products={featuredProducts.slice(0, 3)}
+        products={editorialProducts}
       />
 
       {/* 6. RECENSIONI */}
