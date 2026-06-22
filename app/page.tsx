@@ -127,7 +127,7 @@ async function getRandomProducts(count: number): Promise<ReturnType<typeof mapPr
       .skip(skip)
       .limit(count * 3)
       .lean();
-    return shuffleArray(JSON.parse(JSON.stringify(products)).map(mapProduct)).slice(0, count);
+    return shuffleArray((JSON.parse(JSON.stringify(products)) as any[]).map(mapProduct)).slice(0, count);
   } catch {
     return [];
   }
