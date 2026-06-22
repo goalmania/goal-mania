@@ -118,7 +118,7 @@ async function getFeaturedProducts() {
   }
 }
 
-async function getRandomProducts(count: number) {
+async function getRandomProducts(count: number): Promise<ReturnType<typeof mapProduct>[]> {
   try {
     await connectDB();
     const total = await ProductModel.countDocuments({ isActive: true });
