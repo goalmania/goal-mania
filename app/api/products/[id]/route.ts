@@ -509,6 +509,7 @@ export async function PATCH(
       basePrice: z.number().optional(),
       retroPrice: z.number().optional(),
       shippingPrice: z.number().optional(),
+      images: z.array(z.string()).optional(),
     });
 
     try {
