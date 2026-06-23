@@ -446,7 +446,7 @@ function ProductCarousel({ products, badge }: { products: Product[]; badge?: str
     <div
       ref={scrollRef}
       className="overflow-x-scroll"
-      style={{ scrollbarWidth: "none", msOverflowStyle: "none", cursor: "grab", userSelect: "none", WebkitOverflowScrolling: "touch" } as React.CSSProperties}
+      style={{ scrollbarWidth: "none", msOverflowStyle: "none", cursor: "grab", userSelect: "none", WebkitOverflowScrolling: "touch", touchAction: "pan-x" } as React.CSSProperties}
       onMouseEnter={() => { isPaused.current = true;  lastTs.current = 0; }}
       onMouseLeave={() => { isPaused.current = false; }}
       onPointerDown={(e) => {
@@ -460,10 +460,12 @@ function ProductCarousel({ products, badge }: { products: Product[]; badge?: str
       onTouchStart={() => { isPaused.current = true; lastTs.current = 0; }}
       onTouchEnd={() => {
         if (scrollRef.current) posRef.current = scrollRef.current.scrollLeft;
-        setTimeout(() => { isPaused.current = false; }, 600);
+        lastTs.current = 0;
+        setTimeout(() => { isPaused.current = false; }, 800);
       }}
       onTouchCancel={() => {
         if (scrollRef.current) posRef.current = scrollRef.current.scrollLeft;
+        lastTs.current = 0;
         isPaused.current = false;
       }}
       onClick={handleClick}
