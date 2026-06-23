@@ -36,7 +36,7 @@
     },
     {
       "path": "/api/cart-recovery",
-      "schedule": "0 * * * *"
+      "schedule": "0 11 * * *"
     }
   ]
 }
