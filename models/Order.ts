@@ -48,6 +48,7 @@ export interface IOrder extends Document {
   refundedAt?: Date;
   refundReference?: string;
   trackingCode?: string;
+  trackingUrl?: string;
   coupon?: {
     code: string;
     discountPercentage: number;
@@ -110,6 +111,7 @@ const OrderSchema = new Schema<IOrder>({
   refundedAt: { type: Date },
   refundReference: { type: String },
   trackingCode: { type: String },
+  trackingUrl: { type: String },
   coupon: {
     code: String,
     discountPercentage: Number,

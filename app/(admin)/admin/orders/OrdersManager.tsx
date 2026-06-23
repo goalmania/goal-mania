@@ -211,6 +211,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
   const loadingUsersRef = React.useRef<Set<string>>(new Set());
   const [isRefunding, setIsRefunding] = useState(false);
   const [trackingCode, setTrackingCode] = useState("");
+  const [trackingUrl, setTrackingUrl] = useState("");
   const [isSavingTracking, setIsSavingTracking] = useState(false);
   const [isSendingNotification, setIsSendingNotification] = useState(false);
   const [isSendingInvoice, setIsSendingInvoice] = useState(false);
@@ -306,6 +307,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
   const handleViewDetails = (order: z.infer<typeof orderSchema>) => {
     setSelectedOrder(order);
     setTrackingCode(order.trackingCode || "");
+    setTrackingUrl((order as any).trackingUrl || "");
     setIsDetailsModalOpen(true);
   };
 
@@ -360,7 +362,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ trackingCode }),
+        body: JSON.stringify({ trackingCode, trackingUrl }),
       });
 
       if (!response.ok) {
@@ -1461,40 +1463,60 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex gap-2">
-                      <Input
-                        placeholder="Enter tracking code"
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-white/70">Codice tracking</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Es. 12345678901234"
                           value={trackingCode}
                           onChange={(e) => setTrackingCode(e.target.value)}
-                        className="flex-1"
+                          className="flex-1"
                         />
-                      <Button 
-                          onClick={handleTrackingCodeUpdate}
-                          disabled={isSavingTracking}
-                        >
-                          {isSavingTracking ? "Saving..." : "Save"}
-                      </Button>
                       </div>
-                    
-                      {selectedOrder.trackingCode && (
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-white/70">URL tracking corriere</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Es. https://www.brt.it/it/ricerca.html?id=..."
+                          value={trackingUrl}
+                          onChange={(e) => setTrackingUrl(e.target.value)}
+                          className="flex-1"
+                        />
+                      </div>
+                      <p className="text-xs text-white/40">Opzionale. Il link viene generato automaticamente per BRT, GLS, Poste, SDA, DHL, UPS, FedEx, TNT. Incollane uno manuale solo se il corriere non viene rilevato in automatico.</p>
+                    </div>
+                    <Button
+                      onClick={handleTrackingCodeUpdate}
+                      disabled={isSavingTracking}
+                    >
+                      {isSavingTracking ? "Salvataggio..." : "Salva tracking"}
+                    </Button>
+
+                    {selectedOrder.trackingCode && (
                       <div className="bg-blue-50 p-4 rounded-lg">
                         <p className="text-sm font-medium text-blue-900">
-                            Current tracking code: {selectedOrder.trackingCode}
+                          Codice attuale: <span className="font-mono">{selectedOrder.trackingCode}</span>
+                        </p>
+                        {(selectedOrder as any).trackingUrl && (
+                          <p className="text-sm text-blue-700 mt-1">
+                            URL: <a href={(selectedOrder as any).trackingUrl} target="_blank" rel="noopener noreferrer" className="underline">{(selectedOrder as any).trackingUrl}</a>
                           </p>
-                          {selectedOrder.status === "shipped" && (
+                        )}
+                        {selectedOrder.status === "shipped" && (
                           <Button
-                              onClick={handleSendOrderNotification}
-                              disabled={isSendingNotification}
+                            onClick={handleSendOrderNotification}
+                            disabled={isSendingNotification}
                             variant="outline"
                             size="sm"
                             className="mt-2"
                           >
-                            {isSendingNotification ? "Sending..." : "Send Order Notification"}
+                            {isSendingNotification ? "Invio..." : "Invia notifica spedizione"}
                           </Button>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
 

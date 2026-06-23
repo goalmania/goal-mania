@@ -109,7 +109,7 @@ export async function PATCH(
     }
 
     // Prepare update object
-    const updateData: { status?: string; trackingCode?: string } = {};
+    const updateData: { status?: string; trackingCode?: string; trackingUrl?: string } = {};
 
     // Add status if provided
     if (data.status) {
@@ -119,6 +119,11 @@ export async function PATCH(
     // Add tracking code if provided
     if (data.trackingCode !== undefined) {
       updateData.trackingCode = data.trackingCode;
+    }
+
+    // Add tracking URL if provided
+    if (data.trackingUrl !== undefined) {
+      updateData.trackingUrl = data.trackingUrl;
     }
 
     // Check if there's anything to update

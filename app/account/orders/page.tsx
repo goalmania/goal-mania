@@ -370,27 +370,24 @@ function OrderDetailsDialog({ order, isOpen, onClose }: {
             <>
               <Separator className="my-8" />
               <div className="space-y-4">
-                <Label className="text-lg font-semibold">Tracking Information</Label>
+                <Label className="text-lg font-semibold">Spedizione</Label>
                 <div className="bg-blue-50 dark:bg-blue-950/30 p-4 sm:p-6 rounded-lg space-y-4">
                   <div className="flex items-center space-x-3">
                     <TruckIcon className="h-6 w-6 text-[#c8f000] flex-shrink-0" />
                     <div>
                       <p className="text-blue-700 dark:text-blue-300 font-semibold">
-                        Tracking Number: {order.trackingCode}
+                        Codice tracking: <span className="font-mono">{order.trackingCode}</span>
                       </p>
-                      <p className="text-sm text-[#c8f000] dark:text-blue-400 mt-1">
-                        You can use this tracking number to follow your package's journey.
+                      <p className="text-sm text-blue-500 dark:text-blue-400 mt-1">
+                        Usa questo codice per seguire il percorso del tuo pacco.
                       </p>
                     </div>
                   </div>
                   <Button asChild className="w-full sm:w-auto">
-                    <a
-                      href={`https://www.packagetrackr.com/track/${order.trackingCode}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Track My Package
-                    </a>
+                    <Link href={`/account/orders/${order._id}/tracking`}>
+                      <TruckIcon className="mr-2 h-4 w-4" />
+                      Traccia il tuo pacco
+                    </Link>
                   </Button>
                 </div>
               </div>
@@ -596,16 +593,12 @@ function OrdersDataTable({ orders }: { orders: Order[] }) {
               <EyeIcon className="mr-2 h-4 w-4" />
               View Details
             </DropdownMenuItem>
-            {row.original.status === "shipped" && row.original.trackingCode && (
+            {row.original.trackingCode && (
               <DropdownMenuItem asChild>
-                <a
-                  href={`https://www.packagetrackr.com/track/${row.original.trackingCode}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link href={`/account/orders/${row.original._id}/tracking`}>
                   <TruckIcon className="mr-2 h-4 w-4" />
-                  Track Package
-                </a>
+                  Traccia spedizione
+                </Link>
               </DropdownMenuItem>
             )}
           </DropdownMenuContent>
