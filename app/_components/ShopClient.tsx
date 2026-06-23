@@ -450,11 +450,21 @@ function ProductCarousel({ products, badge }: { products: Product[]; badge?: str
       onMouseEnter={() => { isPaused.current = true;  lastTs.current = 0; }}
       onMouseLeave={() => { isPaused.current = false; }}
       onPointerDown={(e) => {
+        if (e.pointerType === "touch") return;
         isDragging.current = true;
         dragMoved.current  = 0;
         dragStartX.current = e.clientX;
         scrollAtDragStart.current = scrollRef.current?.scrollLeft ?? 0;
         e.currentTarget.style.cursor = "grabbing";
+      }}
+      onTouchStart={() => { isPaused.current = true; lastTs.current = 0; }}
+      onTouchEnd={() => {
+        if (scrollRef.current) posRef.current = scrollRef.current.scrollLeft;
+        setTimeout(() => { isPaused.current = false; }, 600);
+      }}
+      onTouchCancel={() => {
+        if (scrollRef.current) posRef.current = scrollRef.current.scrollLeft;
+        isPaused.current = false;
       }}
       onClick={handleClick}
     >
