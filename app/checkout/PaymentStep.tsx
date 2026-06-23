@@ -7,8 +7,6 @@ import { ExclamationTriangleIcon, LockClosedIcon } from "@heroicons/react/24/out
 import ScalapayButton from "./ScalapayButton";
 import toast from "react-hot-toast";
 import { useTranslation } from "@/lib/hooks/useTranslation";
-import { PayPalScriptProvider } from "@paypal/react-paypal-js";
-import PayPalButton from "./PayPalButton";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "");
 
@@ -69,18 +67,6 @@ const stripeAppearance = {
       backgroundColor: "rgba(200,240,0,0.08)",
     },
   },
-};
-
-const paypalOptions = {
-  clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "",
-  currency: "EUR",
-  intent: "capture",
-  "enable-funding": "paylater,venmo",
-  "disable-funding": "card",
-  "data-sdk-integration-source": "button-factory",
-  debug: process.env.NODE_ENV === "development",
-  "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "",
-  "merchant-id": process.env.NEXT_PUBLIC_PAYPAL_MERCHANT_ID || "",
 };
 
 // ── Stripe form ──────────────────────────────────────────────────────────────
@@ -243,14 +229,13 @@ function PaymentMethods({ clientSecret, total, onSuccess, items, addressId, coup
   clientSecret: string; total: number; onSuccess: () => void; items: any[]; addressId: string; coupon: any; discountRules?: any[];
   guestEmail?: string; shippingAddress?: any;
 }) {
-  const [selectedMethod, setSelectedMethod] = useState<"stripe" | "paypal" | "scalapay">(clientSecret ? "stripe" : "paypal");
-  const selectMethod = (id: "stripe" | "paypal" | "scalapay") => setSelectedMethod(id);
+  const [selectedMethod, setSelectedMethod] = useState<"stripe" | "scalapay">("stripe");
+  const selectMethod = (id: "stripe" | "scalapay") => setSelectedMethod(id);
 
   const methods = [
     clientSecret && { id: "stripe" as const, label: "💳 Carta / Klarna / Link", sub: "Visa, Mastercard, Amex, Klarna, Apple/Google Pay" },
-    { id: "paypal" as const, label: "🅿️ PayPal", sub: "Veloce e sicuro" },
     SCALAPAY_ENABLED && { id: "scalapay" as const, label: "🟣 Scalapay", sub: `3 rate da €${(total / 3).toFixed(2)}` },
-  ].filter(Boolean) as { id: "stripe" | "paypal" | "scalapay"; label: string; sub: string }[];
+  ].filter(Boolean) as { id: "stripe" | "scalapay"; label: string; sub: string }[];
 
   return (
     <div className="space-y-5">
@@ -279,9 +264,7 @@ function PaymentMethods({ clientSecret, total, onSuccess, items, addressId, coup
           <StripePayment clientSecret={clientSecret} total={total} onSuccess={onSuccess} />
         ) : selectedMethod === "scalapay" ? (
           <ScalapayButton total={total} items={items} guestEmail={guestEmail} shippingAddress={shippingAddress} />
-        ) : (
-          <PayPalButton total={total} items={items} addressId={addressId} coupon={coupon} discountRules={discountRules} onSuccess={onSuccess} guestEmail={guestEmail} guestAddress={shippingAddress} />
-        )}
+        ) : null}
       </div>
     </div>
   );
@@ -292,15 +275,11 @@ export default function PaymentStep({ clientSecret, total, onSuccess, items, add
   clientSecret: string; total: number; onSuccess: () => void; items: any[]; addressId: string; coupon: any; discountRules?: any[];
   guestEmail?: string; shippingAddress?: any;
 }) {
-  return (
-    <PayPalScriptProvider options={paypalOptions}>
-      {clientSecret ? (
-        <Elements stripe={stripePromise} options={{ clientSecret, appearance: stripeAppearance }}>
-          <PaymentMethods clientSecret={clientSecret} total={total} onSuccess={onSuccess} items={items} addressId={addressId} coupon={coupon} discountRules={discountRules} guestEmail={guestEmail} shippingAddress={shippingAddress} />
-        </Elements>
-      ) : (
-        <PaymentMethods clientSecret="" total={total} onSuccess={onSuccess} items={items} addressId={addressId} coupon={coupon} discountRules={discountRules} guestEmail={guestEmail} shippingAddress={shippingAddress} />
-      )}
-    </PayPalScriptProvider>
+  return clientSecret ? (
+    <Elements stripe={stripePromise} options={{ clientSecret, appearance: stripeAppearance }}>
+      <PaymentMethods clientSecret={clientSecret} total={total} onSuccess={onSuccess} items={items} addressId={addressId} coupon={coupon} discountRules={discountRules} guestEmail={guestEmail} shippingAddress={shippingAddress} />
+    </Elements>
+  ) : (
+    <PaymentMethods clientSecret="" total={total} onSuccess={onSuccess} items={items} addressId={addressId} coupon={coupon} discountRules={discountRules} guestEmail={guestEmail} shippingAddress={shippingAddress} />
   );
 }
