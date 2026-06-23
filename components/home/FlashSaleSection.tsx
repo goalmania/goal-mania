@@ -48,8 +48,9 @@ export default function FlashSaleSection({ products, product }: Props) {
   const [visible, setVisible] = useState(true);
   const [timeLeft, setTimeLeft] = useState(FLASH_DURATION_MINUTES * 60);
   const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const indexRef = useRef(0); // mirrors currentIndex but readable inside intervals
+  const indexRef = useRef(0);
   const listLenRef = useRef(list.length);
+  const touchStartX = useRef<number | null>(null);
   listLenRef.current = list.length;
 
   // ── Countdown ──────────────────────────────────────────────────
@@ -164,6 +165,17 @@ export default function FlashSaleSection({ products, product }: Props) {
             style={{
               opacity: visible ? 1 : 0,
               transition: `opacity ${FADE_DURATION_MS}ms cubic-bezier(0.4,0,0.2,1)`,
+            }}
+            onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+            onTouchEnd={(e) => {
+              if (touchStartX.current === null || list.length <= 1) return;
+              const diff = touchStartX.current - e.changedTouches[0].clientX;
+              if (Math.abs(diff) > 40) {
+                goTo(diff > 0
+                  ? (currentIndex + 1) % list.length
+                  : (currentIndex - 1 + list.length) % list.length);
+              }
+              touchStartX.current = null;
             }}
           >
             {/* Left: Product image */}
