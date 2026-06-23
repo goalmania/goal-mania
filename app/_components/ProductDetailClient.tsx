@@ -347,6 +347,7 @@ export default function ProductDetailClient({
       : product._id;
     addToCart({
       id: itemId,
+      slug: product.slug || product._id,
       name: product.title,
       price: totalPrice,
       image: product.images[selectedImage],

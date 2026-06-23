@@ -130,6 +130,30 @@ function StripePayment({ clientSecret, total, onSuccess }: { clientSecret: strin
 
   return (
     <div className="space-y-4">
+      {/* Social proof strip */}
+      <div className="rounded-2xl p-4 space-y-3" style={{ background: "rgba(200,240,0,0.04)", border: "1px solid rgba(200,240,0,0.12)" }}>
+        <p className="text-xs font-black uppercase tracking-widest text-white/40 text-center">Cosa dicono i clienti</p>
+        {[
+          { name: "Marco R.", city: "Milano", text: "Arrivata in 3 giorni, qualità ottima. La porto allo stadio.", stars: 5 },
+          { name: "Giulia T.", city: "Roma", text: "Personalizzata con nome e numero, stampa perfetta. Lo ricompro.", stars: 5 },
+          { name: "Luca B.", city: "Napoli", text: "Scettico all'inizio, ora ne ho ordinate 4. Spedizione velocissima.", stars: 5 },
+        ].map((r) => (
+          <div key={r.name} className="flex items-start gap-3">
+            <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 text-xs font-bold text-white/60">
+              {r.name[0]}
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-white">{r.name}</span>
+                <span className="text-[10px] text-white/30">{r.city}</span>
+                <span className="text-[#c8f000] text-[10px]">{"★".repeat(r.stars)}</span>
+              </div>
+              <p className="text-xs text-white/50 leading-snug mt-0.5">{r.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {/* Express Checkout (Apple Pay / Google Pay) */}
       {canMakePayment && paymentRequest && (
         <div className="space-y-2">

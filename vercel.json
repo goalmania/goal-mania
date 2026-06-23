@@ -33,6 +33,10 @@
     {
       "path": "/api/cron/generate-jersey-article",
       "schedule": "0 16 * * *"
+    },
+    {
+      "path": "/api/cart-recovery",
+      "schedule": "0 * * * *"
     }
   ]
 }

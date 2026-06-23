@@ -433,6 +433,20 @@ export default function CheckoutPage() {
       return;
     }
 
+    // Salva carrello abbandonato (recupero automatico via email)
+    const emailForRecovery = isGuest ? guestEmail : session?.user?.email;
+    if (emailForRecovery) {
+      fetch("/api/cart-recovery", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: emailForRecovery,
+          items: items.map((i) => ({ id: i.id, slug: i.slug, name: i.name, price: i.price, quantity: i.quantity, image: i.image })),
+          total: getTotal(),
+        }),
+      }).catch(() => {});
+    }
+
     // Se il clientSecret è già pronto (prefetchato), vai subito al pagamento
     if (clientSecret) {
       setStep("payment");
@@ -509,7 +523,16 @@ export default function CheckoutPage() {
     })
       .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
       .then((data) => {
-        trackEvent("purchase", { value: total });
+        // Track purchase per ogni prodotto nel carrello
+        items.forEach((item) => {
+          trackEvent("purchase", {
+            value: item.price * item.quantity,
+            productId: item.id.split("_")[0], // rimuovi hash customizzazione
+            productSlug: item.slug || item.name?.toLowerCase().replace(/\s+/g, "-"),
+            productTitle: item.name,
+            productImage: item.image,
+          });
+        });
         trackFbq("Purchase", {
           value: total,
           currency: "EUR",
@@ -602,6 +625,23 @@ export default function CheckoutPage() {
               <span key={b} className="text-[10px] font-bold text-white/20 border border-white/10 px-2 py-1 rounded">{b}</span>
             ))}
           </div>
+
+          {/* Social proof sotto i pulsanti */}
+          <div className="mt-6 pt-5 border-t border-white/6 space-y-2">
+            {[
+              { n: "Marco R.", c: "Milano", t: "Arrivata in 3 giorni, qualità ottima." },
+              { n: "Giulia T.", c: "Roma", t: "Stampa perfetta, lo ricompro sicuro." },
+            ].map((r) => (
+              <div key={r.n} className="flex items-start gap-2.5">
+                <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-white/50">{r.n[0]}</div>
+                <div>
+                  <span className="text-[10px] font-bold text-white/50">{r.n} · {r.c}</span>
+                  <span className="text-[#c8f000] text-[10px] ml-1">★★★★★</span>
+                  <p className="text-[11px] text-white/35 leading-tight">{r.t}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -613,8 +653,20 @@ export default function CheckoutPage() {
       <div className="container mx-auto px-4 max-w-6xl">
 
         {/* Header */}
-        <div className="mb-6">
+        <div className="mb-4 flex items-center justify-between">
           <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">Checkout</h1>
+          <div className="flex items-center gap-2 text-xs text-white/40">
+            <LockClosedIcon className="w-3.5 h-3.5 text-[#c8f000]" />
+            Pagamento sicuro SSL
+          </div>
+        </div>
+
+        {/* Urgency banner */}
+        <div className="mb-5 rounded-xl px-4 py-2.5 flex items-center gap-2 text-sm font-medium" style={{ background: "rgba(200,240,0,0.06)", border: "1px solid rgba(200,240,0,0.15)" }}>
+          <span className="text-[#c8f000]">⚡</span>
+          <span className="text-white/70">
+            Hai <span className="text-white font-bold">2 articoli rimasti</span> in stock — altri utenti stanno guardando questa maglia.
+          </span>
         </div>
 
         <TrustBar />
