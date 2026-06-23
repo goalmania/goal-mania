@@ -12,7 +12,7 @@ const collectionSchema = {
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Maglie Premier League 2025/26 | Liverpool, Arsenal, Manchester City — Goal Mania",
+  title: "Maglie Premier League 2025/26 — Liverpool, Arsenal, Manchester City",
   description:
     "Acquista le maglie della Premier League 2025/26 a partire da 30€. Manchester City, Liverpool, Arsenal, Chelsea, Manchester United. Spedizione gratuita in Italia.",
   keywords: [

@@ -5,7 +5,7 @@ import SerieAClient from "@/app/_components/SerieAClient";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Giacche Calcio | Felpe e Giacche Sportive — Goal Mania",
+  title: "Giacche Calcio — Felpe e Giacche Sportive",
   description:
     "Giacche e felpe sportive delle migliori squadre di calcio. Inter, Juventus, Milan, Liverpool e altre. Spedizione gratuita in Italia.",
   alternates: {

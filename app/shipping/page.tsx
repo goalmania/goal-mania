@@ -2,8 +2,12 @@ import { Metadata } from "next";
 import { Truck, Clock, Shield, MapPin, Package, Globe } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Shipping Information",
-  description: "Shipping options, delivery times, and policies for Goal Mania football jerseys.",
+  title: "Spedizioni — Consegna Gratuita in Italia",
+  description:
+    "Spedizione gratuita su tutti gli ordini in Italia. Consegna in 2-5 giorni lavorativi. Reso gratuito entro 30 giorni. Tutti i metodi di pagamento accettati.",
+  alternates: {
+    canonical: "https://goal-mania.it/shipping",
+  },
 };
 
 export default function ShippingPage() {

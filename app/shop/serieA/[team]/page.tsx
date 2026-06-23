@@ -78,7 +78,7 @@ export async function generateMetadata({
     TEAM_DISPLAY_NAMES[team.toLowerCase()] ||
     team.charAt(0).toUpperCase() + team.slice(1);
   return {
-    title: `Maglia ${teamName} 2025/26 | Acquista Online — Goal Mania`,
+    title: `Maglia ${teamName} 2025/26 | Acquista Online`,
     description: `Acquista la maglia ${teamName} 2025/26 a partire da 30€. Home, away e third kit. Spedizione gratuita in Italia.`,
     keywords: [
       `maglia ${teamName}`,

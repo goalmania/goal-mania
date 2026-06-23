@@ -96,12 +96,14 @@ export async function generateMetadata({
     const productUrl = `https://goal-mania.it/products/${slug}`;
 
     // Rich title using the real product title (should include season + kit type)
-    const title = `${p.title} | Acquista Online a €${p.basePrice ?? 30} — Goal Mania`;
+    const title = `${p.title} | Acquista Online a €${p.basePrice ?? 30}`;
 
     // Use DB description if long enough, otherwise build a rich fallback
+    // Strip "ufficiale/i" (legal risk) replacing with "da collezione"
+    const sanitizeDesc = (s: string) => s.replace(/\bufficial[ei]\b/gi, "da collezione");
     const hasRichDesc = p.description && p.description.length > 60;
     const description = hasRichDesc
-      ? p.description.slice(0, 160)
+      ? sanitizeDesc(p.description.slice(0, 160))
       : (() => {
           const seasonMatch = (p.title as string).match(/\d{2,4}\/\d{2,4}/);
           const season = seasonMatch ? seasonMatch[0] : "2025/26";
@@ -279,6 +281,8 @@ export default async function ProductPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
+      {/* SSR H1 for SEO — the visual H1 is rendered by ProductDetailClient */}
+      <h1 className="sr-only">{product.title}</h1>
       <Suspense fallback={<div>Loading...</div>}>
         <ProductDetailClient product={product} />
       </Suspense>

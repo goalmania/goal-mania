@@ -1,265 +1,339 @@
-# Goal Mania — SEO & GEO Audit Report
-**Data:** 28 Maggio 2026  
-**Dominio:** https://goal-mania.it  
-**Obiettivo:** Ranking per "maglie da calcio", "maglie calcio a prezzi bassi", "maglie calcio 30€", "maglia [squadra]"
+# SEO Audit Report — goal-mania.it
+**Data audit:** 23 giugno 2026  
+**Sito:** https://goal-mania.it  
+**Piattaforma:** Next.js su Vercel + Cloudflare CDN  
+**Tipo di business:** E-commerce (maglie da calcio) con blog editoriale
 
 ---
 
-## SEO Health Score: 38/100 → 67/100 (dopo le fix applicate)
+## SEO Health Score: **62 / 100**
 
-| Categoria | Prima | Dopo | Peso |
-|-----------|-------|------|------|
-| Technical SEO | 55/100 | 75/100 | 22% |
-| Content / On-Page | 20/100 | 65/100 | 23% |
-| Schema Markup | 10/100 | 70/100 | 10% |
-| AI Search (GEO) | 0/100 | 55/100 | 10% |
-| Performance | 60/100 | 60/100 | 10% |
-| Sitemap | 50/100 | 85/100 | 5% |
-
----
-
-## Executive Summary
-
-Goal Mania ha 407 URL in sitemap e un'infrastruttura Next.js con ISR (revalidate 300s) — il
-framework è corretto. Il problema principale è che **tutte le pagine chiave condividevano
-lo stesso title e la stessa description**, rendendole indistinguibili agli occhi di Google.
-Parallelamente, il **robots.txt gestito da Cloudflare bloccava tutti gli AI crawler** (GPTBot,
-PerplexityBot, ClaudeBot) azzerando la visibilità GEO su ChatGPT, Perplexity e Bing Copilot.
+| Categoria | Peso | Score | Contributo |
+|-----------|------|-------|-----------|
+| Technical SEO | 22% | 55 | 12.1 |
+| Content Quality | 23% | 65 | 14.9 |
+| On-Page SEO | 20% | 60 | 12.0 |
+| Schema / Structured Data | 10% | 55 | 5.5 |
+| Performance (CWV) | 10% | 65 | 6.5 |
+| AI Search Readiness | 10% | 70 | 7.0 |
+| Images | 5% | 75 | 3.75 |
+| **TOTALE** | | | **61.75** |
 
 ---
 
-## Problemi Critici — RISOLTI IN QUESTO AUDIT
+## Top 5 Critical Issues
 
-### 1. Metadata duplicati su tutte le pagine
-**Impatto:** Google non riesce a differenziare le pagine → nessun ranking per keyword specifiche.
+1. **"ufficiale" nelle meta description dei prodotti** — 18 occorrenze su ogni pagina prodotto. Viola la regola brand/legale (rischio IP claim).
+2. **"| Goal Mania" duplicato in tutti i title tag** — ogni pagina finisce con "— Goal Mania | Goal Mania". Penalizzazione di 11+ caratteri su ogni title.
+3. **H1 mancante su tutte le pagine prodotto** — `/products/*` non ha H1. Segnale on-page critico per e-commerce.
+4. **Canonical mancante su 6+ pagine importanti** — /news, /about, /contact, /transfer, /shop/worldcup, /shipping.
+5. **Conflitto robots.txt GPTBot** — la sezione Cloudflare (posizione 1) blocca GPTBot con `Disallow: /`, mentre la sezione manuale lo consente. Vince la prima regola: GPTBot è bloccato.
 
-**Prima:** Ogni pagina mostrava "Goal Mania - Maglie da Calcio" come title.  
-**Dopo:** Ogni pagina ha ora title e description unici con keyword specifiche:
+## Top 5 Quick Wins
 
-| Pagina | Title ottimizzato |
-|--------|-------------------|
-| Homepage | `Maglie da Calcio a 30€ - Goal Mania — Serie A, Premier League, Mondiali` |
-| /shop | `Negozio Maglie da Calcio - Goal Mania — Tutte le Squadre` |
-| /shop/serieA | `Maglie Serie A 2025/26 - Inter, Milan, Juventus, Napoli — Goal Mania` |
-| /shop/premier-league | `Maglie Premier League 2025/26 - Liverpool, Arsenal, Manchester City` |
-| /shop/serieA/[team] | `Maglia [Team] 2025/26 - Acquista Online — Goal Mania` |
-| /shop/retro | `Maglie Calcio Retro - Storiche, Vintage, Anni 90 — Goal Mania` |
-| /shop/2025/26 | `Maglie Calcio 2025/26 - Nuova Stagione — Goal Mania` |
-| /products/[slug] | `[Nome Maglia] - Acquista Online — Goal Mania` |
-
-### 2. Nessun Product Schema (JSON-LD) sulle pagine prodotto
-**Impatto:** Zero rich results Google Shopping → invisibile nelle SERP con prezzi.
-
-**Aggiunto:** `Product` schema con `name`, `image`, `sku`, `offers.price`, `offers.priceCurrency: "EUR"`,
-`offers.availability`, `aggregateRating` dinamico dai reviews in DB + `BreadcrumbList`.
-
-### 3. GEO: tutti gli AI crawler bloccati da robots.txt
-**Impatto:** Sito invisibile su ChatGPT, Perplexity, Bing Copilot.
-
-Il robots.txt (iniettato da Cloudflare Bot Management) bloccava:
-- GPTBot (OpenAI/ChatGPT)
-- PerplexityBot
-- ClaudeBot
-- Bytespider, CCBot, meta-externalagent, Applebot-Extended
-
-**Soluzione applicata:**
-- Creato `app/robots.ts` con Allow esplicito per GPTBot, PerplexityBot, anthropic-ai, Applebot
-- Creato `public/llms.txt` con struttura completa del sito
-
-> **AZIONE MANUALE RICHIESTA (5 minuti):**
-> Il blocco principale viene dal Cloudflare Bot Management.
-> Vai su Cloudflare Dashboard → Security → Bots e disabilita il blocco per i bot verificati
-> come GPTBot e PerplexityBot. Oppure crea una regola WAF che skippa Bot Fight Mode per
-> questi User-Agent.
-
-### 4. Sitemap incompleta — mancavano 50+ pagine team
-**Prima:** 0 URL per pagine team (es. /shop/serieA/inter, /shop/premier-league/liverpool)  
-**Dopo:** 18 squadre Serie A + 8 Premier League + 14 Nazionali mondiali aggiunte con priority 0.85
-
-### 5. Organization schema povero + mancava WebSite schema
-**Prima:** Solo name, url, logo, sameAs  
-**Dopo:** Aggiunto contactPoint, email, description ricca + WebSite schema con SearchAction
-(abilita il sitelink search box in Google SERP)
-
-### 6. Root metadata con keyword doppiate e description corta
-**Prima:** `keywords: ["maglie calcio", ..., "maglie calcio"]` (duplicato), OG description: "Le migliori maglie da calcio" (5 parole)  
-**Dopo:** 15 keyword uniche, description da 130 caratteri con keyword target incluse
+1. Rimuovere `| Goal Mania` duplicato dal suffix dei title (fix in `layout.tsx` o `metadata.ts`)
+2. Aggiungere `<h1>` alle pagine prodotto
+3. Sostituire "ufficiale" → "da collezione" / "stagione 2026/27" nelle meta description prodotto
+4. Aggiungere canonical tag alle pagine mancanti
+5. Aggiungere `og:image` alla homepage
 
 ---
 
-## Problemi Alti — DA IMPLEMENTARE (priorità alta)
+## 1. Technical SEO
 
-### H1 nella HeroSection è client-side rendered
-**Impatto:** Google vede il DOM dopo JS — ritardo di indicizzazione.
+### Crawlabilità e Indicizzazione
 
-La `HeroSection` ha `"use client"` — l'H1 non è nel server render iniziale.
-Google Renderer elabora JS, ma ci vogliono settimane in più rispetto a contenuto statico.
+| Segnale | Status |
+|---------|--------|
+| robots.txt presente | ✅ |
+| Sitemap XML presente | ✅ |
+| HTTPS | ✅ |
+| HSTS | ✅ (max-age=63072000) |
+| Redirect www → apex | ⚠️ 307 Temporary (dovrebbe essere 301/308) |
+| Canonical tag — homepage | ✅ https://goal-mania.it |
+| Canonical tag — /shop | ✅ |
+| Canonical tag — /shop/serieA/inter | ✅ |
+| Canonical tag — /news | ❌ MANCANTE |
+| Canonical tag — /about | ❌ MANCANTE |
+| Canonical tag — /contact | ❌ MANCANTE |
+| Canonical tag — /transfer | ❌ MANCANTE |
+| Canonical tag — /shop/worldcup | ❌ MANCANTE |
+| Canonical tag — /shipping | ❌ MANCANTE |
+| Pagine articoli (news/transfer) | ✅ canonical presenti |
 
-**Fix raccomandato:**
-```tsx
-// In app/page.tsx — aggiungere PRIMA di HeroSection:
-<h1 className="sr-only">
-  Maglie da Calcio a 30€ — Goal Mania: Serie A, Premier League, Mondiali 2026
-</h1>
+### robots.txt — Analisi
+
+Il file ha un conflitto critico tra le regole generate da Cloudflare (inizio file) e le regole manuali (fine file).
+
+**Sezione Cloudflare Managed (prima nel file — vince):**
 ```
-Oppure passare il testo H1 come prop server a HeroSection.
-
-### Nessun H1 o testo leggibile sulle pagine listing
-Le pagine `/shop/serieA`, `/shop/premier-league` etc. non hanno H1 nel server render.
-I client component (SerieAClient, PremierLeagueClient) gestiscono tutto il markup visibile.
-
-**Fix:** Aggiungere hero section server-rendered con H1 + testo descrittivo prima del client component:
-```tsx
-export default async function SerieAShopPage() {
-  const products = await getSerieAProducts();
-  return (
-    <>
-      <section className="py-8 px-4 max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-2">Maglie Serie A 2025/26</h1>
-        <p className="text-gray-400">
-          Acquista le maglie delle squadre di Serie A 2025/26 a partire da 30€.
-          Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre.
-          Spedizione gratuita in Italia.
-        </p>
-      </section>
-      <SerieAClient products={products} />
-    </>
-  );
-}
+User-agent: GPTBot
+Disallow: /          ← blocca tutto
 ```
 
-### ItemList schema mancante sulle pagine listing
-Le pagine `/shop/serieA`, `/shop/premier-league` non hanno `CollectionPage` schema.
-
-**Fix:**
-```tsx
-const collectionSchema = {
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  name: "Maglie Serie A 2025/26",
-  url: "https://goal-mania.it/shop/serieA",
-  hasPart: products.slice(0, 10).map((p) => ({
-    "@type": "Product",
-    name: p.name,
-    url: `https://goal-mania.it/products/${p.slug}`,
-    offers: { "@type": "Offer", price: p.price, priceCurrency: "EUR" },
-  })),
-};
+**Sezione manuale (dopo — ignorata per GPTBot):**
+```
+User-Agent: GPTBot
+Allow: /             ← mai raggiunta
 ```
 
----
+**Bot bloccati da Cloudflare:** Amazonbot, Applebot-Extended, Bytespider, CCBot, ClaudeBot, CloudflareBrowserRenderingCrawler, Google-Extended, GPTBot, meta-externalagent
 
-## GEO (AI Search) — Piano completo
+**Bot consentiti manualmente (ma alcuni bloccati dalla sezione CF):** GPTBot (conflitto), PerplexityBot, anthropic-ai, Claude-Web, Applebot
 
-### Stato visibilità AI PRIMA delle fix
+**Impatto:** GPTBot (ChatGPT browsing) è di fatto bloccato sul sito intero nonostante l'intenzione del webmaster di consentirlo.
 
-| Piattaforma | Stato | Causa |
-|-------------|-------|-------|
-| Google AI Overviews | Parziale | Cloudflare blocca Google-Extended |
-| ChatGPT / Bing Copilot | Bloccata | GPTBot: Disallow: / |
-| Perplexity | Bloccata | PerplexityBot: Disallow: / |
-| Claude AI | Bloccata | ClaudeBot: Disallow: / |
-| Apple Intelligence | Bloccata | Applebot-Extended: Disallow: / |
+### Header di Sicurezza
 
-### Fix applicate ora
-
-1. `app/robots.ts` con Allow esplicito per AI crawler di valore
-2. `public/llms.txt` con struttura navigabile del sito
-3. Organization schema con description lunga (citabile da AI)
-4. WebSite schema (SearchAction)
-
-### Fix manuali richieste — Cloudflare (CRITICO)
-
-**Opzione A — Cloudflare Dashboard:**
-1. Login → goalmania.it → Security → Bots
-2. Trovare "Block AI Scrapers" → Disabilitare
-3. Oppure: Security → WAF → Custom Rules → Aggiungi regola:
-   - Expression: `(http.user_agent contains "GPTBot") or (http.user_agent contains "PerplexityBot")`
-   - Action: Skip → Bot Fight Mode
-
-**Opzione B — Verificare se il blocco viene da Cloudflare Managed Rules:**
-Alcune regole "Cloudflare Managed Bot" bloccano automaticamente AI scraper.
-Verificare in: Security → WAF → Managed Rules → "Cloudflare Bot Management"
-
-### Ottimizzazione GEO avanzata (da aggiungere)
-
-Aggiungere FAQ schema su homepage per aumentare la citability:
-```tsx
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "Quanto costano le maglie da calcio su Goal Mania?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Su Goal Mania le maglie da calcio partono da 30€. Trovi maglie di Serie A, Premier League, Mondiali 2026 e maglie retro storiche. Spedizione gratuita in Italia."
-      }
-    },
-    {
-      "@type": "Question",
-      name: "Goal Mania spedisce in Italia gratuitamente?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Sì, Goal Mania offre spedizione gratuita su tutti gli ordini in Italia."
-      }
-    },
-    {
-      "@type": "Question",
-      name: "Goal Mania vende maglie di quale squadra?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Goal Mania vende maglie di tutte le principali squadre: Inter, Milan, Juventus, Napoli, Roma, Lazio per la Serie A; Liverpool, Manchester City, Arsenal, Chelsea per la Premier League; più nazionali per i Mondiali 2026."
-      }
-    }
-  ]
-};
-```
+| Header | Status |
+|--------|--------|
+| Strict-Transport-Security | ✅ |
+| Content-Security-Policy | ❌ MANCANTE |
+| X-Frame-Options | ❌ MANCANTE |
+| X-Content-Type-Options | ❌ MANCANTE |
+| Permissions-Policy | ❌ MANCANTE |
+| Referrer-Policy | ❌ MANCANTE |
 
 ---
 
-## Sitemap — Stato dopo le fix
+## 2. On-Page SEO
 
-| Tipo URL | Prima | Dopo |
-|----------|-------|------|
-| Pagine statiche | 17 | 17 |
-| Pagine team Serie A | 0 | 18 |
-| Pagine team Premier League | 0 | 8 |
-| Pagine nazionali Mondiali | 0 | 14 |
-| Pagine prodotto | ~380 | ~380 |
-| **Totale** | **~407** | **~437+** |
+### Title Tag
+
+**Problema critico: tutti i title terminano con `| Goal Mania` duplicato.**
+
+Esempi reali:
+- `/shop` → `Negozio Maglie da Calcio | Goal Mania — Tutte le Squadre | **Goal Mania**`
+- `/news` → `News Calcio | Goal Mania — Serie A, Champions, Calciomercato | **Goal Mania**`
+- `/products/maglia-real-madrid-home-2026-27` → `...— Goal Mania | **Goal Mania**`
+
+**Homepage title length: 71 caratteri** (ideale: 50-60). Verrà troncato da Google.
+
+Titolo attuale: `Maglie da Calcio a 30€ | Goal Mania — Serie A, Premier League, Mondiali 2026`
+Suggerito: `Maglie da Calcio a 30€ | Serie A, Premier League, Mondiali — Goal Mania`
+
+### Meta Description
+
+| Pagina | Lunghezza | Status |
+|--------|-----------|--------|
+| Homepage | 169 chars | ⚠️ Troppo lunga (ideale 120-160) |
+| /shop | ~100 chars | ✅ |
+| /shop/serieA/inter | ~105 chars | ✅ |
+| /transfer | 65 chars | ⚠️ Troppo corta |
+| /contact | ✅ | ✅ |
+
+### Struttura Heading
+
+**Homepage — doppio H1 (problema critico):**
+- H1: `Maglie da Calcio a 30€ — Goal Mania: Serie A, Premier League, Mondiali 2026`
+- H1 (secondo): `MAGLIE DA CALCIO A 30€` ← probabilmente componente decorativo (HeroSection)
+
+Il secondo H1 è quasi certamente il testo hero visivo. Va convertito in `<p>` o `<span>` con stile equivalente.
+
+**Pagine prodotto — H1 assente:**
+La pagina `/products/maglia-real-madrid-home-2026-27` non ha nessun `<h1>`. Il titolo del prodotto è presente nel `<title>` ma non nell'heading della pagina.
+
+**Pagine categoria — H1 con testo spezzato:**
+- `/shop` → H1: `Le MiglioriMaglieda Calcio` (parole concatenate — probabilmente un CSS `::before/::after` che non si combina bene nel DOM testuale)
+- `/shop/worldcup` → H1: `WORLD CUP2026`
+
+### Open Graph
+
+| Tag | Homepage | Prodotti | News |
+|-----|----------|----------|------|
+| og:title | ✅ | ✅ | ✅ |
+| og:description | ✅ | ✅ | ✅ |
+| og:image | ❌ MANCANTE | ✅ (Cloudinary) | ✅ |
+
+La homepage manca completamente di `og:image`. Ogni condivisione social della homepage mostrerà un'anteprima senza immagine.
 
 ---
 
-## Priority Action Plan
+## 3. Schema / Structured Data
 
-### Immediato (GIA' FATTO in questo audit)
-- [x] Metadata unici per tutte le pagine chiave (homepage, shop, serieA, premier-league, team pages, retro, 2025/26, 2024/25)
-- [x] Product schema JSON-LD (Product + aggregateRating + BreadcrumbList)
-- [x] robots.ts con AI crawler permessi
-- [x] public/llms.txt
-- [x] Sitemap con pagine team Serie A, Premier League, Mondiali
-- [x] Organization + WebSite schema potenziati
-- [x] Root metadata keywords aggiornate (15 keyword, no duplicati)
-- [x] Canonical tags su tutte le pagine modificate
-- [x] OG description da 5 → 130 caratteri
+### Homepage
+| Schema | Status |
+|--------|--------|
+| Organization | ✅ |
+| WebSite + SearchAction | ✅ |
+| FAQPage (4 Q&A) | ✅ |
 
-### Questa settimana (MANUALE — 30 minuti totali)
-- [ ] **Azione Cloudflare** — Permettere GPTBot e PerplexityBot (5 min)
-- [ ] **H1 server-rendered** su homepage e pagine categoria
-- [ ] **Registrare sito in Google Search Console** e inviare sitemap
-- [ ] **Bing Webmaster Tools** — invia sitemap per Bing/Copilot
+### Pagine Prodotto (`/products/*`)
+| Schema | Status |
+|--------|--------|
+| Organization | ✅ |
+| WebSite | ✅ |
+| BreadcrumbList | ✅ |
+| **Product** | ❌ **MANCANTE** |
 
-### Questo mese
-- [ ] Testo SEO above-the-fold su pagine listing (150-300 parole)
-- [ ] FAQ schema su homepage per GEO
-- [ ] ItemList/CollectionPage schema su pagine listing
-- [ ] OG image 1200x630 per homepage e categorie principali
-- [ ] Google Merchant Center — feed prodotti per Shopping
+Le pagine prodotto **non hanno Product schema**. Questo è il gap più grave per un e-commerce: senza `Product` con `offers.price`, `offers.availability` e `aggregateRating`, i prodotti non ottengono i rich results di Google Shopping / price snippets.
 
-### Lungo termine
-- [ ] Blog: articoli "Migliore maglia [squadra] 2025/26", "Guida maglie Mondiali 2026"
-- [ ] Link building: partnership con siti notizie calcio italiani
-- [ ] Pagine landing long-tail: "maglia Inter home 2025", "maglia Napoli away 2025"
-- [ ] Valutare redirect /shop/serieA → /shop/serie-a (URL SEO-friendly)
+### Pagine News
+| Schema | Status |
+|--------|--------|
+| NewsArticle | ✅ |
+| BreadcrumbList | ✅ |
+| Author (Person) | ❌ MANCANTE |
+
+I NewsArticle non hanno `author`. Google richiede almeno `author.name` per considerare l'articolo bylined content (E-E-A-T).
+
+### Pagine Categoria (`/shop/*`)
+Solo Organization + WebSite. Manca `ItemList` schema per le categorie prodotto (opzionale ma utile per rich results).
+
+---
+
+## 4. Sitemap
+
+- **765 URL totali** in sitemap.xml
+  - 274 pagine prodotto (`/products/*`)
+  - 50 categorie shop (`/shop/*`)
+  - ~441 altre (news, transfer, international, serieA articles)
+- Sitemap dichiarata in robots.txt ✅
+- `lastmod` presente su tutti gli URL ✅
+- `changefreq` e `priority` valorizzati ✅
+
+**Problemi:**
+- Alcune URL in sitemap non hanno canonical (es. `/shop/worldcup`, `/about`, `/contact`) — rischio di indicizzazione senza canonical
+- Le URL `/serieA/*` (tipo `/serieA/mancini-...`) sembrano articoli ma non stanno sotto `/news/` — URL structure incoerente
+
+---
+
+## 5. Performance
+
+### Header Analysis (CDN/Cache)
+- `x-vercel-cache: HIT` → ISR funzionante ✅
+- `x-nextjs-stale-time: 300` → revalidation ogni 5 min ✅
+- Cloudflare CDN attivo ✅
+
+### Segnali di Performance
+
+| Segnale | Valore | Impatto |
+|---------|--------|---------|
+| Font preloads in `<head>` | **17 file** | Alto — LCP |
+| Script in `<head>` | **20 script** | Alto — TBT/TTI |
+| Google Ads (pagead2) | presente | Medio — CLS/LCP |
+| Immagini lazy loaded | 129/131 | ✅ Buono |
+| Immagini eager loaded | 0 | ⚠️ LCP hero potenzialmente non preloadato |
+| Cloudinary CDN per immagini | ✅ | ✅ Buono |
+
+**17 font preloads** è eccessivo. Il browser tenta di scaricarli tutti in parallelo prima del render. Ridurre a 3-4 font critici + `font-display: swap` per gli altri.
+
+---
+
+## 6. Content Quality
+
+### E-E-A-T Signals
+
+| Segnale | Status |
+|---------|--------|
+| Chi siamo page | ✅ presente (/about) |
+| Contatti con email | ✅ (/contact) |
+| Privacy Policy | ✅ in sitemap |
+| Shipping info | ✅ (/shipping) |
+| Autore articoli visibile | ❌ nessun byline |
+| Trust signals (recensioni) | non rilevato |
+
+### Copy Legale — CRITICO
+
+**La meta description di ogni pagina prodotto contiene "ufficiale":**
+
+Esempio `/products/maglia-real-madrid-home-2026-27`:
+> "La divisa **ufficiale** da casa del Real Madrid per la stagione La Liga 2026/27."
+
+Con 18 occorrenze del termine su una singola pagina prodotto, e 274 pagine prodotto nel sito, questo è un rischio legale sistematico. Sostituire con:
+- "da collezione"
+- "della stagione 2026/27"
+- "stile home 2026/27"
+
+Verificare anche le descrizioni prodotto nel CMS/database, non solo il metadata.
+
+---
+
+## 7. AI Search Readiness
+
+| Segnale | Status |
+|---------|--------|
+| llms.txt | ✅ presente e ben strutturato |
+| robots.txt: ai-train=no | ✅ (Cloudflare managed) |
+| robots.txt: search=yes | ✅ |
+| anthropic-ai Allow | ✅ |
+| Claude-Web Allow | ✅ |
+| PerplexityBot Allow | ✅ |
+| GPTBot | ⚠️ Bloccato da regola CF (conflitto con sezione manuale) |
+| Google-Extended (AI Overviews) | ❌ Bloccato da Cloudflare |
+| ClaudeBot | ❌ Bloccato da Cloudflare |
+| FAQ schema (AI friendly) | ✅ |
+
+**Google-Extended bloccato** = il sito non appare negli AI Overviews di Google Search. Considerare se questa è una scelta intenzionale (i Cloudflare presets sono spesso troppo aggressivi per default).
+
+---
+
+## 8. Images
+
+| Segnale | Status |
+|---------|--------|
+| Alt text presente | ✅ 131/131 immagini hanno alt |
+| Formato WebP | ✅ (Cloudinary) |
+| Lazy loading | ✅ 129/131 |
+| og:image homepage | ❌ MANCANTE |
+| CDN immagini | ✅ Cloudinary |
+
+---
+
+## ACTION PLAN
+
+### 🔴 CRITICO — Fix immediato
+
+| # | Issue | File / Area | Effort |
+|---|-------|-------------|--------|
+| C1 | Rimuovere `| Goal Mania` duplicato dal suffix di tutti i title | `app/layout.tsx` o template metadata | 1h |
+| C2 | Sostituire "ufficiale" nelle meta description prodotto | CMS/database + `app/products/[slug]/page.tsx` | 2h |
+| C3 | Aggiungere `<h1>` alle pagine prodotto | `app/products/[slug]/page.tsx` | 30min |
+| C4 | Correggere conflitto GPTBot in robots.txt | `app/robots.ts` — rimuovere la sezione manuale GPTBot (già gestita da Cloudflare) | 15min |
+| C5 | Aggiungere `og:image` alla homepage | `app/page.tsx` metadata | 30min |
+
+### 🟠 ALTA — Fix entro 1 settimana
+
+| # | Issue | File / Area | Effort |
+|---|-------|-------------|--------|
+| H1 | Aggiungere canonical alle 6 pagine mancanti | `app/news/page.tsx`, `app/about/page.tsx`, `app/contact/page.tsx`, `app/transfer/page.tsx`, `app/shop/worldcup/page.tsx`, `app/shipping/page.tsx` | 2h |
+| H2 | Aggiungere Product schema alle pagine prodotto | `app/products/[slug]/page.tsx` | 3h |
+| H3 | Correggere doppio H1 homepage (secondo H1 → `<p>` o `<span>`) | `components/home/HeroSection.tsx` | 30min |
+| H4 | Aggiungere `author` al NewsArticle schema | `app/news/[slug]/page.tsx` | 1h |
+| H5 | Cambiare redirect www da 307 → 301 | `vercel.json` o Vercel dashboard | 15min |
+| H6 | Ridurre font preloads da 17 a 4 critici | `app/layout.tsx` | 2h |
+
+### 🟡 MEDIA — Fix entro 1 mese
+
+| # | Issue | File / Area | Effort |
+|---|-------|-------------|--------|
+| M1 | Accorciare title homepage a <60 caratteri | metadata homepage | 15min |
+| M2 | Allungare meta desc /transfer (ora 65 chars) | `app/transfer/page.tsx` | 15min |
+| M3 | Aggiungere header sicurezza: X-Frame-Options, X-Content-Type-Options, Referrer-Policy | `next.config.js` headers | 1h |
+| M4 | Correggere H1 testo spezzato su /shop e /shop/worldcup | HeroSection dei componenti shop | 1h |
+| M5 | Decidere strategia Google-Extended (ora bloccato = no AI Overviews) | Cloudflare Bot Management | 15min |
+| M6 | Aggiungere byline (autore) visibile agli articoli news | componenti news | 2h |
+| M7 | Verificare word count articoli news (min 500 parole) | CMS | ongoing |
+
+### 🟢 BASSA — Backlog
+
+| # | Issue | Effort |
+|---|-------|--------|
+| L1 | Aggiungere `ItemList` schema alle pagine categoria | 2h |
+| L2 | Aggiungere `rel=next/prev` per paginazione categorie | 1h |
+| L3 | Aggiungere `aggregateRating` a Product schema quando si raccolgono recensioni | — |
+| L4 | Implementare Content-Security-Policy header | 4h |
+| L5 | Uniformare URL struttura articoli (ora mix /news/, /transfer/, /serieA/, /international/) | refactor routes | 4h |
+
+---
+
+## Note Tecniche
+
+- **Sitemap:** 765 URL. Verificare che tutte le URL siano effettivamente indicizzabili prima di inviarla a Google Search Console.
+- **Performance:** Senza dati CrUX reali non è possibile misurare LCP/INP/CLS. Verificare in Google Search Console → Core Web Vitals.
+- **Google Ads (`pagead2.googlesyndication.com`):** lo script è caricato su ogni pagina e può impattare CLS (annunci che spostano layout). Usare `strategy="lazyOnload"` con Next.js Script.
+- **20 script in `<head>`:** verificare che GA, GTM e Ads usino `strategy="afterInteractive"` in Next.js per non bloccare il render.
+
+---
+
+*Report generato con Claude Code SEO Audit — goal-mania.it — 23 giugno 2026*

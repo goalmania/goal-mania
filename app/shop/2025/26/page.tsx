@@ -7,7 +7,7 @@ import { IProduct } from "@/lib/types/product";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Maglie Calcio 2025/26 | Nuova Stagione — Goal Mania",
+  title: "Maglie Calcio 2025/26 — Stagione Corrente",
   description:
     "Tutte le maglie da calcio della stagione 2025/26. Home e away kit delle migliori squadre europee a partire da 30€. Spedizione gratuita in Italia.",
   alternates: {

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, ShoppingBag, Tag } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useCartStore } from "@/lib/store/cart";
 
 const GRAIN = `<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(#g)' opacity='0.07'/></svg>`;
 
@@ -41,6 +42,8 @@ export default function HeroSection({ products = [] }: Props) {
   const [mounted, setMounted] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [visible, setVisible] = useState(true);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const addItemToCart = useCartStore((state) => state.addItem);
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -133,7 +136,8 @@ export default function HeroSection({ products = [] }: Props) {
           </div>
 
           {/* ── HEADLINE PRINCIPALE ── */}
-          <h1
+          <div
+            aria-hidden="true"
             className={`font-black uppercase leading-none mb-4 transition-all duration-700 delay-100 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
             style={{
               fontFamily: "var(--font-display,'Barlow Condensed',sans-serif)",
@@ -145,7 +149,7 @@ export default function HeroSection({ products = [] }: Props) {
             <span className="text-white block">MAGLIE DA</span>
             <span className="text-white block">CALCIO</span>
             <span style={{ color: "#c8f000" }} className="block">A 30€</span>
-          </h1>
+          </div>
 
           {/* Subtext */}
           <p
@@ -275,13 +279,19 @@ export default function HeroSection({ products = [] }: Props) {
                           Spedizione Gratis
                         </div>
                       </div>
-                      <Link
-                        href={`/products/${current.slug || current.id}`}
-                        className="flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 hover:scale-110"
-                        style={{ background: "#c8f000" }}
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addItemToCart({ id: current.id, name: current.name, price: current.price, image: current.image, quantity: 1 });
+                          setAddedToCart(true);
+                          setTimeout(() => setAddedToCart(false), 1800);
+                        }}
+                        className="flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
+                        style={{ background: addedToCart ? "#a0c000" : "#c8f000" }}
+                        title="Aggiungi al carrello"
                       >
                         <ShoppingBag size={15} color="#0a0a0a" />
-                      </Link>
+                      </button>
                     </div>
                   </div>
                 </div>

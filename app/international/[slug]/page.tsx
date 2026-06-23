@@ -57,7 +57,7 @@ export async function generateMetadata({
     const publishedAt = article.publishedAt ? new Date(article.publishedAt).toISOString() : undefined;
 
     return {
-      title: `${article.title} | Goal Mania`,
+      title: article.title,
       description: article.summary,
       keywords: article.seoKeywords?.join(", ") ?? undefined,
       authors: [{ name: article.author ?? "Redazione Goalmania", url: "https://goal-mania.it" }],
@@ -85,7 +85,7 @@ export async function generateMetadata({
   } catch (error) {
     console.error("Error generating metadata:", error);
     return {
-      title: "Goal Mania",
+      title: "Calcio Internazionale",
       description: "Ultime notizie calcio internazionale",
     };
   }
@@ -173,11 +173,9 @@ export default async function InternationalArticlePage({
       : article.publishedAt
       ? new Date(article.publishedAt).toISOString()
       : undefined,
-    author: {
-      "@type": "Organization",
-      name: article.author ?? "Redazione Goalmania",
-      url: "https://goal-mania.it",
-    },
+    author: article.author
+      ? { "@type": "Person", name: article.author, url: "https://goal-mania.it/news" }
+      : { "@type": "Organization", name: "Redazione Goal Mania", url: "https://goal-mania.it" },
     publisher: {
       "@type": "Organization",
       name: "Goal Mania",

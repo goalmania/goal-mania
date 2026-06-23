@@ -6,7 +6,7 @@ import Season2627Client from "@/app/_components/Season2627Client";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Maglie Calcio 2026/27 | Nuova Stagione — Goal Mania",
+  title: "Maglie Calcio 2026/27 — Nuova Stagione",
   description:
     "Acquista le maglie calcio della stagione 2026/27 a partire da €30. Inter, Milan, Juventus, Napoli, Liverpool, Real Madrid, Bayern Monaco e altri. Spedizione gratuita in Italia.",
   keywords: [

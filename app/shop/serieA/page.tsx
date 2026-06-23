@@ -7,7 +7,7 @@ import { IProduct } from "@/lib/types/product";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Maglie Serie A 2025/26 | Inter, Milan, Juventus, Napoli — Goal Mania",
+  title: "Maglie Serie A 2025/26 — Inter, Milan, Juventus, Napoli",
   description:
     "Acquista le maglie della Serie A 2025/26 a partire da 30€. Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre. Spedizione gratuita in Italia.",
   keywords: [

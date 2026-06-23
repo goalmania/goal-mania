@@ -7,7 +7,7 @@ import { IProduct } from "@/lib/types/product";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Maglie Calcio 2024/25 | Kit Stagione Scorsa — Goal Mania",
+  title: "Maglie Calcio 2024/25 — Kit Stagione Scorsa",
   description:
     "Maglie da calcio della stagione 2024/25 a prezzi scontati. Home e away kit delle migliori squadre europee da 30€. Spedizione gratuita in Italia.",
   alternates: {

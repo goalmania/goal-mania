@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/admin/", "/api/", "/checkout/", "/account/"],
       },
-      // Allow AI search crawlers for GEO visibility (ChatGPT, Perplexity, Bing Copilot)
+      // Allow AI search crawlers for GEO visibility (ChatGPT, Perplexity, Bing Copilot, Claude, Apple)
       {
         userAgent: "GPTBot",
         allow: "/",
@@ -30,7 +30,18 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin/", "/api/", "/checkout/", "/account/"],
       },
       {
+        userAgent: "ClaudeBot",
+        allow: "/",
+        disallow: ["/admin/", "/api/", "/checkout/", "/account/"],
+      },
+      {
         userAgent: "Applebot",
+        allow: "/",
+        disallow: ["/admin/", "/api/", "/checkout/", "/account/"],
+      },
+      // Allow Google-Extended so the site appears in AI Overviews (Google SGE)
+      {
+        userAgent: "Google-Extended",
         allow: "/",
         disallow: ["/admin/", "/api/", "/checkout/", "/account/"],
       },

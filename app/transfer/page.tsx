@@ -8,9 +8,18 @@ import Article from "@/lib/models/Article";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Transfer Market",
+  title: "Calciomercato 2026 — Notizie e Trasferimenti",
   description:
-    "Latest football transfer news, rumors and updates from Goal Mania",
+    "Ultime notizie di calciomercato: trattative, trasferimenti, rumor e ufficialità di Serie A, Premier League, Champions League. Aggiornato ogni ora.",
+  alternates: {
+    canonical: "https://goal-mania.it/transfer",
+  },
+  openGraph: {
+    title: "Calciomercato 2026 | Goal Mania",
+    description: "Tutte le trattative e i trasferimenti in tempo reale.",
+    url: "https://goal-mania.it/transfer",
+    type: "website",
+  },
 };
 
 async function getTransferArticles() {

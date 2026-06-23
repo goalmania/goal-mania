@@ -5,7 +5,7 @@ import SerieAClient from "@/app/_components/SerieAClient";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Maglie Edizione Limitata | Collezioni Esclusive — Goal Mania",
+  title: "Maglie Edizione Limitata — Collezioni Esclusive",
   description:
     "Maglie da calcio in edizione limitata e collezioni esclusive. Pezzi unici difficili da trovare altrove. Spedizione gratuita in Italia.",
   alternates: {

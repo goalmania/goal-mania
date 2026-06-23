@@ -4,7 +4,7 @@ import ShopClientWrapper from "@/app/_components/ShopClientWrapper";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Negozio Maglie da Calcio | Goal Mania — Tutte le Squadre",
+  title: "Negozio Maglie da Calcio — Tutte le Squadre",
   description:
     "Scopri tutto il catalogo: maglie Serie A, Premier League, Mondiali 2026, retro e edizioni limitate. Prezzi a partire da 30€. Spedizione gratuita in Italia.",
   keywords: [

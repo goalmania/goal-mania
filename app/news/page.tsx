@@ -21,9 +21,12 @@ import NewsCategoryTabsClient from "./NewsCategoryTabsClient";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "News Calcio | Goal Mania — Serie A, Champions, Calciomercato",
+  title: "News Calcio — Serie A, Champions, Calciomercato",
   description:
     "Tutte le notizie di calcio in tempo reale: Serie A, Champions League, Calciomercato, Nazionale. Il meglio del giornalismo calcistico italiano.",
+  alternates: {
+    canonical: "https://goal-mania.it/news",
+  },
 };
 
 async function getNewsArticles(): Promise<{

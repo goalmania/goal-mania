@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Maglie Calcio Retro | Storiche, Vintage, Anni 90 — Goal Mania",
+  title: "Maglie Calcio Retro — Storiche, Vintage, Anni 90",
   description:
     "Acquista maglie retro storiche del calcio. Napoli di Maradona, Brasile 2002, Milan anni '90, Juventus, Argentina, France 98. Da 30€. Spedizione gratuita in Italia.",
   keywords: [

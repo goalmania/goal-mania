@@ -54,7 +54,7 @@ const faqSchema = {
 };
 
 export const metadata: Metadata = {
-  title: "Maglie da Calcio a 30€ | Goal Mania — Serie A, Premier League, Mondiali",
+  title: "Maglie da Calcio a 30€ — Serie A, Premier League, Mondiali 2026",
   description:
     "Acquista maglie da calcio a partire da 30€. Inter, Milan, Juventus, Napoli, Liverpool, Manchester City e le nazionali per i Mondiali 2026. Spedizione gratuita in Italia.",
   keywords: [
@@ -76,6 +76,14 @@ export const metadata: Metadata = {
       "Inter, Milan, Juventus, Napoli, Liverpool, Manchester City e le nazionali per i Mondiali 2026. Spedizione gratuita in Italia.",
     url: "https://goal-mania.it",
     type: "website",
+    images: [
+      {
+        url: "https://goal-mania.it/hero-home.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Goal Mania — Maglie da Calcio a 30€",
+      },
+    ],
   },
   alternates: {
     canonical: "https://goal-mania.it",

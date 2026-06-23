@@ -1,5 +1,15 @@
 import Image from "next/image";
 import React from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Chi Siamo",
+  description:
+    "Goal Mania è il negozio online italiano di maglie da calcio a prezzi accessibili. Scopri la nostra storia, i nostri valori e perché più di 10.000 tifosi si affidano a noi.",
+  alternates: {
+    canonical: "https://goal-mania.it/about",
+  },
+};
 
 const Page = () => {
   return (

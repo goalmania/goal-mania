@@ -55,7 +55,7 @@ export async function generateMetadata({
     const publishedAt = article.publishedAt ? new Date(article.publishedAt).toISOString() : undefined;
 
     return {
-      title: `${article.title} | Goal Mania`,
+      title: article.title,
       description: article.summary,
       keywords: article.seoKeywords?.join(", ") ?? undefined,
       authors: [{ name: article.author ?? "Redazione Goalmania", url: "https://goal-mania.it" }],
@@ -171,11 +171,9 @@ export default async function SerieAArticlePage({
       : article.publishedAt
       ? new Date(article.publishedAt).toISOString()
       : undefined,
-    author: {
-      "@type": "Organization",
-      name: article.author ?? "Redazione Goalmania",
-      url: "https://goal-mania.it",
-    },
+    author: article.author
+      ? { "@type": "Person", name: article.author, url: "https://goal-mania.it/news" }
+      : { "@type": "Organization", name: "Redazione Goal Mania", url: "https://goal-mania.it" },
     publisher: {
       "@type": "Organization",
       name: "Goal Mania",
