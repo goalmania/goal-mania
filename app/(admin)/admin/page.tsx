@@ -26,6 +26,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import LiveAnalyticsPanel from "@/components/admin/LiveAnalyticsPanel";
+import HistoricalAnalyticsPanel from "@/components/admin/HistoricalAnalyticsPanel";
 
 interface Stat {
   name: string;
@@ -297,6 +298,7 @@ export default function AdminDashboard() {
     <>
       {/* Live Analytics */}
       <LiveAnalyticsPanel />
+      <HistoricalAnalyticsPanel />
 
       {/* Header */}
       <div>
