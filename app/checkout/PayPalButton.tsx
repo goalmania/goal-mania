@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
-import { PayPalButtons, usePayPalScriptReducer, SCRIPT_LOADING_STATE } from "@paypal/react-paypal-js";
+import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 
 interface PayPalButtonProps {
   total: number;
@@ -19,30 +19,7 @@ interface PayPalButtonProps {
 export default function PayPalButton({ total, items, addressId, coupon, discountRules, onSuccess, guestEmail, guestAddress }: PayPalButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [{ isPending, isRejected }, dispatch] = usePayPalScriptReducer();
-  const [isScriptReady, setIsScriptReady] = useState(false);
-
-  // Triggera il caricamento del SDK PayPal quando il componente appare
-  useEffect(() => {
-    dispatch({ type: "setLoadingStatus", value: SCRIPT_LOADING_STATE.PENDING });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    // Controlla immediatamente, poi ogni 200ms max 5 volte
-    let attempts = 0;
-    const check = () => {
-      if (typeof window !== "undefined" && (window as any).paypal) {
-        setIsScriptReady(true);
-      } else if (attempts < 5) {
-        attempts++;
-        setTimeout(check, 200);
-      } else {
-        setError("PayPal non disponibile. Aggiorna la pagina o usa la carta.");
-      }
-    };
-    check();
-  }, []);
+  const [{ isPending, isRejected }] = usePayPalScriptReducer();
 
   const Spinner = () => (
     <div className="flex flex-col items-center gap-3 py-6">
@@ -69,9 +46,8 @@ export default function PayPalButton({ total, items, addressId, coupon, discount
   if (!process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID) {
     return <ErrorBlock msg="PayPal non configurato. Usa il pagamento con carta." />;
   }
-  if (isPending || !isScriptReady) return <Spinner />;
+  if (isPending) return <Spinner />;
   if (isRejected) return <ErrorBlock msg="PayPal non è riuscito a caricarsi. Prova con la carta." />;
-  if (error && error.includes("non disponibile")) return <ErrorBlock msg={error} />;
 
   const createOrder = async (_data: any, _actions: any) => {
     setIsLoading(true);

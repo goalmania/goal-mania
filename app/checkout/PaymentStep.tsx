@@ -292,9 +292,8 @@ export default function PaymentStep({ clientSecret, total, onSuccess, items, add
   clientSecret: string; total: number; onSuccess: () => void; items: any[]; addressId: string; coupon: any; discountRules?: any[];
   guestEmail?: string; shippingAddress?: any;
 }) {
-  // deferLoading=true: PayPal SDK non carica finché l'utente non seleziona PayPal
   return (
-    <PayPalScriptProvider options={paypalOptions} deferLoading={true}>
+    <PayPalScriptProvider options={paypalOptions}>
       {clientSecret ? (
         <Elements stripe={stripePromise} options={{ clientSecret, appearance: stripeAppearance }}>
           <PaymentMethods clientSecret={clientSecret} total={total} onSuccess={onSuccess} items={items} addressId={addressId} coupon={coupon} discountRules={discountRules} guestEmail={guestEmail} shippingAddress={shippingAddress} />
