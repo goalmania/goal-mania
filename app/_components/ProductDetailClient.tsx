@@ -254,6 +254,7 @@ export default function ProductDetailClient({
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [imgErrors, setImgErrors] = useState<Record<number, boolean>>({});
   const [quantity, setQuantity] = useState(1);
   const [sizeChartOpen, setSizeChartOpen] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -534,13 +535,14 @@ export default function ProductDetailClient({
               }}
             >
               <Image
-                src={cloudinaryOpt(product.images[selectedImage]) || "/images/placeholder.png"}
+                src={imgErrors[selectedImage] ? "/images/placeholder.png" : (cloudinaryOpt(product.images[selectedImage]) || "/images/placeholder.png")}
                 alt={product.title}
                 fill
                 unoptimized
                 className="object-contain p-5 transition-all duration-400"
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
+                onError={() => setImgErrors(prev => ({ ...prev, [selectedImage]: true }))}
               />
               {/* Image counter */}
               <div
@@ -570,7 +572,7 @@ export default function ProductDetailClient({
                       opacity: i === selectedImage ? 1 : 0.55,
                     }}
                   >
-                    <Image src={cloudinaryOpt(img, 120)} alt="" width={60} height={60} unoptimized className="object-contain w-full h-full p-1" />
+                    <Image src={imgErrors[i] ? "/images/placeholder.png" : (cloudinaryOpt(img, 120) || "/images/placeholder.png")} alt="" width={60} height={60} unoptimized className="object-contain w-full h-full p-1" onError={() => setImgErrors(prev => ({ ...prev, [i]: true }))} />
                   </button>
                 ))}
               </div>
