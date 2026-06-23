@@ -37,10 +37,10 @@ const ARTICLE_MAP: [string, string][] = [
   // ── JUVENTUS ──────────────────────────────────────────────────────────
   ["juventus home 2026", "https://www.footyheadlines.com/2025/08/juventus-26-27-home-kit.html"],
   ["juventus away 2026", "https://www.footyheadlines.com/2025/08/juventus-26-27-away-kit.html"],
-  ["juventus third 2026","https://www.footyheadlines.com/1345761138/juventus-26-27-third-kit-leaked-2-new-pictures.html"],
+  ["juventus third 2026","https://www.footyheadlines.com/2025/08/juventus-26-27-away-kit.html"],
   ["juventus home",      "https://www.footyheadlines.com/2025/08/juventus-26-27-home-kit.html"],
   ["juventus away",      "https://www.footyheadlines.com/2025/08/juventus-26-27-away-kit.html"],
-  ["juventus third",     "https://www.footyheadlines.com/1345761138/juventus-26-27-third-kit-leaked-2-new-pictures.html"],
+  ["juventus third",     "https://www.footyheadlines.com/2025/08/juventus-26-27-away-kit.html"],
 
   // ── NAPOLI ────────────────────────────────────────────────────────────
   ["napoli home 2026",   "https://www.footyheadlines.com/2025/07/new-napoli-25-26-home-away-kits.html"],
@@ -76,9 +76,9 @@ const ARTICLE_MAP: [string, string][] = [
   ["atalanta third",     "https://www.footyheadlines.com/2025/08/atalanta-25-26-third-kit.html"],
 
   // ── FIORENTINA ────────────────────────────────────────────────────────
-  ["fiorentina home 2026","https://www.footyheadlines.com/3745976621/joma-fiorentina-26-27-home-away-third-kits-colors-leaked-centenary-kit-coming-no-more-kappa.html"],
-  ["fiorentina away 2026","https://www.footyheadlines.com/3745976621/joma-fiorentina-26-27-home-away-third-kits-colors-leaked-centenary-kit-coming-no-more-kappa.html"],
-  ["fiorentina third 2026","https://www.footyheadlines.com/3745976621/joma-fiorentina-26-27-home-away-third-kits-colors-leaked-centenary-kit-coming-no-more-kappa.html"],
+  ["fiorentina home 2026","https://www.footyheadlines.com/2025/05/fiorentina-25-26-home-kit.html"],
+  ["fiorentina away 2026","https://www.footyheadlines.com/2025/05/fiorentina-25-26-home-kit.html"],
+  ["fiorentina third 2026","https://www.footyheadlines.com/2025/05/fiorentina-25-26-home-kit.html"],
   ["fiorentina home",    "https://www.footyheadlines.com/2025/05/fiorentina-25-26-home-kit.html"],
   ["fiorentina away",    "https://www.footyheadlines.com/2025/05/fiorentina-25-26-home-kit.html"],
   ["fiorentina third",   "https://www.footyheadlines.com/2025/05/fiorentina-25-26-home-kit.html"],
@@ -197,12 +197,12 @@ const ARTICLE_MAP: [string, string][] = [
   ["borussia dortmund third",     "https://www.footyheadlines.com/2026/03/bvb-26-27-away-kit.html"],
 
   // ── COMO ──────────────────────────────────────────────────────────────
-  ["como home 2026",  "https://www.footyheadlines.com/team/Como"],
-  ["como away 2026",  "https://www.footyheadlines.com/team/Como"],
-  ["como third 2026", "https://www.footyheadlines.com/team/Como"],
-  ["como home",       "https://www.footyheadlines.com/team/Como"],
-  ["como away",       "https://www.footyheadlines.com/team/Como"],
-  ["como third",      "https://www.footyheadlines.com/team/Como"],
+  ["como home 2026",  "https://www.footyheadlines.com/2026/04/como-26-27-home-kit.html"],
+  ["como away 2026",  "https://www.footyheadlines.com/2026/04/como-26-27-home-kit.html"],
+  ["como third 2026", "https://www.footyheadlines.com/2026/04/como-26-27-home-kit.html"],
+  ["como home",       "https://www.footyheadlines.com/2026/04/como-26-27-home-kit.html"],
+  ["como away",       "https://www.footyheadlines.com/2026/04/como-26-27-home-kit.html"],
+  ["como third",      "https://www.footyheadlines.com/2026/04/como-26-27-home-kit.html"],
 
   // ── BOLOGNA ───────────────────────────────────────────────────────────
   ["bologna home",    "https://www.footyheadlines.com/team/Bologna"],
