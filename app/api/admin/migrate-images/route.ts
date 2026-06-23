@@ -276,7 +276,7 @@ async function uploadToCloudinary(imageUrl: string, publicId: string): Promise<s
 }
 
 function isBadImage(url: string) {
-  return !url || url === PLACEHOLDER || !url.includes("res.cloudinary.com");
+  return !url || url.includes("/images/image.png") || url.trim() === "";
 }
 
 export async function GET(req: NextRequest) {
