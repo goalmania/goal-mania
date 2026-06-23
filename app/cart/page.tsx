@@ -272,7 +272,7 @@ export default function CartPage() {
                   >
                     <div className="relative w-10 h-10 rounded-lg flex-shrink-0 bg-[#1a1a1a] overflow-hidden">
                       {item.images?.[0] ? (
-                        <Image src={item.images[0]} alt={item.title} fill className="object-cover" />
+                        <Image src={item.images[0].includes("res.cloudinary.com") ? item.images[0].replace("/upload/", "/upload/w_80,q_auto,f_auto/") : item.images[0]} alt={item.title} fill unoptimized className="object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-lg">👕</div>
                       )}

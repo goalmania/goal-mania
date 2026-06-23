@@ -107,20 +107,15 @@ export const authOptions: NextAuthOptions = {
           token.email = user.email;
           token.name = user.name;
           token.role = user.role as string | undefined;
-          console.log("[NextAuth][JWT Callback] Set token role:", token.role);
         }
 
-        // Handle updates to the session
         if (trigger === "update" && session) {
           if (session.user) {
             token.name = session.user.name;
             token.email = session.user.email;
-            // Do not update role here to avoid accidental removal
           }
         }
 
-        // Always log token on callback
-        console.log("[NextAuth][JWT Callback] Token:", token);
         return token;
       },
       async session({ session, token }) {
@@ -129,10 +124,7 @@ export const authOptions: NextAuthOptions = {
           session.user.name = token.name as string;
           session.user.email = token.email as string;
           session.user.role = token.role as string | undefined;
-          console.log("[NextAuth][Session Callback] Set session user role:", session.user.role);
         }
-        // Always log session on callback
-        console.log("[NextAuth][Session Callback] Session:", session);
         return session;
       },
     },

@@ -81,6 +81,7 @@ export async function POST(req: NextRequest) {
     // Ref ordine
     const reference = `GM-${Date.now()}`;
 
+    console.log("[PayPal] mode:", process.env.PAYPAL_MODE, "url:", PAYPAL_BASE_URL, "clientId set:", !!process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID, "secret set:", !!process.env.PAYPAL_CLIENT_SECRET);
     const accessToken = await getPayPalAccessToken();
 
     const orderPayload = {
