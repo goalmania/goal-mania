@@ -44,7 +44,8 @@ async function getPayPalAccessToken(): Promise<string> {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    let session = null;
+    try { session = await getServerSession(authOptions); } catch {}
     const body = await req.json();
     const { items, addressId, coupon, discountRules, guestEmail, guestAddress } = body;
 
@@ -54,17 +55,11 @@ export async function POST(req: NextRequest) {
 
     const isGuest = !session?.user;
 
-    // Recupera indirizzo (utente registrato o guest)
+    // Recupera indirizzo
     let shippingName = "";
-    if (isGuest) {
-      if (!guestAddress) {
-        return NextResponse.json({ error: "Indirizzo spedizione mancante" }, { status: 400 });
-      }
+    if (guestAddress) {
       shippingName = guestAddress.fullName || "";
-    } else {
-      if (!addressId) {
-        return NextResponse.json({ error: "Indirizzo non selezionato" }, { status: 400 });
-      }
+    } else if (addressId) {
       await connectDB();
       const address = await Address.findById(addressId);
       shippingName = address?.fullName || "";

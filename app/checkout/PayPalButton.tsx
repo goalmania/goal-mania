@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
-import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { PayPalButtons, usePayPalScriptReducer, SCRIPT_LOADING_STATE } from "@paypal/react-paypal-js";
 
 interface PayPalButtonProps {
   total: number;
@@ -19,8 +19,14 @@ interface PayPalButtonProps {
 export default function PayPalButton({ total, items, addressId, coupon, discountRules, onSuccess, guestEmail, guestAddress }: PayPalButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [{ isPending, isRejected }] = usePayPalScriptReducer();
+  const [{ isPending, isRejected }, dispatch] = usePayPalScriptReducer();
   const [isScriptReady, setIsScriptReady] = useState(false);
+
+  // Triggera il caricamento del SDK PayPal quando il componente appare
+  useEffect(() => {
+    dispatch({ type: "setLoadingStatus", value: SCRIPT_LOADING_STATE.PENDING });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     // Controlla immediatamente, poi ogni 200ms max 5 volte

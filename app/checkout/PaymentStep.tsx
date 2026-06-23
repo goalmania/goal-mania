@@ -131,7 +131,13 @@ function StripePayment({ clientSecret, total, onSuccess }: { clientSecret: strin
     if (!stripe || !elements) return;
     setIsLoading(true);
     setError(null);
-    const { error, paymentIntent } = await stripe.confirmPayment({ elements, redirect: "if_required" });
+    const { error, paymentIntent } = await stripe.confirmPayment({
+      elements,
+      redirect: "if_required",
+      confirmParams: {
+        return_url: `${window.location.origin}/checkout/success?payment_method=stripe`,
+      },
+    });
     if (error) {
       setError(error.message || "Pagamento fallito");
     } else if (paymentIntent && ["succeeded", "processing"].includes(paymentIntent.status)) {
@@ -238,6 +244,7 @@ function PaymentMethods({ clientSecret, total, onSuccess, items, addressId, coup
   guestEmail?: string; shippingAddress?: any;
 }) {
   const [selectedMethod, setSelectedMethod] = useState<"stripe" | "paypal" | "scalapay">(clientSecret ? "stripe" : "paypal");
+  const selectMethod = (id: "stripe" | "paypal" | "scalapay") => setSelectedMethod(id);
 
   const methods = [
     clientSecret && { id: "stripe" as const, label: "💳 Carta / Klarna / Link", sub: "Visa, Mastercard, Amex, Klarna, Apple/Google Pay" },
@@ -253,7 +260,7 @@ function PaymentMethods({ clientSecret, total, onSuccess, items, addressId, coup
           <button
             key={m.id}
             type="button"
-            onClick={() => setSelectedMethod(m.id)}
+            onClick={() => selectMethod(m.id)}
             className={`p-3.5 border rounded-xl text-left transition-all duration-150 ${
               selectedMethod === m.id
                 ? "border-[#c8f000] bg-[#c8f000]/8"
@@ -285,8 +292,9 @@ export default function PaymentStep({ clientSecret, total, onSuccess, items, add
   clientSecret: string; total: number; onSuccess: () => void; items: any[]; addressId: string; coupon: any; discountRules?: any[];
   guestEmail?: string; shippingAddress?: any;
 }) {
+  // deferLoading=true: PayPal SDK non carica finché l'utente non seleziona PayPal
   return (
-    <PayPalScriptProvider options={paypalOptions} deferLoading={false}>
+    <PayPalScriptProvider options={paypalOptions} deferLoading={true}>
       {clientSecret ? (
         <Elements stripe={stripePromise} options={{ clientSecret, appearance: stripeAppearance }}>
           <PaymentMethods clientSecret={clientSecret} total={total} onSuccess={onSuccess} items={items} addressId={addressId} coupon={coupon} discountRules={discountRules} guestEmail={guestEmail} shippingAddress={shippingAddress} />
