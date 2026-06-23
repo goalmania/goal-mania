@@ -65,8 +65,8 @@ export default function HeroSection({ products = [] }: Props) {
 
   return (
     <section
-      className="relative w-full min-h-screen flex flex-col overflow-hidden"
-      style={{ background: "#070707" }}
+      className="relative w-full flex flex-col overflow-hidden"
+      style={{ background: "#070707", minHeight: "min(100svh, 700px)" }}
     >
       {/* Hero bg — jersey collage */}
       <div className="absolute inset-0">
@@ -116,6 +116,14 @@ export default function HeroSection({ products = [] }: Props) {
 
         {/* LEFT */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left max-w-2xl">
+
+          {/* Urgency */}
+          <div className={`flex items-center gap-2 mb-3 transition-all duration-500 ${mounted ? "opacity-100" : "opacity-0"}`}>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest" style={{ background: "rgba(255,68,68,0.12)", border: "1px solid rgba(255,68,68,0.3)", color: "#ff6666", fontFamily: "var(--font-mono,monospace)" }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#ff4444", display: "inline-block", animation: "pulse 1.5s infinite" }} />
+              Ultimi pezzi disponibili
+            </span>
+          </div>
 
           {/* Social proof */}
           <div
@@ -359,11 +367,29 @@ export default function HeroSection({ products = [] }: Props) {
         </div>
       </div>
 
+      {/* Scroll indicator */}
+      <div className="relative z-10 flex justify-center pb-3 pt-1">
+        <div className="flex flex-col items-center gap-1 opacity-40">
+          <span className="text-[9px] uppercase tracking-[3px] text-white/50" style={{ fontFamily: "var(--font-mono,monospace)" }}>Scopri le maglie</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ animation: "scrollBounce 1.4s ease-in-out infinite" }}>
+            <path d="M8 3v10M4 9l4 4 4-4" stroke="rgba(200,240,0,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
       <style jsx>{`
         @keyframes heroFloat {
           0%,100% { transform: translateY(0px) rotate(0deg); }
           33% { transform: translateY(-10px) rotate(0.5deg); }
           66% { transform: translateY(-5px) rotate(-0.5deg); }
+        }
+        @keyframes scrollBounce {
+          0%,100% { transform: translateY(0); opacity: 0.6; }
+          50% { transform: translateY(4px); opacity: 1; }
+        }
+        @keyframes pulse {
+          0%,100% { opacity: 1; }
+          50% { opacity: 0.3; }
         }
       `}</style>
     </section>
