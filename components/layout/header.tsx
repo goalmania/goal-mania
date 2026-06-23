@@ -688,10 +688,12 @@ export function Header() {
               // Cerca
             </div>
             <button
-              onClick={() => setSearchOpen(false)}
-              className="w-9 h-9 rounded-xl border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-white/30 transition-all"
+              type="button"
+              onPointerDown={(e) => { e.preventDefault(); setSearchOpen(false); setSearchQuery(""); }}
+              className="w-11 h-11 rounded-xl border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-white/30 transition-all"
+              aria-label="Chiudi ricerca"
             >
-              <X className="h-4 w-4" />
+              <X className="h-5 w-5" />
             </button>
           </div>
           <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-16">
