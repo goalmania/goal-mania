@@ -2,6 +2,16 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
+
+// Bypassa /_next/image (quota Vercel Hobby) per immagini Cloudinary:
+// usa trasformazioni native Cloudinary f_auto,q_auto,w_{size}
+function cloudinaryOpt(url: string, width = 828): string {
+  if (!url) return url;
+  if (url.includes("res.cloudinary.com") && url.includes("/upload/")) {
+    return url.replace("/upload/", `/upload/w_${width},q_auto,f_auto/`);
+  }
+  return url;
+}
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
@@ -524,9 +534,10 @@ export default function ProductDetailClient({
               }}
             >
               <Image
-                src={product.images[selectedImage] || "/images/placeholder.png"}
+                src={cloudinaryOpt(product.images[selectedImage]) || "/images/placeholder.png"}
                 alt={product.title}
                 fill
+                unoptimized
                 className="object-contain p-5 transition-all duration-400"
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
@@ -559,7 +570,7 @@ export default function ProductDetailClient({
                       opacity: i === selectedImage ? 1 : 0.55,
                     }}
                   >
-                    <Image src={img} alt="" width={60} height={60} className="object-contain w-full h-full p-1" />
+                    <Image src={cloudinaryOpt(img, 120)} alt="" width={60} height={60} unoptimized className="object-contain w-full h-full p-1" />
                   </button>
                 ))}
               </div>

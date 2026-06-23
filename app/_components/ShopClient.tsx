@@ -3,6 +3,14 @@
 import { Suspense, useState, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+
+function cloudinaryOpt(url: string, width = 600): string {
+  if (!url) return url;
+  if (url.includes("res.cloudinary.com") && url.includes("/upload/")) {
+    return url.replace("/upload/", `/upload/w_${width},q_auto,f_auto/`);
+  }
+  return url;
+}
 import Link from "next/link";
 import {
   ArrowRight,
@@ -251,9 +259,10 @@ function ShopHero({ featuredProducts: products }: { featuredProducts: Product[] 
               >
                 <div className="relative overflow-hidden" style={{ aspectRatio: "3/4" }}>
                   <Image
-                    src={current.image}
+                    src={cloudinaryOpt(current.image)}
                     alt={current.name}
                     fill
+                    unoptimized
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     sizes="(max-width: 1024px) 100vw, 340px"
                   />
@@ -459,7 +468,7 @@ function ProductCarousel({ products, badge }: { products: Product[]; badge?: str
             draggable={false}
           >
             <div className="relative overflow-hidden" style={{ aspectRatio: "3/4", pointerEvents: "none" }}>
-              <Image src={p.image} alt={p.name} fill className="object-cover" style={{ transition: "transform 500ms cubic-bezier(0.23,1,0.32,1)", pointerEvents: "none" }} sizes="190px" draggable={false} />
+              <Image src={cloudinaryOpt(p.image, 400)} alt={p.name} fill unoptimized className="object-cover" style={{ transition: "transform 500ms cubic-bezier(0.23,1,0.32,1)", pointerEvents: "none" }} sizes="190px" draggable={false} />
               <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)", pointerEvents: "none" }} />
               {badge && (
                 <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest" style={{ background: "rgba(10,10,10,0.9)", color: "#c8f000", fontFamily: "var(--font-mono, monospace)", border: "1px solid rgba(200,240,0,0.22)", pointerEvents: "none" }}>
