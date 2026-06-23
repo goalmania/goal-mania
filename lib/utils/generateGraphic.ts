@@ -37,13 +37,15 @@ function truncateTitle(text: string, max = 80): string {
   return text.slice(0, cut > 0 ? cut : max) + "…";
 }
 
-// Font-size dinamico: parte dal nativo Canva e scende se il testo è lungo
 function calcFontSize(text: string): number {
   const len = text.length;
-  if (len <= 35)  return FONT_SIZE;
-  if (len <= 50)  return 74;
-  if (len <= 65)  return 64;
-  return 56;
+  if (len <= 25)  return 120;
+  if (len <= 35)  return 108;
+  if (len <= 45)  return 96;
+  if (len <= 55)  return 88;
+  if (len <= 65)  return 78;
+  if (len <= 75)  return 70;
+  return 62;
 }
 
 export async function generateGraphic(
