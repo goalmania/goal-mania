@@ -1,69 +1,60 @@
-/**
- * Genera grafica GoalMania story 1080×1920 pixel-perfect 1:1 rispetto al template Canva.
- * Strategia: usa il PNG base esportato da Canva (sfondo+green box+decorazioni) come layer fisso,
- * poi composita dinamicamente la foto articolo e il titolo alle coordinate native Canva.
- */
-
 import sharp from "sharp";
 import satori from "satori";
 import fs from "fs";
 import path from "path";
 
-// ─── Dimensioni native template Canva (1080×1920) ───────────────────────────
 const W = 1080;
 const H = 1920;
 
-// Coordinate esatte dalla transazione MCP su design DAHL_KIbVXc
-const PHOTO_LEFT = Math.round(60.75);     // 61
-const PHOTO_TOP  = Math.round(268.19);    // 268
-const PHOTO_W    = Math.round(958.49);    // 958
-const PHOTO_H    = Math.round(725.20);    // 725
-const PHOTO_RADIUS = 24;                  // border-radius visibile nel template
+const PHOTO_LEFT = Math.round(60.75);
+const PHOTO_TOP  = Math.round(268.19);
+const PHOTO_W    = Math.round(958.49);
+const PHOTO_H    = Math.round(725.20);
+const PHOTO_RADIUS = 24;
 
-const TEXT_LEFT  = Math.round(169.97);   // 170
-const TEXT_TOP   = Math.round(1316.50);  // 1317
-const TEXT_W     = Math.round(740.07);   // 740
-const TEXT_H     = Math.round(342.31);   // 342
+const TEXT_LEFT  = Math.round(169.97);
+const TEXT_TOP   = Math.round(1316.50);
+const TEXT_W     = Math.round(740.07);
+const TEXT_H     = Math.round(342.31);
 
 const TEXT_COLOR = "#ffffff";
+// Font-size nativo dal design Canva (coordinate 1:1 con la risoluzione 1080px)
+const FONT_SIZE  = 86;
 
-// ─── Font cache ─────────────────────────────────────────────────────────────
 let _fontCache: ArrayBuffer | null = null;
-function getOswaldFont(): ArrayBuffer {
+function getAghartiFont(): ArrayBuffer {
   if (_fontCache) return _fontCache;
-  const fontPath = path.join(
-    process.cwd(),
-    "node_modules/@fontsource/oswald/files/oswald-latin-700-normal.woff"
-  );
+  const fontPath = path.join(process.cwd(), "public/fonts/agharti-bold.woff");
   const buf = fs.readFileSync(fontPath);
   _fontCache = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer;
   return _fontCache;
 }
 
-// ─── Auto font-size: massimizza la dimensione che non sfora il box ───────────
-// Usa una griglia empirica basata sulla lunghezza del testo uppercase
-function calcFontSize(text: string): number {
-  const len = text.length;
-  if (len <= 30)  return 80;
-  if (len <= 45)  return 70;
-  if (len <= 60)  return 62;
-  if (len <= 80)  return 54;
-  if (len <= 100) return 46;
-  return 40;
+// Tronca il titolo a max ~80 caratteri senza spezzare parole
+function truncateTitle(text: string, max = 80): string {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max).lastIndexOf(" ");
+  return text.slice(0, cut > 0 ? cut : max) + "…";
 }
 
-// ─── Generatore principale ───────────────────────────────────────────────────
+// Font-size dinamico: parte dal nativo Canva e scende se il testo è lungo
+function calcFontSize(text: string): number {
+  const len = text.length;
+  if (len <= 35)  return FONT_SIZE;
+  if (len <= 50)  return 74;
+  if (len <= 65)  return 64;
+  return 56;
+}
+
 export async function generateGraphic(
   title: string,
   articleImageUrl: string
 ): Promise<Buffer> {
-  const font = getOswaldFont();
+  const font = getAghartiFont();
 
-  // 1. Carica il template base Canva (sfondo texture + green box + decorazioni)
   const templatePath = path.join(process.cwd(), "public/templates/goalmania-base.png");
   const templateBuf = fs.readFileSync(templatePath);
 
-  // 2. Scarica e ridimensiona la foto articolo alle dimensioni native Canva
   const imgRes = await fetch(articleImageUrl);
   if (!imgRes.ok) throw new Error(`Image fetch failed: ${imgRes.status} ${articleImageUrl}`);
   const imgBuf = Buffer.from(await imgRes.arrayBuffer());
@@ -73,7 +64,6 @@ export async function generateGraphic(
     .png()
     .toBuffer();
 
-  // 3. Maschera angoli arrotondati sulla foto (radius 24px come nel template)
   const roundedMask = Buffer.from(
     `<svg width="${PHOTO_W}" height="${PHOTO_H}">
       <rect x="0" y="0" width="${PHOTO_W}" height="${PHOTO_H}"
@@ -85,12 +75,9 @@ export async function generateGraphic(
     .png()
     .toBuffer();
 
-  // 4. Genera il layer testo con Satori (trasparente + testo bianco Oswald Bold)
-  const titleUpper = title.toUpperCase();
-  const fontSize = calcFontSize(titleUpper);
-  const lineHeight = 1.25;
+  const displayTitle = truncateTitle(title.toUpperCase());
+  const fontSize = calcFontSize(displayTitle);
 
-  // satori accetta VDOM grezzo ma TypeScript vuole ReactNode — cast necessario
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const satoriNode = {
     type: "div",
@@ -115,35 +102,31 @@ export async function generateGraphic(
               width: "100%",
               color: TEXT_COLOR,
               fontSize,
-              fontWeight: 700,
-              fontFamily: "Oswald",
+              fontWeight: 800,
+              fontFamily: "Agharti",
               textAlign: "center",
-              lineHeight,
-              letterSpacing: "0.02em",
+              lineHeight: 1.2,
+              letterSpacing: "0.01em",
               wordBreak: "break-word",
-              padding: "0 16px",
+              padding: "0 12px",
             },
-            children: titleUpper,
+            children: displayTitle,
           },
         },
       ],
     },
   } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  const textSvg = await satori(
-    satoriNode,
-    {
-      width: TEXT_W,
-      height: TEXT_H,
-      fonts: [{ name: "Oswald", data: font, weight: 700, style: "normal" }],
-    }
-  );
+
+  const textSvg = await satori(satoriNode, {
+    width: TEXT_W,
+    height: TEXT_H,
+    fonts: [{ name: "Agharti", data: font, weight: 800, style: "normal" }],
+  });
 
   const textPng = await sharp(Buffer.from(textSvg)).png().toBuffer();
 
-  // 5. Compositing finale:
-  //    [template base] → [foto articolo] → [testo titolo]
   return sharp(templateBuf)
-    .resize(W, H, { fit: "fill" }) // normalizza se necessario
+    .resize(W, H, { fit: "fill" })
     .composite([
       {
         input: photoRounded,
