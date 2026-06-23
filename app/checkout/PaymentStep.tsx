@@ -12,22 +12,15 @@ import PayPalButton from "./PayPalButton";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "");
 
-// Recensioni reali dal DB — fallback se il DB è vuoto
-const FALLBACK_REVIEWS = [
-  { name: "Marco R.", rating: 5, comment: "Arrivata in 3 giorni a Milano. Qualità ottima, la porto allo stadio.", verified: true },
-  { name: "Giulia T.", rating: 5, comment: "Personalizzata con nome e numero, stampa perfetta. Lo ricompro.", verified: true },
-  { name: "Luca B.", rating: 5, comment: "Scettico all'inizio, ora ne ho ordinate 4. Spedizione velocissima.", verified: true },
-];
-
 function useCheckoutReviews() {
-  const [reviews, setReviews] = useState(FALLBACK_REVIEWS);
+  const [reviews, setReviews] = useState<Array<{ name: string; rating: number; comment: string; verified: boolean }>>([]);
   const fetched = useRef(false);
   useEffect(() => {
     if (fetched.current) return;
     fetched.current = true;
     fetch("/api/reviews/checkout-social-proof")
       .then((r) => r.json())
-      .then((data) => { if (Array.isArray(data) && data.length >= 2) setReviews(data); })
+      .then((data) => { if (Array.isArray(data)) setReviews(data); })
       .catch(() => {});
   }, []);
   return reviews;

@@ -294,6 +294,17 @@ export default function CheckoutPage() {
     [items]
   );
 
+  const [loginScreenReviews, setLoginScreenReviews] = useState<Array<{ name: string; rating: number; comment: string; verified: boolean }>>([]);
+  const reviewsFetched = useRef(false);
+  useEffect(() => {
+    if (reviewsFetched.current) return;
+    reviewsFetched.current = true;
+    fetch("/api/reviews/checkout-social-proof")
+      .then((r) => r.json())
+      .then((data) => { if (Array.isArray(data)) setLoginScreenReviews(data); })
+      .catch(() => {});
+  }, []);
+
   const [checkoutMode, setCheckoutMode] = useState<"choose" | "guest" | "account">("choose");
   const [guestEmail, setGuestEmail] = useState("");
   const [guestAddress, setGuestAddress] = useState<Omit<Address, "isDefault">>({
@@ -626,22 +637,22 @@ export default function CheckoutPage() {
             ))}
           </div>
 
-          {/* Social proof sotto i pulsanti */}
-          <div className="mt-6 pt-5 border-t border-white/6 space-y-2">
-            {[
-              { n: "Marco R.", c: "Milano", t: "Arrivata in 3 giorni, qualità ottima." },
-              { n: "Giulia T.", c: "Roma", t: "Stampa perfetta, lo ricompro sicuro." },
-            ].map((r) => (
-              <div key={r.n} className="flex items-start gap-2.5">
-                <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-white/50">{r.n[0]}</div>
-                <div>
-                  <span className="text-[10px] font-bold text-white/50">{r.n} · {r.c}</span>
-                  <span className="text-[#c8f000] text-[10px] ml-1">★★★★★</span>
-                  <p className="text-[11px] text-white/35 leading-tight">{r.t}</p>
+          {/* Social proof dal DB */}
+          {loginScreenReviews.length > 0 && (
+            <div className="mt-6 pt-5 border-t border-white/6 space-y-2">
+              {loginScreenReviews.slice(0, 2).map((r, i) => (
+                <div key={i} className="flex items-start gap-2.5">
+                  <div className="w-6 h-6 rounded-full bg-[#c8f000]/15 flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-[#c8f000]">{r.name?.[0]?.toUpperCase() ?? "C"}</div>
+                  <div>
+                    <span className="text-[10px] font-bold text-white/50">{r.name}</span>
+                    {r.verified && <span className="text-[9px] text-[#c8f000] ml-1">✓</span>}
+                    <span className="text-[#c8f000] text-[10px] ml-1">★★★★★</span>
+                    <p className="text-[11px] text-white/35 leading-tight">{r.comment}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     );
