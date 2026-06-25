@@ -203,6 +203,7 @@ export default function FlashSaleSection({ products, product }: Props) {
                     fill
                     className="object-contain p-6"
                     sizes="(max-width: 1024px) 100vw, 340px"
+                    unoptimized
                   />
                   {/* ⚡ badge */}
                   <div

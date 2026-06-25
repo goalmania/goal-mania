@@ -232,6 +232,7 @@ export default function UrgencyFloat() {
               sizes="56px"
               className="object-cover"
               style={{ objectFit: "cover" }}
+              unoptimized
             />
           </div>
           <div className="flex-1 min-w-0">
