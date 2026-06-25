@@ -299,6 +299,7 @@ export default async function ArticlePage({
           className="object-cover"
           priority
           sizes="100vw"
+          unoptimized
         />
         {/* Multi-layered gradient for dramatic effect */}
         <div
@@ -631,6 +632,7 @@ export default async function ArticlePage({
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-110"
                       sizes="96px"
+                      unoptimized
                     />
                   </div>
                   <div className="flex-1 min-w-0 flex flex-col justify-center">
@@ -904,6 +906,7 @@ export default async function ArticlePage({
                             fill
                             className="object-cover transition-transform duration-300 group-hover:scale-110"
                             sizes="64px"
+                            unoptimized
                           />
                         </div>
                         <div className="flex-1 min-w-0">

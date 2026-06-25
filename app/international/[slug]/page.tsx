@@ -237,6 +237,7 @@ export default async function InternationalArticlePage({
         {/* Article Featured Image */}
         <div className="relative h-[50vh] w-full mb-8 rounded-lg overflow-hidden">
           <Image
+            unoptimized
             src={article.image}
             alt={article.title}
             fill
@@ -288,6 +289,7 @@ export default async function InternationalArticlePage({
               >
                 <div className="relative h-48 w-full">
                   <Image
+                    unoptimized
                     src={related.image}
                     alt={related.title}
                     fill

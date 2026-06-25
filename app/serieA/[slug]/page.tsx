@@ -235,6 +235,7 @@ export default async function SerieAArticlePage({
         {/* Article Featured Image */}
         <div className="relative h-[50vh] w-full mb-8 rounded-lg overflow-hidden">
           <Image
+            unoptimized
             src={article.image ?? "/product-placeholder-img.jpg"}
             alt={article.title}
             fill
@@ -284,6 +285,7 @@ export default async function SerieAArticlePage({
               >
                 <div className="relative h-48 w-full">
                   <Image
+                    unoptimized
                     src={related.image ?? "/product-placeholder-img.jpg"}
                     alt={related.title}
                     fill
