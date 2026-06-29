@@ -164,20 +164,27 @@ function analyzeRuleForCart(rule: any, cartItems: CartItem[]): RuleAnalysis {
       }
       break;
 
-    case "buy_x_get_y":
-      if (rule.buyQuantity && applicableQuantity < rule.buyQuantity) {
-        const needed = rule.buyQuantity - applicableQuantity;
+    case "buy_x_get_y": {
+      // Need at least buyQuantity + getFreeQuantity items to apply (buy X, get Y additional free)
+      const minRequired = (rule.buyQuantity || 1) + (rule.getFreeQuantity || 1);
+      if (!rule.buyQuantity || !rule.getFreeQuantity || applicableQuantity < minRequired) {
+        const needed = minRequired - applicableQuantity;
         reason = `Need ${needed} more applicable item(s)`;
         howToQualify = `Add ${needed} more ${rule.applicableCategories?.length ? rule.applicableCategories.join(' or ') : 'applicable'} items to get ${rule.getFreeQuantity} free`;
         isApplicable = false;
       } else {
         reason = "Ready to apply";
         isApplicable = true;
-        const ruleApplications = Math.floor(applicableQuantity / rule.buyQuantity);
+        // For every buyQuantity items, getFreeQuantity are free (cheapest ones)
+        const ruleApplications = Math.floor(applicableQuantity / minRequired);
         const freeQuantity = ruleApplications * rule.getFreeQuantity;
-        potentialDiscount = freeQuantity * Math.min(...applicableItems.map(i => i.price));
+        const sortedPrices = [...applicableItems]
+          .flatMap(i => Array(i.quantity).fill(i.price))
+          .sort((a, b) => a - b);
+        potentialDiscount = sortedPrices.slice(0, freeQuantity).reduce((s, p) => s + p, 0);
       }
       break;
+    }
 
     case "percentage_off":
       if (applicableItems.length === 0) {

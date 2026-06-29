@@ -336,13 +336,15 @@ function applyBuyXGetYDiscount(rule: any, applicableItems: CartItem[]) {
 
   const totalQuantity = applicableItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  if (totalQuantity < rule.buyQuantity) {
-    console.log('ℹ️ Quantity requirement not met:', { totalQuantity, required: rule.buyQuantity });
+  // Need at least buyQuantity + getFreeQuantity items (buy X, get Y additional free)
+  const minRequired = rule.buyQuantity + rule.getFreeQuantity;
+  if (totalQuantity < minRequired) {
+    console.log('ℹ️ Quantity requirement not met:', { totalQuantity, required: minRequired });
     return null;
   }
 
   // Calculate how many times the rule can be applied
-  const ruleApplications = Math.floor(totalQuantity / rule.buyQuantity);
+  const ruleApplications = Math.floor(totalQuantity / minRequired);
   const freeQuantity = ruleApplications * rule.getFreeQuantity;
 
   console.log('✅ Rule can be applied:', { ruleApplications, freeQuantity });

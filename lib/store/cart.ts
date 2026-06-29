@@ -136,7 +136,7 @@ buyItem: (item) => {
         }
       },
       clearCart: () => {
-        set({ items: [] });
+        set({ items: [], appliedDiscountRules: [] });
         toast.success("Cart cleared");
       },
       getTotal: () => {
@@ -149,7 +149,8 @@ buyItem: (item) => {
           (total, rule) => total + rule.discountAmount,
           0
         );
-        return subtotal - discountAmount;
+        // Never let total go below 0, and never discount more than the subtotal
+        return Math.max(0, subtotal - Math.min(discountAmount, subtotal));
       },
       getItemCount: () => {
         const state = get();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo, useRef } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { refreshUserSession } from "@/lib/utils/session";
@@ -62,8 +62,7 @@ export function DiscountRulesForm({
   const [appliedDiscounts, setAppliedDiscounts] = useState<DiscountRule[]>([]);
   const [availableRules, setAvailableRules] = useState<DiscountRule[]>([]);
   
-  // Add ref to prevent automatic rule application from running multiple times
-  const hasAppliedAutomaticRules = useRef(false);
+  const hasAppliedAutomaticRules = useRef(false); // kept for legacy — auto-apply is disabled
 
   // Memoize the fetchAvailableRules function to prevent recreation on every render
   const fetchAvailableRules = useCallback(async () => {
@@ -103,123 +102,21 @@ export function DiscountRulesForm({
     }
   }, [cartItems]);
 
-  // Memoize the checkAndApplyAutomaticRules function
-  const checkAndApplyAutomaticRules = useCallback(async () => {
-    // Prevent running multiple times
-    if (hasAppliedAutomaticRules.current) {
-      console.log('🚫 Automatic rules already applied, skipping...');
-      return;
-    }
 
-    console.log('🎯 Checking for automatic rule application...');
-    try {
-      // Get rules that are ready to apply automatically
-      const readyRules = availableRules.filter(rule => rule.isApplicable);
-      
-      if (readyRules.length > 0) {
-        hasAppliedAutomaticRules.current = true;
-        console.log('🚀 Applying automatic rules:', readyRules.length);
-        
-        // Log the rule details to debug
-        console.log('🔍 Ready rules details:', readyRules.map((rule: any) => ({
-          id: rule._id,
-          name: rule.name,
-          type: rule.type,
-          requirements: rule.requirements
-        })));
-        
-        // Apply all ready rules automatically using the rule IDs we already have
-        const response = await fetch("/api/discount-rules/apply-specific", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ 
-            cartItems,
-            ruleIds: readyRules.map((rule: any) => rule._id)
-          }),
-        });
-
-        const data = await response.json();
-
-        if (response.ok && data.success && data.appliedRules && data.appliedRules.length > 0) {
-          const appliedRules = data.appliedRules.map((r: any) => ({
-            ...r,
-            _id: r.ruleId,
-            isApplicable: true,
-            reason: "Auto-applied"
-          }));
-          
-          console.log('✅ Automatic rules applied successfully:', appliedRules.length);
-          setAppliedDiscounts(appliedRules);
-          
-          // Only call onApplyDiscounts if we haven't already applied these rules
-          if (appliedDiscounts.length === 0) {
-            onApplyDiscounts(appliedRules);
-          }
-          
-          if (data.appliedRules.length > 1) {
-            toast.success(`${data.appliedRules.length} discount rules applied automatically!`);
-          } else {
-            toast.success(`Discount rule "${data.appliedRules[0].ruleName}" applied automatically!`);
-          }
-          
-          // Refresh available rules to update the UI
-          await fetchAvailableRules();
-        }
-      } else {
-        console.log('ℹ️ No ready rules for automatic application');
-      }
-    } catch (error) {
-      console.error("Error applying automatic rules:", error);
-      // Reset the flag on error so it can try again
-      hasAppliedAutomaticRules.current = false;
-    }
-  }, [availableRules, cartItems, onApplyDiscounts, fetchAvailableRules, appliedDiscounts.length]);
-
-  // Check for available discount rules when cart items change
+  // Load available rules when cart items change; clear applied discounts on cart change
   useEffect(() => {
-    console.log('🔄 useEffect triggered - cart items changed:', cartItems.length);
     if (cartItems.length > 0) {
       fetchAvailableRules();
-      // Reset the automatic rules flag when cart items change
-      hasAppliedAutomaticRules.current = false;
     } else {
       setAvailableRules([]);
       setAppliedDiscounts([]);
-      hasAppliedAutomaticRules.current = false;
+      onApplyDiscounts([]);
     }
+    // Reset applied discounts when cart composition changes to avoid stale discounts
+    setAppliedDiscounts([]);
+    onApplyDiscounts([]);
+    hasAppliedAutomaticRules.current = false;
   }, [cartItems, fetchAvailableRules]);
-
-  // Separate useEffect for automatic rule application to prevent infinite loops
-  useEffect(() => {
-    console.log('🎯 useEffect for automatic rules - availableRules:', availableRules.length, 'cartItems:', cartItems.length, 'hasApplied:', hasAppliedAutomaticRules.current);
-    if (availableRules.length > 0 && cartItems.length > 0 && !hasAppliedAutomaticRules.current) {
-      // Only apply automatic rules if we have rules and haven't applied any yet
-      if (appliedDiscounts.length === 0) {
-        // Add a small delay to prevent rapid successive calls
-        const timer = setTimeout(() => {
-          checkAndApplyAutomaticRules();
-        }, 100);
-        
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [availableRules, cartItems, appliedDiscounts.length, checkAndApplyAutomaticRules]);
-
-  // Reset the automatic rules flag when component unmounts or when cart items change significantly
-  useEffect(() => {
-    return () => {
-      hasAppliedAutomaticRules.current = false;
-    };
-  }, []);
-
-  // Memoize the cart items to prevent unnecessary re-renders
-  const memoizedCartItems = useMemo(() => cartItems, [cartItems]);
-
-  // Memoize the available rules to prevent unnecessary re-renders
-  const memoizedAvailableRules = useMemo(() => availableRules, [availableRules]);
-
 
   const handleApplyRule = async (rule: any) => {
     if (!rule.isApplicable) return;
