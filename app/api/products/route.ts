@@ -83,7 +83,10 @@ export async function GET(req: NextRequest) {
     // Build query
     const query: any = {};
     if (!includeInactive) query.isActive = true;
-    if (category !== "all") query.category = category;
+    if (category !== "all") {
+      const categories = category.split(",").map((c) => c.trim()).filter(Boolean);
+      query.category = categories.length > 1 ? { $in: categories } : categories[0];
+    }
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: "i" } },

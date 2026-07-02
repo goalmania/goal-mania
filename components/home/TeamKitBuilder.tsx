@@ -20,6 +20,16 @@ import {
 
 const WHATSAPP_NUMBER = "393334218596";
 
+const CATEGORY_TABS: { id: string; label: string; categories: string[] }[] = [
+  { id: "attuali", label: "Attuali", categories: ["2024/25", "2025/26"] },
+  { id: "retro", label: "Retro", categories: ["Retro"] },
+  { id: "serieA", label: "Serie A", categories: ["Serie A"] },
+  { id: "premierLeague", label: "Premier League", categories: ["Premier League"] },
+  { id: "restoDelMondo", label: "Resto del Mondo", categories: ["Resto del Mondo"] },
+  { id: "international", label: "International", categories: ["International"] },
+  { id: "worldCup", label: "Mondiali 2026", categories: ["World Cup 2026"] },
+];
+
 interface JerseyOption {
   id: string;
   title: string;
@@ -49,26 +59,42 @@ export default function TeamKitBuilder() {
   const [kitType, setKitType] = useState<KitType>("completo");
 
   // Step 3 — maglia
+  const [activeTabId, setActiveTabId] = useState(CATEGORY_TABS[0].id);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<JerseyOption[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [selectedJersey, setSelectedJersey] = useState<JerseyOption | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Carica le maglie (selezione iniziale allo step 3, poi ricerca con debounce)
+  const activeTab = CATEGORY_TABS.find((t) => t.id === activeTabId) ?? CATEGORY_TABS[0];
+
+  // Carica le maglie della categoria attiva (con ricerca opzionale, debounced)
   useEffect(() => {
     if (!isOpen) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
     const run = () => {
       setIsSearching(true);
-      const params = new URLSearchParams({ limit: "8" });
+      const params = new URLSearchParams({
+        limit: "16",
+        page: "1",
+        category: activeTab.categories.join(","),
+      });
       if (query.trim()) params.set("search", query.trim());
-      else params.set("feature", "true");
       fetch(`/api/products?${params.toString()}`)
-        .then((res) => (res.ok ? res.json() : { products: [] }))
-        .then((data) => setResults((data.products || []).map(mapJersey)))
-        .catch(() => setResults([]))
+        .then((res) => (res.ok ? res.json() : { products: [], pagination: {} }))
+        .then((data) => {
+          setResults((data.products || []).map(mapJersey));
+          setPage(1);
+          setHasMore(!!data.pagination?.hasNextPage);
+        })
+        .catch(() => {
+          setResults([]);
+          setHasMore(false);
+        })
         .finally(() => setIsSearching(false));
     };
 
@@ -76,7 +102,27 @@ export default function TeamKitBuilder() {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [isOpen, query]);
+  }, [isOpen, activeTabId, query]);
+
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    setIsLoadingMore(true);
+    const params = new URLSearchParams({
+      limit: "16",
+      page: String(nextPage),
+      category: activeTab.categories.join(","),
+    });
+    if (query.trim()) params.set("search", query.trim());
+    fetch(`/api/products?${params.toString()}`)
+      .then((res) => (res.ok ? res.json() : { products: [], pagination: {} }))
+      .then((data) => {
+        setResults((prev) => [...prev, ...(data.products || []).map(mapJersey)]);
+        setPage(nextPage);
+        setHasMore(!!data.pagination?.hasNextPage);
+      })
+      .catch(() => setHasMore(false))
+      .finally(() => setIsLoadingMore(false));
+  };
 
   const effectivePlayers =
     customPlayers.trim() !== "" ? parseInt(customPlayers, 10) || 0 : players;
@@ -289,19 +335,41 @@ export default function TeamKitBuilder() {
                 </div>
               ) : (
                 <>
+                  {/* Tabs categoria */}
+                  <div
+                    className="flex gap-2 mb-3 overflow-x-auto pb-1"
+                    style={{ scrollbarWidth: "none" } as React.CSSProperties}
+                  >
+                    {CATEGORY_TABS.map((tab) => (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveTabId(tab.id)}
+                        className="flex-shrink-0 px-3.5 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all active:scale-[0.97]"
+                        style={{
+                          fontFamily: "var(--font-display, sans-serif)",
+                          background: activeTabId === tab.id ? "#c8f000" : "rgba(255,255,255,0.05)",
+                          color: activeTabId === tab.id ? "#0a0a0a" : "rgba(255,255,255,0.6)",
+                          border: `1px solid ${activeTabId === tab.id ? "#c8f000" : "rgba(255,255,255,0.1)"}`,
+                        }}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
+
                   <div className="relative mb-3">
                     <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2" style={{ color: "rgba(255,255,255,0.35)" }} />
                     <input
                       type="text"
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
-                      placeholder="Cerca una maglia (es. Inter, Real Madrid...)"
+                      placeholder={`Cerca in ${activeTab.label} (es. Inter, Real Madrid...)`}
                       className="w-full pl-11 pr-4 py-3 rounded-xl text-sm outline-none text-white placeholder:text-white/30"
                       style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", fontFamily: "var(--font-body, sans-serif)" }}
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-h-[340px] overflow-y-auto">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-h-[420px] overflow-y-auto pr-0.5">
                     {isSearching && (
                       <div className="col-span-full flex items-center justify-center py-6">
                         <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#c8f000" }} />
@@ -309,7 +377,7 @@ export default function TeamKitBuilder() {
                     )}
                     {!isSearching && results.length === 0 && (
                       <p className="col-span-full text-center text-xs py-6" style={{ color: "rgba(255,255,255,0.35)" }}>
-                        Nessuna maglia trovata. Prova un altro nome.
+                        Nessuna maglia trovata in questa categoria.
                       </p>
                     )}
                     {!isSearching &&
@@ -337,6 +405,23 @@ export default function TeamKitBuilder() {
                         </button>
                       ))}
                   </div>
+
+                  {!isSearching && hasMore && (
+                    <button
+                      onClick={handleLoadMore}
+                      disabled={isLoadingMore}
+                      className="w-full mt-3 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all active:scale-[0.97] disabled:opacity-50 flex items-center justify-center gap-2"
+                      style={{
+                        fontFamily: "var(--font-mono, monospace)",
+                        color: "#c8f000",
+                        background: "rgba(200,240,0,0.06)",
+                        border: "1px solid rgba(200,240,0,0.2)",
+                      }}
+                    >
+                      {isLoadingMore && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                      Carica altre maglie
+                    </button>
+                  )}
                 </>
               )}
             </div>
