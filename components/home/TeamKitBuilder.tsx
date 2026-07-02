@@ -20,13 +20,41 @@ import {
 
 const WHATSAPP_NUMBER = "393334218596";
 
-const CATEGORY_TABS: { id: string; label: string; categories: string[] }[] = [
+// Squadre di La Liga / Bundesliga / Ligue 1 — usate per isolare "Resto del Mondo"
+// dal pool di maglie attuali, dato che quella categoria in DB è quasi vuota
+// (stesso approccio usato in app/_components/RestOfWorldClient.tsx)
+const REST_OF_WORLD_TEAMS = [
+  "Real Madrid", "Barcelona", "Atletico", "Valencia", "Sevilla", "Villarreal",
+  "Athletic Bilbao", "Real Betis", "Real Sociedad", "Getafe", "Osasuna",
+  "Bayern", "Dortmund", "Leipzig", "Leverkusen", "Frankfurt", "Schalke",
+  "Wolfsburg", "Stuttgart", "Hoffenheim", "Monchengladbach",
+  "PSG", "Lyon", "Marseille", "Monaco", "Lille", "Rennes", "Nice", "Lens",
+];
+
+interface CategoryTab {
+  id: string;
+  label: string;
+  /** Valori reali del campo `category` a DB da interrogare (uniti con $in) */
+  categories: string[];
+  /** Se presente, filtra ulteriormente lato client per nome squadra nel titolo */
+  teamNames?: string[];
+}
+
+// I valori usati qui rispecchiano i valori REALI presenti a DB (verificati via API),
+// che in alcuni casi differiscono dalle label mostrate nel menu dello shop
+// (es. "SerieA"/"PremierLeague" senza spazio, non "Serie A"/"Premier League").
+const CATEGORY_TABS: CategoryTab[] = [
   { id: "attuali", label: "Attuali", categories: ["2024/25", "2025/26"] },
   { id: "retro", label: "Retro", categories: ["Retro"] },
-  { id: "serieA", label: "Serie A", categories: ["Serie A"] },
-  { id: "premierLeague", label: "Premier League", categories: ["Premier League"] },
-  { id: "restoDelMondo", label: "Resto del Mondo", categories: ["Resto del Mondo"] },
-  { id: "international", label: "International", categories: ["International"] },
+  { id: "serieA", label: "Serie A", categories: ["SerieA", "Serie A"] },
+  { id: "premierLeague", label: "Premier League", categories: ["PremierLeague", "Premier League"] },
+  { id: "champions", label: "Champions League", categories: ["Champions"] },
+  {
+    id: "restoDelMondo",
+    label: "Resto del Mondo",
+    categories: ["2025/26", "World Cup 2026", "Resto del Mondo"],
+    teamNames: REST_OF_WORLD_TEAMS,
+  },
   { id: "worldCup", label: "Mondiali 2026", categories: ["World Cup 2026"] },
 ];
 
@@ -43,9 +71,15 @@ function mapJersey(p: any): JerseyOption {
     id: p._id,
     title: p.title || "Maglia",
     image: p.images?.[0] || "/images/placeholder.png",
-    isRetro: !!p.isRetro,
+    // Il flag isRetro a DB è incoerente per molti prodotti "Retro": la categoria è la fonte affidabile
+    isRetro: !!p.isRetro || p.category === "Retro",
     slug: p.slug,
   };
+}
+
+function matchesTeamNames(title: string, teamNames: string[]): boolean {
+  const t = title.toLowerCase();
+  return teamNames.some((name) => t.includes(name.toLowerCase()));
 }
 
 export default function TeamKitBuilder() {
@@ -70,26 +104,54 @@ export default function TeamKitBuilder() {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const activeTab = CATEGORY_TABS.find((t) => t.id === activeTabId) ?? CATEGORY_TABS[0];
+  const MIN_RESULTS = 16;
 
-  // Carica le maglie della categoria attiva (con ricerca opzionale, debounced)
+  // Recupera una pagina "piena" di risultati per il tab attivo. Se il tab ha
+  // teamNames e non c'è ricerca testuale, scorre più pagine server finché non
+  // accumula abbastanza maglie che matchano i nomi squadra (filtro client-side),
+  // perché la paginazione del server non conosce quel filtro aggiuntivo.
+  async function fetchTabPage(startPage: number) {
+    const useTeamFilter = !!activeTab.teamNames && !query.trim();
+    const collected: any[] = [];
+    let page = startPage;
+    let serverHasMore = true;
+
+    while (serverHasMore) {
+      const params = new URLSearchParams({
+        limit: "100",
+        page: String(page),
+        category: activeTab.categories.join(","),
+      });
+      if (query.trim()) params.set("search", query.trim());
+      const res = await fetch(`/api/products?${params.toString()}`);
+      const data = res.ok ? await res.json() : { products: [], pagination: {} };
+      const items: any[] = data.products || [];
+      collected.push(
+        ...(useTeamFilter
+          ? items.filter((p) => matchesTeamNames(p.title || "", activeTab.teamNames!))
+          : items)
+      );
+      serverHasMore = !!data.pagination?.hasNextPage;
+      page++;
+      if (!useTeamFilter) break; // paginazione normale: una richiesta = una pagina
+      if (collected.length >= MIN_RESULTS) break;
+    }
+
+    return { items: collected, nextPage: page, hasMore: serverHasMore };
+  }
+
+  // Carica le maglie del tab attivo (con ricerca opzionale, debounced)
   useEffect(() => {
     if (!isOpen) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
     const run = () => {
       setIsSearching(true);
-      const params = new URLSearchParams({
-        limit: "16",
-        page: "1",
-        category: activeTab.categories.join(","),
-      });
-      if (query.trim()) params.set("search", query.trim());
-      fetch(`/api/products?${params.toString()}`)
-        .then((res) => (res.ok ? res.json() : { products: [], pagination: {} }))
-        .then((data) => {
-          setResults((data.products || []).map(mapJersey));
-          setPage(1);
-          setHasMore(!!data.pagination?.hasNextPage);
+      fetchTabPage(1)
+        .then(({ items, nextPage, hasMore: more }) => {
+          setResults(items.map(mapJersey));
+          setPage(nextPage);
+          setHasMore(more);
         })
         .catch(() => {
           setResults([]);
@@ -105,20 +167,12 @@ export default function TeamKitBuilder() {
   }, [isOpen, activeTabId, query]);
 
   const handleLoadMore = () => {
-    const nextPage = page + 1;
     setIsLoadingMore(true);
-    const params = new URLSearchParams({
-      limit: "16",
-      page: String(nextPage),
-      category: activeTab.categories.join(","),
-    });
-    if (query.trim()) params.set("search", query.trim());
-    fetch(`/api/products?${params.toString()}`)
-      .then((res) => (res.ok ? res.json() : { products: [], pagination: {} }))
-      .then((data) => {
-        setResults((prev) => [...prev, ...(data.products || []).map(mapJersey)]);
+    fetchTabPage(page)
+      .then(({ items, nextPage, hasMore: more }) => {
+        setResults((prev) => [...prev, ...items.map(mapJersey)]);
         setPage(nextPage);
-        setHasMore(!!data.pagination?.hasNextPage);
+        setHasMore(more);
       })
       .catch(() => setHasMore(false))
       .finally(() => setIsLoadingMore(false));
