@@ -10,6 +10,7 @@ import EditorialCommerceSection from "@/components/home/EditorialCommerceSection
 import HomeCategoryCards from "@/app/_components/HomeCategoryCards";
 import ReviewsStrip from "@/components/home/ReviewsStrip";
 import HomeNewsStrip from "@/components/home/HomeNewsStrip";
+import TeamKitBuilder from "@/components/home/TeamKitBuilder";
 import ProductModel from "@/lib/models/Product";
 
 export const revalidate = 300;
@@ -201,6 +202,9 @@ export default async function Home() {
 
       {/* 4. MAGLIE IN EVIDENZA — grid prodotti featured */}
       <FeaturedProducts products={featuredProducts} />
+
+      {/* 4b. KIT PER TORNEI — configuratore kit squadra con preventivo WhatsApp */}
+      <TeamKitBuilder />
 
       {/* 5. NOTIZIE + MAGLIE — editoriale ibrido */}
       <EditorialCommerceSection
