@@ -10,6 +10,7 @@ import { ChevronDownIcon, CubeIcon } from "@heroicons/react/24/outline";
 const categoryToPath: Record<string, string> = {
   "2024/25": "/shop/2024/25",
   "2025/26": "/shop/2025/26",
+  "2026/27": "/shop/2026/27",
   "Retro": "/shop/retro",
   "Serie A": "/serieA",
   "Premier League": "/international/premierLeague",
@@ -22,6 +23,7 @@ const categoryToPath: Record<string, string> = {
 const categoryToLabel: Record<string, string> = {
   "2024/25": "2024/25 Collection",
   "2025/26": "2025/26 Collection",
+  "2026/27": "2026/27 Collection",
   "Retro": "Retro Collection",
   "Serie A": "Serie A",
   "Premier League": "Premier League",

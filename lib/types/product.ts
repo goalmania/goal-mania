@@ -14,6 +14,7 @@ export const VALID_PATCHES = [
 export const PRODUCT_CATEGORIES = [
   "2024/25",
   "2025/26",
+  "2026/27",
   "World Cup 2026",
   "Retro",
   "Serie A",

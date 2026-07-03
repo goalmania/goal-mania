@@ -36,6 +36,7 @@ export async function POST(request: NextRequest) {
       revalidatePath("/shop");
       revalidatePath("/shop/2024/25");
       revalidatePath("/shop/2025/26");
+      revalidatePath("/shop/2026/27");
       revalidatePath("/shop/retro");
       revalidatePath("/shop/serieA/international");
 

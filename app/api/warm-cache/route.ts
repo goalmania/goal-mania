@@ -7,6 +7,7 @@ const PAGE_PATHS: string[] = [
   "/shop",
   "/shop/2024/25",
   "/shop/2025/26",
+  "/shop/2026/27",
   "/shop/retro",
   "/shop/serieA",
   "/shop/mystery-box",
