@@ -2,6 +2,14 @@ import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { IProduct } from "@/lib/types/product";
 import MysteryBoxPageClient from "@/app/_components/MysteryBoxPageClient";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Mystery Box Maglie da Calcio — Sorpresa a Partire da 30€",
+  description:
+    "Scopri le Mystery Box Goal Mania: maglie da calcio a sorpresa a partire da 30€, squadre di Serie A, Premier League e nazionali. Spedizione gratuita in Italia.",
+  alternates: { canonical: "https://goal-mania.it/shop/mystery-box" },
+};
 
 // Enable ISR for mystery box listing
 export const revalidate = 300;

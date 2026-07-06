@@ -2,6 +2,14 @@ import SerieAClient from "@/app/_components/SerieAClient";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { IProduct } from "@/lib/types/product";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Maglie Real Madrid, Barcellona, PSG, Bayern — Grandi Club Europei",
+  description:
+    "Acquista le maglie dei grandi club europei a partire da 30€: Real Madrid, Barcellona, PSG, Bayern Monaco, Atlético Madrid, Borussia Dortmund. Spedizione gratuita in Italia.",
+  alternates: { canonical: "https://goal-mania.it/shop/international" },
+};
 
 // Enable ISR for international shop listing
 export const revalidate = 300;

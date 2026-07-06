@@ -25,6 +25,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "croatia", "morocco", "usa", "mexico",
   ];
 
+  const internationalTeams = [
+    "real-madrid", "barcelona", "psg", "atletico", "bayern", "dortmund",
+  ];
+
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: BASE_URL, lastModified: new Date(), changeFrequency: "daily", priority: 1.0 },
     { url: `${BASE_URL}/shop`, lastModified: new Date(), changeFrequency: "daily", priority: 0.9 },
@@ -33,6 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/shop/serieA`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/shop/premier-league`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/shop/worldcup`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/shop/international`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/shop/2026/27`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/shop/2025/26`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/shop/2024/25`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.6 },
@@ -63,6 +68,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.75,
+    })),
+    // Top European club pages — evergreen, high-volume, not World-Cup-dependent
+    ...internationalTeams.map((team) => ({
+      url: `${BASE_URL}/shop/international/${team}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
     })),
     // Top European club product pages 2026/27 (direct product links)
     ...[

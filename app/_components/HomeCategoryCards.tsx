@@ -11,7 +11,7 @@ const CATS = [
     flag: "🇮🇹",
     label: "Serie A",
     count: "66 maglie",
-    href: "/shop",
+    href: "/shop/serieA",
     teams: ["Inter", "Juventus", "Milan", "Roma", "Napoli"],
     accent: "rgba(0,120,220,0.12)",
     accentBorder: "rgba(0,120,220,0.28)",
@@ -23,7 +23,7 @@ const CATS = [
     flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
     label: "Premier League",
     count: "50+ maglie",
-    href: "/shop",
+    href: "/shop/premier-league",
     teams: ["Arsenal", "Man City", "Liverpool", "Chelsea"],
     accent: "rgba(130,60,200,0.12)",
     accentBorder: "rgba(130,60,200,0.28)",
@@ -41,6 +41,18 @@ const CATS = [
     accentBorder: "rgba(200,150,0,0.28)",
     accentText: "#FCD34D",
     glow: "rgba(180,120,0,0.15)",
+  },
+  {
+    key: "international",
+    flag: "⭐",
+    label: "Grandi Club Europei",
+    count: "30+ maglie",
+    href: "/shop/international",
+    teams: ["Real Madrid", "Barcellona", "PSG", "Bayern"],
+    accent: "rgba(220,40,60,0.12)",
+    accentBorder: "rgba(220,40,60,0.28)",
+    accentText: "#F87171",
+    glow: "rgba(200,30,50,0.15)",
   },
   {
     key: "retro",
@@ -112,7 +124,7 @@ export default function HomeCategoryCards() {
         </div>
 
         {/* Cards — horizontal scroll on mobile, grid on desktop */}
-        <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar lg:grid lg:grid-cols-5 lg:overflow-visible lg:pb-0">
+        <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar lg:grid lg:grid-cols-6 lg:overflow-visible lg:pb-0">
           {CATS.map((cat) => (
             <Link
               key={cat.key}

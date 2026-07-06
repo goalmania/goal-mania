@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
         destination: "/shop/serieA",
         permanent: true,
       },
+      {
+        source: "/shop/serieA/international",
+        destination: "/shop/international",
+        permanent: true,
+      },
     ];
   },
   async headers() {
