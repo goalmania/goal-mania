@@ -10,6 +10,7 @@ import {
   MessageCircle,
   Check,
   Loader2,
+  Trophy,
 } from "lucide-react";
 import {
   calculateKitPrice,
@@ -228,9 +229,13 @@ export default function TeamKitBuilder() {
             <span className="w-4 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
           </div>
           <h2
-            className="font-black uppercase text-white mb-3"
+            className="font-black uppercase text-white mb-3 flex items-center justify-center gap-3"
             style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.8rem, 4vw, 2.6rem)", letterSpacing: "-0.5px" }}
           >
+            <Trophy
+              className="animate-pulse flex-shrink-0"
+              style={{ width: "0.8em", height: "0.8em", color: "#c8f000" }}
+            />
             Kit per Tornei
           </h2>
           <p
@@ -258,10 +263,16 @@ export default function TeamKitBuilder() {
               <Users className="w-5 h-5" style={{ color: "#0a0a0a" }} />
             </div>
             <span
-              className="font-black text-sm sm:text-base uppercase text-left"
+              className="font-black text-sm sm:text-base uppercase text-left flex items-center gap-2"
               style={{ fontFamily: "var(--font-display, sans-serif)", color: "white", letterSpacing: "0.5px" }}
             >
               Configura il kit della tua squadra
+              <span
+                className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded leading-none flex-shrink-0"
+                style={{ background: "#c8f000", color: "#000" }}
+              >
+                Nuovo
+              </span>
             </span>
           </div>
           <ChevronDown
