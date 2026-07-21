@@ -139,7 +139,7 @@ export async function POST(req: NextRequest) {
         orderId: paymentIntent.id,
       });
     } catch (error) {
-      console.error("Stripe API error:", error);
+      console.error("Checkout error (Stripe intent or OrderDetails save):", error);
       return NextResponse.json(
         {
           error: "Failed to create payment intent",
