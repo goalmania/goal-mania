@@ -92,6 +92,16 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
   try {
     await connectDB();
 
+    // Idempotenza: Stripe puo' consegnare lo stesso evento piu' di una volta
+    // (retry di rete, o - come scoperto oggi - un secondo endpoint webhook
+    // ancora registrato su un vecchio deploy). Senza questo controllo si
+    // rischia un ordine duplicato per lo stesso pagamento.
+    const alreadyProcessed = await Order.findOne({ paymentIntentId: paymentIntent.id });
+    if (alreadyProcessed) {
+      console.log("Ordine gia' creato per questo pagamento, salto:", paymentIntent.id);
+      return;
+    }
+
     const { userId, addressId, guestEmail } = paymentIntent.metadata || {};
 
     if (!userId || !addressId) {

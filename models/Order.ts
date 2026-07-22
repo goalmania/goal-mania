@@ -103,7 +103,10 @@ const OrderSchema = new Schema<IOrder>({
     fullName: String,
     phone: String,
   },
-  paymentIntentId: { type: String },
+  // unique+sparse: impedisce di creare due ordini per lo stesso pagamento
+  // Stripe (es. se il webhook viene consegnato piu' volte), senza bloccare
+  // gli ordini che non hanno ancora un paymentIntentId.
+  paymentIntentId: { type: String, unique: true, sparse: true },
   cancelledAt: { type: Date },
   cancelledBy: { type: String },
   cancellationReason: { type: String },
