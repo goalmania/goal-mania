@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import OrderDetails from "@/lib/models/OrderDetails";
+import Address from "@/lib/models/Address";
 import { getStripe } from "@/lib/stripe";
 
 interface CartItem {
@@ -111,6 +112,19 @@ export async function POST(req: NextRequest) {
 
       // Store the full cart data with customizations in the database
       await connectDB();
+
+      // Snapshot dell'indirizzo per utenti registrati: se l'indirizzo salvato
+      // viene poi modificato/eliminato, il webhook di conferma pagamento deve
+      // comunque poter creare l'ordine senza dipendere da una ricerca live.
+      let addressSnapshot = null;
+      if (!isGuest && addressId) {
+        const savedAddress = await Address.findOne({
+          _id: addressId,
+          userId: session!.user!.id,
+        }).lean();
+        addressSnapshot = savedAddress || null;
+      }
+
       await OrderDetails.create({
         paymentIntentId: paymentIntent.id,
         fullItems: items.map((item: CartItem) => ({
@@ -124,6 +138,7 @@ export async function POST(req: NextRequest) {
         guestEmail: guestEmail || null,
         guestAddress: guestAddress || null,
         addressId: addressId || null,
+        addressSnapshot,
         couponData: coupon
           ? {
               code: coupon.code,

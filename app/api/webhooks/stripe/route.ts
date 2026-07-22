@@ -135,44 +135,48 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
 
     if (isGuest) {
       const guestAddr = orderDetails.guestAddress;
-      if (!guestAddr) {
-        console.error("Guest address not found in order details:", paymentIntent.id);
-        return;
-      }
       userEmail = orderDetails.guestEmail || guestEmail || null;
-      userName = guestAddr.fullName;
-      shippingAddress = {
-        street: guestAddr.addressLine1 + (guestAddr.addressLine2 ? `, ${guestAddr.addressLine2}` : ""),
-        city: guestAddr.city || "",
-        state: guestAddr.state || "",
-        postalCode: guestAddr.postalCode || "",
-        country: guestAddr.country || "",
-        fullName: guestAddr.fullName || "",
-        phone: guestAddr.phone || "",
-      };
+      userName = guestAddr?.fullName;
+      shippingAddress = guestAddr
+        ? {
+            street: guestAddr.addressLine1 + (guestAddr.addressLine2 ? `, ${guestAddr.addressLine2}` : ""),
+            city: guestAddr.city || "",
+            state: guestAddr.state || "",
+            postalCode: guestAddr.postalCode || "",
+            country: guestAddr.country || "",
+            fullName: guestAddr.fullName || "",
+            phone: guestAddr.phone || "",
+          }
+        : { street: "", city: "", state: "", postalCode: "", country: "", fullName: "", phone: "" };
+      if (!guestAddr) {
+        console.error("Guest address not found in order details — creating order anyway with empty shipping info:", paymentIntent.id);
+      }
     } else {
       const userDoc = await User.findById(userId).select("email name language");
       const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
+      userEmail = user?.email ?? null;
+      userName = user?.name;
+      userLanguage = user?.language || "it";
       if (!user) {
-        console.error("User not found:", userId);
-        return;
+        console.error("User not found — creating order anyway:", userId);
       }
-      userEmail = user.email;
-      userName = user.name;
-      userLanguage = user.language || "it";
 
-      const address = await Address.findOne({ _id: addressId, userId }) as AddressType | null;
+      // Preferisce lo snapshot salvato al momento del checkout: l'indirizzo
+      // live puo' essere stato modificato o eliminato nel frattempo.
+      const snapshot = orderDetails.addressSnapshot;
+      const address = snapshot || (await Address.findOne({ _id: addressId, userId }).lean() as AddressType | null);
       if (!address) {
-        console.error("Address not found for user:", addressId);
-        return;
+        console.error("Address not found for user — creating order anyway with empty shipping info:", addressId);
       }
-      shippingAddress = {
-        street: address.addressLine1 + (address.addressLine2 ? `, ${address.addressLine2}` : ""),
-        city: address.city,
-        state: address.state,
-        postalCode: address.postalCode,
-        country: address.country,
-      };
+      shippingAddress = address
+        ? {
+            street: address.addressLine1 + (address.addressLine2 ? `, ${address.addressLine2}` : ""),
+            city: address.city,
+            state: address.state,
+            postalCode: address.postalCode,
+            country: address.country,
+          }
+        : { street: "", city: "", state: "", postalCode: "", country: "" };
     }
 
     // Update product stock
