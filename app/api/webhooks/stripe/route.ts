@@ -179,17 +179,6 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
         : { street: "", city: "", state: "", postalCode: "", country: "" };
     }
 
-    // Update product stock
-    for (const item of processedItems) {
-      if (item.productId) {
-        await Product.findByIdAndUpdate(
-          item.productId,
-          { $inc: { stockQuantity: -item.quantity } },
-          { new: true }
-        );
-      }
-    }
-
     const newOrder = new Order({
       userId: isGuest ? null : userId,
       guestEmail: isGuest ? userEmail : null,
@@ -203,6 +192,26 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
 
     await newOrder.save();
     console.log("Order created successfully:", newOrder._id, isGuest ? "(guest)" : "(user)");
+
+    // Aggiorna lo stock DOPO aver salvato l'ordine: un pagamento riuscito non
+    // deve mai andare perso per un errore di decremento scorte. item.productId
+    // e' l'id del carrello (productId_hashPersonalizzazione per gli articoli
+    // personalizzati) — va ripulito dell'eventuale suffisso prima di usarlo
+    // come ObjectId, altrimenti Mongoose lancia un CastError.
+    for (const item of processedItems) {
+      if (item.productId) {
+        try {
+          const cleanProductId = item.productId.split("_")[0];
+          await Product.findByIdAndUpdate(
+            cleanProductId,
+            { $inc: { stockQuantity: -item.quantity } },
+            { new: true }
+          );
+        } catch (stockError) {
+          console.error("Errore aggiornamento stock per", item.productId, stockError);
+        }
+      }
+    }
 
     if (userEmail) {
       try {
