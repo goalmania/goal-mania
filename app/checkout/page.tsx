@@ -520,49 +520,38 @@ export default function CheckoutPage() {
   const handlePaymentSuccess = () => {
     setPaymentSuccess(true);
     const isGuest = checkoutMode === "guest";
-    fetch("/api/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        items: items.map((item) => ({ productId: item.id, name: item.name, price: item.price, quantity: item.quantity, customization: item.customization })),
-        amount: total,
-        addressId: isGuest ? null : selectedAddressId,
-        shippingAddress: isGuest ? guestAddress : addresses.find((a) => a._id === selectedAddressId),
-        guestEmail: isGuest ? guestEmail : undefined,
-        coupon: appliedCoupon ? { code: appliedCoupon.code, discountPercentage: appliedCoupon.discountPercentage, discountAmount: couponDiscount, id: appliedCoupon.couponId } : null,
-      }),
-    })
-      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
-      .then((data) => {
-        // Track purchase per ogni prodotto nel carrello
-        items.forEach((item) => {
-          trackEvent("purchase", {
-            value: item.price * item.quantity,
-            productId: item.id.split("_")[0], // rimuovi hash customizzazione
-            productSlug: item.slug || item.name?.toLowerCase().replace(/\s+/g, "-"),
-            productTitle: item.name,
-            productImage: item.image,
-          });
-        });
-        trackFbq("Purchase", {
-          value: total,
-          currency: "EUR",
-          content_ids: items.map((i) => i.id),
-          num_items: items.reduce((n, i) => n + i.quantity, 0),
-        });
-        clearCart();
-        if (appliedCoupon) {
-          return fetch("/api/coupons/apply", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ couponId: appliedCoupon.couponId }) });
-        }
-      })
-      .then(() => {
-        clearCart();
-        router.push(isGuest ? "/checkout/success?guest=true" : "/account/orders?success=true");
-      })
-      .catch(() => {
-        toast.error("Problema con l'ordine, contattaci");
-        router.push(isGuest ? "/checkout/success?guest=true" : "/account/orders");
+
+    // L'ordine viene creato lato server dal webhook Stripe
+    // (payment_intent.succeeded, vedi app/api/webhooks/stripe/route.ts) — non
+    // qui. La vecchia chiamata client-side a /api/orders falliva sempre per
+    // gli ospiti (quella route richiede una sessione autenticata), mostrando
+    // un errore fuorviante subito dopo un pagamento riuscito, e per gli
+    // utenti loggati rischiava di creare un ordine duplicato rispetto a
+    // quello gia' creato dal webhook.
+    items.forEach((item) => {
+      trackEvent("purchase", {
+        value: item.price * item.quantity,
+        productId: item.id.split("_")[0], // rimuovi hash customizzazione
+        productSlug: item.slug || item.name?.toLowerCase().replace(/\s+/g, "-"),
+        productTitle: item.name,
+        productImage: item.image,
       });
+    });
+    trackFbq("Purchase", {
+      value: total,
+      currency: "EUR",
+      content_ids: items.map((i) => i.id),
+      num_items: items.reduce((n, i) => n + i.quantity, 0),
+    });
+
+    const applyCoupon = appliedCoupon
+      ? fetch("/api/coupons/apply", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ couponId: appliedCoupon.couponId }) })
+      : Promise.resolve();
+
+    applyCoupon.catch(() => {}).finally(() => {
+      clearCart();
+      router.push(isGuest ? "/checkout/success?guest=true" : "/account/orders?success=true");
+    });
   };
 
   const handleApplyCoupon = (discountPercentage: number, couponId: string, code: string) => {
