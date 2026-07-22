@@ -1,25 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Coupon from "@/lib/models/Coupon";
 
+// I coupon sono utilizzabili da chiunque nel checkout (ospiti compresi) — il
+// campo "Hai un coupon?" e' mostrato a tutti i clienti, senza distinzione di
+// ruolo o autenticazione.
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session || !session.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Check if user has premium role
-    if (session.user.role !== "premium" && session.user.role !== "admin") {
-      return NextResponse.json(
-        { error: "Only premium users can apply coupons" },
-        { status: 403 }
-      );
-    }
-
     const { couponId } = await req.json();
 
     if (!couponId) {
