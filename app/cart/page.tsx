@@ -9,7 +9,6 @@ import { TrashIcon, ShoppingBagIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { ShieldCheck, Truck, RotateCcw, BadgeCheck, Zap, Star, ArrowRight, Package } from "lucide-react";
-import { useTrackEvent } from "@/components/analytics/AnalyticsTracker";
 import { trackFbq } from "@/lib/utils/fbq";
 
 const FREE_SHIPPING_THRESHOLD = 0; // spedizione sempre gratuita
@@ -40,7 +39,6 @@ export default function CartPage() {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [upsellProducts, setUpsellProducts] = useState<UpsellProduct[]>([]);
   const router = useRouter();
-  const trackEvent = useTrackEvent();
 
   // Carica prodotti correlati (escludi quelli già nel carrello)
   useEffect(() => {
@@ -64,7 +62,10 @@ export default function CartPage() {
   const handleCheckout = async () => {
     setIsCheckingOut(true);
     try {
-      trackEvent("checkout_start", { value: getTotal() });
+      // checkout_start viene tracciato in app/checkout/page.tsx quando si
+      // raggiunge davvero lo step di pagamento con un PaymentIntent Stripe
+      // valido — non qui, altrimenti chi arriva al pagamento verrebbe
+      // contato due volte nel funnel.
       trackFbq("InitiateCheckout", {
         value: getTotal(),
         currency: "EUR",

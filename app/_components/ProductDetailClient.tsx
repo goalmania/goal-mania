@@ -400,11 +400,10 @@ export default function ProductDetailClient({
       return;
     }
     handleAddToCart();
-    trackEvent("checkout_start", {
-      productId: product._id,
-      productSlug: product.slug || product._id,
-      value: totalPrice,
-    });
+    // checkout_start viene tracciato in app/checkout/page.tsx quando si
+    // raggiunge davvero lo step di pagamento con un PaymentIntent Stripe
+    // valido — non qui, altrimenti chi arriva al pagamento verrebbe
+    // contato due volte nel funnel.
     trackFbq("InitiateCheckout", {
       content_ids: [product._id],
       content_name: product.title,
