@@ -390,11 +390,14 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
     }
   };
 
-  const handleSendOrderNotification = async () => {
+  const handleSendOrderNotification = async (
+    order?: z.infer<typeof orderSchema>
+  ) => {
+    const targetOrder = order || selectedOrder;
     if (
-      !selectedOrder ||
-      !selectedOrder.trackingCode ||
-      selectedOrder.status !== "shipped"
+      !targetOrder ||
+      !targetOrder.trackingCode ||
+      targetOrder.status !== "shipped"
     ) {
       toast.error(
         "Order must be shipped and have a tracking code to send notification"
@@ -405,7 +408,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
     setIsSendingNotification(true);
     try {
       const response = await fetch(
-        `/api/orders/${selectedOrder._id}/notify-shipping`,
+        `/api/orders/${targetOrder._id}/notify-shipping`,
         {
           method: "POST",
           headers: {
@@ -433,8 +436,9 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
     }
   };
 
-  const handleSendInvoice = async () => {
-    if (!selectedOrder) {
+  const handleSendInvoice = async (order?: z.infer<typeof orderSchema>) => {
+    const targetOrder = order || selectedOrder;
+    if (!targetOrder) {
       toast.error("No order selected");
       return;
     }
@@ -442,7 +446,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
     setIsSendingInvoice(true);
     try {
       const response = await fetch(
-        `/api/orders/${selectedOrder._id}/send-invoice`,
+        `/api/orders/${targetOrder._id}/send-invoice`,
         {
           method: "POST",
           headers: {
@@ -470,15 +474,16 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
     }
   };
 
-  const handlePrintInvoice = () => {
-    if (!selectedOrder) return;
+  const handlePrintInvoice = (order?: z.infer<typeof orderSchema>) => {
+    const targetOrder = order || selectedOrder;
+    if (!targetOrder) return;
     
     const printWindow = window.open('', '_blank');
     if (printWindow) {
       printWindow.document.write(`
         <html>
           <head>
-            <title>Invoice - Order ${selectedOrder._id}</title>
+            <title>Invoice - Order ${targetOrder._id}</title>
             <style>
               @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
               
@@ -770,21 +775,21 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                 <div class="invoice-details">
                   <div class="detail-section">
                     <h3>Order Information</h3>
-                    <p><strong>Order ID:</strong> #${selectedOrder._id.substring(selectedOrder._id.length - 8)}</p>
-                    <p><strong>Date:</strong> ${formatDate(selectedOrder.createdAt)}</p>
+                    <p><strong>Order ID:</strong> #${targetOrder._id.substring(targetOrder._id.length - 8)}</p>
+                    <p><strong>Date:</strong> ${formatDate(targetOrder.createdAt)}</p>
                     <p><strong>Status:</strong></p>
-                    <span class="status-badge status-${selectedOrder.status}">${selectedOrder.status}</span>
+                    <span class="status-badge status-${targetOrder.status}">${targetOrder.status}</span>
                   </div>
                   <div class="detail-section">
                     <h3>Customer Information</h3>
-                    <p><strong>Name:</strong> ${selectedOrder.userId ? users[selectedOrder.userId as string]?.name || 'Unknown' : 'Guest'}</p>
-                    <p><strong>Email:</strong> ${selectedOrder.userId ? users[selectedOrder.userId as string]?.email || 'Not Available' : selectedOrder.guestEmail || 'Not Available'}</p>
-                    ${selectedOrder.shippingAddress ? `
+                    <p><strong>Name:</strong> ${targetOrder.userId ? users[targetOrder.userId as string]?.name || 'Unknown' : 'Guest'}</p>
+                    <p><strong>Email:</strong> ${targetOrder.userId ? users[targetOrder.userId as string]?.email || 'Not Available' : targetOrder.guestEmail || 'Not Available'}</p>
+                    ${targetOrder.shippingAddress ? `
                       <p><strong>Address:</strong></p>
                       <p style="font-size: 0.875rem; color: #6b7280; margin-top: 4px;">
-                        ${selectedOrder.shippingAddress.street}<br>
-                        ${selectedOrder.shippingAddress.city}, ${selectedOrder.shippingAddress.state} ${selectedOrder.shippingAddress.postalCode}<br>
-                        ${selectedOrder.shippingAddress.country}
+                        ${targetOrder.shippingAddress.street}<br>
+                        ${targetOrder.shippingAddress.city}, ${targetOrder.shippingAddress.state} ${targetOrder.shippingAddress.postalCode}<br>
+                        ${targetOrder.shippingAddress.country}
                       </p>
                     ` : ''}
                   </div>
@@ -802,7 +807,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                       </tr>
                     </thead>
                     <tbody>
-                      ${selectedOrder.items.map(item => `
+                      ${targetOrder.items.map(item => `
                         <tr>
                           <td>
                             <div class="item-name">${item.name}</div>
@@ -837,7 +842,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                 
                 <div class="total-section">
                   <div class="total-amount">
-                    Total: €${selectedOrder.amount.toFixed(2)}
+                    Total: €${targetOrder.amount.toFixed(2)}
                   </div>
                 </div>
                 
@@ -973,16 +978,16 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
               <EyeIcon className="mr-2 h-4 w-4" />
               View Details
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handlePrintInvoice()}>
+            <DropdownMenuItem onClick={() => handlePrintInvoice(row.original)}>
               <PrinterIcon className="mr-2 h-4 w-4" />
               Print Invoice
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleSendInvoice()}>
+            <DropdownMenuItem onClick={() => handleSendInvoice(row.original)}>
               <EnvelopeIcon className="mr-2 h-4 w-4" />
               Send Invoice Email
             </DropdownMenuItem>
             {row.original.status === "shipped" && row.original.trackingCode && (
-              <DropdownMenuItem onClick={() => handleSendOrderNotification()}>
+              <DropdownMenuItem onClick={() => handleSendOrderNotification(row.original)}>
                 <EnvelopeIcon className="mr-2 h-4 w-4" />
                 Send Notification
               </DropdownMenuItem>
