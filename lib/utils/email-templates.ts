@@ -44,12 +44,20 @@ async function generateProductCards(items: any[], language: 'it' | 'en' = 'it'):
     const productCards = await Promise.all(
       items.map(async (item) => {
         let productDetails = null;
-        
-        // Try to fetch product details if productId exists
+
+        // item.productId e' l'id del carrello (productId_hashPersonalizzazione
+        // per gli articoli personalizzati), non un ObjectId Mongo valido di per
+        // se' - va ripulito del suffisso prima della query, altrimenti Mongoose
+        // lancia un CastError (stesso bug gia' corretto per lo scarico scorte).
         if (item.productId) {
-          productDetails = await Product.findById(item.productId).lean();
+          try {
+            const cleanProductId = item.productId.split("_")[0];
+            productDetails = await Product.findById(cleanProductId).lean();
+          } catch (lookupError) {
+            console.error("Errore lookup prodotto per email card:", item.productId, lookupError);
+          }
         }
-        
+
         // Use product details if available, otherwise use item data
         const product: any = productDetails || {
           title: item.name,
