@@ -1510,7 +1510,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
                         )}
                         {selectedOrder.status === "shipped" && (
                           <Button
-                            onClick={handleSendOrderNotification}
+                            onClick={() => handleSendOrderNotification()}
                             disabled={isSendingNotification}
                             variant="outline"
                             size="sm"
@@ -1578,13 +1578,13 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
 
               {/* Action Buttons */}
               <div className="flex gap-2 justify-end">
-                <Button variant="outline" onClick={handlePrintInvoice}>
+                <Button variant="outline" onClick={() => handlePrintInvoice()}>
                   <PrinterIcon className="mr-2 h-4 w-4" />
                   Print Invoice
                 </Button>
                 <Button 
                   variant="outline" 
-                  onClick={handleSendInvoice}
+                  onClick={() => handleSendInvoice()}
                   disabled={isSendingInvoice}
                 >
                   <EnvelopeIcon className="mr-2 h-4 w-4" />
