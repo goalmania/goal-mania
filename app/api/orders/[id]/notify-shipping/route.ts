@@ -54,11 +54,20 @@ export async function POST(
       );
     }
 
-    // Get user email and language preference (convert safely)
-    const userDoc = await User.findById(order.userId).select(
-      "email name language"
-    );
-    const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
+    // Get recipient info - registered user or guest checkout
+    let user: UserDocument | null = null;
+    if (order.userId) {
+      const userDoc = await User.findById(order.userId).select(
+        "email name language"
+      );
+      user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
+    } else if (order.guestEmail) {
+      user = {
+        _id: String(order._id),
+        email: order.guestEmail,
+        name: order.shippingAddress?.fullName || "",
+      };
+    }
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });

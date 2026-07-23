@@ -19,7 +19,9 @@ interface UserDocument {
 // Minimal shape needed from Order when using lean()
 interface OrderLean {
   _id: mongoose.Types.ObjectId;
-  userId: string;
+  userId?: string;
+  guestEmail?: string;
+  shippingAddress?: { fullName?: string };
   items: any[];
   paymentIntentId?: string;
   amount: number;
@@ -56,11 +58,20 @@ export async function POST(
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
-    // Get user information (avoid unsafe cast on lean result)
-    const userDoc = await User.findById(order.userId).select(
-      "email name language"
-    );
-    const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
+    // Get recipient info - registered user or guest checkout
+    let user: UserDocument | null = null;
+    if (order.userId) {
+      const userDoc = await User.findById(order.userId).select(
+        "email name language"
+      );
+      user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
+    } else if (order.guestEmail) {
+      user = {
+        _id: order._id,
+        email: order.guestEmail,
+        name: order.shippingAddress?.fullName,
+      };
+    }
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
