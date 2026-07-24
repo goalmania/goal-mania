@@ -12,16 +12,36 @@ import mongoose from "mongoose";
 // Type for order with necessary properties
 interface OrderType {
   _id: string;
-  userId: string;
+  userId?: string;
+  guestEmail?: string;
+  shippingAddress?: { fullName?: string };
   status: string;
   [key: string]: any;
 }
 
 interface UserDocument {
-  _id: mongoose.Types.ObjectId;
+  _id: mongoose.Types.ObjectId | string;
   email: string;
   name?: string;
   language?: string;
+}
+
+// Ordine con account -> User; ordine ospite -> guestEmail/shippingAddress
+async function resolveRecipient(order: OrderType): Promise<UserDocument | null> {
+  if (order.userId) {
+    const userDoc = await User.findById(order.userId).select(
+      "email name language"
+    );
+    return userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
+  }
+  if (order.guestEmail) {
+    return {
+      _id: order._id,
+      email: order.guestEmail,
+      name: order.shippingAddress?.fullName,
+    };
+  }
+  return null;
 }
 
 // GET /api/orders/[id] - Get order by ID
@@ -56,7 +76,7 @@ export async function GET(
     }
 
     // Check if user has permission to view this order
-    if (order.userId.toString() !== session.user.id) {
+    if (order.userId?.toString() !== session.user.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
@@ -153,15 +173,12 @@ export async function PATCH(
     // Send email notifications for status changes
     if (data.status && currentOrder && data.status !== currentOrder.status) {
       try {
-        // Get user information
-        const userDoc = await User.findById(updatedOrder.userId).select(
-          "email name language"
-        );
-        const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
+        // Get recipient info - registered user or guest checkout
+        const user = await resolveRecipient(updatedOrder);
 
         if (user && user.email) {
           const userLanguage = user.language || 'it'; // Default to Italian
-          
+
           // Get detailed order items
           const orderDetails = await OrderDetails.findOne({
             paymentIntentId: updatedOrder.paymentIntentId,
@@ -196,14 +213,11 @@ export async function PATCH(
     // Send shipping notification if status is "shipped" and tracking code is provided
     if (data.status === "shipped" && data.trackingCode && currentOrder && currentOrder.status !== "shipped") {
       try {
-        const userDoc = await User.findById(updatedOrder.userId).select(
-          "email name language"
-        );
-        const user = userDoc ? (userDoc.toObject() as unknown as UserDocument) : null;
+        const user = await resolveRecipient(updatedOrder);
 
         if (user && user.email) {
           const userLanguage = user.language || 'it';
-          
+
           const orderDetails = await OrderDetails.findOne({
             paymentIntentId: updatedOrder.paymentIntentId,
           });

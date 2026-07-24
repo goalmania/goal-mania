@@ -388,6 +388,9 @@ export default function CheckoutPage() {
       toast.success("Indirizzo aggiunto!");
       setAddresses((prev) => [...prev, data]);
       setSelectedAddressId(data._id);
+      // Reset Stripe client secret — l'indirizzo e' cambiato, il prefetch e' stale
+      setClientSecret("");
+      prefetchingRef.current = false;
       setIsAddingAddress(false);
       setNewAddress({ fullName: "", addressLine1: "", addressLine2: "", city: "", state: "", postalCode: "", country: "", phone: "" });
     } catch {
@@ -552,6 +555,15 @@ export default function CheckoutPage() {
       clearCart();
       router.push(isGuest ? "/checkout/success?guest=true" : "/account/orders?success=true");
     });
+  };
+
+  const handleSelectAddress = (id: string) => {
+    if (id !== selectedAddressId) {
+      setSelectedAddressId(id);
+      // Reset Stripe client secret — l'indirizzo e' cambiato, il prefetch e' stale
+      setClientSecret("");
+      prefetchingRef.current = false;
+    }
   };
 
   const handleApplyCoupon = (discountPercentage: number, couponId: string, code: string) => {
@@ -805,7 +817,7 @@ export default function CheckoutPage() {
                   ) : addresses.length > 0 && !isAddingAddress ? (
                     // ── SAVED ADDRESSES ─────────────────────────────────────
                     <div className="space-y-5">
-                      <RadioGroup value={selectedAddressId} onValueChange={setSelectedAddressId} className="space-y-3">
+                      <RadioGroup value={selectedAddressId} onValueChange={handleSelectAddress} className="space-y-3">
                         {addresses.map((address) => (
                           <div
                             key={address._id}

@@ -28,7 +28,7 @@ export async function POST(
 
     // Check if the order belongs to the user or if the user is an admin
     if (
-      order.userId.toString() !== session.user.id &&
+      order.userId?.toString() !== session.user.id &&
       session.user.role !== "admin"
     ) {
       return NextResponse.json(
