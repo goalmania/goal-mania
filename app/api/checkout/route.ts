@@ -118,9 +118,12 @@ export async function POST(req: NextRequest) {
       // comunque poter creare l'ordine senza dipendere da una ricerca live.
       let addressSnapshot = null;
       if (!isGuest && addressId) {
+        // $or su email: copre gli indirizzi salvati da /api/addresses quando
+        // (bug corretto il 24/07) la sessione veniva letta senza authOptions
+        // e finiva per salvare l'email al posto del vero userId.
         const savedAddress = await Address.findOne({
           _id: addressId,
-          userId: session!.user!.id,
+          $or: [{ userId: session!.user!.id }, { userId: session!.user!.email }],
         }).lean();
         addressSnapshot = savedAddress || null;
       }

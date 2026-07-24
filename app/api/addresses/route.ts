@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import Address from "@/lib/models/Address";
 import dbConnect from "@/lib/db";
 
 // Get all addresses for the current user
 export async function GET() {
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     console.log("GET /addresses: Session", session?.user);
 
     if (!session || !session.user) {
@@ -52,7 +53,7 @@ export async function GET() {
 // Create a new address
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     console.log("POST /addresses: Session", session?.user);
 
     if (!session || !session.user) {

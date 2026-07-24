@@ -172,9 +172,15 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
       }
 
       // Preferisce lo snapshot salvato al momento del checkout: l'indirizzo
-      // live puo' essere stato modificato o eliminato nel frattempo.
+      // live puo' essere stato modificato o eliminato nel frattempo. Il
+      // fallback su userEmail copre gli indirizzi salvati da /api/addresses
+      // quando (bug corretto il 24/07) la sessione veniva letta senza
+      // authOptions e finiva per salvare l'email al posto del vero userId.
       const snapshot = orderDetails.addressSnapshot;
-      const address = snapshot || (await Address.findOne({ _id: addressId, userId }).lean() as AddressType | null);
+      const address = snapshot || (await Address.findOne({
+        _id: addressId,
+        $or: [{ userId }, { userId: userEmail }],
+      }).lean() as AddressType | null);
       if (!address) {
         console.error("Address not found for user — creating order anyway with empty shipping info:", addressId);
       }
