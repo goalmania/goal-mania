@@ -6,6 +6,7 @@ import "./globals.css";
 import Script from "next/script";
 import SiteShell from "@/app/_components/SiteShell";
 import AnalyticsTrackerLoader from "@/components/analytics/AnalyticsTrackerLoader";
+import ServiceWorkerRegister from "@/app/_components/ServiceWorkerRegister";
 
 const PIXEL_ID = "1059199992701994";
 
@@ -310,6 +311,7 @@ export default function RootLayout({
         <Providers>
           <SiteShell>{children}</SiteShell>
           <AnalyticsTrackerLoader />
+          <ServiceWorkerRegister />
         </Providers>
       </body>
     </html>

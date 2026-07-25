@@ -14,6 +14,7 @@ import OrderDetails from "@/lib/models/OrderDetails";
 import mongoose from "mongoose";
 import { sendEmail } from "@/lib/utils/email";
 import { orderConfirmationTemplate, invoiceTemplate } from "@/lib/utils/email-templates";
+import { sendPushToAdmins } from "@/lib/utils/push";
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
@@ -208,6 +209,15 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
 
     await newOrder.save();
     console.log("Order created successfully:", newOrder._id, isGuest ? "(guest)" : "(user)");
+
+    // Notifica push all'admin - non deve mai bloccare/far fallire l'ordine
+    const firstItemName = processedItems[0]?.name || "articolo";
+    const extraItems = processedItems.length - 1;
+    sendPushToAdmins({
+      title: `Nuovo ordine! €${(paymentIntent.amount / 100).toFixed(2)}`,
+      body: extraItems > 0 ? `${firstItemName} +${extraItems} altro/i` : firstItemName,
+      url: "/admin/orders",
+    }).catch((err) => console.error("Push notification error:", err));
 
     // Aggiorna lo stock DOPO aver salvato l'ordine: un pagamento riuscito non
     // deve mai andare perso per un errore di decremento scorte. item.productId

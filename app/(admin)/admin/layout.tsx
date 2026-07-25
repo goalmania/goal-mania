@@ -15,6 +15,7 @@ import {
   TicketIcon,
 } from "@heroicons/react/24/outline";
 import { signOut } from "next-auth/react";
+import PushNotificationButton from "@/app/(admin)/admin/_components/PushNotificationButton";
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: Squares2X2Icon },
@@ -35,5 +36,12 @@ export default function AdminLayout({
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  return <>{children}</>;
+  return (
+    <>
+      <div className="fixed top-4 right-4 z-50">
+        <PushNotificationButton />
+      </div>
+      {children}
+    </>
+  );
 }
