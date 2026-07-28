@@ -40,7 +40,8 @@ import React from "react";
 import { useTrackEvent } from "@/components/analytics/AnalyticsTracker";
 import { trackFbq } from "@/lib/utils/fbq";
 
-const PaymentStep = dynamic(() => import("./PaymentStep"), { ssr: false });
+const loadPaymentStep = () => import("./PaymentStep");
+const PaymentStep = dynamic(loadPaymentStep, { ssr: false });
 
 interface Address {
   _id?: string;
@@ -328,6 +329,13 @@ export default function CheckoutPage() {
 
   const [clientSecret, setClientSecret] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+
+  // Precarica il bundle Stripe/PaymentStep appena si apre il checkout, cosi'
+  // il modulo pagamento non deve scaricarsi da zero quando l'utente arriva
+  // allo step 2 - resta solo la chiamata di Stripe per i metodi disponibili.
+  useEffect(() => {
+    loadPaymentStep();
+  }, []);
   const prefetchingRef = useRef(false);
 
   // Subtotale lordo — NON usare getTotal() che già sottrae i discount rules
@@ -687,9 +695,9 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-10">
 
           {/* ── LEFT: form ─────────────────────────────────────────────────── */}
-          <div className="lg:col-span-3 space-y-5">
+          <div className="lg:col-span-3 space-y-5 relative">
 
-            {step === "address" ? (
+            <div className={step === "address" ? "" : "hidden"}>
               <div className="bg-white/4 border border-white/8 rounded-2xl overflow-hidden">
                 {/* Section header */}
                 <div className="px-6 py-5 border-b border-white/8 flex items-center gap-3">
@@ -953,40 +961,47 @@ export default function CheckoutPage() {
                   )}
                 </div>
               </div>
+            </div>
 
-            ) : (
-              // ── PAYMENT STEP ────────────────────────────────────────────────
-              <div className="bg-white/4 border border-white/8 rounded-2xl overflow-hidden">
-                <div className="px-6 py-5 border-b border-white/8 flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-[#c8f000]/10 flex items-center justify-center">
-                    <CreditCardIcon className="w-5 h-5 text-[#c8f000]" />
+            {/* Montato appena il clientSecret e' pronto (di solito durante lo
+                step indirizzo, grazie al prefetch) e tenuto invisibile finche'
+                non si arriva davvero al pagamento: cosi' Stripe ha gia' fatto
+                la sua chiamata per i metodi disponibili (PayPal incluso) ed
+                evitiamo lo skeleton di caricamento visibile al cambio step. */}
+            {clientSecret && (
+              <div className={step === "payment" ? "" : "invisible absolute inset-0 pointer-events-none"}>
+                <div className="bg-white/4 border border-white/8 rounded-2xl overflow-hidden">
+                  <div className="px-6 py-5 border-b border-white/8 flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-[#c8f000]/10 flex items-center justify-center">
+                      <CreditCardIcon className="w-5 h-5 text-[#c8f000]" />
+                    </div>
+                    <div>
+                      <h2 className="text-white font-bold text-base">Pagamento</h2>
+                      <p className="text-white/40 text-xs">Transazione crittografata SSL</p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-white font-bold text-base">Pagamento</h2>
-                    <p className="text-white/40 text-xs">Transazione crittografata SSL</p>
+                  <div className="p-6">
+                    <PaymentStep
+                      clientSecret={clientSecret}
+                      total={total}
+                      onSuccess={handlePaymentSuccess}
+                      items={items}
+                      addressId={selectedAddressId || ""}
+                      coupon={appliedCoupon}
+                      discountRules={appliedDiscountRules}
+                      guestEmail={checkoutMode === "guest" ? guestEmail : undefined}
+                      shippingAddress={checkoutMode === "guest" ? guestAddress : addresses.find(a => a._id === selectedAddressId)}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setStep("address")}
+                      disabled={isLoading}
+                      className="mt-5 flex items-center gap-1.5 text-sm text-white/40 hover:text-white/70 transition-colors"
+                    >
+                      <ArrowLeftIcon className="w-4 h-4" />
+                      Modifica spedizione
+                    </button>
                   </div>
-                </div>
-                <div className="p-6">
-                  <PaymentStep
-                    clientSecret={clientSecret}
-                    total={total}
-                    onSuccess={handlePaymentSuccess}
-                    items={items}
-                    addressId={selectedAddressId || ""}
-                    coupon={appliedCoupon}
-                    discountRules={appliedDiscountRules}
-                    guestEmail={checkoutMode === "guest" ? guestEmail : undefined}
-                    shippingAddress={checkoutMode === "guest" ? guestAddress : addresses.find(a => a._id === selectedAddressId)}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setStep("address")}
-                    disabled={isLoading}
-                    className="mt-5 flex items-center gap-1.5 text-sm text-white/40 hover:text-white/70 transition-colors"
-                  >
-                    <ArrowLeftIcon className="w-4 h-4" />
-                    Modifica spedizione
-                  </button>
                 </div>
               </div>
             )}
