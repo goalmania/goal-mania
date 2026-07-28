@@ -190,7 +190,7 @@ function StripePayment({ clientSecret, total, onSuccess }: { clientSecret: strin
         <PaymentElement
           options={{
             layout: { type: "tabs", defaultCollapsed: false },
-            paymentMethodOrder: ["card", "apple_pay", "google_pay", "klarna", "paypal"],
+            paymentMethodOrder: ["card", "paypal", "apple_pay", "google_pay", "klarna"],
           }}
         />
 
