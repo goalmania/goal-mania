@@ -437,12 +437,16 @@ export default function CheckoutPage() {
     }
   }, [items, guestEmail, guestAddress, appliedCoupon, couponDiscount, appliedDiscountRules, clientSecret]);
 
-  // Prefetch appena l'indirizzo è scelto
+  // Prefetch appena l'indirizzo è scelto, e ri-prefetch automatico ogni volta
+  // che coupon/sconti invalidano il pagamento gia' pronto (il box coupon e'
+  // visibile anche mentre si e' gia' allo step Pagamento) - senza questo,
+  // un coupon applicato a quel punto lasciava il pagamento vuoto in attesa
+  // di un trigger che non arrivava mai.
   useEffect(() => {
     if (selectedAddressId && checkoutMode !== "guest") {
       prefetchPaymentIntent(selectedAddressId, false);
     }
-  }, [selectedAddressId]);
+  }, [selectedAddressId, appliedCoupon, appliedDiscountRules]);
 
   const handleContinueToPayment = async () => {
     const isGuest = checkoutMode === "guest";
@@ -963,24 +967,29 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Montato appena il clientSecret e' pronto (di solito durante lo
-                step indirizzo, grazie al prefetch) e tenuto invisibile finche'
-                non si arriva davvero al pagamento: cosi' Stripe ha gia' fatto
-                la sua chiamata per i metodi disponibili (PayPal incluso) ed
-                evitiamo lo skeleton di caricamento visibile al cambio step. */}
-            {clientSecret && (
-              <div className={step === "payment" ? "" : "invisible absolute inset-0 pointer-events-none"}>
-                <div className="bg-white/4 border border-white/8 rounded-2xl overflow-hidden">
-                  <div className="px-6 py-5 border-b border-white/8 flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#c8f000]/10 flex items-center justify-center">
-                      <CreditCardIcon className="w-5 h-5 text-[#c8f000]" />
-                    </div>
-                    <div>
-                      <h2 className="text-white font-bold text-base">Pagamento</h2>
-                      <p className="text-white/40 text-xs">Transazione crittografata SSL</p>
-                    </div>
+            {/* Montato appena si apre il checkout (invisibile finche' non si
+                arriva davvero al pagamento), cosi' Stripe fa in anticipo la
+                sua chiamata per i metodi disponibili (PayPal incluso) ed
+                evitiamo lo skeleton di caricamento al cambio step. La card
+                (intestazione + pulsante indietro) resta pero' sempre visibile
+                una volta raggiunto lo step Pagamento anche se il coupon
+                (applicabile dalla colonna destra pure da li') invalida
+                temporaneamente il pagamento gia' pronto: senza il pulsante
+                indietro sempre presente il cliente restava bloccato su una
+                schermata vuota in attesa di un nuovo pagamento. */}
+            <div className={step === "payment" ? "" : "invisible absolute inset-0 pointer-events-none"}>
+              <div className="bg-white/4 border border-white/8 rounded-2xl overflow-hidden">
+                <div className="px-6 py-5 border-b border-white/8 flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-[#c8f000]/10 flex items-center justify-center">
+                    <CreditCardIcon className="w-5 h-5 text-[#c8f000]" />
                   </div>
-                  <div className="p-6">
+                  <div>
+                    <h2 className="text-white font-bold text-base">Pagamento</h2>
+                    <p className="text-white/40 text-xs">Transazione crittografata SSL</p>
+                  </div>
+                </div>
+                <div className="p-6">
+                  {clientSecret ? (
                     <PaymentStep
                       clientSecret={clientSecret}
                       total={total}
@@ -992,19 +1001,24 @@ export default function CheckoutPage() {
                       guestEmail={checkoutMode === "guest" ? guestEmail : undefined}
                       shippingAddress={checkoutMode === "guest" ? guestAddress : addresses.find(a => a._id === selectedAddressId)}
                     />
-                    <button
-                      type="button"
-                      onClick={() => setStep("address")}
-                      disabled={isLoading}
-                      className="mt-5 flex items-center gap-1.5 text-sm text-white/40 hover:text-white/70 transition-colors"
-                    >
-                      <ArrowLeftIcon className="w-4 h-4" />
-                      Modifica spedizione
-                    </button>
-                  </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-3 py-10">
+                      <div className="w-6 h-6 border-2 border-white/10 border-t-[#c8f000] rounded-full animate-spin" />
+                      <p className="text-sm text-white/40">Aggiornamento pagamento...</p>
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setStep("address")}
+                    disabled={isLoading}
+                    className="mt-5 flex items-center gap-1.5 text-sm text-white/40 hover:text-white/70 transition-colors"
+                  >
+                    <ArrowLeftIcon className="w-4 h-4" />
+                    Modifica spedizione
+                  </button>
                 </div>
               </div>
-            )}
+            </div>
 
             {/* Bottom trust */}
             <div className="flex items-center justify-center gap-2 text-white/25 text-xs py-2">
