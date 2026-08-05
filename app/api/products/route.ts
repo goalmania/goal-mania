@@ -188,12 +188,12 @@ export async function POST(request: Request) {
     const existingProduct = await Product.findOne({ slug: validatedData.slug });
     if (existingProduct) validatedData.slug += `-${Date.now()}`;
 
-    const product = await Product.create(processedBody); // Use processedBody to ensure isWorldCup is correctly set
+    const product = await Product.create({ ...processedBody, slug: validatedData.slug });
 
     // Clear caches and revalidate paths
     try {
       globalCache.clear(); // Clear all memory cache
-      
+
       revalidatePath("/");
       revalidatePath("/shop");
       revalidatePath("/shop/worldcup");
@@ -204,8 +204,28 @@ export async function POST(request: Request) {
 
     return NextResponse.json(product);
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error";
     console.error("[PRODUCTS_POST]", err);
-    return NextResponse.json({ error: "Failed to create product", details: message }, { status: 500 });
+
+    if (err instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: "Validation error", message: "Validation failed", details: err.errors },
+        { status: 400 }
+      );
+    }
+
+    // Duplicate key (e.g. slug already exists)
+    if (typeof err === "object" && err !== null && (err as any).code === 11000) {
+      const field = Object.keys((err as any).keyPattern || { field: 1 })[0];
+      return NextResponse.json(
+        {
+          error: "Duplicate value",
+          message: `A product with this ${field} already exists`,
+        },
+        { status: 409 }
+      );
+    }
+
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ error: "Failed to create product", message, details: message }, { status: 500 });
   }
 }

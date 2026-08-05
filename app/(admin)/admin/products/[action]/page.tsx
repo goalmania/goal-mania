@@ -616,20 +616,21 @@ export default function ProductForm() {
         // Handle validation errors
         if (errorData.details && Array.isArray(errorData.details)) {
           const validationMessages = errorData.details
-            .map((err: any) => `${err.path.join(".")} - ${err.message}`)
+            .map((err: any) => `${err.path?.join?.(".") ?? "field"} - ${err.message}`)
             .join(", ");
           throw new Error(`Validation failed: ${validationMessages}`);
         }
 
-        throw new Error(errorData.message || "Failed to save product");
+        throw new Error(errorData.message || errorData.error || "Failed to save product");
       }
 
       toast.success(`Product ${isEditing ? "updated" : "created"} successfully`);
       router.push("/admin/products");
     } catch (error) {
       console.error("Error saving product:", error);
-      setError(error instanceof Error ? error.message : "Failed to save product");
-      toast.error("Failed to save product");
+      const message = error instanceof Error ? error.message : "Failed to save product";
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
