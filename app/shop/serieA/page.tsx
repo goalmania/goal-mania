@@ -3,13 +3,14 @@ import SerieAClient from "@/app/_components/SerieAClient";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { IProduct } from "@/lib/types/product";
+import { buildCollectionSchema } from "@/lib/seo/collectionSchema";
 
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Maglie Serie A 2025/26 — Inter, Milan, Juventus, Napoli",
+  title: "Maglie Serie A 2026/27 — Inter, Milan, Juventus, Napoli",
   description:
-    "Acquista le maglie della Serie A 2025/26 a partire da 30€. Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre. Spedizione gratuita in Italia.",
+    "Acquista le maglie della Serie A 2026/27 a partire da 30€. Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre. Spedizione gratuita in Italia.",
   keywords: [
     "maglie Serie A",
     "maglia Inter",
@@ -18,13 +19,13 @@ export const metadata: Metadata = {
     "maglia Napoli",
     "maglia Roma",
     "maglia Lazio",
-    "maglie calcio Serie A 2025",
+    "maglie calcio Serie A 2026/27",
   ],
   alternates: {
     canonical: "https://goal-mania.it/shop/serieA",
   },
   openGraph: {
-    title: "Maglie Serie A 2025/26 | Goal Mania",
+    title: "Maglie Serie A 2026/27 | Goal Mania",
     description:
       "Inter, Milan, Juventus, Napoli, Roma, Lazio e tutte le squadre di Serie A. Da 30€.",
     url: "https://goal-mania.it/shop/serieA",
@@ -47,22 +48,6 @@ async function getSerieAProducts() {
     title: { $regex: new RegExp(`^Maglia\\s+(${teamRegex})`, 'i') }
   }).sort({ feature: -1, createdAt: -1 });
   return JSON.parse(JSON.stringify(products)); // Serialize the Mongoose documents
-}
-
-function buildCollectionSchema(products: any[]) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: "Maglie Serie A 2025/26",
-    url: "https://goal-mania.it/shop/serieA",
-    description: "Acquista le maglie delle squadre di Serie A 2025/26 a partire da 30€. Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre.",
-    hasPart: products.slice(0, 10).map((p: any) => ({
-      "@type": "Product",
-      name: p.title,
-      url: `https://goal-mania.it/products/${p.slug || p._id}`,
-      offers: { "@type": "Offer", price: p.basePrice ?? 30, priceCurrency: "EUR" },
-    })),
-  };
 }
 
 export default async function SerieAShopPage() {
@@ -97,7 +82,13 @@ export default async function SerieAShopPage() {
     videos: product.videos || [], // Include videos for showcase
   }));
 
-  const collectionSchema = buildCollectionSchema(serverProducts);
+  const collectionSchema = buildCollectionSchema({
+    name: "Maglie Serie A 2026/27",
+    url: "https://goal-mania.it/shop/serieA",
+    description:
+      "Acquista le maglie delle squadre di Serie A 2026/27 a partire da 30€. Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre.",
+    products: serverProducts,
+  });
 
   return (
     <>
@@ -107,10 +98,10 @@ export default async function SerieAShopPage() {
       />
       <section className="pt-24 pb-4 px-4 max-w-7xl mx-auto">
         <h1 className="text-3xl font-black uppercase mb-2" style={{ fontFamily: "var(--font-barlow-condensed, sans-serif)", color: "#fff" }}>
-          Maglie Serie A 2025/26
+          Maglie Serie A 2026/27
         </h1>
         <p className="text-gray-400 text-sm max-w-2xl">
-          Acquista le maglie delle squadre di Serie A 2025/26 a partire da 30€.
+          Acquista le maglie delle squadre di Serie A 2026/27 a partire da 30€.
           Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre.
           Spedizione gratuita in Italia.
         </p>

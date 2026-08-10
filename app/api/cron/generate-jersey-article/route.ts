@@ -27,7 +27,28 @@ async function slugExists(slug: string): Promise<boolean> {
 
 // Recupera prodotti attivi non ancora coperti da un articolo recente
 async function pickProducts(count: number, recentSlugs: string[]) {
-  // Mescola: metà attuali, metà retro
+  // Priorità alla nuova stagione 2026/27 — spinta organica in corso su queste maglie
+  const seasonProducts = await Product.find({
+    isActive: true,
+    isMysteryBox: false,
+    $or: [
+      { category: "2026/27" },
+      { title: { $regex: "2026[-/]27", $options: "i" } },
+    ],
+  })
+    .select("_id slug title description images basePrice isWorldCup country nationalTeam category isRetro")
+    .lean();
+
+  const seasonAvailable = (seasonProducts as any[]).filter(
+    (p: any) => !recentSlugs.includes(p.slug)
+  );
+
+  if (seasonAvailable.length >= count) {
+    const shuffled = seasonAvailable.sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, count);
+  }
+
+  // Non bastano prodotti 2026/27 non ancora coperti: completa con il mix classico (attuali + retro)
   const [current, retro] = await Promise.all([
     Product.find({ isActive: true, isRetro: false, isMysteryBox: false })
       .select("_id slug title description images basePrice isWorldCup country nationalTeam category isRetro")
@@ -37,14 +58,12 @@ async function pickProducts(count: number, recentSlugs: string[]) {
       .lean(),
   ]);
 
-  // Filtra prodotti già coperti di recente
+  const seasonSlugs = seasonAvailable.map((p: any) => p.slug);
   const available = [...current, ...retro].filter(
-    (p: any) => !recentSlugs.includes(p.slug)
+    (p: any) => !recentSlugs.includes(p.slug) && !seasonSlugs.includes(p.slug)
   );
-
-  // Shuffle e prendi i primi N
   const shuffled = available.sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
+  return [...seasonAvailable, ...shuffled].slice(0, count);
 }
 
 // Leggi gli slug di prodotti già usati in articoli recenti (48h)

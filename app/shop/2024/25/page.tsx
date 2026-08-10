@@ -3,6 +3,7 @@ import Season2024Client from "@/app/_components/Season2024Client";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { IProduct } from "@/lib/types/product";
+import { buildCollectionSchema } from "@/lib/seo/collectionSchema";
 
 export const revalidate = 300;
 
@@ -62,5 +63,21 @@ export default async function Season2024ShopPage() {
     videos: product.videos || [], // Include videos for showcase
   }));
 
-  return <Season2024Client products={products} />;
+  const collectionSchema = buildCollectionSchema({
+    name: "Maglie Calcio 2024/25",
+    url: "https://goal-mania.it/shop/2024/25",
+    description:
+      "Maglie da calcio della stagione 2024/25 a prezzi scontati. Home e away kit delle migliori squadre europee da 30€. Spedizione gratuita in Italia.",
+    products: serverProducts,
+  });
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
+      <Season2024Client products={products} />
+    </>
+  );
 }

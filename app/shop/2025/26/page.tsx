@@ -3,6 +3,7 @@ import Season2025Client from "@/app/_components/Season2025Client";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { IProduct } from "@/lib/types/product";
+import { buildCollectionSchema } from "@/lib/seo/collectionSchema";
 
 export const revalidate = 300;
 
@@ -62,5 +63,21 @@ export default async function Season2025ShopPage() {
     videos: product.videos || [], // Include videos for showcase
   }));
 
-  return <Season2025Client products={products} />;
+  const collectionSchema = buildCollectionSchema({
+    name: "Maglie Calcio 2025/26",
+    url: "https://goal-mania.it/shop/2025/26",
+    description:
+      "Tutte le maglie da calcio della stagione 2025/26. Home e away kit delle migliori squadre europee a partire da 30€. Spedizione gratuita in Italia.",
+    products: serverProducts,
+  });
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
+      <Season2025Client products={products} />
+    </>
+  );
 }

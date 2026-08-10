@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Image from "next/image";
 import ProductCard from "@/components/ui/ProductCard";
 import { Zap, ChevronRight } from "lucide-react";
+import ShopNav from "@/app/_components/ShopNav";
 
 // ─── Types ────────────────────────────────────────────────
 interface SeasonProduct {
@@ -148,6 +149,7 @@ export default function Season2627Client({ products }: { products: SeasonProduct
 
   return (
     <main className="min-h-screen bg-[#0a0a0a] font-munish">
+      <ShopNav />
 
       {/* ── HERO ──────────────────────────────────────── */}
       <section className="relative pt-32 pb-12 overflow-hidden">

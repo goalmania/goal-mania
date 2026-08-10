@@ -136,7 +136,7 @@ async function main() {
         shippingPrice: 0,
         stockQuantity: 100,
         images: ["/images/image.png"],
-        category: team.category,
+        category: "2026/27",
         isRetro: false,
         isWorldCup: false,
         isMysteryBox: false,

@@ -76,18 +76,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: 0.9,
     })),
-    // Top European club product pages 2026/27 (direct product links)
-    ...[
-      "real-madrid", "barcelona", "bayern-monaco",
-      "psg", "borussia-dortmund",
-    ].flatMap((team) =>
-      ["home", "away", "third"].map((kit) => ({
-        url: `${BASE_URL}/products/maglia-${team}-${kit}-2026-27`,
-        lastModified: new Date(),
-        changeFrequency: "weekly" as const,
-        priority: 0.85,
-      }))
-    ),
   ];
 
   try {

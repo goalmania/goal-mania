@@ -2,6 +2,7 @@ import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import type { Metadata } from "next";
 import Season2627Client from "@/app/_components/Season2627Client";
+import { buildCollectionSchema } from "@/lib/seo/collectionSchema";
 
 export const revalidate = 300;
 
@@ -65,5 +66,21 @@ export default async function Season2627Page() {
       feature: !!p.feature,
     }));
 
-  return <Season2627Client products={products} />;
+  const collectionSchema = buildCollectionSchema({
+    name: "Maglie Calcio 2026/27",
+    url: "https://goal-mania.it/shop/2026/27",
+    description:
+      "Acquista le maglie calcio della stagione 2026/27 a partire da €30. Inter, Milan, Juventus, Napoli, Liverpool, Real Madrid, Bayern Monaco e altri. Spedizione gratuita in Italia.",
+    products: raw,
+  });
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
+      <Season2627Client products={products} />
+    </>
+  );
 }
