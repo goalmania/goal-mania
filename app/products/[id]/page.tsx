@@ -219,7 +219,7 @@ export default async function ProductPage({
       "@type": "Offer",
       url: productUrl,
       priceCurrency: "EUR",
-      price: product.basePrice ?? 30,
+      price: product.isRetro ? (product.retroPrice ?? 35) : (product.basePrice ?? 30),
       priceValidUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
       availability:
         (product.stockQuantity ?? 1) > 0

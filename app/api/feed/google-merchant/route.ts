@@ -6,8 +6,9 @@ export const revalidate = 3600; // cache 1h
 
 const BASE_URL = "https://goal-mania.it";
 
-// Google product category for football jerseys
-const GOOGLE_CATEGORY = "Abbigliamento e accessori > Abbigliamento > Abbigliamento sportivo > Magliette sportive";
+// Google product category for football jerseys — ID ufficiale dalla tassonomia Google:
+// "Abbigliamento e accessori > Abbigliamento > Uniformi > Divise sportive > Divise da calcio"
+const GOOGLE_CATEGORY = "5564";
 
 // Colore storico maglia Home per squadra/nazionale (fatto stabile, non legato alla grafica
 // della singola stagione). Usato solo per kit Home; per Away/Third/altro il colore reale
