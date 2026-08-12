@@ -9,6 +9,42 @@ const BASE_URL = "https://goal-mania.it";
 // Google product category for football jerseys
 const GOOGLE_CATEGORY = "Abbigliamento e accessori > Abbigliamento > Abbigliamento sportivo > Magliette sportive";
 
+// Colore storico maglia Home per squadra/nazionale (fatto stabile, non legato alla grafica
+// della singola stagione). Usato solo per kit Home; per Away/Third/altro il colore reale
+// della stagione non è verificabile dai dati disponibili, quindi si usa "Multicolore".
+const HOME_COLOR_BY_TEAM: Record<string, string> = {
+  inter: "Nerazzurro", milan: "Rossonero", juventus: "Bianconero", napoli: "Azzurro",
+  roma: "Giallorosso", lazio: "Biancoceleste", atalanta: "Nerazzurro", fiorentina: "Viola",
+  torino: "Granata", bologna: "Rossoblu", como: "Azzurro", udinese: "Bianconero",
+  monza: "Bianco-Rosso", lecce: "Giallorosso", cagliari: "Rossoblu", genoa: "Rossoblu",
+  empoli: "Azzurro", verona: "Giallo-Blu", sassuolo: "Nero-Verde", frosinone: "Giallo-Azzurro",
+  salernitana: "Granata", venezia: "Arancio-Verde-Nero",
+  "manchester united": "Rosso", "manchester city": "Celeste", liverpool: "Rosso",
+  arsenal: "Rosso", chelsea: "Blu", newcastle: "Bianconero", tottenham: "Bianco",
+  "aston villa": "Bordeaux-Blu",
+  "real madrid": "Bianco", barcellona: "Blaugrana", barcelona: "Blaugrana",
+  "bayern monaco": "Rosso", psg: "Blu", "borussia dortmund": "Giallonero",
+  "atletico madrid": "Rossoblu",
+  italia: "Azzurro", francia: "Blu", germania: "Bianco", spagna: "Rosso",
+  brasile: "Giallo", argentina: "Celeste-Bianco", portogallo: "Rosso",
+  inghilterra: "Bianco", olanda: "Arancio", belgio: "Rosso",
+  croazia: "Bianco-Rosso", marocco: "Rosso", usa: "Bianco", "stati uniti": "Bianco",
+  messico: "Verde", uruguay: "Celeste", egitto: "Rosso", turchia: "Rosso",
+  svezia: "Giallo-Blu", "sud korea": "Rosso", "sud africa": "Verde-Giallo",
+  senegal: "Verde-Giallo-Rosso", scozia: "Blu", norvegia: "Rosso",
+  "nuova zelanda": "Bianco-Nero", "repubblica ceca": "Rosso-Bianco",
+};
+
+function guessColor(title: string): string {
+  const t = title.toLowerCase();
+  const isHome = /\bhome\b|\bcasa\b/.test(t);
+  if (!isHome) return "Multicolore";
+  for (const [team, color] of Object.entries(HOME_COLOR_BY_TEAM)) {
+    if (t.includes(team)) return color;
+  }
+  return "Multicolore";
+}
+
 function escapeXml(str: string): string {
   return (str ?? "")
     .replace(/&/g, "&amp;")
@@ -36,6 +72,7 @@ function productToItems(product: any): string {
 
   const brand = "Goal Mania";
   const condition = "new";
+  const color = guessColor(product.title ?? "");
   const availability = (product.stockQuantity ?? 1) > 0 ? "in stock" : "out of stock";
 
   // Determine product type label
@@ -97,7 +134,7 @@ ${shippingXml}
     <g:size>${sizeLabel}</g:size>
     <g:age_group>${ageGroup}</g:age_group>
     <g:gender>unisex</g:gender>
-    <g:color>Vedi immagine</g:color>
+    <g:color>${escapeXml(color)}</g:color>
     <g:material>Poliestere</g:material>
     <g:identifier_exists>false</g:identifier_exists>
     <g:custom_label_0>${isRetro ? "retro" : product.isWorldCup ? "mondiali-2026" : "attuale"}</g:custom_label_0>
