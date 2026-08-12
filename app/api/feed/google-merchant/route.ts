@@ -101,6 +101,12 @@ function productToItems(product: any): string {
   // Skip products with no valid image — Google rejects them anyway
   if (!imageLink) return "";
 
+  // Skip products la cui foto proviene dal lotto importato con watermark di terzi
+  // (path Cloudinary "/goal-mania/products/"). Il prodotto resta identico e visibile
+  // sul sito — viene solo escluso dall'invio a Google Merchant per evitare problemi
+  // di proprieta intellettuale/contraffazione sulle inserzioni Shopping.
+  if (imageLink.includes("/goal-mania/products/")) return "";
+
   // Shipping entries for all active countries
   const shippingXml = ["IT", "DE", "GB", "ES", "FR"].map(country => `    <g:shipping>
       <g:country>${country}</g:country>
