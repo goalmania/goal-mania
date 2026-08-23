@@ -17,7 +17,7 @@ export default function Page() {
           </div>
         </div>
 
-        <h1 className="text-3xl font-black uppercase tracking-tight text-[#0a0a0a] mb-2">
+        <h1 className="text-3xl font-black uppercase tracking-tight text-white mb-2">
           Ordine confermato!
         </h1>
         <p className="text-white/60 mb-8">

@@ -11,6 +11,7 @@ import HomeCategoryCards from "@/app/_components/HomeCategoryCards";
 import ReviewsStrip from "@/components/home/ReviewsStrip";
 import HomeNewsStrip from "@/components/home/HomeNewsStrip";
 import TeamKitBuilder from "@/components/home/TeamKitBuilder";
+import LandingCategorySection from "@/app/_components/LandingCategorySection";
 import ProductModel from "@/lib/models/Product";
 
 export const revalidate = 300;
@@ -142,8 +143,58 @@ async function getRandomProducts(count: number): Promise<ReturnType<typeof mapPr
   }
 }
 
+function mapLandingProduct(p: any) {
+  return {
+    id: p._id.toString(),
+    name: p.title || "Product",
+    price: p.basePrice || 0,
+    image: p.images?.[0] || "/images/image.png",
+    category: p.category || "Uncategorized",
+    team: p.title || "Unknown",
+    availablePatches: p.availablePatches || [],
+    videos: p.videos || [],
+  };
+}
+
+const SERIE_A_TEAMS = [
+  "Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio",
+  "Atalanta", "Fiorentina", "Torino", "Bologna", "Sassuolo",
+  "Udinese", "Monza", "Lecce", "Frosinone", "Cagliari",
+  "Genoa", "Empoli", "Verona", "Salernitana",
+];
+
+async function getSerieACurrentSeasonProducts() {
+  try {
+    await connectDB();
+    const teamRegex = SERIE_A_TEAMS.join("|");
+    const products = await ProductModel.find({
+      isActive: true,
+      title: { $regex: new RegExp(`^Maglia\\s+(${teamRegex})`, "i") },
+    })
+      .sort({ feature: -1, createdAt: -1 })
+      .limit(12)
+      .lean();
+    return JSON.parse(JSON.stringify(products)).map(mapLandingProduct);
+  } catch {
+    return [];
+  }
+}
+
+async function getRetroProducts() {
+  try {
+    await connectDB();
+    const products = await ProductModel.find({ category: "Retro", isActive: true })
+      .sort({ feature: -1, createdAt: -1 })
+      .limit(12)
+      .lean();
+    return JSON.parse(JSON.stringify(products)).map(mapLandingProduct);
+  } catch {
+    return [];
+  }
+}
+
 export default async function Home() {
-  const [featuredProducts, featuredArticles, latestArticles, editorialProducts] = await Promise.all([
+  const [featuredProducts, featuredArticles, latestArticles, editorialProducts, serieAProducts, retroProducts] = await Promise.all([
     getFeaturedProducts(),
     (async () => {
       try {
@@ -171,6 +222,8 @@ export default async function Home() {
       }
     })(),
     getRandomProducts(3),
+    getSerieACurrentSeasonProducts(),
+    getRetroProducts(),
   ]);
 
   return (
@@ -202,6 +255,20 @@ export default async function Home() {
 
       {/* 4. MAGLIE IN EVIDENZA — grid prodotti featured */}
       <FeaturedProducts products={featuredProducts} />
+
+      {/* 4a. SERIE A 2026/27 — carosello maglie stagione corrente */}
+      <LandingCategorySection
+        title="Serie A 2026/27"
+        products={serieAProducts}
+        viewAllHref="/shop/serieA"
+      />
+
+      {/* 4b1. MAGLIE RETRO — carosello maglie storiche/vintage */}
+      <LandingCategorySection
+        title="Maglie Retro"
+        products={retroProducts}
+        viewAllHref="/shop/retro"
+      />
 
       {/* 4b. KIT PER TORNEI — configuratore kit squadra con preventivo WhatsApp */}
       <TeamKitBuilder />

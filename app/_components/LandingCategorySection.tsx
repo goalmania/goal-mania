@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useCallback } from "react";
+import Link from "next/link";
 import ProductCard from "@/components/ui/ProductCard";
 import { useWishlistStore } from "@/lib/store/wishlist";
 import { useCartStore } from "@/lib/store/cart";
@@ -14,7 +15,8 @@ import "swiper/css/free-mode";
 
 interface LandingCategorySectionProps {
   title: string;
-  category: string;
+  category?: string;
+  products?: Product[];
   viewAllHref?: string;
 }
 
@@ -82,9 +84,10 @@ function ArrowBtn({
 export default function LandingCategorySection({
   title,
   category,
+  products: providedProducts,
   viewAllHref,
 }: LandingCategorySectionProps) {
-  const [products, setProducts] = React.useState<Product[]>([]);
+  const [fetchedProducts, setFetchedProducts] = React.useState<Product[]>([]);
   const swiperRef = useRef<SwiperType | null>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
@@ -94,8 +97,11 @@ export default function LandingCategorySection({
   const { addItem: addToCart } = useCartStore();
 
   React.useEffect(() => {
-    getCategoryProducts(category).then(setProducts);
-  }, [category]);
+    if (providedProducts || !category) return;
+    getCategoryProducts(category).then(setFetchedProducts);
+  }, [category, providedProducts]);
+
+  const products = providedProducts ?? fetchedProducts;
 
   const handleSwiper = useCallback((swiper: SwiperType) => {
     swiperRef.current = swiper;
@@ -133,17 +139,28 @@ export default function LandingCategorySection({
               {title}
             </h2>
           </div>
-          <div className="flex items-center gap-2">
-            <ArrowBtn
-              direction="prev"
-              disabled={isBeginning}
-              onClick={() => swiperRef.current?.slidePrev()}
-            />
-            <ArrowBtn
-              direction="next"
-              disabled={isEnd}
-              onClick={() => swiperRef.current?.slideNext()}
-            />
+          <div className="flex items-center gap-4">
+            {viewAllHref && (
+              <Link
+                href={viewAllHref}
+                className="hidden md:inline-flex text-[10px] uppercase tracking-widest transition-opacity duration-200 hover:opacity-70"
+                style={{ fontFamily: "var(--font-mono,monospace)", color: "#c8f000" }}
+              >
+                Vedi tutto
+              </Link>
+            )}
+            <div className="flex items-center gap-2">
+              <ArrowBtn
+                direction="prev"
+                disabled={isBeginning}
+                onClick={() => swiperRef.current?.slidePrev()}
+              />
+              <ArrowBtn
+                direction="next"
+                disabled={isEnd}
+                onClick={() => swiperRef.current?.slideNext()}
+              />
+            </div>
           </div>
         </div>
 

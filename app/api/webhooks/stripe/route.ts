@@ -26,6 +26,8 @@ interface AddressType {
   state: string;
   postalCode: string;
   country: string;
+  fullName?: string;
+  phone?: string;
 }
 
 interface UserDocument {
@@ -192,8 +194,10 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
             state: address.state,
             postalCode: address.postalCode,
             country: address.country,
+            fullName: address.fullName || "",
+            phone: address.phone || "",
           }
-        : { street: "", city: "", state: "", postalCode: "", country: "" };
+        : { street: "", city: "", state: "", postalCode: "", country: "", fullName: "", phone: "" };
     }
 
     const newOrder = new Order({

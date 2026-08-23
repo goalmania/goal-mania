@@ -49,9 +49,9 @@ const EXTRAS_PRICES = { player_edition: 5, long_sleeve: 10, shorts: 11, socks: 1
 
 // ─── Competition config (visual) ─────────────────────────────────────────────
 const COMP: Record<string, { label: string; abbr: string; border: string; text: string; bg: string }> = {
-  "champions-league":  { label: "Champions League", abbr: "UCL",  border: "#FFD700", text: "#FFD700", bg: "rgba(20,18,0,0.95)" },
-  "europa-league":     { label: "Europa League",    abbr: "UEL",  border: "#FF6600", text: "#FF8C3F", bg: "rgba(28,10,0,0.95)" },
-  "conference-league": { label: "Conference League",abbr: "UECL", border: "#00A651", text: "#3DCA7A", bg: "rgba(0,18,8,0.95)"  },
+  "champions-league":  { label: "Competizione Europea", abbr: "UEFA", border: "#FFD700", text: "#FFD700", bg: "rgba(20,18,0,0.95)" },
+  "europa-league":     { label: "Competizione Europea", abbr: "UEFA", border: "#FF6600", text: "#FF8C3F", bg: "rgba(28,10,0,0.95)" },
+  "conference-league": { label: "Competizione Europea", abbr: "UEFA", border: "#00A651", text: "#3DCA7A", bg: "rgba(0,18,8,0.95)"  },
   "serie-a":           { label: "Serie A",          abbr: "SA",   border: "#1B5EBF", text: "#5B9EFF", bg: "rgba(5,10,30,0.95)" },
   "coppa-italia":      { label: "Coppa Italia",     abbr: "CI",   border: "#0066CC", text: "#5BAAFF", bg: "rgba(0,10,28,0.95)" },
   "premier-league":    { label: "Premier League",   abbr: "PL",   border: "#7B2FBE", text: "#C8A0D4", bg: "rgba(15,5,25,0.95)" },

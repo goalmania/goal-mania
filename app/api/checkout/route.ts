@@ -53,6 +53,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (guestAddress && !String(guestAddress.phone || "").trim()) {
+      return NextResponse.json(
+        { error: "Il numero di telefono è obbligatorio" },
+        { status: 400 }
+      );
+    }
+
     // Calculate total amount
     const total = items.reduce(
       (sum: number, item: CartItem) => sum + item.price * item.quantity,
