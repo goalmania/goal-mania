@@ -139,6 +139,7 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
     });
 
     const coupon = orderDetails.couponData;
+    const discountRules = orderDetails.discountRulesData;
 
     // Resolve user/address differently for guest vs registered
     let userEmail: string | null = null;
@@ -209,6 +210,7 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
       shippingAddress,
       paymentIntentId: paymentIntent.id,
       coupon,
+      discountRules,
     });
 
     await newOrder.save();

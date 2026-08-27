@@ -145,6 +145,7 @@ export function DiscountRulesForm({
         const appliedRules = data.appliedRules.map((r: any) => ({
           ...r,
           _id: r.ruleId,
+          name: r.ruleName,
           isApplicable: true,
           reason: "Applied"
         }));

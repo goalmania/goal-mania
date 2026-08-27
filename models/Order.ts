@@ -54,6 +54,11 @@ export interface IOrder extends Document {
     discountPercentage: number;
     discountAmount: number;
   };
+  discountRules?: Array<{
+    ruleId: string;
+    name: string;
+    discountAmount: number;
+  }>;
 }
 
 const OrderSchema = new Schema<IOrder>({
@@ -120,6 +125,13 @@ const OrderSchema = new Schema<IOrder>({
     discountPercentage: Number,
     discountAmount: Number,
   },
+  discountRules: [
+    {
+      ruleId: String,
+      name: String,
+      discountAmount: Number,
+    },
+  ],
 });
 
 // Check if model is already defined to prevent overwrite errors during development hot reload
