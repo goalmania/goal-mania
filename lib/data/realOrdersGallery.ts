@@ -41,6 +41,12 @@ const v = (n: number, alt: string): GalleryMediaItem => ({
   alt,
 });
 
+const img = (n: number, alt: string): GalleryMediaItem => ({
+  type: "image",
+  src: `/gallery/ordine-${String(n).padStart(2, "0")}.jpg`,
+  alt,
+});
+
 export const realOrdersGallery: GalleryMediaItem[] = [
   { type: "image", src: "/gallery/ordine-01.jpg", alt: "Maglia Juventus third rosa personalizzata NÚÑEZ ricevuta da un cliente Goal Mania" },
   v(1, "Video di un ordine di maglie da calcio consegnato a un cliente Goal Mania"),
@@ -102,4 +108,29 @@ export const realOrdersGallery: GalleryMediaItem[] = [
   v(31, "Maglie da calcio reali ricevute da un cliente Goal Mania"),
   v(32, "Video di maglie da calcio spedite da Goal Mania"),
   v(33, "Video di un ordine di maglie da calcio consegnato a un cliente Goal Mania"),
+
+  img(15, "Maglia da calcio vintage indossata da un cliente Goal Mania"),
+  img(16, "Outfit con maglia da calcio retro acquistata su Goal Mania"),
+  img(17, "Maglia da calcio storica ricevuta da un cliente Goal Mania"),
+  img(18, "Look total look con maglia da calcio retro Goal Mania"),
+  v(34, "Video di un ordine di maglie da calcio consegnato a un cliente Goal Mania"),
+  img(19, "Maglia da calcio vintage indossata da un cliente Goal Mania"),
+  img(20, "Outfit con maglia da calcio retro acquistata su Goal Mania"),
+  img(21, "Maglia da calcio storica ricevuta da un cliente Goal Mania"),
+  img(22, "Look total look con maglia da calcio retro Goal Mania"),
+  v(35, "Unboxing di maglie da calcio acquistate su Goal Mania"),
+  img(23, "Maglia da calcio vintage indossata da un cliente Goal Mania"),
+  img(24, "Outfit con maglia da calcio retro acquistata su Goal Mania"),
+  img(25, "Maglia da calcio storica ricevuta da un cliente Goal Mania"),
+  img(26, "Look total look con maglia da calcio retro Goal Mania"),
+  v(36, "Maglie da calcio reali ricevute da un cliente Goal Mania"),
+  img(27, "Maglia da calcio vintage indossata da un cliente Goal Mania"),
+  img(28, "Outfit con maglia da calcio retro acquistata su Goal Mania"),
+  img(29, "Maglia da calcio storica ricevuta da un cliente Goal Mania"),
+  img(30, "Look total look con maglia da calcio retro Goal Mania"),
+  v(37, "Video di maglie da calcio spedite da Goal Mania"),
+  img(31, "Maglia da calcio vintage indossata da un cliente Goal Mania"),
+  img(32, "Outfit con maglia da calcio retro acquistata su Goal Mania"),
+  img(33, "Maglia da calcio storica ricevuta da un cliente Goal Mania"),
+  v(38, "Video di un ordine di maglie da calcio consegnato a un cliente Goal Mania"),
 ];
