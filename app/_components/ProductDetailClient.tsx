@@ -21,6 +21,7 @@ import { IProduct, Review, Patch } from "@/lib/types/product";
 import ProductReviews from "@/app/_components/ProductReviews";
 import DiscountRulesDisplay from "@/app/_components/DiscountRulesDisplay";
 import SizeGuideModal from "@/components/shop/SizeGuideModal";
+import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
 import FaqSection from "./FaqSection";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -1207,6 +1208,9 @@ export default function ProductDetailClient({
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Galleria ordini reali — foto/video di maglie e pacchi dei clienti */}
+      <RealOrdersGallery title="Indossata dai tifosi" eyebrow="Ordini reali" />
 
       {/* Size Guide Modal */}
       <SizeGuideModal isOpen={sizeChartOpen} onClose={() => setSizeChartOpen(false)} />

@@ -12,6 +12,7 @@ import ReviewsStrip from "@/components/home/ReviewsStrip";
 import HomeNewsStrip from "@/components/home/HomeNewsStrip";
 import TeamKitBuilder from "@/components/home/TeamKitBuilder";
 import LandingCategorySection from "@/app/_components/LandingCategorySection";
+import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
 import ProductModel from "@/lib/models/Product";
 
 export const revalidate = 300;
@@ -281,6 +282,9 @@ export default async function Home() {
 
       {/* 6. RECENSIONI */}
       <SocialProofSection />
+
+      {/* 6b. GALLERIA ORDINI REALI — foto/video di maglie e pacchi dei clienti */}
+      <RealOrdersGallery />
 
       {/* 7. ULTIME NOTIZIE — link agli articoli del blog (dopo il funnel acquisto) */}
       <HomeNewsStrip articles={latestArticles} />
