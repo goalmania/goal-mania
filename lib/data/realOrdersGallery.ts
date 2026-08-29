@@ -190,4 +190,17 @@ export const realOrdersGallery: GalleryMediaItem[] = [
   v(65, "Maglia da calcio del Parma di Crespo mostrata da un cliente Goal Mania"),
   v(66, "Maglia da calcio della Roma di Totti mostrata da un cliente Goal Mania"),
   v(67, "Collezione di maglie da calcio retro di un cliente Goal Mania"),
+
+  // Blocco 10 — altri originali iPhone. video-50/58/63/64 sostituiti nello
+  // stesso slot; qui i nuovi.
+  img(36, "Collezione di maglie da calcio retro di un cliente Goal Mania"),
+  v(68, "Collezione di maglie da calcio vintage di un cliente Goal Mania"),
+  v(69, "Maglia da calcio del Manchester United mostrata da un cliente Goal Mania"),
+  v(70, "Maglia da calcio del Milan mostrata da un cliente Goal Mania"),
+  v(71, "Maglia da calcio del Milan vintage mostrata da un cliente Goal Mania"),
+  v(72, "Maglia da calcio dell'Arsenal vintage mostrata da un cliente Goal Mania"),
+  v(73, "Maglia da calcio dell'Arsenal di Bergkamp mostrata da un cliente Goal Mania"),
+  v(74, "Maglia da calcio del Real Madrid di Roberto Carlos mostrata da un cliente Goal Mania"),
+  v(75, "Maglia da calcio vintage mostrata da un cliente Goal Mania"),
+  v(76, "Maglia da calcio del Manchester United di Ronaldo mostrata da un cliente Goal Mania"),
 ];
