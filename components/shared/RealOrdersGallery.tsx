@@ -26,12 +26,16 @@ interface RealOrdersGalleryProps {
 }
 
 /**
- * Clip muta in loop. Il file viene caricato solo quando la card si avvicina
- * al viewport (lazy), poi va in play/pause a seconda che sia visibile.
+ * Clip muta in loop. Il poster resta sempre visibile sopra il video finché
+ * quest'ultimo non è davvero in riproduzione: così non si vede mai il frame
+ * nero mentre il file bufferizza (anche sugli slide clonati da Swiper per il
+ * marquee, che non ricevono il JS di lazy-load). Il download parte molto
+ * prima che la card entri in viewport.
  */
 function GalleryVideo({ item }: { item: GalleryMediaItem }) {
   const ref = useRef<HTMLVideoElement | null>(null);
   const [load, setLoad] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -41,7 +45,7 @@ function GalleryVideo({ item }: { item: GalleryMediaItem }) {
       ([entry]) => {
         if (entry.isIntersecting) setLoad(true);
       },
-      { rootMargin: "600px" }
+      { rootMargin: "1400px" }
     );
     near.observe(el);
 
@@ -50,7 +54,7 @@ function GalleryVideo({ item }: { item: GalleryMediaItem }) {
         if (entry.isIntersecting) el.play().catch(() => {});
         else el.pause();
       },
-      { threshold: 0.4 }
+      { threshold: 0.25 }
     );
     visible.observe(el);
 
@@ -61,18 +65,33 @@ function GalleryVideo({ item }: { item: GalleryMediaItem }) {
   }, []);
 
   return (
-    <video
-      ref={ref}
-      src={load ? item.src : undefined}
-      poster={item.poster}
-      muted
-      loop
-      playsInline
-      preload="none"
-      tabIndex={-1}
-      aria-label={item.alt || "Video di un ordine reale"}
-      className="h-full w-full object-cover pointer-events-none"
-    />
+    <>
+      <video
+        ref={ref}
+        src={load ? item.src : undefined}
+        poster={item.poster}
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        tabIndex={-1}
+        aria-label={item.alt || "Video di un ordine reale"}
+        onPlaying={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        className="h-full w-full object-cover pointer-events-none"
+      />
+      {item.poster && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={item.poster}
+          alt=""
+          aria-hidden="true"
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
+            playing ? "opacity-0" : "opacity-100"
+          }`}
+        />
+      )}
+    </>
   );
 }
 

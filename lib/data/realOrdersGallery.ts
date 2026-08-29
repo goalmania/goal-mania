@@ -5,17 +5,18 @@
  * Compare in home, pagine prodotto e in tutte le pagine /shop/*.
  *
  * COME AGGIUNGERE NUOVI CONTENUTI
- *   1. Metti il file dentro  /public/gallery/
- *        foto  ->  public/gallery/ordine-14.jpg, ordine-15.jpg, ...
- *        video ->  public/gallery/video-26.mp4, video-27.mp4, ...
- *   2. I video vanno SENZA audio e compressi per il web. Dal terminale:
- *        ffmpeg -y -i sorgente.mp4 -an \
- *          -vf "scale='min(720,iw)':-2" -c:v libx264 -crf 28 -preset veryfast \
- *          -movflags +faststart public/gallery/video-26.mp4
- *   3. Per ogni video crea il poster (frame di anteprima) con lo stesso nome:
- *        ffmpeg -y -ss 1 -i public/gallery/video-26.mp4 -frames:v 1 -q:v 3 \
- *          public/gallery/video-26.jpg
- *   4. Aggiungi una riga qui sotto nell'array `realOrdersGallery`.
+ *   FOTO -> restano in /public/gallery/ (ordine-15.jpg, ordine-16.jpg, ...)
+ *           poi aggiungi una riga  img(NN, "alt")  qui sotto.
+ *
+ *   VIDEO -> vanno su Cloudinary, NON nel repo. Prendi il file ORIGINALE
+ *            (meglio non passato da Telegram: la sua compressione li rovina)
+ *            e caricalo:
+ *
+ *        node scripts/upload-gallery-to-cloudinary.mjs /percorso/originale-video-50.mp4
+ *
+ *            Lo script lo mette come  goalmania/gallery/video-50 .
+ *            Poi aggiungi una riga  v(50, "alt")  qui sotto: la compressione
+ *            di delivery (q_auto/f_auto) e il poster li fa Cloudinary via URL.
  *
  * NOTE
  *   - I video sono muti in loop; le foto storte vengono raddrizzate
@@ -26,20 +27,30 @@
 
 export type GalleryMediaItem = {
   type: "image" | "video";
-  /** Percorso pubblico del file, es. "/gallery/ordine-01.jpg" */
+  /** URL del file (foto: locale /gallery/... ; video: Cloudinary) */
   src: string;
-  /** Solo per i video: immagine di anteprima, es. "/gallery/video-01.jpg" */
+  /** Solo per i video: immagine di anteprima (poster Cloudinary) */
   poster?: string;
   /** Testo alternativo / descrizione breve */
   alt?: string;
 };
 
-const v = (n: number, alt: string): GalleryMediaItem => ({
-  type: "video",
-  src: `/gallery/video-${String(n).padStart(2, "0")}.mp4`,
-  poster: `/gallery/video-${String(n).padStart(2, "0")}.jpg`,
-  alt,
-});
+/** Cloud name Cloudinary del progetto */
+const CLD = "do04e87p5";
+/** Video: compressione adattiva + formato automatico per dispositivo */
+const CLD_VIDEO = `https://res.cloudinary.com/${CLD}/video/upload/q_auto,f_auto`;
+/** Poster: primo secondo del video, largo max 600px */
+const CLD_POSTER = `https://res.cloudinary.com/${CLD}/video/upload/so_1,q_auto,f_auto,w_600`;
+
+const v = (n: number, alt: string): GalleryMediaItem => {
+  const id = `goalmania/gallery/video-${String(n).padStart(2, "0")}`;
+  return {
+    type: "video",
+    src: `${CLD_VIDEO}/${id}.mp4`,
+    poster: `${CLD_POSTER}/${id}.jpg`,
+    alt,
+  };
+};
 
 const img = (n: number, alt: string): GalleryMediaItem => ({
   type: "image",
