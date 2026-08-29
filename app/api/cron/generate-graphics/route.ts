@@ -24,7 +24,7 @@ function articleUrl(slug: string, category: string): string {
 
 async function sendToTelegram(pngBuffer: Buffer, caption: string): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID || "594028829";
+  const chatId = process.env.TELEGRAM_CHAT_ID || "8649572632";
   if (!token) throw new Error("TELEGRAM_BOT_TOKEN not set");
 
   const formData = new FormData();
