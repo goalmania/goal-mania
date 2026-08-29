@@ -11,14 +11,20 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  // body: { updates: Array<{ slug: string, images: string[] }> }
-  const { updates } = body as { updates: Array<{ slug: string; images: string[] }> };
+  await connectDB();
 
-  if (!Array.isArray(updates) || updates.length === 0) {
-    return NextResponse.json({ error: "updates array required" }, { status: 400 });
+  // Attivazione bulk: { action: "activate", filter: { category: "Retro" } }
+  if (body.action === "activate") {
+    const filter = body.filter ?? {};
+    const result = await Product.updateMany(filter, { $set: { isActive: true } });
+    return NextResponse.json({ ok: true, matched: result.matchedCount, modified: result.modifiedCount });
   }
 
-  await connectDB();
+  // Aggiornamento immagini: { updates: Array<{ slug, images }> }
+  const { updates } = body as { updates: Array<{ slug: string; images: string[] }> };
+  if (!Array.isArray(updates) || updates.length === 0) {
+    return NextResponse.json({ error: "updates array required or action missing" }, { status: 400 });
+  }
 
   const results: Array<{ slug: string; status: "ok" | "not_found" | "error"; error?: string }> = [];
 

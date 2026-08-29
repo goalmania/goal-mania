@@ -12,18 +12,22 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import FormData from "form-data";
 import * as dotenv from "dotenv";
+import { v2 as cloudinary } from "cloudinary";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(__dirname, "../.env.production.local") });
 
-const CLOUDINARY_CLOUD = "do04e87p5";
-const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`;
 const CLOUDINARY_API_KEY = "669869849348577";
 const CLOUDINARY_API_SECRET = "XGE9WXGv9cUhGrBG5uKepyZLPpU";
 const ADMIN_TOKEN = "cc5a27994a86cb80c7b72a7da26cb852";
 const SITE_URL = "https://goal-mania.it";
+
+cloudinary.config({
+  cloud_name: "do04e87p5",
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET,
+});
 
 const ARCHIVE_BASE = path.join(process.env.HOME, "Downloads/maglie_archivio/Squadre");
 const DRY_RUN = process.argv.includes("--dry-run");
@@ -33,25 +37,12 @@ const TEAM_FILTER = (() => {
 })();
 
 async function uploadToCloudinary(filePath, slug, idx) {
-  const form = new FormData();
-  form.append("file", fs.createReadStream(filePath));
-  form.append("folder", "goal-mania/products/retro");
-  form.append("public_id", `${slug}_${idx}`);
-  form.append("overwrite", "true");
-
-  const credentials = Buffer.from(`${CLOUDINARY_API_KEY}:${CLOUDINARY_API_SECRET}`).toString("base64");
-  const res = await fetch(CLOUDINARY_URL, {
-    method: "POST",
-    headers: { Authorization: `Basic ${credentials}`, ...form.getHeaders() },
-    body: form,
+  const result = await cloudinary.uploader.upload(filePath, {
+    folder: "goal-mania/products/retro",
+    public_id: `${slug}_${idx}`,
+    overwrite: true,
   });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Cloudinary: ${err.slice(0, 200)}`);
-  }
-  const data = await res.json();
-  return data.secure_url;
+  return result.secure_url;
 }
 
 async function updateProductImages(slug, images) {

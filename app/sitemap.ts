@@ -41,7 +41,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/shop/2026/27`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/shop/2025/26`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/shop/2024/25`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.6 },
-    { url: `${BASE_URL}/shop/retro`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
+    { url: `${BASE_URL}/shop/retro`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
+    // Retro team pages — high commercial intent ("maglia Milan retro", "maglia Napoli Maradona")
+    ...["milan","inter","juventus","napoli","roma","lazio","fiorentina","parma",
+        "man-united","liverpool","arsenal","barcellona","real-madrid","celtic",
+        "brasile","argentina","italia","inghilterra","francia","psg"].map((team) => ({
+      url: `${BASE_URL}/shop/retro/${team}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.85,
+    })),
     { url: `${BASE_URL}/shop/jackets`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.6 },
     { url: `${BASE_URL}/shop/limited-edition`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.6 },
     { url: `${BASE_URL}/shop/mystery-box`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.5 },
