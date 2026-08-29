@@ -135,14 +135,19 @@ export default function RealOrdersGallery({
         modules={[FreeMode, A11y, Autoplay]}
         spaceBetween={12}
         slidesPerView={1.35}
-        freeMode={{ enabled: true, momentum: true, momentumRatio: 0.5 }}
+        // Marquee continuo: scorre da solo in modo fluido (delay 0 + speed
+        // lungo lineare) e resta trascinabile a mano; dopo il drag riparte
+        // da solo (disableOnInteraction:false). Su desktop si mette in pausa
+        // al passaggio del mouse.
+        speed={6000}
+        freeMode={{ enabled: true, momentum: false }}
         grabCursor
         loop={enableLoop}
         a11y={{ enabled: true }}
         autoplay={
           enableLoop
             ? {
-                delay: 2200,
+                delay: 0,
                 disableOnInteraction: false,
                 pauseOnMouseEnter: true,
               }
