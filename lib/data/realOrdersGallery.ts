@@ -167,4 +167,9 @@ export const realOrdersGallery: GalleryMediaItem[] = [
   v(53, "Video in alta qualità di un ordine di maglie da calcio Goal Mania"),
   v(54, "Maglia da calcio vintage ricevuta da un cliente Goal Mania"),
   v(55, "Unboxing in alta qualità di una maglia da calcio Goal Mania"),
+
+  // Blocco 7 — originali iPhone. video-08..20 sono stati sostituiti in
+  // qualità piena (stesso slot Cloudinary), qui solo i contenuti nuovi.
+  img(34, "Maglie da calcio retro di un cliente Goal Mania"),
+  v(56, "Maglia da calcio Juventus vintage mostrata da un cliente Goal Mania"),
 ];
