@@ -37,8 +37,12 @@ export type GalleryMediaItem = {
 
 /** Cloud name Cloudinary del progetto */
 const CLD = "do04e87p5";
-/** Video: compressione adattiva + formato automatico per dispositivo */
-const CLD_VIDEO = `https://res.cloudinary.com/${CLD}/video/upload/q_auto,f_auto`;
+/**
+ * Video: compressione adattiva + formato automatico per dispositivo.
+ * w_900,c_limit = mai servito piu largo di 900px (i sorgenti nuovi sono 4K,
+ * inutile mandarli interi a una card da ~300px; i vecchi restano com'erano).
+ */
+const CLD_VIDEO = `https://res.cloudinary.com/${CLD}/video/upload/q_auto,f_auto,w_900,c_limit`;
 /** Poster: primo secondo del video, largo max 600px */
 const CLD_POSTER = `https://res.cloudinary.com/${CLD}/video/upload/so_1,q_auto,f_auto,w_600`;
 
@@ -155,4 +159,12 @@ export const realOrdersGallery: GalleryMediaItem[] = [
   v(47, "Video di un ordine di maglie da calcio consegnato a un cliente Goal Mania"),
   v(48, "Maglie da calcio reali ricevute da un cliente Goal Mania"),
   v(49, "Video di maglie da calcio spedite da Goal Mania"),
+
+  // Blocco 6 — originali iPhone 4K caricati direttamente su Cloudinary
+  v(50, "Video in alta qualità di una maglia da calcio ricevuta da un cliente Goal Mania"),
+  v(51, "Unboxing in alta qualità di una maglia da calcio acquistata su Goal Mania"),
+  v(52, "Maglia da calcio reale mostrata da un cliente Goal Mania"),
+  v(53, "Video in alta qualità di un ordine di maglie da calcio Goal Mania"),
+  v(54, "Maglia da calcio vintage ricevuta da un cliente Goal Mania"),
+  v(55, "Unboxing in alta qualità di una maglia da calcio Goal Mania"),
 ];
