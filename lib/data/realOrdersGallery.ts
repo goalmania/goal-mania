@@ -172,4 +172,12 @@ export const realOrdersGallery: GalleryMediaItem[] = [
   // qualità piena (stesso slot Cloudinary), qui solo i contenuti nuovi.
   img(34, "Maglie da calcio retro di un cliente Goal Mania"),
   v(56, "Maglia da calcio Juventus vintage mostrata da un cliente Goal Mania"),
+
+  // Blocco 8 — altri originali iPhone. Diversi hanno sostituito clip
+  // esistenti nello stesso slot (video-06..25); qui solo i nuovi.
+  v(57, "Maglia da calcio del Brasile mostrata da un cliente Goal Mania"),
+  v(58, "Maglia da calcio dell'Inter mostrata da un cliente Goal Mania"),
+  v(59, "Maglia da calcio della Juventus vintage mostrata da un cliente Goal Mania"),
+  v(60, "Maglia da calcio del Brasile vintage mostrata da un cliente Goal Mania"),
+  v(61, "Maglia da calcio del Milan vintage mostrata da un cliente Goal Mania"),
 ];
