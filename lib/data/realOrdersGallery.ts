@@ -180,4 +180,14 @@ export const realOrdersGallery: GalleryMediaItem[] = [
   v(59, "Maglia da calcio della Juventus vintage mostrata da un cliente Goal Mania"),
   v(60, "Maglia da calcio del Brasile vintage mostrata da un cliente Goal Mania"),
   v(61, "Maglia da calcio del Milan vintage mostrata da un cliente Goal Mania"),
+
+  // Blocco 9 — altri originali iPhone. video-33 (Kakà Milan) sostituito
+  // nello stesso slot; qui i nuovi.
+  img(35, "Collezione di maglie da calcio retro di un cliente Goal Mania"),
+  v(62, "Maglia da calcio del Manchester United mostrata da un cliente Goal Mania"),
+  v(63, "Maglia da calcio retro mostrata da un cliente Goal Mania"),
+  v(64, "Maglia da calcio del Parma vintage mostrata da un cliente Goal Mania"),
+  v(65, "Maglia da calcio del Parma di Crespo mostrata da un cliente Goal Mania"),
+  v(66, "Maglia da calcio della Roma di Totti mostrata da un cliente Goal Mania"),
+  v(67, "Collezione di maglie da calcio retro di un cliente Goal Mania"),
 ];
