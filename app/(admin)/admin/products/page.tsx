@@ -721,6 +721,7 @@ export default function ProductsPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isImportingRetro, setIsImportingRetro] = useState(false);
 
   // Use the optimized products hook
   const {
@@ -790,6 +791,36 @@ export default function ProductsPage() {
   const cancelDeleteProduct = () => {
     setDeleteDialogOpen(false);
     setProductToDelete(null);
+  };
+
+  const handleImportRetroJerseys = async () => {
+    if (isImportingRetro) return;
+    setIsImportingRetro(true);
+    const toastId = toast.loading("Importazione maglie retro in corso...");
+    try {
+      const response = await fetch("/api/admin/import-retro-jerseys", {
+        method: "POST",
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || data.error || "Import failed");
+      }
+      toast.success(
+        `Import completato: ${data.createdCount} creati, ${data.alreadyExisted} già presenti, ${data.failedCount} falliti (bozza, non visibili sul sito)`,
+        { id: toastId, duration: 8000 }
+      );
+      await fetchProducts({
+        page: pagination.page,
+        limit: pagination.limit,
+        search: searchTerm,
+        includeInactive: showInactive,
+      });
+    } catch (error) {
+      console.error("Error importing retro jerseys:", error);
+      toast.error("Import fallito, controlla la console.", { id: toastId });
+    } finally {
+      setIsImportingRetro(false);
+    }
   };
 
   const handleToggleStatus = async (productId: string, isActive: boolean) => {
@@ -898,6 +929,14 @@ const stats = useMemo(() => {
             Manage your product catalog, inventory, and product settings.
           </p>
         </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleImportRetroJerseys}
+          disabled={isImportingRetro}
+        >
+          {isImportingRetro ? "Importazione in corso..." : "Importa maglie mancanti"}
+        </Button>
       </div>
 
       {/* Stats */}
