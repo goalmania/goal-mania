@@ -144,6 +144,7 @@ function ProductCard({
               src={image || "/images/placeholder.png"}
               alt={name}
               fill
+              unoptimized={!!(image && image.startsWith("https://res.cloudinary.com"))}
               className="object-contain transition-all duration-700 ease-in-out p-3"
               style={{
                 transform: isHovered && !secondImage ? "scale(1.05)" : "scale(1)",
@@ -158,6 +159,7 @@ function ProductCard({
                 src={secondImage}
                 alt={`${name} - Vista 2`}
                 fill
+                unoptimized={!!(secondImage && secondImage.startsWith("https://res.cloudinary.com"))}
                 className="object-contain absolute inset-0 transition-all duration-700 ease-in-out p-3"
                 style={{
                   opacity: isHovered ? 1 : 0,
