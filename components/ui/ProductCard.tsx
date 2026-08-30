@@ -138,7 +138,7 @@ function ProductCard({
       >
         {/* Image Section — 65% of card */}
         <Link href={href} className="block" style={{ flexBasis: "65%" }}>
-          <div className="relative overflow-hidden" style={{ paddingBottom: "100%", background: "#F7F7F7" }}>
+          <div className="relative overflow-hidden" style={{ paddingBottom: "100%", background: "#1a1a1a" }}>
             {/* Primary image */}
             <Image
               src={image || "/images/placeholder.png"}
