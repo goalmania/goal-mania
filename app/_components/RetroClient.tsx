@@ -295,14 +295,11 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
   const [activeFilter, setActiveFilter] = useState<"all" | "nationals" | "serieA" | "europe">("all");
   const [teamFilter, setTeamFilter] = useState<string | null>(null); // slug of selected club
 
-  // When a logo is clicked: set team filter + scroll to products
+  // When a logo is clicked: set team filter
   function handleSelectTeam(slug: string) {
     const newSlug = teamFilter === slug ? null : slug;
     setTeamFilter(newSlug);
     setActiveFilter("all"); // reset category filter
-    setTimeout(() => {
-      document.getElementById("retro-products")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 80);
   }
 
   // Keyword for current team filter
