@@ -21,6 +21,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, matched: result.matchedCount, modified: result.modifiedCount });
   }
 
+  // Disattivazione per slug: { action: "deactivate", slugs: ["slug1", "slug2"] }
+  if (body.action === "deactivate") {
+    const { slugs } = body as { slugs: string[] };
+    if (!Array.isArray(slugs) || slugs.length === 0) {
+      return NextResponse.json({ error: "slugs array required" }, { status: 400 });
+    }
+    const result = await Product.updateMany({ slug: { $in: slugs } }, { $set: { isActive: false } });
+    revalidatePath("/shop/retro");
+    revalidatePath("/shop");
+    return NextResponse.json({ ok: true, matched: result.matchedCount, modified: result.modifiedCount });
+  }
+
   // Aggiornamento immagini: { updates: Array<{ slug, images }> }
   const { updates } = body as { updates: Array<{ slug: string; images: string[] }> };
   if (!Array.isArray(updates) || updates.length === 0) {
