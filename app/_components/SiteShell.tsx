@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import AnnouncementBar from "@/components/AnnouncementBar";
@@ -10,6 +11,11 @@ import UrgencyFloat from "@/components/UrgencyFloat";
 
 export default function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+
+  // Reset scroll to top on every page navigation
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [pathname]);
   const isAdmin = pathname.startsWith("/admin");
   const isShop = pathname.startsWith("/shop");
 
