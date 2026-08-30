@@ -33,6 +33,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, matched: result.matchedCount, modified: result.modifiedCount });
   }
 
+  // Aggiornamento campi generici: { action: "update-fields", updates: Array<{ slug, fields: Record<string,any> }> }
+  if (body.action === "update-fields") {
+    const { updates } = body as { updates: Array<{ slug: string; fields: Record<string, unknown> }> };
+    if (!Array.isArray(updates) || updates.length === 0) {
+      return NextResponse.json({ error: "updates array required" }, { status: 400 });
+    }
+    const results = [];
+    for (const { slug, fields } of updates) {
+      const res = await Product.updateOne({ slug }, { $set: fields });
+      results.push({ slug, status: res.matchedCount === 0 ? "not_found" : "ok" });
+    }
+    revalidatePath("/shop/retro");
+    revalidatePath("/shop");
+    return NextResponse.json({ ok: true, results });
+  }
+
   // Aggiornamento immagini: { updates: Array<{ slug, images }> }
   const { updates } = body as { updates: Array<{ slug: string; images: string[] }> };
   if (!Array.isArray(updates) || updates.length === 0) {
