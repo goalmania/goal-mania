@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 
@@ -41,5 +42,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  revalidatePath("/shop/retro");
+  revalidatePath("/shop");
   return NextResponse.json({ ok: true, results });
 }
