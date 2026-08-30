@@ -140,32 +140,30 @@ function ProductCard({
         <Link href={href} className="block" style={{ flexBasis: "65%" }}>
           <div className="relative overflow-hidden" style={{ paddingBottom: "100%", background: "#1a1a1a" }}>
             {/* Primary image */}
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={image || "/images/placeholder.png"}
               alt={name}
-              fill
-              unoptimized={!!(image && image.startsWith("https://res.cloudinary.com"))}
-              className="object-contain transition-all duration-700 ease-in-out p-3"
+              className="absolute inset-0 w-full h-full object-contain p-3 transition-all duration-700 ease-in-out"
               style={{
                 transform: isHovered && !secondImage ? "scale(1.05)" : "scale(1)",
                 opacity: isHovered && secondImage ? 0 : 1,
               }}
-              sizes="(max-width: 768px) 50vw, 25vw"
+              loading="lazy"
             />
 
             {/* Second image slides in on hover */}
             {secondImage && (
-              <Image
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
                 src={secondImage}
                 alt={`${name} - Vista 2`}
-                fill
-                unoptimized={!!(secondImage && secondImage.startsWith("https://res.cloudinary.com"))}
-                className="object-contain absolute inset-0 transition-all duration-700 ease-in-out p-3"
+                className="absolute inset-0 w-full h-full object-contain p-3 transition-all duration-700 ease-in-out"
                 style={{
                   opacity: isHovered ? 1 : 0,
                   transform: isHovered ? "scale(1.03)" : "scale(1.08)",
                 }}
-                sizes="(max-width: 768px) 50vw, 25vw"
+                loading="lazy"
               />
             )}
 
