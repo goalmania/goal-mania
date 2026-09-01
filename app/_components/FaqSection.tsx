@@ -34,7 +34,7 @@ export default function FaqSection() {
       {
         question: "Che Metodi di Pagamento Accettate?",
         answer:
-          "Gli acquisti sul nostro sito possono essere effettuati tramite: Visa, Mastercard, American Express, Maestro e PayPal. Non accettiamo pagamenti in contanti, tramite.",
+          "Gli acquisti sul nostro sito possono essere effettuati tramite: Visa, Mastercard, American Express, Maestro, Apple Pay, Google Pay e Klarna. Non accettiamo pagamenti in contanti, tramite.",
       },
     ],
     costruzione: [

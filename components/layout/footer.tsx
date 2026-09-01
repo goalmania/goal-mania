@@ -56,7 +56,7 @@ const TRUST_BADGES = [
 ];
 
 const PAYMENT_METHODS = [
-  "VISA", "Mastercard", "PayPal", "Apple Pay", "Google Pay", "Klarna", "Stripe",
+  "VISA", "Mastercard", "Apple Pay", "Google Pay", "Klarna", "Stripe",
 ];
 
 const SOCIALS = [

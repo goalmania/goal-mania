@@ -62,7 +62,7 @@ export default function TermsPage() {
                 Payment must be made in full at the time of ordering.
               </p>
               <p className="text-white/70 mb-4">
-                We accept major credit cards, PayPal, and other payment methods as displayed during checkout. 
+                We accept major credit cards and other payment methods as displayed during checkout.
                 All transactions are secure and encrypted.
               </p>
             </div>

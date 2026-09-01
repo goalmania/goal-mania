@@ -792,7 +792,7 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
               {
                 icon: "🔒",
                 title: "Pagamento Sicuro",
-                desc: "Carta, PayPal, Klarna. Sempre protetto.",
+                desc: "Carta, Klarna, Apple Pay. Sempre protetto.",
               },
             ].map(({ icon, title, desc }) => (
               <div key={title} className="flex items-start gap-3">

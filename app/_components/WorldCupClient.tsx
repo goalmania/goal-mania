@@ -595,7 +595,7 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
           {[
             { Icon: Truck,       title: "Spedizione Rapida",  sub: "3-5 giorni lavorativi" },
             { Icon: RotateCcw,   title: "Reso Gratuito",      sub: "30 giorni senza domande" },
-            { Icon: ShieldCheck, title: "Pagamento Sicuro",   sub: "SSL · PayPal · Klarna" },
+            { Icon: ShieldCheck, title: "Pagamento Sicuro",   sub: "SSL · Carta · Klarna" },
             { Icon: Trophy,      title: "Kit Mondiali 2026",  sub: "Selezione esclusiva" },
           ].map(({ Icon, title, sub }) => (
             <div key={title} className="flex flex-col sm:flex-row items-center sm:items-start gap-3 text-center sm:text-left">

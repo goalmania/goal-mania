@@ -645,7 +645,7 @@ export default function CheckoutPage() {
           </div>
 
           <div className="flex items-center justify-center gap-4 mt-6">
-            {["SSL", "Stripe", "PayPal"].map((b) => (
+            {["SSL", "Stripe"].map((b) => (
               <span key={b} className="text-[10px] font-bold text-white/20 border border-white/10 px-2 py-1 rounded">{b}</span>
             ))}
           </div>
@@ -969,8 +969,8 @@ export default function CheckoutPage() {
 
             {/* Montato appena si apre il checkout (invisibile finche' non si
                 arriva davvero al pagamento), cosi' Stripe fa in anticipo la
-                sua chiamata per i metodi disponibili (PayPal incluso) ed
-                evitiamo lo skeleton di caricamento al cambio step. La card
+                sua chiamata per i metodi disponibili ed evitiamo lo skeleton
+                di caricamento al cambio step. La card
                 (intestazione + pulsante indietro) resta pero' sempre visibile
                 una volta raggiunto lo step Pagamento anche se il coupon
                 (applicabile dalla colonna destra pure da li') invalida

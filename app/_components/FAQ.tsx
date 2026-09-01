@@ -51,11 +51,11 @@ const FAQ_TABS = [
       },
       {
         q: "Che metodi di pagamento accettate?",
-        a: "Accettiamo Visa, Mastercard, American Express, Maestro e PayPal. Non accettiamo contrassegno o bonifico bancario.",
+        a: "Accettiamo Visa, Mastercard, American Express, Maestro, Apple Pay, Google Pay e Klarna. Non accettiamo contrassegno o bonifico bancario.",
       },
       {
         q: "Posso pagare a rate?",
-        a: "Sì, tramite PayPal offriamo la possibilità di dilazionare il pagamento in 3 rate senza interessi per ordini superiori a €30.",
+        a: "Sì, tramite Klarna offriamo la possibilità di dilazionare il pagamento in 3 rate senza interessi per ordini superiori a €30.",
       },
     ],
   },

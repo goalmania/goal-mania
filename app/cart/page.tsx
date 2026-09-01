@@ -393,7 +393,7 @@ export default function CartPage() {
                     Metodi di Pagamento Accettati
                   </p>
                   <div className="flex justify-center gap-2 flex-wrap">
-                    {["VISA", "MC", "PayPal", "Apple Pay"].map((method) => (
+                    {["VISA", "MC", "Klarna", "Apple Pay"].map((method) => (
                       <span
                         key={method}
                         className="text-[8px] font-black px-2 py-1 rounded tracking-widest"

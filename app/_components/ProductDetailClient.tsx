@@ -1089,7 +1089,7 @@ export default function ProductDetailClient({
 
               {/* Payment methods */}
               <div className="flex items-center justify-center gap-1.5 flex-wrap pt-1">
-                {["VISA","Mastercard","PayPal","Apple Pay","Google Pay","Klarna"].map(m => (
+                {["VISA","Mastercard","Apple Pay","Google Pay","Klarna"].map(m => (
                   <span
                     key={m}
                     className="text-[8px] font-black px-2 py-1 rounded tracking-widest"
