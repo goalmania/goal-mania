@@ -16,15 +16,23 @@ import * as dotenv from "dotenv";
 import { v2 as cloudinary } from "cloudinary";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, "../.env.production.local") });
+dotenv.config({ path: path.resolve(__dirname, "../.env.local") });
 
-const CLOUDINARY_API_KEY = "669869849348577";
-const CLOUDINARY_API_SECRET = "XGE9WXGv9cUhGrBG5uKepyZLPpU";
-const ADMIN_TOKEN = "cc5a27994a86cb80c7b72a7da26cb852";
+const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME || "do04e87p5";
+const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
+const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
+const ADMIN_TOKEN = process.env.ADMIN_UPDATE_TOKEN;
 const SITE_URL = "https://goal-mania.it";
 
+if (!CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET || !ADMIN_TOKEN) {
+  console.error(
+    "Variabili mancanti in .env.local: CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, ADMIN_UPDATE_TOKEN"
+  );
+  process.exit(1);
+}
+
 cloudinary.config({
-  cloud_name: "do04e87p5",
+  cloud_name: CLOUDINARY_CLOUD_NAME,
   api_key: CLOUDINARY_API_KEY,
   api_secret: CLOUDINARY_API_SECRET,
 });
