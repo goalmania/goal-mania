@@ -367,7 +367,7 @@ Il countdown "entro" usa la stima di spedizione reale (giorni lavorativi).
 
 **Blocco 3 — Spedizione gratuita (SOPRA le taglie, non sotto):**
 ```
-✅ Spedizione GRATUITA in Italia — Consegna 3-5 giorni lavorativi
+✅ Spedizione GRATUITA in Italia — Consegna 5-10 giorni lavorativi
 ```
 Verde, piccolo, Barlow 500, con icona truck. Non può essere mancato.
 

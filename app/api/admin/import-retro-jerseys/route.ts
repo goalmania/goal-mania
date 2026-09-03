@@ -64,7 +64,7 @@ export async function POST() {
       if (existingSlugs.has(slug)) slug = `${slug}-${Date.now()}`;
       existingSlugs.add(slug);
 
-      const description = `${title} disponibile su Goal Mania a soli 40€. Maglia storica di qualità premium. Personalizzazione gratuita con nome e numero sulla schiena. Spedizione gratuita in tutta Italia. Consegna in 3-5 giorni lavorativi.`;
+      const description = `${title} disponibile su Goal Mania a soli 40€. Maglia storica di qualità premium. Personalizzazione gratuita con nome e numero sulla schiena. Spedizione gratuita in tutta Italia. Consegna in 5-10 giorni lavorativi.`;
 
       try {
         await Product.create({

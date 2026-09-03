@@ -202,8 +202,8 @@ export async function orderConfirmationTemplate({
   };
 
   const texts = {
-    it: `Ciao${userName ? ' ' + userName : ''},\n\n🎉 SCELTA ECCELLENTE! Il tuo ordine è stato confermato e stiamo già lavorando su di esso.\n\n📦 Dettagli Ordine:\nOrdine #: ${orderId}\nTotale: €${amount}\n\n⚡ Prossimi Passi:\n- Processeremo il tuo ordine entro 24 ore\n- Riceverai conferma di spedizione con tracking\n- La consegna richiede 3-5 giorni lavorativi\n\n🏆 Grazie per aver scelto Goal Mania!\n\nCordiali saluti,\nIl Team Goal Mania`,
-    en: `Hi${userName ? ' ' + userName : ''},\n\n🎉 EXCELLENT CHOICE! Your order has been confirmed and we're already working on it.\n\n📦 Order Details:\nOrder #: ${orderId}\nTotal: €${amount}\n\n⚡ What's Next:\n- We'll process your order within 24 hours\n- You'll get shipping confirmation with tracking\n- Delivery typically takes 3-5 business days\n\n🏆 Thank you for choosing Goal Mania!\n\nBest regards,\nThe Goal Mania Team`
+    it: `Ciao${userName ? ' ' + userName : ''},\n\n🎉 SCELTA ECCELLENTE! Il tuo ordine è stato confermato e stiamo già lavorando su di esso.\n\n📦 Dettagli Ordine:\nOrdine #: ${orderId}\nTotale: €${amount}\n\n⚡ Prossimi Passi:\n- Processeremo il tuo ordine entro 24 ore\n- Riceverai conferma di spedizione con tracking\n- La consegna richiede 5-10 giorni lavorativi\n\n🏆 Grazie per aver scelto Goal Mania!\n\nCordiali saluti,\nIl Team Goal Mania`,
+    en: `Hi${userName ? ' ' + userName : ''},\n\n🎉 EXCELLENT CHOICE! Your order has been confirmed and we're already working on it.\n\n📦 Order Details:\nOrder #: ${orderId}\nTotal: €${amount}\n\n⚡ What's Next:\n- We'll process your order within 24 hours\n- You'll get shipping confirmation with tracking\n- Delivery typically takes 5-10 business days\n\n🏆 Thank you for choosing Goal Mania!\n\nBest regards,\nThe Goal Mania Team`
   };
 
   return {
@@ -243,8 +243,8 @@ export async function shippingNotificationTemplate({
   };
 
   const texts = {
-    it: `Ciao${userName ? ' ' + userName : ''},\n\n🚚 NOTIZIE EMOZIONANTI! Il tuo ordine è stato spedito e sta arrivando da te!\n\n📦 Ordine #: ${orderId}\n📋 Tracking: ${trackingCode}\n\n🎯 Traccia il tuo pacco in tempo reale e ricevi aggiornamenti sulla consegna.\n\n⚡ Consegna stimata: 3-5 giorni lavorativi\n\n🏆 Grazie per aver scelto Goal Mania!\n\nCordiali saluti,\nIl Team Goal Mania`,
-    en: `Hi${userName ? ' ' + userName : ''},\n\n🚚 EXCITING NEWS! Your order has been shipped and is on its way to you!\n\n📦 Order #: ${orderId}\n📋 Tracking: ${trackingCode}\n\n🎯 Track your package in real-time and get delivery updates.\n\n⚡ Estimated delivery: 3-5 business days\n\n🏆 Thank you for choosing Goal Mania!\n\nBest regards,\nThe Goal Mania Team`
+    it: `Ciao${userName ? ' ' + userName : ''},\n\n🚚 NOTIZIE EMOZIONANTI! Il tuo ordine è stato spedito e sta arrivando da te!\n\n📦 Ordine #: ${orderId}\n📋 Tracking: ${trackingCode}\n\n🎯 Traccia il tuo pacco in tempo reale e ricevi aggiornamenti sulla consegna.\n\n⚡ Consegna stimata: 5-10 giorni lavorativi\n\n🏆 Grazie per aver scelto Goal Mania!\n\nCordiali saluti,\nIl Team Goal Mania`,
+    en: `Hi${userName ? ' ' + userName : ''},\n\n🚚 EXCITING NEWS! Your order has been shipped and is on its way to you!\n\n📦 Order #: ${orderId}\n📋 Tracking: ${trackingCode}\n\n🎯 Track your package in real-time and get delivery updates.\n\n⚡ Estimated delivery: 5-10 business days\n\n🏆 Thank you for choosing Goal Mania!\n\nBest regards,\nThe Goal Mania Team`
   };
 
   return {

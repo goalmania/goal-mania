@@ -4,7 +4,7 @@ import { Truck, Clock, Shield, MapPin, Package, Globe } from "lucide-react";
 export const metadata: Metadata = {
   title: "Spedizioni — Consegna Gratuita in Italia",
   description:
-    "Spedizione gratuita su tutti gli ordini in Italia. Consegna in 2-5 giorni lavorativi. Reso gratuito entro 30 giorni. Tutti i metodi di pagamento accettati.",
+    "Spedizione gratuita su tutti gli ordini in Italia. Consegna in 5-10 giorni lavorativi. Reso gratuito entro 30 giorni. Tutti i metodi di pagamento accettati.",
   alternates: {
     canonical: "https://goal-mania.it/shipping",
   },
@@ -46,7 +46,7 @@ export default function ShippingPage() {
                 <div className="flex justify-between items-center py-3 border-b border-gray-100">
                   <div>
                     <h3 className="font-semibold text-[#0a0a0a]">Standard Delivery</h3>
-                    <p className="text-sm text-white/60">3-5 business days</p>
+                    <p className="text-sm text-white/60">5-10 business days</p>
                   </div>
                   <span className="text-2xl font-bold text-[#c8f000]">FREE</span>
                 </div>
