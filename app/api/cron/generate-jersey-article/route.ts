@@ -7,7 +7,7 @@ import { notifySearchEngines } from "@/lib/google-indexing";
 
 export const maxDuration = 300;
 
-const ARTICLES_PER_RUN = 3;
+const ARTICLES_PER_RUN = 2;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -100,41 +100,36 @@ async function generateJerseyArticle(product: any): Promise<{
     day: "numeric", month: "long", year: "numeric",
   });
 
-  const prompt = `Sei un esperto di maglie da calcio che scrive per Goal-Mania.it, un e-commerce italiano di maglie calcistiche.
+  const prompt = `Scrivi una scheda-racconto per la maglia qui sotto, per Goal-Mania.it. Sei un appassionato di maglie che sa di cosa parla: niente linguaggio da brochure, niente lodi generiche.
 
 DATA ODIERNA: ${today}
 
-PRODOTTO DA DESCRIVERE:
+MAGLIA:
 - Nome: ${product.title}
 - Squadra/Nazionale: ${team}
-- Tipo: ${isRetro ? "Maglia RETRO/vintage" : isWorldCup ? "Maglia Mondiale 2026" : "Maglia attuale 2025/26 o 2026/27"}
+- Tipo: ${isRetro ? "RETRO / vintage" : isWorldCup ? "Mondiale 2026" : "stagione attuale"}
 - Prezzo: €${price}
-- Descrizione prodotto: ${product.description?.slice(0, 300) ?? ""}
+- Descrizione a catalogo: ${product.description?.slice(0, 300) ?? ""}
 - URL prodotto: ${productUrl}
 
-OBIETTIVO: Articolo SEO di almeno 700 parole che:
-1. Targettizza keyword come "${product.title}" e varianti long-tail
-2. Descrive la maglia in modo appassionato (colori, design, storia, quando si indossa)
-3. ${isRetro ? "Racconta la storia di questa maglia vintage, che stagione rappresenta, perché è iconica" : "Descrive il kit attuale della squadra, il design 2025/26 o 2026/27, le caratteristiche"}
-4. Include naturalmente il link al prodotto con testo ancora come "acquista la ${product.title}" o "disponibile su Goal-Mania"
-5. Parla di abbinamenti, taglie, personalizzazioni (nome+numero)
-6. Conclude con CTA verso Goal-Mania.it
+${isRetro
+  ? `ANGOLO (retro): parti da una cosa concreta e vera legata a questa maglia — la stagione precisa, una partita, un giocatore che la indossava, cosa vinse (o perse) la squadra quell'anno, un dettaglio del design di quell'epoca. Il format è "quella volta che…": un fatto specifico, non "una maglia che ha fatto la storia". Se non conosci un episodio verificabile su questa squadra in quegli anni, resta sul concreto del design e dell'epoca senza inventare.`
+  : `ANGOLO (attuale): descrivi com'è fatta la maglia di questa stagione — colori, il dettaglio che la distingue da quella dell'anno prima, chi è lo sponsor tecnico se lo sai, quando la squadra la indossa. Un dettaglio preciso vale più di dieci aggettivi.`}
 
-Struttura HTML:
-<p class="lead"><strong>Intro</strong> (2-3 frasi che aganciano il lettore)</p>
-<h2>Design e caratteristiche</h2><p>...</p>
-<h2>${isRetro ? "Storia e iconicità" : "Il kit " + (isWorldCup ? "Mondiali 2026" : "stagione 2025/26")}</h2><p>...</p>
-<h2>Come acquistarla</h2><p>...includi <a href="${productUrl}">link al prodotto</a>...</p>
-<h2>Personalizzazione e taglie</h2><p>...</p>
-<h2>Conclusioni</h2><p>...</p>
+LUNGHEZZA: 220-420 parole. Basta e avanza.
 
-REGOLA: NON usare le parole "ufficiale", "replica", "licenziata". Usa solo "maglia", "kit", "divisa".
+REGOLE:
+- Ogni paragrafo dice qualcosa di specifico. Vietato "capolavoro di design", "un mix di stile e passione", "esalta la figura atletica", "vivi la tua passione", "un pezzo di storia", "non è solo una maglia".
+- Un solo link al prodotto, dentro una frase naturale (es. "la trovi su Goal-Mania a ${price}€"). Una CTA leggera alla fine, non due.
+- Non usare "ufficiale", "replica", "licenziata": scrivi "maglia", "kit", "divisa".
+- Usa "è / ha". Frasi di lunghezza varia. Niente domande retoriche come titoli, niente grassetti sparsi, niente sezione "Conclusioni".
+- HTML: apri con un <p> (nessuna classe, nessun <strong>). Se serve, 1 solo <h2> in stile frase. Poi <p>. Includi <a href="${productUrl}">…</a> una volta. Solo tag <p>, <h2>, <a>.
 
 Rispondi SOLO con JSON valido:
 {
-  "title": "Titolo SEO 60-75 caratteri (includi nome squadra + anno/tipo es: 'Maglia Argentina Home 2026: Guida Completa')",
-  "summary": "Meta description 140-160 caratteri con keyword principale",
-  "content": "HTML completo minimo 700 parole"
+  "title": "Titolo 45-70 caratteri col nome della maglia (es. 'Maglia Argentina Home 2026'). Niente ': Guida Completa' o sottotitoli a effetto.",
+  "summary": "Meta description 140-160 caratteri, keyword principale, dice cos'è la maglia",
+  "content": "HTML, 220-420 parole"
 }`;
 
   let response;
@@ -144,7 +139,7 @@ Rispondi SOLO con JSON valido:
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
         {
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.75, maxOutputTokens: 6000 },
+          generationConfig: { temperature: 0.85, maxOutputTokens: 2600 },
         },
         { headers: { "content-type": "application/json" }, timeout: 90000 }
       );

@@ -10,9 +10,9 @@ export const maxDuration = 300;
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
-// 4 cron giornalieri × 5 articoli = 20 articoli/giorno
-// Orari: 06:00, 10:00, 14:00, 18:00 (UTC)
-const ARTICLES_PER_RUN = 5;
+// 2 cron giornalieri × 3 articoli = 6 articoli/giorno
+// Orari: 07:00, 17:00 (UTC). Meno volume, più sostanza.
+const ARTICLES_PER_RUN = 3;
 
 // Feed verificati al 29/05/2026: freschi + includono immagini proprie
 const RSS_FEEDS = [
@@ -421,47 +421,50 @@ async function generateArticleWithGemini(
   // Lista argomenti già coperti di recente (per evitare ripetizioni)
   const recentTopics = recentDbTitles.slice(0, 20).join("\n- ");
 
-  const prompt = `Sei un giornalista sportivo senior per Goal-Mania.it, portale calcistico italiano.
+  const prompt = `Scrivi una notizia di calcio per Goal-Mania.it. Sei un redattore italiano che conosce il calcio e scrive come parlerebbe a un amico tifoso: diretto, informato, senza fronzoli.
 
 DATA ODIERNA: ${dateLabel}
 
 NOTIZIE REALI DELLE ULTIME ORE:
 ${newsDigest}
 
-${recentDbTitles.length > 0 ? `ARGOMENTI GIÀ TRATTATI NELLE ULTIME 48H (NON RIPETERE):
+${recentDbTitles.length > 0 ? `ARGOMENTI GIÀ TRATTATI NELLE ULTIME 48H (NON RIPETERE, cambia angolo o notizia):
 - ${recentTopics}
 
-` : ""}**REGOLA ASSOLUTA #1 — FACT-CHECK OBBLIGATORIO**: Prima di scrivere, valida ogni notizia con le tue conoscenze aggiornate. Se la notizia RSS parla di un trasferimento o di un'offerta per un giocatore che TU SAI essere già in quella squadra da mesi, quella notizia è OBSOLETA — NON scriverla, segnalala come "OBSOLETA" nel JSON con {"skip": true, "reason": "..."}. I feed RSS pubblicano spesso notizie riciclate o vecchie indiscrezioni come se fossero nuove.
-**REGOLA ASSOLUTA #2**: Non trattare argomenti già coperti di recente — scegli un angolo diverso.
-**REGOLA ASSOLUTA #3**: L'articolo deve riguardare la NOTIZIA PRINCIPALE. Le altre notizie servono solo per contesto.
-**REGOLA ASSOLUTA #4 — MERCATO**: Per voci di mercato non ancora confermate usa il condizionale: "secondo le indiscrezioni", "sarebbe in corso una trattativa". Se invece il trasferimento è già avvenuto (lo sai dalle tue conoscenze), NON scrivere come se fosse ancora in trattativa.
-**REGOLA ASSOLUTA #5 — NESSUNA FONTE**: NON citare mai la fonte della notizia nell'articolo. Non scrivere mai "secondo Tuttosport", "come riporta Calciomercato.it", "stando a La Gazzetta", "secondo Sky Sport" o qualsiasi altro media. Goal-Mania.it è la voce narrante: scrivi in prima persona editoriale, come se la notizia fosse di proprietà della redazione.
+` : ""}FACT-CHECK: valida la notizia con quello che sai. Se parla di un trasferimento o di un'offerta per un giocatore che sai già in quella squadra da mesi, è obsoleta: rispondi {"skip": true, "reason": "..."}. I feed RSS ripubblicano spesso vecchie indiscrezioni come fossero nuove.
 
-**OBIETTIVO**: Articolo giornalistico approfondito, minimo 800 parole.
-1. SEO-ottimizzato: keyword naturali, H2/H3, liste puntate
-2. GEO-ottimizzato: risposte dirette, fatti concreti, nomi e cifre reali
-3. Originale: rielabora, non copiare
-4. Tone of voice: appassionato, professionale, italiano
+L'articolo riguarda SOLO la notizia principale. Le altre servono da contesto, non allargare.
 
-Struttura HTML richiesta:
-<p class="lead"><strong>Occhiello</strong> (2-3 frasi che riassumono il fatto)</p>
-<h2>Sezione 1</h2><p>...</p>
-<h2>Sezione 2</h2><p>...</p>
-<h2>Analisi e Prospettive</h2><p>...</p>
-<h2>Conclusioni</h2><p>...</p>
+MERCATO: se la trattativa non è confermata, usa il condizionale ("sarebbe vicino", "avrebbe offerto") e di' da dove viene l'indiscrezione (es. "secondo Sky Sport", "riporta la Gazzetta"). Se il trasferimento è già ufficiale (lo sai), scrivilo come fatto, non come trattativa in corso.
+
+LUNGHEZZA: quella che la notizia merita, mai di più. Una voce di mercato secca: 130-220 parole. Un affare fatto con un minimo di contesto: 300-450. Un'analisi vera con dati e precedenti: fino a 550. Non allungare per riempire.
+
+COME SCRIVERE — regole vincolanti:
+- Ogni paragrafo porta un fatto concreto: un nome, una cifra, una data, la durata di un contratto, un numero di gol, un precedente. Se una frase non aggiunge un fatto, cancellala.
+- Frasi di lunghezza varia. Verbi piani: "ha firmato", "è costato", "gioca", "ha detto" — non "ha apposto la firma", "ha effettuato il trasferimento", "ha dichiarato".
+- Usa "è / ha / c'è". Non "si configura come", "rappresenta", "va a inserirsi", "funge da".
+- VIETATE queste frasi e simili: "un vero e proprio", "non è un fulmine a ciel sereno", "chiave di volta", "nuovi orizzonti", "un capitolo nuovo", "il tempo dirà", "non resta che attendere", "una cosa è certa", "nel panorama calcistico", "a 360 gradi", "mix di esperienza e gioventù", "getta le basi", "pietra miliare", "punto di svolta", "sottolineando", "evidenziando come", "riflettendo un più ampio".
+- Niente auto-riferimenti: non scrivere "Goal-Mania.it analizza / esplora / seguirà con attenzione".
+- Niente triadi automatiche di aggettivi, niente "non solo X ma anche Y", niente paragrafo o sezione "In conclusione" che ripete quello che hai già detto.
+- Niente domande retoriche come titoli. Niente grassetti sparsi. Elenchi puntati SOLO per liste vere (formazioni, numeri), non per spezzare la prosa.
+
+STRUTTURA HTML del campo "content":
+- Apri con un <p> che dice il fatto in 2-3 frasi. Nessuna classe, nessun <strong>.
+- Se l'articolo supera le 300 parole e ha davvero due parti distinte, puoi usare 1-2 <h2> con titoli in stile frase che dicono il contenuto ("Cosa cambia per il centrocampo", non "Analisi e prospettive"). Sotto le 300 parole: solo <p>, nessun heading.
+- Solo tag <p>, <h2>, <ul>/<li>, <a>. Niente <h1>.
 
 Rispondi SOLO con JSON valido, zero markdown, zero testo extra:
 {
-  "title": "Titolo accattivante (60-80 caratteri, include nome persona/squadra principale)",
-  "summary": "Meta description SEO: 140-160 caratteri, keyword principale, risponde alla domanda principale",
-  "content": "HTML completo minimo 800 parole con struttura indicata",
+  "title": "Titolo da notizia vera, 55-75 caratteri, con il nome del protagonista o della squadra. Stile frase, non Maiuscole Ovunque, niente due punti con sottotitolo salvo che sia naturale.",
+  "summary": "Meta description 140-160 caratteri: dice il fatto, con la keyword principale. Non è un teaser, è un riassunto.",
+  "content": "HTML come sopra, lunghezza proporzionata alla notizia",
   "category": "serieA | transferMarket | news | internationalTeams",
   "league": "Solo se internationalTeams: LaLiga | Premier League | Bundesliga | Ligue 1 | Champions League | Europa League",
-  "mainTeam": "Nome breve squadra (Milan NON AC Milan, Inter NON Internazionale, Juve o Juventus, ecc.)",
+  "mainTeam": "Nome breve squadra (Milan non AC Milan, Inter non Internazionale, Juve o Juventus)",
   "secondaryTeams": ["Max 3 squadre secondarie"],
-  "mainPerson": "Nome e cognome protagonista (allenatore, presidente, giocatore, dirigente). Stringa vuota se non c'è un protagonista umano specifico citato.",
+  "mainPerson": "Nome e cognome del protagonista. Stringa vuota se non c'è una persona specifica.",
   "seoKeywords": ["5-7 keyword dalla più importante"],
-  "imageSearchQuery": "Query per trovare foto recente del protagonista (es: 'Luciano Spalletti conferenza stampa 2026' o 'Maurizio Sarri Lazio 2026')"
+  "imageSearchQuery": "Query per foto recente del protagonista (es. 'Luciano Spalletti conferenza stampa 2026')"
 }`;
 
   let response;
@@ -471,7 +474,7 @@ Rispondi SOLO con JSON valido, zero markdown, zero testo extra:
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
         {
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 8000 },
+          generationConfig: { temperature: 0.85, maxOutputTokens: 3500 },
         },
         { headers: { "content-type": "application/json" }, timeout: 90000 }
       );
