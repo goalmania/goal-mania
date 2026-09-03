@@ -7,7 +7,7 @@ import { notifySearchEngines } from "@/lib/google-indexing";
 
 export const maxDuration = 300;
 
-const ARTICLES_PER_RUN = 2;
+const ARTICLES_PER_RUN = 3;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -139,7 +139,7 @@ Rispondi SOLO con JSON valido:
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
         {
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.85, maxOutputTokens: 2600 },
+          generationConfig: { temperature: 0.85, maxOutputTokens: 3200 },
         },
         { headers: { "content-type": "application/json" }, timeout: 90000 }
       );

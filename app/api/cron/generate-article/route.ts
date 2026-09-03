@@ -10,9 +10,9 @@ export const maxDuration = 300;
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
-// 2 cron giornalieri × 3 articoli = 6 articoli/giorno
-// Orari: 07:00, 17:00 (UTC). Meno volume, più sostanza.
-const ARTICLES_PER_RUN = 3;
+// 4 cron giornalieri × 5 articoli = 20 articoli/giorno
+// Orari: 06:00, 10:00, 14:00, 18:00 (UTC)
+const ARTICLES_PER_RUN = 5;
 
 // Feed verificati al 29/05/2026: freschi + includono immagini proprie
 const RSS_FEEDS = [
@@ -474,7 +474,7 @@ Rispondi SOLO con JSON valido, zero markdown, zero testo extra:
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
         {
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.85, maxOutputTokens: 3500 },
+          generationConfig: { temperature: 0.85, maxOutputTokens: 5000 },
         },
         { headers: { "content-type": "application/json" }, timeout: 90000 }
       );

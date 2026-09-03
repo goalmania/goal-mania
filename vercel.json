@@ -12,15 +12,27 @@
   "crons": [
     {
       "path": "/api/cron/generate-article",
-      "schedule": "0 7 * * *"
+      "schedule": "0 6 * * *"
     },
     {
       "path": "/api/cron/generate-article",
-      "schedule": "0 17 * * *"
+      "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/generate-article",
+      "schedule": "0 14 * * *"
+    },
+    {
+      "path": "/api/cron/generate-article",
+      "schedule": "0 18 * * *"
     },
     {
       "path": "/api/cron/generate-jersey-article",
-      "schedule": "0 9 * * *"
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/generate-jersey-article",
+      "schedule": "0 16 * * *"
     },
     {
       "path": "/api/cart-recovery",
