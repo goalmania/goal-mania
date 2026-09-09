@@ -5,6 +5,13 @@ const nextConfig: NextConfig = {
   output: "standalone",
   async redirects() {
     return [
+      // Canonicalizzazione dominio: www → apex, 308 permanente (evita il 307 temporaneo)
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.goal-mania.it" }],
+        destination: "https://goal-mania.it/:path*",
+        permanent: true,
+      },
       {
         source: "/shop/serie-a",
         destination: "/shop/serieA",

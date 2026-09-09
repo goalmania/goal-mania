@@ -7,7 +7,9 @@ import { notifySearchEngines } from "@/lib/google-indexing";
 
 export const maxDuration = 300;
 
-const ARTICLES_PER_RUN = 3;
+// 1 cron giornaliero × 2 articoli maglia/giorno. Questi articoli linkano
+// direttamente alle schede prodotto: contenuto a supporto della conversione.
+const ARTICLES_PER_RUN = 2;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

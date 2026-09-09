@@ -10,9 +10,10 @@ export const maxDuration = 300;
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
-// 4 cron giornalieri × 5 articoli = 20 articoli/giorno
-// Orari: 06:00, 10:00, 14:00, 18:00 (UTC)
-const ARTICLES_PER_RUN = 5;
+// 1 cron giornaliero × 2 articoli = 2 articoli news/giorno.
+// Volume ridotto di proposito: focus sito = vendita maglie, non content farm.
+// Le news restano a supporto, non come massa di contenuti thin.
+const ARTICLES_PER_RUN = 2;
 
 // Feed verificati al 29/05/2026: freschi + includono immagini proprie
 const RSS_FEEDS = [

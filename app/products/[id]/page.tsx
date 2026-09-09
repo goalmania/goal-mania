@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Metadata } from "next";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
@@ -183,6 +183,13 @@ export default async function ProductPage({
 
   if (!product) {
     notFound();
+  }
+
+  // Canonicalizzazione URL: 301 permanente da qualsiasi URL non-slug
+  // (vecchio _id Mongo indicizzato da Google, slug legacy) verso lo slug corrente.
+  // Consolida su un solo URL il link equity delle schede prodotto.
+  if (product.slug && id !== product.slug) {
+    permanentRedirect(`/products/${product.slug}`);
   }
 
   const slug = product.slug || id;

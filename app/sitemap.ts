@@ -5,6 +5,13 @@ import Article from "@/lib/models/Article";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it";
 
+// Data stabile per le pagine evergreen (categorie / team): cambiarla a mano
+// quando quelle pagine vengono ristrutturate. Evita che ogni rigenerazione
+// oraria della sitemap sposti in avanti il lastmod di centinaia di URL statici
+// (segnale rumoroso/manipolativo per Google). Le schede prodotto e gli articoli
+// continuano a usare il loro updatedAt reale.
+const EVERGREEN_LASTMOD = new Date("2026-09-09T00:00:00.000Z");
+
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -34,54 +41,54 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/shop`, lastModified: new Date(), changeFrequency: "daily", priority: 0.9 },
     { url: `${BASE_URL}/news`, lastModified: new Date(), changeFrequency: "daily", priority: 0.8 },
     { url: `${BASE_URL}/transfer`, lastModified: new Date(), changeFrequency: "daily", priority: 0.7 },
-    { url: `${BASE_URL}/shop/serieA`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
-    { url: `${BASE_URL}/shop/premier-league`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
-    { url: `${BASE_URL}/shop/worldcup`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE_URL}/shop/international`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
-    { url: `${BASE_URL}/shop/2026/27`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
-    { url: `${BASE_URL}/shop/2025/26`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE_URL}/shop/2024/25`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.6 },
-    { url: `${BASE_URL}/shop/retro`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
+    { url: `${BASE_URL}/shop/serieA`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${BASE_URL}/shop/premier-league`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${BASE_URL}/shop/worldcup`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/shop/international`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${BASE_URL}/shop/2026/27`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${BASE_URL}/shop/2025/26`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/shop/2024/25`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${BASE_URL}/shop/retro`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.9 },
     // Retro team pages — high commercial intent ("maglia Milan retro", "maglia Napoli Maradona")
     ...["milan","inter","juventus","napoli","roma","lazio","fiorentina","parma",
         "man-united","liverpool","arsenal","barcellona","real-madrid","celtic",
         "brasile","argentina","italia","inghilterra","francia","psg"].map((team) => ({
       url: `${BASE_URL}/shop/retro/${team}`,
-      lastModified: new Date(),
+      lastModified: EVERGREEN_LASTMOD,
       changeFrequency: "weekly" as const,
       priority: 0.85,
     })),
-    { url: `${BASE_URL}/shop/jackets`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.6 },
-    { url: `${BASE_URL}/shop/limited-edition`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.6 },
-    { url: `${BASE_URL}/shop/mystery-box`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.5 },
-    { url: `${BASE_URL}/about`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.4 },
-    { url: `${BASE_URL}/contact`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.4 },
-    { url: `${BASE_URL}/shipping`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.3 },
+    { url: `${BASE_URL}/shop/jackets`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${BASE_URL}/shop/limited-edition`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${BASE_URL}/shop/mystery-box`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.5 },
+    { url: `${BASE_URL}/about`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "monthly", priority: 0.4 },
+    { url: `${BASE_URL}/contact`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "monthly", priority: 0.4 },
+    { url: `${BASE_URL}/shipping`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "monthly", priority: 0.3 },
     // Serie A team pages — high-value keyword targets
     ...serieATeams.map((team) => ({
       url: `${BASE_URL}/shop/serieA/${team}`,
-      lastModified: new Date(),
+      lastModified: EVERGREEN_LASTMOD,
       changeFrequency: "weekly" as const,
       priority: 0.85,
     })),
     // Premier League team pages
     ...premierLeagueTeams.map((team) => ({
       url: `${BASE_URL}/shop/premier-league/${team}`,
-      lastModified: new Date(),
+      lastModified: EVERGREEN_LASTMOD,
       changeFrequency: "weekly" as const,
       priority: 0.85,
     })),
     // World Cup national team pages
     ...worldCupTeams.map((team) => ({
       url: `${BASE_URL}/shop/worldcup/${team}`,
-      lastModified: new Date(),
+      lastModified: EVERGREEN_LASTMOD,
       changeFrequency: "weekly" as const,
       priority: 0.75,
     })),
     // Top European club pages — evergreen, high-volume, not World-Cup-dependent
     ...internationalTeams.map((team) => ({
       url: `${BASE_URL}/shop/international/${team}`,
-      lastModified: new Date(),
+      lastModified: EVERGREEN_LASTMOD,
       changeFrequency: "weekly" as const,
       priority: 0.9,
     })),
