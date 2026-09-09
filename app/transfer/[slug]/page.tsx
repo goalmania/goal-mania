@@ -4,12 +4,10 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
-import Script from "next/script";
 import ArticleContent from "@/app/_components/ArticleContent";
 import { JerseyAdBlock } from "@/app/_components/JerseyAdBlock";
 import { Separator } from "@/components/ui/separator";
 import ViewTracker from "@/app/_components/ViewTracker";
-import AdSenseUnit from "@/components/ads/AdSenseUnit";
 
 export const revalidate = 300;
 
@@ -225,18 +223,8 @@ export default async function TransferArticlePage({
     ],
   };
 
-  const publisherId = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
-
   return (
     <>
-      {true && (
-        <Script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`}
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
-      )}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(newsArticleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <ViewTracker articleId={article._id as string} />
@@ -282,9 +270,6 @@ export default async function TransferArticlePage({
           <JerseyAdBlock jerseyId={article.featuredJerseyId} teamHint={teamHint} />
           <Separator className="mt-6" />
         </div>
-
-        {/* AdSense — in-article */}
-        <AdSenseUnit position="in-article" className="my-8" />
 
         {contentSecondPart && (
           <ArticleContent

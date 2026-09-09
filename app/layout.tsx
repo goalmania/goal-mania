@@ -76,9 +76,6 @@ export const metadata: Metadata = {
   verification: {
     google: "NgWEwSj9CLxYPIR8GMiEMo0f-edOghZzGqw7_9P2u-E",
   },
-  other: {
-    "google-adsense-account": "ca-pub-1255454616752120",
-  },
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it"),
   openGraph: {
     type: "website",
@@ -200,8 +197,6 @@ export default function RootLayout({
             ]),
           }}
         />
-        {/* Google AdSense — verifica proprietà sito */}
-        <meta name="google-adsense-account" content="ca-pub-1255454616752120" />
         {/* Favicon with cache busting */}
         <link rel="icon" type="image/png" sizes="192x192" href="/icon.png?v=3" />
         <link rel="shortcut icon" href="/icon.png?v=3" />
@@ -217,9 +212,6 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="//www.google-analytics.com" />
-        {/* Google AdSense */}
-        <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
-        <link rel="dns-prefetch" href="//pagead2.googlesyndication.com" />
         {/* Cloudinary (images) */}
         <link
           rel="preconnect"
@@ -295,16 +287,6 @@ export default function RootLayout({
             dangerouslySetInnerHTML={{
               __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}");`,
             }}
-          />
-        )}
-
-        {/* Google AdSense */}
-        {process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID && (
-          <Script
-            id="google-adsense"
-            strategy="lazyOnload"
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID}`}
-            crossOrigin="anonymous"
           />
         )}
 

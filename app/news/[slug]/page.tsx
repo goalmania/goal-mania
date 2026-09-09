@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import Script from "next/script";
 import { notFound, redirect } from "next/navigation";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
@@ -10,7 +9,6 @@ import ArticleContent from "@/app/_components/ArticleContent";
 import ReadingProgressBar from "@/app/_components/ReadingProgressBar";
 import ViewTracker from "@/app/_components/ViewTracker";
 import ArticleCard from "@/components/news/ArticleCard";
-import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { NewsArticle } from "@/types/news";
 import { Calendar, Clock, BookOpen, Share2, Bookmark, ChevronLeft } from "lucide-react";
 
@@ -231,20 +229,8 @@ export default async function ArticlePage({
     telegram: `https://t.me/share/url?url=${encodeURIComponent(articleUrl)}&text=${encodeURIComponent(article.title)}`,
   };
 
-  const publisherId = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
-
   return (
     <div style={{ background: "#0a0a0a", color: "#f5f5f5", minHeight: "100vh" }}>
-      {/* AdSense script — solo nelle pagine articolo, non nello shop */}
-      {true && (
-        <Script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`}
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
-      )}
-
       {/* JSON-LD structured data — NewsArticle + BreadcrumbList */}
       <script
         type="application/ld+json"
@@ -607,10 +593,7 @@ export default async function ArticlePage({
               </div>
             </div>
 
-            {/* AdSense — in-article (dopo maglia correlata) */}
-            <AdSenseUnit position="in-article" className="my-8" />
-
-            {/* Related article inline (after ad) */}
+            {/* Related article inline */}
             {relatedArticles[0] && (
               <div className="my-8">
                 <div
@@ -875,9 +858,6 @@ export default async function ArticlePage({
                   </a>
                 ))}
               </div>
-
-              {/* AdSense — bottom sidebar */}
-              <AdSenseUnit position="bottom" className="mb-6" />
 
               {/* Related articles */}
               {relatedArticles.length > 0 && (
