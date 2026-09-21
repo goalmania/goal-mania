@@ -12,7 +12,15 @@ const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it";
 // continuano a usare il loro updatedAt reale.
 const EVERGREEN_LASTMOD = new Date("2026-09-09T00:00:00.000Z");
 
-export const revalidate = 3600;
+// Era 3600 (ISR oraria): la cache è rimasta bloccata per giorni su uno
+// snapshot vecchio (osservato 21/9: age ~8 giorni, x-vercel-cache HIT,
+// sitemap.xml serviva ancora la foto del 9/9 nonostante decine di articoli
+// e aggiornamenti prodotto pubblicati nel frattempo). Con Google che sta
+// riprendendo a scansionare dopo il core update, la sitemap deve essere
+// sempre accurata: 0 = nessuna cache, query fresca a ogni richiesta.
+// Costo: qualche query Mongo in più sulle visite di crawler/bot, trascurabile
+// per un file richiesto raramente.
+export const revalidate = 0;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const serieATeams = [
