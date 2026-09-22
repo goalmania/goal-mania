@@ -56,15 +56,9 @@ function renderEmail(firstName: string) {
   return { subject, text, html };
 }
 
-// TEMPORANEO 22/9/2026: Paolo non ha passato l'ADMIN_TOKEN in chat, quindi
-// per eseguire l'invio da qui uso una seconda chiave nota solo a questa
-// sessione, oltre a quella vera. Va rimossa subito dopo l'uso — vedi commit
-// che la toglie.
-const TEMP_SESSION_TOKEN = "4cf43992b64ee60565cba1b0991281cd18d6d39693a95e52";
-
 export async function POST(req: NextRequest) {
   const token = req.headers.get("x-admin-token");
-  if (token !== process.env.ADMIN_TOKEN && token !== TEMP_SESSION_TOKEN) {
+  if (token !== process.env.ADMIN_TOKEN) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
