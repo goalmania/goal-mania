@@ -15,6 +15,15 @@ const templates = {
 type TemplateKey = keyof typeof templates;
 
 export async function POST(req: NextRequest) {
+  // Endpoint scoperto senza autenticazione il 22/9/2026: chiunque poteva
+  // mandare email arbitrarie a chiunque usando il Brevo del sito (rischio
+  // spam/reputazione mittente). Stesso schema x-admin-token delle altre
+  // route admin.
+  const token = req.headers.get("x-admin-token");
+  if (token !== process.env.ADMIN_TOKEN) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await req.json();
     const { to, template, params, language = 'it' }: { 

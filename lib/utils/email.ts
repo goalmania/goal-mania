@@ -1,9 +1,26 @@
 // Invia email transazionali tramite l'API HTTP di Brevo (ex Sendinblue).
 // Il precedente transport SMTP (nodemailer) non aveva mai host/user/pass
 // configurati in produzione e falliva sempre con ECONNREFUSED a localhost.
-export async function sendEmail({ to, subject, text, html }: { to: string; subject: string; text: string; html?: string }) {
+export async function sendEmail({
+  to,
+  subject,
+  text,
+  html,
+  from,
+}: {
+  to: string;
+  subject: string;
+  text: string;
+  html?: string;
+  // Sovrascrive il mittente di default (BREVO_SENDER_EMAIL) — usato per le
+  // campagne che devono partire da un indirizzo diverso da quello
+  // transazionale, es. redazionegoalmania@gmail.com per il win-back.
+  // Deve essere un mittente gia' verificato nell'account Brevo, altrimenti
+  // l'API risponde 400.
+  from?: { name: string; email: string };
+}) {
   const apiKey = process.env.BREVO_API_KEY;
-  const senderEmail = process.env.BREVO_SENDER_EMAIL;
+  const senderEmail = from?.email || process.env.BREVO_SENDER_EMAIL;
 
   if (!apiKey || !senderEmail) {
     throw new Error(
@@ -19,7 +36,7 @@ export async function sendEmail({ to, subject, text, html }: { to: string; subje
       Accept: "application/json",
     },
     body: JSON.stringify({
-      sender: { name: "Goal Mania", email: senderEmail },
+      sender: { name: from?.name || "Goal Mania", email: senderEmail },
       to: [{ email: to }],
       subject,
       textContent: text,
