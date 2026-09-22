@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import { AbandonedCart } from "@/lib/models/AbandonedCart";
+import Coupon from "@/lib/models/Coupon";
 import { sendEmail } from "@/lib/utils/email";
 import crypto from "crypto";
 
@@ -62,10 +63,23 @@ export async function GET(req: NextRequest) {
       const firstItem = cart.items[0];
       const itemsText = cart.items.map((i) => `• ${i.name} x${i.quantity} — €${(i.price * i.quantity).toFixed(2)}`).join("\n");
 
+      // Sconto di recupero: un codice nuovo per ogni carrello, usabile una
+      // volta sola (maxUses: 1 è già applicato da /api/coupons/validate e
+      // /apply). Non è legato all'email a livello di schema, ma è privato
+      // (lo riceve solo questo cliente) e muore al primo utilizzo o dopo 72h.
+      const recoveryCode = `RECUPERO${crypto.randomBytes(3).toString("hex").toUpperCase()}`;
+      await Coupon.create({
+        code: recoveryCode,
+        discountPercentage: 15,
+        expiresAt: new Date(Date.now() + 72 * 60 * 60 * 1000),
+        maxUses: 1,
+        description: `Recupero carrello abbandonato — ${cart.email}`,
+      });
+
       await sendEmail({
         to: cart.email,
-        subject: `Hai dimenticato la tua maglia? 🛒 Completa l'ordine`,
-        text: `Ciao!\n\nHai lasciato questi articoli nel tuo carrello:\n\n${itemsText}\n\nTotale: €${cart.total.toFixed(2)}\n\nCompleta il tuo ordine qui (valido 24h):\n${recoveryUrl}\n\n— Il team Goal Mania`,
+        subject: `Il tuo carrello ti aspetta, con il 15% di sconto`,
+        text: `Ciao,\n\nhai lasciato questi articoli nel carrello:\n\n${itemsText}\n\nTotale: €${cart.total.toFixed(2)}\n\nSe torni entro 72 ore, usa il codice ${recoveryCode} al checkout per il 15% di sconto su questo ordine (vale una volta sola).\n\nCompleta l'ordine qui:\n${recoveryUrl}\n\n— Goal Mania`,
         html: `
 <!DOCTYPE html>
 <html>
@@ -83,10 +97,16 @@ export async function GET(req: NextRequest) {
 
     <!-- Message -->
     <div style="background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px;margin-bottom:20px">
-      <h1 style="color:#ffffff;font-size:22px;font-weight:900;margin:0 0 8px">Hai dimenticato qualcosa?</h1>
-      <p style="color:rgba(255,255,255,0.5);font-size:15px;line-height:1.5;margin:0 0 24px">
-        Il tuo carrello ti sta aspettando. Completa l'ordine prima che le maglie vadano esaurite.
+      <h1 style="color:#ffffff;font-size:22px;font-weight:900;margin:0 0 8px">Hai lasciato qualcosa nel carrello</h1>
+      <p style="color:rgba(255,255,255,0.5);font-size:15px;line-height:1.5;margin:0 0 20px">
+        Sono ancora qui, nessuno te li ha presi. Se torni entro 72 ore hai il 15% di sconto su questo ordine.
       </p>
+
+      <!-- Coupon -->
+      <div style="background:rgba(200,240,0,0.08);border:1.5px dashed #c8f000;border-radius:12px;padding:16px;margin-bottom:20px;text-align:center">
+        <p style="color:rgba(255,255,255,0.5);font-size:12px;margin:0 0 6px;text-transform:uppercase;letter-spacing:0.5px">Codice sconto</p>
+        <p style="color:#c8f000;font-size:20px;font-weight:900;margin:0;letter-spacing:1px">${recoveryCode}</p>
+      </div>
 
       <!-- Items -->
       <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:16px;margin-bottom:24px">
@@ -110,6 +130,10 @@ export async function GET(req: NextRequest) {
       <a href="${recoveryUrl}" style="display:block;background:#c8f000;color:#000000;text-align:center;padding:16px 24px;border-radius:14px;font-weight:900;font-size:16px;text-decoration:none;letter-spacing:-0.3px">
         Completa l'ordine →
       </a>
+
+      <p style="color:rgba(255,255,255,0.35);font-size:12px;text-align:center;margin:12px 0 0">
+        Inserisci il codice al checkout, nel campo coupon. Vale una volta sola.
+      </p>
 
       <p style="color:rgba(255,255,255,0.25);font-size:12px;text-align:center;margin:16px 0 0">
         Spedizione gratuita · Reso gratuito 30gg · Pagamento sicuro SSL
