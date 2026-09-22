@@ -98,7 +98,12 @@ export async function POST(req: NextRequest) {
         byEmail.set(o.guestEmail.toLowerCase(), o.shippingAddress?.fullName || "");
       }
     }
-    recipients = [...byEmail.entries()].map(([email, name]) => ({ email, name }));
+    // Account interni/di test finiti tra gli ordini (non clienti veri):
+    // niente email di "ci manchi" all'account admin del sito.
+    const EXCLUDE = new Set(["goalmaniaofficial@gmail.com", "admin-arpit@gmail.com"]);
+    recipients = [...byEmail.entries()]
+      .filter(([email]) => !EXCLUDE.has(email))
+      .map(([email, name]) => ({ email, name }));
   }
 
   if (dryRun) {
