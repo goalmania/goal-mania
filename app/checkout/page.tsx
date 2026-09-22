@@ -39,6 +39,7 @@ import { useTranslation } from "@/lib/hooks/useTranslation";
 import React from "react";
 import { useTrackEvent } from "@/components/analytics/AnalyticsTracker";
 import { trackFbq } from "@/lib/utils/fbq";
+import { trackGtag } from "@/lib/utils/gtag";
 
 const loadPaymentStep = () => import("./PaymentStep");
 const PaymentStep = dynamic(loadPaymentStep, { ssr: false });
@@ -557,6 +558,21 @@ export default function CheckoutPage() {
       currency: "EUR",
       content_ids: items.map((i) => i.id),
       num_items: items.reduce((n, i) => n + i.quantity, 0),
+    });
+    // GA4 — evento ecommerce "purchase" (prima mancante: GA4 vedeva solo
+    // pageview, mai una vendita). transaction_id dal Payment Intent Stripe
+    // (prefisso di clientSecret) cosi' non si conta due volte lo stesso ordine.
+    trackGtag("purchase", {
+      transaction_id: clientSecret?.split("_secret_")[0] || `gm_${Date.now()}`,
+      value: total,
+      currency: "EUR",
+      coupon: appliedCoupon?.code,
+      items: items.map((item) => ({
+        item_id: item.id.split("_")[0],
+        item_name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+      })),
     });
 
     const applyCoupon = appliedCoupon
