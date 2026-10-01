@@ -278,6 +278,39 @@ export default async function ProductPage({
     ],
   };
 
+  // Rispecchia il contenuto visibile nel tab FAQ "Generale" di ProductDetailClient/FaqSection
+  // (fallbackFaqs.generale) — tenerli sincronizzati se quel testo cambia.
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Dopo quanto arriva?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Solitamente impiega tra i 10-14 giorni per arrivare a casa tua. Puoi controllare lo stato del tuo ordine nella sezione 'Traccia il tuo ordine'.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "I pagamenti sono sicuri?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Sì. Utilizziamo sistemi di pagamento sicuri e affidabili per garantire una transazione senza preoccupazioni.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Che metodi di pagamento accettate?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Visa, Mastercard, American Express, Maestro, Apple Pay, Google Pay e Klarna.",
+        },
+      },
+    ],
+  };
+
   return (
     <>
       <script
@@ -287,6 +320,10 @@ export default async function ProductPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       {/* SSR H1 for SEO — the visual H1 is rendered by ProductDetailClient */}
       <h1 className="sr-only">{product.title}</h1>
