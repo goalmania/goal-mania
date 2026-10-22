@@ -43,9 +43,18 @@ export default function HeroSection({ products = [] }: Props) {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [visible, setVisible] = useState(true);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [totalOrders, setTotalOrders] = useState<number | null>(null);
   const addItemToCart = useCartStore((state) => state.addItem);
 
   useEffect(() => { setMounted(true); }, []);
+
+  // Real order count — no fabricated customer/review numbers
+  useEffect(() => {
+    fetch("/api/stats/public")
+      .then((r) => r.json())
+      .then((d) => { if (typeof d.totalOrders === "number") setTotalOrders(d.totalOrders); })
+      .catch(() => {});
+  }, []);
 
   const pool = products.slice(0, 6);
 
@@ -117,31 +126,20 @@ export default function HeroSection({ products = [] }: Props) {
         {/* LEFT */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left max-w-2xl">
 
-          {/* Urgency */}
-          <div className={`flex items-center gap-2 mb-3 transition-all duration-500 ${mounted ? "opacity-100" : "opacity-0"}`}>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest" style={{ background: "rgba(255,68,68,0.12)", border: "1px solid rgba(255,68,68,0.3)", color: "#ff6666", fontFamily: "var(--font-mono,monospace)" }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#ff4444", display: "inline-block", animation: "pulse 1.5s infinite" }} />
-              Ultimi pezzi disponibili
-            </span>
-          </div>
-
-          {/* Social proof */}
-          <div
-            className={`flex items-center gap-2.5 mb-6 px-4 py-2 rounded-full transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
-            style={{ background: "rgba(200,240,0,0.08)", border: "1px solid rgba(200,240,0,0.22)" }}
-          >
-            <div className="flex">
-              {"★★★★★".split("").map((s, i) => (
-                <span key={i} style={{ color: "#c8f000", fontSize: 10 }}>{s}</span>
-              ))}
-            </div>
-            <span
-              className="text-[10px] font-black uppercase tracking-[2px]"
-              style={{ fontFamily: "var(--font-display,'Barlow Condensed',sans-serif)", color: "#c8f000" }}
+          {/* Trust badge — real order count only, no fabricated reviews */}
+          {totalOrders !== null && totalOrders > 0 && (
+            <div
+              className={`flex items-center gap-2.5 mb-6 px-4 py-2 rounded-full transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+              style={{ background: "rgba(200,240,0,0.08)", border: "1px solid rgba(200,240,0,0.22)" }}
             >
-              4.9/5 · 2.847 recensioni
-            </span>
-          </div>
+              <span
+                className="text-[10px] font-black uppercase tracking-[2px]"
+                style={{ fontFamily: "var(--font-display,'Barlow Condensed',sans-serif)", color: "#c8f000" }}
+              >
+                {totalOrders.toLocaleString("it-IT")} ordini spediti
+              </span>
+            </div>
+          )}
 
           {/* ── HEADLINE PRINCIPALE ── */}
           <div
@@ -349,9 +347,9 @@ export default function HeroSection({ products = [] }: Props) {
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/5">
             {[
-              { value: "10.000+", label: "Clienti" },
-              { value: "500+", label: "Maglie" },
-              { value: "4.9★", label: "Rating" },
+              { value: totalOrders !== null ? `${totalOrders}` : "—", label: "Ordini Spediti" },
+              { value: "900+", label: "Maglie" },
+              { value: "Gratis", label: "Spedizione" },
               { value: "30gg", label: "Reso Gratis" },
             ].map(({ value, label }) => (
               <div key={label} className="flex flex-col items-center justify-center py-4 px-4 text-center">

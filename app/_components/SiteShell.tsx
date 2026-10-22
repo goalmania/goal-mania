@@ -7,7 +7,6 @@ import { Footer } from "@/components/layout/footer";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import { ToastProvider } from "@/components/ToastProvider";
 import WhatsAppButton from "@/components/shared/WhatsAppButton";
-import UrgencyFloat from "@/components/UrgencyFloat";
 
 export default function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -36,7 +35,6 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
       {!isShop && <Footer />}
       <ToastProvider />
       <WhatsAppButton />
-      <UrgencyFloat />
     </div>
   );
 }

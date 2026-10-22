@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
-import { ShoppingCart, Star, Zap, Tag, Eye } from "lucide-react";
+import { ShoppingCart, Star, Zap, Tag } from "lucide-react";
 
 import { useCartStore } from "@/lib/store/cart";
 import { useWishlistStore } from "@/lib/store/wishlist";
@@ -63,7 +63,6 @@ function ProductCard({
   const [isHovered, setIsHovered] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
   const [cartFlyAnim, setCartFlyAnim] = useState(false);
-  const [viewersCount] = useState(() => Math.floor(Math.random() * 30) + 8);
 
   const addItemToCart = useCartStore((state) => state.addItem);
   const buyItem = useCartStore((state) => state.buyItem);
@@ -81,8 +80,9 @@ function ProductCard({
   const hasDiscount = displayOriginalPrice && displayOriginalPrice > price;
   const discountPercent = hasDiscount ? Math.round((1 - price / displayOriginalPrice) * 100) : 0;
   const isLowStock = displayStockCount !== undefined && displayStockCount <= 3 && displayStockCount > 0;
-  const avgRating = product?.averageRating || 4.8;
+  const avgRating = product?.averageRating || 0;
   const reviewCount = product?.reviewCount || product?.reviews?.length || 0;
+  const hasRealReviews = reviewCount > 0 && avgRating > 0;
 
   // Second image for hover effect
   const secondImage = product?.images?.[1] || null;
@@ -258,14 +258,6 @@ function ProductCard({
 
         {/* Content — remaining 35% */}
         <div className="flex flex-col flex-grow p-3.5 gap-1.5">
-          {/* Viewers counter */}
-          <div className="flex items-center gap-1.5">
-            <Eye size={10} className="text-white/25" />
-            <span className="text-[9px] text-white/25" style={{ fontFamily: "var(--font-mono, monospace)" }}>
-              {viewersCount} persone lo stanno guardando
-            </span>
-          </div>
-
           {/* Name */}
           <h3
             className="text-sm font-bold text-white line-clamp-2 leading-tight transition-colors"
@@ -281,17 +273,19 @@ function ProductCard({
             {team || category || "Jersey"}
           </p>
 
-          {/* Stars */}
-          <div className="flex items-center gap-1.5">
-            <div className="flex items-center gap-0.5">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star key={star} size={9} fill={star <= Math.round(avgRating) ? "#c8f000" : "none"} color={star <= Math.round(avgRating) ? "#c8f000" : "#444"} />
-              ))}
+          {/* Stars — only shown with real reviews, never a fabricated default */}
+          {hasRealReviews && (
+            <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-0.5">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star key={star} size={9} fill={star <= Math.round(avgRating) ? "#c8f000" : "none"} color={star <= Math.round(avgRating) ? "#c8f000" : "#444"} />
+                ))}
+              </div>
+              <span className="text-[9px] text-white/30" style={{ fontFamily: "var(--font-mono, monospace)" }}>
+                {avgRating.toFixed(1)} ({reviewCount})
+              </span>
             </div>
-            <span className="text-[9px] text-white/30" style={{ fontFamily: "var(--font-mono, monospace)" }}>
-              {avgRating.toFixed(1)} ({reviewCount > 0 ? reviewCount : "—"})
-            </span>
-          </div>
+          )}
 
           {/* Price */}
           <div className="flex items-baseline gap-2 mt-auto pt-1">

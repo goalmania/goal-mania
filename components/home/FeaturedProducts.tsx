@@ -80,7 +80,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
             Scelti per <span style={{ color: "#c8f000" }}>Te</span>
           </h2>
           <p className="text-white/40 max-w-xl mx-auto text-sm leading-relaxed" style={{ fontFamily: "var(--font-body, sans-serif)" }}>
-            Scopri la nostra selezione di maglie originali • 10.000+ clienti soddisfatti
+            Scopri la nostra selezione di maglie • Spedizione gratuita e reso 30 giorni
           </p>
         </div>
 

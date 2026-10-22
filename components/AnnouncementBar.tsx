@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 // Exported so Header and template can stay in sync
 export const ANNOUNCEMENT_BAR_HEIGHT = 40;
@@ -11,18 +11,9 @@ const PROMOS = [
   { text: "⚡ MAGLIE DA CALCIO A 30€ — oltre 500 modelli disponibili", href: "/shop" },
   { text: "🔄 RESO GRATUITO entro 30 giorni — acquisto senza rischi", href: "/shop" },
   { text: "🏆 MONDIALI 2026 — Vesti la tua Nazionale adesso", href: "/shop/worldcup" },
-  { text: "⭐ 4.9/5 — oltre 10.000 clienti soddisfatti", href: "/shop" },
 ];
 
-const SALE_DURATION = 30 * 60;
-
-function pad(n: number) {
-  return n.toString().padStart(2, "0");
-}
-
 export default function AnnouncementBar() {
-  const [countdown, setCountdown] = useState(SALE_DURATION);
-
   // Scroll refs — same pattern as TeamLogoTicker Strip
   const scrollRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
@@ -33,11 +24,6 @@ export default function AnnouncementBar() {
   const lastTs = useRef(0);
   const isPaused = useRef(false);
   const didDrag = useRef(false);
-
-  useEffect(() => {
-    const id = setInterval(() => setCountdown((c) => Math.max(0, c - 1)), 1000);
-    return () => clearInterval(id);
-  }, []);
 
   // JS-driven auto-scroll
   useEffect(() => {
@@ -104,8 +90,6 @@ export default function AnnouncementBar() {
   }
 
   const items = [...PROMOS, ...PROMOS];
-  const minutes = Math.floor(countdown / 60);
-  const seconds = countdown % 60;
 
   return (
     <div
@@ -164,36 +148,6 @@ export default function AnnouncementBar() {
             ))}
           </div>
           <style jsx>{`div::-webkit-scrollbar { display: none; }`}</style>
-        </div>
-
-        {/* ── Countdown — fixed right ── */}
-        <div
-          className="hidden sm:flex items-center gap-2 flex-shrink-0 px-4 h-full"
-          style={{ borderLeft: "1px solid rgba(0,0,0,0.12)" }}
-        >
-          <span
-            className="whitespace-nowrap"
-            style={{
-              fontFamily: "var(--font-mono, monospace)",
-              fontSize: "9px",
-              fontWeight: 800,
-              textTransform: "uppercase",
-              letterSpacing: "1px",
-              color: "rgba(0,0,0,0.55)",
-            }}
-          >
-            🔥 scade tra
-          </span>
-          <span
-            className="font-black text-sm px-2 py-0.5 rounded"
-            style={{
-              fontFamily: "var(--font-mono, monospace)",
-              background: "rgba(0,0,0,0.12)",
-              color: "#0a0a0a",
-            }}
-          >
-            {pad(minutes)}:{pad(seconds)}
-          </span>
         </div>
       </div>
     </div>

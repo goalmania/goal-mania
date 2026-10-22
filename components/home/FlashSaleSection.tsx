@@ -3,18 +3,12 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Zap, ShoppingBag, Clock, Flame, ChevronLeft, ChevronRight } from "lucide-react";
+import { ShoppingBag, ChevronLeft, ChevronRight } from "lucide-react";
 
-const FLASH_DURATION_MINUTES = 15;
-const STOCK = 7;
 const ROTATE_INTERVAL_MS = 7000; // auto-advance every 7s
 const FADE_DURATION_MS = 350;
 
 const GRAIN_SVG = `<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(#g)' opacity='0.09'/></svg>`;
-
-function pad(n: number) {
-  return n.toString().padStart(2, "0");
-}
 
 function cleanTitle(raw: string): string {
   return raw.replace(/^Maglia\s+/i, "").trim();
@@ -46,22 +40,11 @@ export default function FlashSaleSection({ products, product }: Props) {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visible, setVisible] = useState(true);
-  const [timeLeft, setTimeLeft] = useState(FLASH_DURATION_MINUTES * 60);
   const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const indexRef = useRef(0);
   const listLenRef = useRef(list.length);
   const touchStartX = useRef<number | null>(null);
   listLenRef.current = list.length;
-
-  // ── Countdown ──────────────────────────────────────────────────
-  useEffect(() => {
-    if (timeLeft <= 0) return;
-    const id = setInterval(() => setTimeLeft((t) => Math.max(0, t - 1)), 1000);
-    return () => clearInterval(id);
-  }, [timeLeft]);
-
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
 
   // ── Manual navigation ──────────────────────────────────────────
   const goTo = (index: number) => {
@@ -123,7 +106,7 @@ export default function FlashSaleSection({ products, product }: Props) {
             className="text-[10px] uppercase tracking-[4px]"
             style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
           >
-            // Offerta Lampo
+            // In Evidenza
           </span>
           <span className="w-6 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
         </div>
@@ -205,7 +188,7 @@ export default function FlashSaleSection({ products, product }: Props) {
                     sizes="(max-width: 1024px) 100vw, 340px"
                     unoptimized
                   />
-                  {/* ⚡ badge */}
+                  {/* In evidenza badge */}
                   <div
                     className="absolute top-4 left-4 px-3 py-1.5 rounded-full font-black text-xs uppercase z-10"
                     style={{
@@ -215,7 +198,7 @@ export default function FlashSaleSection({ products, product }: Props) {
                       letterSpacing: "1px",
                     }}
                   >
-                    ⚡ Hot
+                    In Evidenza
                   </div>
                 </div>
               ) : (
@@ -233,7 +216,7 @@ export default function FlashSaleSection({ products, product }: Props) {
 
             {/* Right: Details */}
             <div className="flex-1 p-8 md:p-10 lg:p-12 flex flex-col justify-center">
-              {/* Header badges */}
+              {/* Header badge */}
               <div className="flex items-center gap-2.5 mb-5">
                 <div
                   className="flex items-center gap-2 px-3 py-1.5 rounded-full"
@@ -242,21 +225,11 @@ export default function FlashSaleSection({ products, product }: Props) {
                     border: "1px solid rgba(200,240,0,0.25)",
                   }}
                 >
-                  <Zap className="w-3.5 h-3.5 animate-pulse" style={{ color: "#c8f000" }} />
                   <span
                     className="text-xs font-black uppercase tracking-[2px]"
                     style={{ fontFamily: "var(--font-display, sans-serif)", color: "#c8f000" }}
                   >
-                    Offerta Lampo
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ background: "#ff4444" }} />
-                  <span
-                    className="text-xs uppercase tracking-widest"
-                    style={{ fontFamily: "var(--font-mono, monospace)", color: "#ff4444" }}
-                  >
-                    LIVE
+                    In Evidenza
                   </span>
                 </div>
               </div>
@@ -311,70 +284,6 @@ export default function FlashSaleSection({ products, product }: Props) {
                 >
                   🚚 Spedizione Gratis
                 </div>
-              </div>
-
-              {/* Stock + Countdown */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
-                <div
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl"
-                  style={{
-                    background: "rgba(255,68,68,0.08)",
-                    border: "1px solid rgba(255,68,68,0.2)",
-                  }}
-                >
-                  <Flame className="w-4 h-4" style={{ color: "#ff4444" }} />
-                  <span
-                    className="text-sm font-bold uppercase tracking-wider"
-                    style={{ fontFamily: "var(--font-display, sans-serif)", color: "#ff6666" }}
-                  >
-                    Solo {STOCK} rimasti!
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" style={{ color: "rgba(200,240,0,0.6)" }} />
-                  <span
-                    className="text-xs uppercase tracking-wider"
-                    style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.35)" }}
-                  >
-                    Scade tra:
-                  </span>
-                  <div className="flex items-center gap-1">
-                    {[pad(minutes), ":", pad(seconds)].map((part, i) => (
-                      <span
-                        key={i}
-                        className={`font-black text-base ${part === ":" ? "" : "px-2 py-1 rounded-lg"}`}
-                        style={{
-                          fontFamily: "var(--font-mono, monospace)",
-                          color: "#c8f000",
-                          background: part !== ":" ? "rgba(200,240,0,0.1)" : "transparent",
-                          border: part !== ":" ? "1px solid rgba(200,240,0,0.15)" : "none",
-                        }}
-                      >
-                        {part}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Stock progress */}
-              <div className="mb-7">
-                <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
-                  <div
-                    className="h-full rounded-full transition-all duration-1000"
-                    style={{
-                      width: `${(STOCK / 20) * 100}%`,
-                      background: "linear-gradient(90deg, #c8f000, rgba(200,240,0,0.6))",
-                    }}
-                  />
-                </div>
-                <p
-                  className="text-[10px] mt-1.5 uppercase tracking-wider"
-                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.28)" }}
-                >
-                  {STOCK}/20 ancora disponibili
-                </p>
               </div>
 
               {/* CTA */}

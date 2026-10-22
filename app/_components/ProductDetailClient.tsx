@@ -259,8 +259,6 @@ export default function ProductDetailClient({
   const [quantity, setQuantity] = useState(1);
   const [sizeChartOpen, setSizeChartOpen] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [viewers] = useState(() => Math.floor(Math.random() * 20) + 8);
-  const [soldThisWeek] = useState(() => Math.floor(Math.random() * 20) + 15);
   const [deliveryCountdown, setDeliveryCountdown] = useState("");
   const [errors, setErrors] = useState<{ size?: string }>({});
   const { t } = useI18n();
@@ -678,38 +676,28 @@ export default function ProductDetailClient({
               )}
             </div>
 
-            {/* Social proof + urgency */}
-            <div
-              className="grid grid-cols-2 gap-2 p-3 rounded-2xl"
-              style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
-            >
-              <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#c8f000] animate-pulse flex-shrink-0" />
-                <span className="text-[11px] font-bold" style={{ color: "rgba(255,255,255,0.6)" }}>
-                  {viewers} guardando ora
-                </span>
+            {/* Real stock warning / delivery cutoff only — no fabricated viewer/sales counts */}
+            {(Boolean(product.stockQuantity !== undefined && product.stockQuantity > 0 && product.stockQuantity < 5) || Boolean(deliveryCountdown)) && (
+              <div
+                className="grid grid-cols-1 gap-2 p-3 rounded-2xl"
+                style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
+              >
+                {product.stockQuantity !== undefined && product.stockQuantity > 0 && product.stockQuantity < 5 && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] animate-pulse">⚠️</span>
+                    <span className="text-[11px] font-black" style={{ color: "#fb923c" }}>
+                      Solo {product.stockQuantity} rimast{product.stockQuantity === 1 ? "o" : "i"}!
+                    </span>
+                  </div>
+                )}
+                {deliveryCountdown && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px]">⚡</span>
+                    <span className="text-[11px] font-bold" style={{ color: "#c8f000" }}>{deliveryCountdown}</span>
+                  </div>
+                )}
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[11px]">✅</span>
-                <span className="text-[11px] font-bold" style={{ color: "rgba(255,255,255,0.6)" }}>
-                  {soldThisWeek} venduti
-                </span>
-              </div>
-              {product.stockQuantity !== undefined && product.stockQuantity > 0 && product.stockQuantity < 5 && (
-                <div className="col-span-2 flex items-center gap-2">
-                  <span className="text-[11px] animate-pulse">⚠️</span>
-                  <span className="text-[11px] font-black" style={{ color: "#fb923c" }}>
-                    Solo {product.stockQuantity} rimast{product.stockQuantity === 1 ? "o" : "i"}!
-                  </span>
-                </div>
-              )}
-              {deliveryCountdown && (
-                <div className="col-span-2 flex items-center gap-2">
-                  <span className="text-[11px]">⚡</span>
-                  <span className="text-[11px] font-bold" style={{ color: "#c8f000" }}>{deliveryCountdown}</span>
-                </div>
-              )}
-            </div>
+            )}
 
             {/* Description */}
             {product.description && (

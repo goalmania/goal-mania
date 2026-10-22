@@ -8,7 +8,7 @@ import { useTranslation } from "@/lib/hooks/useTranslation";
 import { TrashIcon, ShoppingBagIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { ShieldCheck, Truck, RotateCcw, BadgeCheck, Zap, Star, ArrowRight, Package } from "lucide-react";
+import { ShieldCheck, Truck, RotateCcw, BadgeCheck, Zap, ArrowRight, Package } from "lucide-react";
 import { trackFbq } from "@/lib/utils/fbq";
 
 const FREE_SHIPPING_THRESHOLD = 0; // spedizione sempre gratuita
@@ -405,15 +405,10 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                {/* Stars social proof */}
+                {/* Trust line */}
                 <div className="flex items-center justify-center gap-2 py-2">
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} size={10} fill="#c8f000" color="#c8f000" />
-                    ))}
-                  </div>
                   <span className="text-[9px] text-white/30" style={{ fontFamily: "var(--font-mono, monospace)" }}>
-                    10.000+ clienti soddisfatti
+                    Pagamento sicuro · Spedizione gratuita · Reso 30 giorni
                   </span>
                 </div>
               </div>

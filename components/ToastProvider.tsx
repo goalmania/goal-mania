@@ -1,27 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
-
-// Dynamic import with no SSR (allowed in client components)
-const PromoToast = dynamic(() => import("@/components/PromoToast"), {
-  ssr: false,
-});
-
+// Previously rendered a site-wide "PromoToast" popup with a fabricated review
+// count/rating fallback (2.500 recensioni / 4.9) and a fake 15-minute countdown.
+// Removed 22/10/2026 — no honest replacement content exists yet.
 export function ToastProvider() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
-
-  return (
-    <>
-      <PromoToast />
-    </>
-  );
+  return null;
 }

@@ -701,14 +701,6 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        {/* Urgency banner */}
-        <div className="mb-5 rounded-xl px-4 py-2.5 flex items-center gap-2 text-sm font-medium" style={{ background: "rgba(200,240,0,0.06)", border: "1px solid rgba(200,240,0,0.15)" }}>
-          <span className="text-[#c8f000]">⚡</span>
-          <span className="text-white/70">
-            Hai <span className="text-white font-bold">2 articoli rimasti</span> in stock — altri utenti stanno guardando questa maglia.
-          </span>
-        </div>
-
         <TrustBar />
         <StepBar step={step} />
 

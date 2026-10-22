@@ -1,7 +1,7 @@
 "use client";
 
 import { useI18n } from "@/lib/hooks/useI18n";
-import { ArrowRight, Star, Users, Shield } from "lucide-react";
+import { ArrowRight, Shield } from "lucide-react";
 import React from "react";
 
 interface HeroBannerProps {
@@ -51,18 +51,12 @@ export default function HeroBanner({
             border: "1px solid rgba(200,240,0,0.25)",
           }}
         >
-          <div className="flex">
-            {[1, 2, 3, 4, 5].map((s) => (
-              <Star key={s} size={10} fill="#c8f000" color="#c8f000" />
-            ))}
-          </div>
           <span
             className="text-[10px] font-black uppercase tracking-widest text-[#c8f000]"
             style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px" }}
           >
-            10.000+ Clienti Soddisfatti
+            Spedizione Gratuita · Reso 30 Giorni
           </span>
-          <Users size={10} className="text-[#c8f000]" />
         </div>
 
         {/* Title */}

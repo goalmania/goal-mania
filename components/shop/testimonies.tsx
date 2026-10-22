@@ -1,115 +1,12 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { Star, CheckCircle2, RefreshCw } from "lucide-react";
-
-// ─── Static high-quality reviews (always shown) ───────────────────────────────
-const STATIC_REVIEWS = [
-  {
-    id: "s1",
-    name: "Marco R.",
-    city: "Milano",
-    text: "Maglia della Juve in perfette condizioni, qualità davvero ottima. Già al 5° acquisto su Goal Mania — non cambio mai.",
-    rating: 5,
-    product: "Maglia Juventus 25/26",
-    date: "15 mag 2026",
-    repeat: true,
-  },
-  {
-    id: "s2",
-    name: "Giulia F.",
-    city: "Roma",
-    text: "Ordinata per il compleanno di mio fratello, rimasto stupito dalla qualità. Dettagli impeccabili, consegna rapidissima.",
-    rating: 5,
-    product: "Maglia Napoli 2025/26",
-    date: "2 mag 2026",
-    repeat: false,
-  },
-  {
-    id: "s3",
-    name: "Alessandro T.",
-    city: "Torino",
-    text: "Inizialmente scettico, ora sono al 5° acquisto. Materiale pesante, cuciture perfette. Il miglior sito in assoluto.",
-    rating: 5,
-    product: "Maglia Inter 25/26 Casa",
-    date: "28 apr 2026",
-    repeat: true,
-  },
-  {
-    id: "s4",
-    name: "Luca M.",
-    city: "Napoli",
-    text: "Maglia del Milan per il compleanno di mio padre. È rimasto senza parole — qualità da stadio, a metà prezzo.",
-    rating: 5,
-    product: "Maglia AC Milan 25/26",
-    date: "20 apr 2026",
-    repeat: false,
-  },
-  {
-    id: "s5",
-    name: "Carlos B.",
-    city: "Barcellona",
-    text: "Ordered the Argentina World Cup jersey — arrived in 12 days, perfect quality. The badge detail is incredible.",
-    rating: 5,
-    product: "Maglia Argentina Mondiale",
-    date: "10 apr 2026",
-    repeat: false,
-  },
-  {
-    id: "s6",
-    name: "Simone G.",
-    city: "Genova",
-    text: "Ho preso la maglia retro del Napoli 1987. Un capolavoro — mi ricorda quando guardavo le partite con mio nonno.",
-    rating: 5,
-    product: "Maglia Napoli Retro 1987",
-    date: "5 apr 2026",
-    repeat: true,
-  },
-  {
-    id: "s7",
-    name: "Federica L.",
-    city: "Firenze",
-    text: "Prima volta su Goal Mania e sono già fan. Tessuto leggerissimo, stampa perfetta. Spedizione super veloce.",
-    rating: 5,
-    product: "Maglia Fiorentina 25/26",
-    date: "22 mar 2026",
-    repeat: false,
-  },
-  {
-    id: "s8",
-    name: "Roberto D.",
-    city: "Bari",
-    text: "4ª maglia ordinata. Stavolta ho preso quella del Real Madrid per mio figlio — non l'ha tolta per 3 giorni!",
-    rating: 5,
-    product: "Maglia Real Madrid 25/26",
-    date: "15 mar 2026",
-    repeat: true,
-  },
-  {
-    id: "s9",
-    name: "Davide C.",
-    city: "Bologna",
-    text: "La maglia del Barcellona × Travis Scott è assurda. L'ho indossata a una partita e tutti me la chiedevano. 10/10.",
-    rating: 5,
-    product: "Maglia Barcellona × Travis Scott",
-    date: "8 mar 2026",
-    repeat: false,
-  },
-  {
-    id: "s10",
-    name: "Sara P.",
-    city: "Torino",
-    text: "Presa la maglia vintage dell'Argentina '86. Qualità stampata identica alla versione storica. Mia figlia è impazzita.",
-    rating: 5,
-    product: "Maglia Argentina Retro 1986",
-    date: "1 mar 2026",
-    repeat: true,
-  },
-];
+import { Star, CheckCircle2 } from "lucide-react";
+import { useRealReviews, type RealReview } from "@/lib/hooks/useRealReviews";
 
 const CAROUSEL_DURATION_S = 40;
 
-function ReviewCard({ review }: { review: typeof STATIC_REVIEWS[0] }) {
+function ReviewCard({ review }: { review: RealReview }) {
   return (
     <div
       className="flex-shrink-0 mx-2 rounded-2xl p-4 flex flex-col gap-3"
@@ -120,7 +17,6 @@ function ReviewCard({ review }: { review: typeof STATIC_REVIEWS[0] }) {
         cursor: "default",
       }}
     >
-      {/* Stars */}
       <div className="flex gap-0.5">
         {Array.from({ length: 5 }).map((_, i) => (
           <Star
@@ -132,39 +28,34 @@ function ReviewCard({ review }: { review: typeof STATIC_REVIEWS[0] }) {
         ))}
       </div>
 
-      {/* Text */}
       <p
         className="text-[13px] leading-relaxed flex-1"
         style={{ color: "rgba(255,255,255,0.75)", fontFamily: "var(--font-body, sans-serif)" }}
       >
-        "{review.text}"
+        "{review.comment}"
       </p>
 
-      {/* Product tag */}
-      <div
-        className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider self-start"
-        style={{ background: "rgba(200,240,0,0.08)", color: "rgba(200,240,0,0.6)", fontFamily: "var(--font-mono, monospace)", border: "1px solid rgba(200,240,0,0.12)" }}
-      >
-        {review.product}
-      </div>
+      {review.productName && (
+        <div
+          className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider self-start"
+          style={{ background: "rgba(200,240,0,0.08)", color: "rgba(200,240,0,0.6)", fontFamily: "var(--font-mono, monospace)", border: "1px solid rgba(200,240,0,0.12)" }}
+        >
+          {review.productName}
+        </div>
+      )}
 
-      {/* Author */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <div
             className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black"
             style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000", fontFamily: "var(--font-display, sans-serif)" }}
           >
-            {review.name[0]}
+            {review.userName[0]?.toUpperCase()}
           </div>
           <div>
             <p className="text-xs font-bold text-white flex items-center gap-1" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-              {review.name}
+              {review.userName}
               <CheckCircle2 size={11} fill="#22c55e" stroke="white" strokeWidth={1.5} />
-              {review.repeat && <RefreshCw size={9} style={{ color: "#c8f000" }} />}
-            </p>
-            <p className="text-[9px]" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-mono, monospace)" }}>
-              {review.city} · {review.date}
             </p>
           </div>
         </div>
@@ -174,6 +65,7 @@ function ReviewCard({ review }: { review: typeof STATIC_REVIEWS[0] }) {
 }
 
 const Testimonies = () => {
+  const { reviews } = useRealReviews();
   const scrollRef   = useRef<HTMLDivElement>(null);
   const rafRef      = useRef<number>(0);
   const posRef      = useRef(0);
@@ -184,11 +76,11 @@ const Testimonies = () => {
   const isPaused    = useRef(false);
   const dragMoved   = useRef(0);
 
-  const doubled = [...STATIC_REVIEWS, ...STATIC_REVIEWS];
+  const doubled = [...reviews, ...reviews];
 
   useEffect(() => {
     const el = scrollRef.current;
-    if (!el) return;
+    if (!el || reviews.length === 0) return;
 
     function tick(ts: number) {
       const el = scrollRef.current;
@@ -235,7 +127,10 @@ const Testimonies = () => {
       document.removeEventListener("pointerup", onUp);
       document.removeEventListener("pointercancel", onUp);
     };
-  }, []);
+  }, [reviews.length]);
+
+  // Nothing fabricated to show until real reviews exist
+  if (reviews.length === 0) return null;
 
   return (
     <section className="py-14 relative overflow-hidden" style={{ background: "#0a0a0a", borderTop: "0.5px solid rgba(255,255,255,0.05)" }}>
@@ -258,11 +153,6 @@ const Testimonies = () => {
           >
             I Nostri Clienti Felici
           </h2>
-          <div className="flex items-center gap-2">
-            {[1,2,3,4,5].map((s) => <Star key={s} size={14} fill="#c8f000" stroke="none" />)}
-            <span className="font-black text-white text-sm" style={{ fontFamily: "var(--font-display, sans-serif)" }}>4.9</span>
-            <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-mono, monospace)" }}>/ 2.847 recensioni</span>
-          </div>
         </div>
       </div>
 

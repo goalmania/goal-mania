@@ -246,12 +246,12 @@ export default async function Home() {
       {/* 2b. LOGHI SQUADRE — ticker cliccabile tra categorie e offerta */}
       <TeamLogoTicker />
 
-      {/* 2c. RECENSIONI TICKER — espanso dal bottone "Leggi tutte" in SocialProofSection */}
+      {/* 2c. RECENSIONI TICKER — mostra solo recensioni reali, nascosto se non ce ne sono */}
       <div data-reviews-strip>
         <ReviewsStrip />
       </div>
 
-      {/* 3. OFFERTA LAMPO — urgency + prodotti reali in rotazione */}
+      {/* 3. IN EVIDENZA — prodotti reali in rotazione, nessuna scarsità finta */}
       <FlashSaleSection products={featuredProducts.slice(0, 6)} />
 
       {/* 4. MAGLIE IN EVIDENZA — grid prodotti featured */}
