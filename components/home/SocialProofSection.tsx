@@ -173,7 +173,7 @@ export default function SocialProofSection() {
                   className="text-xs uppercase tracking-widest"
                   style={{ color: "rgba(255,255,255,0.25)", fontFamily: "var(--font-mono, monospace)" }}
                 >
-                  · {reviews.length} {reviews.length === 1 ? "recensione" : "recensioni"} verificate
+                  · {reviews.length} {reviews.length === 1 ? "recensione verificata" : "recensioni verificate"}
                 </span>
               </div>
             )}
