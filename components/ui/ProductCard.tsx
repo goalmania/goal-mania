@@ -13,6 +13,7 @@ import { useWishlistStore } from "@/lib/store/wishlist";
 
 interface ProductCardProps {
   id: string;
+  slug?: string;
   name: string;
   price: number;
   image: string;
@@ -40,10 +41,11 @@ interface ProductCardProps {
 
 function ProductCard({
   id,
+  slug,
   name,
   price,
   image,
-  href = `/products/${id}`,
+  href = `/products/${slug || id}`,
   category,
   team,
   isWorldCup,

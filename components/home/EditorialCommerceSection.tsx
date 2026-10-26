@@ -134,7 +134,7 @@ function NewsCard({ article }: { article: Article }) {
 function ProductCard({ product }: { product: Product }) {
   return (
     <Link
-      href={`/products/${product.id}`}
+      href={`/products/${product.slug || product.id}`}
       className="group gm-product-card flex flex-col overflow-hidden rounded-2xl h-full"
       style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
     >

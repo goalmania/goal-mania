@@ -49,7 +49,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
   };
 
   const handleAddToCart = (product: Product) => {
-    router.push(`/products/${product.id}`);
+    router.push(`/products/${product.slug || product.id}`);
   };
 
   if (products.length === 0) return null;
@@ -107,13 +107,14 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                 <SwiperSlide key={product.id} className="h-auto flex items-stretch">
                   <ProductCard
                     id={product.id}
+                    slug={product.slug}
                     name={product.name}
                     price={product.price}
                     image={product.image}
                     category={product.category || ""}
                     team={product.team || ""}
                     availablePatches={product.availablePatches || []}
-                    href={`/products/${product.id}`}
+                    href={`/products/${product.slug || product.id}`}
                     cardHeight="lg"
                     imageAspectRatio="portrait"
                     onWishlistToggle={handleWishlistToggle}
@@ -175,13 +176,14 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
               <ProductCard
                 key={product.id}
                 id={product.id}
+                slug={product.slug}
                 name={product.name}
                 price={product.price}
                 image={product.image}
                 category={product.category || ""}
                 team={product.team || ""}
                 availablePatches={product.availablePatches || []}
-                href={`/products/${product.id}`}
+                href={`/products/${product.slug || product.id}`}
                 cardHeight="lg"
                 imageAspectRatio="portrait"
                 onWishlistToggle={handleWishlistToggle}

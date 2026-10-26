@@ -147,6 +147,7 @@ async function getRandomProducts(count: number): Promise<ReturnType<typeof mapPr
 function mapLandingProduct(p: any) {
   return {
     id: p._id.toString(),
+    slug: p.slug || "",
     name: p.title || "Product",
     price: p.basePrice || 0,
     image: p.images?.[0] || "/images/image.png",

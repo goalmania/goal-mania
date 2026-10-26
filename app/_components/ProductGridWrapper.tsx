@@ -34,7 +34,7 @@ export default function ProductGridWrapper({ products }: ProductGridWrapperProps
   };
 
   const handleAddToCart = (product: Product) => {
-    router.push(`/products/${product.id}`);
+    router.push(`/products/${product.slug || product.id}`);
   };
 
   return (

@@ -8,6 +8,7 @@ import { ArrowRight } from "lucide-react";
 
 interface ProductCardProps {
   id: string;
+  slug?: string;
   name: string;
   price: number;
   image: string;
@@ -34,10 +35,11 @@ interface ProductCardProps {
 
 export default function ProductVideoCard({
   id,
+  slug,
   name,
   price,
   image,
-  href = `/products/${id}`,
+  href = `/products/${slug || id}`,
   videos = [],
   imageAspectRatio = "square",
   cardHeight = "lg",

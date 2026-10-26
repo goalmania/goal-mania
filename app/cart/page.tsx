@@ -181,7 +181,7 @@ export default function CartPage() {
                             className="font-bold text-white text-sm leading-tight mb-1 hover:text-[#c8f000] transition-colors"
                             style={{ fontFamily: "var(--font-display, sans-serif)" }}
                           >
-                            <Link href={`/products/${item.id}`}>{item.name}</Link>
+                            <Link href={`/products/${item.slug || item.id}`}>{item.name}</Link>
                           </h3>
                           <div className="flex flex-wrap items-center gap-2 mb-2">
                             {item.customization?.size && (

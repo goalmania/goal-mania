@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 
 interface Product {
   id: string;
+  slug?: string;
   name: string;
   price: number;
   image: string;
@@ -58,6 +59,7 @@ export default function RestOfWorldClient() {
 
         const mappedProducts = filtered.map((product: any) => ({
           id: product._id || "",
+          slug: product.slug || "",
           name: product.title || "Product",
           price: product.basePrice || 0,
           image: product.images?.[0] || "/images/image.png",
@@ -93,7 +95,7 @@ export default function RestOfWorldClient() {
   };
 
   const handleAddToCart = (product: Product) => {
-    router.push(`/products/${product.id}`);
+    router.push(`/products/${product.slug || product.id}`);
   };
 
   if (products.length === 0) return null;
@@ -127,13 +129,14 @@ export default function RestOfWorldClient() {
               <SwiperSlide key={product.id} className="p-2">
                 <ProductCard
                   id={product.id}
+                  slug={product.slug}
                   name={product.name}
                   price={product.price}
                   image={product.image}
                   category={product.category || ""}
                   team={product.team || ""}
                   availablePatches={product.availablePatches || []}
-                  href={`/products/${product.id}`}
+                  href={`/products/${product.slug || product.id}`}
                   cardHeight="lg"
                   imageAspectRatio="portrait"
                   onWishlistToggle={handleWishlistToggle}

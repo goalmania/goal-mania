@@ -63,10 +63,11 @@ export default function ProductGrid({
         <ProductCard
           key={product.id}
           id={product.id}
+          slug={product.slug}
           name={product.name}
           price={product.price}
           image={product.image}
-          href={`/products/${product.id}`}
+          href={`/products/${product.slug || product.id}`}
           category={product.category}
           team={product.team}
           availablePatches={product.availablePatches}

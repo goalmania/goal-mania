@@ -256,7 +256,7 @@ export default function MysteryBoxPageClient({
                         )}
                       </button>
                       <Link
-                        href={`/products/${product.id}`}
+                        href={`/products/${product.slug || product.id}`}
                         className=" w-full text-center hidden text-purple-600 hover:text-purple-700 font-medium py-2 px-4 border border-purple-600 rounded-lg hover:bg-purple-50 transition-colors duration-200"
                         aria-label={t("mysteryBox.product.learnMore")}
                       >

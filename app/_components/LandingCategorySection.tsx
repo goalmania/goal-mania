@@ -31,6 +31,7 @@ async function getCategoryProducts(category: string): Promise<Product[]> {
     const rawList = Array.isArray(data) ? data : data.products || [];
     return rawList.map((p: any) => ({
       id: p._id || "",
+      slug: p.slug || "",
       name: p.title || "Product",
       price: p.basePrice || 0,
       image: p.images?.[0] || "/images/image.png",
@@ -121,7 +122,7 @@ export default function LandingCategorySection({
   };
 
   const handleAddToCart = (product: Product) => {
-    router.push(`/products/${product.id}`);
+    router.push(`/products/${product.slug || product.id}`);
   };
 
   if (products.length === 0) return null;
@@ -193,7 +194,7 @@ export default function LandingCategorySection({
                   image={product.image}
                   category={product.category || ""}
                   team={product.team || ""}
-                  href={`/products/${product.id}`}
+                  href={`/products/${product.slug || product.id}`}
                   imageAspectRatio="square"
                   onWishlistToggle={handleWishlistToggle}
                   onAddToCart={handleAddToCart}
@@ -215,7 +216,7 @@ export default function LandingCategorySection({
                 image={product.image}
                 category={product.category || ""}
                 team={product.team || ""}
-                href={`/products/${product.id}`}
+                href={`/products/${product.slug || product.id}`}
                 imageAspectRatio="square"
                 onWishlistToggle={handleWishlistToggle}
                 onAddToCart={handleAddToCart}

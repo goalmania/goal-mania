@@ -33,6 +33,7 @@ export type Category = (typeof PRODUCT_CATEGORIES)[number];
 // Simple Product interface for grid components
 export interface Product {
   id: string;
+  slug?: string;
   name: string;
   price: number;
   image: string;

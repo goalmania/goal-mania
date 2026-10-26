@@ -8,6 +8,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 interface Product {
   _id: string;
+  slug?: string;
   title: string;
   images: string[];
   basePrice: number;
@@ -113,7 +114,7 @@ export default function SearchClient({
                       {products.map((product) => (
                         <Link
                           key={product._id}
-                          href={`/products/${product._id}`}
+                          href={`/products/${product.slug || product._id}`}
                           className="group"
                         >
                           <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-[#1a1a1a] xl:aspect-w-7 xl:aspect-h-8">

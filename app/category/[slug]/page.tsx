@@ -84,6 +84,7 @@ export default async function CategoryPage({ params }: Props) {
 
       return {
         id: product._id || product.id,
+        slug: product.slug || "",
         name: product.title || 'Untitled Product',
         price: typeof product.basePrice === 'number' ? product.basePrice : parseFloat(product.basePrice) || 0,
         image: product.images?.[0] || '/placeholder-product.jpg',

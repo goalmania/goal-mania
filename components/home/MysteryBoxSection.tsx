@@ -56,7 +56,7 @@ export default function MysteryBoxSection({ products }: MysteryBoxSectionProps) 
                   €{product.price.toFixed(2)}
                 </span>
                 <Link
-                  href={`/products/${product.id}`}
+                  href={`/products/${product.slug || product.id}`}
                   className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 sm:px-4 py-2 rounded-full font-semibold hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm"
                 >
                   Scopri →

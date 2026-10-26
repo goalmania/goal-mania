@@ -5,6 +5,7 @@ import ProductModel from "@/lib/models/Product";
 
 interface Product {
   id: string;
+  slug?: string;
   name: string;
   price: number;
   image: string;
@@ -17,6 +18,7 @@ interface Product {
 function mapProduct(product: any): Product {
   return {
     id: product._id?.toString() || "",
+    slug: product.slug || "",
     name: product.title || "Unknown Product",
     price: product.basePrice || 0,
     image: product.images?.[0] || "/images/image.png",

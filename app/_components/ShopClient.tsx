@@ -45,6 +45,7 @@ import FeaturesCardStats from "@/components/shop/FeaturesCardStats";
 
 interface Product {
   id: string;
+  slug?: string;
   name: string;
   price: number;
   image: string;
@@ -253,7 +254,7 @@ function ShopHero({ featuredProducts: products }: { featuredProducts: Product[] 
             {/* Card fades on product change */}
             <div style={{ opacity: visible ? 1 : 0, transition: `opacity ${HERO_FADE_MS}ms cubic-bezier(0.4,0,0.2,1)` }}>
               <Link
-                href={`/products/${current.id}`}
+                href={`/products/${current.slug || current.id}`}
                 className="group block relative rounded-3xl overflow-hidden"
                 style={{ background: "#111", border: "1px solid rgba(255,255,255,0.08)" }}
               >
@@ -474,7 +475,7 @@ function ProductCarousel({ products, badge }: { products: Product[]; badge?: str
         {doubled.map((p, i) => (
           <div
             key={`${p.id}-${i}`}
-            data-href={`/products/${p.id}`}
+            data-href={`/products/${p.slug || p.id}`}
             className="carousel-card group flex-shrink-0 mx-2 rounded-2xl overflow-hidden"
             style={{ width: "190px", background: "#111", border: "1px solid rgba(255,255,255,0.07)", cursor: "pointer" }}
             draggable={false}
