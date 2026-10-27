@@ -118,7 +118,7 @@ export default function HeroBanner({
           {[
             { icon: "🚚", label: "Spedizione Gratuita" },
             { icon: "🔒", label: "Pagamento Sicuro" },
-            { icon: "✅", label: "Originale Garantito" },
+            { icon: "✅", label: "Qualità Garantita" },
           ].map(({ icon, label }) => (
             <div key={label} className="flex items-center gap-1.5">
               <span className="text-sm">{icon}</span>

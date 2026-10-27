@@ -375,9 +375,9 @@ export default async function NewsPage() {
                       className="text-xl lg:text-2xl font-black uppercase text-white leading-tight mt-1"
                       style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "0.5px" }}
                     >
-                      Compra la Nuova Maglia Ufficiale
+                      Compra la Nuova Maglia
                     </h2>
-                    <p className="text-sm text-white/40 mt-1">Spedizione gratuita · Originale Garantito</p>
+                    <p className="text-sm text-white/40 mt-1">Spedizione gratuita · Qualità Garantita</p>
                   </div>
                   <Link href="/shop">
                     <button

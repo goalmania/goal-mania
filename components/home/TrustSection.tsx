@@ -23,8 +23,8 @@ const PILLARS = [
   },
   {
     icon: BadgeCheck,
-    title: "Prodotti Originali",
-    subtitle: "Garanzia autenticità 100%",
+    title: "Qualità Garantita",
+    subtitle: "Controllo prima della spedizione",
     emoji: "✅",
   },
 ];

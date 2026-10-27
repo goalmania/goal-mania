@@ -52,7 +52,7 @@ const TRUST_BADGES = [
   { icon: Truck, label: "Spedizione Gratuita", sub: "Sopra €89" },
   { icon: RotateCcw, label: "Reso Gratuito", sub: "30 giorni" },
   { icon: ShieldCheck, label: "Pagamento Sicuro", sub: "SSL 256-bit" },
-  { icon: BadgeCheck, label: "Originale Garantito", sub: "100% autentico" },
+  { icon: BadgeCheck, label: "Qualità Garantita", sub: "Controllo prima della spedizione" },
 ];
 
 const PAYMENT_METHODS = [
