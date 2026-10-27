@@ -59,9 +59,13 @@ function productToItems(product: any): string {
   const slug = product.slug || product._id.toString();
   const link = `${BASE_URL}/products/${slug}`;
   const title = escapeXml(product.title);
-  const description = escapeXml(
-    (product.description ?? product.title).slice(0, 5000)
-  );
+  const color = guessColor(product.title ?? "");
+  // Google chiede che Colore e Materiale compaiano anche nel testo libero della
+  // descrizione, non solo nei campi strutturati g:color/g:material, per il
+  // matching di ricerca ("Aggiorna le descrizioni" — suggerimento Merchant Center).
+  const baseDescription = (product.description ?? product.title ?? "").trim();
+  const descriptionWithAttributes = `${baseDescription} Colore: ${color}. Materiale: poliestere.`.trim();
+  const description = escapeXml(descriptionWithAttributes.slice(0, 5000));
   const imageLink = (product.images ?? []).find((img: string) => img && img.startsWith("http")) ?? "";
   const additionalImages = (product.images ?? []).slice(1, 10);
 
@@ -73,7 +77,6 @@ function productToItems(product: any): string {
 
   const brand = "Goal Mania";
   const condition = "new";
-  const color = guessColor(product.title ?? "");
   const availability = (product.stockQuantity ?? 1) > 0 ? "in stock" : "out of stock";
 
   // Determine product type label
