@@ -1,26 +1,40 @@
 import ProductGridWrapper from "@/app/_components/ProductGridWrapper";
 import { Metadata } from "next";
+import { cache } from "react";
 
-interface Props {
-  params: Promise<{ slug: string }>;
-}
+// Come le altre pagine /shop/*: cache 5 minuti invece di no-store. Le
+// categorie/prodotti non cambiano al secondo, e con cache:'no-store' ogni
+// singola visita faceva da zero 3 chiamate di funzione in catena (categorie
+// x2 + prodotti) invece di servire la risposta cache.
+export const revalidate = 300;
+
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it";
+
+// cache() di React deduplica la chiamata nella stessa request: generateMetadata
+// e CategoryPage girano entrambi per ogni richiesta, prima rifacevano la
+// stessa fetch delle categorie due volte.
+const getCategories = cache(async (): Promise<any[]> => {
+  try {
+    const res = await fetch(`${BASE_URL}/api/admin/categories`, {
+      next: { revalidate: 300 },
+    });
+    if (res.ok) return await res.json();
+  } catch {}
+  return [];
+});
 
 async function resolveCategoryName(slug: string): Promise<string> {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it"}/api/admin/categories`,
-      { cache: "no-store" }
-    );
-    if (res.ok) {
-      const cats = await res.json();
-      const match = cats.find((c: any) => c.slug === slug);
-      if (match) return match.name;
-    }
-  } catch {}
+  const cats = await getCategories();
+  const match = cats.find((c: any) => c.slug === slug);
+  if (match) return match.name;
   return slug
     .split("-")
     .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
+}
+
+interface Props {
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -36,26 +50,13 @@ export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
   
   try {
-    // First, try to fetch the category from the database to get its name
-    let categoryName = slug;
-    try {
-      const categoryRes = await fetch(`/api/admin/categories`, {
-        cache: 'no-store',
-      });
-      if (categoryRes.ok) {
-        const categories = await categoryRes.json();
-        const category = categories.find((cat: any) => cat.slug === slug);
-        if (category) {
-          categoryName = category.name;
-        }
-      }
-    } catch (err) {
-      console.log('Could not fetch category, using slug as name:', slug);
-    }
+    // Stesso helper usato da generateMetadata: cache() di React fa sì che,
+    // nella stessa richiesta, la fetch delle categorie parta una volta sola.
+    const categoryName = await resolveCategoryName(slug);
 
     // Fetch products using the category name (products store category by name, not slug)
-    const res = await fetch(`/api/products?category=${encodeURIComponent(categoryName)}&noPagination=true`, {
-      cache: 'no-store',
+    const res = await fetch(`${BASE_URL}/api/products?category=${encodeURIComponent(categoryName)}&noPagination=true`, {
+      next: { revalidate: 300 },
     });
 
     if (!res.ok) {

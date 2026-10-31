@@ -1,5 +1,7 @@
-export const dynamic = "force-dynamic";
-
+// Niente force-dynamic: questo layout è solo wrapper visivo (gradiente di
+// sfondo), non fa fetch di dati. Senza il force-dynamic, Next.js può
+// pre-renderizzare le 5 pagine squadra come statiche (serviti da CDN,
+// zero query/compute per visita) invece di rieseguirle ad ogni richiesta.
 export default function InternationalLayout({
   children,
 }: {
