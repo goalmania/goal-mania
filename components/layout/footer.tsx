@@ -189,18 +189,12 @@ export function Footer() {
           <div className="col-span-2 md:col-span-4 lg:col-span-1">
             <Link href="/" className="flex items-center gap-3 group mb-4 w-fit">
               <Image
-                src="/images/recentUpdate/desktop-logo.png"
+                src="/images/recentUpdate/goalmania-wordmark.png"
                 alt="Goal Mania"
-                width={40}
-                height={40}
-                className="w-10 h-10 object-contain transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(200,240,0,0.5)]"
+                width={392}
+                height={201}
+                className="h-9 w-auto object-contain transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(200,240,0,0.5)]"
               />
-              <span
-                className="font-black uppercase tracking-widest text-white text-sm"
-                style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "4px" }}
-              >
-                GOAL<span style={{ color: "#c8f000" }}>MANIA</span>
-              </span>
             </Link>
             <p
               className="text-xs max-w-[180px] mb-6"

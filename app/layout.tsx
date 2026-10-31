@@ -198,9 +198,9 @@ export default function RootLayout({
           }}
         />
         {/* Favicon with cache busting */}
-        <link rel="icon" type="image/png" sizes="192x192" href="/icon.png?v=3" />
-        <link rel="shortcut icon" href="/icon.png?v=3" />
-        <link rel="apple-touch-icon" sizes="192x192" href="/apple-icon.png?v=3" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icon.png?v=4" />
+        <link rel="shortcut icon" href="/icon.png?v=4" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/apple-icon.png?v=4" />
         {/* Resource hints to improve LCP/FCP */}
         {/* Facebook Pixel */}
         <link rel="preconnect" href="https://connect.facebook.net" />

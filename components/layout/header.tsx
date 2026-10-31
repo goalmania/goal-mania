@@ -230,31 +230,22 @@ export function Header() {
             </button>
 
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative">
-                <Image
-                  src="/images/recentUpdate/gm-shield-v2.png"
-                  alt="Goal Mania"
-                  width={52}
-                  height={52}
-                  className="w-12 h-12 object-contain transition-all duration-500 group-hover:drop-shadow-[0_0_14px_rgba(200,240,0,0.7)]"
-                  style={{ filter: "brightness(1.1)" }}
-                />
-                <span className="absolute inset-0 rounded-full border border-[#c8f000]/0 group-hover:border-[#c8f000]/30 transition-all duration-500 scale-110" />
-              </div>
-              <div className="hidden sm:flex flex-col leading-none">
-                <span
-                  className="font-black italic uppercase leading-none"
-                  style={{ fontFamily: "var(--font-mulish, 'Mulish', sans-serif)", fontSize: "22px", letterSpacing: "1px", fontWeight: 900 }}
-                >
-                  <span style={{ color: "#ffffff" }}>GOAL</span><span style={{ color: "#c8f000" }}>MANIA</span>
-                </span>
-                <span
-                  className="text-[9px] tracking-[2px]"
-                  style={{ fontFamily: "var(--font-mono, monospace)", color: "#666" }}
-                >
-                  La tua dose quotidiana di calcio
-                </span>
-              </div>
+              <Image
+                src="/images/recentUpdate/goalmania-wordmark.png"
+                alt="Goal Mania"
+                width={392}
+                height={201}
+                priority
+                className="h-10 w-auto object-contain transition-all duration-500 group-hover:drop-shadow-[0_0_14px_rgba(200,240,0,0.7)]"
+              />
+              <span
+                className="hidden sm:block text-[9px] tracking-[2px]"
+                style={{ fontFamily: "var(--font-mono, monospace)", color: "#666" }}
+              >
+                La tua dose
+                <br />
+                quotidiana di calcio
+              </span>
             </Link>
           </div>
 
@@ -768,18 +759,12 @@ export function Header() {
             <div className="flex items-center justify-between p-5 border-b" style={{ borderColor: "rgba(200,240,0,0.1)" }}>
               <Link href="/" onClick={() => setOpenMenu(false)} className="flex items-center gap-2.5">
                 <Image
-                  src="/images/recentUpdate/gm-shield-v2.png"
+                  src="/images/recentUpdate/goalmania-wordmark.png"
                   alt="Goal Mania"
-                  width={38}
-                  height={38}
-                  className="w-10 h-10 object-contain"
+                  width={392}
+                  height={201}
+                  className="h-8 w-auto object-contain"
                 />
-                <span
-                  className="text-white font-black uppercase text-base"
-                  style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "3px" }}
-                >
-                  GOAL<span style={{ color: "#c8f000" }}>MANIA</span>
-                </span>
               </Link>
               <button
                 onClick={() => setOpenMenu(false)}
