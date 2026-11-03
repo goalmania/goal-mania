@@ -19,7 +19,7 @@ import {
   type KitType,
 } from "@/lib/teamKitPricing";
 
-const WHATSAPP_NUMBER = "393334218596";
+const WHATSAPP_NUMBER = "393510800258";
 
 // Squadre di La Liga / Bundesliga / Ligue 1 — usate per isolare "Resto del Mondo"
 // dal pool di maglie attuali, dato che quella categoria in DB è quasi vuota

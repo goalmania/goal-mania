@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const WhatsAppButton = () => {
   const [showTooltip, setShowTooltip] = React.useState(false);
-  const phoneNumber = "393334218596";
+  const phoneNumber = "393510800258";
   const message = "Ciao! Vorrei avere informazioni sulle maglie.";
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
