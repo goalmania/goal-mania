@@ -5,7 +5,6 @@ import {
   Mail,
   Instagram,
   Twitter,
-  Phone,
   MapPin,
   Send,
   ArrowRightFromLine,
@@ -452,12 +451,6 @@ export default function ContactPage() {
             </div>
 
             <div className="bg-[#111111] border w-full text-[#FAFBFF] p-6 rounded-2xl mt-5 shadow-lg  ">
-              <div className="flex items-center mb-4">
-                <Phone className="  mr-3" size={20} />
-                <span className="text-[16px] font-light text-[#FAFBFF]">
-                  +39 090 330 47732
-                </span>
-              </div>
 
               {/* Email */}
               <div className="flex items-center mb-4">

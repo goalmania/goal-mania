@@ -7,7 +7,7 @@ import {
   Shirt,
   Search,
   ChevronDown,
-  MessageCircle,
+  Mail,
   Check,
   Loader2,
   Trophy,
@@ -19,7 +19,7 @@ import {
   type KitType,
 } from "@/lib/teamKitPricing";
 
-const WHATSAPP_NUMBER = "393510800258";
+const CONTACT_EMAIL = "goalmaniaofficial@gmail.com";
 
 // Squadre di La Liga / Bundesliga / Ligue 1 — usate per isolare "Resto del Mondo"
 // dal pool di maglie attuali, dato che quella categoria in DB è quasi vuota
@@ -194,7 +194,7 @@ export default function TeamKitBuilder() {
     setCustomPlayers("");
   };
 
-  const handleWhatsApp = () => {
+  const handleRequest = () => {
     if (!canSubmit || price === null) return;
     const lines = [
       "Ciao! Vorrei richiedere un preventivo per un Kit Torneo:",
@@ -206,8 +206,8 @@ export default function TeamKitBuilder() {
       "",
       "Attendo indicazioni per personalizzazione taglie/numeri.",
     ];
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    const subject = "Preventivo Kit Torneo";
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join("\n"))}`;
   };
 
   return (
@@ -510,19 +510,19 @@ export default function TeamKitBuilder() {
                 ) : null}
               </div>
               <button
-                onClick={handleWhatsApp}
+                onClick={handleRequest}
                 disabled={!canSubmit}
                 className="inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-full font-black uppercase transition-all active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed"
                 style={{
-                  background: "#25D366",
-                  color: "white",
+                  background: "#c8f000",
+                  color: "#0a0a0a",
                   fontFamily: "var(--font-display, sans-serif)",
                   letterSpacing: "1.5px",
                   fontSize: "0.85rem",
                 }}
               >
-                <MessageCircle className="w-4 h-4" />
-                Richiedi il kit su WhatsApp
+                <Mail className="w-4 h-4" />
+                Richiedi il kit via email
               </button>
             </div>
             {!canSubmit && (

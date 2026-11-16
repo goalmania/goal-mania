@@ -272,7 +272,7 @@ export default async function Home() {
         viewAllHref="/shop/retro"
       />
 
-      {/* 4b. KIT PER TORNEI — configuratore kit squadra con preventivo WhatsApp */}
+      {/* 4b. KIT PER TORNEI — configuratore kit squadra con preventivo via email */}
       <TeamKitBuilder />
 
       {/* 5. NOTIZIE + MAGLIE — editoriale ibrido */}

@@ -73,7 +73,7 @@ const FAQ_TABS = [
       },
       {
         q: "Come contatto l'assistenza?",
-        a: "Puoi scriverci a goalmaniaofficial@gmail.com o tramite WhatsApp. Rispondiamo entro 24 ore, spesso molto prima.",
+        a: "Puoi scriverci a goalmaniaofficial@gmail.com o dal modulo nella pagina Contatti. Rispondiamo entro 24 ore, spesso molto prima.",
       },
     ],
   },

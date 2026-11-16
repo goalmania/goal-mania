@@ -6,7 +6,6 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import { ToastProvider } from "@/components/ToastProvider";
-import WhatsAppButton from "@/components/shared/WhatsAppButton";
 
 export default function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -34,7 +33,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
       <main className="flex-grow pt-[112px]">{children}</main>
       {!isShop && <Footer />}
       <ToastProvider />
-      <WhatsAppButton />
+      
     </div>
   );
 }
