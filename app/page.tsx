@@ -7,6 +7,8 @@ import FeaturedProducts from "@/components/home/FeaturedProducts";
 import SocialProofSection from "@/components/home/SocialProofSection";
 import EditorialCommerceSection from "@/components/home/EditorialCommerceSection";
 import HomeCategoryCards from "@/app/_components/HomeCategoryCards";
+import BlackFridayBand from "@/components/home/BlackFridayBand";
+import TrustBar from "@/components/home/TrustBar";
 import ReviewsStrip from "@/components/home/ReviewsStrip";
 import HomeNewsStrip from "@/components/home/HomeNewsStrip";
 import TeamKitBuilder from "@/components/home/TeamKitBuilder";
@@ -246,6 +248,9 @@ export default async function Home() {
       {/* 3. MAGLIE IN EVIDENZA — subito dopo le categorie: il prodotto prima di tutto il resto */}
       <FeaturedProducts products={featuredProducts} />
 
+      {/* 3b. BLACK FRIDAY — offerta 3x2 spiegata col conto */}
+      <BlackFridayBand />
+
       {/* 4a. SERIE A 2026/27 — carosello maglie stagione corrente */}
       <LandingCategorySection
         title="Serie A 2026/27"
@@ -259,6 +264,9 @@ export default async function Home() {
         products={retroProducts}
         viewAllHref="/shop/retro"
       />
+
+      {/* 4d. FIDUCIA — condizioni vere, subito prima delle recensioni */}
+      <TrustBar />
 
       {/* 4c. LOGHI SQUADRE — scorciatoia per squadra, dopo il catalogo */}
       <TeamLogoTicker />

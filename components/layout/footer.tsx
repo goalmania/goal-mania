@@ -52,7 +52,7 @@ const TRUST_BADGES = [
   { icon: Truck, label: "Spedizione Gratuita", sub: "Su ogni ordine" },
   { icon: RotateCcw, label: "Reso facile", sub: "Entro 14 giorni" },
   { icon: ShieldCheck, label: "Pagamento Sicuro", sub: "SSL 256-bit" },
-  { icon: BadgeCheck, label: "Qualità Garantita", sub: "Controllo prima della spedizione" },
+  { icon: BadgeCheck, label: "Tracking", sub: "Via email alla partenza" },
 ];
 
 const PAYMENT_METHODS = [
@@ -69,84 +69,9 @@ export function Footer() {
     <footer
       style={{
         background: "#0a0a0a",
-        borderTop: "0.5px solid rgba(200,240,0,0.12)",
+        borderTop: "4px solid #c8f000",
       }}
     >
-      {/* ── Newsletter bar ── */}
-      <div
-        className="border-b"
-        style={{ borderColor: "rgba(255,255,255,0.05)", background: "#0d0d0d" }}
-      >
-        <div className="max-w-5xl mx-auto px-6 py-14 text-center">
-          <div
-            className="text-[10px] uppercase tracking-[4px] mb-4 flex items-center justify-center gap-2"
-            style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
-          >
-            <span className="w-4 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
-            // Newsletter
-            <span className="w-4 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
-          </div>
-          <h2
-            className="font-black uppercase text-white mb-3 leading-tight"
-            style={{
-              fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
-              fontSize: "clamp(1.6rem, 4vw, 2.4rem)",
-              letterSpacing: "1px",
-            }}
-          >
-            Resta aggiornato su{" "}
-            <span style={{ color: "#c8f000" }}>offerte esclusive</span> e nuovi arrivi
-          </h2>
-          <p
-            className="mb-8 max-w-lg mx-auto text-sm"
-            style={{
-              color: "rgba(245,245,245,0.45)",
-              fontFamily: "var(--font-body, sans-serif)",
-              lineHeight: "1.7",
-            }}
-          >
-            Iscriviti per ricevere aggiornamenti su offerte speciali, nuovi arrivi e notizie dal mondo del calcio.
-          </p>
-
-          <div className="flex justify-center">
-            <div
-              className="flex items-center gap-2 p-2 rounded-full w-full max-w-md"
-              style={{
-                background: "#1a1a1a",
-                border: "1px solid rgba(200,240,0,0.2)",
-              }}
-            >
-              <input
-                type="email"
-                placeholder="La tua email..."
-                className="flex-1 bg-transparent text-white px-5 py-2 text-sm outline-none placeholder-white/25"
-                style={{ fontFamily: "var(--font-body, sans-serif)" }}
-              />
-              <button
-                type="submit"
-                className="px-6 py-2.5 rounded-full font-black text-sm uppercase tracking-wider transition-all hover:opacity-90 hover:-translate-y-0.5"
-                style={{
-                  color: "#0a0a0a",
-                  background: "#c8f000",
-                  fontFamily: "var(--font-display, sans-serif)",
-                  letterSpacing: "2px",
-                  boxShadow: "0 4px 16px rgba(200,240,0,0.2)",
-                }}
-              >
-                Iscriviti
-              </button>
-            </div>
-          </div>
-
-          <p
-            className="mt-4 text-[10px] uppercase tracking-widest"
-            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.2)" }}
-          >
-            Nessuno spam. Cancellati quando vuoi.
-          </p>
-        </div>
-      </div>
-
       {/* ── Trust badges strip ── */}
       <div
         className="border-b"
@@ -171,7 +96,7 @@ export function Footer() {
                   </p>
                   <p
                     className="text-[10px] mt-0.5"
-                    style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.45)" }}
+                    style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
                   >
                     {sub}
                   </p>
@@ -198,7 +123,7 @@ export function Footer() {
             </Link>
             <p
               className="text-xs max-w-[180px] mb-6"
-              style={{ color: "rgba(255,255,255,0.28)", fontFamily: "var(--font-mono, monospace)", lineHeight: "1.7" }}
+              style={{ color: "rgba(255,255,255,0.68)", fontFamily: "var(--font-mono, monospace)", lineHeight: "1.7" }}
             >
               // The football universe
               <br />
@@ -218,7 +143,7 @@ export function Footer() {
                   className="w-8 h-8 rounded-lg flex items-center justify-center border transition-all duration-200 hover:border-[#c8f000]/40 hover:text-[#c8f000] hover:-translate-y-0.5"
                   style={{
                     border: "1px solid rgba(255,255,255,0.08)",
-                    color: "rgba(255,255,255,0.35)",
+                    color: "rgba(255,255,255,0.68)",
                   }}
                 >
                   <Icon size={15} />
@@ -241,7 +166,7 @@ export function Footer() {
                   <Link
                     href={l.href}
                     className="text-xs transition-colors hover:text-[#c8f000]"
-                    style={{ fontFamily: "var(--font-body, sans-serif)", color: "rgba(255,255,255,0.38)" }}
+                    style={{ fontFamily: "var(--font-body, sans-serif)", color: "rgba(255,255,255,0.68)" }}
                   >
                     {l.label}
                   </Link>
@@ -264,7 +189,7 @@ export function Footer() {
                   <Link
                     href={l.href}
                     className="text-xs transition-colors hover:text-[#c8f000]"
-                    style={{ fontFamily: "var(--font-body, sans-serif)", color: "rgba(255,255,255,0.38)" }}
+                    style={{ fontFamily: "var(--font-body, sans-serif)", color: "rgba(255,255,255,0.68)" }}
                   >
                     {l.label}
                   </Link>
@@ -287,7 +212,7 @@ export function Footer() {
                   <Link
                     href={l.href}
                     className="text-xs transition-colors hover:text-[#c8f000]"
-                    style={{ fontFamily: "var(--font-body, sans-serif)", color: "rgba(255,255,255,0.38)" }}
+                    style={{ fontFamily: "var(--font-body, sans-serif)", color: "rgba(255,255,255,0.68)" }}
                   >
                     {l.label}
                   </Link>
@@ -308,7 +233,7 @@ export function Footer() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
             <p
               className="text-[10px] uppercase tracking-widest"
-              style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.18)" }}
+              style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.68)" }}
             >
               Metodi di Pagamento Accettati
             </p>
@@ -319,7 +244,7 @@ export function Footer() {
                   className="text-[9px] font-black px-2.5 py-1.5 rounded-lg tracking-widest"
                   style={{
                     background: "rgba(255,255,255,0.04)",
-                    color: "rgba(255,255,255,0.3)",
+                    color: "rgba(255,255,255,0.68)",
                     fontFamily: "var(--font-mono, monospace)",
                     border: "1px solid rgba(255,255,255,0.06)",
                   }}
@@ -337,7 +262,7 @@ export function Footer() {
           >
             <span
               className="text-[10px]"
-              style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.18)" }}
+              style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.68)" }}
             >
               &copy; 2025 Goal Mania. All rights reserved.
             </span>
@@ -353,7 +278,7 @@ export function Footer() {
                   key={l.href + l.label}
                   href={l.href}
                   className="text-[10px] uppercase tracking-widest hover:text-[#c8f000] transition-colors"
-                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.2)" }}
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.68)" }}
                 >
                   {l.label}
                 </Link>
@@ -368,7 +293,7 @@ export function Footer() {
               />
               <span
                 className="text-[10px]"
-                style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.45)" }}
+                style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
               >
                 // Goal Mania is live
               </span>

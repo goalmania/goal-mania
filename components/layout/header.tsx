@@ -163,14 +163,12 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && session) {
+    // Il contatore vale per tutti, non solo per chi ha fatto login: l'acquisto da ospite e il caso comune
+    if (typeof window !== "undefined") {
       setCartItemCount(cart.getItemCount());
       setWishlistItemCount(wishlist.items.length);
-    } else {
-      setCartItemCount(0);
-      setWishlistItemCount(0);
     }
-  }, [cart, wishlist, session]);
+  }, [cart, wishlist]);
 
   useEffect(() => {
     if (searchOpen) setTimeout(() => searchInputRef.current?.focus(), 100);
@@ -210,7 +208,7 @@ export function Header() {
           top: ANNOUNCEMENT_BAR_HEIGHT,
           background: scrolled ? "rgba(10,10,10,0.98)" : "rgba(10,10,10,0.92)",
           backdropFilter: "blur(20px)",
-          borderBottom: "0.5px solid rgba(200,240,0,0.12)",
+          borderBottom: "1px solid rgba(255,255,255,0.1)",
           boxShadow: scrolled ? "0 4px 30px rgba(0,0,0,0.4)" : "none",
         }}
       >
@@ -222,7 +220,7 @@ export function Header() {
           {/* ── Left: Hamburger + Logo ── */}
           <div className="flex items-center gap-3">
             <button
-              className="md:hidden flex items-center justify-center w-9 h-9 rounded-xl border border-white/10 text-white hover:border-[#c8f000]/40 hover:text-[#c8f000] transition-all duration-200"
+              className="md:hidden flex items-center justify-center w-11 h-11 rounded-[8px] border border-white/10 text-white hover:border-[#c8f000]/40 hover:text-[#c8f000] transition-all duration-200"
               onClick={() => setOpenMenu(true)}
               aria-label="Menu"
             >
@@ -236,11 +234,11 @@ export function Header() {
                 width={392}
                 height={201}
                 priority
-                className="h-10 w-auto object-contain transition-all duration-500 group-hover:drop-shadow-[0_0_14px_rgba(200,240,0,0.7)]"
+                className="h-10 w-auto object-contain transition-all duration-500 "
               />
               <span
-                className="hidden sm:block text-[9px] tracking-[2px]"
-                style={{ fontFamily: "var(--font-mono, monospace)", color: "#666" }}
+                className="hidden xl:block text-[10px] tracking-[2px]"
+                style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.6)" }}
               >
                 La tua dose
                 <br />
@@ -259,10 +257,10 @@ export function Header() {
             >
               <Link
                 href="/shop"
-                className={`flex items-center gap-1 px-3 py-2 rounded-lg text-[0.78rem] font-semibold uppercase tracking-wider transition-all duration-200 ${
+                className={`flex items-center gap-1 px-3 py-2 rounded-lg text-[1rem] font-bold uppercase tracking-wider transition-all duration-200 ${
                   pathname.startsWith("/shop") || activeMega === "shop"
                     ? "text-[#c8f000]"
-                    : "text-white/70 hover:text-white"
+                    : "text-white hover:text-[#c8f000]"
                 }`}
                 style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1.5px" }}
               >
@@ -281,10 +279,10 @@ export function Header() {
             >
               <Link
                 href="/news"
-                className={`flex items-center gap-1 px-3 py-2 rounded-lg text-[0.78rem] font-semibold uppercase tracking-wider transition-all duration-200 ${
+                className={`flex items-center gap-1 px-3 py-2 rounded-lg text-[1rem] font-bold uppercase tracking-wider transition-all duration-200 ${
                   pathname.startsWith("/news") || activeMega === "news"
                     ? "text-[#c8f000]"
-                    : "text-white/70 hover:text-white"
+                    : "text-white hover:text-[#c8f000]"
                 }`}
                 style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1.5px" }}
               >
@@ -304,23 +302,23 @@ export function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`relative flex items-center gap-1.5 px-3 py-2 rounded-lg text-[0.78rem] font-semibold uppercase tracking-wider transition-all duration-200 group ${
+                className={`relative flex items-center gap-1.5 px-3 py-2 rounded-lg text-[1rem] font-bold uppercase tracking-wider transition-all duration-200 group ${
                   pathname === item.href
                     ? "text-[#c8f000]"
                     : item.isSpecial
                     ? "text-[#c8f000] hover:text-[#c8f000]/80"
-                    : "text-white/70 hover:text-white"
+                    : "text-white hover:text-[#c8f000]"
                 }`}
                 style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1.5px" }}
               >
                 {item.isSpecial && <Trophy size={11} className="animate-pulse" />}
                 {item.name}
                 {item.isNew && (
-                  <span className="text-[7px] font-black uppercase px-1 py-0.5 rounded ml-0.5 leading-none"
+                  <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded-[3px] ml-0.5 leading-none"
                     style={{ background: "#c8f000", color: "#000" }}>NEW</span>
                 )}
                 {item.isRetro && (
-                  <span className="text-[7px] font-black uppercase px-1 py-0.5 rounded ml-0.5 leading-none"
+                  <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded-[3px] ml-0.5 leading-none"
                     style={{ background: "rgba(200,240,0,0.15)", color: "#c8f000", border: "1px solid rgba(200,240,0,0.3)" }}>RETRO</span>
                 )}
                 {pathname === item.href && (
@@ -338,7 +336,7 @@ export function Header() {
             {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="flex items-center justify-center w-9 h-9 rounded-xl text-white/70 hover:text-[#c8f000] hover:bg-[#c8f000]/8 transition-all duration-200"
+              className="flex items-center justify-center w-11 h-11 rounded-[8px] text-white/70 hover:text-[#c8f000] hover:bg-[#c8f000]/8 transition-all duration-200"
               aria-label="Cerca"
             >
               <Search className="h-4 w-4" />
@@ -357,11 +355,11 @@ export function Header() {
             {/* Wishlist */}
             <Link href="/wishlist" className="relative">
               <button
-                className="flex items-center justify-center w-9 h-9 rounded-xl text-white/70 hover:text-[#c8f000] hover:bg-[#c8f000]/8 transition-all duration-200"
+                className="flex items-center justify-center w-11 h-11 rounded-[8px] text-white/70 hover:text-[#c8f000] hover:bg-[#c8f000]/8 transition-all duration-200"
                 aria-label="Wishlist"
               >
                 <Heart className="h-4 w-4" />
-                {session && wishlistItemCount > 0 && (
+                {wishlistItemCount > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 bg-[#c8f000] text-[#0a0a0a] text-[9px] font-black rounded-full">
                     {wishlistItemCount}
                   </span>
@@ -372,11 +370,11 @@ export function Header() {
             {/* Cart */}
             <Link href="/cart" className="relative">
               <button
-                className="flex items-center justify-center w-9 h-9 rounded-xl text-white/70 hover:text-[#c8f000] hover:bg-[#c8f000]/8 transition-all duration-200"
+                className="flex items-center justify-center w-11 h-11 rounded-[8px] text-white/70 hover:text-[#c8f000] hover:bg-[#c8f000]/8 transition-all duration-200"
                 aria-label="Carrello"
               >
                 <ShoppingBag className="h-4 w-4" />
-                {session && cartItemCount > 0 && (
+                {cartItemCount > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 bg-[#c8f000] text-[#0a0a0a] text-[9px] font-black rounded-full">
                     {cartItemCount}
                   </span>
@@ -463,7 +461,7 @@ export function Header() {
               background: "rgba(10,10,10,0.98)",
               backdropFilter: "blur(24px)",
               borderColor: "rgba(200,240,0,0.1)",
-              borderBottom: "0.5px solid rgba(200,240,0,0.12)",
+              borderBottom: "1px solid rgba(255,255,255,0.1)",
             }}
             onMouseEnter={keepMega}
             onMouseLeave={closeMega}
@@ -548,7 +546,7 @@ export function Header() {
               background: "rgba(10,10,10,0.98)",
               backdropFilter: "blur(24px)",
               borderColor: "rgba(200,240,0,0.1)",
-              borderBottom: "0.5px solid rgba(200,240,0,0.12)",
+              borderBottom: "1px solid rgba(255,255,255,0.1)",
             }}
             onMouseEnter={keepMega}
             onMouseLeave={closeMega}

@@ -1,99 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
-const GRAIN = `<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(#g)' opacity='0.08'/></svg>`;
-
+// Sei porte d'ingresso al catalogo. Tutte uguali per forma e colore:
+// al passaggio (o al tocco) il riquadro diventa lime pieno.
 const CATS = [
-  {
-    key: "serieA",
-    flag: "🇮🇹",
-    label: "Serie A",
-    count: "66 maglie",
-    href: "/shop/serieA",
-    teams: ["Inter", "Juventus", "Milan", "Roma", "Napoli"],
-    accent: "rgba(0,120,220,0.12)",
-    accentBorder: "rgba(0,120,220,0.28)",
-    accentText: "#60A5FA",
-    glow: "rgba(0,100,200,0.15)",
-  },
-  {
-    key: "premier",
-    flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-    label: "Premier League",
-    count: "50+ maglie",
-    href: "/shop/premier-league",
-    teams: ["Arsenal", "Man City", "Liverpool", "Chelsea"],
-    accent: "rgba(130,60,200,0.12)",
-    accentBorder: "rgba(130,60,200,0.28)",
-    accentText: "#A78BFA",
-    glow: "rgba(100,40,180,0.15)",
-  },
-  {
-    key: "worldcup",
-    flag: "🌍",
-    label: "World Cup 2026",
-    count: "64 maglie",
-    href: "/shop/worldcup",
-    teams: ["Brasile", "Italia", "Argentina", "Francia"],
-    accent: "rgba(200,150,0,0.12)",
-    accentBorder: "rgba(200,150,0,0.28)",
-    accentText: "#FCD34D",
-    glow: "rgba(180,120,0,0.15)",
-  },
-  {
-    key: "international",
-    flag: "⭐",
-    label: "Grandi Club Europei",
-    count: "30+ maglie",
-    href: "/shop/international",
-    teams: ["Real Madrid", "Barcellona", "PSG", "Bayern"],
-    accent: "rgba(220,40,60,0.12)",
-    accentBorder: "rgba(220,40,60,0.28)",
-    accentText: "#F87171",
-    glow: "rgba(200,30,50,0.15)",
-  },
-  {
-    key: "retro",
-    flag: "⏪",
-    label: "Maglie Retro",
-    count: "50+ maglie",
-    href: "/shop/retro",
-    teams: ["Napoli '87", "Brasile '02", "Milan '90s"],
-    accent: "rgba(200,240,0,0.07)",
-    accentBorder: "rgba(200,240,0,0.22)",
-    accentText: "#c8f000",
-    glow: "rgba(180,220,0,0.1)",
-  },
-  {
-    key: "next",
-    flag: "⚡",
-    label: "Stagione 26/27",
-    count: "Nuovi arrivi",
-    href: "/shop/2026/27",
-    teams: ["Arsenal", "In arrivo…"],
-    accent: "rgba(200,240,0,0.05)",
-    accentBorder: "rgba(200,240,0,0.15)",
-    accentText: "#c8f000",
-    glow: "rgba(180,220,0,0.08)",
-  },
+  { key: "serieA", flag: "🇮🇹", label: "Serie A", count: "66 maglie", href: "/shop/serieA", ghost: "A" },
+  { key: "premier", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", label: "Premier League", count: "50+ maglie", href: "/shop/premier-league", ghost: "PL" },
+  { key: "worldcup", flag: "🌍", label: "Mondiali 2026", count: "64 maglie", href: "/shop/worldcup", ghost: "26" },
+  { key: "international", flag: "⭐", label: "Grandi club", count: "30+ maglie", href: "/shop/international", ghost: "UE" },
+  { key: "retro", flag: "⏪", label: "Maglie retro", count: "700+ maglie", href: "/shop/retro", ghost: "90" },
+  { key: "next", flag: "⚡", label: "Stagione 26/27", count: "73 maglie", href: "/shop/2026/27", ghost: "27" },
 ];
 
 export default function HomeCategoryCards() {
   return (
-    <section className="py-12 md:py-16 bg-[#070707] relative overflow-hidden">
-      {/* Grain */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-50"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(GRAIN)}")`,
-          backgroundRepeat: "repeat",
-        }}
-      />
-
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        {/* Section header */}
+    <section className="bg-[#0a0a0a] py-12 md:py-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-end gap-4">
           <div>
             <p className="gm-eyebrow">Shop per campionato</p>
@@ -104,95 +28,50 @@ export default function HomeCategoryCards() {
             className="ml-auto hidden items-center gap-2 text-sm font-bold uppercase tracking-widest text-[#c8f000] transition-all duration-200 hover:gap-3 md:inline-flex"
             style={{ fontFamily: "var(--font-display,sans-serif)" }}
           >
-            Vedi tutto <ArrowRight size={16} />
+            Tutto il catalogo <ArrowUpRight size={16} />
           </Link>
         </div>
 
-        {/* Cards — horizontal scroll on mobile, grid on desktop */}
-        <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar lg:grid lg:grid-cols-6 lg:overflow-visible lg:pb-0">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
           {CATS.map((cat) => (
             <Link
               key={cat.key}
               href={cat.href}
-              className="flex-shrink-0 w-[200px] lg:w-auto group relative rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
-              style={{
-                background: "rgba(255,255,255,0.02)",
-                border: `1.5px solid ${cat.accentBorder}`,
-                boxShadow: `0 0 0 0 ${cat.glow}`,
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 32px ${cat.glow}`;
-                (e.currentTarget as HTMLElement).style.borderColor = cat.accentText;
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow = "0 0 0 0 transparent";
-                (e.currentTarget as HTMLElement).style.borderColor = cat.accentBorder;
-              }}
+              className="group relative flex min-h-[150px] flex-col justify-between overflow-hidden rounded-[10px] border border-white/10 bg-[#101010] p-4 transition-colors duration-200 hover:border-[#c8f000] hover:bg-[#c8f000] active:bg-[#c8f000] md:min-h-[210px] md:p-5"
             >
-              {/* Inner grain */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-30"
+              {/* Numero fantasma: richiamo al numero di maglia */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -bottom-4 -right-2 select-none font-black leading-none transition-colors duration-200 group-hover:text-black/15"
                 style={{
-                  backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(GRAIN)}")`,
-                  backgroundRepeat: "repeat",
+                  fontFamily: "var(--font-display,'Barlow Condensed',sans-serif)",
+                  fontSize: "clamp(5rem, 12vw, 8.5rem)",
+                  color: "rgba(255,255,255,0.07)",
                 }}
-              />
-              {/* Colored radial bg */}
-              <div
-                className="absolute inset-0"
-                style={{ background: `radial-gradient(ellipse at 50% 0%,${cat.accent} 0%,transparent 70%)` }}
-              />
+              >
+                {cat.ghost}
+              </span>
 
-              <div className="relative z-10 p-5 flex flex-col h-full min-h-[220px]">
-                {/* Flag */}
-                <div className="text-4xl mb-3 select-none">{cat.flag}</div>
+              <div className="relative flex items-start justify-between">
+                <span className="text-2xl leading-none" aria-hidden="true">{cat.flag}</span>
+                <span className="flex h-8 w-8 items-center justify-center rounded-[6px] bg-[#c8f000] text-[#0a0a0a] transition-colors group-hover:bg-[#0a0a0a] group-hover:text-[#c8f000]">
+                  <ArrowUpRight size={16} />
+                </span>
+              </div>
 
-                {/* Name */}
-                <div
-                  className="font-black uppercase leading-none mb-1"
-                  style={{
-                    fontFamily: "var(--font-display,'Barlow Condensed',sans-serif)",
-                    fontSize: "1.3rem",
-                    color: "white",
-                    letterSpacing: "0.5px",
-                  }}
+              <div className="relative">
+                <h3
+                  className="text-[26px] font-extrabold uppercase leading-[0.95] text-white transition-colors group-hover:text-[#0a0a0a] md:text-[30px]"
+                  style={{ fontFamily: "var(--font-display,'Barlow Condensed',sans-serif)" }}
                 >
                   {cat.label}
-                </div>
-
-                {/* Count */}
-                <div
-                  className="text-[10px] uppercase tracking-[2px] mb-3"
-                  style={{ fontFamily: "var(--font-mono,monospace)", color: cat.accentText }}
+                </h3>
+                <p
+                  className="mt-1.5 text-[12px] font-bold uppercase tracking-[0.14em] text-[#c8f000] transition-colors group-hover:text-[#0a0a0a]/80"
+                  style={{ fontFamily: "var(--font-mono,monospace)" }}
                 >
                   {cat.count}
-                </div>
-
-                {/* Teams */}
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {cat.teams.map((t) => (
-                    <span
-                      key={t}
-                      className="text-[9px] px-2 py-0.5 rounded-full"
-                      style={{
-                        fontFamily: "var(--font-mono,monospace)",
-                        background: "rgba(255,255,255,0.04)",
-                        color: "rgba(255,255,255,0.4)",
-                        border: "1px solid rgba(255,255,255,0.06)",
-                      }}
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-
-                {/* CTA */}
-                <div
-                  className="mt-auto flex items-center gap-1.5 text-[10px] uppercase tracking-widest transition-all duration-200 group-hover:gap-2.5"
-                  style={{ fontFamily: "var(--font-mono,monospace)", color: cat.accentText }}
-                >
-                  Vedi tutte <ArrowRight size={11} />
-                </div>
+                </p>
               </div>
             </Link>
           ))}

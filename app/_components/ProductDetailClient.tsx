@@ -204,14 +204,13 @@ function SizeBtn({ size, selected, onClick }: { size: string; selected: boolean;
     <button
       type="button"
       onClick={onClick}
-      className="relative h-11 min-w-[44px] px-3 rounded-xl text-[12px] font-black transition-all active:scale-[0.96]"
+      className="relative h-12 min-w-[54px] px-3 rounded-[6px] text-[16px] font-extrabold transition-all active:scale-[0.96]"
       style={{
-        background: selected ? "#c8f000" : "rgba(255,255,255,0.04)",
-        color: selected ? "#000" : "rgba(255,255,255,0.5)",
-        border: `1.5px solid ${selected ? "#c8f000" : "rgba(255,255,255,0.08)"}`,
+        background: selected ? "#c8f000" : "transparent",
+        color: selected ? "#0a0a0a" : "rgba(255,255,255,0.9)",
+        border: `2px solid ${selected ? "#c8f000" : "rgba(255,255,255,0.3)"}`,
         fontFamily: "var(--font-display, sans-serif)",
         letterSpacing: "0.5px",
-        boxShadow: selected ? "0 4px 16px rgba(200,240,0,0.25)" : "none",
         transition: "all 160ms cubic-bezier(0.23,1,0.32,1)",
       }}
     >
@@ -606,19 +605,19 @@ export default function ProductDetailClient({
 
               {/* Price block */}
               <div
-                className="flex items-baseline gap-3 p-4 rounded-2xl"
-                style={{ background: "rgba(200,240,0,0.04)", border: "1px solid rgba(200,240,0,0.08)" }}
+                className="flex items-baseline gap-3 rounded-[10px] px-4 py-3"
+                style={{ background: "#c8f000", color: "#0a0a0a" }}
               >
-                <span className="text-4xl font-black text-white" style={{ fontFamily: "var(--font-display,sans-serif)" }}>
-                  €{totalPrice.toFixed(2)}
+                <span className="text-[46px] font-black leading-none" style={{ fontFamily: "var(--font-display,sans-serif)", fontVariantNumeric: "tabular-nums" }}>
+                  €{totalPrice.toFixed(2).replace(".00", "")}
                 </span>
                 {quantity > 1 && (
-                  <span className="text-sm font-bold" style={{ color: "rgba(255,255,255,0.35)" }}>
+                  <span className="text-sm font-bold" style={{ color: "rgba(10,10,10,0.7)" }}>
                     ({quantity}× €{unitPrice.toFixed(2)})
                   </span>
                 )}
-                <span className="text-[10px] font-black uppercase tracking-widest ml-auto" style={{ color: "rgba(255,255,255,0.25)", fontFamily: "var(--font-mono,monospace)" }}>
-                  IVA incl.
+                <span className="text-[11px] font-black uppercase tracking-widest ml-auto text-right leading-tight" style={{ color: "rgba(10,10,10,0.75)", fontFamily: "var(--font-mono,monospace)" }}>
+                  IVA incl.<br />Spedizione gratis
                 </span>
               </div>
 

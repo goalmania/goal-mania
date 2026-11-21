@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import AnnouncementBar from "@/components/AnnouncementBar";
+import MobileBottomNav from "@/components/layout/MobileBottomNav";
 import { ToastProvider } from "@/components/ToastProvider";
 
 export default function SiteShell({ children }: { children: React.ReactNode }) {
@@ -30,8 +31,9 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
       <AnnouncementBar />
       <Header />
       {/* pt = announcement bar (40px) + header (72px) = 112px */}
-      <main className="flex-grow pt-[112px]">{children}</main>
+      <main className="flex-grow pt-[112px] pb-[calc(56px+env(safe-area-inset-bottom))] md:pb-0">{children}</main>
       {!isShop && <Footer />}
+      <MobileBottomNav />
       <ToastProvider />
       
     </div>

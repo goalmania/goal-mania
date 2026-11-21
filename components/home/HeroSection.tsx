@@ -87,7 +87,7 @@ export default function HeroSection({ products = [] }: Props) {
         <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, #0a0a0a 0%, rgba(10,10,10,0.82) 55%, rgba(10,10,10,0.6) 100%)" }} />
       </div>
 
-      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-5 pb-10 pt-8 sm:px-8 lg:grid-cols-[1.25fr_1fr] lg:pb-16 lg:pt-14">
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-5 pb-8 pt-6 sm:px-8 lg:grid-cols-[1.35fr_1fr] lg:pb-12 lg:pt-10">
         {/* Testo */}
         <div className={`transition-all duration-700 ${mounted ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}>
           <Link
@@ -103,12 +103,12 @@ export default function HeroSection({ products = [] }: Props) {
             className="font-black uppercase text-white"
             style={{
               fontFamily: "var(--font-display,'Barlow Condensed',sans-serif)",
-              fontSize: "clamp(3.4rem, 11vw, 8.5rem)",
+              fontSize: "clamp(3rem, 7.6vw, 6.4rem)",
               lineHeight: 0.86,
               letterSpacing: "-0.02em",
             }}
           >
-            Maglie da<br />calcio a{" "}
+            Maglie da calcio<br />a{" "}
             <span className="gm-lime-block inline-block px-3" style={{ transform: "rotate(-1.5deg)" }}>35€</span>
           </h2>
 
