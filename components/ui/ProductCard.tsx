@@ -77,8 +77,7 @@ function ProductCard({
   const displayOriginalPrice = originalPrice || product?.originalPrice;
   const displayStockCount = stockCount ?? product?.stockCount;
   const displayIsNew = isNew ?? product?.isNew;
-  const isBestSeller = product?.isBestSeller ?? product?.isFeatured ?? false;
-  const isLimitedEdition = product?.isLimitedEdition ?? false;
+    const isLimitedEdition = product?.isLimitedEdition ?? false;
   const hasDiscount = displayOriginalPrice && displayOriginalPrice > price;
   const discountPercent = hasDiscount ? Math.round((1 - price / displayOriginalPrice) * 100) : 0;
   const isLowStock = displayStockCount !== undefined && displayStockCount <= 3 && displayStockCount > 0;
@@ -92,7 +91,7 @@ function ProductCard({
   useEffect(() => { setMounted(true); }, []);
 
   if (!mounted) {
-    return <div className={`bg-[#111] rounded-2xl animate-pulse w-full h-[26rem] ${className}`} />;
+    return <div className={`bg-[#111] rounded-[10px] animate-pulse w-full h-[26rem] ${className}`} />;
   }
 
   const handleWishlistToggle = (e: React.MouseEvent) => {
@@ -130,184 +129,124 @@ function ProductCard({
   return (
     <div className="w-full h-full">
       <div
-        className={`group relative bg-[#111] rounded-2xl duration-300 h-full flex flex-col overflow-hidden transition-all ${className}`}
-        style={{
-          border: isHovered ? "1.5px solid rgba(200,240,0,0.35)" : "1.5px solid rgba(255,255,255,0.07)",
-          boxShadow: isHovered ? "0 16px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,240,0,0.08)" : "0 4px 16px rgba(0,0,0,0.4)",
-        }}
+        className={`group relative flex h-full flex-col overflow-hidden rounded-[10px] bg-[#101010] transition-colors duration-200 ${className}`}
+        style={{ border: isHovered ? "1px solid rgba(200,240,0,0.6)" : "1px solid rgba(255,255,255,0.1)" }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Image Section — 65% of card */}
-        <Link href={href} className="block" style={{ flexBasis: "65%" }}>
-          <div className="relative overflow-hidden" style={{ paddingBottom: "100%", background: "#1a1a1a" }}>
-            {/* Primary image */}
+        {/* Immagine: fondo chiaro, le foto con sfondo bianco si fondono (multiply) */}
+        <Link href={href} className="block">
+          <div className="relative overflow-hidden" style={{ paddingBottom: "112%", background: "#f1f1ec" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={image || "/images/placeholder.png"}
               alt={name}
-              className="absolute inset-0 w-full h-full object-contain p-3 transition-all duration-700 ease-in-out"
-              style={{
-                transform: isHovered && !secondImage ? "scale(1.05)" : "scale(1)",
-                opacity: isHovered && secondImage ? 0 : 1,
-              }}
+              className="absolute inset-0 h-full w-full object-contain p-3 transition-opacity duration-500"
+              style={{ mixBlendMode: "multiply", opacity: isHovered && secondImage ? 0 : 1 }}
               loading="lazy"
             />
-
-            {/* Second image slides in on hover */}
             {secondImage && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={secondImage}
-                alt={`${name} - Vista 2`}
-                className="absolute inset-0 w-full h-full object-contain p-3 transition-all duration-700 ease-in-out"
-                style={{
-                  opacity: isHovered ? 1 : 0,
-                  transform: isHovered ? "scale(1.03)" : "scale(1.08)",
-                }}
+                alt={`${name} - vista 2`}
+                className="absolute inset-0 h-full w-full object-contain p-3 transition-opacity duration-500"
+                style={{ mixBlendMode: "multiply", opacity: isHovered ? 1 : 0 }}
                 loading="lazy"
               />
             )}
 
-            {/* Badges — top left */}
-            <div className="absolute top-2.5 left-2.5 z-20 flex flex-col gap-1.5">
+            {/* Etichette: solo fatti veri */}
+            <div className="absolute left-2 top-2 z-20 flex flex-col items-start gap-1">
               {isWorldCup && (
-                <span
-                  className="text-[9px] font-black uppercase tracking-tight px-2 py-1 rounded-sm shadow-lg"
-                  style={{ background: "#c8f000", color: "#000", fontFamily: "var(--font-display, sans-serif)" }}
-                >
+                <span className="rounded-[3px] bg-[#0a0a0a] px-2 py-1 text-[10px] font-black uppercase tracking-wide text-[#c8f000]" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
                   World Cup 26
                 </span>
               )}
               {displayIsNew && (
-                <span className="text-[9px] font-black uppercase tracking-tight px-2 py-1 rounded-sm shadow-lg text-white" style={{ background: "#3b82f6" }}>
-                  NUOVO
-                </span>
-              )}
-              {isBestSeller && (
-                <span
-                  className="text-[9px] font-black uppercase tracking-tight px-2 py-1 rounded-sm shadow-lg"
-                  style={{ background: "rgba(200,240,0,0.15)", color: "#c8f000", border: "1px solid rgba(200,240,0,0.3)", fontFamily: "var(--font-mono, monospace)" }}
-                >
-                  BESTSELLER
+                <span className="rounded-[3px] bg-[#c8f000] px-2 py-1 text-[10px] font-black uppercase tracking-wide text-[#0a0a0a]" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+                  Novità
                 </span>
               )}
               {isLimitedEdition && (
-                <span className="text-[9px] font-black uppercase tracking-tight px-2 py-1 rounded-sm shadow-lg text-white" style={{ background: "#7c3aed" }}>
-                  EDIZIONE LIMITATA
+                <span className="rounded-[3px] bg-[#0a0a0a] px-2 py-1 text-[10px] font-black uppercase tracking-wide text-white" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+                  Edizione limitata
                 </span>
               )}
               {isLowStock && (
-                <span className="flex items-center gap-1 text-[9px] font-black uppercase tracking-tight px-2 py-1 rounded-sm shadow-lg text-white" style={{ background: "#f97316" }}>
-                  <Zap size={8} /> ULTIMI {displayStockCount}!
+                <span className="flex items-center gap-1 rounded-[3px] bg-[#ff4444] px-2 py-1 text-[10px] font-black uppercase tracking-wide text-white" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+                  <Zap size={9} /> Ultimi {displayStockCount}
                 </span>
               )}
               {hasDiscount && (
-                <span className="flex items-center gap-1 text-[9px] font-black uppercase tracking-tight px-2 py-1 rounded-sm shadow-lg text-white" style={{ background: "#ef4444" }}>
-                  <Tag size={8} /> -{discountPercent}%
+                <span className="flex items-center gap-1 rounded-[3px] bg-[#ff4444] px-2 py-1 text-[10px] font-black uppercase tracking-wide text-white" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+                  <Tag size={9} /> -{discountPercent}%
                 </span>
               )}
             </div>
 
-            {/* Wishlist button — top right */}
             <button
               onClick={handleWishlistToggle}
-              className="absolute top-2.5 right-2.5 z-20 w-9 h-9 rounded-full flex items-center justify-center transition-all active:scale-90"
-              style={{
-                background: "rgba(10,10,10,0.82)",
-                backdropFilter: "blur(8px)",
-                border: activeIsInWishlist ? "1.5px solid rgba(239,68,68,0.4)" : "1.5px solid rgba(255,255,255,0.1)",
-              }}
+              aria-label={activeIsInWishlist ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
+              className="absolute right-2 top-2 z-20 flex h-10 w-10 items-center justify-center rounded-[6px] bg-[#0a0a0a]/85 transition-transform active:scale-90"
             >
               {activeIsInWishlist ? (
-                <HeartIconSolid className="h-4.5 w-4.5 text-red-500" />
+                <HeartIconSolid className="h-5 w-5 text-[#ff4444]" />
               ) : (
-                <HeartIcon className="h-4.5 w-4.5 text-white/70" />
+                <HeartIcon className="h-5 w-5 text-white" />
               )}
             </button>
-
-            {/* Quick-add button slides up on hover */}
-            <div
-              className="absolute bottom-0 left-0 right-0 z-20 transition-all duration-300"
-              style={{
-                transform: isHovered ? "translateY(0)" : "translateY(100%)",
-                opacity: isHovered ? 1 : 0,
-              }}
-            >
-              <button
-                onClick={handleAddToCart}
-                className="w-full py-3 flex items-center justify-center gap-2 font-black uppercase text-[11px] tracking-widest transition-all relative overflow-hidden"
-                style={{
-                  background: addedToCart ? "#22c55e" : "#c8f000",
-                  color: "#000",
-                  fontFamily: "var(--font-display, sans-serif)",
-                  letterSpacing: "2px",
-                }}
-              >
-                {/* Flying cart animation dot */}
-                {cartFlyAnim && (
-                  <span
-                    className="absolute w-2 h-2 rounded-full bg-black animate-ping"
-                    style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
-                  />
-                )}
-                <ShoppingCart size={13} />
-                {addedToCart ? "Aggiunto!" : "Aggiungi al Carrello"}
-              </button>
-            </div>
           </div>
         </Link>
 
-        {/* Content — remaining 35% */}
-        <div className="flex flex-col flex-grow p-3.5 gap-1.5">
-          {/* Name */}
+        {/* Info */}
+        <div className="flex flex-grow flex-col gap-1.5 p-3">
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>
+            {team || category || "Maglia"}
+          </p>
           <h3
-            className="text-sm font-bold text-white line-clamp-2 leading-tight transition-colors"
-            style={{
-              fontFamily: "var(--font-display, sans-serif)",
-              color: isHovered ? "#c8f000" : "#fff",
-            }}
+            className="line-clamp-2 text-[17px] font-bold uppercase leading-[1.05] text-white"
+            style={{ fontFamily: "var(--font-display, sans-serif)" }}
           >
             <Link href={href}>{name}</Link>
           </h3>
 
-          <p className="text-[9px] uppercase tracking-[0.18em] text-white/35 font-bold" style={{ fontFamily: "var(--font-mono, monospace)" }}>
-            {team || category || "Jersey"}
-          </p>
-
-          {/* Stars — only shown with real reviews, never a fabricated default */}
           {hasRealReviews && (
             <div className="flex items-center gap-1.5">
               <div className="flex items-center gap-0.5">
                 {[1, 2, 3, 4, 5].map((star) => (
-                  <Star key={star} size={9} fill={star <= Math.round(avgRating) ? "#c8f000" : "none"} color={star <= Math.round(avgRating) ? "#c8f000" : "#444"} />
+                  <Star key={star} size={11} fill={star <= Math.round(avgRating) ? "#c8f000" : "none"} color={star <= Math.round(avgRating) ? "#c8f000" : "#555"} />
                 ))}
               </div>
-              <span className="text-[9px] text-white/30" style={{ fontFamily: "var(--font-mono, monospace)" }}>
+              <span className="text-[11px] text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>
                 {avgRating.toFixed(1)} ({reviewCount})
               </span>
             </div>
           )}
 
-          {/* Price */}
-          <div className="flex items-baseline gap-2 mt-auto pt-1">
-            <span className="text-base font-black text-white" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-              €{Number(price).toFixed(2)}
+          <div className="mt-auto flex items-baseline gap-2 pt-1">
+            <span className="text-[26px] font-extrabold leading-none text-[#c8f000]" style={{ fontFamily: "var(--font-display, sans-serif)", fontVariantNumeric: "tabular-nums" }}>
+              €{Number(price).toFixed(2).replace(".00", "")}
             </span>
             {hasDiscount && (
-              <>
-                <span className="text-xs text-white/30 line-through" style={{ fontFamily: "var(--font-mono, monospace)" }}>
-                  €{Number(displayOriginalPrice).toFixed(2)}
-                </span>
-                <span
-                  className="text-[9px] font-black px-1.5 py-0.5 rounded-full"
-                  style={{ background: "rgba(239,68,68,0.12)", color: "#f87171", fontFamily: "var(--font-mono, monospace)" }}
-                >
-                  -€{(displayOriginalPrice - price).toFixed(2)}
-                </span>
-              </>
+              <span className="text-sm text-white/50 line-through" style={{ fontFamily: "var(--font-mono, monospace)" }}>
+                €{Number(displayOriginalPrice).toFixed(0)}
+              </span>
             )}
+            <span className="ml-auto text-[11px] font-semibold uppercase tracking-wide text-white/60" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+              Spedizione gratis
+            </span>
           </div>
+
+          {/* La taglia si sceglie nella scheda: niente aggiunta al carrello senza taglia */}
+          <Link
+            href={href}
+            className="mt-2 flex min-h-[44px] items-center justify-center gap-2 rounded-[6px] bg-[#c8f000] text-[13px] font-black uppercase tracking-[0.14em] text-[#0a0a0a] transition-colors hover:bg-[#d8ff1a] active:translate-y-px"
+            style={{ fontFamily: "var(--font-display, sans-serif)" }}
+          >
+            <ShoppingCart size={15} />
+            Scegli la taglia
+          </Link>
         </div>
       </div>
     </div>

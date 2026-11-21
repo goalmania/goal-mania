@@ -94,32 +94,17 @@ export default function HomeCategoryCards() {
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         {/* Section header */}
-        <div className="flex items-center gap-4 mb-8">
+        <div className="mb-8 flex items-end gap-4">
           <div>
-            <div
-              className="text-[10px] uppercase tracking-[4px] mb-1"
-              style={{ fontFamily: "var(--font-mono,monospace)", color: "rgba(200,240,0,0.6)" }}
-            >
-              // Shop per campionato
-            </div>
-            <h2
-              className="font-black uppercase text-white leading-none"
-              style={{
-                fontFamily: "var(--font-display,'Barlow Condensed',sans-serif)",
-                fontSize: "clamp(1.8rem,4vw,2.8rem)",
-                letterSpacing: "0.5px",
-              }}
-            >
-              Scegli la tua{" "}
-              <span style={{ color: "#c8f000" }}>Categoria</span>
-            </h2>
+            <p className="gm-eyebrow">Shop per campionato</p>
+            <h2 className="gm-section-title">Scegli la categoria</h2>
           </div>
           <Link
             href="/shop"
-            className="ml-auto hidden md:inline-flex items-center gap-2 text-xs uppercase tracking-widest transition-all duration-200 hover:gap-3"
-            style={{ fontFamily: "var(--font-mono,monospace)", color: "rgba(200,240,0,0.6)" }}
+            className="ml-auto hidden items-center gap-2 text-sm font-bold uppercase tracking-widest text-[#c8f000] transition-all duration-200 hover:gap-3 md:inline-flex"
+            style={{ fontFamily: "var(--font-display,sans-serif)" }}
           >
-            Vedi tutto <ArrowRight size={14} />
+            Vedi tutto <ArrowRight size={16} />
           </Link>
         </div>
 

@@ -61,13 +61,11 @@ function ArrowBtn({
     <button
       onClick={onClick}
       disabled={disabled}
-      className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95"
+      className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-[6px] transition-all duration-200 active:scale-95"
       style={{
-        background: disabled ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.07)",
-        border: disabled
-          ? "1px solid rgba(255,255,255,0.04)"
-          : "1px solid rgba(200,240,0,0.2)",
-        color: disabled ? "rgba(255,255,255,0.15)" : "#c8f000",
+        background: disabled ? "rgba(255,255,255,0.04)" : "#c8f000",
+        border: "1px solid transparent",
+        color: disabled ? "rgba(255,255,255,0.3)" : "#0a0a0a",
         cursor: disabled ? "not-allowed" : "pointer",
       }}
     >
@@ -133,19 +131,15 @@ export default function LandingCategorySection({
         {/* Section header */}
         <div className="flex items-end justify-between mb-6">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/25 mb-1">
-              Collezione
-            </p>
-            <h2 className="text-xl md:text-2xl font-black uppercase italic text-white leading-none">
-              {title}
-            </h2>
+            <p className="gm-eyebrow">Collezione</p>
+            <h2 className="gm-section-title !text-[clamp(1.75rem,5vw,2.75rem)]">{title}</h2>
           </div>
           <div className="flex items-center gap-4">
             {viewAllHref && (
               <Link
                 href={viewAllHref}
-                className="hidden md:inline-flex text-[10px] uppercase tracking-widest transition-opacity duration-200 hover:opacity-70"
-                style={{ fontFamily: "var(--font-mono,monospace)", color: "#c8f000" }}
+                className="hidden text-sm font-bold uppercase tracking-widest transition-opacity duration-200 hover:opacity-70 md:inline-flex"
+                style={{ fontFamily: "var(--font-display,sans-serif)", color: "#c8f000" }}
               >
                 Vedi tutto
               </Link>

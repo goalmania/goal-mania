@@ -57,30 +57,11 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
   return (
     <section className="py-12 md:py-16 lg:py-20 bg-[#0a0a0a]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section header with social proof */}
-        <div className="text-center mb-10">
-          <div className="flex items-center justify-center gap-3 mb-3">
-            <span className="w-6 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
-            <span
-              className="text-[10px] uppercase tracking-[4px]"
-              style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
-            >
-              // In evidenza
-            </span>
-            <span className="w-6 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
-          </div>
-          <h2
-            className="font-black uppercase text-white leading-tight mb-3"
-            style={{
-              fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
-              fontSize: "clamp(1.8rem, 4vw, 3rem)",
-              letterSpacing: "1px",
-            }}
-          >
-            Scelti per <span style={{ color: "#c8f000" }}>Te</span>
-          </h2>
-          <p className="text-white/40 max-w-xl mx-auto text-sm leading-relaxed" style={{ fontFamily: "var(--font-body, sans-serif)" }}>
-            Scopri la nostra selezione di maglie • Spedizione gratuita e reso entro 14 giorni
+        <div className="mb-8 md:mb-10">
+          <p className="gm-eyebrow">In evidenza</p>
+          <h2 className="gm-section-title">Scelti per te</h2>
+          <p className="gm-muted mt-4 max-w-xl text-base leading-relaxed" style={{ fontFamily: "var(--font-body, sans-serif)" }}>
+            Spedizione gratuita e reso entro 14 giorni. Tre maglie nello stesso ordine: ne paghi due.
           </p>
         </div>
 
