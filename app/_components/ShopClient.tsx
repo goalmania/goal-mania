@@ -62,7 +62,7 @@ interface Product {
 const NAV_ITEMS = [
   { label: "Tutto", href: "#top" },
   { label: "Nuovi Arrivi", href: "#nuovi-arrivi" },
-  { label: "Bestseller", href: "#bestseller" },
+  { label: "In evidenza", href: "#bestseller" },
   { label: "26/27", href: "#stagione-2627" },
   { label: "Serie A", href: "#serie-a-section" },
   { label: "Premier League", href: "#premier-section" },
@@ -327,25 +327,20 @@ function BestsellerSection({ products }: { products: Product[] }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-6 relative z-0">
         <div className="flex items-end justify-between flex-wrap gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-4 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
-              <span className="text-[9px] uppercase tracking-[3px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}>
-                // Scelti da Goal Mania
-              </span>
-            </div>
-            <h2 className="font-black uppercase text-white" style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", letterSpacing: "-0.5px" }}>
-              I Più Venduti
+            <p className="gm-eyebrow">Scelti da Goal Mania</p>
+            <h2 className="gm-section-title !text-[clamp(1.75rem,5vw,2.75rem)]">
+              Selezione Goal Mania
             </h2>
           </div>
-          <Link href="#nuovi-arrivi" className="text-xs font-bold uppercase tracking-widest transition-colors hover:text-white flex items-center gap-1.5" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.35)" }}>
+          <Link href="#nuovi-arrivi" className="text-xs font-bold uppercase tracking-widest transition-colors hover:text-white flex items-center gap-1.5" style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}>
             Vedi tutto <ArrowRight size={12} />
           </Link>
         </div>
       </div>
 
-      <ProductCarousel products={products} badge="🏆 Top" />
+      <ProductCarousel products={products} />
 
-      <p className="text-center mt-3 text-[9px] uppercase tracking-[2px] relative z-20" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.15)" }}>
+      <p className="text-center mt-3 text-[9px] uppercase tracking-[2px] relative z-20" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.55)" }}>
         ← trascina per scorrere • clicca per vedere la maglia →
       </p>
     </section>
@@ -359,7 +354,7 @@ function BestsellerSection({ products }: { products: Product[] }) {
 type SortOption = "bestseller" | "newest" | "price_asc" | "price_desc" | "discount";
 
 const SORT_OPTIONS: { value: SortOption; label: string; icon: React.ReactNode }[] = [
-  { value: "bestseller", label: "Più Venduti",  icon: <TrendingUp size={11} /> },
+  { value: "bestseller", label: "In evidenza",  icon: <TrendingUp size={11} /> },
   { value: "newest",     label: "Novità",        icon: <Clock size={11} /> },
   { value: "price_asc",  label: "Prezzo ↑",      icon: <ArrowUp size={11} /> },
   { value: "price_desc", label: "Prezzo ↓",      icon: <ArrowDown size={11} /> },
@@ -457,12 +452,7 @@ function NuoviArrivi({ products }: { products: Product[] }) {
         {/* Header + sort */}
         <div className="flex items-end justify-between mb-6 flex-wrap gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-4 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
-              <span className="text-[9px] uppercase tracking-[3px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}>
-                // Le Migliori Maglie
-              </span>
-            </div>
+            <p className="gm-eyebrow">Le Migliori Maglie</p>
             <h2
               className="font-black uppercase text-white"
               style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", letterSpacing: "-0.5px" }}
@@ -487,7 +477,7 @@ function NuoviArrivi({ products }: { products: Product[] }) {
       )}
 
       <p className="text-center mt-3 text-[9px] uppercase tracking-[2px] relative z-20"
-        style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.15)" }}>
+        style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.55)" }}>
         ← trascina per scorrere • clicca per vedere la maglia →
       </p>
     </section>
@@ -515,12 +505,7 @@ function Section2627({ products }: { products: Product[] }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-6 relative z-0">
         <div className="flex items-end justify-between flex-wrap gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-4 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
-              <span className="text-[9px] uppercase tracking-[3px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}>
-                // Stagione in corso
-              </span>
-            </div>
+            <p className="gm-eyebrow">Stagione in corso</p>
             <h2
               className="font-black uppercase text-white"
               style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", letterSpacing: "-0.5px" }}
@@ -549,7 +534,7 @@ function Section2627({ products }: { products: Product[] }) {
 
       <ProductCarousel products={products} badge="✦ 26/27" />
 
-      <p className="text-center mt-3 text-[9px] uppercase tracking-[2px] relative z-20" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.15)" }}>
+      <p className="text-center mt-3 text-[9px] uppercase tracking-[2px] relative z-20" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.55)" }}>
         ← trascina per scorrere • clicca per vedere la maglia →
       </p>
     </section>
@@ -586,12 +571,7 @@ function RetroSection({ products }: { products: Product[] }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-6 relative z-0">
         <div className="flex items-end justify-between flex-wrap gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-4 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
-              <span className="text-[9px] uppercase tracking-[3px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}>
-                // Leggende del Calcio
-              </span>
-            </div>
+            <p className="gm-eyebrow">Leggende del Calcio</p>
             <h2
               className="font-black uppercase text-white"
               style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", letterSpacing: "-0.5px" }}
@@ -619,7 +599,7 @@ function RetroSection({ products }: { products: Product[] }) {
 
       <ProductCarousel products={products} badge="🏛 Retro" />
 
-      <p className="text-center mt-3 text-[9px] uppercase tracking-[2px] relative z-20" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.15)" }}>
+      <p className="text-center mt-3 text-[9px] uppercase tracking-[2px] relative z-20" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.55)" }}>
         ← trascina per scorrere • clicca per vedere la maglia →
       </p>
     </section>

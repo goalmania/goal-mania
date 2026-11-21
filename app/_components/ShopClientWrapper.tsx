@@ -56,7 +56,8 @@ async function fetchBestSellingProducts(): Promise<Product[]> {
       "Maglia Barcellona 2010/11 Home"
     ];
     await connectDB();
-    const bestSellers = await ProductModel.find({ title: { $in: bestSellerTitles } }).lean();
+    // solo prodotti attivi: un prodotto spento non deve comparire (prezzo vecchio, niente foto)
+    const bestSellers = await ProductModel.find({ title: { $in: bestSellerTitles }, isActive: true }).lean();
     return JSON.parse(JSON.stringify(bestSellers)).map(mapProduct);
   } catch (error) {
     console.error("Error fetching best selling products:", error);
