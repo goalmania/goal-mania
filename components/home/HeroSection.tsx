@@ -75,7 +75,7 @@ export default function HeroSection({ products = [] }: Props) {
   return (
     <section
       className="relative w-full flex flex-col overflow-hidden"
-      style={{ background: "#070707", minHeight: "clamp(460px, 76svh, 640px)" }}
+      style={{ background: "#070707", minHeight: "clamp(340px, 76svh, 640px)" }}
     >
       {/* Hero bg — jersey collage */}
       <div className="absolute inset-0">
@@ -121,7 +121,7 @@ export default function HeroSection({ products = [] }: Props) {
 
 
       {/* ── Main ── */}
-      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between flex-1 container mx-auto px-6 lg:px-12 max-w-7xl pt-12 pb-16 lg:pt-16 gap-10">
+      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between flex-1 container mx-auto px-6 lg:px-12 max-w-7xl pt-8 pb-10 lg:pt-16 lg:pb-16 gap-10">
 
         {/* LEFT */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left max-w-2xl">
@@ -235,7 +235,7 @@ export default function HeroSection({ products = [] }: Props) {
 
         {/* RIGHT: rotating product card */}
         <div
-          className={`flex-shrink-0 transition-all duration-1000 delay-200 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+          className={`hidden lg:block flex-shrink-0 transition-all duration-1000 delay-200 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
         >
           <div
             className="relative w-60 lg:w-[300px]"
@@ -354,7 +354,7 @@ export default function HeroSection({ products = [] }: Props) {
       </div>
 
       {/* ── Stats bar ── */}
-      <div className="relative z-10 border-t" style={{ borderColor: "rgba(200,240,0,0.08)" }}>
+      <div className="relative z-10 hidden md:block border-t" style={{ borderColor: "rgba(200,240,0,0.08)" }}>
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/5">
             {[

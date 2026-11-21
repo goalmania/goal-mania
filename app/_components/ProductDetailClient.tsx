@@ -257,6 +257,7 @@ export default function ProductDetailClient({
   const [selectedImage, setSelectedImage] = useState(0);
   const [imgErrors, setImgErrors] = useState<Record<number, boolean>>({});
   const [quantity, setQuantity] = useState(1);
+  const [customOpen, setCustomOpen] = useState(false); // personalizzazione chiusa di default: prima taglia e acquisto
   const [sizeChartOpen, setSizeChartOpen] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
   const deliveryCountdown = "Spedizione gratuita · consegna in 7-10 giorni lavorativi"; // testo fisso, nessun conto alla rovescia inventato
@@ -678,14 +679,85 @@ export default function ProductDetailClient({
               </div>
             )}
 
-            {/* Description */}
-            {product.description && (
-              <div>
-                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
-                  {product.description}
-                </p>
+            {/* ── SIZE + SLEEVE ─────────────────────────────────────── */}
+            <div
+              className="rounded-[24px] overflow-hidden"
+              style={{ border: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.015)" }}
+            >
+              <div className="px-4 py-3 border-b flex items-center justify-between" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+                <span className="text-[9px] font-black uppercase tracking-[3px]" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-mono,monospace)" }}>
+                  // Taglia
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setSizeChartOpen(true)}
+                  className="text-[10px] font-black"
+                  style={{ color: "#c8f000", textDecoration: "underline", fontFamily: "var(--font-mono,monospace)" }}
+                >
+                  Guida taglie →
+                </button>
               </div>
-            )}
+
+              <div className="p-4 space-y-4">
+                {/* Adult / Kids toggle */}
+                {product.kidsSizes && product.kidsSizes.length > 0 && (
+                  <div className="flex gap-1 p-1 rounded-xl self-start" style={{ background: "rgba(255,255,255,0.04)", width: "fit-content" }}>
+                    {["ADULT", "KIDS"].map(type => (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => setCustomization(p => ({ ...p, isKidSize: type === "KIDS", size: "" }))}
+                        className="px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all"
+                        style={{
+                          background: (type === "KIDS") === customization.isKidSize ? "rgba(255,255,255,0.08)" : "transparent",
+                          color: (type === "KIDS") === customization.isKidSize ? "#fff" : "rgba(255,255,255,0.3)",
+                          fontFamily: "var(--font-mono,monospace)",
+                        }}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Size grid */}
+                <div className="flex flex-wrap gap-2">
+                  {(customization.isKidSize ? product.kidsSizes : product.adultSizes)?.map(size => (
+                    <SizeBtn
+                      key={size}
+                      size={size}
+                      selected={customization.size === size}
+                      onClick={() => setCustomization(p => ({ ...p, size }))}
+                    />
+                  ))}
+                </div>
+
+                {errors.size && (
+                  <p className="text-[10px] font-black text-red-400 uppercase tracking-tight flex items-center gap-1">
+                    <span>⚠️</span> {errors.size}
+                  </p>
+                )}
+
+                {/* Long sleeve toggle */}
+                <div
+                  className="flex items-center justify-between p-3.5 rounded-2xl"
+                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+                >
+                  <div>
+                    <p className="text-[12px] font-black text-white" style={{ fontFamily: "var(--font-display,sans-serif)" }}>
+                      Manica lunga
+                    </p>
+                    <p className="text-[10px] font-black" style={{ color: "rgba(200,240,0,0.6)", fontFamily: "var(--font-mono,monospace)" }}>
+                      +€{EXTRAS_PRICES.long_sleeve}.00
+                    </p>
+                  </div>
+                  <Switch
+                    checked={customization.hasLongSleeve}
+                    onCheckedChange={val => setCustomization(p => ({ ...p, hasLongSleeve: val }))}
+                  />
+                </div>
+              </div>
+            </div>
 
             {/* ── CUSTOMIZATION SECTION ──────────────────────────────── */}
             {!product.isMysteryBox && (
@@ -693,15 +765,23 @@ export default function ProductDetailClient({
                 className="rounded-[24px] overflow-hidden"
                 style={{ border: "1px solid rgba(200,240,0,0.1)", background: "rgba(200,240,0,0.015)" }}
               >
-                <div className="px-4 py-3 border-b" style={{ borderColor: "rgba(200,240,0,0.08)" }}>
+                <button
+                  type="button"
+                  onClick={() => setCustomOpen((o) => !o)}
+                  aria-expanded={customOpen}
+                  className="flex w-full items-center justify-between px-4 py-3 text-left"
+                  style={{ borderBottom: customOpen ? "1px solid rgba(200,240,0,0.08)" : "none", minHeight: 48 }}
+                >
                   <span
-                    className="text-[9px] font-black uppercase tracking-[3px]"
+                    className="text-[10px] font-black uppercase tracking-[2px]"
                     style={{ color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}
                   >
-                    // Personalizza la tua maglia
+                    // Personalizza: nome, numero, patch (opzionale)
                   </span>
-                </div>
+                  <span className="text-lg font-black" style={{ color: "#c8f000" }}>{customOpen ? "−" : "+"}</span>
+                </button>
 
+                {customOpen && (
                 <div className="p-4 space-y-6">
 
                   {/* STEP 1: Tipo maglia */}
@@ -845,6 +925,7 @@ export default function ProductDetailClient({
                   )}
 
                 </div>
+                )}
               </div>
             )}
 
@@ -879,86 +960,6 @@ export default function ProductDetailClient({
                 </div>
               </div>
             )}
-
-            {/* ── SIZE + SLEEVE ─────────────────────────────────────── */}
-            <div
-              className="rounded-[24px] overflow-hidden"
-              style={{ border: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.015)" }}
-            >
-              <div className="px-4 py-3 border-b flex items-center justify-between" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-                <span className="text-[9px] font-black uppercase tracking-[3px]" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-mono,monospace)" }}>
-                  // Taglia
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setSizeChartOpen(true)}
-                  className="text-[10px] font-black"
-                  style={{ color: "#c8f000", textDecoration: "underline", fontFamily: "var(--font-mono,monospace)" }}
-                >
-                  Guida taglie →
-                </button>
-              </div>
-
-              <div className="p-4 space-y-4">
-                {/* Adult / Kids toggle */}
-                {product.kidsSizes && product.kidsSizes.length > 0 && (
-                  <div className="flex gap-1 p-1 rounded-xl self-start" style={{ background: "rgba(255,255,255,0.04)", width: "fit-content" }}>
-                    {["ADULT", "KIDS"].map(type => (
-                      <button
-                        key={type}
-                        type="button"
-                        onClick={() => setCustomization(p => ({ ...p, isKidSize: type === "KIDS", size: "" }))}
-                        className="px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all"
-                        style={{
-                          background: (type === "KIDS") === customization.isKidSize ? "rgba(255,255,255,0.08)" : "transparent",
-                          color: (type === "KIDS") === customization.isKidSize ? "#fff" : "rgba(255,255,255,0.3)",
-                          fontFamily: "var(--font-mono,monospace)",
-                        }}
-                      >
-                        {type}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Size grid */}
-                <div className="flex flex-wrap gap-2">
-                  {(customization.isKidSize ? product.kidsSizes : product.adultSizes)?.map(size => (
-                    <SizeBtn
-                      key={size}
-                      size={size}
-                      selected={customization.size === size}
-                      onClick={() => setCustomization(p => ({ ...p, size }))}
-                    />
-                  ))}
-                </div>
-
-                {errors.size && (
-                  <p className="text-[10px] font-black text-red-400 uppercase tracking-tight flex items-center gap-1">
-                    <span>⚠️</span> {errors.size}
-                  </p>
-                )}
-
-                {/* Long sleeve toggle */}
-                <div
-                  className="flex items-center justify-between p-3.5 rounded-2xl"
-                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
-                >
-                  <div>
-                    <p className="text-[12px] font-black text-white" style={{ fontFamily: "var(--font-display,sans-serif)" }}>
-                      Manica lunga
-                    </p>
-                    <p className="text-[10px] font-black" style={{ color: "rgba(200,240,0,0.6)", fontFamily: "var(--font-mono,monospace)" }}>
-                      +€{EXTRAS_PRICES.long_sleeve}.00
-                    </p>
-                  </div>
-                  <Switch
-                    checked={customization.hasLongSleeve}
-                    onCheckedChange={val => setCustomization(p => ({ ...p, hasLongSleeve: val }))}
-                  />
-                </div>
-              </div>
-            </div>
 
             {/* ── CTA BLOCK ──────────────────────────────────────────── */}
             <div className="space-y-3 pb-4">
@@ -1083,6 +1084,16 @@ export default function ProductDetailClient({
                 />
               </div>
             </div>
+
+            {/* Description */}
+            {product.description && (
+              <div>
+                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
+                  {product.description}
+                </p>
+              </div>
+            )}
+
           </div>
         </div>
       </div>
