@@ -429,20 +429,19 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
 
           {/* Tagline */}
           <p
-            className="text-sm max-w-lg mb-2 leading-relaxed"
+            className="hidden md:block text-sm max-w-lg mb-2 leading-relaxed"
             style={{ color: "rgba(255,255,255,0.4)", fontStyle: "italic" }}
           >
             "Il calcio è emozione, la storia è immortale."
           </p>
-          <p className="text-xs text-white/30 max-w-xl mb-8">
+          <p className="hidden md:block text-xs text-white/30 max-w-xl mb-8">
             Dal Napoli di Maradona al Brasile del Penta, passando per il Triplete
             dell'Inter e la Barcellona di Guardiola — ogni maglia racconta una storia.
           </p>
 
           {/* Stats strip */}
-          <div className="flex flex-wrap items-center gap-6">
+          <div className="hidden md:flex flex-wrap items-center gap-6">
             {[
-              { icon: Clock,  val: `Dal ${new Date().getFullYear() - 37}`, label: "Oltre 35 anni di storia" },
               { icon: Flame,  val: `${products.length}+`, label: "Maglie in collezione" },
               { icon: Trophy, val: "3",  label: "Ere del calcio" },
             ].map(({ icon: Icon, val, label }) => (

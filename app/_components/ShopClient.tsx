@@ -185,15 +185,15 @@ function ShopHero({ featuredProducts: products }: { featuredProducts: Product[] 
         {/* Left: Copy */}
         <div className="flex-1 min-w-0">
           {/* Live badge */}
-          <div className="inline-flex items-center gap-2 mb-7 px-3 py-1.5 rounded-full" style={{ background: "rgba(200,240,0,0.07)", border: "1px solid rgba(200,240,0,0.15)" }}>
+          <div className="inline-flex items-center gap-2 mb-4 md:mb-7 px-3 py-1.5 rounded-full" style={{ background: "rgba(200,240,0,0.07)", border: "1px solid rgba(200,240,0,0.15)" }}>
             <span className="w-1.5 h-1.5 rounded-full bg-[#c8f000] animate-pulse" />
             <span className="text-[10px] uppercase tracking-[3px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}>
-              // Stagione 2025/26 Live
+              // Stagione 2026/27
             </span>
           </div>
 
           <h1
-            className="font-black uppercase text-white mb-6 leading-[0.9]"
+            className="font-black uppercase text-white mb-3 md:mb-6 leading-[0.9]"
             style={{
               fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
               fontSize: "clamp(3rem, 8vw, 6rem)",
@@ -205,13 +205,13 @@ function ShopHero({ featuredProducts: products }: { featuredProducts: Product[] 
             da Calcio
           </h1>
 
-          <p className="text-sm mb-10 max-w-md" style={{ color: "rgba(255,255,255,0.45)", fontFamily: "var(--font-body, sans-serif)", lineHeight: "1.75" }}>
+          <p className="hidden md:block text-sm mb-10 max-w-md" style={{ color: "rgba(255,255,255,0.45)", fontFamily: "var(--font-body, sans-serif)", lineHeight: "1.75" }}>
             Serie A, Premier League, Champions League, Nazionali —<br />
             tutta la passione del calcio in un unico posto.
           </p>
 
           {/* Stats row */}
-          <div className="flex items-center gap-8 mb-10 flex-wrap">
+          <div className="hidden md:flex items-center gap-8 mb-10 flex-wrap">
             {[
               { num: "900+", label: "Maglie",      icon: <Trophy size={14} /> },
               { num: "50+",    label: "Squadre",     icon: <Globe size={14} /> },
@@ -243,7 +243,7 @@ function ShopHero({ featuredProducts: products }: { featuredProducts: Product[] 
               className="px-7 py-3.5 rounded-full font-black text-sm uppercase tracking-widest transition-all hover:border-white/30"
               style={{ background: "transparent", color: "rgba(255,255,255,0.65)", border: "1.5px solid rgba(255,255,255,0.12)", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px" }}
             >
-              Bestseller
+              In evidenza
             </a>
           </div>
         </div>
