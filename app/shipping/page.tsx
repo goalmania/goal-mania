@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function ShippingPage() {
   return (
-    <div className="bg-gradient-to-b from-white to-blue-50 min-h-screen">
+    <div className="bg-[#070707] min-h-screen">
       <div className="container mx-auto px-6 sm:px-10 lg:px-20 pt-12 pb-12">
         {/* Header */}
         <div className="text-center mb-12">
@@ -37,29 +37,29 @@ export default function ShippingPage() {
           {/* Delivery Options */}
           <div className="grid lg:grid-cols-2 gap-8 mb-12">
             {/* Domestic Delivery */}
-            <div className="bg-[#0a0a0a] rounded-2xl shadow-xl p-8">
+            <div className="bg-[#111111] border border-white/10 rounded-2xl shadow-xl p-8">
               <div className="flex items-center mb-6">
                 <MapPin className="h-8 w-8 text-[#c8f000] mr-3" />
-                <h2 className="text-2xl font-bold text-[#0a0a0a]">Domestic Delivery (Italy)</h2>
+                <h2 className="text-2xl font-bold text-white">Domestic Delivery (Italy)</h2>
               </div>
               <div className="space-y-4">
                 <div className="flex justify-between items-center py-3 border-b border-gray-100">
                   <div>
-                    <h3 className="font-semibold text-[#0a0a0a]">Standard Delivery</h3>
+                    <h3 className="font-semibold text-white">Standard Delivery</h3>
                     <p className="text-sm text-white/60">5-10 business days</p>
                   </div>
                   <span className="text-2xl font-bold text-[#c8f000]">FREE</span>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-gray-100">
                   <div>
-                    <h3 className="font-semibold text-[#0a0a0a]">Express Delivery</h3>
+                    <h3 className="font-semibold text-white">Express Delivery</h3>
                     <p className="text-sm text-white/60">1-2 business days</p>
                   </div>
                   <span className="text-lg font-semibold text-white/70">€9.99</span>
                 </div>
                 <div className="flex justify-between items-center py-3">
                   <div>
-                    <h3 className="font-semibold text-[#0a0a0a]">Same Day Delivery</h3>
+                    <h3 className="font-semibold text-white">Same Day Delivery</h3>
                     <p className="text-sm text-white/60">Order by 12:00 PM (Roma area)</p>
                   </div>
                   <span className="text-lg font-semibold text-white/70">€19.99</span>
@@ -68,29 +68,29 @@ export default function ShippingPage() {
             </div>
 
             {/* International Delivery */}
-            <div className="bg-[#0a0a0a] rounded-2xl shadow-xl p-8">
+            <div className="bg-[#111111] border border-white/10 rounded-2xl shadow-xl p-8">
               <div className="flex items-center mb-6">
                 <Globe className="h-8 w-8 text-[#c8f000] mr-3" />
-                <h2 className="text-2xl font-bold text-[#0a0a0a]">International Delivery</h2>
+                <h2 className="text-2xl font-bold text-white">International Delivery</h2>
               </div>
               <div className="space-y-4">
                 <div className="flex justify-between items-center py-3 border-b border-gray-100">
                   <div>
-                    <h3 className="font-semibold text-[#0a0a0a]">European Union</h3>
+                    <h3 className="font-semibold text-white">European Union</h3>
                     <p className="text-sm text-white/60">5-7 business days</p>
                   </div>
                   <span className="text-lg font-semibold text-white/70">€12.99</span>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-gray-100">
                   <div>
-                    <h3 className="font-semibold text-[#0a0a0a]">Rest of Europe</h3>
+                    <h3 className="font-semibold text-white">Rest of Europe</h3>
                     <p className="text-sm text-white/60">7-10 business days</p>
                   </div>
                   <span className="text-lg font-semibold text-white/70">€15.99</span>
                 </div>
                 <div className="flex justify-between items-center py-3">
                   <div>
-                    <h3 className="font-semibold text-[#0a0a0a]">Worldwide</h3>
+                    <h3 className="font-semibold text-white">Worldwide</h3>
                     <p className="text-sm text-white/60">10-15 business days</p>
                   </div>
                   <span className="text-lg font-semibold text-white/70">€24.99</span>
@@ -100,35 +100,35 @@ export default function ShippingPage() {
           </div>
 
           {/* Delivery Process */}
-          <div className="bg-[#0a0a0a] rounded-2xl shadow-xl p-8 mb-12">
-            <h2 className="text-3xl font-bold text-[#0a0a0a] mb-8 text-center">How Delivery Works</h2>
+          <div className="bg-[#111111] border border-white/10 rounded-2xl shadow-xl p-8 mb-12">
+            <h2 className="text-3xl font-bold text-white mb-8 text-center">How Delivery Works</h2>
             <div className="grid md:grid-cols-4 gap-6">
               <div className="text-center">
                 <div className="bg-[#c8f000] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-white font-bold text-xl">1</span>
                 </div>
-                <h3 className="font-semibold text-lg text-[#0a0a0a] mb-2">Order Placed</h3>
+                <h3 className="font-semibold text-lg text-white mb-2">Order Placed</h3>
                 <p className="text-white/60 text-sm">Your order is confirmed and payment is processed securely</p>
               </div>
               <div className="text-center">
                 <div className="bg-[#c8f000] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-white font-bold text-xl">2</span>
                 </div>
-                <h3 className="font-semibold text-lg text-[#0a0a0a] mb-2">Order Processed</h3>
+                <h3 className="font-semibold text-lg text-white mb-2">Order Processed</h3>
                 <p className="text-white/60 text-sm">We pick, pack, and prepare your jersey for shipment</p>
               </div>
               <div className="text-center">
                 <div className="bg-[#c8f000] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-white font-bold text-xl">3</span>
                 </div>
-                <h3 className="font-semibold text-lg text-[#0a0a0a] mb-2">Dispatched</h3>
+                <h3 className="font-semibold text-lg text-white mb-2">Dispatched</h3>
                 <p className="text-white/60 text-sm">Your order is dispatched with tracking information sent to your email</p>
               </div>
               <div className="text-center">
                 <div className="bg-[#c8f000] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-white font-bold text-xl">4</span>
                 </div>
-                <h3 className="font-semibold text-lg text-[#0a0a0a] mb-2">Delivered</h3>
+                <h3 className="font-semibold text-lg text-white mb-2">Delivered</h3>
                 <p className="text-white/60 text-sm">Your jersey arrives safely at your doorstep</p>
               </div>
             </div>
@@ -138,27 +138,27 @@ export default function ShippingPage() {
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <div className="bg-[#0a0a0a] rounded-xl p-6 shadow-lg text-center">
               <Package className="h-12 w-12 text-[#c8f000] mx-auto mb-4" />
-              <h3 className="font-semibold text-lg text-[#0a0a0a] mb-2">Secure Packaging</h3>
+              <h3 className="font-semibold text-lg text-white mb-2">Secure Packaging</h3>
               <p className="text-white/60 text-sm">All jerseys are carefully packaged to ensure they arrive in perfect condition</p>
             </div>
             <div className="bg-[#0a0a0a] rounded-xl p-6 shadow-lg text-center">
               <Shield className="h-12 w-12 text-[#c8f000] mx-auto mb-4" />
-              <h3 className="font-semibold text-lg text-[#0a0a0a] mb-2">Insurance Included</h3>
+              <h3 className="font-semibold text-lg text-white mb-2">Insurance Included</h3>
               <p className="text-white/60 text-sm">All deliveries include insurance for your peace of mind</p>
             </div>
             <div className="bg-[#0a0a0a] rounded-xl p-6 shadow-lg text-center">
               <Clock className="h-12 w-12 text-[#c8f000] mx-auto mb-4" />
-              <h3 className="font-semibold text-lg text-[#0a0a0a] mb-2">Real-time Tracking</h3>
+              <h3 className="font-semibold text-lg text-white mb-2">Real-time Tracking</h3>
               <p className="text-white/60 text-sm">Track your order from warehouse to doorstep with detailed updates</p>
             </div>
           </div>
 
           {/* Important Information */}
-          <div className="bg-[#0a0a0a] rounded-2xl shadow-xl p-8">
-            <h2 className="text-3xl font-bold text-[#0a0a0a] mb-6">Important Delivery Information</h2>
+          <div className="bg-[#111111] border border-white/10 rounded-2xl shadow-xl p-8">
+            <h2 className="text-3xl font-bold text-white mb-6">Important Delivery Information</h2>
             <div className="grid md:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-xl font-semibold text-[#0a0a0a] mb-4">Processing Times</h3>
+                <h3 className="text-xl font-semibold text-white mb-4">Processing Times</h3>
                 <ul className="space-y-2 text-white/70">
                   <li>• Orders placed before 2:00 PM CET are dispatched same day</li>
                   <li>• Orders placed after 2:00 PM CET are dispatched next business day</li>
@@ -167,7 +167,7 @@ export default function ShippingPage() {
                 </ul>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-[#0a0a0a] mb-4">Delivery Notes</h3>
+                <h3 className="text-xl font-semibold text-white mb-4">Delivery Notes</h3>
                 <ul className="space-y-2 text-white/70">
                   <li>• Signature may be required for high-value orders</li>
                   <li>• Delivery attempts are made during business hours</li>
@@ -179,27 +179,27 @@ export default function ShippingPage() {
           </div>
 
           {/* FAQ Section */}
-          <div className="mt-12 bg-[#0a0a0a] rounded-2xl shadow-xl p-8">
-            <h2 className="text-3xl font-bold text-[#0a0a0a] mb-8 text-center">Frequently Asked Questions</h2>
+          <div className="mt-12 bg-[#111111] border border-white/10 rounded-2xl shadow-xl p-8">
+            <h2 className="text-3xl font-bold text-white mb-8 text-center">Frequently Asked Questions</h2>
             <div className="space-y-6">
               <div className="border-b border-white/8 pb-6">
-                <h3 className="font-semibold text-lg text-[#0a0a0a] mb-2">When will I receive my tracking number?</h3>
+                <h3 className="font-semibold text-lg text-white mb-2">When will I receive my tracking number?</h3>
                 <p className="text-white/70">You'll receive a tracking number via email within 24 hours of your order being dispatched.</p>
               </div>
               <div className="border-b border-white/8 pb-6">
-                <h3 className="font-semibold text-lg text-[#0a0a0a] mb-2">What if my package is lost or damaged?</h3>
+                <h3 className="font-semibold text-lg text-white mb-2">What if my package is lost or damaged?</h3>
                 <p className="text-white/70">All deliveries are insured. Contact us immediately if your package is lost or damaged, and we'll help resolve the issue.</p>
               </div>
               <div className="border-b border-white/8 pb-6">
-                <h3 className="font-semibold text-lg text-[#0a0a0a] mb-2">Do you deliver to PO boxes?</h3>
+                <h3 className="font-semibold text-lg text-white mb-2">Do you deliver to PO boxes?</h3>
                 <p className="text-white/70">Yes, we deliver to PO boxes. However, some express delivery options may not be available for PO box addresses.</p>
               </div>
               <div className="border-b border-white/8 pb-6">
-                <h3 className="font-semibold text-lg text-[#0a0a0a] mb-2">Can I change my delivery address after ordering?</h3>
+                <h3 className="font-semibold text-lg text-white mb-2">Can I change my delivery address after ordering?</h3>
                 <p className="text-white/70">You can change your delivery address within 2 hours of placing your order by contacting our customer service team.</p>
               </div>
               <div>
-                <h3 className="font-semibold text-lg text-[#0a0a0a] mb-2">What are the customs fees for international orders?</h3>
+                <h3 className="font-semibold text-lg text-white mb-2">What are the customs fees for international orders?</h3>
                 <p className="text-white/70">Customs fees vary by country and are the responsibility of the recipient. We recommend checking with your local customs office for specific rates.</p>
               </div>
             </div>
@@ -207,7 +207,7 @@ export default function ShippingPage() {
 
           {/* Contact Section */}
           <div className="mt-12 text-center">
-            <h2 className="text-2xl font-bold text-[#0a0a0a] mb-4">Need Help with Delivery?</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">Need Help with Delivery?</h2>
             <p className="text-white/60 mb-6">
               Our customer service team is here to help with any delivery questions or concerns.
             </p>

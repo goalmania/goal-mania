@@ -7,8 +7,8 @@ export const ANNOUNCEMENT_BAR_HEIGHT = 40;
 
 const PROMOS = [
   { text: "🚚 SPEDIZIONE GRATUITA su tutti gli ordini — senza minimo", href: "/shop" },
-  { text: "🎁 PRENDI 3 PAGHI 2 su tutte le maglie", href: "/shop" },
-  { text: "⚡ MAGLIE DA CALCIO A 35€ — oltre 500 modelli disponibili", href: "/shop" },
+  { text: "🖤 BLACK FRIDAY — PRENDI 3 PAGHI 2 su tutte le maglie", href: "/shop" },
+  { text: "⚡ MAGLIE DA CALCIO A 35€ — RETRO A 40€ — oltre 900 modelli", href: "/shop" },
   { text: "🔄 RESO entro 14 giorni — acquisto senza rischi", href: "/shop" },
   { text: "🏆 MONDIALI 2026 — Vesti la tua Nazionale adesso", href: "/shop/worldcup" },
 ];

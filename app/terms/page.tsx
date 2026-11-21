@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="bg-gradient-to-b from-white to-blue-50 min-h-screen">
+    <div className="bg-[#070707] min-h-screen">
       <div className="container mx-auto px-6 sm:px-10 lg:px-20 pt-12 pb-12">
         {/* Header */}
         <div className="text-center mb-12">
@@ -20,10 +20,10 @@ export default function TermsPage() {
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto bg-[#0a0a0a] rounded-2xl shadow-xl p-8">
+        <div className="max-w-4xl mx-auto bg-[#111111] border border-white/10 rounded-2xl shadow-xl p-8">
           <div className="prose prose-lg max-w-none">
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-[#0a0a0a] mb-4">1. Acceptance of Terms</h2>
+              <h2 className="text-3xl font-bold text-white mb-4">1. Acceptance of Terms</h2>
               <p className="text-white/70 mb-4">
                 By accessing and using Goal Mania's website, you accept and agree to be bound by the terms and provision of this agreement. 
                 If you do not agree to abide by the above, please do not use this service.
@@ -31,7 +31,7 @@ export default function TermsPage() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-[#0a0a0a] mb-4">2. Use License</h2>
+              <h2 className="text-3xl font-bold text-white mb-4">2. Use License</h2>
               <p className="text-white/70 mb-4">
                 Permission is granted to temporarily download one copy of the materials (information or software) on Goal Mania's website for personal, 
                 non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
@@ -45,7 +45,7 @@ export default function TermsPage() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-[#0a0a0a] mb-4">3. Product Information</h2>
+              <h2 className="text-3xl font-bold text-white mb-4">3. Product Information</h2>
               <p className="text-white/70 mb-4">
                 We strive to display our products as accurately as possible. However, we do not warrant that product descriptions, colors, 
                 information, or other content available on the site is accurate, complete, reliable, current, or error-free.
@@ -56,7 +56,7 @@ export default function TermsPage() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-[#0a0a0a] mb-4">4. Pricing and Payment</h2>
+              <h2 className="text-3xl font-bold text-white mb-4">4. Pricing and Payment</h2>
               <p className="text-white/70 mb-4">
                 All prices are shown in Euros (€) and include VAT where applicable. We reserve the right to modify prices at any time.
                 Payment must be made in full at the time of ordering.
@@ -68,7 +68,7 @@ export default function TermsPage() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-[#0a0a0a] mb-4">5. Order and Delivery</h2>
+              <h2 className="text-3xl font-bold text-white mb-4">5. Order and Delivery</h2>
               <p className="text-white/70 mb-4">
                 We offer free delivery on all orders within Italy. For international orders, delivery costs will be calculated at checkout.
                 Delivery times are estimates and may vary based on location and availability.
@@ -79,7 +79,7 @@ export default function TermsPage() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-[#0a0a0a] mb-4">6. Returns and Refunds</h2>
+              <h2 className="text-3xl font-bold text-white mb-4">6. Returns and Refunds</h2>
               <p className="text-white/70 mb-4">
                 You may withdraw from your purchase within 14 days of delivery, without giving a reason. Items must be:
               </p>
@@ -96,7 +96,7 @@ export default function TermsPage() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-[#0a0a0a] mb-4">7. Privacy Policy</h2>
+              <h2 className="text-3xl font-bold text-white mb-4">7. Privacy Policy</h2>
               <p className="text-white/70 mb-4">
                 Your privacy is important to us. Please review our Privacy Policy, which also governs your use of the website, 
                 to understand our practices regarding the collection and use of your personal information.
@@ -104,7 +104,7 @@ export default function TermsPage() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-[#0a0a0a] mb-4">8. Intellectual Property</h2>
+              <h2 className="text-3xl font-bold text-white mb-4">8. Intellectual Property</h2>
               <p className="text-white/70 mb-4">
                 The content on this website, including but not limited to text, graphics, images, logos, and software, 
                 is the property of Goal Mania and is protected by copyright laws.
@@ -115,7 +115,7 @@ export default function TermsPage() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-[#0a0a0a] mb-4">9. Limitation of Liability</h2>
+              <h2 className="text-3xl font-bold text-white mb-4">9. Limitation of Liability</h2>
               <p className="text-white/70 mb-4">
                 In no event shall Goal Mania or its suppliers be liable for any damages (including, without limitation, 
                 damages for loss of data or profit, or due to business interruption) arising out of the use or inability 
@@ -124,7 +124,7 @@ export default function TermsPage() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-[#0a0a0a] mb-4">10. Governing Law</h2>
+              <h2 className="text-3xl font-bold text-white mb-4">10. Governing Law</h2>
               <p className="text-white/70 mb-4">
                 These terms and conditions are governed by and construed in accordance with the laws of Italy. 
                 Any disputes relating to these terms and conditions will be subject to the exclusive jurisdiction 
@@ -133,7 +133,7 @@ export default function TermsPage() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-[#0a0a0a] mb-4">11. Changes to Terms</h2>
+              <h2 className="text-3xl font-bold text-white mb-4">11. Changes to Terms</h2>
               <p className="text-white/70 mb-4">
                 We reserve the right to modify these terms and conditions at any time. Changes will be effective 
                 immediately upon posting on the website. Your continued use of the website constitutes acceptance of the modified terms.
@@ -141,7 +141,7 @@ export default function TermsPage() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-[#0a0a0a] mb-4">12. Contact Information</h2>
+              <h2 className="text-3xl font-bold text-white mb-4">12. Contact Information</h2>
               <p className="text-white/70 mb-4">
                 If you have any questions about these Terms & Conditions, please contact us at:
               </p>

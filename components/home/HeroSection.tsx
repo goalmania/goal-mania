@@ -75,7 +75,7 @@ export default function HeroSection({ products = [] }: Props) {
   return (
     <section
       className="relative w-full flex flex-col overflow-hidden"
-      style={{ background: "#070707", minHeight: "min(100svh, 700px)" }}
+      style={{ background: "#070707", minHeight: "clamp(460px, 76svh, 640px)" }}
     >
       {/* Hero bg — jersey collage */}
       <div className="absolute inset-0">
@@ -126,6 +126,17 @@ export default function HeroSection({ products = [] }: Props) {
         {/* LEFT */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left max-w-2xl">
 
+          {/* Black Friday — offerta reale (regola 3x2 attiva), nessuna scadenza inventata */}
+          <Link
+            href="/shop"
+            className={`mb-4 inline-flex items-center gap-2 rounded-full px-4 py-2 transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+            style={{ background: "#c8f000", color: "#0a0a0a" }}
+          >
+            <span className="text-[11px] font-black uppercase tracking-[2px]" style={{ fontFamily: "var(--font-display,'Barlow Condensed',sans-serif)" }}>
+              Black Friday · Prendi 3, paghi 2
+            </span>
+          </Link>
+
           {/* Trust badge — real order count only, no fabricated reviews */}
           {totalOrders !== null && totalOrders > 0 && (
             <div
@@ -162,8 +173,8 @@ export default function HeroSection({ products = [] }: Props) {
             className={`text-sm md:text-base text-white/55 mb-8 max-w-md leading-relaxed transition-all duration-700 delay-200 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
             style={{ fontFamily: "var(--font-body,sans-serif)" }}
           >
-            Serie A, Premier League, World Cup 2026, Retro e molto altro.
-            Spedizione gratuita su tutti gli ordini.
+            Retro da 40€. Tre maglie nello stesso ordine: ne paghi due.
+            Spedizione gratuita, reso entro 14 giorni.
           </p>
 
           {/* CTAs */}
@@ -181,7 +192,7 @@ export default function HeroSection({ products = [] }: Props) {
               }}
             >
               <Tag className="w-4 h-4" />
-              Vedi le Maglie
+              Scegli la tua maglia
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
             <Link
@@ -196,7 +207,7 @@ export default function HeroSection({ products = [] }: Props) {
                 background: "transparent",
               }}
             >
-              ⚡ Nuovi arrivi 26/27
+              Nuovi arrivi 26/27
             </Link>
           </div>
 
@@ -362,16 +373,6 @@ export default function HeroSection({ products = [] }: Props) {
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* Scroll indicator */}
-      <div className="relative z-10 flex justify-center pb-3 pt-1">
-        <div className="flex flex-col items-center gap-1 opacity-40">
-          <span className="text-[9px] uppercase tracking-[3px] text-white/50" style={{ fontFamily: "var(--font-mono,monospace)" }}>Scopri le maglie</span>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ animation: "scrollBounce 1.4s ease-in-out infinite" }}>
-            <path d="M8 3v10M4 9l4 4 4-4" stroke="rgba(200,240,0,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
         </div>
       </div>
 

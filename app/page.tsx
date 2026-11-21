@@ -5,7 +5,6 @@ import HeroSection from "@/components/home/HeroSection";
 import TeamLogoTicker from "@/components/home/TeamLogoTicker";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
 import SocialProofSection from "@/components/home/SocialProofSection";
-import FlashSaleSection from "@/components/home/FlashSaleSection";
 import EditorialCommerceSection from "@/components/home/EditorialCommerceSection";
 import HomeCategoryCards from "@/app/_components/HomeCategoryCards";
 import ReviewsStrip from "@/components/home/ReviewsStrip";
@@ -247,15 +246,7 @@ export default async function Home() {
       {/* 2b. LOGHI SQUADRE — ticker cliccabile tra categorie e offerta */}
       <TeamLogoTicker />
 
-      {/* 2c. RECENSIONI TICKER — mostra solo recensioni reali, nascosto se non ce ne sono */}
-      <div data-reviews-strip>
-        <ReviewsStrip />
-      </div>
-
-      {/* 3. IN EVIDENZA — prodotti reali in rotazione, nessuna scarsità finta */}
-      <FlashSaleSection products={featuredProducts.slice(0, 6)} />
-
-      {/* 4. MAGLIE IN EVIDENZA — grid prodotti featured */}
+      {/* 3. MAGLIE IN EVIDENZA — subito dopo le categorie: il prodotto prima di tutto il resto */}
       <FeaturedProducts products={featuredProducts} />
 
       {/* 4a. SERIE A 2026/27 — carosello maglie stagione corrente */}
@@ -265,27 +256,32 @@ export default async function Home() {
         viewAllHref="/shop/serieA"
       />
 
-      {/* 4b1. MAGLIE RETRO — carosello maglie storiche/vintage */}
+      {/* 4b. MAGLIE RETRO — carosello maglie storiche/vintage */}
       <LandingCategorySection
         title="Maglie Retro"
         products={retroProducts}
         viewAllHref="/shop/retro"
       />
 
-      {/* 4b. KIT PER TORNEI — configuratore kit squadra con preventivo via email */}
-      <TeamKitBuilder />
+      {/* 5. RECENSIONI TICKER — mostra solo recensioni reali, nascosto se non ce ne sono */}
+      <div data-reviews-strip>
+        <ReviewsStrip />
+      </div>
 
-      {/* 5. NOTIZIE + MAGLIE — editoriale ibrido */}
-      <EditorialCommerceSection
-        articles={featuredArticles.slice(0, 3)}
-        products={editorialProducts}
-      />
-
-      {/* 6. RECENSIONI */}
+      {/* 6. RECENSIONI + garanzie */}
       <SocialProofSection />
 
       {/* 6b. GALLERIA ORDINI REALI — foto/video di maglie e pacchi dei clienti */}
       <RealOrdersGallery />
+
+      {/* 7. KIT PER TORNEI — configuratore kit squadra con preventivo via email */}
+      <TeamKitBuilder />
+
+      {/* 8. NOTIZIE + MAGLIE — editoriale ibrido */}
+      <EditorialCommerceSection
+        articles={featuredArticles.slice(0, 3)}
+        products={editorialProducts}
+      />
 
       {/* 7. ULTIME NOTIZIE — link agli articoli del blog (dopo il funnel acquisto) */}
       <HomeNewsStrip articles={latestArticles} />
