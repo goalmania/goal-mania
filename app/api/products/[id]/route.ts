@@ -503,6 +503,8 @@ export async function PATCH(
 
     // Create a minimal update schema for PATCH requests
     const patchSchema = z.object({
+      title: z.string().min(1).optional(), // slug resta invariato: gli URL non cambiano
+      description: z.string().optional(),
       isActive: z.boolean().optional(),
       feature: z.boolean().optional(),
       stockQuantity: z.number().optional(),
