@@ -121,222 +121,29 @@ function LeagueNav() {
 const HERO_FADE_MS = 350;
 const HERO_ROTATE_MS = 6000;
 
-function ShopHero({ featuredProducts: products }: { featuredProducts: Product[] }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [visible, setVisible]           = useState(true);
-  const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const indexRef     = useRef(0);
-  const lenRef       = useRef(products.length);
-  lenRef.current     = products.length;
-
-  const goTo = (idx: number) => {
-    if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
-    setVisible(false);
-    fadeTimerRef.current = setTimeout(() => {
-      indexRef.current = idx;
-      setCurrentIndex(idx);
-      setVisible(true);
-    }, HERO_FADE_MS);
-  };
-
-  useEffect(() => {
-    if (lenRef.current <= 1) return;
-    const id = setInterval(() => {
-      const next = (indexRef.current + 1) % lenRef.current;
-      if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
-      setVisible(false);
-      fadeTimerRef.current = setTimeout(() => {
-        indexRef.current = next;
-        setCurrentIndex(next);
-        setVisible(true);
-      }, HERO_FADE_MS);
-    }, HERO_ROTATE_MS);
-    return () => {
-      clearInterval(id);
-      if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
-    };
-  }, []); // intentionally empty — uses refs
-
-  const current = products[currentIndex] ?? null;
-
+function ShopHero(_props: { featuredProducts: Product[] }) {
   return (
-    <section
-      id="top"
-      className="relative overflow-hidden"
-      style={{ background: "#0a0a0a" }}
-    >
-      {/* Grid dot background */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: "radial-gradient(rgba(200,240,0,0.035) 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
-        }}
-      />
-      {/* Lime glow */}
-      <div
-        className="absolute top-0 right-1/4 w-[600px] h-[400px] pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse at center, rgba(200,240,0,0.06) 0%, transparent 70%)",
-        }}
-      />
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24 flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-        {/* Left: Copy */}
-        <div className="flex-1 min-w-0">
-          {/* Live badge */}
-          <div className="inline-flex items-center gap-2 mb-4 md:mb-7 px-3 py-1.5 rounded-full" style={{ background: "rgba(200,240,0,0.07)", border: "1px solid rgba(200,240,0,0.15)" }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#c8f000] animate-pulse" />
-            <span className="text-[10px] uppercase tracking-[3px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}>
-              // Stagione 2026/27
-            </span>
-          </div>
-
-          <h1
-            className="font-black uppercase text-white mb-3 md:mb-6 leading-[0.9]"
-            style={{
-              fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
-              fontSize: "clamp(3rem, 8vw, 6rem)",
-              letterSpacing: "-1px",
-            }}
-          >
-            Le Migliori<br />
-            <span style={{ color: "#c8f000" }}>Maglie</span><br />
-            da Calcio
-          </h1>
-
-          <p className="hidden md:block text-sm mb-10 max-w-md" style={{ color: "rgba(255,255,255,0.45)", fontFamily: "var(--font-body, sans-serif)", lineHeight: "1.75" }}>
-            Serie A, Premier League, Champions League, Nazionali —<br />
-            tutta la passione del calcio in un unico posto.
-          </p>
-
-          {/* Stats row */}
-          <div className="hidden md:flex items-center gap-8 mb-10 flex-wrap">
-            {[
-              { num: "900+", label: "Maglie",      icon: <Trophy size={14} /> },
-              { num: "50+",    label: "Squadre",     icon: <Globe size={14} /> },
-              { num: "7-10 gg", label: "Consegna",  icon: <Zap size={14} /> },
-            ].map(({ num, label, icon }) => (
-              <div key={label} className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "rgba(200,240,0,0.08)", color: "#c8f000" }}>
-                  {icon}
-                </div>
-                <div>
-                  <p className="font-black text-lg text-white leading-none" style={{ fontFamily: "var(--font-display, sans-serif)" }}>{num}</p>
-                  <p className="text-[10px] uppercase tracking-[2px] mt-0.5" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.55)" }}>{label}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* CTAs */}
-          <div className="flex gap-3 flex-wrap">
-            <a
-              href="#nuovi-arrivi"
-              className="px-7 py-3.5 rounded-full font-black text-sm uppercase tracking-widest transition-all hover:opacity-90 active:scale-[0.97]"
-              style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px", boxShadow: "0 8px 32px rgba(200,240,0,0.25)" }}
-            >
-              Esplora Ora
-            </a>
-            <a
-              href="#bestseller"
-              className="px-7 py-3.5 rounded-full font-black text-sm uppercase tracking-widest transition-all hover:border-white/30"
-              style={{ background: "transparent", color: "rgba(255,255,255,0.65)", border: "1.5px solid rgba(255,255,255,0.12)", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px" }}
-            >
-              In evidenza
-            </a>
-          </div>
+    <section id="top" className="border-b border-white/10 bg-[#0a0a0a]">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:py-12">
+        <p className="gm-eyebrow">Stagione 2026/27</p>
+        <h1 className="gm-section-title">Le migliori maglie da calcio</h1>
+        <p className="gm-muted mt-4 max-w-xl text-base leading-relaxed" style={{ fontFamily: "var(--font-body, sans-serif)" }}>
+          Maglie attuali da 35€, retro da 40€. Spedizione gratuita, reso entro 14 giorni. Tre maglie nello stesso ordine: ne paghi due.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a href="#nuovi-arrivi" className="gm-btn gm-btn-primary">Nuovi arrivi</a>
+          <Link href="/shop/retro" className="gm-btn gm-btn-secondary">Maglie retro</Link>
         </div>
-
-        {/* Right: Rotating featured product card */}
-        {current ? (
-          <div className="flex-shrink-0 w-full max-w-[300px] lg:max-w-[340px]">
-            {/* Card fades on product change */}
-            <div style={{ opacity: visible ? 1 : 0, transition: `opacity ${HERO_FADE_MS}ms cubic-bezier(0.4,0,0.2,1)` }}>
-              <Link
-                href={`/products/${current.slug || current.id}`}
-                className="group block relative rounded-3xl overflow-hidden"
-                style={{ background: "#111", border: "1px solid rgba(255,255,255,0.08)" }}
-              >
-                <div className="relative overflow-hidden" style={{ aspectRatio: "3/4" }}>
-                  <Image
-                    src={cloudinaryOpt(current.image)}
-                    alt={current.name}
-                    fill
-                    unoptimized
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    sizes="(max-width: 1024px) 100vw, 340px"
-                  />
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%)" }} />
-                  <div
-                    className="absolute top-4 left-4 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest"
-                    style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-mono, monospace)" }}
-                  >
-                    ⭐ In Evidenza
-                  </div>
-                </div>
-                <div className="p-5">
-                  <p className="text-[9px] uppercase tracking-[2px] mb-1" style={{ color: "rgba(200,240,0,0.6)", fontFamily: "var(--font-mono, monospace)" }}>
-                    {current.team}
-                  </p>
-                  <p className="font-black text-sm text-white leading-tight mb-3" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-                    {current.name}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="font-black text-xl text-white" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-                      €{current.price.toFixed(2)}
-                    </span>
-                    <span className="text-[10px] font-bold uppercase tracking-widest transition-colors group-hover:text-[#c8f000]" style={{ color: "rgba(255,255,255,0.35)", fontFamily: "var(--font-mono, monospace)" }}>
-                      Vedi →
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            </div>
-
-            {/* Dot indicators */}
-            {products.length > 1 && (
-              <div className="flex items-center justify-center gap-1.5 mt-4">
-                {products.map((_, i) => (
-                  <button
-                    key={i}
-                    aria-label={`Maglia ${i + 1}`}
-                    onClick={() => goTo(i)}
-                    className="rounded-full transition-all duration-300"
-                    style={{
-                      width:  i === currentIndex ? "20px" : "6px",
-                      height: "6px",
-                      background: i === currentIndex ? "#c8f000" : "rgba(200,240,0,0.25)",
-                      border: "none",
-                      cursor: "pointer",
-                    }}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        ) : (
-          <div
-            className="hidden lg:flex flex-shrink-0 w-[340px] h-[440px] rounded-3xl items-center justify-center"
-            style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
-          >
-            <span className="text-6xl opacity-20">⚽</span>
-          </div>
-        )}
       </div>
     </section>
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// Trust Strip
-// ─────────────────────────────────────────────────────────────
-
 const TRUST = [
-  { icon: Truck,       label: "Spedizione Gratuita", sub: "Su ogni ordine" },
-  { icon: RotateCcw,   label: "Reso facile",        sub: "Entro 14 giorni" },
-  { icon: ShieldCheck, label: "Pagamento Sicuro",      sub: "SSL 256-bit" },
-  { icon: BadgeCheck,  label: "Qualità Garantita",     sub: "100% verificato" },
+  { icon: Truck,       label: "Spedizione gratuita", sub: "Su ogni ordine" },
+  { icon: RotateCcw,   label: "Reso entro 14 giorni", sub: "Maglia non indossata" },
+  { icon: ShieldCheck, label: "Pagamento sicuro",    sub: "Carta, PayPal, Klarna" },
+  { icon: BadgeCheck,  label: "Tracking via email",  sub: "Alla partenza" },
 ];
 
 function TrustStrip() {
@@ -476,35 +283,30 @@ function ProductCarousel({ products, badge }: { products: Product[]; badge?: str
           <div
             key={`${p.id}-${i}`}
             data-href={`/products/${p.slug || p.id}`}
-            className="carousel-card group flex-shrink-0 mx-2 rounded-2xl overflow-hidden"
-            style={{ width: "190px", background: "#111", border: "1px solid rgba(255,255,255,0.07)", cursor: "pointer" }}
+            className="carousel-card group flex-shrink-0 mx-2 overflow-hidden rounded-[10px]"
+            style={{ width: "210px", background: "#101010", border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer" }}
             draggable={false}
           >
-            <div className="relative overflow-hidden" style={{ aspectRatio: "3/4", pointerEvents: "none" }}>
-              <Image src={cloudinaryOpt(p.image, 400)} alt={p.name} fill unoptimized className="object-cover" style={{ transition: "transform 500ms cubic-bezier(0.23,1,0.32,1)", pointerEvents: "none" }} sizes="190px" draggable={false} />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%)", pointerEvents: "none" }} />
+            <div className="relative overflow-hidden" style={{ aspectRatio: "1/1.1", background: "#f1f1ec", pointerEvents: "none" }}>
+              <Image src={cloudinaryOpt(p.image, 400)} alt={p.name} fill unoptimized className="object-contain p-2" style={{ mixBlendMode: "multiply", pointerEvents: "none" }} sizes="210px" draggable={false} />
               {badge && (
-                <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest" style={{ background: "rgba(10,10,10,0.9)", color: "#c8f000", fontFamily: "var(--font-mono, monospace)", border: "1px solid rgba(200,240,0,0.22)", pointerEvents: "none" }}>
+                <div className="absolute left-2 top-2 rounded-[3px] bg-[#0a0a0a] px-2 py-1 text-[10px] font-black uppercase tracking-wide text-[#c8f000]" style={{ fontFamily: "var(--font-display, sans-serif)", pointerEvents: "none" }}>
                   {badge}
                 </div>
               )}
-              <div className="absolute bottom-3 left-0 right-0 flex justify-center" style={{ pointerEvents: "none" }}>
-                <span className="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest opacity-0 translate-y-1" style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-mono, monospace)", transition: "opacity 250ms, transform 250ms" }}>Vedi →</span>
-              </div>
             </div>
-            <div className="p-2.5" style={{ pointerEvents: "none" }}>
-              <p className="font-black text-xs text-white leading-tight truncate" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+            <div className="p-3" style={{ pointerEvents: "none" }}>
+              <p className="line-clamp-2 text-[15px] font-bold uppercase leading-[1.05] text-white" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
                 {p.name.replace(/^Maglia\s+/i, "")}
               </p>
-              <div className="flex items-center justify-between mt-1">
-                <p className="font-black text-sm" style={{ fontFamily: "var(--font-display, sans-serif)", color: "#c8f000" }}>€{p.price.toFixed(2)}</p>
-                <div className="flex items-center gap-px">{[1,2,3,4,5].map((s) => <Star key={s} size={7} fill="#c8f000" stroke="none" />)}</div>
-              </div>
+              <p className="mt-2 text-[24px] font-extrabold leading-none text-[#c8f000]" style={{ fontFamily: "var(--font-display, sans-serif)", fontVariantNumeric: "tabular-nums" }}>
+                €{p.price.toFixed(2).replace(".00", "")}
+              </p>
             </div>
           </div>
         ))}
       </div>
-      <style jsx>{`div::-webkit-scrollbar{display:none}.carousel-card:hover img{transform:scale(1.06)}.carousel-card:hover span{opacity:1!important;transform:translateY(0)!important}`}</style>
+      <style jsx>{`div::-webkit-scrollbar{display:none}.carousel-card:hover{border-color:#c8f000!important}`}</style>
     </div>
   );
 }

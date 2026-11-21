@@ -637,18 +637,9 @@ export function Header() {
                   >
                     {NEWS_MEGA.featured.subtitle}
                   </p>
-                  {/* Fake rating */}
-                  <div className="flex items-center gap-1 mb-4">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} size={10} fill="#c8f000" color="#c8f000" />
-                    ))}
-                    <span
-                      className="text-[9px] ml-1.5"
-                      style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}
-                    >
-                      Aggiornate ogni ora
-                    </span>
-                  </div>
+                  <p className="mb-4 text-[11px]" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.8)" }}>
+                    Aggiornate ogni ora
+                  </p>
                 </div>
                 <Link
                   href={NEWS_MEGA.featured.href}
