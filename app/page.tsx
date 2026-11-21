@@ -243,9 +243,6 @@ export default async function Home() {
       {/* 2. CATEGORIE — navigazione per campionato */}
       <HomeCategoryCards />
 
-      {/* 2b. LOGHI SQUADRE — ticker cliccabile tra categorie e offerta */}
-      <TeamLogoTicker />
-
       {/* 3. MAGLIE IN EVIDENZA — subito dopo le categorie: il prodotto prima di tutto il resto */}
       <FeaturedProducts products={featuredProducts} />
 
@@ -262,6 +259,9 @@ export default async function Home() {
         products={retroProducts}
         viewAllHref="/shop/retro"
       />
+
+      {/* 4c. LOGHI SQUADRE — scorciatoia per squadra, dopo il catalogo */}
+      <TeamLogoTicker />
 
       {/* 5. RECENSIONI TICKER — mostra solo recensioni reali, nascosto se non ce ne sono */}
       <div data-reviews-strip>
