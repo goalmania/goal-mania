@@ -352,7 +352,10 @@ export default function ProductDetailClient({
         isPlayerEdition: customization.isPlayerEdition,
         size: customization.size,
         isKidSize: customization.isKidSize,
-        hasCustomization: hasCustom,
+        // la sola taglia non e una personalizzazione (hasCustom la include solo per distinguere le righe del carrello)
+        hasCustomization: !!(customization.name || customization.number || customization.isPlayerEdition ||
+          customization.includeShorts || customization.hasLongSleeve || customization.includeSocks ||
+          customization.selectedPatches.length > 0),
         excludedShirts: customization.excludedShirts,
       },
       quantity,
