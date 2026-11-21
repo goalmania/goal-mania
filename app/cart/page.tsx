@@ -374,7 +374,7 @@ export default function CartPage() {
                 <div className="grid grid-cols-2 gap-3">
                   {[
                     { icon: ShieldCheck, label: "Pag. Sicuro" },
-                    { icon: Truck, label: "Sped. Veloce" },
+                    { icon: Truck, label: "Sped. Gratuita" },
                     { icon: RotateCcw, label: "Reso 14gg" },
                     { icon: BadgeCheck, label: "Originale" },
                   ].map(({ icon: Icon, label }) => (

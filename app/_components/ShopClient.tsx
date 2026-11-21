@@ -213,9 +213,9 @@ function ShopHero({ featuredProducts: products }: { featuredProducts: Product[] 
           {/* Stats row */}
           <div className="flex items-center gap-8 mb-10 flex-wrap">
             {[
-              { num: "3.200+", label: "Maglie",      icon: <Trophy size={14} /> },
+              { num: "900+", label: "Maglie",      icon: <Trophy size={14} /> },
               { num: "50+",    label: "Squadre",     icon: <Globe size={14} /> },
-              { num: "24h",    label: "Spedizione",  icon: <Zap size={14} /> },
+              { num: "7-10 gg", label: "Consegna",  icon: <Zap size={14} /> },
             ].map(({ num, label, icon }) => (
               <div key={label} className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "rgba(200,240,0,0.08)", color: "#c8f000" }}>

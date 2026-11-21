@@ -240,7 +240,7 @@ export default async function ProductPage({
         deliveryTime: {
           "@type": "ShippingDeliveryTime",
           handlingTime: { "@type": "QuantitativeValue", minValue: 1, maxValue: 2, unitCode: "DAY" },
-          transitTime: { "@type": "QuantitativeValue", minValue: 2, maxValue: 5, unitCode: "DAY" },
+          transitTime: { "@type": "QuantitativeValue", minValue: 6, maxValue: 8, unitCode: "DAY" },
         },
       },
       seller: {
@@ -289,7 +289,7 @@ export default async function ProductPage({
         name: "Dopo quanto arriva?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Solitamente impiega tra i 10-14 giorni per arrivare a casa tua. Puoi controllare lo stato del tuo ordine nella sezione 'Traccia il tuo ordine'.",
+          text: "La consegna richiede 7-10 giorni lavorativi. Puoi controllare lo stato del tuo ordine nella sezione 'Traccia il tuo ordine'.",
         },
       },
       {

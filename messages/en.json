@@ -188,7 +188,7 @@
     "quantity": "Quantity",
     "features": "Features",
     "shipping": "Shipping Information",
-    "shippingInfo": "Free shipping on all orders. Usually ships within 1-2 business days."
+    "shippingInfo": "Free shipping on all orders. Delivery takes 7-10 business days."
   },
   "sale": "Free shipping for the next 24 hours",
   "search": "Search",
@@ -449,7 +449,7 @@
     "questions": [
       {
         "question": "How long does delivery take?",
-        "answer": "Your wait will be short! It usually takes 10-14 days to arrive at your home. You can check your order status in the 'Track Your Order' section!"
+        "answer": "Delivery takes 7-10 business days. You can check your order status in the 'Track Your Order' section!"
       },
       {
         "question": "Are payments secure?",

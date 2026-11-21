@@ -24,7 +24,7 @@ export default function FaqSection() {
       {
         question: "Dopo Quanto Arriva?",
         answer:
-          "La tua attesa sarà breve! Solitamente impiega tra i 10-14 giorni per arrivare a casa tua. Puoi controllare lo stato del tuo ordine nella sezione 'Traccia il tuo ordine'!",
+          "La consegna richiede 7-10 giorni lavorativi. Puoi controllare lo stato del tuo ordine nella sezione 'Traccia il tuo ordine'!",
       },
       {
         question: "I Pagamenti Sono Sicuri?",

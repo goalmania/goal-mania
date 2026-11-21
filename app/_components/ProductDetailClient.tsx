@@ -259,7 +259,7 @@ export default function ProductDetailClient({
   const [quantity, setQuantity] = useState(1);
   const [sizeChartOpen, setSizeChartOpen] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [deliveryCountdown, setDeliveryCountdown] = useState("");
+  const deliveryCountdown = "Spedizione gratuita · consegna in 7-10 giorni lavorativi"; // testo fisso, nessun conto alla rovescia inventato
   const [errors, setErrors] = useState<{ size?: string }>({});
   const { t } = useI18n();
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
@@ -299,27 +299,6 @@ export default function ProductDetailClient({
 
   const totalPrice = unitPrice * quantity;
 
-  // Delivery countdown
-  useEffect(() => {
-    function build() {
-      const now = new Date();
-      const cutoff = new Date(); cutoff.setHours(18, 0, 0, 0);
-      if (now >= cutoff) { setDeliveryCountdown(""); return; }
-      const rem = cutoff.getTime() - now.getTime();
-      const h = Math.floor(rem / 3600000);
-      const m = Math.floor((rem % 3600000) / 60000);
-      const days = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];
-      const months = ["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
-      const target = new Date(now);
-      target.setDate(target.getDate() + (now < cutoff ? 0 : 1));
-      let wd = 0; const t = new Date(target);
-      while (wd < 4) { t.setDate(t.getDate() + 1); if (t.getDay() !== 0 && t.getDay() !== 6) wd++; }
-      setDeliveryCountdown(`Ordina entro ${h}h ${m}m → consegna entro ${days[t.getDay()]} ${t.getDate()} ${months[t.getMonth()]}`);
-    }
-    build();
-    const id = setInterval(build, 60000);
-    return () => clearInterval(id);
-  }, []);
 
   useEffect(() => {
     setMounted(true);

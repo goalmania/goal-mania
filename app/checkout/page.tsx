@@ -1060,7 +1060,7 @@ export default function CheckoutPage() {
               {/* Reassurance block */}
               <div className="mt-4 grid grid-cols-3 gap-3">
                 {[
-                  { icon: TruckIcon, title: "Spedizione rapida", sub: "2–5 giorni lav." },
+                  { icon: TruckIcon, title: "Spedizione gratuita", sub: "7–10 giorni lav." },
                   { icon: ArrowPathIcon, title: "Reso facile", sub: "Entro 14 giorni" },
                   { icon: ShieldCheckIcon, title: "100% sicuro", sub: "Dati protetti" },
                 ].map(({ icon: Icon, title, sub }) => (
