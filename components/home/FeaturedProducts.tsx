@@ -65,7 +65,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
               className="text-[10px] uppercase tracking-[4px]"
               style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
             >
-              // I Più Venduti
+              // In evidenza
             </span>
             <span className="w-6 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
           </div>
