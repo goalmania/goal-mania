@@ -11,8 +11,8 @@ const PILLARS = [
   },
   {
     icon: RotateCcw,
-    title: "Reso Gratuito",
-    subtitle: "30 giorni senza domande",
+    title: "Reso facile",
+    subtitle: "Entro 14 giorni",
     emoji: "🔄",
   },
   {

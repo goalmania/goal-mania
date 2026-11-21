@@ -50,12 +50,12 @@
         "description": "We guarantee risk-free transactions, putting your security first. You can shop with confidence, knowing that every transaction is handled with reliable and maximum security systems."
       },
       "guarantee": {
-        "title": "7-Day Guarantee",
-        "description": "With our 7-day guarantee, we offer peace of mind to try your purchase without worries. If for any reason you're not completely satisfied, you have 7 days to return the product and get a full refund."
+        "title": "14-Day Returns",
+        "description": "You have 14 days from delivery to change your mind. Return the unworn item with its tags and original packaging and we refund you."
       },
       "returns": {
-        "title": "Free Returns",
-        "description": "We offer free returns to ensure every purchase meets your expectations. If for any reason you want to return your product, return it within 7 days and enjoy a return without additional costs."
+        "title": "Faulty or wrong item: free return",
+        "description": "If the item arrives faulty or different from your order, collection and replacement or refund are on us. For a voluntary return, return shipping is paid by the customer."
       },
       "tracking": {
         "title": "Order Tracking",
@@ -193,7 +193,7 @@
     },
     "returns": {
       "title": "Easy Returns",
-      "description": "7 days to change your mind"
+      "description": "14 days to change your mind"
     },
     "rating": {
       "title": "4.8/5 Rating",

@@ -375,7 +375,7 @@ export default function CartPage() {
                   {[
                     { icon: ShieldCheck, label: "Pag. Sicuro" },
                     { icon: Truck, label: "Sped. Veloce" },
-                    { icon: RotateCcw, label: "Reso 30gg" },
+                    { icon: RotateCcw, label: "Reso 14gg" },
                     { icon: BadgeCheck, label: "Originale" },
                   ].map(({ icon: Icon, label }) => (
                     <div key={label} className="flex flex-col items-center gap-1.5 py-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
@@ -408,7 +408,7 @@ export default function CartPage() {
                 {/* Trust line */}
                 <div className="flex items-center justify-center gap-2 py-2">
                   <span className="text-[9px] text-white/30" style={{ fontFamily: "var(--font-mono, monospace)" }}>
-                    Pagamento sicuro · Spedizione gratuita · Reso 30 giorni
+                    Pagamento sicuro · Spedizione gratuita · Reso entro 14 giorni
                   </span>
                 </div>
               </div>

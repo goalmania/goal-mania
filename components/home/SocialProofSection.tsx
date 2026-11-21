@@ -202,7 +202,7 @@ export default function SocialProofSection() {
               <div className="flex flex-wrap items-center justify-center gap-3">
                 <TrustPill icon={<ShieldCheck size={14} />} text="Pagamento sicuro" />
                 <TrustPill icon={<Truck size={14} />} text="Spedizione gratuita" />
-                <TrustPill icon={<RotateCcw size={14} />} text="Reso entro 30 giorni" />
+                <TrustPill icon={<RotateCcw size={14} />} text="Reso entro 14 giorni" />
               </div>
             </div>
           )
@@ -227,7 +227,7 @@ export default function SocialProofSection() {
             className="mt-4 text-[10px] uppercase tracking-widest"
             style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.15)" }}
           >
-            Spedizione gratuita · Reso entro 30 giorni · Pagamento sicuro
+            Spedizione gratuita · Reso entro 14 giorni · Pagamento sicuro
           </p>
         </div>
       </div>

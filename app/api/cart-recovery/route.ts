@@ -136,7 +136,7 @@ export async function GET(req: NextRequest) {
       </p>
 
       <p style="color:rgba(255,255,255,0.25);font-size:12px;text-align:center;margin:16px 0 0">
-        Spedizione gratuita · Reso gratuito 30gg · Pagamento sicuro SSL
+        Spedizione gratuita · Reso entro 14 giorni · Pagamento sicuro SSL
       </p>
     </div>
 

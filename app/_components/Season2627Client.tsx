@@ -220,7 +220,7 @@ export default function Season2627Client({ products }: { products: SeasonProduct
           <p className="text-sm text-white/40 max-w-xl mb-6">
             {products.length > 0
               ? `${products.length} kit già disponibili — Serie A, Premier League, La Liga e Nazionali. Nuovi arrivi ogni settimana.`
-              : "I nuovi kit della stagione 2026/27 stanno arrivando. Ogni maglia spedita gratis, resa in 30 giorni."}
+              : "I nuovi kit della stagione 2026/27 stanno arrivando. Ogni maglia spedita gratis, reso entro 14 giorni."}
           </p>
 
           {/* League quick-jump chips */}
@@ -245,7 +245,7 @@ export default function Season2627Client({ products }: { products: SeasonProduct
 
           {/* Trust strip */}
           <div className="flex flex-wrap items-center gap-4 mt-2">
-            {["🚚 Spedizione Gratuita", "🔄 Reso 30gg", "🔒 Pagamento Sicuro"].map((t) => (
+            {["🚚 Spedizione Gratuita", "🔄 Reso 14gg", "🔒 Pagamento Sicuro"].map((t) => (
               <span key={t} className="text-[10px] font-bold text-white/35 uppercase tracking-wider">{t}</span>
             ))}
           </div>

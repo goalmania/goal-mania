@@ -49,12 +49,12 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Goal Mania — Maglie da Calcio a 30€",
+    default: "Goal Mania — Maglie da Calcio a 35€",
     template: "%s | Goal Mania",
   },
   manifest: "/site.webmanifest",
   description:
-    "Goal Mania: negozio online di maglie da calcio a partire da 30€. Serie A, Premier League, Mondiali 2026, maglie retro. Spedizione gratuita in Italia.",
+    "Goal Mania: negozio online di maglie da calcio a partire da 35€. Serie A, Premier League, Mondiali 2026, maglie retro. Spedizione gratuita in Italia.",
   keywords: [
     "maglie da calcio",
     "maglie calcio a prezzi bassi",
@@ -82,9 +82,9 @@ export const metadata: Metadata = {
     locale: "it_IT",
     url: "https://goal-mania.it",
     siteName: "Goal Mania",
-    title: "Goal Mania — Maglie da Calcio a 30€",
+    title: "Goal Mania — Maglie da Calcio a 35€",
     description:
-      "Negozio online di maglie da calcio a partire da 30€. Serie A, Premier League, Mondiali 2026 e maglie retro. Spedizione gratuita in Italia.",
+      "Negozio online di maglie da calcio a partire da 35€. Serie A, Premier League, Mondiali 2026 e maglie retro. Spedizione gratuita in Italia.",
     images: [
       {
         url: "/favicon-for-public/web-app-manifest-512x512.png",
@@ -96,9 +96,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Goal Mania — Maglie da Calcio a 30€",
+    title: "Goal Mania — Maglie da Calcio a 35€",
     description:
-      "Negozio online di maglie da calcio a partire da 30€. Serie A, Premier League, Mondiali 2026.",
+      "Negozio online di maglie da calcio a partire da 35€. Serie A, Premier League, Mondiali 2026.",
     images: ["/favicon-for-public/web-app-manifest-512x512.png"],
   },
   robots: {
@@ -167,7 +167,7 @@ export default function RootLayout({
                   height: 512,
                 },
                 description:
-                  "Negozio online italiano di maglie da calcio a partire da 30€. Serie A, Premier League, Mondiali 2026 e maglie retro.",
+                  "Negozio online italiano di maglie da calcio a partire da 35€. Serie A, Premier League, Mondiali 2026 e maglie retro.",
                 contactPoint: {
                   "@type": "ContactPoint",
                   contactType: "customer service",

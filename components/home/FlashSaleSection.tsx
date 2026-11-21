@@ -258,7 +258,7 @@ export default function FlashSaleSection({ products, product }: Props) {
                 style={{ fontFamily: "var(--font-body, sans-serif)" }}
               >
                 Disponibile in tutte le taglie. Spedizione gratuita inclusa.
-                Reso gratuito entro 30 giorni.
+                Reso entro 14 giorni.
               </p>
 
               {/* Price */}

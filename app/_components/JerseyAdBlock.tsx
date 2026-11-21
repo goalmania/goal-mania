@@ -188,7 +188,6 @@ export function JerseyAdBlock({ jerseyId, teamHint }: JerseyAdBlockProps) {
           <div className="flex items-end justify-between gap-4 flex-wrap">
             <div className="flex items-baseline gap-2">
               <span className="text-[#c8f000] text-3xl font-black">€{jersey.basePrice}</span>
-              <span className="text-white/30 text-sm line-through">€{Math.round(jersey.basePrice * 1.2)}</span>
             </div>
             <Link
               href={`/products/${jersey.slug}`}

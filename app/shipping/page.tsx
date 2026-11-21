@@ -4,7 +4,7 @@ import { Truck, Clock, Shield, MapPin, Package, Globe } from "lucide-react";
 export const metadata: Metadata = {
   title: "Spedizioni — Consegna Gratuita in Italia",
   description:
-    "Spedizione gratuita su tutti gli ordini in Italia. Consegna in 5-10 giorni lavorativi. Reso gratuito entro 30 giorni. Tutti i metodi di pagamento accettati.",
+    "Spedizione gratuita su tutti gli ordini in Italia. Consegna in 5-10 giorni lavorativi. Reso entro 14 giorni. Tutti i metodi di pagamento accettati.",
   alternates: {
     canonical: "https://goal-mania.it/shipping",
   },

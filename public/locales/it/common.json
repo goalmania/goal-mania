@@ -50,12 +50,12 @@
         "description": "Garantiamo transazioni senza rischi, mettendo la tua sicurezza al primo posto. Puoi fare acquisti con fiducia, sapendo che ogni transazione è gestita con sistemi affidabili e di sicurezza massima."
       },
       "guarantee": {
-        "title": "Garanzia di 7 Giorni",
-        "description": "Con la nostra garanzia di 7 giorni, offriamo la tranquillità di poter provare il tuo acquisto senza preoccupazioni. Se per qualsiasi motivo non fossi completamente soddisfatto, hai 7 giorni per restituire il prodotto e ottenere un rimborso completo."
+        "title": "Reso entro 14 giorni",
+        "description": "Hai 14 giorni dalla consegna per ripensarci. Restituisci la maglia non indossata, con cartellino e imballo originale, e ti rimborsiamo."
       },
       "returns": {
-        "title": "Reso Gratuito",
-        "description": "Offriamo resi gratuiti per garantire che ogni acquisto soddisfi le tue aspettative. Se per qualsiasi motivo desideri restituire il tuo prodotto, rendilo entro 7 giorni e goditi un reso senza costi aggiuntivi."
+        "title": "Reso difettoso o sbagliato: gratis",
+        "description": "Se la maglia arriva difettosa o diversa dall'ordine, ritiro e sostituzione o rimborso sono a nostro carico. Per un reso volontario le spese di spedizione sono a carico del cliente."
       },
       "tracking": {
         "title": "Ordine Tracciabile",
@@ -193,7 +193,7 @@
     },
     "returns": {
       "title": "Reso Facile",
-      "description": "7 giorni per cambiare idea"
+      "description": "14 giorni per cambiare idea"
     },
     "rating": {
       "title": "4.8/5 Rating",

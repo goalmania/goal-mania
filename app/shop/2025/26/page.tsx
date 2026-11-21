@@ -10,13 +10,13 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Maglie Calcio 2025/26 — Stagione Corrente",
   description:
-    "Tutte le maglie da calcio della stagione 2025/26. Home e away kit delle migliori squadre europee a partire da 30€. Spedizione gratuita in Italia.",
+    "Tutte le maglie da calcio della stagione 2025/26. Home e away kit delle migliori squadre europee a partire da 35€. Spedizione gratuita in Italia.",
   alternates: {
     canonical: "https://goal-mania.it/shop/2025/26",
   },
   openGraph: {
     title: "Maglie Calcio 2025/26 | Goal Mania",
-    description: "Home e away kit stagione 2025/26 a partire da 30€.",
+    description: "Home e away kit stagione 2025/26 a partire da 35€.",
     url: "https://goal-mania.it/shop/2025/26",
     type: "website",
   },
@@ -67,7 +67,7 @@ export default async function Season2025ShopPage() {
     name: "Maglie Calcio 2025/26",
     url: "https://goal-mania.it/shop/2025/26",
     description:
-      "Tutte le maglie da calcio della stagione 2025/26. Home e away kit delle migliori squadre europee a partire da 30€. Spedizione gratuita in Italia.",
+      "Tutte le maglie da calcio della stagione 2025/26. Home e away kit delle migliori squadre europee a partire da 35€. Spedizione gratuita in Italia.",
     products: serverProducts,
   });
 

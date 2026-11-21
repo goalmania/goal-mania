@@ -156,7 +156,7 @@ export async function generateMetadata({
     },
     openGraph: {
       title: `Maglie ${display} Retro | Goal Mania`,
-      description: `Jersey storiche e vintage del ${display}. Collezione retro da €35.`,
+      description: `Jersey storiche e vintage del ${display}. Collezione retro da €40.`,
       url: `https://goal-mania.it/shop/retro/${team}`,
       type: "website",
     },
@@ -203,7 +203,7 @@ export default async function RetroTeamPage({
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: `Maglie ${teamData.display} Retro`,
-    description: `Collezione maglie retro ${teamData.display} — jersey storiche e vintage da €35`,
+    description: `Collezione maglie retro ${teamData.display} — jersey storiche e vintage da €40`,
     url: `https://goal-mania.it/shop/retro/${team}`,
     breadcrumb: breadcrumbSchema,
     numberOfItems: products.length,

@@ -10,7 +10,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Maglie Serie A 2026/27 — Inter, Milan, Juventus, Napoli",
   description:
-    "Acquista le maglie della Serie A 2026/27 a partire da 30€. Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre. Spedizione gratuita in Italia.",
+    "Acquista le maglie della Serie A 2026/27 a partire da 35€. Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre. Spedizione gratuita in Italia.",
   keywords: [
     "maglie Serie A",
     "maglia Inter",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Maglie Serie A 2026/27 | Goal Mania",
     description:
-      "Inter, Milan, Juventus, Napoli, Roma, Lazio e tutte le squadre di Serie A. Da 30€.",
+      "Inter, Milan, Juventus, Napoli, Roma, Lazio e tutte le squadre di Serie A. Da 35€.",
     url: "https://goal-mania.it/shop/serieA",
     type: "website",
   },
@@ -86,7 +86,7 @@ export default async function SerieAShopPage() {
     name: "Maglie Serie A 2026/27",
     url: "https://goal-mania.it/shop/serieA",
     description:
-      "Acquista le maglie delle squadre di Serie A 2026/27 a partire da 30€. Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre.",
+      "Acquista le maglie delle squadre di Serie A 2026/27 a partire da 35€. Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre.",
     products: serverProducts,
   });
 
@@ -101,7 +101,7 @@ export default async function SerieAShopPage() {
           Maglie Serie A 2026/27
         </h1>
         <p className="text-gray-400 text-sm max-w-2xl">
-          Acquista le maglie delle squadre di Serie A 2026/27 a partire da 30€.
+          Acquista le maglie delle squadre di Serie A 2026/27 a partire da 35€.
           Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre.
           Spedizione gratuita in Italia.
         </p>

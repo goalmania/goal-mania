@@ -105,8 +105,7 @@ const Page = () => {
           <div className="">
             <div className="bg-[#111111] w-full font-munish h-[156px] font-medium text-[18px] text-white flex justify-center items-center rounded-[30px]">
               <p className=" w-1/2 mx-auto ">
-                Shop esclusivo con maglie da calcio attuali e retrò, fedeli agli
-                originali, a un prezzo unico di 35€.
+                Shop con maglie da calcio attuali e retrò a partire da 35€.
               </p>
             </div>
           </div>

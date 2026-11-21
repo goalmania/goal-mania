@@ -57,7 +57,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const display = TEAM_DISPLAY[team] ?? (team.charAt(0).toUpperCase() + team.slice(1));
   return {
     title: `Maglia ${display} Mondiali 2026`,
-    description: `Acquista la maglia ${display} per i Mondiali 2026 a partire da 30€. Spedizione gratuita in Italia.`,
+    description: `Acquista la maglia ${display} per i Mondiali 2026 a partire da 35€. Spedizione gratuita in Italia.`,
     alternates: { canonical: `https://goal-mania.it/shop/worldcup/${team}` },
   };
 }

@@ -8,13 +8,13 @@ export const revalidate = 600;
 export const metadata: Metadata = {
   title: "Maglie Mondiali 2026 — FIFA World Cup",
   description:
-    "Acquista le maglie per i Mondiali 2026 a partire da 30€. Italia, Argentina, Brasile, Francia, Spagna e tutte le nazionali. Spedizione gratuita in Italia.",
+    "Acquista le maglie per i Mondiali 2026 a partire da 35€. Italia, Argentina, Brasile, Francia, Spagna e tutte le nazionali. Spedizione gratuita in Italia.",
   alternates: {
     canonical: "https://goal-mania.it/shop/worldcup",
   },
   openGraph: {
     title: "Maglie Mondiali 2026 | Goal Mania",
-    description: "Italia, Argentina, Brasile, Francia e tutte le nazionali per il Mondiale 2026. Da 30€, spedizione gratuita.",
+    description: "Italia, Argentina, Brasile, Francia e tutte le nazionali per il Mondiale 2026. Da 35€, spedizione gratuita.",
     url: "https://goal-mania.it/shop/worldcup",
     type: "website",
   },

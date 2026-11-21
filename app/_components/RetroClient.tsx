@@ -786,8 +786,8 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
               },
               {
                 icon: "🔄",
-                title: "Reso 30 Giorni",
-                desc: "Non soddisfatto? Reso facile e gratuito.",
+                title: "Reso entro 14 giorni",
+                desc: "Non soddisfatto? Restituisci la maglia entro 14 giorni.",
               },
               {
                 icon: "🔒",

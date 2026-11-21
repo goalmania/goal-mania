@@ -42,15 +42,15 @@ const NEWS_LINKS = [
 const SUPPORT_LINKS = [
   { label: "FAQ", href: "/contact" },
   { label: "I Miei Ordini", href: "/account/orders" },
-  { label: "Resi e Rimborsi", href: "/contact" },
+  { label: "Resi e Rimborsi", href: "/resi" },
   { label: "Guida alle Taglie", href: "/contact" },
   { label: "Contattaci", href: "/contact" },
   { label: "About", href: "/about" },
 ];
 
 const TRUST_BADGES = [
-  { icon: Truck, label: "Spedizione Gratuita", sub: "Sopra €89" },
-  { icon: RotateCcw, label: "Reso Gratuito", sub: "30 giorni" },
+  { icon: Truck, label: "Spedizione Gratuita", sub: "Su ogni ordine" },
+  { icon: RotateCcw, label: "Reso facile", sub: "Entro 14 giorni" },
   { icon: ShieldCheck, label: "Pagamento Sicuro", sub: "SSL 256-bit" },
   { icon: BadgeCheck, label: "Qualità Garantita", sub: "Controllo prima della spedizione" },
 ];

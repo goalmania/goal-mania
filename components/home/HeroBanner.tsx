@@ -55,7 +55,7 @@ export default function HeroBanner({
             className="text-[10px] font-black uppercase tracking-widest text-[#c8f000]"
             style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px" }}
           >
-            Spedizione Gratuita · Reso 30 Giorni
+            Spedizione Gratuita · Reso 14 Giorni
           </span>
         </div>
 

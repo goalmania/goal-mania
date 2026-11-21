@@ -989,8 +989,8 @@ export default function ProductDetailClient({
                 style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
               >
                 {[
-                  { icon: "🚚", label: "Sped. Gratuita", sub: "Sopra €89" },
-                  { icon: "🔄", label: "Reso 30gg", sub: "Gratuito" },
+                  { icon: "🚚", label: "Sped. Gratuita", sub: "Su ogni ordine" },
+                  { icon: "🔄", label: "Reso 14gg", sub: "Spese a carico tuo" },
                   { icon: "🔒", label: "Pagamento", sub: "Sicuro SSL" },
                   { icon: "⭐", label: "Qualità", sub: "Garantita" },
                 ].map(({ icon, label, sub }) => (
@@ -1113,10 +1113,10 @@ export default function ProductDetailClient({
         <div className="max-w-5xl mx-auto px-4 py-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { icon: "🚚", label: "Spedizione Gratuita", sub: "Per ordini sopra €89" },
-              { icon: "🔄", label: "Reso Gratuito", sub: "Entro 30 giorni" },
+              { icon: "🚚", label: "Spedizione Gratuita", sub: "Su ogni ordine" },
+              { icon: "🔄", label: "Reso facile", sub: "Entro 14 giorni" },
               { icon: "🔒", label: "Pagamento Sicuro", sub: "Crittografia SSL 256-bit" },
-              { icon: "⭐", label: "Qualità Garantita", sub: "Soddisfatti o rimborsati" },
+              { icon: "⭐", label: "Qualità Garantita", sub: "Controllo prima della spedizione" },
             ].map(({ icon, label, sub }) => (
               <div
                 key={label}

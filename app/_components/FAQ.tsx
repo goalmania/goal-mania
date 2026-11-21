@@ -65,7 +65,7 @@ const FAQ_TABS = [
     questions: [
       {
         q: "Accettate resi?",
-        a: "Sì, accettiamo resi entro 30 giorni dalla data di ricevimento. La maglia deve essere nelle condizioni originali, non lavata e con cartellino attaccato. Il rimborso viene emesso entro 5 giorni lavorativi.",
+        a: "Sì, accettiamo resi entro 14 giorni dalla data di ricevimento. Le spese di spedizione del reso sono a carico del cliente, tranne se la maglia è difettosa o sbagliata. La maglia deve essere nelle condizioni originali, non lavata e con cartellino attaccato. Il rimborso viene emesso entro 14 giorni da quando riceviamo il reso.",
       },
       {
         q: "C'è una garanzia?",

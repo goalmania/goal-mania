@@ -9,7 +9,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Maglie Calcio 2026/27 — Nuova Stagione",
   description:
-    "Acquista le maglie calcio della stagione 2026/27 a partire da €30. Inter, Milan, Juventus, Napoli, Liverpool, Real Madrid, Bayern Monaco e altri. Spedizione gratuita in Italia.",
+    "Acquista le maglie calcio della stagione 2026/27 a partire da €35. Inter, Milan, Juventus, Napoli, Liverpool, Real Madrid, Bayern Monaco e altri. Spedizione gratuita in Italia.",
   keywords: [
     "maglie calcio 2026/27",
     "maglie 2026 27",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Maglie Calcio 2026/27 | Goal Mania",
     description:
-      "Le nuove maglie della stagione 2026/27. Inter, Milan, Liverpool, Real Madrid, Bayern, PSG a partire da €30. Spedizione gratuita.",
+      "Le nuove maglie della stagione 2026/27. Inter, Milan, Liverpool, Real Madrid, Bayern, PSG a partire da €35. Spedizione gratuita.",
     url: "https://goal-mania.it/shop/2026/27",
     type: "website",
   },
@@ -70,7 +70,7 @@ export default async function Season2627Page() {
     name: "Maglie Calcio 2026/27",
     url: "https://goal-mania.it/shop/2026/27",
     description:
-      "Acquista le maglie calcio della stagione 2026/27 a partire da €30. Inter, Milan, Juventus, Napoli, Liverpool, Real Madrid, Bayern Monaco e altri. Spedizione gratuita in Italia.",
+      "Acquista le maglie calcio della stagione 2026/27 a partire da €35. Inter, Milan, Juventus, Napoli, Liverpool, Real Madrid, Bayern Monaco e altri. Spedizione gratuita in Italia.",
     products: raw,
   });
 

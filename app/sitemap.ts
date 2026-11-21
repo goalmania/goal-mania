@@ -72,6 +72,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/about`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "monthly", priority: 0.4 },
     { url: `${BASE_URL}/contact`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "monthly", priority: 0.4 },
     { url: `${BASE_URL}/shipping`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "monthly", priority: 0.3 },
+    { url: `${BASE_URL}/resi`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "monthly", priority: 0.3 },
     // Serie A team pages — high-value keyword targets
     ...serieATeams.map((team) => ({
       url: `${BASE_URL}/shop/serieA/${team}`,

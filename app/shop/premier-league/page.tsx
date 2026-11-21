@@ -9,7 +9,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Maglie Premier League 2026/27 — Liverpool, Arsenal, Manchester City",
   description:
-    "Acquista le maglie della Premier League 2026/27 a partire da 30€. Manchester City, Liverpool, Arsenal, Chelsea, Manchester United. Spedizione gratuita in Italia.",
+    "Acquista le maglie della Premier League 2026/27 a partire da 35€. Manchester City, Liverpool, Arsenal, Chelsea, Manchester United. Spedizione gratuita in Italia.",
   keywords: [
     "maglie Premier League",
     "maglia Liverpool",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Maglie Premier League 2026/27 | Goal Mania",
     description:
-      "Manchester City, Liverpool, Arsenal, Chelsea, Manchester United e tutte le squadre inglesi. Da 30€.",
+      "Manchester City, Liverpool, Arsenal, Chelsea, Manchester United e tutte le squadre inglesi. Da 35€.",
     url: "https://goal-mania.it/shop/premier-league",
     type: "website",
   },
@@ -52,7 +52,7 @@ export default async function PremierLeagueShopPage() {
     name: "Maglie Premier League 2026/27",
     url: "https://goal-mania.it/shop/premier-league",
     description:
-      "Acquista le maglie della Premier League 2026/27 a partire da 30€. Manchester City, Liverpool, Arsenal, Chelsea, Manchester United. Spedizione gratuita in Italia.",
+      "Acquista le maglie della Premier League 2026/27 a partire da 35€. Manchester City, Liverpool, Arsenal, Chelsea, Manchester United. Spedizione gratuita in Italia.",
     products: serverProducts,
   });
 
@@ -67,7 +67,7 @@ export default async function PremierLeagueShopPage() {
           Maglie Premier League 2026/27
         </h1>
         <p className="text-gray-400 text-sm max-w-2xl">
-          Acquista le maglie della Premier League 2026/27 a partire da 30€.
+          Acquista le maglie della Premier League 2026/27 a partire da 35€.
           Manchester City, Liverpool, Arsenal, Chelsea, Manchester United e tutte le squadre inglesi.
           Spedizione gratuita in Italia.
         </p>

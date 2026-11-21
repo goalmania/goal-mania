@@ -131,7 +131,7 @@ function TrustBar() {
   const items = [
     { icon: LockClosedIcon, text: "Pagamento sicuro SSL" },
     { icon: TruckIcon, text: "Spedizione gratuita" },
-    { icon: ArrowPathIcon, text: "Reso gratuito 30gg" },
+    { icon: ArrowPathIcon, text: "Reso entro 14 giorni" },
     { icon: ShieldCheckIcon, text: "Acquisto protetto" },
   ];
   return (
@@ -1061,7 +1061,7 @@ export default function CheckoutPage() {
               <div className="mt-4 grid grid-cols-3 gap-3">
                 {[
                   { icon: TruckIcon, title: "Spedizione rapida", sub: "2–5 giorni lav." },
-                  { icon: ArrowPathIcon, title: "Reso gratuito", sub: "Entro 30 giorni" },
+                  { icon: ArrowPathIcon, title: "Reso facile", sub: "Entro 14 giorni" },
                   { icon: ShieldCheckIcon, title: "100% sicuro", sub: "Dati protetti" },
                 ].map(({ icon: Icon, title, sub }) => (
                   <div key={title} className="bg-white/3 border border-white/6 rounded-xl p-3 text-center">

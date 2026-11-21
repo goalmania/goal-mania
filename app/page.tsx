@@ -26,7 +26,7 @@ const faqSchema = {
       name: "Quanto costano le maglie da calcio su Goal Mania?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Su Goal Mania le maglie da calcio partono da 30€. Trovi maglie di Serie A (Inter, Milan, Juventus, Napoli), Premier League (Liverpool, Arsenal, Manchester City), Mondiali 2026 e maglie retro storiche. Spedizione gratuita in Italia.",
+        text: "Su Goal Mania le maglie da calcio partono da 35€. Trovi maglie di Serie A (Inter, Milan, Juventus, Napoli), Premier League (Liverpool, Arsenal, Manchester City), Mondiali 2026 e maglie retro storiche. Spedizione gratuita in Italia.",
       },
     },
     {
@@ -50,16 +50,16 @@ const faqSchema = {
       name: "Dove posso comprare maglie da calcio a prezzi bassi in Italia?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Goal Mania è il negozio online italiano specializzato in maglie da calcio a prezzi bassi. Con prezzi a partire da 30€ trovi maglie di Serie A, Premier League, Mondiali 2026 e maglie retro vintage.",
+        text: "Goal Mania è il negozio online italiano specializzato in maglie da calcio a prezzi bassi. Con prezzi a partire da 35€ trovi maglie di Serie A, Premier League, Mondiali 2026 e maglie retro vintage.",
       },
     },
   ],
 };
 
 export const metadata: Metadata = {
-  title: "Maglie da Calcio a 30€ — Serie A, Premier League, Mondiali 2026",
+  title: "Maglie da Calcio a 35€ — Serie A, Premier League, Mondiali 2026",
   description:
-    "Acquista maglie da calcio a partire da 30€. Inter, Milan, Juventus, Napoli, Liverpool, Manchester City e le nazionali per i Mondiali 2026. Spedizione gratuita in Italia.",
+    "Acquista maglie da calcio a partire da 35€. Inter, Milan, Juventus, Napoli, Liverpool, Manchester City e le nazionali per i Mondiali 2026. Spedizione gratuita in Italia.",
   keywords: [
     "maglie da calcio",
     "maglie calcio a prezzi bassi",
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     "negozio maglie calcio Italia",
   ],
   openGraph: {
-    title: "Maglie da Calcio a 30€ | Goal Mania",
+    title: "Maglie da Calcio a 35€ | Goal Mania",
     description:
       "Inter, Milan, Juventus, Napoli, Liverpool, Manchester City e le nazionali per i Mondiali 2026. Spedizione gratuita in Italia.",
     url: "https://goal-mania.it",
@@ -84,7 +84,7 @@ export const metadata: Metadata = {
         url: "https://goal-mania.it/hero-home.jpg",
         width: 1200,
         height: 630,
-        alt: "Goal Mania — Maglie da Calcio a 30€",
+        alt: "Goal Mania — Maglie da Calcio a 35€",
       },
     ],
   },
@@ -235,10 +235,10 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <h1 className="sr-only">
-        Maglie da Calcio a 30€ — Goal Mania: Serie A, Premier League, Mondiali 2026
+        Maglie da Calcio a 35€ — Goal Mania: Serie A, Premier League, Mondiali 2026
       </h1>
 
-      {/* 1. HERO — "MAGLIE DA CALCIO A 30€" + maglie reali rotanti */}
+      {/* 1. HERO — "MAGLIE DA CALCIO A 35€" + maglie reali rotanti */}
       <HeroSection products={featuredProducts} />
 
       {/* 2. CATEGORIE — navigazione per campionato */}

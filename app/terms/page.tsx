@@ -81,15 +81,16 @@ export default function TermsPage() {
             <div className="mb-8">
               <h2 className="text-3xl font-bold text-[#0a0a0a] mb-4">6. Returns and Refunds</h2>
               <p className="text-white/70 mb-4">
-                We accept returns within 7 days of delivery. Items must be:
+                You may withdraw from your purchase within 14 days of delivery, without giving a reason. Items must be:
               </p>
               <ul className="list-disc pl-6 text-white/70 mb-4">
                 <li>Unworn and in original condition</li>
                 <li>In original packaging with all tags attached</li>
                 <li>Accompanied by proof of purchase</li>
+                <li>Not personalised (items with a custom name or number cannot be returned)</li>
               </ul>
               <p className="text-white/70 mb-4">
-                Refunds will be processed within 14 business days of receiving the returned item. 
+                Refunds are issued to the original payment method within 14 days of receiving the returned item. 
                 Return delivery costs are the responsibility of the customer unless the item is defective.
               </p>
             </div>

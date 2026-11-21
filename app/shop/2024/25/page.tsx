@@ -10,13 +10,13 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Maglie Calcio 2024/25 — Kit Stagione Scorsa",
   description:
-    "Maglie da calcio della stagione 2024/25 a prezzi scontati. Home e away kit delle migliori squadre europee da 30€. Spedizione gratuita in Italia.",
+    "Maglie da calcio della stagione 2024/25 a prezzi scontati. Home e away kit delle migliori squadre europee da 35€. Spedizione gratuita in Italia.",
   alternates: {
     canonical: "https://goal-mania.it/shop/2024/25",
   },
   openGraph: {
     title: "Maglie Calcio 2024/25 | Goal Mania",
-    description: "Kit stagione 2024/25 a prezzi scontati. Da 30€.",
+    description: "Kit stagione 2024/25 a prezzi scontati. Da 35€.",
     url: "https://goal-mania.it/shop/2024/25",
     type: "website",
   },
@@ -67,7 +67,7 @@ export default async function Season2024ShopPage() {
     name: "Maglie Calcio 2024/25",
     url: "https://goal-mania.it/shop/2024/25",
     description:
-      "Maglie da calcio della stagione 2024/25 a prezzi scontati. Home e away kit delle migliori squadre europee da 30€. Spedizione gratuita in Italia.",
+      "Maglie da calcio della stagione 2024/25 a prezzi scontati. Home e away kit delle migliori squadre europee da 35€. Spedizione gratuita in Italia.",
     products: serverProducts,
   });
 

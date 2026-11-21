@@ -163,7 +163,7 @@ export async function GET() {
   <channel>
     <title>Goal Mania — Maglie da Calcio</title>
     <link>${BASE_URL}</link>
-    <description>Maglie da calcio a partire da 30€. Serie A, Premier League, Mondiali 2026, maglie retro.</description>
+    <description>Maglie da calcio a partire da 35€. Serie A, Premier League, Mondiali 2026, maglie retro.</description>
 ${items}
   </channel>
 </rss>`;

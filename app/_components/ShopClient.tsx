@@ -333,8 +333,8 @@ function ShopHero({ featuredProducts: products }: { featuredProducts: Product[] 
 // ─────────────────────────────────────────────────────────────
 
 const TRUST = [
-  { icon: Truck,       label: "Spedizione Gratuita", sub: "Sopra €89" },
-  { icon: RotateCcw,   label: "Reso Gratuito",        sub: "30 giorni" },
+  { icon: Truck,       label: "Spedizione Gratuita", sub: "Su ogni ordine" },
+  { icon: RotateCcw,   label: "Reso facile",        sub: "Entro 14 giorni" },
   { icon: ShieldCheck, label: "Pagamento Sicuro",      sub: "SSL 256-bit" },
   { icon: BadgeCheck,  label: "Qualità Garantita",     sub: "100% verificato" },
 ];

@@ -79,7 +79,7 @@ export async function generateMetadata({
     team.charAt(0).toUpperCase() + team.slice(1);
   return {
     title: `Maglia ${teamName} 2025/26 | Acquista Online`,
-    description: `Acquista la maglia ${teamName} 2025/26 a partire da 30€. Home, away e third kit. Spedizione gratuita in Italia.`,
+    description: `Acquista la maglia ${teamName} 2025/26 a partire da 35€. Home, away e third kit. Spedizione gratuita in Italia.`,
     keywords: [
       `maglia ${teamName}`,
       `maglie ${teamName}`,
@@ -92,7 +92,7 @@ export async function generateMetadata({
     },
     openGraph: {
       title: `Maglia ${teamName} 2025/26 | Goal Mania`,
-      description: `Home, away e third kit ${teamName} 2025/26. Da 30€, spedizione gratuita.`,
+      description: `Home, away e third kit ${teamName} 2025/26. Da 35€, spedizione gratuita.`,
       url: `https://goal-mania.it/shop/serieA/${team.toLowerCase()}`,
       type: "website",
     },
@@ -171,7 +171,7 @@ export default async function TeamShopPage({ params }: TeamPageProps) {
     "@type": "CollectionPage",
     name: `Maglie ${teamDisplayName} 2025/26`,
     url: `https://goal-mania.it/shop/serieA/${team.toLowerCase()}`,
-    description: `Acquista la maglia ${teamDisplayName} 2025/26 a partire da 30€. Home, away e third kit. Spedizione gratuita in Italia.`,
+    description: `Acquista la maglia ${teamDisplayName} 2025/26 a partire da 35€. Home, away e third kit. Spedizione gratuita in Italia.`,
     hasPart: products.slice(0, 6).map((p: any) => ({
       "@type": "Product",
       name: p.name,
@@ -191,7 +191,7 @@ export default async function TeamShopPage({ params }: TeamPageProps) {
           Maglia {teamDisplayName} 2025/26
         </h1>
         <p className="text-gray-400 text-sm max-w-2xl">
-          Acquista la maglia {teamDisplayName} 2025/26 a partire da 30€.
+          Acquista la maglia {teamDisplayName} 2025/26 a partire da 35€.
           Home, away e third kit disponibili. Spedizione gratuita in Italia.
         </p>
       </section>

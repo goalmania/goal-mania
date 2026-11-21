@@ -11,15 +11,15 @@ const guarantees = [
     icon: "🔒",
   },
   {
-    title: "Garanzia di 7 Giorni",
+    title: "Reso entro 14 giorni",
     description:
-      "Con la nostra garanzia di 7 giorni, offriamo la tranquillità di poter provare il tuo acquisto senza preoccupazioni. Se per qualsiasi motivo non fossi completamente soddisfatto, hai 7 giorni per restituire il prodotto e ottenere un rimborso completo.",
+      "Hai 14 giorni dalla consegna per ripensarci. Restituisci la maglia non indossata, con cartellino e imballo originale, e ti rimborsiamo entro 14 giorni da quando riceviamo il reso.",
     icon: "✅",
   },
   {
-    title: "Reso Gratuito",
+    title: "Reso difettoso o sbagliato: gratis",
     description:
-      "Offriamo resi gratuiti per garantire che ogni acquisto soddisfi le tue aspettative. Se per qualsiasi motivo desideri restituire il tuo prodotto, rendilo entro 7 giorni e goditi un reso senza costi aggiuntivi.",
+      "Se la maglia arriva difettosa o diversa dall'ordine, ci pensiamo noi: ritiro e sostituzione o rimborso senza costi per te. Per un reso volontario le spese di spedizione sono a carico del cliente.",
     icon: "🔄",
   },
   {

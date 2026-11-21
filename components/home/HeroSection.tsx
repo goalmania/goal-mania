@@ -154,7 +154,7 @@ export default function HeroSection({ products = [] }: Props) {
           >
             <span className="text-white block">MAGLIE DA</span>
             <span className="text-white block">CALCIO</span>
-            <span style={{ color: "#c8f000" }} className="block">A 30€</span>
+            <span style={{ color: "#c8f000" }} className="block">A 35€</span>
           </div>
 
           {/* Subtext */}
@@ -207,7 +207,7 @@ export default function HeroSection({ products = [] }: Props) {
             {[
               { icon: "🚚", label: "Spedizione Gratis" },
               { icon: "🔒", label: "Pagamento Sicuro" },
-              { icon: "↩️", label: "Reso 30 giorni" },
+              { icon: "↩️", label: "Reso 14 giorni" },
             ].map(({ icon, label }) => (
               <div key={label} className="flex items-center gap-1.5">
                 <span className="text-sm">{icon}</span>
@@ -350,7 +350,7 @@ export default function HeroSection({ products = [] }: Props) {
               { value: totalOrders !== null ? `${totalOrders}` : "—", label: "Ordini Spediti" },
               { value: "900+", label: "Maglie" },
               { value: "Gratis", label: "Spedizione" },
-              { value: "30gg", label: "Reso Gratis" },
+              { value: "14gg", label: "Per il reso" },
             ].map(({ value, label }) => (
               <div key={label} className="flex flex-col items-center justify-center py-4 px-4 text-center">
                 <span className="font-black text-xl lg:text-2xl text-white leading-none mb-0.5" style={{ fontFamily: "var(--font-display,'Barlow Condensed',sans-serif)", letterSpacing: "1px" }}>
