@@ -85,7 +85,7 @@ export function Header() {
         className="fixed inset-x-0 z-50 border-b-2 border-[var(--line)] bg-[var(--asphalt)]"
         style={{ top: "var(--bar-h)", height: "var(--head-h)" }}
       >
-        <nav className="mx-auto flex h-full max-w-[1280px] items-center gap-2 px-2 md:gap-6 md:px-8" aria-label="Principale">
+        <nav className="mx-auto flex h-full max-w-[1760px] items-center gap-2 px-2 md:gap-6 md:px-8" aria-label="Principale">
           <Link href="/" className="flex h-11 items-center px-2" aria-label="Goal Mania, home">
             <Image
               src="/images/recentUpdate/goalmania-wordmark.png"

@@ -10,7 +10,7 @@ export default function Manifesto({ retroCount }: { retroCount: number }) {
   ];
   return (
     <section className="bg-[var(--wall)] py-14 md:py-20">
-      <div className="mx-auto max-w-[1280px] px-5 md:px-8">
+      <div className="mx-auto max-w-[1760px] px-5 md:px-10 lg:px-16">
         <p className="disp max-w-[16ch] text-[clamp(2.8rem,9.5vw,7.5rem)] text-white">
           Una maglia è <span className="mark"><span>memoria</span></span> che si indossa.
         </p>

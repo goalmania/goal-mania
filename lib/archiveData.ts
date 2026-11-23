@@ -1,6 +1,6 @@
 import connectDB from "@/lib/db";
 import ProductModel from "@/lib/models/Product";
-import { ERAS, toItem, eraOf, teamOf, isLegend, type ArchiveItem } from "@/lib/archive";
+import { ERAS, toItem, eraOf, teamOf, isLegend, hasPhoto, type ArchiveItem } from "@/lib/archive";
 
 export const slugify = (s: string) =>
   s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -13,18 +13,12 @@ export async function getArchiveItems(): Promise<ArchiveItem[]> {
       .select({ title: 1, slug: 1, basePrice: 1, retroPrice: 1, isRetro: 1, category: 1, feature: 1, images: { $slice: 1 } })
       .sort({ feature: -1, createdAt: -1 })
       .lean();
-    return JSON.parse(JSON.stringify(docs)).map(toItem);
+    // Con la foto vera prima, i segnaposto in fondo (l'ordine resta quello del catalogo)
+    const all: ArchiveItem[] = JSON.parse(JSON.stringify(docs)).map(toItem);
+    return [...all.filter((it) => hasPhoto(it.image)), ...all.filter((it) => !hasPhoto(it.image))];
   } catch {
     return [];
   }
-}
-
-export function eraTiles(items: ArchiveItem[]) {
-  return ERAS.map((e) => {
-    const inEra = items.filter((it) => eraOf(it.year)?.slug === e.slug);
-    const pick = inEra.find((it) => it.image) || null;
-    return { slug: e.slug, label: e.label, short: e.short, count: inEra.length, image: pick?.image || "", alt: pick?.name || e.label };
-  }).filter((e) => e.count > 0);
 }
 
 export function topTeams(items: ArchiveItem[], n = 30) {

@@ -1,28 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ProductCard from "@/components/ui/ProductCard";
-import type { ArchiveItem } from "@/lib/archive";
+import { teamOf, type ArchiveItem } from "@/lib/archive";
 
 const STEP = 24;
 
-// Le maglie si caricano 24 alla volta: la pagina resta leggera anche con 270 maglie
-export default function ArchiveGrid({ items }: { items: ArchiveItem[] }) {
+// Maglie 24 alla volta + filtro per squadra: la pagina resta leggera anche con 270 maglie
+export default function ArchiveGrid({ items, filterTeams = false, themed = false }: { items: ArchiveItem[]; filterTeams?: boolean; themed?: boolean }) {
   const [n, setN] = useState(STEP);
+  const [team, setTeam] = useState("");
+  const teams = useMemo(() => {
+    if (!filterTeams) return [];
+    const m = new Map<string, number>();
+    for (const it of items) m.set(teamOf(it.name), (m.get(teamOf(it.name)) || 0) + 1);
+    return [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, 14);
+  }, [items, filterTeams]);
+  const list = team ? items.filter((it) => teamOf(it.name) === team) : items;
+  const pick = (t: string) => { setTeam(t); setN(STEP); };
+
   return (
-    <>
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-4 gap-y-9 px-5 md:grid-cols-3 md:px-8 lg:grid-cols-4 lg:gap-x-6">
-        {items.slice(0, n).map((p, i) => (
+    <div className="mx-auto w-full max-w-[1760px] px-5 pb-16 pt-8 md:px-10 lg:px-16">
+      {teams.length > 1 && (
+        <div className="mb-8 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] md:flex-wrap" role="group" aria-label="Filtra per squadra">
+          <button type="button" className="era-chip shrink-0" aria-pressed={team === ""} onClick={() => pick("")}>Tutte <span className="num text-[16px] opacity-70">{items.length}</span></button>
+          {teams.map(([t, c]) => (
+            <button key={t} type="button" className="era-chip shrink-0" aria-pressed={team === t} onClick={() => pick(t)}>
+              {t} <span className="num text-[16px] opacity-70">{c}</span>
+            </button>
+          ))}
+        </div>
+      )}
+      <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-7 lg:grid-cols-4 2xl:grid-cols-5">
+        {list.slice(0, n).map((p, i) => (
           <ProductCard key={p.id} id={p.id} slug={p.slug} name={p.name} price={p.price} image={p.image} category="Retro" team={p.year ? String(p.year) : "Retro"} priority={i < 4} />
         ))}
       </div>
-      {n < items.length && (
-        <div className="mt-10 flex justify-center px-5">
-          <button onClick={() => setN((v) => v + STEP)} className="btn btn-lime">
-            Mostra altre {Math.min(STEP, items.length - n)} maglie
+      {n < list.length && (
+        <div className="mt-12 flex justify-center">
+          <button onClick={() => setN((v) => v + STEP)} className={themed ? "era-btn" : "btn btn-lime"}>
+            Mostra altre {Math.min(STEP, list.length - n)} maglie
           </button>
         </div>
       )}
-    </>
+    </div>
   );
 }

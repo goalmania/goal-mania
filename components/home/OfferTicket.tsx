@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 export default function OfferTicket() {
   return (
     <section id="offerta" className="px-4 py-10 md:px-8 md:py-16">
-      <div className="mx-auto grid max-w-[1280px] gap-8 overflow-hidden bg-[var(--lime)] p-6 text-[#0a0a0a] md:grid-cols-[1.25fr_1fr] md:items-center md:gap-12 md:p-12" style={{ transform: "rotate(-0.6deg)" }}>
+      <div className="mx-auto grid max-w-[1760px] gap-8 overflow-hidden bg-[var(--lime)] p-6 text-[#0a0a0a] md:grid-cols-[1.25fr_1fr] md:items-center md:gap-12 md:p-12" style={{ transform: "rotate(-0.6deg)" }}>
         <div>
           <h2 className="disp text-[clamp(3.4rem,11vw,8rem)]">
             Prendi 3,

@@ -44,7 +44,7 @@ const GROUPS = [
 export function Footer() {
   return (
     <footer className="mt-12 border-t-4 border-[var(--lime)] bg-[var(--wall)] pb-[calc(80px+env(safe-area-inset-bottom))] md:pb-6">
-      <div className="mx-auto grid max-w-[1280px] gap-10 px-5 py-12 md:grid-cols-[1.3fr_1fr_1fr_1fr] md:px-8">
+      <div className="mx-auto grid max-w-[1760px] gap-10 px-5 py-12 md:grid-cols-[1.3fr_1fr_1fr_1fr] md:px-8">
         <div>
           <Image src="/images/recentUpdate/goalmania-wordmark.png" alt="Goal Mania" width={392} height={201} className="h-24 w-auto object-contain" />
           <p className="mt-3 max-w-[28ch] text-[16px] leading-snug text-[var(--text-2)]">
@@ -76,7 +76,7 @@ export function Footer() {
         ))}
       </div>
 
-      <div className="mx-auto max-w-[1280px] border-t border-[var(--line)] px-5 pt-5 text-[13px] leading-relaxed text-[var(--text-3)] md:px-8">
+      <div className="mx-auto max-w-[1760px] border-t border-[var(--line)] px-5 pt-5 text-[13px] leading-relaxed text-[var(--text-3)] md:px-8">
         <p>Pagamenti: Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal, Klarna. · <Link href="/privacy" className="underline">Privacy e cookie</Link> · <Link href="/terms" className="underline">Termini di servizio</Link> · <Link href="/about" className="underline">Chi siamo</Link></p>
         <p className="mt-1">© {new Date().getFullYear()} Goal Mania. I nomi e i marchi dei club appartengono ai rispettivi proprietari; Goal Mania non è affiliata ad alcun club o federazione.</p>
       </div>

@@ -28,7 +28,7 @@ export default function ProductRail({
   if (!products.length) return null;
   return (
     <section className="py-8 md:py-12">
-      <div className="mx-auto mb-3 flex max-w-[1280px] items-end justify-between gap-4 px-5 md:px-8">
+      <div className="mx-auto mb-3 flex max-w-[1760px] items-end justify-between gap-4 px-5 md:px-8">
         <div>
           <h2 className="disp text-[clamp(2.6rem,8vw,5rem)] text-white">{title}</h2>
           {lead && <p className="mt-2 max-w-[44ch] text-[17px] leading-snug text-[var(--text-2)]">{lead}</p>}
@@ -39,7 +39,7 @@ export default function ProductRail({
       </div>
       <div className="rail">
         {products.map((p, i) => (
-          <div key={p.id} className="w-[64vw] max-w-[290px] md:w-[272px]">
+          <div key={p.id} className="w-[64vw] max-w-[290px] md:w-[300px] 2xl:w-[330px]">
             <ProductCard id={p.id} slug={p.slug} name={p.name} price={p.price} image={p.image} category={p.category} team={p.team} priority={priorityFirst && i < 2} />
           </div>
         ))}

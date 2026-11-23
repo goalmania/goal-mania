@@ -1,0 +1,194 @@
+/* ================================================================
+   LE ERE — ogni decennio ha il suo mondo: colori, motivo, carattere, cornice.
+   Le variabili --e-* guidano scene, pannelli, schede prodotto e pulsanti.
+   ================================================================ */
+.era { --e-rad: 3px; --e-btn-rad: 999px; --e-ui: var(--font-display); }
+
+/* ---------- Mondi ---------- */
+.era-70 {
+  --e-bg: #f0dfb3; --e-fg: #3a1f0d; --e-fg2: rgba(58, 31, 13, 0.78); --e-ac: #d9541e; --e-ac-ink: #fff4de;
+  --e-card: #fff7e4; --e-plate: #f6e9c6; --e-ink: #3a1f0d; --e-ink2: rgba(58, 31, 13, 0.62);
+  --e-line: rgba(58, 31, 13, 0.22); --e-rad: 10px; --e-f: var(--f-70, var(--font-display));
+  --e-shadow: 0 14px 24px -12px rgba(58, 31, 13, 0.55), 0 2px 0 rgba(58, 31, 13, 0.12);
+}
+.era-80 {
+  --e-bg: #13052e; --e-fg: #ffffff; --e-fg2: rgba(255, 255, 255, 0.8); --e-ac: #ffe14a; --e-ac-ink: #1a0636;
+  --e-card: #1d0b45; --e-plate: #f4f1ff; --e-ink: #ffffff; --e-ink2: rgba(255, 255, 255, 0.68);
+  --e-line: rgba(0, 229, 255, 0.45); --e-rad: 2px; --e-f: var(--f-80, var(--font-display));
+  --e-shadow: 0 0 0 2px #00e5ff, 0 0 26px rgba(0, 229, 255, 0.35);
+}
+.era-90 {
+  --e-bg: #1537d6; --e-fg: #ffffff; --e-fg2: rgba(255, 255, 255, 0.9); --e-ac: #ffd400; --e-ac-ink: #0b1a6b;
+  --e-card: #ffffff; --e-plate: #eef1ff; --e-ink: #0b1a6b; --e-ink2: rgba(11, 26, 107, 0.62);
+  --e-line: rgba(255, 255, 255, 0.4); --e-rad: 6px; --e-f: var(--f-90, var(--font-display));
+  --e-shadow: 0 0 0 3px #ffd400, 0 14px 22px -10px rgba(5, 12, 70, 0.8);
+}
+.era-00 {
+  --e-bg: #0a2347; --e-fg: #eaf6ff; --e-fg2: rgba(234, 246, 255, 0.82); --e-ac: #7be0ff; --e-ac-ink: #04223f;
+  --e-card: #f2f9ff; --e-plate: #ffffff; --e-ink: #04223f; --e-ink2: rgba(4, 34, 63, 0.6);
+  --e-line: rgba(180, 225, 255, 0.4); --e-rad: 26px; --e-f: var(--f-00, var(--font-display));
+  --e-shadow: 0 18px 30px -12px rgba(0, 30, 80, 0.75), inset 0 -10px 18px rgba(120, 190, 255, 0.4);
+}
+.era-10 {
+  --e-bg: #f4f1ea; --e-fg: #1f2328; --e-fg2: rgba(31, 35, 40, 0.74); --e-ac: #ff6b57; --e-ac-ink: #ffffff;
+  --e-card: #ffffff; --e-plate: #ffffff; --e-ink: #1f2328; --e-ink2: rgba(31, 35, 40, 0.58);
+  --e-line: rgba(31, 35, 40, 0.18); --e-rad: 14px; --e-f: var(--f-10, var(--font-display));
+  --e-shadow: 0 3px 0 #e1d9c6;
+}
+.era-20 {
+  --e-bg: #0a0a0b; --e-fg: #f4f2ea; --e-fg2: rgba(244, 242, 234, 0.78); --e-ac: #c8f000; --e-ac-ink: #0a0a0a;
+  --e-card: #f3f0e7; --e-plate: #f3f0e7; --e-ink: #0a0a0a; --e-ink2: rgba(10, 10, 10, 0.6);
+  --e-line: rgba(244, 242, 234, 0.18); --e-rad: 3px; --e-f: var(--font-display);
+  --e-shadow: 0 16px 28px -12px rgba(0, 0, 0, 0.8);
+}
+
+/* ---------- Scena: fondale a tutta larghezza ---------- */
+.era-scene { position: relative; isolation: isolate; overflow: hidden; background-color: var(--e-bg); color: var(--e-fg); }
+.era-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.era-bg::before, .era-bg::after { content: ""; position: absolute; }
+
+.era-70 .era-bg {
+  background:
+    radial-gradient(circle at 94% 112%, transparent 0 15%, #7a3b12 15% 18%, #d9541e 18% 26%, #e8861f 26% 34%, #f0b429 34% 42%, #cdb552 42% 50%, transparent 50%),
+    repeating-conic-gradient(from 0deg at 94% 112%, rgba(122, 59, 18, 0.08) 0 5deg, transparent 5deg 10deg),
+    #f0dfb3;
+}
+.era-80 .era-bg { background: linear-gradient(#13052e 0 52%, #2b0a52 100%); }
+.era-80 .era-bg::before {
+  left: 50%; bottom: 24%; width: min(72vw, 680px); aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%;
+  background: linear-gradient(#ffe14a 8%, #ff2d95 80%);
+  -webkit-mask-image: linear-gradient(#000 0 46%, transparent 46% 49%, #000 49% 57%, transparent 57% 62%, #000 62% 69%, transparent 69% 76%, #000 76% 81%, transparent 81% 89%, #000 89% 93%, transparent 93%);
+  mask-image: linear-gradient(#000 0 46%, transparent 46% 49%, #000 49% 57%, transparent 57% 62%, #000 62% 69%, transparent 69% 76%, #000 76% 81%, transparent 81% 89%, #000 89% 93%, transparent 93%);
+}
+.era-80 .era-bg::after {
+  left: -40%; right: -40%; bottom: 0; height: 30%; transform-origin: 50% 100%; transform: perspective(420px) rotateX(58deg);
+  background: linear-gradient(#ff2d95 1.5px, transparent 1.5px) 0 0 / 100% 40px, linear-gradient(90deg, #ff2d95 1.5px, transparent 1.5px) 0 0 / 70px 100%;
+  -webkit-mask-image: linear-gradient(transparent, #000 55%); mask-image: linear-gradient(transparent, #000 55%); opacity: 0.7;
+}
+.era-90 .era-bg {
+  background:
+    radial-gradient(rgba(255, 255, 255, 0.2) 1.7px, transparent 1.9px) 0 0 / 16px 16px,
+    linear-gradient(112deg, transparent 0 56%, #ffd400 56% 65%, #ff2b2b 65% 72%, #ffffff 72% 74%, transparent 74%),
+    #1537d6;
+}
+.era-90 .era-bg::before {
+  left: 0; right: 0; bottom: 0; height: 26px;
+  background: conic-gradient(from 135deg at 50% 100%, #ffd400 0 90deg, transparent 90deg) 0 0 / 52px 26px repeat-x;
+}
+.era-00 .era-bg {
+  background:
+    radial-gradient(circle at 16% 20%, rgba(120, 220, 255, 0.55), transparent 36%),
+    radial-gradient(circle at 88% 82%, rgba(170, 195, 255, 0.4), transparent 42%),
+    linear-gradient(160deg, #06183a, #14396b 55%, #05122a);
+}
+.era-00 .era-bg::before, .era-00 .era-bg::after {
+  border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.45);
+  background: radial-gradient(circle at 30% 26%, rgba(255, 255, 255, 0.9) 0 5%, rgba(170, 232, 255, 0.4) 6% 36%, rgba(60, 140, 220, 0.25) 62%, rgba(255, 255, 255, 0.18) 100%);
+}
+.era-00 .era-bg::before { width: 360px; height: 360px; left: -90px; bottom: -110px; }
+.era-00 .era-bg::after { width: 190px; height: 190px; right: 9%; top: 10%; }
+.era-10 .era-bg::before { width: min(52vw, 560px); aspect-ratio: 1; border-radius: 50%; right: -8%; top: -14%; background: #ff6b57; }
+.era-10 .era-bg::after { left: -2%; bottom: 0; width: min(34vw, 360px); aspect-ratio: 1; clip-path: polygon(0 100%, 100% 100%, 0 0); background: #00b8a9; }
+.era-10 .era-bg { background: radial-gradient(circle at 58% 90%, #ffc93c 0 5.5%, transparent 5.7%), #f4f1ea; }
+.era-20 .era-bg { background: radial-gradient(circle at 80% 0%, rgba(200, 240, 0, 0.1), transparent 45%), #0a0a0b; }
+
+/* ---------- Cifra dell'era ---------- */
+.era-num { font-family: var(--e-f); line-height: 0.78; font-weight: 400; font-style: normal; letter-spacing: 0; font-size: var(--num, clamp(8rem, 24vw, 19rem)); user-select: none; }
+.era-70 .era-num { color: #d9541e; font-style: normal; text-shadow: 0.025em 0.025em 0 #f0b429, 0.05em 0.05em 0 #7a3b12; }
+.era-80 .era-num { color: #ff2d95; text-shadow: 0 0 0.12em rgba(255, 45, 149, 0.75), 0 0 0.4em rgba(0, 229, 255, 0.35); }
+.era-90 .era-num { color: #ffd400; -webkit-text-stroke: 0.035em #0b1a6b; paint-order: stroke fill; text-shadow: 0.05em 0.05em 0 #ff2b2b; }
+.era-00 .era-num {
+  color: transparent; background: linear-gradient(#ffffff 0%, #cfe9ff 38%, #6fa5d6 50%, #e8f5ff 58%, #9ac6ee 100%); -webkit-background-clip: text; background-clip: text;
+  filter: drop-shadow(0 0.04em 0.05em rgba(0, 0, 0, 0.5));
+}
+.era-10 .era-num { color: #1f2328; }
+.era-20 .era-num { color: transparent; -webkit-text-stroke: 0.03em var(--lime); font-family: var(--font-display); font-style: italic; }
+
+/* Titolo dell'era */
+.era-title { font-family: var(--e-f); font-weight: 400; line-height: 1; text-transform: uppercase; letter-spacing: 0.01em; }
+.era-80 .era-title { font-family: var(--font-display); font-style: italic; letter-spacing: 0.04em; text-shadow: 0 0 18px rgba(0, 229, 255, 0.55); }
+.era-20 .era-title { font-family: var(--font-display); font-style: italic; }
+.era-70 .era-title { text-transform: none; }
+
+/* Cornici delle maglie: ognuna dice l'epoca */
+.era-frame { position: relative; display: block; transform: rotate(var(--rot, 0deg)); transition: transform 420ms var(--ease); }
+.era-frame:hover { transform: rotate(0deg) translateY(-6px); }
+.era-frame img { mix-blend-mode: multiply; }
+.era-70 .era-frame { background: #fff7e4; padding: 12px 12px 40px; border-radius: 6px; box-shadow: var(--e-shadow); }
+.era-80 .era-frame { background: #f4f1ff; border: 2px solid #00e5ff; box-shadow: 0 0 0 2px #13052e, 0 0 30px rgba(0, 229, 255, 0.45); }
+.era-90 .era-frame { background: #ffffff; padding: 8px 8px 0; border-radius: 6px; box-shadow: var(--e-shadow); overflow: hidden; }
+.era-90 .era-frame::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 34%, rgba(255, 255, 255, 0.7) 50%, transparent 66%) 120% 0 / 260% 100% no-repeat;
+  transition: background-position 700ms var(--ease);
+}
+.era-90 .era-frame:hover::after { background-position: -20% 0; }
+.era-00 .era-frame { background: linear-gradient(#ffffff, #d8ecff); border-radius: 30px; box-shadow: var(--e-shadow); overflow: hidden; border: 1px solid #fff; }
+.era-00 .era-frame::after { content: ""; position: absolute; inset: 0 0 56% 0; pointer-events: none; background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0)); }
+.era-10 .era-frame { background: #ffffff; border-radius: 16px; box-shadow: 0 4px 0 #e1d9c6, 0 22px 30px -18px rgba(31, 35, 40, 0.5); }
+.era-20 .era-frame { background: var(--paper); border-radius: 3px; box-shadow: var(--e-shadow); }
+
+/* Pulsante dell'era */
+.era-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 56px; padding: 0 28px; border-radius: var(--e-btn-rad);
+  background: var(--e-ac); color: var(--e-ac-ink); font-family: var(--font-display); font-style: italic; text-transform: uppercase; font-size: 21px; letter-spacing: 0.02em;
+  transition: transform 240ms var(--ease), box-shadow 240ms var(--ease);
+}
+.era-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 22px -10px rgba(0, 0, 0, 0.55); }
+.era-btn:active { transform: scale(0.97); }
+.era-btn-ghost { background: transparent; color: var(--e-fg); box-shadow: inset 0 0 0 2px var(--e-fg); }
+.era-btn-ghost:hover { background: var(--e-fg); color: var(--e-bg); }
+.era-70 .era-btn, .era-10 .era-btn { border-radius: 14px; }
+.era-80 .era-btn, .era-90 .era-btn { border-radius: 0; }
+
+/* ---------- Schede prodotto dentro un'era (la scheda globale si ritinteggia) ---------- */
+.era .poster { background: var(--e-card); border-radius: var(--e-rad); box-shadow: var(--e-shadow); }
+.era .poster:hover, .era .poster:focus-within { box-shadow: var(--e-shadow), 0 24px 34px -16px rgba(0, 0, 0, 0.6); }
+.era .poster > a:first-child { background: var(--e-plate); border-radius: calc(var(--e-rad) - 1px) calc(var(--e-rad) - 1px) 0 0; }
+.era .poster h3, .era .poster h3 a, .era .poster .num { color: var(--e-ink); }
+.era .poster p { color: var(--e-ink2); }
+.era .poster .num { text-shadow: none; }
+.era .poster .btn-ink { background: var(--e-ac); color: var(--e-ac-ink); border-radius: var(--e-btn-rad); }
+.era-70 .poster .btn-ink, .era-10 .poster .btn-ink { border-radius: 12px; }
+.era-80 .poster .btn-ink, .era-90 .poster .btn-ink { border-radius: 0; }
+.era-80 .poster::before, .era-90 .poster::before, .era-00 .poster::before, .era-10 .poster::before, .era-70 .poster::before { display: none; }
+.era-80 .poster > a:first-child img { mix-blend-mode: multiply; }
+.era .poster svg { color: var(--e-ink); }
+
+/* ---------- Pannelli (porta d'ingresso delle ere) ---------- */
+.eras { display: flex; gap: 0; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; height: min(78svh, 640px); }
+.eras::-webkit-scrollbar { display: none; }
+.era-panel { position: relative; display: block; flex: 0 0 78vw; max-width: 340px; scroll-snap-align: start; overflow: hidden; --num: clamp(6.2rem, 30vw, 9.5rem); }
+.era-panel .p-jersey { position: absolute; left: 50%; bottom: 22%; width: 82%; max-width: 300px; transform: translateX(-50%) rotate(var(--rot, 0deg)); transition: transform 600ms var(--ease); }
+.era-panel .p-jersey .era-frame { transform: none; }
+.era-panel .p-cue { opacity: 1; }
+@media (min-width: 1024px) {
+  .eras { overflow: hidden; scroll-snap-type: none; height: min(80svh, 760px); }
+  .era-panel { flex: 1 1 0; max-width: none; min-width: 0; transition: flex-grow 640ms var(--ease); --num: clamp(4.6rem, 7.6vw, 9.5rem); }
+  .eras:hover .era-panel { flex-grow: 1; }
+  .eras .era-panel:hover, .eras .era-panel:focus-visible { flex-grow: 2.7; }
+  .era-panel:hover .p-jersey, .era-panel:focus-visible .p-jersey { transform: translateX(-50%) rotate(0deg) scale(1.06); }
+  .era-panel .p-cue { opacity: 0; transition: opacity 300ms ease; }
+  .era-panel:hover .p-cue, .era-panel:focus-visible .p-cue { opacity: 1; }
+}
+.era-panel::after { content: ""; position: absolute; inset: 0 0 0 auto; width: 1px; background: rgba(0, 0, 0, 0.25); z-index: 5; }
+
+/* ---------- Capitolo (pagina Archivio) ---------- */
+.era-chapter { min-height: min(92svh, 860px); display: grid; align-items: center; scroll-margin-top: calc(var(--bar-h) + var(--head-h) + 52px); }
+
+/* Dock: indice delle ere, sempre a portata di pollice */
+.era-dock { position: sticky; top: calc(var(--bar-h) + var(--head-h)); z-index: 30; display: flex; justify-content: center; padding: 10px 12px; pointer-events: none; }
+.era-dock ul { display: flex; gap: 6px; padding: 6px; border-radius: 999px; background: rgba(10, 10, 11, 0.86); backdrop-filter: blur(10px); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.14), 0 10px 24px -8px rgba(0, 0, 0, 0.7); pointer-events: auto; }
+.era-dock a { display: flex; align-items: center; justify-content: center; min-width: 52px; height: 40px; padding: 0 12px; border-radius: 999px; font-family: var(--font-display); font-style: italic; font-size: 20px; color: #f4f2ea; transition: background-color 200ms ease, color 200ms ease; }
+.era-dock a[aria-current="true"] { background: var(--lime); color: #0a0a0a; }
+@media (hover: hover) and (pointer: fine) { .era-dock a:hover { background: rgba(255, 255, 255, 0.16); } .era-dock a[aria-current="true"]:hover { background: var(--lime); } }
+
+/* Chip squadra dentro un'era */
+.era-chip { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: var(--e-btn-rad); font-family: var(--font-display); font-style: italic; text-transform: uppercase; font-size: 18px; color: var(--e-fg); box-shadow: inset 0 0 0 2px var(--e-line); transition: background-color 160ms ease, color 160ms ease; }
+.era-chip[aria-pressed="true"] { background: var(--e-ac); color: var(--e-ac-ink); box-shadow: none; }
+.era-70 .era-chip, .era-10 .era-chip { border-radius: 12px; }
+.era-80 .era-chip, .era-90 .era-chip { border-radius: 0; }
+@media (hover: hover) and (pointer: fine) { .era-chip:hover { background: var(--e-ac); color: var(--e-ac-ink); } }
+
+.era-chip span:not(.num) { text-transform: none; font-style: normal; font-family: var(--font-body); font-weight: 600; letter-spacing: 0; }
+.era-90 .era-head-text { background: rgba(21, 55, 214, 0.96); padding: 22px 26px; border-radius: 6px; }

@@ -4,13 +4,16 @@ import Article from "@/lib/models/Article";
 import HomeHero from "@/components/home/HomeHero";
 import TapeMarquee from "@/components/home/TapeMarquee";
 import EditorMosaic from "@/components/home/EditorMosaic";
-import EraTiles, { type EraTile } from "@/components/home/EraTiles";
+import EraPanels, { type EraPanelData } from "@/components/era/EraPanels";
+import { pickForEra } from "@/lib/eraPick";
+import { ERA_ORDER } from "@/lib/eraTheme";
+import { eraOf } from "@/lib/archive";
 import ProductRail from "@/components/home/ProductRail";
 import OfferTicket from "@/components/home/OfferTicket";
 import Manifesto from "@/components/home/Manifesto";
 import HomeNewsStrip from "@/components/home/HomeNewsStrip";
 import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
-import { getArchiveItems, eraTiles } from "@/lib/archiveData";
+import { getArchiveItems } from "@/lib/archiveData";
 import ProductModel from "@/lib/models/Product";
 
 export const revalidate = 300;
@@ -128,9 +131,14 @@ async function getFeatured() {
   }
 }
 
-async function getArchiveEras(): Promise<{ eras: EraTile[]; total: number }> {
+async function getArchiveEras(): Promise<{ eras: EraPanelData[]; total: number }> {
   const items = await getArchiveItems();
-  return { eras: eraTiles(items), total: items.length || 730 };
+  const eras = ERA_ORDER.map((slug) => {
+    const count = items.filter((it) => eraOf(it.year)?.slug === slug).length;
+    const pick = pickForEra(items, slug, 1)[0];
+    return { slug, count, image: pick?.image || "", alt: pick?.name || slug };
+  }).filter((e) => e.count > 0);
+  return { eras, total: items.length || 730 };
 }
 
 export default async function Home() {
@@ -162,7 +170,15 @@ export default async function Home() {
       <HomeHero products={hero} />
       <TapeMarquee />
       <EditorMosaic products={mosaic} />
-      <EraTiles eras={archive.eras} />
+      <section aria-labelledby="eras-h" className="pt-8 md:pt-14">
+        <div className="mx-auto mb-6 flex w-full max-w-[1760px] flex-wrap items-end justify-between gap-4 px-5 md:px-10 lg:px-16">
+          <h2 id="eras-h" className="disp text-[clamp(3rem,10vw,9rem)] leading-[0.85] text-white">
+            In che anni <span className="mark"><span>sei cresciuto?</span></span>
+          </h2>
+          <p className="max-w-[34ch] text-[18px] leading-snug text-[var(--text-2)]">Sei decenni di maglie retro, ognuno con il suo mondo. A 40€, spedizione gratuita.</p>
+        </div>
+        <EraPanels panels={archive.eras} />
+      </section>
       <OfferTicket />
       <ProductRail title="Novità 26/27" href="/shop/2026/27" lead="La nuova stagione, tutta a 35€." products={season} priorityFirst />
       <Manifesto retroCount={Math.floor(archive.total / 10) * 10} />

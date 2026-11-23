@@ -27,6 +27,9 @@ export const LEGENDS = [
 
 export const WORLD_CUP_YEARS = [1990, 1994, 1998, 2002, 2006, 2010, 2014, 2018, 2022];
 
+// Alcune schede hanno ancora il segnaposto con il logo al posto della foto: non devono rappresentare un'era
+export const hasPhoto = (image: string) => !!image && !image.startsWith("/images/");
+
 export function yearOf(title: string): number | null {
   const m = title.match(/(19[0-9]\d|20[0-2]\d)/);
   return m ? Number(m[1]) : null;

@@ -1294,7 +1294,8 @@ body {
 }
 .rail::-webkit-scrollbar { display: none; }
 .rail > * { scroll-snap-align: start; flex: 0 0 auto; }
-@media (min-width: 1024px) { .rail { padding-inline: max(32px, calc((100vw - 1280px) / 2 + 32px)); scroll-padding-inline: 32px; } }
+@media (min-width: 768px) { .rail { gap: 22px; padding-inline: max(40px, calc((100vw - 1760px) / 2 + 40px)); scroll-padding-inline: 40px; } }
+@media (min-width: 1024px) { .rail { padding-inline: max(64px, calc((100vw - 1760px) / 2 + 64px)); scroll-padding-inline: 64px; } }
 
 /* Nastri che scorrono: striscione lime e nastro nero incrociati */
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }

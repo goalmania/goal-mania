@@ -257,7 +257,7 @@ export default function SerieAClient({ products, teamSlug, leagueName = "Serie A
       </div>
 
       {/* ── Product Grid ──────────────────────────────────── */}
-      <div className="px-4 sm:px-6 lg:px-8 py-10 max-w-7xl mx-auto">
+      <div className="px-4 sm:px-6 lg:px-8 py-10 max-w-[1760px] mx-auto">
         {visibleProducts.length === 0 ? (
           <div
             className="flex flex-col items-center justify-center py-24 gap-4"

@@ -148,7 +148,7 @@ export default function ShopClient({
 
   return (
     <div>
-      <header className="mx-auto max-w-[1280px] px-5 pb-3 pt-8 md:px-8 md:pt-14">
+      <header className="mx-auto max-w-[1760px] px-5 pb-3 pt-8 md:px-8 md:pt-14">
         <h1 className="display text-[clamp(2.4rem,7vw,4.5rem)]">Tutte le maglie</h1>
         <p className="mt-3 max-w-[40ch] text-[19px] leading-snug text-[var(--text-2)]">
           Attuali a 35€, retro a 40€. Spedizione gratuita, e se ne prendi 3 ne paghi 2.
@@ -162,7 +162,7 @@ export default function ShopClient({
       <ProductRail title="Maglie retro" href="/shop/retro" products={rail(retroProducts)} />
       <ProductRail title="Ultimi arrivi" href="/shop" products={rail(latestProducts)} />
 
-      <section className="mx-auto max-w-[1280px] space-y-4 px-3 py-10 md:px-6">
+      <section className="mx-auto max-w-[1760px] space-y-4 px-3 py-10 md:px-6">
         <h2 className="display px-2 text-[clamp(1.9rem,5vw,3rem)]">Cerca per squadra</h2>
         <TeamGroup title="Serie A" href="/shop/serieA">
           <SerieATeamsClient />

@@ -351,7 +351,7 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
       {/* ── RETRO LOGO STRIP ──────────────────────────── */}
       <section className="relative overflow-hidden mb-12">
         {/* Section label */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-5">
+        <div className="max-w-[1760px] mx-auto px-4 sm:px-6 mb-5">
           <div className="flex items-center gap-3">
             <div className="h-px flex-shrink-0 w-8" style={{ background: "rgba(200,240,0,0.3)" }} />
             <span
@@ -389,7 +389,7 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
 
       {/* ── TEAM FILTER BANNER ────────────────────────── */}
       {teamFilter && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-6" id="retro-products">
+        <div className="max-w-[1760px] mx-auto px-4 sm:px-6 mb-6" id="retro-products">
           <div
             className="flex items-center justify-between gap-4 px-5 py-3.5 rounded-2xl"
             style={{ background: "rgba(200,240,0,0.06)", border: "1px solid rgba(200,240,0,0.18)" }}
@@ -427,7 +427,7 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
 
       {/* ── HALL OF FAME ──────────────────────────────── */}
       {hof.length > 0 && (
-        <section id={!teamFilter ? "retro-products" : undefined} className="max-w-7xl mx-auto px-4 sm:px-6 mb-16">
+        <section id={!teamFilter ? "retro-products" : undefined} className="max-w-[1760px] mx-auto px-4 sm:px-6 mb-16">
           {/* Section header */}
           <div className="flex items-center gap-4 mb-6">
             <div
@@ -488,7 +488,7 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
       )}
 
       {/* ── FILTER PILLS ──────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-10">
+      <div className="max-w-[1760px] mx-auto px-4 sm:px-6 mb-10">
         <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
           {FILTER_PILLS.map(({ key, label }) => {
             const active = activeFilter === key;
@@ -516,7 +516,7 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
 
       {/* ── FILTERED FLAT VIEW ────────────────────────── */}
       {activeFilter !== "all" && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
+        <section className="max-w-[1760px] mx-auto px-4 sm:px-6 pb-24">
           {filteredFlat.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
               {filteredFlat.map((p) => (
@@ -549,7 +549,7 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
             if (prods.length === 0) return null;
 
             return (
-              <section key={section.key} className="max-w-7xl mx-auto px-4 sm:px-6">
+              <section key={section.key} className="max-w-[1760px] mx-auto px-4 sm:px-6">
                 {/* Section header */}
                 <div className="mb-8">
                   {/* Top line: icon + era + divider */}
@@ -661,7 +661,7 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
         className="border-t py-10"
         style={{ borderColor: "rgba(255,255,255,0.05)" }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-[1760px] mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
               {
