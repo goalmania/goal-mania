@@ -142,10 +142,6 @@ function StripePayment({ clientSecret, total, onSuccess }: { clientSecret: strin
         <div className="rounded-2xl p-4 space-y-3" style={{ background: "rgba(200,240,0,0.04)", border: "1px solid rgba(200,240,0,0.12)" }}>
           <div className="flex items-center justify-between">
             <p className="text-xs font-black uppercase tracking-widest text-white/40">Cosa dicono i clienti</p>
-            <div className="flex items-center gap-1">
-              <span className="text-[#c8f000] text-xs">{"★".repeat(5)}</span>
-              <span className="text-[10px] text-white/30">4.9/5</span>
-            </div>
           </div>
           {reviews.map((r, i) => (
             <div key={i} className="flex items-start gap-3">

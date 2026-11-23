@@ -5,7 +5,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Chi Siamo",
   description:
-    "Goal Mania è il negozio online italiano di maglie da calcio a prezzi accessibili. Scopri la nostra storia, i nostri valori e perché più di 10.000 tifosi si affidano a noi.",
+    "Goal Mania è il negozio online italiano di maglie da calcio a prezzi accessibili. Maglie attuali a 35€, retro a 40€, spedizione gratuita in Italia.",
   alternates: {
     canonical: "https://goal-mania.it/about",
   },

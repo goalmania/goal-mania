@@ -743,39 +743,6 @@ function LeagueDivider({ id, label, sublabel, href }: { id: string; label: strin
 // Social proof band
 // ─────────────────────────────────────────────────────────────
 
-function SocialProofBand() {
-  const stats = [
-    { value: "4.9/5", label: "Rating medio clienti" },
-    { value: "1.200+", label: "Ordini completati" },
-    { value: "98%", label: "Clienti soddisfatti" },
-    { value: "50+", label: "Squadre disponibili" },
-  ];
-
-  return (
-    <div
-      className="py-10 border-y"
-      style={{ background: "#0d0d0d", borderColor: "rgba(255,255,255,0.04)" }}
-    >
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          {stats.map(({ value, label }) => (
-            <div key={label}>
-              <p
-                className="font-black text-2xl text-white mb-1"
-                style={{ fontFamily: "var(--font-display, sans-serif)", color: "#c8f000" }}
-              >
-                {value}
-              </p>
-              <p className="text-[10px] uppercase tracking-[2px]" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.3)" }}>
-                {label}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ─────────────────────────────────────────────────────────────
 // Main export
@@ -835,8 +802,6 @@ export default function ShopClient({
       {/* Maglie Retro */}
       <RetroSection products={retroProducts} />
 
-      {/* Social proof numbers */}
-      <SocialProofBand />
 
       {/* ── League sections ── */}
       <div style={{ background: "#0a0a0a" }}>
@@ -853,19 +818,6 @@ export default function ShopClient({
         <LeagueDivider id="nazionali-section" label="Nazionali" sublabel="Mondiali 2026" href="/shop/worldcup" />
         <NazionaliSection />
       </div>
-
-      {/* Video products */}
-      {videoProducts && videoProducts.length > 0 && (
-        <VideoComp products={videoProducts} />
-      )}
-
-      {/* Testimonials */}
-      <div style={{ background: "#080808", borderTop: "0.5px solid rgba(255,255,255,0.04)" }}>
-        <Testimonies />
-      </div>
-
-      {/* Stats */}
-      <FeaturesCardStats />
 
       {/* FAQ */}
       <FAQ />

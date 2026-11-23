@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 
@@ -133,7 +134,7 @@ function PatchCard({ patch, selected, onToggle }: {
     <button
       type="button"
       onClick={onToggle}
-      className="patch-card relative flex flex-col gap-2 p-3 rounded-2xl transition-all active:scale-[0.97] text-left"
+      className="patch-card relative flex flex-col gap-2 p-3 cut cut-sm transition-all active:scale-[0.97] text-left"
       style={{
         background: selected ? cfg.bg : "rgba(255,255,255,0.02)",
         border: `1.5px solid ${selected ? cfg.border : "rgba(255,255,255,0.07)"}`,
@@ -442,11 +443,7 @@ export default function ProductDetailClient({
       {/* ── Sticky Mobile CTA ──────────────────────────────────────────── */}
       <div
         className="lg:hidden fixed bottom-0 left-0 right-0 z-50"
-        style={{
-          background: "rgba(8,8,8,0.96)",
-          borderTop: "1px solid rgba(200,240,0,0.12)",
-          backdropFilter: "blur(24px)",
-        }}
+        style={{ background: "#0a0a0a", borderTop: "1px solid rgba(255,255,255,0.14)", paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         {customization.size && (
           <div
@@ -471,30 +468,18 @@ export default function ProductDetailClient({
           <button
             type="button"
             onClick={handleAddToCart}
-            className="flex-1 h-12 flex items-center justify-center rounded-2xl text-[11px] font-black uppercase tracking-tight transition-all active:scale-[0.97]"
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              color: "#fff",
-              border: "1.5px solid rgba(200,240,0,0.2)",
-              fontFamily: "var(--font-display,sans-serif)",
-              letterSpacing: "1px",
-            }}
+            className="flex-1 h-14 flex items-center justify-center cut cut-sm text-[17px] font-extrabold uppercase tracking-wide transition-all active:scale-[0.97]"
+            style={{ background: "#26261f", color: "#fff", fontFamily: "var(--font-display,sans-serif)" }}
           >
             + Carrello
           </button>
           <button
             type="button"
             onClick={handleBuyNow}
-            className="flex-[2] h-12 flex items-center justify-center gap-1.5 rounded-2xl text-[12px] font-black uppercase tracking-tight transition-all active:scale-[0.97]"
-            style={{
-              background: "#c8f000",
-              color: "#000",
-              fontFamily: "var(--font-display,sans-serif)",
-              letterSpacing: "1.5px",
-              boxShadow: "0 4px 20px rgba(200,240,0,0.3)",
-            }}
+            className="flex-[2] h-14 flex items-center justify-center gap-1.5 cut cut-sm text-[19px] font-extrabold uppercase tracking-wide transition-all active:scale-[0.97]"
+            style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-display,sans-serif)" }}
           >
-            Compra Subito →
+            Compra subito →
           </button>
         </div>
       </div>
@@ -661,7 +646,7 @@ export default function ProductDetailClient({
             {/* Real stock warning / delivery cutoff only — no fabricated viewer/sales counts */}
             {(Boolean(product.stockQuantity !== undefined && product.stockQuantity > 0 && product.stockQuantity < 5) || Boolean(deliveryCountdown)) && (
               <div
-                className="grid grid-cols-1 gap-2 p-3 rounded-2xl"
+                className="grid grid-cols-1 gap-2 p-3 cut cut-sm"
                 style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
               >
                 {product.stockQuantity !== undefined && product.stockQuantity > 0 && product.stockQuantity < 5 && (
@@ -683,18 +668,16 @@ export default function ProductDetailClient({
 
             {/* ── SIZE + SLEEVE ─────────────────────────────────────── */}
             <div
-              className="rounded-[24px] overflow-hidden"
+              className="cut overflow-hidden"
               style={{ border: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.015)" }}
             >
               <div className="px-4 py-3 border-b flex items-center justify-between" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-                <span className="text-[9px] font-black uppercase tracking-[3px]" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-mono,monospace)" }}>
-                  // Taglia
-                </span>
+                <span className="display text-[22px] text-white">Taglia</span>
                 <button
                   type="button"
                   onClick={() => setSizeChartOpen(true)}
-                  className="text-[10px] font-black"
-                  style={{ color: "#c8f000", textDecoration: "underline", fontFamily: "var(--font-mono,monospace)" }}
+                  className="min-h-[44px] px-1 text-[15px] font-bold"
+                  style={{ color: "#c8f000", textDecoration: "underline", textUnderlineOffset: "4px" }}
                 >
                   Guida taglie →
                 </button>
@@ -742,7 +725,7 @@ export default function ProductDetailClient({
 
                 {/* Long sleeve toggle */}
                 <div
-                  className="flex items-center justify-between p-3.5 rounded-2xl"
+                  className="flex items-center justify-between p-3.5 cut cut-sm"
                   style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
                 >
                   <div>
@@ -764,7 +747,7 @@ export default function ProductDetailClient({
             {/* ── CUSTOMIZATION SECTION ──────────────────────────────── */}
             {!product.isMysteryBox && (
               <div
-                className="rounded-[24px] overflow-hidden"
+                className="cut overflow-hidden"
                 style={{ border: "1px solid rgba(200,240,0,0.1)", background: "rgba(200,240,0,0.015)" }}
               >
                 <button
@@ -774,11 +757,8 @@ export default function ProductDetailClient({
                   className="flex w-full items-center justify-between px-4 py-3 text-left"
                   style={{ borderBottom: customOpen ? "1px solid rgba(200,240,0,0.08)" : "none", minHeight: 48 }}
                 >
-                  <span
-                    className="text-[10px] font-black uppercase tracking-[2px]"
-                    style={{ color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}
-                  >
-                    // Personalizza: nome, numero, patch (opzionale)
+                  <span className="display text-[20px]" style={{ color: "#c8f000" }}>
+                    Nome, numero e patch <span className="text-white/70" style={{ fontFamily: "var(--font-body)", textTransform: "none", fontWeight: 600, fontSize: "15px" }}>(opzionale)</span>
                   </span>
                   <span className="text-lg font-black" style={{ color: "#c8f000" }}>{customOpen ? "−" : "+"}</span>
                 </button>
@@ -798,7 +778,7 @@ export default function ProductDetailClient({
                           key={opt.id}
                           type="button"
                           onClick={() => setCustomization(p => ({ ...p, isPlayerEdition: opt.id === "player" }))}
-                          className="flex flex-col items-center justify-center p-3.5 rounded-2xl transition-all active:scale-[0.97]"
+                          className="flex flex-col items-center justify-center p-3.5 cut cut-sm transition-all active:scale-[0.97]"
                           style={{
                             background: opt.active ? "#c8f000" : "rgba(255,255,255,0.03)",
                             border: `1.5px solid ${opt.active ? "#c8f000" : "rgba(255,255,255,0.08)"}`,
@@ -934,7 +914,7 @@ export default function ProductDetailClient({
             {/* Mystery Box exclusion list */}
             {product.isMysteryBox && (
               <div
-                className="rounded-[24px] overflow-hidden"
+                className="cut overflow-hidden"
                 style={{ background: "linear-gradient(135deg, rgba(88,28,135,0.6), rgba(49,46,129,0.6))", border: "1px solid rgba(139,92,246,0.3)" }}
               >
                 <div className="p-5 space-y-3">
@@ -965,30 +945,27 @@ export default function ProductDetailClient({
 
             {/* ── CTA BLOCK ──────────────────────────────────────────── */}
             <div className="space-y-3 pb-4">
-              {/* Trust row */}
-              <div
-                className="grid grid-cols-4 gap-1 py-3 px-2 rounded-2xl"
-                style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
-              >
-                {[
-                  { icon: "🚚", label: "Sped. Gratuita", sub: "Su ogni ordine" },
-                  { icon: "🔄", label: "Reso 14gg", sub: "Spese a carico tuo" },
-                  { icon: "🔒", label: "Pagamento", sub: "Sicuro SSL" },
-                  { icon: "⭐", label: "Qualità", sub: "Garantita" },
-                ].map(({ icon, label, sub }) => (
-                  <div key={label} className="flex flex-col items-center gap-0.5 text-center">
-                    <span className="text-base">{icon}</span>
-                    <span className="text-[9px] font-black text-white leading-tight" style={{ fontFamily: "var(--font-display,sans-serif)" }}>{label}</span>
-                    <span className="text-[8px] leading-tight" style={{ color: "rgba(200,240,0,0.5)", fontFamily: "var(--font-mono,monospace)" }}>{sub}</span>
-                  </div>
+              {/* Condizioni vere, scritte chiare */}
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-2 py-1 text-[15px] font-semibold text-white/90">
+                {["Spedizione gratuita, 7-10 giorni", "Reso entro 14 giorni", "Pagamento sicuro", "Tracking via email"].map((t) => (
+                  <li key={t} className="flex items-start gap-2">
+                    <span className="mt-[7px] h-2 w-2 shrink-0 bg-[#c8f000]" aria-hidden="true" />
+                    {t}
+                  </li>
                 ))}
-              </div>
+              </ul>
+
+              {/* Offerta 3x2 vicino al pulsante: la leva piu forte per aumentare lo scontrino */}
+              <Link href="/shop" className="cut cut-sm block bg-[#1b1b19] px-4 py-3 text-white transition-colors hover:bg-[#c8f000] hover:text-[#0a0a0a]">
+                <span className="display text-[22px]">Prendi 3, ne paghi 2</span>
+                <span className="mt-0.5 block text-[14px] font-semibold opacity-80">La meno cara è gratis. Scegli altre maglie →</span>
+              </Link>
 
               {/* Quantity + Add to cart + Wishlist */}
               <div className="flex items-center gap-2">
                 {/* Qty */}
                 <div
-                  className="flex items-center rounded-2xl overflow-hidden flex-shrink-0"
+                  className="flex items-center cut cut-sm overflow-hidden flex-shrink-0"
                   style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
                 >
                   <button
@@ -1014,7 +991,7 @@ export default function ProductDetailClient({
                 <button
                   type="button"
                   onClick={handleAddToCart}
-                  className="flex-1 h-12 flex items-center justify-center gap-1.5 rounded-2xl text-[11px] font-black uppercase tracking-tight transition-all active:scale-[0.97]"
+                  className="flex-1 h-12 flex items-center justify-center gap-1.5 cut cut-sm text-[11px] font-black uppercase tracking-tight transition-all active:scale-[0.97]"
                   style={{
                     background: "rgba(255,255,255,0.04)",
                     color: "#fff",
@@ -1030,7 +1007,7 @@ export default function ProductDetailClient({
                 <button
                   type="button"
                   onClick={handleWishlistToggle}
-                  className="h-12 w-12 flex items-center justify-center rounded-2xl transition-all active:scale-[0.96] flex-shrink-0"
+                  className="h-12 w-12 flex items-center justify-center cut cut-sm transition-all active:scale-[0.96] flex-shrink-0"
                   style={{
                     background: inWishlist ? "rgba(239,68,68,0.1)" : "rgba(255,255,255,0.04)",
                     border: `1.5px solid ${inWishlist ? "rgba(239,68,68,0.4)" : "rgba(255,255,255,0.08)"}`,
@@ -1062,13 +1039,8 @@ export default function ProductDetailClient({
                 {["VISA","Mastercard","Apple Pay","Google Pay","Klarna"].map(m => (
                   <span
                     key={m}
-                    className="text-[8px] font-black px-2 py-1 rounded tracking-widest"
-                    style={{
-                      background: "rgba(255,255,255,0.04)",
-                      color: "rgba(255,255,255,0.25)",
-                      border: "1px solid rgba(255,255,255,0.06)",
-                      fontFamily: "var(--font-mono,monospace)",
-                    }}
+                    className="px-2 py-1 text-[13px] font-bold"
+                    style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.85)" }}
                   >
                     {m}
                   </span>
@@ -1096,36 +1068,6 @@ export default function ProductDetailClient({
               </div>
             )}
 
-          </div>
-        </div>
-      </div>
-
-      {/* ── Trust Strip ────────────────────────────────────────────────── */}
-      <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", borderBottom: "1px solid rgba(255,255,255,0.05)", background: "#0d0d0d" }}>
-        <div className="max-w-5xl mx-auto px-4 py-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { icon: "🚚", label: "Spedizione Gratuita", sub: "Su ogni ordine" },
-              { icon: "🔄", label: "Reso facile", sub: "Entro 14 giorni" },
-              { icon: "🔒", label: "Pagamento Sicuro", sub: "Crittografia SSL 256-bit" },
-              { icon: "⭐", label: "Qualità Garantita", sub: "Controllo prima della spedizione" },
-            ].map(({ icon, label, sub }) => (
-              <div
-                key={label}
-                className="flex items-center gap-3 p-4 rounded-2xl"
-                style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
-              >
-                <span className="text-2xl flex-shrink-0">{icon}</span>
-                <div>
-                  <p className="text-[11px] font-black uppercase text-white" style={{ fontFamily: "var(--font-display,sans-serif)", letterSpacing: "0.5px" }}>
-                    {label}
-                  </p>
-                  <p className="text-[10px] mt-0.5" style={{ color: "rgba(200,240,0,0.45)", fontFamily: "var(--font-mono,monospace)" }}>
-                    {sub}
-                  </p>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>
