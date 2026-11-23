@@ -12,29 +12,33 @@ interface HeroProduct {
 
 const fmt = (n: number) => (Number.isInteger(Number(n)) ? String(Number(n)) : Number(n).toFixed(2).replace(".", ","));
 
-function Plate({ p, priority }: { p: HeroProduct; priority?: boolean }) {
+function Poster({ p, w = 320, priority = false, className = "", style }: { p: HeroProduct; w?: number; priority?: boolean; className?: string; style?: React.CSSProperties }) {
   return (
     <Link
       href={`/products/${p.slug || p.id}`}
-      className="group relative block aspect-[4/5] w-[58vw] max-w-[270px] overflow-hidden rounded-[28px] bg-[#f5f5f7] md:w-[262px]"
+      className={`poster tape group block overflow-hidden ${className}`}
+      style={style}
       aria-label={`${p.name}, ${fmt(p.price)} euro`}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={cld(p.image, 440)}
-        srcSet={`${cld(p.image, 320)} 320w, ${cld(p.image, 440)} 440w, ${cld(p.image, 660)} 660w`}
-        sizes="(max-width: 768px) 58vw, 262px"
-        alt={p.name}
-        width={440}
-        height={550}
-        loading={priority ? "eager" : "lazy"}
-        decoding="async"
-        fetchPriority={priority ? "high" : "auto"}
-        className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-500 ease-out group-hover:scale-[1.05]"
-        style={{ mixBlendMode: "multiply" }}
-      />
-      <span className="num absolute bottom-3 left-3 rounded-full bg-black/75 px-3.5 py-2 text-[17px] text-white backdrop-blur-md">
-        {fmt(p.price)}€
+      <span className="relative block aspect-[4/5]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={cld(p.image, w)}
+          srcSet={`${cld(p.image, 320)} 320w, ${cld(p.image, 480)} 480w, ${cld(p.image, 720)} 720w`}
+          sizes="(max-width: 1024px) 56vw, 300px"
+          alt={p.name}
+          width={480}
+          height={600}
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
+          fetchPriority={priority ? "high" : "auto"}
+          className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.06]"
+          style={{ mixBlendMode: "multiply" }}
+        />
+      </span>
+      <span className="flex items-center justify-between gap-2 px-3 pb-3 pt-1">
+        <span className="line-clamp-1 text-[15px] font-semibold uppercase tracking-[0.02em] text-black/80">{p.name.replace(/^Maglia\s+/i, "")}</span>
+        <span className="num marker-line shrink-0 text-[26px]">{fmt(p.price)}€</span>
       </span>
     </Link>
   );
@@ -42,48 +46,52 @@ function Plate({ p, priority }: { p: HeroProduct; priority?: boolean }) {
 
 export default function HomeHero({ products }: { products: HeroProduct[] }) {
   const shelf = products.slice(0, 8);
-  const lead = shelf[0];
+  const c = shelf.slice(0, 5);
   return (
-    <section className="relative isolate overflow-hidden">
-      {/* Luce ambiente: la foto della prima maglia, sfocata, da' il colore al vetro */}
-      {lead && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          aria-hidden="true"
-          alt=""
-          src={cld(lead.image, 300)}
-          className="absolute inset-0 -z-10 h-full w-full scale-[1.5] object-cover opacity-[0.3] blur-[64px] saturate-150"
-        />
-      )}
-      <div className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-b from-transparent to-[var(--bg)]" />
-
-      <div className="mx-auto max-w-[1280px] px-5 pb-6 pt-8 md:px-8 md:pb-10 md:pt-16">
-        <p className="glass rise inline-flex items-center gap-2 rounded-full px-4 py-2 text-[14px] font-medium">
-          <span className="h-2 w-2 rounded-full bg-[var(--lime)]" aria-hidden="true" />
-          Black Friday · prendi 3, ne paghi 2
-        </p>
-        <h1 className="display rise mt-5 text-[clamp(2.9rem,10vw,6rem)]" style={{ animationDelay: "80ms" }}>
-          Maglie da calcio.
-          <br />
-          <span className="text-white/55">Tutte a 35€.</span>
-        </h1>
-        <p className="rise mt-5 max-w-[34ch] text-[19px] leading-snug text-[var(--text-2)]" style={{ animationDelay: "160ms" }}>
-          Retro a 40€. Spedizione gratuita in Italia e reso entro 14 giorni.
-        </p>
-        <div className="rise mt-7 flex flex-wrap gap-3" style={{ animationDelay: "240ms" }}>
-          <Link href="/shop" className="btn btn-lime">
-            Scegli la maglia <ArrowRight className="h-5 w-5" strokeWidth={2.4} />
-          </Link>
-          <Link href="#offerta" className="btn btn-glass">
-            Come funziona il 3×2
-          </Link>
+    <section className="relative overflow-hidden">
+      <div className="mx-auto grid max-w-[1280px] gap-10 px-5 pb-6 pt-7 md:px-8 md:pt-12 lg:grid-cols-[1.02fr_1fr] lg:items-center lg:pb-14">
+        <div>
+          <p className="rise inline-block -rotate-2 bg-[var(--lime)] px-3 py-1.5 font-[family-name:var(--font-display)] text-[19px] italic uppercase leading-none text-[#0a0a0a]">
+            Black Friday · prendi 3, paghi 2
+          </p>
+          <h1 className="disp rise mt-5 text-[clamp(3.9rem,14.5vw,9.5rem)] text-white" style={{ animationDelay: "70ms" }}>
+            Il calcio
+            <br />
+            si <span className="mark"><span>indossa.</span></span>
+          </h1>
+          <p className="rise mt-6 max-w-[34ch] text-[19px] leading-snug text-[var(--text-2)]" style={{ animationDelay: "140ms" }}>
+            Maglie da tifoso a <b className="text-white">35€</b>. Le retro a <b className="text-white">40€</b>. Ne prendi tre, ne paghi due. Spedizione gratuita.
+          </p>
+          <div className="rise mt-7 flex flex-wrap gap-3" style={{ animationDelay: "210ms" }}>
+            <Link href="/shop" className="btn btn-lime">
+              Scegli la tua maglia <ArrowRight className="h-5 w-5" strokeWidth={3} />
+            </Link>
+            <Link href="/archivio" className="btn btn-ghost">
+              Archivio retro
+            </Link>
+          </div>
         </div>
+
+        {/* Desktop: il muro con i manifesti */}
+        {c.length >= 5 && (
+          <div className="relative mx-auto hidden h-[640px] w-full max-w-[600px] lg:block" aria-label="Maglie in evidenza">
+            <Poster p={c[0]} priority className="absolute left-0 top-10 z-10 w-[250px]" style={{ ["--rot" as string]: "-5deg" }} />
+            <Poster p={c[1]} priority className="absolute right-4 top-0 z-20 w-[270px]" style={{ ["--rot" as string]: "4deg", ["--tape-rot" as string]: "5deg" }} />
+            <Poster p={c[2]} className="absolute left-[120px] top-[250px] z-30 w-[270px]" style={{ ["--rot" as string]: "-1.5deg" }} />
+            <Poster p={c[3]} className="absolute bottom-0 right-0 z-10 w-[230px]" style={{ ["--rot" as string]: "5.5deg", ["--tape-rot" as string]: "-6deg" }} />
+            <Poster p={c[4]} className="absolute bottom-2 left-0 z-0 w-[210px]" style={{ ["--rot" as string]: "-7deg" }} />
+            <span className="sticker spin-slow absolute right-[-6px] top-[300px] z-40 h-[118px] w-[118px] text-[44px]" aria-hidden="true">
+              35€
+            </span>
+          </div>
+        )}
       </div>
 
+      {/* Telefono: la scansia scorre di lato, le maglie sono gia sulla prima schermata */}
       {shelf.length > 0 && (
-        <div className="rail pb-8 md:pb-12" aria-label="Maglie in evidenza">
+        <div className="rail lg:hidden" aria-label="Maglie in evidenza">
           {shelf.map((p, i) => (
-            <Plate key={p.id} p={p} priority={i < 2} />
+            <Poster key={p.id} p={p} priority={i < 2} className="w-[56vw] max-w-[250px]" style={{ ["--rot" as string]: `${i % 2 ? 1.6 : -1.6}deg` }} />
           ))}
         </div>
       )}

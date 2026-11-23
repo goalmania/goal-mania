@@ -2,12 +2,15 @@ import { Metadata } from "next";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import HomeHero from "@/components/home/HomeHero";
-import LeagueRail from "@/components/home/LeagueRail";
+import TapeMarquee from "@/components/home/TapeMarquee";
+import EditorMosaic from "@/components/home/EditorMosaic";
+import EraTiles, { type EraTile } from "@/components/home/EraTiles";
 import ProductRail from "@/components/home/ProductRail";
 import OfferTicket from "@/components/home/OfferTicket";
-import ReasonsList from "@/components/home/ReasonsList";
+import Manifesto from "@/components/home/Manifesto";
 import HomeNewsStrip from "@/components/home/HomeNewsStrip";
 import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
+import { ERAS, toItem, eraOf, yearOf } from "@/lib/archive";
 import ProductModel from "@/lib/models/Product";
 
 export const revalidate = 300;
@@ -125,12 +128,32 @@ async function getFeatured() {
   }
 }
 
+// L'archivio: tutte le retro attive (solo i campi che servono), per contare le epoche e scegliere una maglia da mostrare
+async function getArchiveEras(): Promise<{ eras: EraTile[]; total: number }> {
+  try {
+    await connectDB();
+    const docs = await ProductModel.find({ category: "Retro", isActive: true })
+      .select({ title: 1, slug: 1, basePrice: 1, retroPrice: 1, isRetro: 1, category: 1, feature: 1, images: { $slice: 1 } })
+      .sort({ feature: -1 })
+      .lean();
+    const items = JSON.parse(JSON.stringify(docs)).map(toItem);
+    const eras: EraTile[] = ERAS.map((e) => {
+      const inEra = items.filter((it: any) => eraOf(it.year)?.slug === e.slug);
+      const pick = inEra.find((it: any) => it.image) || null;
+      return { slug: e.slug, label: e.label, short: e.short, count: inEra.length, image: pick?.image || "", alt: pick?.name || e.label };
+    }).filter((e) => e.count > 0);
+    return { eras, total: items.length };
+  } catch {
+    return { eras: [], total: 730 };
+  }
+}
+
 export default async function Home() {
-  const [featured, season, retro, worldcup, latestArticles] = await Promise.all([
+  const [featured, season, worldcup, archive, latestArticles] = await Promise.all([
     getFeatured(),
     getByCategory("2026/27"),
-    getByCategory("Retro"),
     getByCategory("World Cup 2026"),
+    getArchiveEras(),
     (async () => {
       try {
         await connectDB();
@@ -145,19 +168,20 @@ export default async function Home() {
       }
     })(),
   ]);
-  const hero = featured.length >= 3 ? featured : season;
+  const hero = featured.length >= 5 ? featured : season;
+  const mosaic = (featured.length >= 5 ? featured.slice(0, 5) : season.slice(0, 5));
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <HomeHero products={hero} />
-      <LeagueRail />
-      <ProductRail title="Scelte per te" href="/shop" products={featured.length ? featured : season} priorityFirst />
+      <TapeMarquee />
+      <EditorMosaic products={mosaic} />
+      <EraTiles eras={archive.eras} />
       <OfferTicket />
-      <ProductRail title="Nuovi arrivi 26/27" href="/shop/2026/27" products={season} />
-      <ProductRail title="Maglie retro" href="/shop/retro" products={retro} />
+      <ProductRail title="Novità 26/27" href="/shop/2026/27" lead="La nuova stagione, tutta a 35€." products={season} priorityFirst />
+      <Manifesto retroCount={Math.floor(archive.total / 10) * 10} />
       <ProductRail title="Mondiali 2026" href="/shop/worldcup" products={worldcup} />
-      <ReasonsList />
       <RealOrdersGallery />
       <HomeNewsStrip articles={latestArticles} />
     </div>

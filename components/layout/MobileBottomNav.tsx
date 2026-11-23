@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import { Home, Shirt, History, ShoppingBag, User } from "lucide-react";
 import { useCartStore } from "@/lib/store/cart";
 
-// Capsula di vetro flottante, solo su telefono (come la barra delle schede di iOS).
-// Nascosta dove c'e gia una barra d'acquisto (scheda prodotto, carrello, checkout) e nell'admin.
+// Barra fissa solo su telefono. Nascosta dove c'e gia una barra d'acquisto
+// (scheda prodotto, carrello, checkout) e nell'admin.
 const HIDDEN = ["/products/", "/cart", "/checkout", "/admin", "/auth"];
 
 export default function MobileBottomNav() {
@@ -24,7 +24,7 @@ export default function MobileBottomNav() {
   const items = [
     { href: "/", label: "Home", Icon: Home, active: pathname === "/" },
     { href: "/shop", label: "Maglie", Icon: Shirt, active: pathname.startsWith("/shop") && !pathname.startsWith("/shop/retro") },
-    { href: "/shop/retro", label: "Retro", Icon: History, active: pathname.startsWith("/shop/retro") },
+    { href: "/archivio", label: "Archivio", Icon: History, active: pathname.startsWith("/archivio") || pathname.startsWith("/shop/retro") },
     { href: "/cart", label: "Carrello", Icon: ShoppingBag, active: false, badge: count },
     { href: "/account/orders", label: "Account", Icon: User, active: pathname.startsWith("/account") || pathname.startsWith("/profile") },
   ];
@@ -32,23 +32,22 @@ export default function MobileBottomNav() {
   return (
     <nav
       aria-label="Navigazione mobile"
-      className="glass-strong fixed inset-x-3 z-[60] rounded-[30px] p-1.5 md:hidden"
-      style={{ bottom: "calc(10px + env(safe-area-inset-bottom))" }}
+      className="fixed inset-x-0 bottom-0 z-[60] border-t-2 border-[var(--line)] bg-[var(--asphalt)] md:hidden"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <ul className="grid grid-cols-5 gap-1">
+      <ul className="grid grid-cols-5">
         {items.map(({ href, label, Icon, active, badge }) => (
           <li key={href}>
             <Link
               href={href}
               aria-current={active ? "page" : undefined}
-              className={`relative flex h-[54px] flex-col items-center justify-center gap-0.5 rounded-[24px] text-[11px] font-medium transition-colors duration-200 active:scale-95 ${active ? "bg-white/14 text-white" : "text-white/65"}`}
+              className={`relative flex h-[58px] flex-col items-center justify-center gap-0.5 font-[family-name:var(--font-display)] text-[13px] italic uppercase tracking-[0.03em] active:bg-white/5 ${active ? "text-[var(--lime)]" : "text-white/75"}`}
             >
+              {active && <span className="absolute inset-x-5 top-[-2px] h-[4px] -skew-x-12 bg-[var(--lime)]" />}
               <span className="relative">
-                <Icon className={`h-[22px] w-[22px] ${active ? "text-[#c8f000]" : ""}`} strokeWidth={active ? 2.4 : 1.9} />
+                <Icon className="h-[22px] w-[22px]" strokeWidth={active ? 2.5 : 2} />
                 {!!badge && badge > 0 && (
-                  <span className="absolute -right-3 -top-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#c8f000] px-1 text-[11px] font-bold text-[#0a0a0a]">
-                    {badge}
-                  </span>
+                  <span className="num absolute -right-3 -top-2 flex h-[19px] min-w-[19px] items-center justify-center rounded-full bg-[var(--lime)] px-1 text-[13px] text-[#0a0a0a]">{badge}</span>
                 )}
               </span>
               {label}

@@ -26,9 +26,9 @@ export interface User {
 }
 
 const NAV = [
-  { href: "/shop", label: "Maglie", match: (p: string) => p === "/shop" || (p.startsWith("/shop/") && !p.startsWith("/shop/retro") && !p.startsWith("/shop/worldcup") && !p.startsWith("/shop/2026")) },
-  { href: "/shop/2026/27", label: "26/27", match: (p: string) => p.startsWith("/shop/2026") },
-  { href: "/shop/retro", label: "Retro", match: (p: string) => p.startsWith("/shop/retro") },
+  { href: "/shop", label: "Maglie", match: (p: string) => p === "/shop" || p.startsWith("/shop/serieA") || p.startsWith("/shop/premier") || p.startsWith("/shop/international") },
+  { href: "/shop/2026/27", label: "Novità 26/27", match: (p: string) => p.startsWith("/shop/2026") },
+  { href: "/archivio", label: "Archivio retro", match: (p: string) => p.startsWith("/archivio") || p.startsWith("/shop/retro") },
   { href: "/shop/worldcup", label: "Mondiali", match: (p: string) => p.startsWith("/shop/worldcup") },
   { href: "/news", label: "Notizie", match: (p: string) => p.startsWith("/news") },
 ];
@@ -37,7 +37,7 @@ const QUICK = [
   { href: "/shop/serieA", label: "Serie A" },
   { href: "/shop/premier-league", label: "Premier League" },
   { href: "/shop/2026/27", label: "Stagione 26/27" },
-  { href: "/shop/retro", label: "Retro" },
+  { href: "/archivio", label: "Archivio retro" },
   { href: "/shop/worldcup", label: "Mondiali 2026" },
 ];
 
@@ -77,12 +77,12 @@ export function Header() {
   };
 
   const iconBtn =
-    "relative flex h-11 w-11 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 active:bg-white/15";
+    "relative flex h-11 w-11 items-center justify-center text-white transition-colors hover:text-[var(--lime)] active:text-[var(--lime)]";
 
   return (
     <>
       <header
-        className="glass-strong fixed inset-x-0 z-50 !rounded-none !border-x-0 !border-t-0"
+        className="fixed inset-x-0 z-50 border-b-2 border-[var(--line)] bg-[var(--asphalt)]"
         style={{ top: "var(--bar-h)", height: "var(--head-h)" }}
       >
         <nav className="mx-auto flex h-full max-w-[1280px] items-center gap-2 px-2 md:gap-6 md:px-8" aria-label="Principale">
@@ -97,7 +97,7 @@ export function Header() {
             />
           </Link>
 
-          <ul className="hidden items-center gap-1 md:flex">
+          <ul className="ml-2 hidden items-stretch lg:flex">
             {NAV.map((n) => {
               const active = n.match(pathname);
               return (
@@ -105,9 +105,10 @@ export function Header() {
                   <Link
                     href={n.href}
                     aria-current={active ? "page" : undefined}
-                    className={`flex h-10 items-center rounded-full px-4 text-[15px] font-medium transition-colors ${active ? "bg-white/14 text-white" : "text-white/75 hover:bg-white/8 hover:text-white"}`}
+                    className={`relative flex h-[var(--head-h)] items-center px-4 font-[family-name:var(--font-display)] text-[19px] italic uppercase tracking-[0.02em] transition-colors ${active ? "text-[var(--lime)]" : "text-white hover:text-[var(--lime)]"}`}
                   >
                     {n.label}
+                    {active && <span className="absolute inset-x-4 bottom-0 h-[4px] -skew-x-12 bg-[var(--lime)]" />}
                   </Link>
                 </li>
               );
@@ -132,7 +133,7 @@ export function Header() {
                     <UserIcon className="h-[22px] w-[22px]" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 rounded-2xl glass-strong text-white">
+                <DropdownMenuContent align="end" className="w-56 rounded-md border border-[var(--line)] bg-[var(--wall)] text-white">
                   <DropdownMenuLabel>
                     <p className="text-sm font-semibold">{session.user?.name}</p>
                     <p className="text-xs text-white/60">{session.user?.email}</p>
@@ -153,7 +154,7 @@ export function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Link href="/auth/signin" className={`${iconBtn} hidden w-auto px-4 text-[15px] font-medium md:flex`}>
+              <Link href="/auth/signin" className={`${iconBtn} hidden w-auto px-3 font-[family-name:var(--font-display)] text-[18px] italic uppercase md:flex`}>
                 Accedi
               </Link>
             )}
@@ -161,31 +162,32 @@ export function Header() {
             <Link
               href="/cart"
               aria-label={`Carrello, ${cartCount} articoli`}
-              className="btn btn-lime ml-1 !h-11 !gap-2 !px-4 !text-[16px]"
+              className="btn btn-lime ml-2 !h-11 !gap-2 !px-4 !text-[19px]"
             >
-              <ShoppingBag className="h-[19px] w-[19px]" strokeWidth={2.3} />
-              <span className="num" suppressHydrationWarning>{cartCount}</span>
+              <ShoppingBag className="h-[19px] w-[19px]" strokeWidth={2.4} />
+              <span className="hidden sm:inline">Carrello</span>
+              <span className="num flex h-6 min-w-6 items-center justify-center rounded-full bg-[#0a0a0a] px-1.5 text-[15px] text-[var(--lime)]" suppressHydrationWarning>{cartCount}</span>
             </Link>
           </div>
         </nav>
       </header>
 
       {searchOpen && (
-        <div className="fade-in fixed inset-0 z-[80] bg-black/55 backdrop-blur-xl" role="dialog" aria-label="Cerca">
+        <div className="fade-in fixed inset-0 z-[80] bg-[var(--asphalt)]/97" role="dialog" aria-label="Cerca">
           <form onSubmit={submit} className="mx-auto mt-[calc(var(--bar-h)+10px)] flex max-w-[720px] items-center gap-2 px-3">
-            <div className="glass-strong flex h-14 flex-1 items-center gap-3 rounded-full px-5">
+            <div className="flex h-14 flex-1 items-center gap-3 border-b-4 border-[var(--lime)] px-1">
               <Search className="h-5 w-5 shrink-0 text-white/60" />
               <input
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Cerca squadra, giocatore, stagione"
-                className="h-full w-full bg-transparent text-[18px] text-white outline-none placeholder:text-white/50"
+                placeholder="Squadra, giocatore, anno"
+                className="h-full w-full bg-transparent font-[family-name:var(--font-display)] text-[26px] italic uppercase text-white outline-none placeholder:text-white/40"
                 enterKeyHint="search"
                 autoComplete="off"
               />
             </div>
-            <button type="button" onClick={() => setSearchOpen(false)} className="glass-strong flex h-14 w-14 items-center justify-center rounded-full text-white" aria-label="Chiudi ricerca">
+            <button type="button" onClick={() => setSearchOpen(false)} className="flex h-14 w-14 items-center justify-center text-white" aria-label="Chiudi ricerca">
               <X className="h-5 w-5" />
             </button>
           </form>

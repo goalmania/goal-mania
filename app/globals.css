@@ -51,7 +51,7 @@
   --radius-md:                     calc(var(--radius) - 2px);
   --radius-lg:                     var(--radius);
   --radius-xl:                     calc(var(--radius) + 4px);
-  --font-munish:                   var(--font-mulish);
+  --font-munish:                   var(--font-instrument);
 }
 
 :root {
@@ -71,9 +71,9 @@
   --gm-teal:        #00c8a0;
 
   /* ── Font Stack ── */
-  --font-display:   var(--font-geist-face, 'Geist', system-ui, sans-serif);
-  --font-body:      var(--font-geist-face, 'Geist', system-ui, sans-serif);
-  --font-mono:      var(--font-geist-face, 'Geist', system-ui, sans-serif);
+  --font-display:   var(--font-anton, 'Anton', 'Arial Narrow', Impact, sans-serif);
+  --font-body:      var(--font-instrument, 'Instrument Sans', system-ui, sans-serif);
+  --font-mono:      var(--font-instrument, 'Instrument Sans', system-ui, sans-serif);
 
   /* ── Radius (rounded but purposeful) ── */
   --radius: 0.75rem;
@@ -158,9 +158,11 @@
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    line-height: 1.1;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-style: italic;
+    letter-spacing: 0.005em;
+    line-height: 0.98;
     text-wrap: balance;
   }
 }
@@ -1176,108 +1178,139 @@ html {
 
 
 /* ================================================================
-   GOAL MANIA — sistema grafico "vetro" (2026)
-   Fondo scuro profondo, superfici di vetro smerigliato, angoli morbidi,
-   un solo carattere (Geist), lime come unico accento.
+   GOAL MANIA — "La Curva" (2026)
+   Calcio da strada: manifesti incollati al muro, nastro, lime spray.
+   Asfalto + carta calda + lime. Titoli Anton in corsivo come il logo.
    ================================================================ */
 :root {
-  --bg: #050506;
-  --bg-2: #0c0c0e;
-  --text: #f5f5f7;
-  --text-2: rgba(245, 245, 247, 0.74);
-  --text-3: rgba(245, 245, 247, 0.56);
-  --stroke: rgba(255, 255, 255, 0.13);
+  --asphalt: #0a0a0b;
+  --wall: #121214;
+  --wall-2: #1b1b1e;
+  --paper: #f3f0e7;
+  --paper-2: #e7e2d4;
+  --ink: #0a0a0a;
   --lime: #c8f000;
-  --lime-hi: #d8ff1a;
-  --paper: #f5f5f7;
-  --ease: cubic-bezier(0.32, 0.72, 0, 1);
-  --bar-h: 34px;
-  --head-h: 58px;
+  --lime-hi: #d9ff2a;
+  --red: #ff3b30;
+  --line: rgba(244, 242, 234, 0.16);
+  --text: #f4f2ea;
+  --text-2: rgba(244, 242, 234, 0.78);
+  --text-3: rgba(244, 242, 234, 0.6);
+  --tape: rgba(233, 226, 196, 0.88);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --bar-h: 36px;
+  --head-h: 60px;
 }
-@media (min-width: 768px) { :root { --head-h: 64px; } }
+@media (min-width: 768px) { :root { --head-h: 68px; } }
 
-html { scroll-behavior: smooth; caret-color: var(--lime); scrollbar-color: #3a3a3f var(--bg); }
-body { background: var(--bg); color: var(--text); font-feature-settings: "ss01", "cv11"; }
+html { scroll-behavior: smooth; caret-color: var(--lime); scrollbar-color: #3a3a3f var(--asphalt); }
+body {
+  background-color: var(--asphalt);
+  /* Grana sottile: il muro non e mai piatto (tile 160px, pochi byte) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  color: var(--text);
+}
 ::selection { background: var(--lime); color: #0a0a0a; }
-:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
 
-/* Raggi: tutto il sito usa la stessa scala */
-.cut    { border-radius: 22px; }
-.cut-sm { border-radius: 16px; }
-.cut-lg { border-radius: 32px; }
-
-/* Vetro smerigliato: sfoca e satura cio che c'e dietro, bordo e riflesso sottili */
-.glass {
-  background: rgba(255, 255, 255, 0.07);
-  -webkit-backdrop-filter: blur(22px) saturate(1.5);
-  backdrop-filter: blur(22px) saturate(1.5);
-  border: 1px solid var(--stroke);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 12px 32px -12px rgba(0, 0, 0, 0.5);
-}
-.glass-strong {
-  background: rgba(18, 18, 21, 0.66);
-  -webkit-backdrop-filter: blur(28px) saturate(1.8);
-  backdrop-filter: blur(28px) saturate(1.8);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 18px 40px -16px rgba(0, 0, 0, 0.6);
-}
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .glass { background: rgba(38, 38, 42, 0.92); }
-  .glass-strong { background: rgba(18, 18, 21, 0.97); }
-}
-
-/* Titoli: minuscolo con maiuscola iniziale, tracking stretto, peso pieno */
-.display {
+/* Titoli e cifre */
+.disp {
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 1.02;
+  text-transform: uppercase;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: 0.005em;
   text-wrap: balance;
 }
-.num {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
+.display { font-family: var(--font-display); text-transform: uppercase; font-style: italic; font-weight: 400; line-height: 0.95; letter-spacing: 0.005em; text-wrap: balance; }
+.num { font-family: var(--font-display); font-style: italic; font-weight: 400; font-variant-numeric: tabular-nums; line-height: 1; letter-spacing: 0.01em; }
 .gm-muted { color: var(--text-2); }
 .gm-lime-block { background: var(--lime); color: #0a0a0a; }
 
-/* Pulsanti a pillola (altezza 52px: bersaglio comodo anche a pollice) */
+/* Evidenziatore: la parola che conta, sul lime, come tracciata a pennarello */
+.mark { background: var(--lime); color: #0a0a0a; padding: 0 0.14em; margin: 0 -0.04em; display: inline-block; transform: skewX(-6deg); }
+.mark > * { display: inline-block; transform: skewX(6deg); }
+.marker-line { background: linear-gradient(transparent 58%, var(--lime) 58% 90%, transparent 90%); padding: 0 0.1em; }
+
+/* Manifesto: carta incollata al muro, appena storta, con il nastro */
+.poster {
+  position: relative;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, 0 16px 28px -12px rgba(0, 0, 0, 0.8), 0 3px 6px rgba(0, 0, 0, 0.45);
+  transform: rotate(var(--rot, 0deg));
+  transition: transform 380ms var(--ease), box-shadow 380ms var(--ease);
+}
+.poster:hover, .poster:focus-within { transform: rotate(0deg) translateY(-6px) scale(1.012); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, 0 28px 40px -14px rgba(0, 0, 0, 0.85), 0 4px 8px rgba(0, 0, 0, 0.5); }
+.tape::before {
+  content: ""; position: absolute; z-index: 3; top: -11px; left: 50%; width: 84px; height: 24px; margin-left: -42px;
+  background: var(--tape); transform: rotate(var(--tape-rot, -3deg));
+  clip-path: polygon(0 12%, 4% 0, 8% 14%, 12% 0, 88% 0, 92% 14%, 96% 0, 100% 12%, 100% 88%, 96% 100%, 92% 86%, 88% 100%, 12% 100%, 8% 86%, 4% 100%, 0 88%);
+  opacity: 0.92;
+}
+
+/* Bollino adesivo */
+.sticker {
+  display: inline-flex; align-items: center; justify-content: center; text-align: center;
+  background: var(--lime); color: #0a0a0a; border-radius: 999px;
+  font-family: var(--font-display); font-style: italic; text-transform: uppercase; line-height: 0.9;
+  box-shadow: 0 0 0 4px #0a0a0a inset, 0 10px 20px -8px rgba(0, 0, 0, 0.7);
+}
+
+/* Pulsanti */
 .btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  height: 52px; padding: 0 26px; border-radius: 999px;
-  font-family: var(--font-display); font-size: 17px; font-weight: 600; letter-spacing: -0.01em;
-  transition: transform 220ms var(--ease), background-color 180ms ease, color 180ms ease;
-  will-change: transform;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  height: 56px; padding: 0 30px; border-radius: 999px;
+  font-family: var(--font-display); font-style: italic; text-transform: uppercase; font-size: 21px; letter-spacing: 0.02em; font-weight: 400;
+  transition: transform 240ms var(--ease), background-color 160ms ease, color 160ms ease, box-shadow 240ms var(--ease);
 }
 .btn:active { transform: scale(0.97); }
 .btn-lime { background: var(--lime); color: #0a0a0a; }
-.btn-lime:hover { background: var(--lime-hi); }
-.btn-glass { background: rgba(255, 255, 255, 0.1); color: var(--text); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); box-shadow: inset 0 0 0 1px var(--stroke); }
-.btn-glass:hover { background: rgba(255, 255, 255, 0.16); }
+.btn-lime:hover { background: var(--lime-hi); transform: translateY(-2px); box-shadow: 0 10px 20px -8px rgba(200, 240, 0, 0.5); }
+.btn-ghost { box-shadow: inset 0 0 0 2px var(--text); color: var(--text); }
+.btn-ghost:hover { background: var(--text); color: #0a0a0a; }
+.btn-glass { box-shadow: inset 0 0 0 2px rgba(244, 242, 234, 0.45); color: var(--text); }
+.btn-glass:hover { background: var(--text); color: #0a0a0a; }
+.btn-ink { background: #0a0a0a; color: var(--lime); }
+.btn-ink:hover { background: #000; transform: translateY(-2px); }
+
+/* Compatibilita con le pagine non ancora riscritte */
+.cut { border-radius: 14px; }
+.cut-sm { border-radius: 10px; }
+.cut-lg { border-radius: 20px; }
+.glass, .glass-strong { background: var(--wall-2); border: 1px solid var(--line); }
 
 /* Fila scorrevole nativa: nessun JavaScript, scatta sulle schede, fluida al tocco */
 .rail {
-  display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x proximity;
-  scrollbar-width: none; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
-  padding-inline: 16px; scroll-padding-inline: 16px;
+  display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none;
+  overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
+  padding: 18px 18px 26px; scroll-padding-inline: 18px;
 }
 .rail::-webkit-scrollbar { display: none; }
 .rail > * { scroll-snap-align: start; flex: 0 0 auto; }
 @media (min-width: 1024px) { .rail { padding-inline: max(32px, calc((100vw - 1280px) / 2 + 32px)); scroll-padding-inline: 32px; } }
 
-/* Comparsa morbida all'ingresso (una sola, breve) */
-/* solo movimento: il testo non e mai invisibile, nemmeno se l'animazione non parte */
-@keyframes rise { from { transform: translateY(14px); } to { transform: none; } }
-.rise { animation: rise 640ms var(--ease) backwards; }
-/* Pannelli che salgono dal basso, come su iOS */
+/* Nastri che scorrono: striscione lime e nastro nero incrociati */
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee { display: flex; width: max-content; animation: marquee var(--dur, 32s) linear infinite; }
+.marquee:hover { animation-play-state: paused; }
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+.spin-slow { animation: spin-slow 22s linear infinite; }
+/* Comparsa: solo movimento, il testo non e mai invisibile */
+@keyframes rise { from { transform: translateY(18px); } to { transform: none; } }
+.rise { animation: rise 700ms var(--ease) backwards; }
 @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 .sheet-up { animation: sheet-up 420ms var(--ease) both; }
 .fade-in { animation: fade-in 240ms ease both; }
+
+/* Le immagini dei manifesti entrano appena si scorre (solo dove il browser lo supporta) */
+@supports (animation-timeline: view()) {
+  .reveal { animation: rise 1ms linear both; animation-timeline: view(); animation-range: entry 0% entry 40%; }
+}

@@ -15,11 +15,19 @@ const GROUPS = [
     title: "Maglie",
     links: [
       { label: "Tutte le maglie", href: "/shop" },
+      { label: "Novità 26/27", href: "/shop/2026/27" },
       { label: "Serie A", href: "/shop/serieA" },
       { label: "Premier League", href: "/shop/premier-league" },
-      { label: "Stagione 26/27", href: "/shop/2026/27" },
-      { label: "Retro", href: "/shop/retro" },
       { label: "Mondiali 2026", href: "/shop/worldcup" },
+    ],
+  },
+  {
+    title: "Archivio retro",
+    links: [
+      { label: "Tutte le epoche", href: "/archivio" },
+      { label: "Anni 90", href: "/archivio/anni-90" },
+      { label: "Anni 2000", href: "/archivio/anni-2000" },
+      { label: "Leggende", href: "/archivio/leggende" },
     ],
   },
   {
@@ -31,57 +39,46 @@ const GROUPS = [
       { label: "I miei ordini", href: "/account/orders" },
     ],
   },
-  {
-    title: "Goal Mania",
-    links: [
-      { label: "Chi siamo", href: "/about" },
-      { label: "Notizie", href: "/news" },
-      { label: "Privacy e cookie", href: "/privacy" },
-      { label: "Termini di servizio", href: "/terms" },
-    ],
-  },
 ];
 
 export function Footer() {
   return (
-    <footer className="mt-10 px-3 pb-[calc(90px+env(safe-area-inset-bottom))] md:px-6 md:pb-8">
-      <div className="glass mx-auto max-w-[1280px] rounded-[32px] px-6 py-10 md:px-10">
-        <div className="grid gap-10 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
-          <div>
-            <Image src="/images/recentUpdate/goalmania-wordmark.png" alt="Goal Mania" width={392} height={201} className="h-14 w-auto object-contain" />
-            <p className="mt-4 max-w-[30ch] text-[15px] leading-snug text-[var(--text-2)]">
-              Maglie da calcio a 35€, retro a 40€. Spedizione gratuita in Italia.
-            </p>
-            <div className="mt-5 flex gap-2">
-              <a href="https://www.instagram.com/goalmania.it/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-[var(--lime)] hover:text-[#0a0a0a]">
-                <Instagram size={20} />
-              </a>
-              <a href="https://www.tiktok.com/@goalmania.it" target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-[var(--lime)] hover:text-[#0a0a0a]">
-                <TikTokIcon />
-              </a>
-            </div>
+    <footer className="mt-12 border-t-4 border-[var(--lime)] bg-[var(--wall)] pb-[calc(80px+env(safe-area-inset-bottom))] md:pb-6">
+      <div className="mx-auto grid max-w-[1280px] gap-10 px-5 py-12 md:grid-cols-[1.3fr_1fr_1fr_1fr] md:px-8">
+        <div>
+          <Image src="/images/recentUpdate/goalmania-wordmark.png" alt="Goal Mania" width={392} height={201} className="h-24 w-auto object-contain" />
+          <p className="mt-3 max-w-[28ch] text-[16px] leading-snug text-[var(--text-2)]">
+            Maglie da calcio da tifoso. 35€ le attuali, 40€ le retro, spedizione gratuita in Italia.
+          </p>
+          <div className="mt-5 flex gap-2">
+            <a href="https://www.instagram.com/goalmania.it/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-[var(--lime)] hover:text-[#0a0a0a]">
+              <Instagram size={20} />
+            </a>
+            <a href="https://www.tiktok.com/@goalmania.it" target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-[var(--lime)] hover:text-[#0a0a0a]">
+              <TikTokIcon />
+            </a>
           </div>
-
-          {GROUPS.map((g) => (
-            <nav key={g.title} aria-label={g.title}>
-              <h2 className="text-[15px] font-semibold text-white">{g.title}</h2>
-              <ul className="mt-2">
-                {g.links.map((l) => (
-                  <li key={l.href + l.label}>
-                    <Link href={l.href} className="flex min-h-[44px] items-center text-[15px] text-[var(--text-2)] transition-colors hover:text-white">
-                      {l.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          ))}
         </div>
 
-        <div className="mt-8 border-t border-white/10 pt-5 text-[13px] leading-relaxed text-[var(--text-3)]">
-          <p>Pagamenti: Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal, Klarna.</p>
-          <p className="mt-1">© {new Date().getFullYear()} Goal Mania. I nomi e i marchi dei club appartengono ai rispettivi proprietari; Goal Mania non è affiliata ad alcun club o federazione.</p>
-        </div>
+        {GROUPS.map((g) => (
+          <nav key={g.title} aria-label={g.title}>
+            <h2 className="text-[22px] text-white">{g.title}</h2>
+            <ul className="mt-2">
+              {g.links.map((l) => (
+                <li key={l.href + l.label}>
+                  <Link href={l.href} className="flex min-h-[44px] items-center text-[16px] text-[var(--text-2)] transition-colors hover:text-[var(--lime)]">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))}
+      </div>
+
+      <div className="mx-auto max-w-[1280px] border-t border-[var(--line)] px-5 pt-5 text-[13px] leading-relaxed text-[var(--text-3)] md:px-8">
+        <p>Pagamenti: Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal, Klarna. · <Link href="/privacy" className="underline">Privacy e cookie</Link> · <Link href="/terms" className="underline">Termini di servizio</Link> · <Link href="/about" className="underline">Chi siamo</Link></p>
+        <p className="mt-1">© {new Date().getFullYear()} Goal Mania. I nomi e i marchi dei club appartengono ai rispettivi proprietari; Goal Mania non è affiliata ad alcun club o federazione.</p>
       </div>
     </footer>
   );

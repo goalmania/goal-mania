@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Italianno, Mulish, Geist, Space_Mono } from "next/font/google";
+import { Anton, Instrument_Sans } from "next/font/google";
 import { Metadata, Viewport } from "next";
 import { Providers } from "@/components/providers";
 import "./globals.css";
@@ -10,29 +10,19 @@ import ServiceWorkerRegister from "@/app/_components/ServiceWorkerRegister";
 
 const PIXEL_ID = "1059199992701994";
 
-const italianno = Italianno({
+// Titoli: Anton, il carattere dei manifesti sportivi (stretto, pesante, da leggere da lontano).
+// Testo: Instrument Sans, pulito e leggibile anche piccolo. Due soli file di font da scaricare.
+const anton = Anton({
   weight: "400",
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-italianno",
+  variable: "--font-anton",
 });
-const mulish = Mulish({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-mulish",
-});
-// Un solo carattere, pulito e moderno: titoli stretti e pesanti, testo leggibile, cifre allineate.
-const geist = Geist({
-  weight: ["400", "500", "600", "700", "800"],
+const instrument = Instrument_Sans({
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-geist-face",
-});
-const spaceMono = Space_Mono({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-space-mono",
+  variable: "--font-instrument",
 });
 
 export const viewport: Viewport = {
@@ -141,7 +131,7 @@ export default function RootLayout({
     <html
       lang="it"
       suppressHydrationWarning
-      className={`${italianno.variable} ${mulish.variable} ${geist.variable} ${spaceMono.variable} text-base dark`}
+      className={`${anton.variable} ${instrument.variable} text-base dark`}
     >
       <head>
         {/* Structured Data for Google */}

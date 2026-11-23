@@ -5,7 +5,7 @@ import Image from "next/image";
 import FAQ from "@/app/_components/FAQ";
 import SerieATeamsClient from "@/app/_components/SerieATeamsClient";
 import PremierLeagueClient from "@/app/_components/PremierLeagueClient";
-import LeagueRail from "@/components/home/LeagueRail";
+import FilterChips from "@/components/shop/FilterChips";
 import ProductRail from "@/components/home/ProductRail";
 import OfferTicket from "@/components/home/OfferTicket";
 import type { Product } from "@/lib/types/product";
@@ -154,7 +154,7 @@ export default function ShopClient({
           Attuali a 35€, retro a 40€. Spedizione gratuita, e se ne prendi 3 ne paghi 2.
         </p>
       </header>
-      <LeagueRail />
+      <FilterChips />
 
       <ProductRail title="Novità 26/27" href="/shop/2026/27" products={rail(products2627)} priorityFirst />
       <ProductRail title="Scelte per te" href="/shop" products={rail(picks)} />
