@@ -124,11 +124,7 @@ export default async function NewsPage() {
     <Suspense fallback={<LoadingFallback />}>
       <div className="min-h-screen flex flex-col" style={{ background: "#0a0a0a", color: "#f5f5f5" }}>
 
-        {/* ── 1. Breaking News Ticker ── */}
-        <BreakingNewsTicker />
 
-        {/* ── 2. Live Scores Ticker ── */}
-        <LiveScoresTicker />
 
         {errorMessage ? (
           <div className="container mx-auto px-4 py-12">
@@ -278,34 +274,12 @@ export default async function NewsPage() {
                     {/* Standings Widget */}
                     <StandingsWidget />
 
-                    {/* Newsletter */}
-                    <div
-                      className="rounded-2xl p-5 text-center"
-                      style={{
-                        background: "linear-gradient(135deg, #111 0%, rgba(200,240,0,0.05) 100%)",
-                        border: "1px solid rgba(200,240,0,0.15)",
-                      }}
-                    >
-                      <div
-                        className="text-[10px] uppercase tracking-[3px] mb-2 flex items-center justify-center gap-2"
-                        style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
-                      >
-                        <Mail size={10} />
-                        Newsletter
-                      </div>
-                      <p className="text-xs text-white/40 mb-4 leading-relaxed">
-                        Ricevi le notizie più importanti ogni giorno nella tua casella email
-                      </p>
-                      <Link href="/shop">
-                        <button
-                          className="flex items-center mx-auto justify-center gap-2 px-5 py-2.5 rounded-full font-black text-black uppercase text-xs tracking-wider transition-all hover:opacity-90"
-                          style={{ background: "#c8f000", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1.5px" }}
-                        >
-                          Iscriviti ora
-                          <MoveRight className="w-4 h-4" />
-                        </button>
-                      </Link>
-                    </div>
+                    {/* Dalle notizie al negozio: la maglia di cui si parla, a 35€ */}
+                    <Link href="/shop" className="poster tape block bg-[var(--lime)] p-6 text-[#0a0a0a]" style={{ ["--rot" as string]: "-1.2deg", background: "var(--lime)" }}>
+                      <span className="disp block text-[44px]">Vesti la tua squadra</span>
+                      <span className="mt-2 block text-[16px] font-semibold leading-snug">Maglie a 35€, retro a 40€. Prendi 3, ne paghi 2. Spedizione gratuita.</span>
+                      <span className="btn btn-ink mt-4 !h-11 !text-[18px]">Vai al negozio <MoveRight className="h-4 w-4" /></span>
+                    </Link>
 
                     {/* Social Follow */}
                     <div

@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
         destination: "https://goal-mania.it/:path*",
         permanent: true,
       },
+      // Archivio retro: l'ex pagina /shop/retro ora e /archivio (308 vero, non meta-refresh)
+      { source: "/shop/retro", destination: "/archivio", permanent: true },
       {
         source: "/shop/serie-a",
         destination: "/shop/serieA",
