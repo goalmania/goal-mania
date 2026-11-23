@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
+// Carrello e preferiti NON sono privati: si salvano nel browser e il checkout accetta gli ospiti.
+// Prima /cart rimandava al login chi non aveva un account, cioe quasi tutti i visitatori.
 const PRIVATE_ROUTES = [
-  "/wishlist",
-  "/cart",
   "/profile",
   "/admin"
 ];
@@ -41,8 +41,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/wishlist/:path*", 
-    "/cart/:path*", 
     "/profile/:path*", 
     "/admin/:path*",
     // Exclude API routes from middleware

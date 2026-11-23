@@ -56,15 +56,15 @@ export default function HomeHero({ products }: { products: HeroProduct[] }) {
           {/* Il tabellone: tre prezzi, un colpo d'occhio */}
           <div className="mt-5 grid grid-cols-3 gap-2" role="list" aria-label="Prezzi e offerta">
             <div role="listitem" className="cut bg-[#c8f000] p-3 text-[#0a0a0a] md:p-4">
-              <BoardNumber value="35€" className="num block text-[clamp(2.6rem,12vw,4.8rem)]" />
+              <BoardNumber value="35€" className="num block text-[clamp(2.4rem,11vw,4.2rem)]" />
               <p className="mt-1 text-[13px] font-bold leading-tight md:text-[15px]">Maglie attuali</p>
             </div>
             <div role="listitem" className="cut bg-[#1b1b19] p-3 text-white md:p-4">
-              <BoardNumber value="40€" delay={160} className="num block text-[clamp(2.6rem,12vw,4.8rem)]" />
+              <BoardNumber value="40€" delay={160} className="num block text-[clamp(2.4rem,11vw,4.2rem)]" />
               <p className="mt-1 text-[13px] font-bold leading-tight text-white/80 md:text-[15px]">Maglie retro</p>
             </div>
             <div role="listitem" className="cut bg-[#1b1b19] p-3 text-white md:p-4">
-              <BoardNumber value="3×2" delay={320} className="num block text-[clamp(2.6rem,12vw,4.8rem)]" />
+              <BoardNumber value="3×2" delay={320} className="num block text-[clamp(2.4rem,11vw,4.2rem)]" />
               <p className="mt-1 text-[13px] font-bold leading-tight text-white/80 md:text-[15px]">Prendi 3, ne paghi 2</p>
             </div>
           </div>
