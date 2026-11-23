@@ -54,7 +54,7 @@ export default function HomeHero({ products }: { products: HeroProduct[] }) {
           <p className="rise inline-block -rotate-2 bg-[var(--lime)] px-3 py-1.5 font-[family-name:var(--font-display)] text-[19px] italic uppercase leading-none text-[#0a0a0a]">
             Black Friday · prendi 3, paghi 2
           </p>
-          <h1 className="disp rise mt-5 text-[clamp(3.9rem,14.5vw,9.5rem)] text-white" style={{ animationDelay: "70ms" }}>
+          <h1 className="disp rise mt-5 text-[clamp(3.9rem,14.5vw,9.5rem)] text-white lg:text-[clamp(4.4rem,7.4vw,7.6rem)]" style={{ animationDelay: "70ms" }}>
             Il calcio
             <br />
             si <span className="mark"><span>indossa.</span></span>

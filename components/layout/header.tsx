@@ -105,7 +105,7 @@ export function Header() {
                   <Link
                     href={n.href}
                     aria-current={active ? "page" : undefined}
-                    className={`relative flex h-[var(--head-h)] items-center px-4 font-[family-name:var(--font-display)] text-[19px] italic uppercase tracking-[0.02em] transition-colors ${active ? "text-[var(--lime)]" : "text-white hover:text-[var(--lime)]"}`}
+                    className={`relative flex h-[var(--head-h)] items-center whitespace-nowrap px-3 font-[family-name:var(--font-display)] text-[18px] italic uppercase tracking-[0.02em] xl:px-4 xl:text-[19px] transition-colors ${active ? "text-[var(--lime)]" : "text-white hover:text-[var(--lime)]"}`}
                   >
                     {n.label}
                     {active && <span className="absolute inset-x-4 bottom-0 h-[4px] -skew-x-12 bg-[var(--lime)]" />}
@@ -165,7 +165,7 @@ export function Header() {
               className="btn btn-lime ml-2 !h-11 !gap-2 !px-4 !text-[19px]"
             >
               <ShoppingBag className="h-[19px] w-[19px]" strokeWidth={2.4} />
-              <span className="hidden sm:inline">Carrello</span>
+              <span className="hidden xl:inline">Carrello</span>
               <span className="num flex h-6 min-w-6 items-center justify-center rounded-full bg-[#0a0a0a] px-1.5 text-[15px] text-[var(--lime)]" suppressHydrationWarning>{cartCount}</span>
             </Link>
           </div>

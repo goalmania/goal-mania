@@ -10,6 +10,12 @@ import mongoose from "mongoose";
 // Incremental Static Regeneration for product detail
 export const revalidate = 600;
 
+// Senza questo la pagina veniva costruita a ogni visita (cache-control: private, no-store, MISS):
+// con un elenco vuoto Next la genera alla prima visita e poi la serve dalla cache.
+export async function generateStaticParams() {
+  return [];
+}
+
 function buildProductKeywords(p: {
   title: string;
   isRetro?: boolean;

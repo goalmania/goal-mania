@@ -10,7 +10,7 @@ import OfferTicket from "@/components/home/OfferTicket";
 import Manifesto from "@/components/home/Manifesto";
 import HomeNewsStrip from "@/components/home/HomeNewsStrip";
 import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
-import { ERAS, toItem, eraOf, yearOf } from "@/lib/archive";
+import { getArchiveItems, eraTiles } from "@/lib/archiveData";
 import ProductModel from "@/lib/models/Product";
 
 export const revalidate = 300;
@@ -128,24 +128,9 @@ async function getFeatured() {
   }
 }
 
-// L'archivio: tutte le retro attive (solo i campi che servono), per contare le epoche e scegliere una maglia da mostrare
 async function getArchiveEras(): Promise<{ eras: EraTile[]; total: number }> {
-  try {
-    await connectDB();
-    const docs = await ProductModel.find({ category: "Retro", isActive: true })
-      .select({ title: 1, slug: 1, basePrice: 1, retroPrice: 1, isRetro: 1, category: 1, feature: 1, images: { $slice: 1 } })
-      .sort({ feature: -1 })
-      .lean();
-    const items = JSON.parse(JSON.stringify(docs)).map(toItem);
-    const eras: EraTile[] = ERAS.map((e) => {
-      const inEra = items.filter((it: any) => eraOf(it.year)?.slug === e.slug);
-      const pick = inEra.find((it: any) => it.image) || null;
-      return { slug: e.slug, label: e.label, short: e.short, count: inEra.length, image: pick?.image || "", alt: pick?.name || e.label };
-    }).filter((e) => e.count > 0);
-    return { eras, total: items.length };
-  } catch {
-    return { eras: [], total: 730 };
-  }
+  const items = await getArchiveItems();
+  return { eras: eraTiles(items), total: items.length || 730 };
 }
 
 export default async function Home() {
