@@ -116,7 +116,7 @@ function AccordionItem({ q, a }: { q: string; a: string }) {
         <p
           className="text-sm pb-5 leading-relaxed"
           style={{
-            color: "rgba(255,255,255,0.5)",
+            color: "rgba(255,255,255,0.64)",
             fontFamily: "var(--font-body, sans-serif)",
           }}
         >
@@ -141,13 +141,13 @@ export default function FAQ() {
         <div className="mb-10 text-center">
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="w-4 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
-            <span className="text-[9px] uppercase tracking-[3px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}>
+            <span className="text-[12px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}>
               // Hai domande?
             </span>
             <span className="w-4 h-[1.5px] rounded-full inline-block" style={{ background: "#c8f000" }} />
           </div>
           <h2
-            className="font-black uppercase text-white"
+            className="font-bold text-white"
             style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.8rem, 4vw, 2.6rem)", letterSpacing: "-0.5px" }}
           >
             Domande Frequenti
@@ -163,7 +163,7 @@ export default function FAQ() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="flex-shrink-0 px-4 py-2.5 text-[11px] font-bold uppercase tracking-widest transition-all relative"
+              className="flex-shrink-0 px-4 py-2.5 text-[13px] font-bold transition-all relative"
               style={{
                 fontFamily: "var(--font-mono, monospace)",
                 color: activeTab === tab.id ? "#c8f000" : "rgba(255,255,255,0.35)",
@@ -192,17 +192,17 @@ export default function FAQ() {
         >
           <MessageCircle size={24} style={{ color: "#c8f000", flexShrink: 0 }} />
           <div className="flex-1 min-w-0">
-            <p className="font-black text-sm text-white mb-0.5" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+            <p className="font-bold text-sm text-white mb-0.5" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
               Non hai trovato la risposta?
             </p>
-            <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-mono, monospace)" }}>
+            <p className="text-[13px]" style={{ color: "rgba(255,255,255,0.64)", fontFamily: "var(--font-mono, monospace)" }}>
               Scrivici — rispondiamo entro 24 ore
             </p>
           </div>
           <a
             href="mailto:goalmaniaofficial@gmail.com"
-            className="px-5 py-2.5 rounded-full font-black text-[11px] uppercase tracking-widest transition-all hover:opacity-90 active:scale-[0.97] flex-shrink-0"
-            style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1.5px" }}
+            className="px-5 py-2.5 rounded-full font-bold text-[13px] transition-all hover:opacity-90 active:scale-[0.97] flex-shrink-0"
+            style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-display, sans-serif)", }}
           >
             Contattaci
           </a>

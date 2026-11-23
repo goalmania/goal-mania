@@ -65,7 +65,7 @@ function CreativeRatingField({
                 className={`h-8 w-8 sm:h-10 sm:w-10 transition-all duration-300 ${
                   (hoveredRating || rating) >= star
                     ? "text-yellow-400 drop-shadow-lg filter brightness-110"
-                    : "text-white/30 hover:text-white/40"
+                    : "text-white/60 hover:text-white/60"
                 } ${hoveredRating >= star ? "animate-pulse" : ""}`}
               />
 

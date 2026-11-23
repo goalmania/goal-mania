@@ -72,7 +72,7 @@ export default function FaqSection() {
           <button
             key={cat.id}
             onClick={() => setActiveCategory(cat.id)}
-            className={`w-full px-4 py-3 sm:py-4 text-sm border border-[#ffff] sm:text-base font-semibold uppercase tracking-wide transition-colors ${
+            className={`w-full px-4 py-3 sm:py-4 text-sm border border-[#ffff] sm:text-base font-semibold tracking-wide transition-colors ${
               activeCategory === cat.id
                 ? "bg-transparent text-white"
                 : "bg-[#111111] text-[#F5F5F5] hover:bg-[#132c4d]"

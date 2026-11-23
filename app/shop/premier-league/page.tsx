@@ -62,11 +62,11 @@ export default async function PremierLeagueShopPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
       />
-      <section className="pt-24 pb-4 px-4 max-w-7xl mx-auto">
-        <h1 className="text-3xl font-black uppercase mb-2" style={{ fontFamily: "var(--font-barlow-condensed, sans-serif)", color: "#fff" }}>
+      <section className="mx-auto max-w-7xl px-5 pb-4 pt-8 md:px-8 md:pt-12">
+        <h1 className="display mb-3 text-[clamp(2.2rem,6vw,3.75rem)]">
           Maglie Premier League 2026/27
         </h1>
-        <p className="text-gray-400 text-sm max-w-2xl">
+        <p className="max-w-2xl text-[17px] leading-snug text-[var(--text-2)]">
           Acquista le maglie della Premier League 2026/27 a partire da 35€.
           Manchester City, Liverpool, Arsenal, Chelsea, Manchester United e tutte le squadre inglesi.
           Spedizione gratuita in Italia.

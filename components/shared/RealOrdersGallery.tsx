@@ -118,15 +118,15 @@ export default function RealOrdersGallery({
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
           {eyebrow && (
-            <p className="mb-1 text-[10px] font-black uppercase tracking-[0.4em] text-white/25">
+            <p className="mb-1 text-[12px] font-bold text-white/60">
               {eyebrow}
             </p>
           )}
-          <h2 className="text-xl md:text-2xl font-black uppercase italic text-white leading-none">
+          <h2 className="text-xl md:text-2xl font-bold italic text-white leading-none">
             {title}
           </h2>
           {description && (
-            <p className="mt-2 max-w-xl text-sm text-white/45">{description}</p>
+            <p className="mt-2 max-w-xl text-sm text-white/60">{description}</p>
           )}
         </div>
       </div>

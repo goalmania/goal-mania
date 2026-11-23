@@ -15,7 +15,7 @@ interface Props {
   product: { id: string; slug?: string; name: string; price: number; image: string; category?: string };
 }
 
-// Aggiunta in due tocchi: scegli la taglia e la maglia e nel carrello, senza aprire la scheda.
+// Pannello che sale dal basso (come su iOS): scegli la taglia, la maglia e nel carrello, senza aprire la scheda.
 export default function QuickAddSheet({ open, onClose, product }: Props) {
   const router = useRouter();
   const addItem = useCartStore((s) => s.addItem);
@@ -77,24 +77,22 @@ export default function QuickAddSheet({ open, onClose, product }: Props) {
       },
       quantity: 1,
     });
-    const n = useCartStore.getState().getItemCount();
-    const hint = threeForTwoHint(n);
+    const hint = threeForTwoHint(useCartStore.getState().getItemCount());
     onClose();
     toast.custom(
       (t) => (
         <div
-          className={`cut cut-sm w-[min(92vw,380px)] bg-[#c8f000] p-4 text-[#0a0a0a] transition-opacity ${t.visible ? "opacity-100" : "opacity-0"}`}
+          className={`glass-strong w-[min(92vw,380px)] rounded-[26px] p-4 text-white transition-all duration-300 ${t.visible ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"}`}
           role="status"
         >
-          <p className="display text-[22px]">Nel carrello</p>
-          <p className="mt-1 text-[15px] font-semibold leading-snug">{hint.text}</p>
+          <p className="text-[17px] font-semibold">Aggiunta al carrello</p>
+          <p className="mt-0.5 text-[15px] text-[var(--text-2)]">{hint.text}</p>
           <button
             onClick={() => {
               toast.dismiss(t.id);
               router.push("/cart");
             }}
-            className="mt-3 h-11 w-full bg-[#0a0a0a] text-[15px] font-extrabold uppercase tracking-wide text-[#c8f000]"
-            style={{ fontFamily: "var(--font-display)" }}
+            className="btn btn-lime mt-3 !h-12 w-full"
           >
             Vai al carrello
           </button>
@@ -106,24 +104,25 @@ export default function QuickAddSheet({ open, onClose, product }: Props) {
 
   return (
     <div className="fixed inset-0 z-[90] flex items-end justify-center md:items-center" role="dialog" aria-modal="true" aria-label={`Scegli la taglia, ${product.name}`}>
-      <button className="absolute inset-0 bg-black/70" onClick={onClose} aria-label="Chiudi" />
-      <div className="cut cut-lg relative w-full max-w-[460px] bg-[#121211] p-5 pb-[calc(20px+env(safe-area-inset-bottom))] md:pb-5">
-        <button onClick={onClose} className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center text-white" aria-label="Chiudi">
-          <X className="h-6 w-6" />
+      <button className="fade-in absolute inset-0 bg-black/55 backdrop-blur-sm" onClick={onClose} aria-label="Chiudi" />
+      <div className="sheet-up glass-strong relative w-full max-w-[480px] rounded-t-[32px] p-5 pb-[calc(20px+env(safe-area-inset-bottom))] md:rounded-[32px] md:pb-6">
+        <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-white/25 md:hidden" aria-hidden="true" />
+        <button onClick={onClose} className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/12 text-white" aria-label="Chiudi">
+          <X className="h-[18px] w-[18px]" />
         </button>
-        <div className="flex gap-4 pr-10">
-          <div className="h-[88px] w-[72px] shrink-0 bg-[#f1f1ec]">
+        <div className="flex items-center gap-4 pr-10">
+          <div className="h-[92px] w-[74px] shrink-0 overflow-hidden rounded-2xl bg-[#f5f5f7]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={cld(product.image, 160)} alt="" className="h-full w-full object-contain p-1" style={{ mixBlendMode: "multiply" }} />
           </div>
           <div className="min-w-0">
-            <p className="display text-[22px] leading-none text-white">{product.name.replace(/^Maglia\s+/i, "")}</p>
-            <p className="num mt-2 text-[34px] text-[#c8f000]">{product.price}€</p>
+            <p className="text-[19px] font-semibold leading-tight tracking-[-0.01em]">{product.name.replace(/^Maglia\s+/i, "")}</p>
+            <p className="num mt-1.5 text-[26px] text-[var(--lime)]">{product.price}€</p>
           </div>
         </div>
 
         {sizes && sizes.kids.length > 0 && (
-          <div className="mt-5 flex gap-2" role="tablist">
+          <div className="mt-5 flex rounded-full bg-white/10 p-1" role="tablist">
             {[
               { k: false, l: "Adulto" },
               { k: true, l: "Bambino" },
@@ -136,8 +135,7 @@ export default function QuickAddSheet({ open, onClose, product }: Props) {
                   setKid(t.k);
                   setSize("");
                 }}
-                className={`h-11 flex-1 text-[16px] font-extrabold uppercase ${kid === t.k ? "bg-white text-[#0a0a0a]" : "bg-white/10 text-white"}`}
-                style={{ fontFamily: "var(--font-display)" }}
+                className={`h-10 flex-1 rounded-full text-[15px] font-semibold transition-colors ${kid === t.k ? "bg-white text-[#0a0a0a]" : "text-white/80"}`}
               >
                 {t.l}
               </button>
@@ -145,11 +143,9 @@ export default function QuickAddSheet({ open, onClose, product }: Props) {
           </div>
         )}
 
-        <p className="mt-5 text-[14px] font-bold uppercase tracking-wider text-white/70" style={{ fontFamily: "var(--font-display)" }}>
-          Taglia
-        </p>
-        <div className="mt-2 flex min-h-[52px] flex-wrap gap-2">
-          {!sizes && <p className="text-[15px] text-white/60">Carico le taglie…</p>}
+        <p className="mt-5 text-[14px] font-medium text-[var(--text-3)]">Taglia</p>
+        <div className="mt-2 flex min-h-[56px] flex-wrap gap-2">
+          {!sizes && <p className="text-[15px] text-[var(--text-3)]">Carico le taglie…</p>}
           {list.map((s) => (
             <button
               key={s}
@@ -158,23 +154,18 @@ export default function QuickAddSheet({ open, onClose, product }: Props) {
                 setError("");
               }}
               aria-pressed={size === s}
-              className={`h-[52px] min-w-[56px] px-3 text-[20px] font-extrabold transition-colors active:scale-[0.97] ${size === s ? "bg-[#c8f000] text-[#0a0a0a]" : "border-2 border-white/35 text-white hover:border-white"}`}
-              style={{ fontFamily: "var(--font-display)" }}
+              className={`h-[54px] min-w-[58px] rounded-2xl px-4 text-[18px] font-semibold transition-all duration-200 active:scale-95 ${size === s ? "bg-[var(--lime)] text-[#0a0a0a]" : "bg-white/10 text-white hover:bg-white/16"}`}
             >
               {s}
             </button>
           ))}
         </div>
-        {error && <p className="mt-2 text-[15px] font-bold text-[#ff6b6b]" role="alert">{error}</p>}
+        {error && <p className="mt-2 text-[15px] font-medium text-[#ff6b6b]" role="alert">{error}</p>}
 
-        <button
-          onClick={confirm}
-          className="cut mt-5 flex h-14 w-full items-center justify-center bg-[#c8f000] text-[19px] font-extrabold uppercase tracking-wide text-[#0a0a0a] transition-colors hover:bg-[#d8ff1a] active:bg-[#b5d800]"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
+        <button onClick={confirm} className="btn btn-lime mt-5 !h-14 w-full !text-[18px]">
           Aggiungi al carrello
         </button>
-        <Link href={`/products/${product.slug || product.id}`} className="mt-3 flex min-h-[44px] items-center justify-center text-[15px] font-semibold text-white/75 underline underline-offset-4 hover:text-[#c8f000]">
+        <Link href={`/products/${product.slug || product.id}`} className="mt-2 flex min-h-[44px] items-center justify-center text-[15px] text-[var(--text-2)] underline decoration-white/30 underline-offset-4 hover:text-white">
           Vuoi nome e numero? Personalizza nella scheda
         </Link>
       </div>

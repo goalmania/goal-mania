@@ -1,5 +1,6 @@
 "use client";
 
+import CategoryHeader from "@/components/shop/CategoryHeader";
 import { useState, useEffect, useRef } from "react";
 import { useWishlistStore } from "@/lib/store/wishlist";
 import { useCartStore } from "@/lib/store/cart";
@@ -174,128 +175,7 @@ export default function SerieAClient({ products, teamSlug, leagueName = "Serie A
   return (
     <div style={{ background: "#0a0a0a", minHeight: "100vh" }}>
 
-      {/* ── Heritage Hero ─────────────────────────────────── */}
-      <div
-        className="relative overflow-hidden select-none"
-        style={{ minHeight: "280px", paddingBottom: "0" }}
-      >
-        {/* Background layers */}
-        <div className="absolute inset-0" style={{ background: "#0d0d0d" }} />
-        {/* Accent glow */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: `radial-gradient(ellipse 70% 60% at 80% 50%, ${identity.dim}, transparent 70%)`,
-          }}
-        />
-        {/* Horizontal rule at top */}
-        <div
-          className="absolute top-0 left-0 right-0 h-[2px]"
-          style={{ background: identity.accent, opacity: 0.9 }}
-        />
-        <GrainSVG />
-
-        {/* Logo watermark */}
-        {logoPath && !logoError && (
-          <div
-            className="absolute right-0 top-0 bottom-0 flex items-center pointer-events-none"
-            style={{ width: "42%", opacity: 0.06, paddingRight: "5%" }}
-          >
-            <Image
-              src={logoPath}
-              alt=""
-              fill
-              className="object-contain"
-              sizes="42vw"
-              onError={() => setLogoError(true)}
-            />
-          </div>
-        )}
-
-        {/* Content */}
-        <div className="relative z-10 px-5 sm:px-8 lg:px-12 pt-10 pb-8">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 mb-7" style={{ fontSize: "10px", letterSpacing: "2px", color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-mono, monospace)", textTransform: "uppercase" }}>
-            <Link href="/" className="hover:text-white/60 transition-colors">Home</Link>
-            <span>/</span>
-            <Link href="/shop" className="hover:text-white/60 transition-colors">Shop</Link>
-            <span>/</span>
-            <Link href={leagueHref} className="hover:text-white/60 transition-colors">{leagueName}</Link>
-            {teamSlug && (
-              <>
-                <span>/</span>
-                <span style={{ color: identity.accent }}>{teamDisplayName}</span>
-              </>
-            )}
-          </nav>
-
-          {/* Badge */}
-          <div className="flex items-center gap-3 mb-4">
-            <div
-              className="h-[2px] w-8 rounded-full"
-              style={{ background: identity.accent }}
-            />
-            <span
-              className="text-[9px] uppercase font-bold tracking-[3px]"
-              style={{ fontFamily: "var(--font-mono, monospace)", color: identity.accent }}
-            >
-              // Collezione
-            </span>
-          </div>
-
-          {/* Team name */}
-          <h1
-            className="font-black uppercase leading-none"
-            style={{
-              fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
-              fontSize: "clamp(2.8rem, 9vw, 5.5rem)",
-              letterSpacing: "-1px",
-              color: "#ffffff",
-              textShadow: `0 0 60px ${identity.dim}`,
-              maxWidth: "680px",
-            }}
-          >
-            {teamDisplayName}
-          </h1>
-
-          {/* Motto */}
-          {identity.motto && (
-            <p
-              className="mt-3"
-              style={{
-                fontFamily: "var(--font-mono, monospace)",
-                fontSize: "10px",
-                letterSpacing: "2.5px",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.22)",
-              }}
-            >
-              {identity.motto}
-            </p>
-          )}
-
-          {/* Product count */}
-          <div className="flex items-center gap-3 mt-6">
-            <span
-              className="px-3 py-1 rounded text-[10px] font-bold uppercase tracking-widest"
-              style={{
-                background: `${identity.accent}22`,
-                border: `1px solid ${identity.accent}44`,
-                color: identity.accent,
-                fontFamily: "var(--font-mono, monospace)",
-              }}
-            >
-              {products.length} {products.length === 1 ? "prodotto" : "prodotti"}
-            </span>
-          </div>
-        </div>
-
-        {/* Bottom fade into page */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
-          style={{ background: "linear-gradient(to bottom, transparent, #0a0a0a)" }}
-        />
-      </div>
+      <CategoryHeader title={leagueName} text="Maglie a 35€, spedizione gratuita e reso entro 14 giorni." />
 
       {/* ── Category Tabs — always visible ───────────────── */}
       <div
@@ -329,7 +209,7 @@ export default function SerieAClient({ products, teamSlug, leagueName = "Serie A
                 <button
                   key={cat}
                   onClick={() => { if (!isEmpty) setActiveTab(cat); }}
-                  className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-[1.5px] transition-all duration-200 whitespace-nowrap flex-shrink-0"
+                  className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all duration-200 whitespace-nowrap flex-shrink-0"
                   style={{
                     fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
                     cursor: isEmpty ? "not-allowed" : "pointer",
@@ -359,13 +239,12 @@ export default function SerieAClient({ products, teamSlug, leagueName = "Serie A
                   )}
                   {CATEGORY_LABELS[cat]}
                   <span
-                    className="text-[9px] font-black px-1.5 py-0.5 rounded-md flex-shrink-0"
+                    className="text-[12px] font-bold px-1.5 py-0.5 rounded-md flex-shrink-0"
                     style={{
                       background: isActive ? `${color}25` : "rgba(255,255,255,0.07)",
                       color: isActive ? color : "rgba(255,255,255,0.3)",
                       fontFamily: "var(--font-mono, monospace)",
-                      letterSpacing: "0px",
-                    }}
+                      }}
                   >
                     {count}
                   </span>
@@ -382,15 +261,15 @@ export default function SerieAClient({ products, teamSlug, leagueName = "Serie A
         {visibleProducts.length === 0 ? (
           <div
             className="flex flex-col items-center justify-center py-24 gap-4"
-            style={{ color: "rgba(255,255,255,0.25)" }}
+            style={{ color: "rgba(255,255,255,0.64)" }}
           >
             <span
-              className="text-5xl font-black uppercase"
+              className="text-5xl font-bold "
               style={{ fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)", color: identity.accent, opacity: 0.4 }}
             >
               —
             </span>
-            <p className="text-[11px] uppercase tracking-[3px]" style={{ fontFamily: "var(--font-mono, monospace)" }}>
+            <p className="text-[13px] " style={{ fontFamily: "var(--font-mono, monospace)" }}>
               Nessun prodotto in questa categoria
             </p>
           </div>

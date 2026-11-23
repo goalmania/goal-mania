@@ -60,10 +60,10 @@ function ReviewCard({ review }: { review: RealReview }) {
 
       {review.productName && (
         <span
-          className="text-[9px] px-2 py-0.5 rounded-full uppercase tracking-wider self-start"
+          className="text-[12px] px-2 py-0.5 rounded-full self-start"
           style={{
             fontFamily: "var(--font-mono, monospace)",
-            color: "rgba(200,240,0,0.5)",
+            color: "#c8f000",
             background: "rgba(200,240,0,0.05)",
             border: "1px solid rgba(200,240,0,0.1)",
           }}
@@ -74,7 +74,7 @@ function ReviewCard({ review }: { review: RealReview }) {
 
       <div className="flex items-center gap-2 mt-auto pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div
-          className="flex-shrink-0 flex items-center justify-center rounded-full font-black text-[10px]"
+          className="flex-shrink-0 flex items-center justify-center rounded-full font-bold text-[12px]"
           style={{
             width: 28,
             height: 28,
@@ -94,10 +94,10 @@ function ReviewCard({ review }: { review: RealReview }) {
             {review.userName}
           </p>
           <div className="flex items-center gap-1">
-            <CheckCircle size={8} style={{ color: "rgba(200,240,0,0.5)" }} />
+            <CheckCircle size={8} style={{ color: "#c8f000" }} />
             <p
-              className="text-[9px] uppercase tracking-wider"
-              style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.28)" }}
+              className="text-[12px] "
+              style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.64)" }}
             >
               verificato
             </p>
@@ -274,8 +274,8 @@ export default function ReviewsStrip() {
         <div className="relative z-20 flex items-center justify-center gap-3 mb-4 px-6">
           <span className="w-6 h-[1.5px] rounded-full" style={{ background: "#c8f000" }} />
           <span
-            className="text-[10px] uppercase tracking-[4px]"
-            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.75)" }}
+            className="text-[12px] "
+            style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
           >
             // Tutte le Recensioni
           </span>
@@ -290,7 +290,7 @@ export default function ReviewsStrip() {
               height: 28,
               background: "rgba(200,240,0,0.06)",
               border: "1px solid rgba(200,240,0,0.15)",
-              color: "rgba(200,240,0,0.55)",
+              color: "#c8f000",
               cursor: "pointer",
             }}
           >

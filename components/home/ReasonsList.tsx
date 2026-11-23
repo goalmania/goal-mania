@@ -5,17 +5,17 @@ const ROWS = [
   { k: "Pagamento", v: "Carta, Apple Pay, Google Pay, PayPal e Klarna." },
 ];
 
-// Una lista a righe, non una fila di schede uguali: si legge in cinque secondi
+// Una lista raggruppata, non una fila di schede uguali: si legge in cinque secondi
 export default function ReasonsList() {
   return (
-    <section className="bg-[#0a0a0a] px-4 py-10 md:px-8 md:py-16">
+    <section className="px-3 py-8 md:px-6 md:py-14">
       <div className="mx-auto max-w-[1280px]">
-        <h2 className="display text-[clamp(2.4rem,8vw,4.5rem)] text-white">Come funziona</h2>
-        <dl className="mt-6">
+        <h2 className="display px-2 text-[clamp(1.9rem,5vw,3rem)]">Come funziona</h2>
+        <dl className="glass mt-5 divide-y divide-white/10 rounded-[32px]">
           {ROWS.map((r) => (
-            <div key={r.k} className="grid gap-1 border-t border-white/14 py-5 md:grid-cols-[260px_1fr] md:gap-8">
-              <dt className="display text-[30px] text-[#c8f000]">{r.k}</dt>
-              <dd className="max-w-[60ch] text-[18px] leading-snug text-white/85">{r.v}</dd>
+            <div key={r.k} className="grid gap-1 px-6 py-5 md:grid-cols-[240px_1fr] md:gap-8 md:px-8 md:py-6">
+              <dt className="text-[19px] font-semibold">{r.k}</dt>
+              <dd className="max-w-[60ch] text-[17px] leading-snug text-[var(--text-2)]">{r.v}</dd>
             </div>
           ))}
         </dl>

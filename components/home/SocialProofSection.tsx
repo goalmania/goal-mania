@@ -24,12 +24,12 @@ function Stars({ count, size = 14 }: { count: number; size?: number }) {
 function VerifiedBadge() {
   return (
     <span
-      className="inline-flex items-center gap-1 text-[9px] uppercase tracking-[1.5px] px-2 py-0.5 rounded-full"
+      className="inline-flex items-center gap-1 text-[12px] px-2 py-0.5 rounded-full"
       style={{
         fontFamily: "var(--font-mono, monospace)",
         background: "rgba(200,240,0,0.06)",
         border: "1px solid rgba(200,240,0,0.18)",
-        color: "rgba(200,240,0,0.65)",
+        color: "#c8f000",
       }}
     >
       <CheckCircle size={9} />
@@ -55,7 +55,7 @@ function Avatar({ name, size = 40 }: { name: string; size?: number }) {
   const color = colorFor(name);
   return (
     <div
-      className="flex-shrink-0 flex items-center justify-center rounded-full font-black"
+      className="flex-shrink-0 flex items-center justify-center rounded-full font-bold"
       style={{
         width: size,
         height: size,
@@ -89,10 +89,10 @@ function ReviewCard({ r }: { r: RealReview }) {
       </p>
       {r.productName && (
         <div
-          className="text-[9px] px-2.5 py-1 rounded-full uppercase tracking-widest self-start"
+          className="text-[12px] px-2.5 py-1 rounded-full self-start"
           style={{
             fontFamily: "var(--font-mono, monospace)",
-            color: "rgba(200,240,0,0.55)",
+            color: "#c8f000",
             background: "rgba(200,240,0,0.05)",
             border: "1px solid rgba(200,240,0,0.1)",
           }}
@@ -144,7 +144,7 @@ export default function SocialProofSection() {
             <div className="flex items-center gap-3 mb-3">
               <span className="w-6 h-[1.5px] rounded-full" style={{ background: "#c8f000" }} />
               <span
-                className="text-[10px] uppercase tracking-[4px]"
+                className="text-[12px] "
                 style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
               >
                 // Recensioni Verificate
@@ -153,12 +153,11 @@ export default function SocialProofSection() {
             </div>
 
             <h2
-              className="font-black uppercase text-white leading-tight mb-4"
+              className="font-bold text-white leading-tight mb-4"
               style={{
                 fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
                 fontSize: "clamp(2rem, 4vw, 3.2rem)",
-                letterSpacing: "1px",
-              }}
+                }}
             >
               Cosa dicono i nostri <span style={{ color: "#c8f000" }}>clienti</span>
             </h2>
@@ -166,12 +165,12 @@ export default function SocialProofSection() {
             {reviews.length > 0 && (
               <div className="flex items-center gap-3 flex-wrap">
                 <Stars count={Math.round(avgRating)} size={18} />
-                <span className="text-3xl font-black text-white" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+                <span className="text-3xl font-bold text-white" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
                   {avgRating.toFixed(1)}
                 </span>
                 <span
-                  className="text-xs uppercase tracking-widest"
-                  style={{ color: "rgba(255,255,255,0.25)", fontFamily: "var(--font-mono, monospace)" }}
+                  className="text-xs "
+                  style={{ color: "rgba(255,255,255,0.64)", fontFamily: "var(--font-mono, monospace)" }}
                 >
                   · {reviews.length} {reviews.length === 1 ? "recensione verificata" : "recensioni verificate"}
                 </span>
@@ -194,7 +193,7 @@ export default function SocialProofSection() {
             >
               <p
                 className="text-sm md:text-base mb-6"
-                style={{ fontFamily: "var(--font-body, sans-serif)", color: "rgba(255,255,255,0.55)" }}
+                style={{ fontFamily: "var(--font-body, sans-serif)", color: "rgba(255,255,255,0.64)" }}
               >
                 Siamo ancora agli inizi: non abbiamo ancora recensioni da mostrare, ma ecco cosa
                 garantiamo su ogni ordine.
@@ -211,12 +210,11 @@ export default function SocialProofSection() {
         <div className="text-center mt-12">
           <Link
             href="/shop"
-            className="inline-flex items-center gap-3 px-8 py-4 rounded-full font-black uppercase transition-all duration-300 hover:-translate-y-1"
+            className="inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold transition-all duration-300 hover:-translate-y-1"
             style={{
               background: "#c8f000",
               color: "#0a0a0a",
               fontFamily: "var(--font-display, sans-serif)",
-              letterSpacing: "2px",
               fontSize: "0.85rem",
               boxShadow: "0 4px 24px rgba(200,240,0,0.3)",
             }}
@@ -224,8 +222,8 @@ export default function SocialProofSection() {
             Scopri le Maglie →
           </Link>
           <p
-            className="mt-4 text-[10px] uppercase tracking-widest"
-            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.15)" }}
+            className="mt-4 text-[12px] "
+            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.64)" }}
           >
             Spedizione gratuita · Reso entro 14 giorni · Pagamento sicuro
           </p>

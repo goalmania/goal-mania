@@ -163,7 +163,7 @@ function PatchCard({ patch, selected, onToggle }: {
         style={{ background: `${cfg.border}18`, border: `1px solid ${cfg.border}30` }}
       >
         <span
-          className="text-[9px] font-black uppercase tracking-widest"
+          className="text-[12px] font-bold "
           style={{ color: cfg.text, fontFamily: "var(--font-mono, monospace)" }}
         >
           {cfg.abbr}
@@ -171,18 +171,17 @@ function PatchCard({ patch, selected, onToggle }: {
       </div>
       {/* Name */}
       <span
-        className="text-[11px] font-black leading-tight pr-5"
+        className="text-[13px] font-bold leading-tight pr-5"
         style={{
           color: selected ? "#fff" : "rgba(255,255,255,0.55)",
           fontFamily: "var(--font-display, sans-serif)",
-          letterSpacing: "0.5px",
-        }}
+          }}
       >
         {cfg.label}
       </span>
       {/* Price */}
       <span
-        className="text-[10px] font-black"
+        className="text-[12px] font-bold"
         style={{ color: cfg.border, fontFamily: "var(--font-mono, monospace)" }}
       >
         +€{patch.price.toFixed(2)}
@@ -205,13 +204,12 @@ function SizeBtn({ size, selected, onClick }: { size: string; selected: boolean;
     <button
       type="button"
       onClick={onClick}
-      className="relative h-12 min-w-[54px] px-3 rounded-[6px] text-[16px] font-extrabold transition-all active:scale-[0.96]"
+      className="relative h-12 min-w-[54px] px-3 rounded-[6px] text-[16px] font-bold transition-all active:scale-[0.96]"
       style={{
         background: selected ? "#c8f000" : "transparent",
         color: selected ? "#0a0a0a" : "rgba(255,255,255,0.9)",
         border: `2px solid ${selected ? "#c8f000" : "rgba(255,255,255,0.3)"}`,
         fontFamily: "var(--font-display, sans-serif)",
-        letterSpacing: "0.5px",
         transition: "all 160ms cubic-bezier(0.23,1,0.32,1)",
       }}
     >
@@ -229,15 +227,15 @@ function StepLabel({ n, label }: { n: number; label: string }) {
         style={{ background: "rgba(200,240,0,0.12)", border: "1px solid rgba(200,240,0,0.25)" }}
       >
         <span
-          className="text-[9px] font-black"
+          className="text-[12px] font-bold"
           style={{ color: "#c8f000", fontFamily: "var(--font-mono, monospace)" }}
         >
           {n}
         </span>
       </div>
       <span
-        className="text-[10px] font-black uppercase tracking-[2px]"
-        style={{ color: "rgba(255,255,255,0.45)", fontFamily: "var(--font-display, sans-serif)" }}
+        className="text-[12px] font-bold "
+        style={{ color: "rgba(255,255,255,0.64)", fontFamily: "var(--font-display, sans-serif)" }}
       >
         {label}
       </span>
@@ -450,16 +448,16 @@ export default function ProductDetailClient({
             className="flex items-center justify-center gap-2 py-1.5 border-b"
             style={{ borderColor: "rgba(255,255,255,0.04)" }}
           >
-            <span className="text-[9px] uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-mono,monospace)" }}>
+            <span className="text-[12px] " style={{ color: "rgba(255,255,255,0.64)", fontFamily: "var(--font-mono,monospace)" }}>
               Taglia:
             </span>
             <span
-              className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full"
+              className="text-[12px] font-bold px-2 py-0.5 rounded-full"
               style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}
             >
               {customization.size}
             </span>
-            <span className="text-[9px] font-black" style={{ color: "rgba(255,255,255,0.3)" }}>
+            <span className="text-[12px] font-bold" style={{ color: "rgba(255,255,255,0.64)" }}>
               · €{totalPrice.toFixed(2)}
             </span>
           </div>
@@ -468,7 +466,7 @@ export default function ProductDetailClient({
           <button
             type="button"
             onClick={handleAddToCart}
-            className="flex-1 h-14 flex items-center justify-center cut cut-sm text-[17px] font-extrabold uppercase tracking-wide transition-all active:scale-[0.97]"
+            className="flex-1 h-14 flex items-center justify-center rounded-full text-[17px] font-semibold transition-all active:scale-[0.97]"
             style={{ background: "#26261f", color: "#fff", fontFamily: "var(--font-display,sans-serif)" }}
           >
             + Carrello
@@ -476,7 +474,7 @@ export default function ProductDetailClient({
           <button
             type="button"
             onClick={handleBuyNow}
-            className="flex-[2] h-14 flex items-center justify-center gap-1.5 cut cut-sm text-[19px] font-extrabold uppercase tracking-wide transition-all active:scale-[0.97]"
+            className="flex-[2] h-14 flex items-center justify-center gap-1.5 rounded-full text-[18px] font-semibold transition-all active:scale-[0.97]"
             style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-display,sans-serif)" }}
           >
             Compra subito →
@@ -514,7 +512,7 @@ export default function ProductDetailClient({
                 className="absolute bottom-4 right-4 px-2.5 py-1 rounded-full"
                 style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)" }}
               >
-                <span className="text-[10px] font-black text-white" style={{ fontFamily: "var(--font-mono,monospace)" }}>
+                <span className="text-[12px] font-bold text-white" style={{ fontFamily: "var(--font-mono,monospace)" }}>
                   {selectedImage + 1}/{product.images.length}
                 </span>
               </div>
@@ -565,10 +563,7 @@ export default function ProductDetailClient({
 
             {/* Title + Rating */}
             <div>
-              <h1
-                className="text-3xl sm:text-4xl font-black tracking-tight text-white leading-none mb-3"
-                style={{ fontFamily: "var(--font-display,sans-serif)" }}
-              >
+              <h1 className="display mb-3 text-[clamp(1.9rem,4vw,2.7rem)]">
                 {product.title}
               </h1>
 
@@ -582,28 +577,17 @@ export default function ProductDetailClient({
                       </svg>
                     ))}
                   </div>
-                  <span className="text-[11px] font-bold" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-mono,monospace)" }}>
+                  <span className="text-[13px] font-bold" style={{ color: "rgba(255,255,255,0.64)", fontFamily: "var(--font-mono,monospace)" }}>
                     {avgRating.toFixed(1)} · {reviews.length} recension{reviews.length === 1 ? "e" : "i"}
                   </span>
                 </div>
               )}
 
-              {/* Price block */}
-              <div
-                className="flex items-baseline gap-3 rounded-[10px] px-4 py-3"
-                style={{ background: "#c8f000", color: "#0a0a0a" }}
-              >
-                <span className="text-[46px] font-black leading-none" style={{ fontFamily: "var(--font-display,sans-serif)", fontVariantNumeric: "tabular-nums" }}>
-                  €{totalPrice.toFixed(2).replace(".00", "")}
-                </span>
-                {quantity > 1 && (
-                  <span className="text-sm font-bold" style={{ color: "rgba(10,10,10,0.7)" }}>
-                    ({quantity}× €{unitPrice.toFixed(2)})
-                  </span>
-                )}
-                <span className="text-[11px] font-black uppercase tracking-widest ml-auto text-right leading-tight" style={{ color: "rgba(10,10,10,0.75)", fontFamily: "var(--font-mono,monospace)" }}>
-                  IVA incl.<br />Spedizione gratis
-                </span>
+              {/* Prezzo: grande e pulito, le condizioni accanto */}
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="num text-[46px]">€{totalPrice.toFixed(2).replace(".00", "")}</span>
+                {quantity > 1 && <span className="text-[15px] text-[var(--text-3)]">({quantity}× €{unitPrice.toFixed(2)})</span>}
+                <span className="text-[15px] text-[var(--text-2)]">IVA inclusa · spedizione gratuita</span>
               </div>
 
               {/* Customization summary chips */}
@@ -612,29 +596,29 @@ export default function ProductDetailClient({
                 customization.selectedPatches.length > 0) && (
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   {customization.isPlayerEdition && (
-                    <span className="text-[9px] font-black px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}>
+                    <span className="text-[12px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}>
                       Player +€{EXTRAS_PRICES.player_edition}
                     </span>
                   )}
                   {customization.hasLongSleeve && (
-                    <span className="text-[9px] font-black px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}>
+                    <span className="text-[12px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}>
                       Manica lunga +€{EXTRAS_PRICES.long_sleeve}
                     </span>
                   )}
                   {customization.includeShorts && (
-                    <span className="text-[9px] font-black px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}>
+                    <span className="text-[12px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}>
                       Pantaloncini +€{EXTRAS_PRICES.shorts}
                     </span>
                   )}
                   {customization.includeSocks && (
-                    <span className="text-[9px] font-black px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}>
+                    <span className="text-[12px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}>
                       Calzettoni +€{EXTRAS_PRICES.socks}
                     </span>
                   )}
                   {customization.selectedPatches.map(p => {
                     const cfg = COMP[p.category] || COMP["other"];
                     return (
-                      <span key={p._id} className="text-[9px] font-black px-2 py-0.5 rounded-full" style={{ background: `${cfg.border}18`, color: cfg.text, fontFamily: "var(--font-mono,monospace)" }}>
+                      <span key={p._id} className="text-[12px] font-bold px-2 py-0.5 rounded-full" style={{ background: `${cfg.border}18`, color: cfg.text, fontFamily: "var(--font-mono,monospace)" }}>
                         {cfg.abbr} +€{p.price}
                       </span>
                     );
@@ -651,16 +635,16 @@ export default function ProductDetailClient({
               >
                 {product.stockQuantity !== undefined && product.stockQuantity > 0 && product.stockQuantity < 5 && (
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] animate-pulse">⚠️</span>
-                    <span className="text-[11px] font-black" style={{ color: "#fb923c" }}>
+                    <span className="text-[13px] animate-pulse">⚠️</span>
+                    <span className="text-[13px] font-bold" style={{ color: "#fb923c" }}>
                       Solo {product.stockQuantity} rimast{product.stockQuantity === 1 ? "o" : "i"}!
                     </span>
                   </div>
                 )}
                 {deliveryCountdown && (
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px]">⚡</span>
-                    <span className="text-[11px] font-bold" style={{ color: "#c8f000" }}>{deliveryCountdown}</span>
+                    <span className="text-[13px]">⚡</span>
+                    <span className="text-[13px] font-bold" style={{ color: "#c8f000" }}>{deliveryCountdown}</span>
                   </div>
                 )}
               </div>
@@ -692,7 +676,7 @@ export default function ProductDetailClient({
                         key={type}
                         type="button"
                         onClick={() => setCustomization(p => ({ ...p, isKidSize: type === "KIDS", size: "" }))}
-                        className="px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all"
+                        className="px-4 py-1.5 rounded-lg text-[12px] font-bold transition-all"
                         style={{
                           background: (type === "KIDS") === customization.isKidSize ? "rgba(255,255,255,0.08)" : "transparent",
                           color: (type === "KIDS") === customization.isKidSize ? "#fff" : "rgba(255,255,255,0.3)",
@@ -718,7 +702,7 @@ export default function ProductDetailClient({
                 </div>
 
                 {errors.size && (
-                  <p className="text-[10px] font-black text-red-400 uppercase tracking-tight flex items-center gap-1">
+                  <p className="text-[12px] font-bold text-red-400 tracking-tight flex items-center gap-1">
                     <span>⚠️</span> {errors.size}
                   </p>
                 )}
@@ -729,10 +713,10 @@ export default function ProductDetailClient({
                   style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
                 >
                   <div>
-                    <p className="text-[12px] font-black text-white" style={{ fontFamily: "var(--font-display,sans-serif)" }}>
+                    <p className="text-[12px] font-bold text-white" style={{ fontFamily: "var(--font-display,sans-serif)" }}>
                       Manica lunga
                     </p>
-                    <p className="text-[10px] font-black" style={{ color: "rgba(200,240,0,0.6)", fontFamily: "var(--font-mono,monospace)" }}>
+                    <p className="text-[12px] font-bold" style={{ color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}>
                       +€{EXTRAS_PRICES.long_sleeve}.00
                     </p>
                   </div>
@@ -760,7 +744,7 @@ export default function ProductDetailClient({
                   <span className="display text-[20px]" style={{ color: "#c8f000" }}>
                     Nome, numero e patch <span className="text-white/70" style={{ fontFamily: "var(--font-body)", textTransform: "none", fontWeight: 600, fontSize: "15px" }}>(opzionale)</span>
                   </span>
-                  <span className="text-lg font-black" style={{ color: "#c8f000" }}>{customOpen ? "−" : "+"}</span>
+                  <span className="text-lg font-bold" style={{ color: "#c8f000" }}>{customOpen ? "−" : "+"}</span>
                 </button>
 
                 {customOpen && (
@@ -786,7 +770,7 @@ export default function ProductDetailClient({
                           }}
                         >
                           <span
-                            className="text-[12px] font-black"
+                            className="text-[12px] font-bold"
                             style={{
                               color: opt.active ? "#000" : "rgba(255,255,255,0.6)",
                               fontFamily: "var(--font-display,sans-serif)",
@@ -796,7 +780,7 @@ export default function ProductDetailClient({
                           </span>
                           {opt.price > 0 && (
                             <span
-                              className="text-[10px] font-black mt-0.5"
+                              className="text-[12px] font-bold mt-0.5"
                               style={{ color: opt.active ? "#000" : "rgba(200,240,0,0.6)" }}
                             >
                               +€{opt.price}
@@ -814,28 +798,28 @@ export default function ProductDetailClient({
                       <div className="grid grid-cols-3 gap-2">
                         {product.allowsNameOnShirt && (
                           <div className="col-span-2 space-y-1.5">
-                            <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-mono,monospace)" }}>Nome</span>
+                            <span className="text-[12px] font-bold " style={{ color: "rgba(255,255,255,0.64)", fontFamily: "var(--font-mono,monospace)" }}>Nome</span>
                             <input
                               type="text"
                               value={customization.name}
                               onChange={e => setCustomization(p => ({ ...p, name: e.target.value.toUpperCase() }))}
                               maxLength={20}
                               placeholder="MARADONA"
-                              className="w-full rounded-xl px-3.5 py-2.5 text-sm font-black text-white placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#c8f000]/30"
+                              className="w-full rounded-xl px-3.5 py-2.5 text-sm font-bold text-white placeholder:text-white/60 outline-none focus:ring-1 focus:ring-[#c8f000]/30"
                               style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", fontFamily: "var(--font-display,sans-serif)" }}
                             />
                           </div>
                         )}
                         {product.allowsNumberOnShirt && (
                           <div className="space-y-1.5">
-                            <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-mono,monospace)" }}>N°</span>
+                            <span className="text-[12px] font-bold " style={{ color: "rgba(255,255,255,0.64)", fontFamily: "var(--font-mono,monospace)" }}>N°</span>
                             <input
                               type="text"
                               value={customization.number}
                               onChange={e => setCustomization(p => ({ ...p, number: e.target.value.replace(/[^0-9]/g, "").slice(0, 2) }))}
                               maxLength={2}
                               placeholder="10"
-                              className="w-full rounded-xl px-3.5 py-2.5 text-sm font-black text-white text-center placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#c8f000]/30"
+                              className="w-full rounded-xl px-3.5 py-2.5 text-sm font-bold text-white text-center placeholder:text-white/60 outline-none focus:ring-1 focus:ring-[#c8f000]/30"
                               style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", fontFamily: "var(--font-display,sans-serif)" }}
                             />
                           </div>
@@ -876,10 +860,10 @@ export default function ProductDetailClient({
                               border: `1.5px solid ${customization.includeShorts ? "#c8f000" : "rgba(255,255,255,0.08)"}`,
                             }}
                           >
-                            <span className="text-[11px] font-black" style={{ color: customization.includeShorts ? "#c8f000" : "rgba(255,255,255,0.5)" }}>
+                            <span className="text-[13px] font-bold" style={{ color: customization.includeShorts ? "#c8f000" : "rgba(255,255,255,0.5)" }}>
                               + Pantaloncini
                             </span>
-                            <span className="text-[10px] font-black" style={{ color: "rgba(200,240,0,0.6)" }}>
+                            <span className="text-[12px] font-bold" style={{ color: "#c8f000" }}>
                               +€{EXTRAS_PRICES.shorts}
                             </span>
                           </button>
@@ -894,10 +878,10 @@ export default function ProductDetailClient({
                               border: `1.5px solid ${customization.includeSocks ? "#c8f000" : "rgba(255,255,255,0.08)"}`,
                             }}
                           >
-                            <span className="text-[11px] font-black" style={{ color: customization.includeSocks ? "#c8f000" : "rgba(255,255,255,0.5)" }}>
+                            <span className="text-[13px] font-bold" style={{ color: customization.includeSocks ? "#c8f000" : "rgba(255,255,255,0.5)" }}>
                               + Calzettoni
                             </span>
-                            <span className="text-[10px] font-black" style={{ color: "rgba(200,240,0,0.6)" }}>
+                            <span className="text-[12px] font-bold" style={{ color: "#c8f000" }}>
                               +€{EXTRAS_PRICES.socks}
                             </span>
                           </button>
@@ -920,9 +904,9 @@ export default function ProductDetailClient({
                 <div className="p-5 space-y-3">
                   <div className="flex items-center gap-2">
                     <span className="text-xl">🎁</span>
-                    <span className="text-sm font-black uppercase tracking-wider text-white">Exclusion List</span>
+                    <span className="text-sm font-bold text-white">Exclusion List</span>
                   </div>
-                  <p className="text-[11px] text-purple-200 leading-relaxed">
+                  <p className="text-[13px] text-purple-200 leading-relaxed">
                     Indica quali squadre o colori vuoi evitare. Selezioneremo la tua box di conseguenza.
                   </p>
                   <textarea
@@ -935,7 +919,7 @@ export default function ProductDetailClient({
                     className="w-full rounded-xl border-none bg-black/20 p-3 text-sm font-medium text-white placeholder:text-purple-300 focus:ring-0 resize-none"
                     placeholder="Es. No AC Milan, No maglie gialle..."
                   />
-                  <div className="flex justify-between text-[10px] font-bold text-purple-200 uppercase tracking-tighter">
+                  <div className="flex justify-between text-[12px] font-bold text-purple-200 tracking-tighter">
                     <span>{(customization as any).excludedShirts?.length || 0} / 5 squadre</span>
                     <span>Personalizzazione garantita</span>
                   </div>
@@ -975,7 +959,7 @@ export default function ProductDetailClient({
                   >
                     −
                   </button>
-                  <span className="w-10 text-center text-sm font-black text-white" style={{ fontFamily: "var(--font-display,sans-serif)" }}>
+                  <span className="w-10 text-center text-sm font-bold text-white" style={{ fontFamily: "var(--font-display,sans-serif)" }}>
                     {quantity}
                   </span>
                   <button
@@ -991,14 +975,13 @@ export default function ProductDetailClient({
                 <button
                   type="button"
                   onClick={handleAddToCart}
-                  className="flex-1 h-12 flex items-center justify-center gap-1.5 cut cut-sm text-[11px] font-black uppercase tracking-tight transition-all active:scale-[0.97]"
+                  className="flex-1 h-12 flex items-center justify-center gap-1.5 cut cut-sm text-[13px] font-bold tracking-tight transition-all active:scale-[0.97]"
                   style={{
                     background: "rgba(255,255,255,0.04)",
                     color: "#fff",
                     border: "1.5px solid rgba(200,240,0,0.2)",
                     fontFamily: "var(--font-display,sans-serif)",
-                    letterSpacing: "1px",
-                  }}
+                    }}
                 >
                   + Carrello
                 </button>
@@ -1015,23 +998,13 @@ export default function ProductDetailClient({
                 >
                   {inWishlist
                     ? <HeartIconSolid className="h-5 w-5 text-red-500" />
-                    : <HeartIcon className="h-5 w-5 text-white/40" />}
+                    : <HeartIcon className="h-5 w-5 text-white/60" />}
                 </button>
               </div>
 
-              {/* BUY NOW — primary CTA */}
-              <button
-                type="button"
-                onClick={handleBuyNow}
-                className="w-full h-14 flex items-center justify-center gap-2 rounded-[20px] text-[14px] font-black uppercase tracking-[2px] transition-all active:scale-[0.98] hidden lg:flex"
-                style={{
-                  background: "#c8f000",
-                  color: "#000",
-                  boxShadow: "0 8px 32px rgba(200,240,0,0.28)",
-                  fontFamily: "var(--font-display,sans-serif)",
-                }}
-              >
-                COMPRA SUBITO →
+              {/* Acquisto immediato: il pulsante principale */}
+              <button type="button" onClick={handleBuyNow} className="btn btn-lime w-full !h-14 !text-[18px]">
+                Compra subito
               </button>
 
               {/* Payment methods */}
@@ -1039,8 +1012,8 @@ export default function ProductDetailClient({
                 {["VISA","Mastercard","Apple Pay","Google Pay","Klarna"].map(m => (
                   <span
                     key={m}
-                    className="px-2 py-1 text-[13px] font-bold"
-                    style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.85)" }}
+                    className="rounded-full px-3 py-1 text-[13px] font-medium"
+                    style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.8)" }}
                   >
                     {m}
                   </span>
@@ -1062,7 +1035,7 @@ export default function ProductDetailClient({
             {/* Description */}
             {product.description && (
               <div>
-                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
+                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.64)" }}>
                   {product.description}
                 </p>
               </div>
@@ -1087,7 +1060,7 @@ export default function ProductDetailClient({
               <TabsTrigger
                 key={tab.value}
                 value={tab.value}
-                className="flex-1 shadow-none rounded-none px-0 font-black text-[11px] uppercase tracking-widest text-white/40
+                className="flex-1 shadow-none rounded-none px-0 font-bold text-[13px] text-white/60
                   data-[state=active]:text-white data-[state=active]:shadow-none data-[state=active]:bg-transparent
                   data-[state=active]:border-b-2 data-[state=active]:border-b-[#c8f000]"
                 style={{ fontFamily: "var(--font-display,sans-serif)" }}
@@ -1098,7 +1071,7 @@ export default function ProductDetailClient({
           </TabsList>
 
           <TabsContent value="details" className="pt-6">
-            <div className="space-y-3 text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
+            <div className="space-y-3 text-sm" style={{ color: "rgba(255,255,255,0.64)" }}>
               {product.description && <p className="leading-relaxed">{product.description}</p>}
               <ul className="space-y-2 mt-4">
                 {[

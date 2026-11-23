@@ -1,5 +1,6 @@
 "use client";
 
+import CategoryHeader from "@/components/shop/CategoryHeader";
 import { useState, useMemo, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -195,8 +196,7 @@ function RetroLogoStrip({
                     fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
                     fontSize: "9px",
                     fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "1.5px",
+                    textTransform: "none",
                     color: isActive ? "rgba(200,240,0,0.85)" : "rgba(255,255,255,0.3)",
                     whiteSpace: "nowrap",
                     transition: "color 0.2s",
@@ -346,121 +346,7 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
   return (
     <main className="min-h-screen bg-[#0a0a0a] font-munish">
 
-      {/* ── HERO ──────────────────────────────────────── */}
-      <section className="relative pt-32 pb-14 overflow-hidden">
-        {/* Hero background image */}
-        <Image
-          src="/retro-hero-bg.avif"
-          alt=""
-          fill
-          priority
-          className="absolute inset-0 object-cover object-center"
-          style={{ zIndex: 0 }}
-          sizes="100vw"
-        />
-        {/* Dark gradient overlay — preserves text readability */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(to right, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.72) 50%, rgba(10,10,10,0.45) 100%)",
-            zIndex: 1,
-          }}
-        />
-        {/* Grain overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.04] mix-blend-overlay"
-          style={{ backgroundImage: GRAIN_SVG, backgroundSize: "300px 300px", zIndex: 2 }}
-        />
-        {/* Warm radial glow */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse 70% 55% at 50% 0%, rgba(200,160,50,0.08) 0%, transparent 70%)",
-            zIndex: 2,
-          }}
-        />
-        {/* Grid pattern */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(200,240,0,0.015) 1px, transparent 1px)," +
-              "linear-gradient(90deg, rgba(200,240,0,0.015) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-            zIndex: 2,
-          }}
-        />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative" style={{ zIndex: 3 }}>
-          {/* Eyebrow */}
-          <div className="flex items-center gap-3 mb-5">
-            <div
-              className="h-px flex-1 max-w-[40px]"
-              style={{ background: "rgba(200,240,0,0.3)" }}
-            />
-            <span
-              className="text-[10px] font-black uppercase tracking-[0.45em]"
-              style={{ color: "rgba(200,240,0,0.55)" }}
-            >
-              Collezione Storica
-            </span>
-            <div
-              className="h-px flex-1 max-w-[40px]"
-              style={{ background: "rgba(200,240,0,0.3)" }}
-            />
-          </div>
-
-          {/* Main title */}
-          <h1
-            className="font-black italic uppercase leading-none mb-4"
-            style={{
-              fontSize: "clamp(3rem, 10vw, 6.5rem)",
-              color: "#fff",
-              letterSpacing: "-0.03em",
-              textShadow: "0 2px 40px rgba(0,0,0,0.6)",
-            }}
-          >
-            Maglie
-            <br />
-            <span style={{ color: "#c8f000", WebkitTextStroke: "0px" }}>Retro</span>
-          </h1>
-
-          {/* Tagline */}
-          <p
-            className="hidden md:block text-sm max-w-lg mb-2 leading-relaxed"
-            style={{ color: "rgba(255,255,255,0.4)", fontStyle: "italic" }}
-          >
-            "Il calcio è emozione, la storia è immortale."
-          </p>
-          <p className="hidden md:block text-xs text-white/30 max-w-xl mb-8">
-            Dal Napoli di Maradona al Brasile del Penta, passando per il Triplete
-            dell'Inter e la Barcellona di Guardiola — ogni maglia racconta una storia.
-          </p>
-
-          {/* Stats strip */}
-          <div className="hidden md:flex flex-wrap items-center gap-6">
-            {[
-              { icon: Flame,  val: `${products.length}+`, label: "Maglie in collezione" },
-              { icon: Trophy, val: "3",  label: "Ere del calcio" },
-            ].map(({ icon: Icon, val, label }) => (
-              <div key={label} className="flex items-center gap-2">
-                <div
-                  className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ background: "rgba(200,240,0,0.08)", border: "1px solid rgba(200,240,0,0.15)" }}
-                >
-                  <Icon size={13} style={{ color: "#c8f000" }} />
-                </div>
-                <div>
-                  <p className="text-xs font-black text-white leading-none">{val}</p>
-                  <p className="text-[9px] text-white/35 uppercase tracking-wider leading-none mt-0.5">{label}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <CategoryHeader title={"Maglie retro"} text="Oltre 700 maglie storiche a 40€. Spedizione gratuita e reso entro 14 giorni." />
 
       {/* ── RETRO LOGO STRIP ──────────────────────────── */}
       <section className="relative overflow-hidden mb-12">
@@ -469,18 +355,18 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
           <div className="flex items-center gap-3">
             <div className="h-px flex-shrink-0 w-8" style={{ background: "rgba(200,240,0,0.3)" }} />
             <span
-              className="text-[9px] font-black uppercase whitespace-nowrap"
+              className="text-[12px] font-bold whitespace-nowrap"
               style={{
                 fontFamily: "var(--font-mono, monospace)",
                 letterSpacing: "0.4em",
-                color: "rgba(200,240,0,0.5)",
+                color: "#c8f000",
               }}
             >
               // Icone del Calcio
             </span>
             <div className="h-px flex-1" style={{ background: "rgba(200,240,0,0.08)" }} />
             <span
-              className="text-[9px] text-white/20 whitespace-nowrap"
+              className="text-[12px] text-white/60 whitespace-nowrap"
               style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "8px" }}
             >
               clicca per sfogliare le retro
@@ -520,18 +406,18 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
                 onError={(e) => { (e.target as HTMLImageElement).src = `/team-logos/${teamFilter}.png`; }}
               />
               <div>
-                <p className="text-[9px] uppercase tracking-[3px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.6)" }}>
+                <p className="text-[12px] font-bold" style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}>
                   // Filtrando per
                 </p>
-                <p className="font-black uppercase text-white text-sm" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
+                <p className="font-bold text-white text-sm" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
                   {RETRO_CLUBS.find(c => c.slug === teamFilter)?.name} · {visibleProducts.length} maglie
                 </p>
               </div>
             </div>
             <button
               onClick={() => setTeamFilter(null)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all active:scale-95"
-              style={{ border: "1px solid rgba(200,240,0,0.25)", color: "rgba(200,240,0,0.7)" }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-bold transition-all active:scale-95"
+              style={{ border: "1px solid rgba(200,240,0,0.25)", color: "#c8f000" }}
             >
               × Tutte
             </button>
@@ -553,7 +439,7 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
             >
               <Star size={10} style={{ color: "#c8f000" }} />
               <span
-                className="text-[10px] font-black uppercase tracking-[0.35em]"
+                className="text-[12px] font-bold "
                 style={{ color: "#c8f000" }}
               >
                 Hall of Fame
@@ -563,7 +449,7 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
           </div>
 
           {/* Intro */}
-          <p className="text-xs text-white/35 mb-6 max-w-2xl">
+          <p className="text-xs text-white/60 mb-6 max-w-2xl">
             Le maglie più iconiche di tutti i tempi. Quelle che chiunque ami il calcio riconosce a prima vista.
           </p>
 
@@ -580,7 +466,7 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
                   }}
                 >
                   <Star size={8} fill="#000" color="#000" />
-                  <span className="text-[8px] font-black uppercase tracking-wider text-black">
+                  <span className="text-[12px] font-bold text-black">
                     Leggenda
                   </span>
                 </div>
@@ -610,13 +496,13 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
               <button
                 key={key}
                 onClick={() => setActiveFilter(key)}
-                className="flex-shrink-0 px-4 py-2 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-200 active:scale-95"
+                className="flex-shrink-0 px-4 py-2 rounded-full text-[13px] font-bold transition-all duration-200 active:scale-95"
                 style={
                   active
                     ? { background: "#c8f000", color: "#000" }
                     : {
                         background: "rgba(255,255,255,0.04)",
-                        color: "rgba(255,255,255,0.5)",
+                        color: "rgba(255,255,255,0.64)",
                         border: "1px solid rgba(255,255,255,0.08)",
                       }
                 }
@@ -649,7 +535,7 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
               ))}
             </div>
           ) : (
-            <p className="text-white/30 text-sm py-20 text-center">Nessuna maglia in questa categoria.</p>
+            <p className="text-white/60 text-sm py-20 text-center">Nessuna maglia in questa categoria.</p>
           )}
         </section>
       )}
@@ -678,8 +564,8 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
                       <Icon size={14} style={{ color: "#c8f000" }} />
                     </div>
                     <span
-                      className="text-[10px] font-black uppercase tracking-[0.4em]"
-                      style={{ color: "rgba(200,240,0,0.5)" }}
+                      className="text-[12px] font-bold "
+                      style={{ color: "#c8f000" }}
                     >
                       {section.era}
                     </span>
@@ -689,10 +575,10 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
                     />
                     {/* Count badge */}
                     <span
-                      className="text-[10px] font-black tabular-nums px-2 py-0.5 rounded-full"
+                      className="text-[12px] font-bold tabular-nums px-2 py-0.5 rounded-full"
                       style={{
                         background: "rgba(255,255,255,0.05)",
-                        color: "rgba(255,255,255,0.3)",
+                        color: "rgba(255,255,255,0.64)",
                       }}
                     >
                       {prods.length} maglie
@@ -701,7 +587,7 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
 
                   {/* Title */}
                   <h2
-                    className="font-black italic uppercase mb-2"
+                    className="font-bold italic mb-2"
                     style={{
                       fontSize: "clamp(1.4rem, 4vw, 2.4rem)",
                       color: "#fff",
@@ -710,18 +596,18 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
                   >
                     {section.title}
                   </h2>
-                  <p className="text-xs text-white/35 max-w-lg mb-4">{section.subtitle}</p>
+                  <p className="text-xs text-white/60 max-w-lg mb-4">{section.subtitle}</p>
 
                   {/* Legend chips */}
                   <div className="flex flex-wrap gap-2">
                     {section.legends.map((leg) => (
                       <span
                         key={leg}
-                        className="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full"
+                        className="text-[12px] font-bold px-2.5 py-1 rounded-full"
                         style={{
                           background: "rgba(200,240,0,0.05)",
                           border: "1px solid rgba(200,240,0,0.12)",
-                          color: "rgba(200,240,0,0.6)",
+                          color: "#c8f000",
                         }}
                       >
                         ★ {leg}
@@ -753,10 +639,10 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
                   <div className="mt-6 flex justify-center">
                     <button
                       onClick={() => setActiveFilter(section.key)}
-                      className="flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-200 active:scale-95"
+                      className="flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-bold transition-all duration-200 active:scale-95"
                       style={{
                         border: "1px solid rgba(200,240,0,0.25)",
-                        color: "rgba(200,240,0,0.7)",
+                        color: "#c8f000",
                         background: "transparent",
                       }}
                     >
@@ -797,10 +683,10 @@ export default function RetroClient({ products }: { products: RetroProduct[] }) 
               <div key={title} className="flex items-start gap-3">
                 <span className="text-xl flex-shrink-0">{icon}</span>
                 <div>
-                  <p className="text-xs font-black text-white uppercase tracking-wider">
+                  <p className="text-xs font-bold text-white ">
                     {title}
                   </p>
-                  <p className="text-[11px] text-white/35 mt-0.5">{desc}</p>
+                  <p className="text-[13px] text-white/60 mt-0.5">{desc}</p>
                 </div>
               </div>
             ))}

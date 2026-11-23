@@ -29,7 +29,7 @@ function TeamLogoCard({ name, logo, href }: { name: string; logo: string; href: 
     <Link
       href={href}
       className="team-logo-card-pl group flex flex-col items-center gap-2"
-      style={{ width: "88px", flexShrink: 0 }}
+      style={{ width: "92px", flexShrink: 0 }}
     >
       <div
         className="w-full flex items-center justify-center rounded-2xl overflow-hidden"
@@ -54,11 +54,11 @@ function TeamLogoCard({ name, logo, href }: { name: string; logo: string; href: 
         className="text-center leading-tight"
         style={{
           fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
-          fontSize: "10px",
-          fontWeight: 700,
-          letterSpacing: "1.2px",
-          color: "rgba(255,255,255,0.5)",
-          textTransform: "uppercase",
+          fontSize: "13px",
+          fontWeight: 500,
+          letterSpacing: "0",
+          color: "rgba(255,255,255,0.8)",
+          textTransform: "none",
           transition: "color 200ms",
           whiteSpace: "nowrap",
           overflow: "hidden",

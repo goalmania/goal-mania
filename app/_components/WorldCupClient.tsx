@@ -1,5 +1,6 @@
 "use client";
 
+import CategoryHeader from "@/components/shop/CategoryHeader";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -85,10 +86,10 @@ function CountdownBox({ n, label }: { n: number; label: string }) {
         padding: "10px 14px",
       }}
     >
-      <span className="font-black tabular-nums leading-none" style={{ fontSize: "clamp(1.5rem,5vw,2.5rem)", color: "#FFD700" }}>
+      <span className="font-bold tabular-nums leading-none" style={{ fontSize: "clamp(1.5rem,5vw,2.5rem)", color: "#FFD700" }}>
         {String(n).padStart(2, "0")}
       </span>
-      <span className="text-[8px] font-bold uppercase tracking-widest mt-1" style={{ color: "rgba(255,215,0,0.4)" }}>
+      <span className="text-[12px] font-bold mt-1" style={{ color: "rgba(255,215,0,0.4)" }}>
         {label}
       </span>
     </div>
@@ -165,8 +166,8 @@ function NationCard({
               sizes="(max-width: 640px) 25vw, 12vw"
             />
             <span
-              className="absolute bottom-1 left-0 right-0 text-center text-[7px] font-black uppercase tracking-widest"
-              style={{ color: "rgba(255,255,255,0.45)" }}
+              className="absolute bottom-1 left-0 right-0 text-center text-[7px] font-bold "
+              style={{ color: "rgba(255,255,255,0.64)" }}
             >
               Home
             </span>
@@ -192,8 +193,8 @@ function NationCard({
               sizes="(max-width: 640px) 25vw, 12vw"
             />
             <span
-              className="absolute bottom-1 left-0 right-0 text-center text-[7px] font-black uppercase tracking-widest"
-              style={{ color: "rgba(255,255,255,0.45)" }}
+              className="absolute bottom-1 left-0 right-0 text-center text-[7px] font-bold "
+              style={{ color: "rgba(255,255,255,0.64)" }}
             >
               Away
             </span>
@@ -228,12 +229,12 @@ function NationCard({
         style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }}
       >
         <img src={getFlagUrl(country)} alt={country} className="w-4 h-3 object-cover rounded-sm flex-shrink-0" />
-        <span className="text-[9px] font-black uppercase tracking-wide text-white/90">{country}</span>
+        <span className="text-[12px] font-bold tracking-wide text-white/90">{country}</span>
       </div>
 
       {/* Kit count top-right */}
       <div
-        className="absolute top-3 right-3 z-10 px-2 py-1 rounded-full text-[8px] font-black"
+        className="absolute top-3 right-3 z-10 px-2 py-1 rounded-full text-[12px] font-bold"
         style={{ background: "rgba(0,0,0,0.6)", color: "#c8f000", backdropFilter: "blur(6px)" }}
       >
         {count} kit
@@ -242,12 +243,12 @@ function NationCard({
       {/* Bottom name + CTA */}
       <div className="absolute bottom-0 left-0 right-0 z-10 p-3">
         <p
-          className="font-black italic uppercase text-white leading-none"
+          className="font-bold italic text-white leading-none"
           style={{ fontSize: "clamp(0.85rem, 2.2vw, 1.05rem)", textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}
         >
           {country}
         </p>
-        <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5" style={{ color: "#c8f000" }}>
+        <p className="text-[12px] font-bold mt-0.5" style={{ color: "#c8f000" }}>
           Vedi kit →
         </p>
       </div>
@@ -301,80 +302,7 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
   return (
     <div className="min-h-screen bg-[#050505] font-munish overflow-x-hidden">
 
-      {/* ── HERO ── */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden">
-        <div
-          className="absolute inset-0 z-0 pointer-events-none"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,215,0,0.025) 1px, transparent 1px)," +
-              "linear-gradient(90deg, rgba(255,215,0,0.025) 1px, transparent 1px)",
-            backgroundSize: "72px 72px",
-          }}
-        />
-        <div
-          className="absolute inset-0 z-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse 70% 55% at 50% 0%, rgba(200,240,0,0.07) 0%, transparent 65%)," +
-              "radial-gradient(ellipse 50% 40% at 50% 100%, rgba(255,215,0,0.04) 0%, transparent 65%)",
-          }}
-        />
-
-        <div
-          className="relative z-10 flex items-center gap-2 mb-8 px-5 py-2.5 rounded-full"
-          style={{ background: "rgba(255,215,0,0.07)", border: "1px solid rgba(255,215,0,0.22)", backdropFilter: "blur(8px)" }}
-        >
-          <Trophy size={12} style={{ color: "#FFD700" }} />
-          <span className="text-[10px] font-black uppercase tracking-[0.35em]" style={{ color: "#FFD700" }}>
-            FIFA World Cup 2026™ · USA · Canada · Mexico
-          </span>
-        </div>
-
-        <div className="relative z-10 mb-10">
-          <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.5em] text-white/25 mb-4">
-            La Tua Nazione · Il Tuo Stile
-          </p>
-          <h1 className="leading-none uppercase italic font-black" style={{ letterSpacing: "-0.025em" }}>
-            <span className="block text-white" style={{ fontSize: "clamp(4rem, 14vw, 10rem)", textShadow: "0 0 120px rgba(255,215,0,0.12)" }}>
-              WORLD CUP
-            </span>
-            <span
-              className="block"
-              style={{ fontSize: "clamp(4rem, 14vw, 10rem)", color: "transparent", WebkitTextStroke: "2px #FFD700", textShadow: "0 0 80px rgba(255,215,0,0.25)" }}
-            >
-              2026
-            </span>
-          </h1>
-        </div>
-
-        {mounted && (
-          <div className="relative z-10 flex gap-3 sm:gap-4 mb-10">
-            <CountdownBox n={timeLeft.days}  label="Giorni" />
-            <CountdownBox n={timeLeft.hours} label="Ore"    />
-            <CountdownBox n={timeLeft.mins}  label="Min"    />
-            <CountdownBox n={timeLeft.secs}  label="Sec"    />
-          </div>
-        )}
-
-        <a
-          href="#kits"
-          className="relative z-10 inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-black uppercase text-[12px] tracking-widest transition-all active:scale-95"
-          style={{ background: "#c8f000", color: "#000", letterSpacing: "2px", boxShadow: "0 0 40px rgba(200,240,0,0.3)" }}
-        >
-          <Trophy size={14} />
-          Vesti la Tua Nazionale
-        </a>
-
-        <div className="relative z-10 mt-10 flex items-center gap-3">
-          {["us", "ca", "mx"].map((code) => (
-            <img key={code} src={`https://flagcdn.com/w80/${code}.png`} alt={code} className="h-4 rounded-sm object-cover" style={{ opacity: 0.5 }} />
-          ))}
-          <span className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold ml-1">Host Nations</span>
-        </div>
-
-        <div className="absolute bottom-0 left-0 right-0 h-40 z-5 pointer-events-none" style={{ background: "linear-gradient(to bottom, transparent, #050505)" }} />
-      </section>
+      <CategoryHeader title={"Mondiali 2026"} text="Le nazionali a 35€. Spedizione gratuita e reso entro 14 giorni." />
 
       {/* ── ALL NATION CARDS ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-8" id="kits">
@@ -382,10 +310,10 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
           <div className="flex items-center gap-3">
             <div className="w-1 h-6 rounded-full" style={{ background: "#FFD700" }} />
             <div>
-              <p className="text-[9px] font-black uppercase tracking-[0.4em]" style={{ color: "rgba(255,215,0,0.6)" }}>
+              <p className="text-[12px] font-bold " style={{ color: "rgba(255,215,0,0.6)" }}>
                 Tutte le Nazionali
               </p>
-              <p className="text-xs font-bold text-white/30" style={{ fontFamily: "var(--font-mono, monospace)" }}>
+              <p className="text-xs font-bold text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>
                 {ordered.length} nazioni · Home &amp; Away
               </p>
             </div>
@@ -394,7 +322,7 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
 
         {ordered.length === 0 ? (
           <div className="text-center py-24">
-            <p className="text-white/20 font-black uppercase text-sm">Nessun kit disponibile</p>
+            <p className="text-white/60 font-bold text-sm">Nessun kit disponibile</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
@@ -419,12 +347,12 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
         {/* Filter bar */}
         <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
           <div>
-            <p className="text-[9px] uppercase tracking-[0.4em] font-black text-white/25">
+            <p className="text-[12px] font-bold text-white/60">
               Filtra per nazione
             </p>
-            <h2 className="text-base font-black italic uppercase text-white leading-tight">
+            <h2 className="text-base font-bold italic text-white leading-tight">
               {selectedNation ? selectedNation : "Tutte le Nazioni"}
-              <span className="text-white/30 font-normal text-sm ml-2">
+              <span className="text-white/60 font-normal text-sm ml-2">
                 ({filteredProducts.length} kit)
               </span>
             </h2>
@@ -432,7 +360,7 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
           {selectedNation && (
             <button
               onClick={() => setSelectedNation(null)}
-              className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full transition-all active:scale-95"
+              className="flex items-center gap-1.5 text-[12px] font-bold px-4 py-2 rounded-full transition-all active:scale-95"
               style={{ color: "#c8f000", border: "1px solid rgba(200,240,0,0.25)" }}
             >
               ← Tutte
@@ -444,7 +372,7 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
         <div ref={pillsRef} className="flex gap-2 overflow-x-auto pb-4 mb-8" style={{ scrollbarWidth: "none" } as React.CSSProperties}>
           <button
             onClick={() => setSelectedNation(null)}
-            className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-full font-black uppercase text-[10px] tracking-wide transition-all active:scale-95"
+            className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-full font-bold text-[12px] tracking-wide transition-all active:scale-95"
             style={{
               background: !selectedNation ? "#c8f000" : "rgba(255,255,255,0.05)",
               color: !selectedNation ? "#000" : "rgba(255,255,255,0.55)",
@@ -463,7 +391,7 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
               <button
                 key={country}
                 onClick={() => setSelectedNation(isSelected ? null : country)}
-                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold uppercase text-[10px] tracking-wide transition-all active:scale-95"
+                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-[12px] tracking-wide transition-all active:scale-95"
                 style={{
                   background: isSelected ? "#c8f000" : isPriority ? "rgba(255,215,0,0.05)" : "rgba(255,255,255,0.04)",
                   color: isSelected ? "#000" : "rgba(255,255,255,0.65)",
@@ -481,7 +409,7 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
         {/* Products grid */}
         {filteredProducts.length === 0 ? (
           <div className="text-center py-24">
-            <p className="text-white/20 font-black uppercase text-sm">Nessun kit disponibile</p>
+            <p className="text-white/60 font-bold text-sm">Nessun kit disponibile</p>
           </div>
         ) : selectedNation ? (
           <div>
@@ -490,8 +418,8 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
                 <Image src={getFlagUrl(selectedNation)} alt={selectedNation} fill className="object-cover" />
               </div>
               <div>
-                <h2 className="text-2xl font-black italic uppercase text-white">{selectedNation}</h2>
-                <p className="text-[10px] uppercase tracking-widest font-bold" style={{ color: "#FFD700" }}>
+                <h2 className="text-2xl font-bold italic text-white">{selectedNation}</h2>
+                <p className="text-[12px] font-bold" style={{ color: "#FFD700" }}>
                   World Cup 2026 · {filteredProducts.length} {filteredProducts.length === 1 ? "kit disponibile" : "kit disponibili"}
                 </p>
               </div>
@@ -523,8 +451,8 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
                     <Image src={getFlagUrl(country)} alt={country} fill className="object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h2 className="text-lg font-black italic uppercase text-white leading-none truncate">{country}</h2>
-                    <p className="text-[9px] uppercase tracking-widest font-bold mt-0.5" style={{ color: "rgba(255,215,0,0.6)" }}>
+                    <h2 className="text-lg font-bold italic text-white leading-none truncate">{country}</h2>
+                    <p className="text-[12px] font-bold mt-0.5" style={{ color: "rgba(255,215,0,0.6)" }}>
                       {groupedProducts[country]?.length ?? 0} kit · World Cup 2026
                     </p>
                   </div>
@@ -533,7 +461,7 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
                       setSelectedNation(country);
                       window.scrollTo({ top: document.getElementById("products-section")?.offsetTop ?? 0, behavior: "smooth" });
                     }}
-                    className="flex-shrink-0 flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-white/30 hover:text-[#c8f000] transition-colors"
+                    className="flex-shrink-0 flex items-center gap-1 text-[12px] font-bold text-white/60 hover:text-[#c8f000] transition-colors"
                   >
                     Vedi tutti <ChevronRight size={10} />
                   </button>
@@ -561,34 +489,6 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
         )}
       </section>
 
-      {/* ── URGENCY BANNER ── */}
-      {mounted && timeLeft.days > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-          <div
-            className="rounded-2xl p-5 md:p-6 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left"
-            style={{ background: "linear-gradient(135deg, rgba(255,215,0,0.05) 0%, rgba(200,240,0,0.04) 100%)", border: "1px solid rgba(255,215,0,0.15)" }}
-          >
-            <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-2xl" style={{ background: "rgba(255,215,0,0.1)" }}>
-              ⚽
-            </div>
-            <div className="flex-1">
-              <p className="font-black uppercase text-white text-sm">
-                Mancano solo <span style={{ color: "#FFD700" }}>{timeLeft.days} giorni</span> al fischio d'inizio!
-              </p>
-              <p className="text-[11px] text-white/40 mt-0.5">Ordina ora e ricevi il tuo kit prima del Mondiale 2026</p>
-            </div>
-            <a
-              href="#kits"
-              className="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-full font-black uppercase text-[10px] tracking-widest transition-all active:scale-95"
-              style={{ background: "#c8f000", color: "#000" }}
-            >
-              <Zap size={11} />
-              Acquista Ora
-            </a>
-          </div>
-        </section>
-      )}
-
       {/* ── TRUST STRIP ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10 mt-4 mb-8" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -603,8 +503,8 @@ export default function WorldCupClient({ products, groupedProducts, sortedCountr
                 <Icon size={16} style={{ color: "#FFD700" }} />
               </div>
               <div>
-                <p className="text-xs font-black uppercase text-white/70">{title}</p>
-                <p className="text-[10px] text-white/30 mt-0.5">{sub}</p>
+                <p className="text-xs font-bold text-white/70">{title}</p>
+                <p className="text-[12px] text-white/60 mt-0.5">{sub}</p>
               </div>
             </div>
           ))}

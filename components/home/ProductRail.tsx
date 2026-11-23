@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 import ProductCard from "@/components/ui/ProductCard";
 
 interface RailProduct {
@@ -24,20 +25,16 @@ export default function ProductRail({
 }) {
   if (!products.length) return null;
   return (
-    <section className="bg-[#0a0a0a] py-9 md:py-14">
-      <div className="mx-auto mb-5 flex max-w-[1280px] items-end justify-between gap-4 px-4 md:px-8">
-        <h2 className="display text-[clamp(2.4rem,8vw,4.5rem)] text-white">{title}</h2>
-        <Link
-          href={href}
-          className="cut cut-sm flex h-11 shrink-0 items-center bg-white/10 px-4 text-[16px] font-extrabold uppercase tracking-wide text-white transition-colors hover:bg-[#c8f000] hover:text-[#0a0a0a]"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          Vedi tutte
+    <section className="py-8 md:py-12">
+      <div className="mx-auto mb-5 flex max-w-[1280px] items-end justify-between gap-4 px-5 md:px-8">
+        <h2 className="display text-[clamp(1.9rem,5vw,3rem)]">{title}</h2>
+        <Link href={href} className="flex min-h-[44px] shrink-0 items-center gap-0.5 text-[16px] font-semibold text-[var(--lime)]">
+          Vedi tutte <ChevronRight className="h-5 w-5" />
         </Link>
       </div>
       <div className="rail">
         {products.map((p, i) => (
-          <div key={p.id} className="w-[64vw] max-w-[290px] md:w-[272px]">
+          <div key={p.id} className="w-[66vw] max-w-[290px] md:w-[272px]">
             <ProductCard id={p.id} slug={p.slug} name={p.name} price={p.price} image={p.image} category={p.category} team={p.team} priority={priorityFirst && i < 2} />
           </div>
         ))}

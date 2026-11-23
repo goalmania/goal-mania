@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Italianno, Mulish, Big_Shoulders, Hanken_Grotesk, Space_Mono } from "next/font/google";
+import { Italianno, Mulish, Geist, Space_Mono } from "next/font/google";
 import { Metadata, Viewport } from "next";
 import { Providers } from "@/components/providers";
 import "./globals.css";
@@ -21,18 +21,12 @@ const mulish = Mulish({
   subsets: ["latin"],
   variable: "--font-mulish",
 });
-// Titoli: insegna da stadio. Testo: grottesco neutro con cifre leggibili.
-const bigShoulders = Big_Shoulders({
-  weight: ["700", "800", "900"],
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-display-face",
-});
-const hanken = Hanken_Grotesk({
+// Un solo carattere, pulito e moderno: titoli stretti e pesanti, testo leggibile, cifre allineate.
+const geist = Geist({
   weight: ["400", "500", "600", "700", "800"],
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-body-face",
+  variable: "--font-geist-face",
 });
 const spaceMono = Space_Mono({
   weight: ["400", "700"],
@@ -147,7 +141,7 @@ export default function RootLayout({
     <html
       lang="it"
       suppressHydrationWarning
-      className={`${italianno.variable} ${mulish.variable} ${bigShoulders.variable} ${hanken.variable} ${spaceMono.variable} text-base dark`}
+      className={`${italianno.variable} ${mulish.variable} ${geist.variable} ${spaceMono.variable} text-base dark`}
     >
       <head>
         {/* Structured Data for Google */}

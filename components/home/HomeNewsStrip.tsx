@@ -47,32 +47,30 @@ export default function HomeNewsStrip({ articles }: Props) {
             <div className="flex items-center gap-3 mb-2">
               <span className="w-5 h-[1.5px] rounded-full" style={{ background: "#c8f000" }} />
               <span
-                className="text-[10px] uppercase tracking-[4px] font-bold"
-                style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.7)" }}
+                className="text-[12px] font-bold"
+                style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
               >
                 // Ultime Notizie
               </span>
             </div>
             <h2
-              className="font-black uppercase leading-none text-white"
+              className="font-bold leading-none text-white"
               style={{
                 fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
                 fontSize: "clamp(1.6rem, 4vw, 2.8rem)",
-                letterSpacing: "1px",
-              }}
+                }}
             >
               Dal <span style={{ color: "#c8f000" }}>Blog</span>
             </h2>
           </div>
           <Link
             href="/news"
-            className="flex-shrink-0 text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full transition-colors"
+            className="flex-shrink-0 text-xs font-bold px-4 py-2 rounded-full transition-colors"
             style={{
               fontFamily: "var(--font-display, sans-serif)",
               color: "#c8f000",
               border: "1px solid rgba(200,240,0,0.35)",
-              letterSpacing: "2px",
-            }}
+              }}
           >
             Tutte →
           </Link>
@@ -108,7 +106,7 @@ export default function HomeNewsStrip({ articles }: Props) {
                     style={{ background: "linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.7) 100%)" }}
                   />
                   <span
-                    className="absolute bottom-2 left-2 text-[8px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded"
+                    className="absolute bottom-2 left-2 text-[12px] font-bold px-1.5 py-0.5 rounded"
                     style={{ background: "rgba(200,240,0,0.2)", color: "#c8f000", fontFamily: "var(--font-mono, monospace)" }}
                   >
                     {label}
@@ -118,17 +116,16 @@ export default function HomeNewsStrip({ articles }: Props) {
                 {/* Title + date */}
                 <div className="p-3 flex flex-col gap-1 flex-1">
                   <p
-                    className="font-black uppercase text-white leading-tight line-clamp-3 group-hover:text-[#c8f000] transition-colors"
+                    className="font-bold text-white leading-tight line-clamp-3 group-hover:text-[#c8f000] transition-colors"
                     style={{
                       fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
                       fontSize: "0.78rem",
-                      letterSpacing: "0.3px",
-                    }}
+                      }}
                   >
                     {article.title}
                   </p>
                   {article.publishedAt && (
-                    <p className="text-white/30 mt-auto" style={{ fontSize: "0.65rem", fontFamily: "var(--font-mono, monospace)" }}>
+                    <p className="text-white/60 mt-auto" style={{ fontSize: "0.65rem", fontFamily: "var(--font-mono, monospace)" }}>
                       {formatDate(article.publishedAt)}
                     </p>
                   )}

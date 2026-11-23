@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import { Home, Shirt, History, ShoppingBag, User } from "lucide-react";
 import { useCartStore } from "@/lib/store/cart";
 
-// Barra fissa solo su telefono. Nascosta dove c'e gia una barra d'acquisto
-// (scheda prodotto, carrello, checkout) e nell'admin.
+// Capsula di vetro flottante, solo su telefono (come la barra delle schede di iOS).
+// Nascosta dove c'e gia una barra d'acquisto (scheda prodotto, carrello, checkout) e nell'admin.
 const HIDDEN = ["/products/", "/cart", "/checkout", "/admin", "/auth"];
 
 export default function MobileBottomNav() {
@@ -32,28 +32,26 @@ export default function MobileBottomNav() {
   return (
     <nav
       aria-label="Navigazione mobile"
-      className="fixed inset-x-0 bottom-0 z-[60] border-t border-white/12 bg-[#0a0a0a] md:hidden"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      className="glass-strong fixed inset-x-3 z-[60] rounded-[30px] p-1.5 md:hidden"
+      style={{ bottom: "calc(10px + env(safe-area-inset-bottom))" }}
     >
-      <ul className="grid grid-cols-5">
+      <ul className="grid grid-cols-5 gap-1">
         {items.map(({ href, label, Icon, active, badge }) => (
           <li key={href}>
             <Link
               href={href}
               aria-current={active ? "page" : undefined}
-              className={`relative flex h-[58px] flex-col items-center justify-center gap-0.5 text-[12px] font-extrabold uppercase tracking-wide active:bg-white/5 ${active ? "text-[#c8f000]" : "text-white/75"}`}
-              style={{ fontFamily: "var(--font-display)" }}
+              className={`relative flex h-[54px] flex-col items-center justify-center gap-0.5 rounded-[24px] text-[11px] font-medium transition-colors duration-200 active:scale-95 ${active ? "bg-white/14 text-white" : "text-white/65"}`}
             >
               <span className="relative">
-                <Icon className="h-[22px] w-[22px]" strokeWidth={active ? 2.6 : 2} />
+                <Icon className={`h-[22px] w-[22px] ${active ? "text-[#c8f000]" : ""}`} strokeWidth={active ? 2.4 : 1.9} />
                 {!!badge && badge > 0 && (
-                  <span className="absolute -right-3 -top-2 flex h-[18px] min-w-[18px] items-center justify-center bg-[#c8f000] px-1 text-[11px] font-black text-[#0a0a0a]">
+                  <span className="absolute -right-3 -top-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#c8f000] px-1 text-[11px] font-bold text-[#0a0a0a]">
                     {badge}
                   </span>
                 )}
               </span>
               {label}
-              {active && <span className="absolute inset-x-6 top-0 h-[3px] bg-[#c8f000]" />}
             </Link>
           </li>
         ))}

@@ -71,9 +71,9 @@
   --gm-teal:        #00c8a0;
 
   /* ── Font Stack ── */
-  --font-display:   var(--font-display-face, 'Big Shoulders', 'Arial Narrow', sans-serif);
-  --font-body:      var(--font-body-face, 'Hanken Grotesk', system-ui, sans-serif);
-  --font-mono:      var(--font-space-mono, 'Space Mono', monospace);
+  --font-display:   var(--font-geist-face, 'Geist', system-ui, sans-serif);
+  --font-body:      var(--font-geist-face, 'Geist', system-ui, sans-serif);
+  --font-mono:      var(--font-geist-face, 'Geist', system-ui, sans-serif);
 
   /* ── Radius (rounded but purposeful) ── */
   --radius: 0.75rem;
@@ -153,14 +153,15 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
-    line-height: 1.6;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    text-wrap: balance;
   }
 }
 
@@ -329,8 +330,7 @@
   gap: 8px;
   padding: 14px 28px;
   min-height: 48px;
-  border-radius: 0;
-  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  border-radius: 999px;
   cursor: pointer;
   transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
   border: none;
@@ -1176,75 +1176,108 @@ html {
 
 
 /* ================================================================
-   GOAL MANIA — sistema grafico "tabellone" (2026)
-   Fondo inchiostro, numeri enormi, lime acceso, angolo tagliato.
+   GOAL MANIA — sistema grafico "vetro" (2026)
+   Fondo scuro profondo, superfici di vetro smerigliato, angoli morbidi,
+   un solo carattere (Geist), lime come unico accento.
    ================================================================ */
 :root {
-  --ink: #0a0a0a;
-  --ink-2: #121211;
-  --ink-3: #1b1b19;
-  --line: rgba(244, 244, 239, 0.14);
-  --paper: #f1f1ec;
-  --paper-2: #e4e4dc;
+  --bg: #050506;
+  --bg-2: #0c0c0e;
+  --text: #f5f5f7;
+  --text-2: rgba(245, 245, 247, 0.74);
+  --text-3: rgba(245, 245, 247, 0.56);
+  --stroke: rgba(255, 255, 255, 0.13);
   --lime: #c8f000;
-  --text: #f4f4ef;
-  --text-2: rgba(244, 244, 239, 0.76);
-  --text-3: rgba(244, 244, 239, 0.58);
-  --bar-h: 36px;
-  --head-h: 56px;
-  --cut: 12px;
+  --lime-hi: #d8ff1a;
+  --paper: #f5f5f7;
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --bar-h: 34px;
+  --head-h: 58px;
 }
 @media (min-width: 768px) { :root { --head-h: 64px; } }
 
-::selection { background: var(--lime); color: var(--ink); }
+html { scroll-behavior: smooth; caret-color: var(--lime); scrollbar-color: #3a3a3f var(--bg); }
+body { background: var(--bg); color: var(--text); font-feature-settings: "ss01", "cv11"; }
+::selection { background: var(--lime); color: #0a0a0a; }
 :focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
-html { scroll-behavior: smooth; caret-color: var(--lime); scrollbar-color: #3a3a36 var(--ink); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
-/* Firma: angolo tagliato in alto a destra (targa, biglietto) */
-.cut    { clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%); }
-.cut-sm { --cut: 8px; }
-.cut-lg { --cut: 22px; }
+/* Raggi: tutto il sito usa la stessa scala */
+.cut    { border-radius: 22px; }
+.cut-sm { border-radius: 16px; }
+.cut-lg { border-radius: 32px; }
 
+/* Vetro smerigliato: sfoca e satura cio che c'e dietro, bordo e riflesso sottili */
+.glass {
+  background: rgba(255, 255, 255, 0.07);
+  -webkit-backdrop-filter: blur(22px) saturate(1.5);
+  backdrop-filter: blur(22px) saturate(1.5);
+  border: 1px solid var(--stroke);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 12px 32px -12px rgba(0, 0, 0, 0.5);
+}
+.glass-strong {
+  background: rgba(18, 18, 21, 0.66);
+  -webkit-backdrop-filter: blur(28px) saturate(1.8);
+  backdrop-filter: blur(28px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 18px 40px -16px rgba(0, 0, 0, 0.6);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: rgba(38, 38, 42, 0.92); }
+  .glass-strong { background: rgba(18, 18, 21, 0.97); }
+}
+
+/* Titoli: minuscolo con maiuscola iniziale, tracking stretto, peso pieno */
 .display {
   font-family: var(--font-display);
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 0.88;
-  letter-spacing: -0.005em;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
   text-wrap: balance;
 }
 .num {
   font-family: var(--font-display);
-  font-weight: 900;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
-  line-height: 0.88;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
-.rule { border-top: 1px solid var(--line); }
 .gm-muted { color: var(--text-2); }
-.gm-lime-block { background: var(--lime); color: var(--ink); }
+.gm-lime-block { background: var(--lime); color: #0a0a0a; }
 
-/* Fila scorrevole nativa: nessun JavaScript, scatta sulle schede, fluida su touch */
+/* Pulsanti a pillola (altezza 52px: bersaglio comodo anche a pollice) */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 52px; padding: 0 26px; border-radius: 999px;
+  font-family: var(--font-display); font-size: 17px; font-weight: 600; letter-spacing: -0.01em;
+  transition: transform 220ms var(--ease), background-color 180ms ease, color 180ms ease;
+  will-change: transform;
+}
+.btn:active { transform: scale(0.97); }
+.btn-lime { background: var(--lime); color: #0a0a0a; }
+.btn-lime:hover { background: var(--lime-hi); }
+.btn-glass { background: rgba(255, 255, 255, 0.1); color: var(--text); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); box-shadow: inset 0 0 0 1px var(--stroke); }
+.btn-glass:hover { background: rgba(255, 255, 255, 0.16); }
+
+/* Fila scorrevole nativa: nessun JavaScript, scatta sulle schede, fluida al tocco */
 .rail {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  scroll-snap-type: x proximity;
-  scrollbar-width: none;
-  overscroll-behavior-x: contain;
-  -webkit-overflow-scrolling: touch;
-  padding-inline: 16px;
-  scroll-padding-inline: 16px;
+  display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x proximity;
+  scrollbar-width: none; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
+  padding-inline: 16px; scroll-padding-inline: 16px;
 }
 .rail::-webkit-scrollbar { display: none; }
 .rail > * { scroll-snap-align: start; flex: 0 0 auto; }
 @media (min-width: 1024px) { .rail { padding-inline: max(32px, calc((100vw - 1280px) / 2 + 32px)); scroll-padding-inline: 32px; } }
 
-/* Cifre del tabellone: scattano una sola volta al caricamento */
-/* Solo movimento (niente opacita): se l'animazione non parte, le cifre restano leggibili */
-@keyframes board-in { from { transform: translateY(0.45em); } to { transform: none; } }
-.board-digit { display: inline-block; animation: board-in 520ms cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+/* Comparsa morbida all'ingresso (una sola, breve) */
+/* solo movimento: il testo non e mai invisibile, nemmeno se l'animazione non parte */
+@keyframes rise { from { transform: translateY(14px); } to { transform: none; } }
+.rise { animation: rise 640ms var(--ease) backwards; }
+/* Pannelli che salgono dal basso, come su iOS */
+@keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+.sheet-up { animation: sheet-up 420ms var(--ease) both; }
+.fade-in { animation: fade-in 240ms ease both; }

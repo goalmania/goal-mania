@@ -2,7 +2,7 @@
 
 import { useEffect, useState, memo } from "react";
 import Link from "next/link";
-import { Heart, Zap } from "lucide-react";
+import { Heart, Plus, Zap } from "lucide-react";
 import { useWishlistStore } from "@/lib/store/wishlist";
 import { cld } from "@/lib/utils/cloudinary";
 import QuickAddSheet from "@/components/shop/QuickAddSheet";
@@ -79,22 +79,22 @@ function ProductCard({
     else addToWishlist({ id, name, price, image, team: team || "" });
   };
 
-  const tag = "px-2 py-1 text-[12px] font-extrabold uppercase leading-none tracking-wide";
+  const pill = "rounded-full px-2.5 py-1 text-[12px] font-semibold leading-none backdrop-blur-md";
   return (
-    <article className={`group relative flex h-full flex-col bg-[#121211] outline outline-1 -outline-offset-1 outline-white/10 transition-[outline-color] duration-150 hover:outline-[#c8f000] ${className}`}>
-      <Link href={href} className="relative block aspect-[4/5] overflow-hidden bg-[#f1f1ec]" aria-label={name}>
+    <article className={`group relative flex h-full flex-col ${className}`}>
+      <Link href={href} className="relative block aspect-[4/5] overflow-hidden rounded-[28px] bg-[#f5f5f7]" aria-label={name}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={cld(image, 520)}
           srcSet={`${cld(image, 360)} 360w, ${cld(image, 520)} 520w, ${cld(image, 720)} 720w`}
-          sizes="(max-width: 640px) 64vw, 280px"
+          sizes="(max-width: 640px) 66vw, 280px"
           alt={name}
           width={520}
           height={650}
           loading={priority ? "eager" : "lazy"}
           decoding="async"
           fetchPriority={priority ? "high" : "auto"}
-          className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-300 ease-out group-hover:scale-[1.04]"
+          className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-500 ease-out group-hover:scale-[1.05]"
           style={{ mixBlendMode: "multiply" }}
         />
         {secondary && (
@@ -110,15 +110,15 @@ function ProductCard({
             style={{ mixBlendMode: "multiply" }}
           />
         )}
-        <div className="absolute left-0 top-0 flex flex-col items-start gap-px">
-          {isWorldCup && <span className={`${tag} bg-[#0a0a0a] text-[#c8f000]`} style={{ fontFamily: "var(--font-display)" }}>Mondiali 26</span>}
-          {isNew && <span className={`${tag} bg-[#c8f000] text-[#0a0a0a]`} style={{ fontFamily: "var(--font-display)" }}>Novità</span>}
+        <div className="absolute left-3 top-3 flex flex-col items-start gap-1.5">
+          {isWorldCup && <span className={`${pill} bg-black/75 text-white`}>Mondiali 26</span>}
+          {isNew && <span className={`${pill} bg-[var(--lime)] text-[#0a0a0a]`}>Novità</span>}
           {lowStock && (
-            <span className={`${tag} flex items-center gap-1 bg-[#ff4444] text-white`} style={{ fontFamily: "var(--font-display)" }}>
+            <span className={`${pill} flex items-center gap-1 bg-[#ff453a] text-white`}>
               <Zap size={12} /> Ultime {stock}
             </span>
           )}
-          {hasDiscount && <span className={`${tag} bg-[#ff4444] text-white`} style={{ fontFamily: "var(--font-display)" }}>-{Math.round((1 - price / (originalPrice as number)) * 100)}%</span>}
+          {hasDiscount && <span className={`${pill} bg-[#ff453a] text-white`}>-{Math.round((1 - price / (originalPrice as number)) * 100)}%</span>}
         </div>
       </Link>
 
@@ -126,30 +126,29 @@ function ProductCard({
         onClick={toggleWish}
         aria-label={liked ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
         aria-pressed={liked}
-        className="absolute right-0 top-0 z-10 flex h-11 w-11 items-center justify-center bg-[#0a0a0a]/85 text-white transition-colors hover:text-[#c8f000]"
+        className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/75 text-[#0a0a0a] backdrop-blur-md transition-transform duration-200 active:scale-90"
       >
-        <Heart className="h-[21px] w-[21px]" fill={liked ? "#ff4444" : "none"} stroke={liked ? "#ff4444" : "currentColor"} />
+        <Heart className="h-[19px] w-[19px]" fill={liked ? "#ff453a" : "none"} stroke={liked ? "#ff453a" : "currentColor"} strokeWidth={2} />
       </button>
 
-      <div className="flex flex-1 flex-col gap-1 p-3">
-        <p className="truncate text-[13px] font-semibold text-white/65">{team || category || "Maglia"}</p>
-        <h3 className="display line-clamp-2 min-h-[2lh] text-[21px] leading-[0.95] text-white">
+      <div className="flex flex-1 flex-col px-1 pt-3">
+        <p className="truncate text-[13px] text-[var(--text-3)]">{team || category || "Maglia"}</p>
+        <h3 className="mt-0.5 line-clamp-2 text-[17px] font-semibold leading-snug tracking-[-0.01em] text-white">
           <Link href={href}>{shortName}</Link>
         </h3>
-        <div className="mt-auto flex items-end justify-between gap-2 pt-2">
-          <p className="num text-[38px] text-[#c8f000]" aria-label={`${fmt(price)} euro`}>
-            {fmt(price)}
-            <span className="text-[24px]">€</span>
+        <div className="mt-auto flex items-center justify-between gap-2 pt-3">
+          <p className="flex items-baseline gap-1.5" aria-label={`${fmt(price)} euro`}>
+            <span className="num text-[22px]">{fmt(price)}€</span>
+            {hasDiscount && <span className="text-[14px] text-[var(--text-3)] line-through">{fmt(originalPrice as number)}€</span>}
           </p>
-          {hasDiscount && <p className="pb-1 text-[15px] text-white/55 line-through">{fmt(originalPrice as number)}€</p>}
+          <button
+            onClick={() => setSheet(true)}
+            className="btn btn-lime !h-10 !gap-1.5 !px-4 !text-[15px]"
+            aria-label={`Aggiungi ${shortName} al carrello`}
+          >
+            <Plus className="h-4 w-4" strokeWidth={2.6} /> Aggiungi
+          </button>
         </div>
-        <button
-          onClick={() => setSheet(true)}
-          className="cut cut-sm mt-1 flex h-12 w-full items-center justify-center bg-[#c8f000] text-[18px] font-extrabold uppercase tracking-wide text-[#0a0a0a] transition-colors hover:bg-[#d8ff1a] active:bg-[#b5d800]"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          Aggiungi
-        </button>
       </div>
 
       <QuickAddSheet open={sheet} onClose={() => setSheet(false)} product={{ id, slug, name, price, image, category }} />

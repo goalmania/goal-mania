@@ -1,5 +1,6 @@
 "use client";
 
+import CategoryHeader from "@/components/shop/CategoryHeader";
 import { useState, useMemo } from "react";
 import Image from "next/image";
 import ProductCard from "@/components/ui/ProductCard";
@@ -151,106 +152,7 @@ export default function Season2627Client({ products }: { products: SeasonProduct
     <main className="min-h-screen bg-[#0a0a0a] font-munish">
       <ShopNav />
 
-      {/* ── HERO ──────────────────────────────────────── */}
-      <section className="relative pt-32 pb-12 overflow-hidden">
-        {/* Hero background image */}
-        <Image
-          src="/hero-2627.jpg"
-          alt=""
-          fill
-          priority
-          className="absolute inset-0 object-cover object-center"
-          style={{ zIndex: 0 }}
-          sizes="100vw"
-        />
-        {/* Dark gradient overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(to right, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.72) 50%, rgba(10,10,10,0.45) 100%)",
-            zIndex: 1,
-          }}
-        />
-        {/* Grid bg */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(200,240,0,0.025) 1px, transparent 1px)," +
-              "linear-gradient(90deg, rgba(200,240,0,0.025) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-            zIndex: 2,
-          }}
-        />
-        {/* Radial glow */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(200,240,0,0.06) 0%, transparent 70%)",
-            zIndex: 2,
-          }}
-        />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative" style={{ zIndex: 3 }}>
-          {/* Eyebrow */}
-          <div className="flex items-center gap-2 mb-4">
-            <Zap size={12} style={{ color: "#c8f000" }} />
-            <span
-              className="text-[10px] font-black uppercase tracking-[0.4em]"
-              style={{ color: "rgba(200,240,0,0.6)" }}
-            >
-              Nuova Stagione
-            </span>
-          </div>
-
-          {/* Title */}
-          <h1
-            className="font-black italic uppercase leading-none mb-3"
-            style={{
-              fontSize: "clamp(2.8rem, 9vw, 5.5rem)",
-              color: "#fff",
-              letterSpacing: "-0.025em",
-            }}
-          >
-            Maglie{" "}
-            <span style={{ color: "#c8f000" }}>2026/27</span>
-          </h1>
-
-          <p className="text-sm text-white/40 max-w-xl mb-6">
-            {products.length > 0
-              ? `${products.length} kit già disponibili — Serie A, Premier League, La Liga e Nazionali. Nuovi arrivi ogni settimana.`
-              : "I nuovi kit della stagione 2026/27 stanno arrivando. Ogni maglia spedita gratis, reso entro 14 giorni."}
-          </p>
-
-          {/* League quick-jump chips */}
-          <div className="flex flex-wrap gap-2 mb-4">
-            {SECTIONS.map((s) => (
-              <button
-                key={s.key}
-                onClick={() => setActiveFilter(s.key)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider transition-all duration-150 active:scale-95"
-                style={{
-                  background: s.accent,
-                  border: `1px solid ${s.accentBorder}`,
-                  color: s.accentText,
-                }}
-              >
-                <span>{s.flag}</span>
-                <span>{s.label}</span>
-                <span className="opacity-50">({grouped[s.key]?.length ?? 0})</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Trust strip */}
-          <div className="flex flex-wrap items-center gap-4 mt-2">
-            {["🚚 Spedizione Gratuita", "🔄 Reso 14gg", "🔒 Pagamento Sicuro"].map((t) => (
-              <span key={t} className="text-[10px] font-bold text-white/35 uppercase tracking-wider">{t}</span>
-            ))}
-          </div>
-        </div>
-      </section>
+      <CategoryHeader title={"Stagione 26/27"} text="Le maglie della nuova stagione a 35€. Spedizione gratuita e reso entro 14 giorni." />
 
       {/* ── FILTER PILLS ──────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-10">
@@ -261,13 +163,13 @@ export default function Season2627Client({ products }: { products: SeasonProduct
               <button
                 key={key}
                 onClick={() => setActiveFilter(key)}
-                className="flex-shrink-0 px-4 py-2 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-200 active:scale-95"
+                className="flex-shrink-0 px-4 py-2 rounded-full text-[13px] font-bold transition-all duration-200 active:scale-95"
                 style={
                   active
                     ? { background: "#c8f000", color: "#000" }
                     : {
                         background: "rgba(255,255,255,0.04)",
-                        color: "rgba(255,255,255,0.45)",
+                        color: "rgba(255,255,255,0.64)",
                         border: "1px solid rgba(255,255,255,0.07)",
                       }
                 }
@@ -287,16 +189,16 @@ export default function Season2627Client({ products }: { products: SeasonProduct
             return sec ? (
               <div className="flex items-center gap-3 mb-6">
                 <span
-                  className="text-xs font-black uppercase tracking-[0.35em] px-3 py-1.5 rounded-full"
+                  className="text-xs font-bold px-3 py-1.5 rounded-full"
                   style={{ background: sec.accent, border: `1px solid ${sec.accentBorder}`, color: sec.accentText }}
                 >
                   {sec.flag} {sec.label}
                 </span>
-                <span className="text-xs text-white/25">{filteredProducts.length} maglie</span>
+                <span className="text-xs text-white/60">{filteredProducts.length} maglie</span>
                 <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.05)" }} />
                 <button
                   onClick={() => setActiveFilter("all")}
-                  className="text-[10px] font-bold text-white/30 hover:text-white/60 transition-colors"
+                  className="text-[12px] font-bold text-white/60 hover:text-white/60 transition-colors"
                 >
                   ← Torna a tutte
                 </button>
@@ -354,7 +256,7 @@ export default function Season2627Client({ products }: { products: SeasonProduct
                     >
                       <span className="text-sm">{section.flag}</span>
                       <span
-                        className="text-[10px] font-black uppercase tracking-[0.35em]"
+                        className="text-[12px] font-bold "
                         style={{ color: section.accentText }}
                       >
                         {section.label}
@@ -364,13 +266,13 @@ export default function Season2627Client({ products }: { products: SeasonProduct
                       className="h-px flex-1"
                       style={{ background: "rgba(255,255,255,0.05)" }}
                     />
-                    <span className="text-[10px] font-black tabular-nums text-white/25">
+                    <span className="text-[12px] font-bold tabular-nums text-white/60">
                       {prods.length} kit · {teams.length} squadre
                     </span>
                   </div>
 
                   <h2
-                    className="font-black italic uppercase mb-1"
+                    className="font-bold italic mb-1"
                     style={{
                       fontSize: "clamp(1.4rem, 4vw, 2.2rem)",
                       color: "#fff",
@@ -379,7 +281,7 @@ export default function Season2627Client({ products }: { products: SeasonProduct
                   >
                     {section.label}
                   </h2>
-                  <p className="text-xs text-white/30">{section.description}</p>
+                  <p className="text-xs text-white/60">{section.description}</p>
                 </div>
 
                 {/* Empty state — coming soon */}
@@ -393,10 +295,10 @@ export default function Season2627Client({ products }: { products: SeasonProduct
                   >
                     <span className="text-2xl">{section.flag}</span>
                     <div>
-                      <p className="text-xs font-black uppercase tracking-wider" style={{ color: section.accentText }}>
+                      <p className="text-xs font-bold " style={{ color: section.accentText }}>
                         Prossimamente
                       </p>
-                      <p className="text-[11px] text-white/30 mt-0.5">
+                      <p className="text-[13px] text-white/60 mt-0.5">
                         I kit {section.label} 2026/27 saranno disponibili a breve.
                       </p>
                     </div>
@@ -411,10 +313,10 @@ export default function Season2627Client({ products }: { products: SeasonProduct
                         {/* Team header */}
                         <div className="flex items-center gap-3 mb-4">
                           <span
-                            className="text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg"
+                            className="text-[13px] font-bold px-2.5 py-1 rounded-lg"
                             style={{
                               background: "rgba(255,255,255,0.05)",
-                              color: "rgba(255,255,255,0.55)",
+                              color: "rgba(255,255,255,0.64)",
                               border: "1px solid rgba(255,255,255,0.08)",
                             }}
                           >
@@ -424,7 +326,7 @@ export default function Season2627Client({ products }: { products: SeasonProduct
                             className="h-px flex-1"
                             style={{ background: "rgba(255,255,255,0.04)" }}
                           />
-                          <span className="text-[9px] text-white/20">
+                          <span className="text-[12px] text-white/60">
                             {byTeam[team].length} kit
                           </span>
                         </div>
@@ -471,7 +373,7 @@ export default function Season2627Client({ products }: { products: SeasonProduct
                   <div className="mt-6 flex justify-center">
                     <button
                       onClick={() => setActiveFilter(section.key)}
-                      className="flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all duration-200 active:scale-95"
+                      className="flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-bold transition-all duration-200 active:scale-95"
                       style={{
                         border: `1px solid ${section.accentBorder}`,
                         color: section.accentText,

@@ -77,12 +77,12 @@ export function Header() {
   };
 
   const iconBtn =
-    "relative flex h-11 w-11 items-center justify-center text-white transition-colors hover:text-[#c8f000] active:text-[#c8f000]";
+    "relative flex h-11 w-11 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 active:bg-white/15";
 
   return (
     <>
       <header
-        className="fixed inset-x-0 z-50 border-b border-white/10 bg-[#0a0a0a]"
+        className="glass-strong fixed inset-x-0 z-50 !rounded-none !border-x-0 !border-t-0"
         style={{ top: "var(--bar-h)", height: "var(--head-h)" }}
       >
         <nav className="mx-auto flex h-full max-w-[1280px] items-center gap-2 px-2 md:gap-6 md:px-8" aria-label="Principale">
@@ -97,7 +97,7 @@ export function Header() {
             />
           </Link>
 
-          <ul className="hidden items-stretch md:flex">
+          <ul className="hidden items-center gap-1 md:flex">
             {NAV.map((n) => {
               const active = n.match(pathname);
               return (
@@ -105,11 +105,9 @@ export function Header() {
                   <Link
                     href={n.href}
                     aria-current={active ? "page" : undefined}
-                    className={`relative flex h-[var(--head-h)] items-center px-4 text-[17px] font-extrabold uppercase tracking-[0.04em] transition-colors ${active ? "text-[#c8f000]" : "text-white hover:text-[#c8f000]"}`}
-                    style={{ fontFamily: "var(--font-display)" }}
+                    className={`flex h-10 items-center rounded-full px-4 text-[15px] font-medium transition-colors ${active ? "bg-white/14 text-white" : "text-white/75 hover:bg-white/8 hover:text-white"}`}
                   >
                     {n.label}
-                    {active && <span className="absolute inset-x-4 bottom-0 h-[3px] bg-[#c8f000]" />}
                   </Link>
                 </li>
               );
@@ -123,7 +121,7 @@ export function Header() {
             <Link href="/wishlist" className={`${iconBtn} hidden sm:flex`} aria-label="Preferiti">
               <Heart className="h-[22px] w-[22px]" />
               {wishCount > 0 && (
-                <span className="absolute right-1 top-1.5 flex h-[18px] min-w-[18px] items-center justify-center bg-[#c8f000] px-1 text-[11px] font-black text-[#0a0a0a]">{wishCount}</span>
+                <span className="absolute right-0.5 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#c8f000] px-1 text-[11px] font-bold text-[#0a0a0a]">{wishCount}</span>
               )}
             </Link>
 
@@ -134,7 +132,7 @@ export function Header() {
                     <UserIcon className="h-[22px] w-[22px]" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-52 rounded-none border border-white/15 bg-[#121211] text-white">
+                <DropdownMenuContent align="end" className="w-56 rounded-2xl glass-strong text-white">
                   <DropdownMenuLabel>
                     <p className="text-sm font-semibold">{session.user?.name}</p>
                     <p className="text-xs text-white/60">{session.user?.email}</p>
@@ -155,7 +153,7 @@ export function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Link href="/auth/signin" className={`${iconBtn} hidden w-auto px-3 text-[15px] font-bold uppercase md:flex`} style={{ fontFamily: "var(--font-display)" }}>
+              <Link href="/auth/signin" className={`${iconBtn} hidden w-auto px-4 text-[15px] font-medium md:flex`}>
                 Accedi
               </Link>
             )}
@@ -163,39 +161,39 @@ export function Header() {
             <Link
               href="/cart"
               aria-label={`Carrello, ${cartCount} articoli`}
-              className="cut cut-sm relative ml-1 flex h-11 min-w-[44px] items-center justify-center gap-2 bg-[#c8f000] px-3 text-[#0a0a0a] transition-colors hover:bg-[#d8ff1a] active:bg-[#b5d800]"
+              className="btn btn-lime ml-1 !h-11 !gap-2 !px-4 !text-[16px]"
             >
-              <ShoppingBag className="h-[20px] w-[20px]" strokeWidth={2.4} />
-              <span className="num text-[20px]" suppressHydrationWarning>{cartCount}</span>
+              <ShoppingBag className="h-[19px] w-[19px]" strokeWidth={2.3} />
+              <span className="num" suppressHydrationWarning>{cartCount}</span>
             </Link>
           </div>
         </nav>
       </header>
 
       {searchOpen && (
-        <div className="fixed inset-0 z-[80] bg-[#0a0a0a]/96 backdrop-blur-sm" role="dialog" aria-label="Cerca">
-          <form onSubmit={submit} className="mx-auto mt-[calc(var(--bar-h)+8px)] flex max-w-[720px] items-center gap-2 px-3">
-            <div className="flex h-14 flex-1 items-center gap-3 border-b-2 border-[#c8f000] px-1">
-              <Search className="h-6 w-6 shrink-0 text-[#c8f000]" />
+        <div className="fade-in fixed inset-0 z-[80] bg-black/55 backdrop-blur-xl" role="dialog" aria-label="Cerca">
+          <form onSubmit={submit} className="mx-auto mt-[calc(var(--bar-h)+10px)] flex max-w-[720px] items-center gap-2 px-3">
+            <div className="glass-strong flex h-14 flex-1 items-center gap-3 rounded-full px-5">
+              <Search className="h-5 w-5 shrink-0 text-white/60" />
               <input
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Squadra, giocatore, stagione"
-                className="h-full w-full bg-transparent text-[20px] font-semibold text-white outline-none placeholder:text-white/50"
+                placeholder="Cerca squadra, giocatore, stagione"
+                className="h-full w-full bg-transparent text-[18px] text-white outline-none placeholder:text-white/50"
                 enterKeyHint="search"
                 autoComplete="off"
               />
             </div>
-            <button type="button" onClick={() => setSearchOpen(false)} className="flex h-14 w-14 items-center justify-center text-white" aria-label="Chiudi ricerca">
-              <X className="h-6 w-6" />
+            <button type="button" onClick={() => setSearchOpen(false)} className="glass-strong flex h-14 w-14 items-center justify-center rounded-full text-white" aria-label="Chiudi ricerca">
+              <X className="h-5 w-5" />
             </button>
           </form>
           <div className="mx-auto mt-6 max-w-[720px] px-4">
-            <p className="mb-3 text-[14px] font-bold uppercase tracking-wider text-white/60" style={{ fontFamily: "var(--font-display)" }}>Vai direttamente a</p>
+            <p className="mb-3 text-[14px] font-medium text-white/60">Vai direttamente a</p>
             <div className="flex flex-wrap gap-2">
               {QUICK.map((q) => (
-                <Link key={q.href} href={q.href} className="cut cut-sm bg-white/10 px-4 py-3 text-[16px] font-bold text-white transition-colors hover:bg-[#c8f000] hover:text-[#0a0a0a]">
+                <Link key={q.href} href={q.href} className="btn btn-glass !h-11 !px-5 !text-[16px]">
                   {q.label}
                 </Link>
               ))}

@@ -226,7 +226,7 @@ export function DiscountRulesForm({
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         <SparklesIcon className="h-3.5 w-3.5 text-[#c8f000]" />
-        <span className="text-xs font-semibold text-white/60 uppercase tracking-wider">Promozioni attive</span>
+        <span className="text-xs font-semibold text-white/60 ">Promozioni attive</span>
       </div>
 
       {/* Sconti già applicati */}
@@ -236,7 +236,7 @@ export function DiscountRulesForm({
             <CheckCircleIcon className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
             <div>
               <p className="text-xs font-semibold text-emerald-400">{discount.name}</p>
-              <p className="text-[10px] text-emerald-400/70">
+              <p className="text-[12px] text-emerald-400/70">
                 {discount.type === "buy_x_get_y" && discount.freeItems?.length
                   ? `${discount.freeItems[0].name} in omaggio — −€${discount.discountAmount.toFixed(2)}`
                   : discount.discountPercentage
@@ -245,7 +245,7 @@ export function DiscountRulesForm({
               </p>
             </div>
           </div>
-          <button onClick={() => removeDiscount(discount._id)} className="text-white/30 hover:text-white/60">
+          <button onClick={() => removeDiscount(discount._id)} className="text-white/60 hover:text-white/60">
             <XMarkIcon className="h-3.5 w-3.5" />
           </button>
         </div>
@@ -266,11 +266,11 @@ export function DiscountRulesForm({
               <div className="flex items-center gap-2 mb-0.5">
                 <span className="text-xs font-bold text-white truncate">{rule.name}</span>
                 {rule.isApplicable && (
-                  <span className="text-[9px] bg-[#c8f000]/20 text-[#c8f000] px-1.5 py-0.5 rounded font-bold uppercase tracking-wide flex-shrink-0">Attivo</span>
+                  <span className="text-[12px] bg-[#c8f000]/20 text-[#c8f000] px-1.5 py-0.5 rounded font-bold tracking-wide flex-shrink-0">Attivo</span>
                 )}
               </div>
               {rule.isApplicable ? (
-                <p className="text-[11px] text-emerald-400">
+                <p className="text-[13px] text-emerald-400">
                   {rule.type === "buy_x_get_y"
                     ? `L'articolo meno caro è gratis — risparmia €${rule.discountAmount?.toFixed(2)}`
                     : `Risparmia €${rule.discountAmount?.toFixed(2)}`
@@ -278,9 +278,9 @@ export function DiscountRulesForm({
                 </p>
               ) : (
                 <div>
-                  <p className="text-[11px] text-white/40">{rule.howToQualify || rule.reason}</p>
+                  <p className="text-[13px] text-white/60">{rule.howToQualify || rule.reason}</p>
                   {rule.requirements && (
-                    <p className="text-[10px] text-white/30 mt-0.5">
+                    <p className="text-[12px] text-white/60 mt-0.5">
                       Attuale: {rule.requirements.currentQuantity} articoli (€{rule.requirements.currentValue?.toFixed(2)})
                     </p>
                   )}
@@ -297,7 +297,7 @@ export function DiscountRulesForm({
               </button>
             )}
             {!rule.isApplicable && (
-              <span className="text-[10px] text-white/30 flex-shrink-0 text-right leading-tight">
+              <span className="text-[12px] text-white/60 flex-shrink-0 text-right leading-tight">
                 Non<br/>idoneo
               </span>
             )}

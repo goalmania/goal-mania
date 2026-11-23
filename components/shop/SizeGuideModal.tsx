@@ -60,12 +60,12 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
             </div>
             <div>
               <h2
-                className="text-base font-black uppercase text-white leading-tight"
-                style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1px" }}
+                className="text-base font-bold text-white leading-tight"
+                style={{ fontFamily: "var(--font-display, sans-serif)", }}
               >
                 Guida alle Taglie
               </h2>
-              <p className="text-[10px] text-white/40 mt-0.5" style={{ fontFamily: "var(--font-mono, monospace)" }}>
+              <p className="text-[12px] text-white/60 mt-0.5" style={{ fontFamily: "var(--font-mono, monospace)" }}>
                 Misure in centimetri
               </p>
             </div>
@@ -85,7 +85,7 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
             style={{ background: "rgba(200,240,0,0.05)", border: "1px solid rgba(200,240,0,0.12)" }}
           >
             <h3
-              className="text-[10px] font-black uppercase tracking-widest"
+              className="text-[12px] font-bold "
               style={{ color: "#c8f000", fontFamily: "var(--font-mono, monospace)" }}
             >
               Come Misurarti
@@ -97,8 +97,8 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
                 { label: "Altezza", desc: "Stai in piedi senza scarpe, appoggiato a una parete. Misura dall'alto della testa ai piedi." },
               ].map(({ label, desc }) => (
                 <div key={label}>
-                  <p className="text-[11px] font-black text-white mb-1">{label}</p>
-                  <p className="text-[10px] text-white/45 leading-relaxed">{desc}</p>
+                  <p className="text-[13px] font-bold text-white mb-1">{label}</p>
+                  <p className="text-[12px] text-white/60 leading-relaxed">{desc}</p>
                 </div>
               ))}
             </div>
@@ -107,7 +107,7 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
           {/* Adult sizes table */}
           <div>
             <h3
-              className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-3"
+              className="text-[12px] font-bold text-white/60 mb-3"
               style={{ fontFamily: "var(--font-mono, monospace)" }}
             >
               Taglie Adulto
@@ -119,7 +119,7 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
                     {["Taglia", "Petto (cm)", "Vita (cm)", "Altezza (cm)"].map((h) => (
                       <th
                         key={h}
-                        className="text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest"
+                        className="text-left px-4 py-3 text-[12px] font-bold "
                         style={{ color: "#c8f000", fontFamily: "var(--font-mono, monospace)" }}
                       >
                         {h}
@@ -136,7 +136,7 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
                         borderBottom: "1px solid rgba(255,255,255,0.04)",
                       }}
                     >
-                      <td className="px-4 py-3 font-black text-white">{row.size}</td>
+                      <td className="px-4 py-3 font-bold text-white">{row.size}</td>
                       <td className="px-4 py-3 text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.chest}</td>
                       <td className="px-4 py-3 text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.waist}</td>
                       <td className="px-4 py-3 text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.height}</td>
@@ -150,7 +150,7 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
           {/* Kids sizes table */}
           <div>
             <h3
-              className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-3"
+              className="text-[12px] font-bold text-white/60 mb-3"
               style={{ fontFamily: "var(--font-mono, monospace)" }}
             >
               Taglie Bambino / Youth
@@ -162,7 +162,7 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
                     {["Taglia", "Petto (cm)", "Vita (cm)", "Altezza (cm)"].map((h) => (
                       <th
                         key={h}
-                        className="text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest text-white/40"
+                        className="text-left px-4 py-3 text-[12px] font-bold text-white/60"
                         style={{ fontFamily: "var(--font-mono, monospace)" }}
                       >
                         {h}
@@ -179,7 +179,7 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
                         borderBottom: "1px solid rgba(255,255,255,0.04)",
                       }}
                     >
-                      <td className="px-4 py-3 font-black text-white">{row.size}</td>
+                      <td className="px-4 py-3 font-bold text-white">{row.size}</td>
                       <td className="px-4 py-3 text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.chest}</td>
                       <td className="px-4 py-3 text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.waist}</td>
                       <td className="px-4 py-3 text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.height}</td>
@@ -191,7 +191,7 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
           </div>
 
           {/* Tip */}
-          <p className="text-[10px] text-white/30 text-center leading-relaxed">
+          <p className="text-[12px] text-white/60 text-center leading-relaxed">
             In caso di dubbio tra due taglie, ti consigliamo di optare per la taglia più grande.{" "}
             <span style={{ color: "#c8f000" }}>Hai domande? Contattaci.</span>
           </p>

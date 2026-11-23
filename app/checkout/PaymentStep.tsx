@@ -52,7 +52,7 @@ const stripeAppearance = {
       color: "rgba(255,255,255,0.6)",
       fontSize: "11px",
       fontWeight: "600",
-      textTransform: "uppercase",
+      textTransform: "none",
       letterSpacing: "0.05em",
     },
     ".Tab": {
@@ -141,7 +141,7 @@ function StripePayment({ clientSecret, total, onSuccess }: { clientSecret: strin
       {reviews.length > 0 && (
         <div className="rounded-2xl p-4 space-y-3" style={{ background: "rgba(200,240,0,0.04)", border: "1px solid rgba(200,240,0,0.12)" }}>
           <div className="flex items-center justify-between">
-            <p className="text-xs font-black uppercase tracking-widest text-white/40">Cosa dicono i clienti</p>
+            <p className="text-xs font-bold text-white/60">Cosa dicono i clienti</p>
           </div>
           {reviews.map((r, i) => (
             <div key={i} className="flex items-start gap-3">
@@ -152,9 +152,9 @@ function StripePayment({ clientSecret, total, onSuccess }: { clientSecret: strin
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-xs font-bold text-white">{r.name}</span>
                   {r.verified && (
-                    <span className="text-[9px] bg-[#c8f000]/10 text-[#c8f000] px-1.5 py-0.5 rounded font-semibold">✓ Verificato</span>
+                    <span className="text-[12px] bg-[#c8f000]/10 text-[#c8f000] px-1.5 py-0.5 rounded font-semibold">✓ Verificato</span>
                   )}
-                  <span className="text-[#c8f000] text-[10px]">{"★".repeat(r.rating)}</span>
+                  <span className="text-[#c8f000] text-[12px]">{"★".repeat(r.rating)}</span>
                 </div>
                 <p className="text-xs text-white/50 leading-snug mt-0.5">{r.comment}</p>
               </div>
@@ -166,7 +166,7 @@ function StripePayment({ clientSecret, total, onSuccess }: { clientSecret: strin
       {/* Express Checkout (Apple Pay / Google Pay) */}
       {canMakePayment && paymentRequest && (
         <div className="space-y-2">
-          <p className="text-xs text-white/40 uppercase tracking-wider font-semibold text-center">Pagamento rapido</p>
+          <p className="text-xs text-white/60 font-semibold text-center">Pagamento rapido</p>
           <PaymentRequestButtonElement
             options={{
               paymentRequest,
@@ -175,7 +175,7 @@ function StripePayment({ clientSecret, total, onSuccess }: { clientSecret: strin
           />
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-white/8" />
-            <span className="text-xs text-white/30">oppure paga con carta</span>
+            <span className="text-xs text-white/60">oppure paga con carta</span>
             <div className="flex-1 h-px bg-white/8" />
           </div>
         </div>
@@ -200,7 +200,7 @@ function StripePayment({ clientSecret, total, onSuccess }: { clientSecret: strin
         <button
           type="submit"
           disabled={!stripe || isLoading}
-          className="w-full flex items-center justify-center gap-2 bg-[#c8f000] hover:bg-[#d4f520] text-black font-black text-base py-4 rounded-2xl active:scale-[0.98] transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-2 bg-[#c8f000] hover:bg-[#d4f520] text-black font-bold text-base py-4 rounded-2xl active:scale-[0.98] transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <><div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />Elaborazione...</>
@@ -209,7 +209,7 @@ function StripePayment({ clientSecret, total, onSuccess }: { clientSecret: strin
           )}
         </button>
 
-        <p className="text-center text-xs text-white/25 flex items-center justify-center gap-1">
+        <p className="text-center text-xs text-white/60 flex items-center justify-center gap-1">
           <LockClosedIcon className="w-3 h-3" />
           Pagamento sicuro con crittografia SSL
         </p>
@@ -249,7 +249,7 @@ function PaymentMethods({ clientSecret, total, onSuccess, items, addressId, coup
             }`}
           >
             <p className={`font-semibold text-sm ${selectedMethod === m.id ? "text-white" : "text-white/60"}`}>{m.label}</p>
-            <p className="text-[11px] text-white/30 mt-0.5">{m.sub}</p>
+            <p className="text-[13px] text-white/60 mt-0.5">{m.sub}</p>
           </button>
         ))}
       </div>

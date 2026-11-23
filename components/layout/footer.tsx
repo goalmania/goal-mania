@@ -44,42 +44,44 @@ const GROUPS = [
 
 export function Footer() {
   return (
-    <footer className="border-t-4 border-[#c8f000] bg-[#0a0a0a] pb-4">
-      <div className="mx-auto grid max-w-[1280px] gap-10 px-5 py-12 md:grid-cols-[1.2fr_1fr_1fr_1fr] md:px-8">
-        <div>
-          <Image src="/images/recentUpdate/goalmania-wordmark.png" alt="Goal Mania" width={392} height={201} className="h-14 w-auto object-contain" />
-          <p className="mt-4 max-w-[28ch] text-[15px] leading-snug text-white/75">
-            Maglie da calcio a 35€, retro a 40€. Spedizione gratuita in Italia.
-          </p>
-          <div className="mt-5 flex gap-2">
-            <a href="https://www.instagram.com/goalmania.it/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="cut cut-sm flex h-11 w-11 items-center justify-center bg-white/10 text-white transition-colors hover:bg-[#c8f000] hover:text-[#0a0a0a]">
-              <Instagram size={20} />
-            </a>
-            <a href="https://www.tiktok.com/@goalmania.it" target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="cut cut-sm flex h-11 w-11 items-center justify-center bg-white/10 text-white transition-colors hover:bg-[#c8f000] hover:text-[#0a0a0a]">
-              <TikTokIcon />
-            </a>
+    <footer className="mt-10 px-3 pb-[calc(90px+env(safe-area-inset-bottom))] md:px-6 md:pb-8">
+      <div className="glass mx-auto max-w-[1280px] rounded-[32px] px-6 py-10 md:px-10">
+        <div className="grid gap-10 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
+          <div>
+            <Image src="/images/recentUpdate/goalmania-wordmark.png" alt="Goal Mania" width={392} height={201} className="h-14 w-auto object-contain" />
+            <p className="mt-4 max-w-[30ch] text-[15px] leading-snug text-[var(--text-2)]">
+              Maglie da calcio a 35€, retro a 40€. Spedizione gratuita in Italia.
+            </p>
+            <div className="mt-5 flex gap-2">
+              <a href="https://www.instagram.com/goalmania.it/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-[var(--lime)] hover:text-[#0a0a0a]">
+                <Instagram size={20} />
+              </a>
+              <a href="https://www.tiktok.com/@goalmania.it" target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-[var(--lime)] hover:text-[#0a0a0a]">
+                <TikTokIcon />
+              </a>
+            </div>
           </div>
+
+          {GROUPS.map((g) => (
+            <nav key={g.title} aria-label={g.title}>
+              <h2 className="text-[15px] font-semibold text-white">{g.title}</h2>
+              <ul className="mt-2">
+                {g.links.map((l) => (
+                  <li key={l.href + l.label}>
+                    <Link href={l.href} className="flex min-h-[44px] items-center text-[15px] text-[var(--text-2)] transition-colors hover:text-white">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
         </div>
 
-        {GROUPS.map((g) => (
-          <nav key={g.title} aria-label={g.title}>
-            <h2 className="display text-[22px] text-white">{g.title}</h2>
-            <ul className="mt-4 space-y-1">
-              {g.links.map((l) => (
-                <li key={l.href + l.label}>
-                  <Link href={l.href} className="flex min-h-[44px] items-center text-[16px] text-white/80 transition-colors hover:text-[#c8f000]">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        ))}
-      </div>
-
-      <div className="mx-auto max-w-[1280px] border-t border-white/12 px-5 pt-5 text-[13px] leading-relaxed text-white/60 md:px-8">
-        <p>Pagamenti: Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal, Klarna.</p>
-        <p className="mt-1">© {new Date().getFullYear()} Goal Mania. I nomi e i marchi dei club appartengono ai rispettivi proprietari; Goal Mania non è affiliata ad alcun club o federazione.</p>
+        <div className="mt-8 border-t border-white/10 pt-5 text-[13px] leading-relaxed text-[var(--text-3)]">
+          <p>Pagamenti: Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal, Klarna.</p>
+          <p className="mt-1">© {new Date().getFullYear()} Goal Mania. I nomi e i marchi dei club appartengono ai rispettivi proprietari; Goal Mania non è affiliata ad alcun club o federazione.</p>
+        </div>
       </div>
     </footer>
   );
