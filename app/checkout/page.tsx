@@ -616,7 +616,7 @@ export default function CheckoutPage() {
   // ── Unauthenticated "choose" screen ────────────────────────────────────────
   if (status === "unauthenticated" && checkoutMode === "choose") {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-4 pt-[112px] pb-12">
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-4 pt-4 pb-12">
         <div className="w-full max-w-sm">
           <div className="text-center mb-8">
             <div className="w-14 h-14 bg-[#c8f000]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -689,7 +689,7 @@ export default function CheckoutPage() {
 
   // ── Main checkout ──────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#0a0a0a] pt-[112px] pb-16">
+    <div className="min-h-screen bg-[#0a0a0a] pt-4 pb-16">
       <div className="container mx-auto px-4 max-w-6xl">
 
         {/* Header */}

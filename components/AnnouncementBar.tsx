@@ -1,155 +1,29 @@
-"use client";
+import Link from "next/link";
 
-import { useEffect, useRef } from "react";
+// Altezza fissa: letta anche dal layout (var --bar-h in globals.css = 36px)
+export const ANNOUNCEMENT_BAR_HEIGHT = 36;
 
-// Exported so Header and template can stay in sync
-export const ANNOUNCEMENT_BAR_HEIGHT = 40;
-
-const PROMOS = [
-  { text: "🚚 SPEDIZIONE GRATUITA su tutti gli ordini — senza minimo", href: "/shop" },
-  { text: "🖤 BLACK FRIDAY — PRENDI 3 PAGHI 2 su tutte le maglie", href: "/shop" },
-  { text: "⚡ MAGLIE DA CALCIO A 35€ — RETRO A 40€ — oltre 900 modelli", href: "/shop" },
-  { text: "🔄 RESO entro 14 giorni — acquisto senza rischi", href: "/shop" },
-  { text: "🏆 MONDIALI 2026 — Vesti la tua Nazionale adesso", href: "/shop/worldcup" },
-];
-
+// Statica: nessun JavaScript, nessuna scorrimento da leggere in corsa.
 export default function AnnouncementBar() {
-  // Scroll refs — same pattern as TeamLogoTicker Strip
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number>(0);
-  const posRef = useRef(0);
-  const isDragging = useRef(false);
-  const dragStartX = useRef(0);
-  const scrollAtDragStart = useRef(0);
-  const lastTs = useRef(0);
-  const isPaused = useRef(false);
-  const didDrag = useRef(false);
-
-  // JS-driven auto-scroll
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    posRef.current = 0;
-    el.scrollLeft = 0;
-
-    function tick(ts: number) {
-      const el = scrollRef.current;
-      if (!el) { rafRef.current = requestAnimationFrame(tick); return; }
-      if (!isDragging.current && !isPaused.current) {
-        if (lastTs.current === 0) lastTs.current = ts;
-        const dt = Math.min(ts - lastTs.current, 64);
-        lastTs.current = ts;
-        const halfWidth = el.scrollWidth / 2;
-        const speed = halfWidth / 30; // full loop every 30s
-        posRef.current += speed * (dt / 1000);
-        if (posRef.current >= halfWidth) posRef.current -= halfWidth;
-        el.scrollLeft = posRef.current;
-      } else {
-        lastTs.current = ts;
-      }
-      rafRef.current = requestAnimationFrame(tick);
-    }
-    rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, []);
-
-  function onMouseEnter() { isPaused.current = true; lastTs.current = 0; }
-  function onMouseLeave() { isPaused.current = false; }
-
-  function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
-    isDragging.current = true;
-    didDrag.current = false;
-    dragStartX.current = e.clientX;
-    scrollAtDragStart.current = scrollRef.current?.scrollLeft ?? 0;
-    e.currentTarget.setPointerCapture(e.pointerId);
-    e.currentTarget.style.cursor = "grabbing";
-  }
-
-  function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
-    if (!isDragging.current || !scrollRef.current) return;
-    const el = scrollRef.current;
-    const delta = dragStartX.current - e.clientX;
-    if (Math.abs(delta) > 4) didDrag.current = true;
-    const halfWidth = el.scrollWidth / 2;
-    let newPos = scrollAtDragStart.current + delta;
-    if (newPos < 0) newPos += halfWidth;
-    if (newPos >= halfWidth * 2) newPos -= halfWidth;
-    el.scrollLeft = newPos;
-    posRef.current = newPos;
-  }
-
-  function onPointerUp(e: React.PointerEvent<HTMLDivElement>) {
-    isDragging.current = false;
-    e.currentTarget.style.cursor = "grab";
-    // Click without drag → navigate
-    if (!didDrag.current) {
-      const target = e.target as HTMLElement;
-      const item = target.closest("[data-href]") as HTMLElement | null;
-      if (item?.dataset?.href) window.location.href = item.dataset.href;
-    }
-  }
-
-  const items = [...PROMOS, ...PROMOS];
-
   return (
     <div
-      className="fixed left-0 right-0 z-[61] overflow-hidden"
-      style={{
-        top: 0,
-        height: `${ANNOUNCEMENT_BAR_HEIGHT}px`,
-        background: "#c8f000",
-      }}
+      className="fixed inset-x-0 top-0 z-[70] flex items-center justify-center bg-[#c8f000] px-3 text-[#0a0a0a]"
+      style={{ height: ANNOUNCEMENT_BAR_HEIGHT }}
     >
-      <div className="flex items-center h-full">
-        {/* ── Scrollable ticker ── */}
-        <div
-          ref={scrollRef}
-          className="flex-1 overflow-x-scroll h-full flex items-center"
-          style={{
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-            cursor: "grab",
-            userSelect: "none",
-            WebkitOverflowScrolling: "touch",
-          } as React.CSSProperties}
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
-        >
-          <div className="flex items-center h-full" style={{ width: "max-content" }}>
-            {items.map((promo, i) => (
-              <div
-                key={i}
-                data-href={promo.href}
-                className="flex-shrink-0 flex items-center"
-                style={{ paddingLeft: "2rem", paddingRight: "1rem" }}
-              >
-                <span
-                  className="text-[11px] font-black uppercase whitespace-nowrap"
-                  style={{
-                    fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
-                    letterSpacing: "1.5px",
-                    color: "#0a0a0a",
-                    pointerEvents: "none",
-                  }}
-                >
-                  {promo.text}
-                </span>
-                <span
-                  className="ml-5 select-none flex-shrink-0"
-                  style={{ color: "rgba(0,0,0,0.2)", fontSize: "9px", pointerEvents: "none" }}
-                >
-                  ★
-                </span>
-              </div>
-            ))}
-          </div>
-          <style jsx>{`div::-webkit-scrollbar { display: none; }`}</style>
-        </div>
-      </div>
+      <Link
+        href="/shop"
+        className="truncate text-[13px] font-extrabold uppercase tracking-[0.06em]"
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        <span className="hidden sm:inline">Black Friday · </span>
+        Prendi 3, ne paghi 2
+        <span className="mx-2 opacity-40">/</span>
+        Spedizione gratuita
+        <span className="hidden md:inline">
+          <span className="mx-2 opacity-40">/</span>
+          Reso entro 14 giorni
+        </span>
+      </Link>
     </div>
   );
 }

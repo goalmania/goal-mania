@@ -71,8 +71,8 @@
   --gm-teal:        #00c8a0;
 
   /* ── Font Stack ── */
-  --font-display:   var(--font-barlow-condensed, 'Barlow Condensed', sans-serif);
-  --font-body:      var(--font-barlow, 'Barlow', sans-serif);
+  --font-display:   var(--font-display-face, 'Big Shoulders', 'Arial Narrow', sans-serif);
+  --font-body:      var(--font-body-face, 'Hanken Grotesk', system-ui, sans-serif);
   --font-mono:      var(--font-space-mono, 'Space Mono', monospace);
 
   /* ── Radius (rounded but purposeful) ── */
@@ -329,7 +329,8 @@
   gap: 8px;
   padding: 14px 28px;
   min-height: 48px;
-  border-radius: 6px;
+  border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
   cursor: pointer;
   transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
   border: none;
@@ -1173,40 +1174,77 @@ html {
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 
+
 /* ================================================================
-   REBRAND 2026 — "tabellone sportivo": lime pieno, angoli netti,
-   titoli grandi, testo leggibile. Stessi colori e font del brand.
+   GOAL MANIA — sistema grafico "tabellone" (2026)
+   Fondo inchiostro, numeri enormi, lime acceso, angolo tagliato.
    ================================================================ */
-.gm-section-title {
+:root {
+  --ink: #0a0a0a;
+  --ink-2: #121211;
+  --ink-3: #1b1b19;
+  --line: rgba(244, 244, 239, 0.14);
+  --paper: #f1f1ec;
+  --paper-2: #e4e4dc;
+  --lime: #c8f000;
+  --text: #f4f4ef;
+  --text-2: rgba(244, 244, 239, 0.76);
+  --text-3: rgba(244, 244, 239, 0.58);
+  --bar-h: 36px;
+  --head-h: 56px;
+  --cut: 12px;
+}
+@media (min-width: 768px) { :root { --head-h: 64px; } }
+
+::selection { background: var(--lime); color: var(--ink); }
+:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+html { scroll-behavior: smooth; caret-color: var(--lime); scrollbar-color: #3a3a36 var(--ink); }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Firma: angolo tagliato in alto a destra (targa, biglietto) */
+.cut    { clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%); }
+.cut-sm { --cut: 8px; }
+.cut-lg { --cut: 22px; }
+
+.display {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 900;
   text-transform: uppercase;
-  line-height: 0.95;
-  letter-spacing: -0.5px;
-  font-size: clamp(2rem, 6vw, 3.5rem);
-  color: #fff;
+  line-height: 0.88;
+  letter-spacing: -0.005em;
   text-wrap: balance;
 }
-.gm-section-title::after {
-  content: '';
-  display: block;
-  width: 56px;
-  height: 5px;
-  margin-top: 14px;
-  background: var(--gm-lime);
+.num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  line-height: 0.88;
+  letter-spacing: -0.01em;
 }
-.gm-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--gm-lime);
-  margin-bottom: 10px;
+.rule { border-top: 1px solid var(--line); }
+.gm-muted { color: var(--text-2); }
+.gm-lime-block { background: var(--lime); color: var(--ink); }
+
+/* Fila scorrevole nativa: nessun JavaScript, scatta sulle schede, fluida su touch */
+.rail {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-inline: 16px;
+  scroll-padding-inline: 16px;
 }
-.gm-lime-block {
-  background: var(--gm-lime);
-  color: var(--gm-black);
-}
-.gm-muted { color: rgba(255, 255, 255, 0.66); }
-html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+.rail::-webkit-scrollbar { display: none; }
+.rail > * { scroll-snap-align: start; flex: 0 0 auto; }
+@media (min-width: 1024px) { .rail { padding-inline: max(32px, calc((100vw - 1280px) / 2 + 32px)); scroll-padding-inline: 32px; } }
+
+/* Cifre del tabellone: scattano una sola volta al caricamento */
+/* Solo movimento (niente opacita): se l'animazione non parte, le cifre restano leggibili */
+@keyframes board-in { from { transform: translateY(0.45em); } to { transform: none; } }
+.board-digit { display: inline-block; animation: board-in 520ms cubic-bezier(0.16, 1, 0.3, 1) backwards; }

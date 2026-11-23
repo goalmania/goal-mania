@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Inter, Italianno, Mulish, Barlow_Condensed, Barlow, Space_Mono } from "next/font/google";
+import { Italianno, Mulish, Big_Shoulders, Hanken_Grotesk, Space_Mono } from "next/font/google";
 import { Metadata, Viewport } from "next";
 import { Providers } from "@/components/providers";
 import "./globals.css";
@@ -10,7 +10,6 @@ import ServiceWorkerRegister from "@/app/_components/ServiceWorkerRegister";
 
 const PIXEL_ID = "1059199992701994";
 
-const inter = Inter({ subsets: ["latin"] });
 const italianno = Italianno({
   weight: "400",
   subsets: ["latin"],
@@ -22,17 +21,18 @@ const mulish = Mulish({
   subsets: ["latin"],
   variable: "--font-mulish",
 });
-const barlowCondensed = Barlow_Condensed({
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+// Titoli: insegna da stadio. Testo: grottesco neutro con cifre leggibili.
+const bigShoulders = Big_Shoulders({
+  weight: ["700", "800", "900"],
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-barlow-condensed",
+  variable: "--font-display-face",
 });
-const barlow = Barlow({
-  weight: ["300", "400", "500", "600", "700"],
+const hanken = Hanken_Grotesk({
+  weight: ["400", "500", "600", "700", "800"],
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-barlow",
+  variable: "--font-body-face",
 });
 const spaceMono = Space_Mono({
   weight: ["400", "700"],
@@ -147,7 +147,7 @@ export default function RootLayout({
     <html
       lang="it"
       suppressHydrationWarning
-      className={`${italianno.variable} ${mulish.variable} ${barlowCondensed.variable} ${barlow.variable} ${spaceMono.variable} text-base dark`}
+      className={`${italianno.variable} ${mulish.variable} ${bigShoulders.variable} ${hanken.variable} ${spaceMono.variable} text-base dark`}
     >
       <head>
         {/* Structured Data for Google */}
@@ -229,7 +229,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
       </head>
-      <body className={inter.className} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <Script
           id="facebook-pixel"
           strategy="afterInteractive"

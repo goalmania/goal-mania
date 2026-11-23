@@ -8,7 +8,7 @@ import OrderDetails from "@/lib/models/OrderDetails";
 import Address from "@/lib/models/Address";
 import DiscountRule from "@/lib/models/DiscountRule";
 import { getStripe } from "@/lib/stripe";
-import { calculateRuleDiscount } from "@/lib/discountRules";
+import { priceOrder, PricingError } from "@/lib/serverPricing";
 
 interface CartItem {
   id: string;
@@ -62,74 +62,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Calculate total amount
-    const total = items.reduce(
-      (sum: number, item: CartItem) => sum + item.price * item.quantity,
-      0
-    );
-
-    // Apply coupon discount if available
-    let discountAmount = 0;
-
-    if (coupon && coupon.discountPercentage) {
-      discountAmount = (total * coupon.discountPercentage) / 100;
+    // Il server stabilisce prezzi (listino + extra scelti), coupon e sconti. Il browser non decide
+    // mai l'importo: prima bastava modificare il prezzo nel carrello per pagare meno.
+    let priced;
+    try {
+      priced = await priceOrder({ items, coupon, discountRules });
+    } catch (e) {
+      if (e instanceof PricingError) return NextResponse.json({ error: e.message }, { status: 400 });
+      throw e;
     }
-
-    // Apply "buy X get Y" / quantity / percentage / fixed discount rules
-    // (e.g. "Prendi 3 Paghi 2"). Never trust the discountAmount the client
-    // sends for these — recompute it server-side from the DB rule so the
-    // charged amount can't be tampered with, and so it can't silently drift
-    // out of sync with what the client showed (bug fixed 27/08/2026: this
-    // recompute step didn't exist at all, so the PaymentIntent was always
-    // created for the full, non-discounted price even when a discount rule
-    // was applied and shown on the cart page).
-    let discountRulesAmount = 0;
-    let appliedDiscountRulesData: Array<{ ruleId: string; name: string; discountAmount: number }> = [];
-
-    if (Array.isArray(discountRules) && discountRules.length > 0) {
-      await connectDB();
-      const ruleIds = discountRules
-        .map((r: any) => r?.ruleId || r?._id)
-        .filter(Boolean);
-
-      if (ruleIds.length > 0) {
-        const dbRules = await DiscountRule.find({
-          _id: { $in: ruleIds },
-          isActive: true,
-          $and: [
-            { $or: [{ expiresAt: null }, { expiresAt: { $gt: new Date() } }] },
-            { $or: [{ maxUses: null }, { $expr: { $lt: ["$currentUses", "$maxUses"] } }] },
-          ],
-        });
-
-        const discountCartItems = items.map((item: CartItem & { category?: string }) => ({
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          category: item.category,
-        }));
-
-        for (const rule of dbRules) {
-          const amount = calculateRuleDiscount(rule, discountCartItems);
-          if (amount > 0) {
-            discountRulesAmount += amount;
-            appliedDiscountRulesData.push({
-              ruleId: rule._id.toString(),
-              name: rule.name,
-              discountAmount: Math.round(amount * 100) / 100,
-            });
-          }
-        }
-      }
-    }
-
-    const finalAmount = Math.max(0, total - discountAmount - discountRulesAmount);
+    const pricedItems = priced.items as CartItem[];
+    const total = priced.subtotal;
+    const discountAmount = priced.couponDiscount;
+    const discountRulesAmount = priced.rulesDiscount;
+    const appliedDiscountRulesData = priced.appliedRules;
+    const finalAmount = priced.total;
 
     try {
       // Create a simplified version of cart items for metadata
       // Only include essential information to stay within the 500 character limit
-      const simplifiedItems = items.map((item: CartItem) => ({
+      const simplifiedItems = pricedItems.map((item: CartItem) => ({
         id: item.id,
         qty: item.quantity,
         p: item.price,
@@ -141,10 +93,10 @@ export async function POST(req: NextRequest) {
 
       // Simplified coupon data
       let couponString = "";
-      if (coupon) {
+      if (priced.couponCode) {
         couponString = JSON.stringify({
-          code: coupon.code,
-          pct: coupon.discountPercentage,
+          code: priced.couponCode,
+          pct: priced.couponPct,
         });
       }
 
@@ -194,7 +146,7 @@ export async function POST(req: NextRequest) {
 
       await OrderDetails.create({
         paymentIntentId: paymentIntent.id,
-        fullItems: items.map((item: CartItem) => ({
+        fullItems: pricedItems.map((item: CartItem) => ({
           productId: item.id,
           name: item.name,
           price: item.price,
@@ -206,10 +158,10 @@ export async function POST(req: NextRequest) {
         guestAddress: guestAddress || null,
         addressId: addressId || null,
         addressSnapshot,
-        couponData: coupon
+        couponData: priced.couponCode
           ? {
-              code: coupon.code,
-              discountPercentage: coupon.discountPercentage,
+              code: priced.couponCode,
+              discountPercentage: priced.couponPct,
               discountAmount: discountAmount,
             }
           : null,

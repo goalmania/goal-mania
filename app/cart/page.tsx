@@ -10,17 +10,23 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { ShieldCheck, Truck, RotateCcw, BadgeCheck, Zap, ArrowRight, Package } from "lucide-react";
 import { trackFbq } from "@/lib/utils/fbq";
+import { threeForTwoHint } from "@/lib/utils/threeForTwo";
 
 const FREE_SHIPPING_THRESHOLD = 0; // spedizione sempre gratuita
 
-function ShippingProgressBar({ total }: { total: number }) {
+// Barra 3x2: dice quante maglie mancano per averne una gratis (regola reale, attiva al checkout)
+function ShippingProgressBar({ count }: { count: number }) {
+  const hint = threeForTwoHint(count);
+  const filled = count % 3 === 0 ? 3 : count % 3;
   return (
-    <div className="rounded-2xl p-4 mb-6 flex items-center gap-3" style={{ background: "rgba(200,240,0,0.08)", border: "1px solid rgba(200,240,0,0.2)" }}>
-      <Truck size={16} className="text-[#c8f000] flex-shrink-0" />
-      <span className="text-xs font-black uppercase tracking-widest text-[#c8f000]" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-        Spedizione Gratuita su tutti gli ordini!
-      </span>
-      <BadgeCheck size={16} className="text-[#c8f000] ml-auto flex-shrink-0" />
+    <div className={`cut mb-6 p-4 ${hint.active ? "bg-[#c8f000] text-[#0a0a0a]" : "bg-[#1b1b19] text-white"}`}>
+      <p className="display text-[26px]">{hint.text}</p>
+      <div className="mt-3 grid grid-cols-3 gap-1.5" aria-hidden="true">
+        {[1, 2, 3].map((n) => (
+          <span key={n} className={`h-2 ${n <= filled ? (hint.active ? "bg-[#0a0a0a]" : "bg-[#c8f000]") : hint.active ? "bg-[#0a0a0a]/25" : "bg-white/20"}`} />
+        ))}
+      </div>
+      <p className={`mt-2 text-[14px] ${hint.active ? "text-[#0a0a0a]/80" : "text-white/70"}`}>Spedizione gratuita su ogni ordine.</p>
     </div>
   );
 }
@@ -83,25 +89,16 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] pt-[112px]">
+      <div className="min-h-screen bg-[#0a0a0a] pt-4">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <div className="mx-auto w-24 h-24 bg-[#111] rounded-full flex items-center justify-center mb-6 border border-white/8">
-              <ShoppingBagIcon className="w-12 h-12 text-white/20" />
-            </div>
-            <h1
-              className="text-3xl font-black uppercase text-white mb-3"
-              style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px" }}
-            >
-              {t("cart.empty.title")}
-            </h1>
-            <p className="text-white/40 mb-8 max-w-sm mx-auto">
+             <h1 className="display text-[clamp(2.6rem,9vw,4.5rem)] text-white mb-3">{t("cart.empty.title")}</h1>
+            <p className="mx-auto mb-8 max-w-sm text-white/70">
               {t("cart.empty.description")}
             </p>
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-black text-black uppercase tracking-wider transition-all hover:opacity-90 hover:-translate-y-0.5"
-              style={{ background: "#c8f000", fontFamily: "var(--font-display, sans-serif)", letterSpacing: "2px", boxShadow: "0 8px 32px rgba(200,240,0,0.25)" }}
+              className="cut inline-flex h-14 items-center gap-3 bg-[#c8f000] px-8 text-[20px] font-extrabold uppercase tracking-wide text-[#0a0a0a] transition-colors hover:bg-[#d8ff1a]" style={{ fontFamily: "var(--font-display)" }}
             >
               {t("cart.empty.cta")} <ArrowRight size={16} />
             </Link>
@@ -112,22 +109,12 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] pt-[90px]">
+    <div className="min-h-screen bg-[#0a0a0a] pt-4">
       {/* Page header */}
       <div className="border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center gap-3">
-            <span className="w-5 h-[2px] rounded-full inline-block" style={{ background: "#c8f000" }} />
-            <span className="text-[10px] uppercase tracking-[4px]" style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}>
-              // Carrello
-            </span>
-          </div>
-          <h1
-            className="font-black uppercase text-white mt-2 leading-tight"
-            style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.8rem, 4vw, 2.8rem)", letterSpacing: "1px" }}
-          >
-            Il Tuo Carrello
-            <span className="text-[#c8f000] ml-3">({items.length})</span>
+          <h1 className="display text-[clamp(2.6rem,9vw,4.5rem)] text-white">
+            Il tuo carrello <span className="text-[#c8f000]">{items.reduce((n, i) => n + i.quantity, 0)}</span>
           </h1>
         </div>
       </div>
@@ -138,7 +125,7 @@ export default function CartPage() {
           {/* ── Cart Items ── */}
           <div className="lg:col-span-2 space-y-4">
             {/* Shipping progress */}
-            <ShippingProgressBar total={total} />
+            <ShippingProgressBar count={items.reduce((n, i) => n + i.quantity, 0)} />
 
             {/* Items list */}
             <div

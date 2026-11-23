@@ -1,15 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef, memo } from "react";
-import Image from "next/image";
+import { useEffect, useState, memo } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { HeartIcon } from "@heroicons/react/24/outline";
-import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
-import { ShoppingCart, Star, Zap, Tag } from "lucide-react";
-
-import { useCartStore } from "@/lib/store/cart";
+import { Heart, Zap } from "lucide-react";
 import { useWishlistStore } from "@/lib/store/wishlist";
+import { cld } from "@/lib/utils/cloudinary";
+import QuickAddSheet from "@/components/shop/QuickAddSheet";
 
 interface ProductCardProps {
   id: string;
@@ -37,7 +33,10 @@ interface ProductCardProps {
   isInWishlist?: (id: string) => boolean;
   showWishlistButton?: boolean;
   showAddToCartButton?: boolean;
+  priority?: boolean;
 }
+
+const fmt = (n: number) => (Number.isInteger(Number(n)) ? String(Number(n)) : Number(n).toFixed(2).replace(".", ","));
 
 function ProductCard({
   id,
@@ -49,207 +48,112 @@ function ProductCard({
   category,
   team,
   isWorldCup,
-  hasLongSleeve,
   product,
-  imageAspectRatio = "square",
   className = "",
   originalPrice,
   stockCount,
   isNew,
   onWishlistToggle,
-  onAddToCart,
   isInWishlist: externalIsInWishlist,
+  priority = false,
 }: ProductCardProps) {
-  const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const [addedToCart, setAddedToCart] = useState(false);
-  const [cartFlyAnim, setCartFlyAnim] = useState(false);
+  const [sheet, setSheet] = useState(false);
+  const addToWishlist = useWishlistStore((s) => s.addItem);
+  const removeFromWishlist = useWishlistStore((s) => s.removeItem);
+  const inWishlistInternal = useWishlistStore((s) => s.isInWishlist(id));
+  useEffect(() => setMounted(true), []);
+  const liked = mounted && (externalIsInWishlist ? externalIsInWishlist(id) : inWishlistInternal);
 
-  const addItemToCart = useCartStore((state) => state.addItem);
-  const buyItem = useCartStore((state) => state.buyItem);
+  const secondary = product?.images?.[1] as string | undefined;
+  const lowStock = (stockCount ?? product?.stockCount) !== undefined && (stockCount ?? product?.stockCount) <= 3 && (stockCount ?? product?.stockCount) > 0;
+  const stock = stockCount ?? product?.stockCount;
+  const hasDiscount = !!originalPrice && originalPrice > price;
+  const shortName = name.replace(/^Maglia\s+/i, "");
 
-  const internalAddToWishlist = useWishlistStore((state) => state.addItem);
-  const internalRemoveFromWishlist = useWishlistStore((state) => state.removeItem);
-  const internalIsInWishlist = useWishlistStore((state) => state.isInWishlist(id));
-  const activeIsInWishlist = externalIsInWishlist ? externalIsInWishlist(id) : internalIsInWishlist;
-
-  const displayOriginalPrice = originalPrice || product?.originalPrice;
-  const displayStockCount = stockCount ?? product?.stockCount;
-  const displayIsNew = isNew ?? product?.isNew;
-    const isLimitedEdition = product?.isLimitedEdition ?? false;
-  const hasDiscount = displayOriginalPrice && displayOriginalPrice > price;
-  const discountPercent = hasDiscount ? Math.round((1 - price / displayOriginalPrice) * 100) : 0;
-  const isLowStock = displayStockCount !== undefined && displayStockCount <= 3 && displayStockCount > 0;
-  const avgRating = product?.averageRating || 0;
-  const reviewCount = product?.reviewCount || product?.reviews?.length || 0;
-  const hasRealReviews = reviewCount > 0 && avgRating > 0;
-
-  // Second image for hover effect
-  const secondImage = product?.images?.[1] || null;
-
-  useEffect(() => { setMounted(true); }, []);
-
-  if (!mounted) {
-    return <div className={`bg-[#111] rounded-[10px] animate-pulse w-full h-[26rem] ${className}`} />;
-  }
-
-  const handleWishlistToggle = (e: React.MouseEvent) => {
+  const toggleWish = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (onWishlistToggle) { onWishlistToggle(product); return; }
-    if (activeIsInWishlist) {
-      internalRemoveFromWishlist(id);
-    } else {
-      internalAddToWishlist({ id, name, price, image, team: team || "" });
-    }
+    if (onWishlistToggle) return onWishlistToggle(product);
+    if (liked) removeFromWishlist(id);
+    else addToWishlist({ id, name, price, image, team: team || "" });
   };
 
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (onAddToCart) {
-      onAddToCart(product);
-    } else {
-      addItemToCart({ id, name, price, image, quantity: 1 });
-    }
-    setAddedToCart(true);
-    setCartFlyAnim(true);
-    setTimeout(() => setAddedToCart(false), 2000);
-    setTimeout(() => setCartFlyAnim(false), 600);
-  };
-
-  const handleBuyNow = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    buyItem({ id, name, price, image, quantity: 1 });
-    setTimeout(() => router.push("/checkout"), 100);
-  };
-
+  const tag = "px-2 py-1 text-[12px] font-extrabold uppercase leading-none tracking-wide";
   return (
-    <div className="w-full h-full">
-      <div
-        className={`group relative flex h-full flex-col overflow-hidden rounded-[10px] bg-[#101010] transition-colors duration-200 ${className}`}
-        style={{ border: isHovered ? "1px solid rgba(200,240,0,0.6)" : "1px solid rgba(255,255,255,0.1)" }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        {/* Immagine: fondo chiaro, le foto con sfondo bianco si fondono (multiply) */}
-        <Link href={href} className="block">
-          <div className="relative overflow-hidden" style={{ paddingBottom: "112%", background: "#f1f1ec" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={image || "/images/placeholder.png"}
-              alt={name}
-              className="absolute inset-0 h-full w-full object-contain p-3 transition-opacity duration-500"
-              style={{ mixBlendMode: "multiply", opacity: isHovered && secondImage ? 0 : 1 }}
-              loading="lazy"
-            />
-            {secondImage && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={secondImage}
-                alt={`${name} - vista 2`}
-                className="absolute inset-0 h-full w-full object-contain p-3 transition-opacity duration-500"
-                style={{ mixBlendMode: "multiply", opacity: isHovered ? 1 : 0 }}
-                loading="lazy"
-              />
-            )}
-
-            {/* Etichette: solo fatti veri */}
-            <div className="absolute left-2 top-2 z-20 flex flex-col items-start gap-1">
-              {isWorldCup && (
-                <span className="rounded-[3px] bg-[#0a0a0a] px-2 py-1 text-[10px] font-black uppercase tracking-wide text-[#c8f000]" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-                  World Cup 26
-                </span>
-              )}
-              {displayIsNew && (
-                <span className="rounded-[3px] bg-[#c8f000] px-2 py-1 text-[10px] font-black uppercase tracking-wide text-[#0a0a0a]" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-                  Novità
-                </span>
-              )}
-              {isLimitedEdition && (
-                <span className="rounded-[3px] bg-[#0a0a0a] px-2 py-1 text-[10px] font-black uppercase tracking-wide text-white" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-                  Edizione limitata
-                </span>
-              )}
-              {isLowStock && (
-                <span className="flex items-center gap-1 rounded-[3px] bg-[#ff4444] px-2 py-1 text-[10px] font-black uppercase tracking-wide text-white" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-                  <Zap size={9} /> Ultimi {displayStockCount}
-                </span>
-              )}
-              {hasDiscount && (
-                <span className="flex items-center gap-1 rounded-[3px] bg-[#ff4444] px-2 py-1 text-[10px] font-black uppercase tracking-wide text-white" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-                  <Tag size={9} /> -{discountPercent}%
-                </span>
-              )}
-            </div>
-
-            <button
-              onClick={handleWishlistToggle}
-              aria-label={activeIsInWishlist ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
-              className="absolute right-2 top-2 z-20 flex h-10 w-10 items-center justify-center rounded-[6px] bg-[#0a0a0a]/85 transition-transform active:scale-90"
-            >
-              {activeIsInWishlist ? (
-                <HeartIconSolid className="h-5 w-5 text-[#ff4444]" />
-              ) : (
-                <HeartIcon className="h-5 w-5 text-white" />
-              )}
-            </button>
-          </div>
-        </Link>
-
-        {/* Info */}
-        <div className="flex flex-grow flex-col gap-1.5 p-3">
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>
-            {team || category || "Maglia"}
-          </p>
-          <h3
-            className="line-clamp-2 text-[17px] font-bold uppercase leading-[1.05] text-white"
-            style={{ fontFamily: "var(--font-display, sans-serif)" }}
-          >
-            <Link href={href}>{name}</Link>
-          </h3>
-
-          {hasRealReviews && (
-            <div className="flex items-center gap-1.5">
-              <div className="flex items-center gap-0.5">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star key={star} size={11} fill={star <= Math.round(avgRating) ? "#c8f000" : "none"} color={star <= Math.round(avgRating) ? "#c8f000" : "#555"} />
-                ))}
-              </div>
-              <span className="text-[11px] text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>
-                {avgRating.toFixed(1)} ({reviewCount})
-              </span>
-            </div>
+    <article className={`group relative flex h-full flex-col bg-[#121211] outline outline-1 -outline-offset-1 outline-white/10 transition-[outline-color] duration-150 hover:outline-[#c8f000] ${className}`}>
+      <Link href={href} className="relative block aspect-[4/5] overflow-hidden bg-[#f1f1ec]" aria-label={name}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={cld(image, 520)}
+          srcSet={`${cld(image, 360)} 360w, ${cld(image, 520)} 520w, ${cld(image, 720)} 720w`}
+          sizes="(max-width: 640px) 64vw, 280px"
+          alt={name}
+          width={520}
+          height={650}
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
+          fetchPriority={priority ? "high" : "auto"}
+          className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-300 ease-out group-hover:scale-[1.04]"
+          style={{ mixBlendMode: "multiply" }}
+        />
+        {secondary && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={cld(secondary, 520)}
+            alt=""
+            width={520}
+            height={650}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 hidden h-full w-full object-contain p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:block"
+            style={{ mixBlendMode: "multiply" }}
+          />
+        )}
+        <div className="absolute left-0 top-0 flex flex-col items-start gap-px">
+          {isWorldCup && <span className={`${tag} bg-[#0a0a0a] text-[#c8f000]`} style={{ fontFamily: "var(--font-display)" }}>Mondiali 26</span>}
+          {isNew && <span className={`${tag} bg-[#c8f000] text-[#0a0a0a]`} style={{ fontFamily: "var(--font-display)" }}>Novità</span>}
+          {lowStock && (
+            <span className={`${tag} flex items-center gap-1 bg-[#ff4444] text-white`} style={{ fontFamily: "var(--font-display)" }}>
+              <Zap size={12} /> Ultime {stock}
+            </span>
           )}
-
-          <div className="mt-auto flex items-baseline gap-2 pt-1">
-            <span className="text-[26px] font-extrabold leading-none text-[#c8f000]" style={{ fontFamily: "var(--font-display, sans-serif)", fontVariantNumeric: "tabular-nums" }}>
-              €{Number(price).toFixed(2).replace(".00", "")}
-            </span>
-            {hasDiscount && (
-              <span className="text-sm text-white/50 line-through" style={{ fontFamily: "var(--font-mono, monospace)" }}>
-                €{Number(displayOriginalPrice).toFixed(0)}
-              </span>
-            )}
-            <span className="ml-auto text-[11px] font-semibold uppercase tracking-wide text-white/60" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-              Spedizione gratis
-            </span>
-          </div>
-
-          {/* La taglia si sceglie nella scheda: niente aggiunta al carrello senza taglia */}
-          <Link
-            href={href}
-            className="mt-2 flex min-h-[44px] items-center justify-center gap-2 rounded-[6px] bg-[#c8f000] text-[13px] font-black uppercase tracking-[0.14em] text-[#0a0a0a] transition-colors hover:bg-[#d8ff1a] active:translate-y-px"
-            style={{ fontFamily: "var(--font-display, sans-serif)" }}
-          >
-            <ShoppingCart size={15} />
-            Scegli la taglia
-          </Link>
+          {hasDiscount && <span className={`${tag} bg-[#ff4444] text-white`} style={{ fontFamily: "var(--font-display)" }}>-{Math.round((1 - price / (originalPrice as number)) * 100)}%</span>}
         </div>
+      </Link>
+
+      <button
+        onClick={toggleWish}
+        aria-label={liked ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
+        aria-pressed={liked}
+        className="absolute right-0 top-0 z-10 flex h-11 w-11 items-center justify-center bg-[#0a0a0a]/85 text-white transition-colors hover:text-[#c8f000]"
+      >
+        <Heart className="h-[21px] w-[21px]" fill={liked ? "#ff4444" : "none"} stroke={liked ? "#ff4444" : "currentColor"} />
+      </button>
+
+      <div className="flex flex-1 flex-col gap-1 p-3">
+        <p className="truncate text-[13px] font-semibold text-white/65">{team || category || "Maglia"}</p>
+        <h3 className="display line-clamp-2 min-h-[2lh] text-[21px] leading-[0.95] text-white">
+          <Link href={href}>{shortName}</Link>
+        </h3>
+        <div className="mt-auto flex items-end justify-between gap-2 pt-2">
+          <p className="num text-[38px] text-[#c8f000]" aria-label={`${fmt(price)} euro`}>
+            {fmt(price)}
+            <span className="text-[24px]">€</span>
+          </p>
+          {hasDiscount && <p className="pb-1 text-[15px] text-white/55 line-through">{fmt(originalPrice as number)}€</p>}
+        </div>
+        <button
+          onClick={() => setSheet(true)}
+          className="cut cut-sm mt-1 flex h-12 w-full items-center justify-center bg-[#c8f000] text-[18px] font-extrabold uppercase tracking-wide text-[#0a0a0a] transition-colors hover:bg-[#d8ff1a] active:bg-[#b5d800]"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          Aggiungi
+        </button>
       </div>
-    </div>
+
+      <QuickAddSheet open={sheet} onClose={() => setSheet(false)} product={{ id, slug, name, price, image, category }} />
+    </article>
   );
 }
 

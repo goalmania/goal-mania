@@ -263,7 +263,7 @@ function PaymentMethods({ clientSecret, total, onSuccess, items, addressId, coup
         {selectedMethod === "stripe" && clientSecret ? (
           <StripePayment clientSecret={clientSecret} total={total} onSuccess={onSuccess} />
         ) : selectedMethod === "scalapay" ? (
-          <ScalapayButton total={total} items={items} guestEmail={guestEmail} shippingAddress={shippingAddress} />
+          <ScalapayButton total={total} items={items} guestEmail={guestEmail} shippingAddress={shippingAddress} coupon={coupon} discountRules={discountRules} />
         ) : null}
       </div>
     </div>

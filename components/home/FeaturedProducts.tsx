@@ -58,7 +58,6 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
     <section className="py-12 md:py-16 lg:py-20 bg-[#0a0a0a]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 md:mb-10">
-          <p className="gm-eyebrow">In evidenza</p>
           <h2 className="gm-section-title">Scelti per te</h2>
           <p className="gm-muted mt-4 max-w-xl text-base leading-relaxed" style={{ fontFamily: "var(--font-body, sans-serif)" }}>
             Spedizione gratuita e reso entro 14 giorni. Tre maglie nello stesso ordine: ne paghi due.

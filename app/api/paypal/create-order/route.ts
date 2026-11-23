@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Address from "@/lib/models/Address";
+import { priceOrder, PricingError } from "@/lib/serverPricing";
 
 interface CartItem {
   id: string;
@@ -65,18 +66,18 @@ export async function POST(req: NextRequest) {
       shippingName = address?.fullName || "";
     }
 
-    // Calcolo totale
-    const subtotal = items.reduce(
-      (sum: number, item: CartItem) => sum + item.price * item.quantity,
-      0
-    );
-    const couponDiscount =
-      coupon?.discountPercentage ? (subtotal * coupon.discountPercentage) / 100 : 0;
-    const discountRulesAmount = Array.isArray(discountRules)
-      ? discountRules.reduce((sum: number, r: { discountAmount: number }) => sum + (r.discountAmount || 0), 0)
-      : 0;
-    const discountAmount = couponDiscount + discountRulesAmount;
-    const finalAmount = Math.max(0, subtotal - discountAmount);
+    // Importi dal server: prezzi, coupon e sconti non arrivano mai dal browser
+    let priced;
+    try {
+      priced = await priceOrder({ items, coupon, discountRules });
+    } catch (e) {
+      if (e instanceof PricingError) return NextResponse.json({ error: e.message }, { status: 400 });
+      throw e;
+    }
+    const subtotal = priced.subtotal;
+    const discountAmount = priced.couponDiscount + priced.rulesDiscount;
+    const finalAmount = priced.total;
+    const pricedItems = priced.items as CartItem[];
 
     // Ref ordine
     const reference = `GM-${Date.now()}`;
@@ -99,7 +100,7 @@ export async function POST(req: NextRequest) {
               discount: { currency_code: "EUR", value: discountAmount.toFixed(2) },
             },
           },
-          items: items.map((item: CartItem) => ({
+          items: pricedItems.map((item: CartItem) => ({
             name: item.name.substring(0, 127),
             unit_amount: { currency_code: "EUR", value: item.price.toFixed(2) },
             quantity: item.quantity.toString(),

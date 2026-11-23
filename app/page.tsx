@@ -1,18 +1,12 @@
 import { Metadata } from "next";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
-import HeroSection from "@/components/home/HeroSection";
-import TeamLogoTicker from "@/components/home/TeamLogoTicker";
-import FeaturedProducts from "@/components/home/FeaturedProducts";
-import SocialProofSection from "@/components/home/SocialProofSection";
-import EditorialCommerceSection from "@/components/home/EditorialCommerceSection";
-import HomeCategoryCards from "@/app/_components/HomeCategoryCards";
-import BlackFridayBand from "@/components/home/BlackFridayBand";
-import TrustBar from "@/components/home/TrustBar";
-import ReviewsStrip from "@/components/home/ReviewsStrip";
+import HomeHero from "@/components/home/HomeHero";
+import LeagueRail from "@/components/home/LeagueRail";
+import ProductRail from "@/components/home/ProductRail";
+import OfferTicket from "@/components/home/OfferTicket";
+import ReasonsList from "@/components/home/ReasonsList";
 import HomeNewsStrip from "@/components/home/HomeNewsStrip";
-import TeamKitBuilder from "@/components/home/TeamKitBuilder";
-import LandingCategorySection from "@/app/_components/LandingCategorySection";
 import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
 import ProductModel from "@/lib/models/Product";
 
@@ -64,7 +58,6 @@ export const metadata: Metadata = {
   keywords: [
     "maglie da calcio",
     "maglie calcio a prezzi bassi",
-    "maglie calcio 30 euro",
     "maglie Serie A",
     "maglie Premier League",
     "maglie Mondiali 2026",
@@ -94,123 +87,50 @@ export const metadata: Metadata = {
   },
 };
 
-function shuffleArray<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
+const LABELS: Record<string, string> = { "2026/27": "Stagione 26/27", "2025/26": "Stagione 25/26", Retro: "Retro", "World Cup 2026": "Mondiali 2026" };
 
-function mapProduct(p: any) {
-  return {
-    id: p._id.toString(),
-    name: p.title || "Featured Product",
-    price: p.basePrice || 0,
-    image: p.images?.[0] || "/images/placeholder.png",
-    category: p.category || "Uncategorized",
-    slug: p.slug || "",
-    team: p.title ? p.title.split(" ")[0] : "Unknown",
-    availablePatches: p.availablePatches || [],
-    isMysteryBox: p.isMysteryBox || false,
-  };
-}
-
-async function getFeaturedProducts() {
-  try {
-    await connectDB();
-    const products = await ProductModel.find({ isActive: true, feature: true })
-      .limit(10)
-      .lean();
-    return JSON.parse(JSON.stringify(products)).map(mapProduct);
-  } catch (error) {
-    console.error("Error fetching featured products:", error);
-    return [];
-  }
-}
-
-async function getRandomProducts(count: number): Promise<ReturnType<typeof mapProduct>[]> {
-  try {
-    await connectDB();
-    const total = await ProductModel.countDocuments({ isActive: true });
-    const skip = Math.max(0, Math.floor(Math.random() * Math.max(1, total - count)));
-    const products = await ProductModel.find({ isActive: true })
-      .skip(skip)
-      .limit(count * 3)
-      .lean();
-    return shuffleArray((JSON.parse(JSON.stringify(products)) as any[]).map(mapProduct)).slice(0, count);
-  } catch {
-    return [];
-  }
-}
-
-function mapLandingProduct(p: any) {
+// Una sola forma per tutte le schede della home: prezzo vero dal listino, foto, etichetta breve
+function mapCard(p: any) {
   return {
     id: p._id.toString(),
     slug: p.slug || "",
-    name: p.title || "Product",
-    price: p.basePrice || 0,
+    name: p.title || "Maglia",
+    price: Number(p.isRetro ? p.retroPrice : p.basePrice) || Number(p.basePrice) || 0,
     image: p.images?.[0] || "/images/image.png",
-    category: p.category || "Uncategorized",
-    team: p.title || "Unknown",
-    availablePatches: p.availablePatches || [],
-    videos: p.videos || [],
+    category: p.category || "",
+    team: LABELS[p.category] || p.category || "",
   };
 }
 
-const SERIE_A_TEAMS = [
-  "Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio",
-  "Atalanta", "Fiorentina", "Torino", "Bologna", "Sassuolo",
-  "Udinese", "Monza", "Lecce", "Frosinone", "Cagliari",
-  "Genoa", "Empoli", "Verona", "Salernitana",
-];
-
-async function getSerieACurrentSeasonProducts() {
+async function getByCategory(category: string, limit = 12) {
   try {
     await connectDB();
-    const teamRegex = SERIE_A_TEAMS.join("|");
-    const products = await ProductModel.find({
-      isActive: true,
-      title: { $regex: new RegExp(`^Maglia\\s+(${teamRegex})`, "i") },
-    })
+    const products = await ProductModel.find({ category, isActive: true })
       .sort({ feature: -1, createdAt: -1 })
-      .limit(12)
+      .limit(limit)
       .lean();
-    return JSON.parse(JSON.stringify(products)).map(mapLandingProduct);
+    return JSON.parse(JSON.stringify(products)).map(mapCard);
   } catch {
     return [];
   }
 }
 
-async function getRetroProducts() {
+async function getFeatured() {
   try {
     await connectDB();
-    const products = await ProductModel.find({ category: "Retro", isActive: true })
-      .sort({ feature: -1, createdAt: -1 })
-      .limit(12)
-      .lean();
-    return JSON.parse(JSON.stringify(products)).map(mapLandingProduct);
+    const products = await ProductModel.find({ isActive: true, feature: true }).sort({ updatedAt: -1 }).limit(12).lean();
+    return JSON.parse(JSON.stringify(products)).map(mapCard);
   } catch {
     return [];
   }
 }
 
 export default async function Home() {
-  const [featuredProducts, featuredArticles, latestArticles, editorialProducts, serieAProducts, retroProducts] = await Promise.all([
-    getFeaturedProducts(),
-    (async () => {
-      try {
-        await connectDB();
-        const articles = await Article.find({ status: "published", featured: true })
-          .sort({ publishedAt: -1 })
-          .limit(20)
-          .lean();
-        return JSON.parse(JSON.stringify(articles));
-      } catch {
-        return [];
-      }
-    })(),
+  const [featured, season, retro, worldcup, latestArticles] = await Promise.all([
+    getFeatured(),
+    getByCategory("2026/27"),
+    getByCategory("Retro"),
+    getByCategory("World Cup 2026"),
     (async () => {
       try {
         await connectDB();
@@ -224,74 +144,21 @@ export default async function Home() {
         return [];
       }
     })(),
-    getRandomProducts(3),
-    getSerieACurrentSeasonProducts(),
-    getRetroProducts(),
   ]);
+  const hero = featured.length >= 3 ? featured : season;
 
   return (
-    <div className="bg-[#070707] min-h-screen relative font-munish">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <h1 className="sr-only">
-        Maglie da Calcio a 35€ — Goal Mania: Serie A, Premier League, Mondiali 2026
-      </h1>
-
-      {/* 1. HERO — "MAGLIE DA CALCIO A 35€" + maglie reali rotanti */}
-      <HeroSection products={featuredProducts} />
-
-      {/* 2. CATEGORIE — navigazione per campionato */}
-      <HomeCategoryCards />
-
-      {/* 3. MAGLIE IN EVIDENZA — subito dopo le categorie: il prodotto prima di tutto il resto */}
-      <FeaturedProducts products={featuredProducts} />
-
-      {/* 3b. BLACK FRIDAY — offerta 3x2 spiegata col conto */}
-      <BlackFridayBand />
-
-      {/* 4a. SERIE A 2026/27 — carosello maglie stagione corrente */}
-      <LandingCategorySection
-        title="Serie A 2026/27"
-        products={serieAProducts}
-        viewAllHref="/shop/serieA"
-      />
-
-      {/* 4b. MAGLIE RETRO — carosello maglie storiche/vintage */}
-      <LandingCategorySection
-        title="Maglie Retro"
-        products={retroProducts}
-        viewAllHref="/shop/retro"
-      />
-
-      {/* 4d. FIDUCIA — condizioni vere, subito prima delle recensioni */}
-      <TrustBar />
-
-      {/* 4c. LOGHI SQUADRE — scorciatoia per squadra, dopo il catalogo */}
-      <TeamLogoTicker />
-
-      {/* 5. RECENSIONI TICKER — mostra solo recensioni reali, nascosto se non ce ne sono */}
-      <div data-reviews-strip>
-        <ReviewsStrip />
-      </div>
-
-      {/* 6. RECENSIONI + garanzie */}
-      <SocialProofSection />
-
-      {/* 6b. GALLERIA ORDINI REALI — foto/video di maglie e pacchi dei clienti */}
+    <div className="min-h-screen bg-[#0a0a0a]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <HomeHero products={hero} />
+      <LeagueRail />
+      <ProductRail title="Scelte per te" href="/shop" products={featured.length ? featured : season} priorityFirst />
+      <OfferTicket />
+      <ProductRail title="Nuovi arrivi 26/27" href="/shop/2026/27" products={season} />
+      <ProductRail title="Maglie retro" href="/shop/retro" products={retro} />
+      <ProductRail title="Mondiali 2026" href="/shop/worldcup" products={worldcup} />
+      <ReasonsList />
       <RealOrdersGallery />
-
-      {/* 7. KIT PER TORNEI — configuratore kit squadra con preventivo via email */}
-      <TeamKitBuilder />
-
-      {/* 8. NOTIZIE + MAGLIE — editoriale ibrido */}
-      <EditorialCommerceSection
-        articles={featuredArticles.slice(0, 3)}
-        products={editorialProducts}
-      />
-
-      {/* 7. ULTIME NOTIZIE — link agli articoli del blog (dopo il funnel acquisto) */}
       <HomeNewsStrip articles={latestArticles} />
     </div>
   );

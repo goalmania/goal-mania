@@ -3,7 +3,7 @@
   overflow-wrap: break-word;
   line-height: 1.8;
   color: rgba(245, 245, 245, 0.85);
-  font-family: var(--font-barlow, 'Barlow', sans-serif);
+  font-family: var(--font-body);
   font-size: 1.05rem;
 }
 
@@ -13,7 +13,7 @@
 .articleContent h4,
 .articleContent h5,
 .articleContent h6 {
-  font-family: var(--font-barlow-condensed, 'Barlow Condensed', sans-serif);
+  font-family: var(--font-display);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -128,7 +128,7 @@
 .articleContent th {
   background: rgba(200, 240, 0, 0.1);
   color: #c8f000;
-  font-family: var(--font-barlow-condensed, 'Barlow Condensed', sans-serif);
+  font-family: var(--font-display);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;

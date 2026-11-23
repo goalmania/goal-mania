@@ -125,7 +125,6 @@ function ShopHero(_props: { featuredProducts: Product[] }) {
   return (
     <section id="top" className="border-b border-white/10 bg-[#0a0a0a]">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:py-12">
-        <p className="gm-eyebrow">Stagione 2026/27</p>
         <h1 className="gm-section-title">Le migliori maglie da calcio</h1>
         <p className="gm-muted mt-4 max-w-xl text-base leading-relaxed" style={{ fontFamily: "var(--font-body, sans-serif)" }}>
           Maglie attuali da 35€, retro da 40€. Spedizione gratuita, reso entro 14 giorni. Tre maglie nello stesso ordine: ne paghi due.
@@ -327,7 +326,6 @@ function BestsellerSection({ products }: { products: Product[] }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-6 relative z-0">
         <div className="flex items-end justify-between flex-wrap gap-4">
           <div>
-            <p className="gm-eyebrow">Scelti da Goal Mania</p>
             <h2 className="gm-section-title !text-[clamp(1.75rem,5vw,2.75rem)]">
               Selezione Goal Mania
             </h2>
@@ -452,7 +450,6 @@ function NuoviArrivi({ products }: { products: Product[] }) {
         {/* Header + sort */}
         <div className="flex items-end justify-between mb-6 flex-wrap gap-4">
           <div>
-            <p className="gm-eyebrow">Le Migliori Maglie</p>
             <h2
               className="font-black uppercase text-white"
               style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", letterSpacing: "-0.5px" }}
@@ -505,7 +502,6 @@ function Section2627({ products }: { products: Product[] }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-6 relative z-0">
         <div className="flex items-end justify-between flex-wrap gap-4">
           <div>
-            <p className="gm-eyebrow">Stagione in corso</p>
             <h2
               className="font-black uppercase text-white"
               style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", letterSpacing: "-0.5px" }}
@@ -571,7 +567,6 @@ function RetroSection({ products }: { products: Product[] }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-6 relative z-0">
         <div className="flex items-end justify-between flex-wrap gap-4">
           <div>
-            <p className="gm-eyebrow">Leggende del Calcio</p>
             <h2
               className="font-black uppercase text-white"
               style={{ fontFamily: "var(--font-display, sans-serif)", fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)", letterSpacing: "-0.5px" }}

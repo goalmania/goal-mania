@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { priceOrder, PricingError } from "@/lib/serverPricing";
 
 const SCALAPAY_API_URL = process.env.SCALAPAY_MODE === "production"
   ? "https://api.scalapay.com"
@@ -18,7 +19,18 @@ export async function POST(req: NextRequest) {
 
     const session = await getServerSession(authOptions);
     const body = await req.json();
-    const { items, totalAmount, guestEmail, shippingAddress } = body;
+    const { items: clientItems, guestEmail, shippingAddress, coupon, discountRules } = body;
+
+    // Importi dal server (prima totalAmount e i prezzi arrivavano dal browser)
+    let priced;
+    try {
+      priced = await priceOrder({ items: clientItems, coupon, discountRules });
+    } catch (e) {
+      if (e instanceof PricingError) return NextResponse.json({ error: e.message }, { status: 400 });
+      throw e;
+    }
+    const items = priced.items as any[];
+    const totalAmount = priced.total;
 
     const origin = req.headers.get("origin") || "https://goal-mania.it";
 

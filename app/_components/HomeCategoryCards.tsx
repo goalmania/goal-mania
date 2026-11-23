@@ -20,7 +20,6 @@ export default function HomeCategoryCards() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-end gap-4">
           <div>
-            <p className="gm-eyebrow">Shop per campionato</p>
             <h2 className="gm-section-title">Scegli la categoria</h2>
           </div>
           <Link

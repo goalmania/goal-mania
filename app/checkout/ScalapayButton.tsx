@@ -9,6 +9,8 @@ interface ScalapayButtonProps {
   items: any[];
   guestEmail?: string;
   shippingAddress?: any;
+  coupon?: any;
+  discountRules?: any[];
   isDisabled?: boolean;
 }
 
@@ -17,6 +19,8 @@ export default function ScalapayButton({
   items,
   guestEmail,
   shippingAddress,
+  coupon,
+  discountRules,
   isDisabled = false,
 }: ScalapayButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -38,6 +42,8 @@ export default function ScalapayButton({
           totalAmount: total,
           guestEmail,
           shippingAddress,
+          coupon,
+          discountRules,
         }),
       });
 

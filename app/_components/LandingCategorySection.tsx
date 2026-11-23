@@ -131,7 +131,6 @@ export default function LandingCategorySection({
         {/* Section header */}
         <div className="flex items-end justify-between mb-6">
           <div>
-            <p className="gm-eyebrow">Collezione</p>
             <h2 className="gm-section-title !text-[clamp(1.75rem,5vw,2.75rem)]">{title}</h2>
           </div>
           <div className="flex items-center gap-4">
