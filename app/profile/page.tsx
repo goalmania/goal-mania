@@ -98,7 +98,7 @@ export default function ProfilePage() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#c8f000] mx-auto mb-4"></div>
-          <p className="text-white/60 text-lg">Loading your profile...</p>
+          <p className="text-white/80 text-lg">Loading your profile...</p>
         </div>
       </div>
     );
@@ -271,7 +271,7 @@ export default function ProfilePage() {
           <h1 className="text-3xl font-bold text-white mb-2">
             Welcome back, {session.user?.name?.split(" ")[0]}!
           </h1>
-          <p className="text-white/60 text-lg">
+          <p className="text-white/80 text-lg">
             Manage your account settings and preferences
           </p>
         </div>
@@ -297,7 +297,7 @@ export default function ProfilePage() {
                       <User className="h-5 w-5 mr-2 text-[#c8f000]" />
                       Profile Information
                     </CardTitle>
-                    <CardDescription className="text-white/60 mt-1">
+                    <CardDescription className="text-white/80 mt-1">
                       Update your personal information and contact details
                     </CardDescription>
                   </div>
@@ -310,7 +310,7 @@ export default function ProfilePage() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="text-white/70 font-medium">
+                      <Label htmlFor="name" className="text-white/80 font-medium">
                         Full Name
                       </Label>
                       <Input
@@ -332,7 +332,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-white/70 font-medium">
+                      <Label htmlFor="email" className="text-white/80 font-medium">
                         Email Address
                       </Label>
                       <Input
@@ -413,7 +413,7 @@ export default function ProfilePage() {
                             setValidationErrors({});
                           }}
                           variant="outline"
-                          className="border-white/10 text-white/70 hover:bg-[#0a0a0a]"
+                          className="border-white/10 text-white/80 hover:bg-[#0a0a0a]"
                         >
                           <X className="h-4 w-4 mr-2" />
                           Cancel
@@ -435,7 +435,7 @@ export default function ProfilePage() {
                       <Shield className="h-5 w-5 mr-2 text-[#c8f000]" />
                       Security Settings
                     </CardTitle>
-                    <CardDescription className="text-white/60 mt-1">
+                    <CardDescription className="text-white/80 mt-1">
                       Update your password to keep your account secure
                     </CardDescription>
                   </div>
@@ -448,7 +448,7 @@ export default function ProfilePage() {
                 <form onSubmit={handlePasswordSubmit} className="space-y-6">
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="currentPassword" className="text-white/70 font-medium">
+                      <Label htmlFor="currentPassword" className="text-white/80 font-medium">
                         Current Password
                       </Label>
                       <div className="relative">
@@ -470,9 +470,9 @@ export default function ProfilePage() {
                           onClick={() => togglePasswordVisibility('current')}
                         >
                           {showPasswords.current ? (
-                            <EyeOff className="h-4 w-4 text-white/40" />
+                            <EyeOff className="h-4 w-4 text-white/80" />
                           ) : (
-                            <Eye className="h-4 w-4 text-white/40" />
+                            <Eye className="h-4 w-4 text-white/80" />
                           )}
                         </Button>
                       </div>
@@ -485,7 +485,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="newPassword" className="text-white/70 font-medium">
+                      <Label htmlFor="newPassword" className="text-white/80 font-medium">
                         New Password
                       </Label>
                       <div className="relative">
@@ -507,9 +507,9 @@ export default function ProfilePage() {
                           onClick={() => togglePasswordVisibility('new')}
                         >
                           {showPasswords.new ? (
-                            <EyeOff className="h-4 w-4 text-white/40" />
+                            <EyeOff className="h-4 w-4 text-white/80" />
                           ) : (
-                            <Eye className="h-4 w-4 text-white/40" />
+                            <Eye className="h-4 w-4 text-white/80" />
                           )}
                         </Button>
                       </div>
@@ -522,7 +522,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="confirmPassword" className="text-white/70 font-medium">
+                      <Label htmlFor="confirmPassword" className="text-white/80 font-medium">
                         Confirm New Password
                       </Label>
                       <div className="relative">
@@ -544,9 +544,9 @@ export default function ProfilePage() {
                           onClick={() => togglePasswordVisibility('confirm')}
                         >
                           {showPasswords.confirm ? (
-                            <EyeOff className="h-4 w-4 text-white/40" />
+                            <EyeOff className="h-4 w-4 text-white/80" />
                           ) : (
-                            <Eye className="h-4 w-4 text-white/40" />
+                            <Eye className="h-4 w-4 text-white/80" />
                           )}
                         </Button>
                       </div>
@@ -618,7 +618,7 @@ export default function ProfilePage() {
                             setPasswordValidationErrors({});
                           }}
                           variant="outline"
-                          className="border-white/10 text-white/70 hover:bg-[#0a0a0a]"
+                          className="border-white/10 text-white/80 hover:bg-[#0a0a0a]"
                         >
                           <X className="h-4 w-4 mr-2" />
                           Cancel

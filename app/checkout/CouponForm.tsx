@@ -71,7 +71,7 @@ export function CouponForm({
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         <TicketIcon className="h-3.5 w-3.5 text-[#c8f000]" />
-        <span className="text-xs font-semibold text-white/60 uppercase tracking-wider">Hai un coupon?</span>
+        <span className="text-xs font-semibold text-white/80 uppercase tracking-wider">Hai un coupon?</span>
       </div>
 
       <form onSubmit={handleSubmit} className="flex gap-2">
@@ -88,7 +88,7 @@ export function CouponForm({
             <button
               type="button"
               onClick={() => setCouponCode("")}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-white/80 hover:text-white/80"
             >
               <XMarkIcon className="h-3.5 w-3.5" />
             </button>

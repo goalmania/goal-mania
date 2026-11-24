@@ -171,7 +171,7 @@ export default function SignUp() {
               <div>
                 <Label
                   htmlFor="phone"
-                  className="text-sm font-medium text-white/70"
+                  className="text-sm font-medium text-white/80"
                 >
                   Numero di telefono
                 </Label>
@@ -179,7 +179,7 @@ export default function SignUp() {
                   <select
                     id="phonePrefix"
                     name="phonePrefix"
-                    className="bg-[#0a0a0a] border text-sm rounded-lg py-2.5 font-munish border-white/10 text-white/60 font-light px-3 shadow-none focus:ring-1 focus:ring-[#c8f000] focus:border-[#c8f000]"
+                    className="bg-[#0a0a0a] border text-sm rounded-lg py-2.5 font-munish border-white/10 text-white/80 font-light px-3 shadow-none focus:ring-1 focus:ring-[#c8f000] focus:border-[#c8f000]"
                     defaultValue="+39"
                   >
                     {phonePrefix.map((prefix) => (
@@ -193,7 +193,7 @@ export default function SignUp() {
                     name="phone"
                     type="tel"
                     required
-                    className="bg-[#0a0a0a] border-0 flex-1 border-b py-2 border-white/20 placeholder:text-white/40 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
+                    className="bg-[#0a0a0a] border-0 flex-1 border-b py-2 border-white/20 placeholder:text-white/80 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
                     placeholder="xxxxxxxxxx"
                   />
                 </div>
@@ -213,7 +213,7 @@ export default function SignUp() {
                 />
                 <Label
                   htmlFor="marketing"
-                  className="text-sm text-white/60 select-none cursor-pointer"
+                  className="text-sm text-white/80 select-none cursor-pointer"
                 >
                   Avvisami su ordini, offerte e aggiornamenti
                 </Label>
@@ -225,7 +225,7 @@ export default function SignUp() {
                 name="name"
                 type="text"
                 required
-                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/20 placeholder:text-white/40 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
+                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/20 placeholder:text-white/80 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
                 placeholder="Nome completo"
               />
               {validationErrors.name && (
@@ -240,7 +240,7 @@ export default function SignUp() {
                 name="email"
                 type="email"
                 required
-                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/20 placeholder:text-white/40 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
+                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/20 placeholder:text-white/80 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
                 placeholder="Indirizzo email"
               />
               {validationErrors.email && (
@@ -253,14 +253,14 @@ export default function SignUp() {
               <div>
                 <Label
                   htmlFor="country"
-                  className="text-sm font-medium text-white/70"
+                  className="text-sm font-medium text-white/80"
                 >
                   Paese
                 </Label>
                 <select
                   id="country"
                   name="country"
-                  className="bg-[#0a0a0a] border text-sm rounded-lg py-2.5 mt-1 w-full font-munish border-white/10 text-white/60 font-light px-3 shadow-none focus:ring-1 focus:ring-[#c8f000] focus:border-[#c8f000]"
+                  className="bg-[#0a0a0a] border text-sm rounded-lg py-2.5 mt-1 w-full font-munish border-white/10 text-white/80 font-light px-3 shadow-none focus:ring-1 focus:ring-[#c8f000] focus:border-[#c8f000]"
                   defaultValue="Italy"
                 >
                   <option value="Italy">Italia</option>
@@ -289,7 +289,7 @@ export default function SignUp() {
                 name="password"
                 type="password"
                 required
-                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/20 placeholder:text-white/40 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
+                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/20 placeholder:text-white/80 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
                 placeholder="Crea una password"
               />
               {validationErrors.password && (
@@ -304,7 +304,7 @@ export default function SignUp() {
                 name="confirmPassword"
                 type="password"
                 required
-                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/20 placeholder:text-white/40 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
+                className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/20 placeholder:text-white/80 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
                 placeholder="Conferma la password"
               />
               {validationErrors.confirmPassword && (

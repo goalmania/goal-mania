@@ -145,16 +145,16 @@ function analyzeRuleForCart(rule: any, cartItems: CartItem[]): RuleAnalysis {
     case "quantity_based":
       if (rule.minQuantity && applicableQuantity < rule.minQuantity) {
         const needed = rule.minQuantity - applicableQuantity;
-        reason = `Need ${needed} more applicable item(s)`;
+        reason = `Aggiungi ancora ${needed} ${needed === 1 ? "maglia" : "maglie"} per attivarla`;
         howToQualify = `Add ${needed} more ${rule.applicableCategories?.length ? rule.applicableCategories.join(' or ') : 'applicable'} items to your cart`;
         isApplicable = false;
       } else if (rule.maxQuantity && applicableQuantity > rule.maxQuantity) {
         const excess = applicableQuantity - rule.maxQuantity;
-        reason = `Too many applicable items (max: ${rule.maxQuantity})`;
+        reason = `Vale fino a ${rule.maxQuantity} articoli`;
         howToQualify = `Remove ${excess} ${rule.applicableCategories?.length ? rule.applicableCategories.join(' or ') : 'applicable'} items from your cart`;
         isApplicable = false;
       } else {
-        reason = "Ready to apply";
+        reason = "Pronta da applicare";
         isApplicable = true;
         if (rule.discountPercentage) {
           potentialDiscount = (applicableValue * rule.discountPercentage) / 100;
@@ -169,11 +169,11 @@ function analyzeRuleForCart(rule: any, cartItems: CartItem[]): RuleAnalysis {
       const minRequired = (rule.buyQuantity || 1) + (rule.getFreeQuantity || 1);
       if (!rule.buyQuantity || !rule.getFreeQuantity || applicableQuantity < minRequired) {
         const needed = minRequired - applicableQuantity;
-        reason = `Need ${needed} more applicable item(s)`;
+        reason = `Aggiungi ancora ${needed} ${needed === 1 ? "maglia" : "maglie"} per attivarla`;
         howToQualify = `Add ${needed} more ${rule.applicableCategories?.length ? rule.applicableCategories.join(' or ') : 'applicable'} items to get ${rule.getFreeQuantity} free`;
         isApplicable = false;
       } else {
-        reason = "Ready to apply";
+        reason = "Pronta da applicare";
         isApplicable = true;
         // For every buyQuantity items, getFreeQuantity are free (cheapest ones)
         const ruleApplications = Math.floor(applicableQuantity / minRequired);
@@ -188,11 +188,11 @@ function analyzeRuleForCart(rule: any, cartItems: CartItem[]): RuleAnalysis {
 
     case "percentage_off":
       if (applicableItems.length === 0) {
-        reason = "No applicable items in cart";
+        reason = "Nessun articolo del carrello è valido per questa offerta";
         howToQualify = `Add items from ${rule.applicableCategories?.length ? rule.applicableCategories.join(' or ') : 'any category'} to qualify`;
         isApplicable = false;
       } else {
-        reason = "Ready to apply";
+        reason = "Pronta da applicare";
         isApplicable = true;
         potentialDiscount = (applicableValue * rule.discountPercentage) / 100;
       }
@@ -200,18 +200,18 @@ function analyzeRuleForCart(rule: any, cartItems: CartItem[]): RuleAnalysis {
 
     case "fixed_amount_off":
       if (applicableItems.length === 0) {
-        reason = "No applicable items in cart";
+        reason = "Nessun articolo del carrello è valido per questa offerta";
         howToQualify = `Add items from ${rule.applicableCategories?.length ? rule.applicableCategories.join(' or ') : 'any category'} to qualify`;
         isApplicable = false;
       } else {
-        reason = "Ready to apply";
+        reason = "Pronta da applicare";
         isApplicable = true;
         potentialDiscount = Math.min(rule.discountAmount, applicableValue);
       }
       break;
 
     default:
-      reason = "Unknown rule type";
+      reason = "Offerta non riconosciuta";
       isApplicable = false;
   }
 

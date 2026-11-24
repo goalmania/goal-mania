@@ -109,7 +109,7 @@ export default function TrackingPage() {
         {/* Back */}
         <Link
           href="/account/orders"
-          className="inline-flex items-center gap-2 text-white/50 hover:text-white text-sm mb-8 transition-colors"
+          className="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm mb-8 transition-colors"
         >
           <ArrowLeftIcon className="h-4 w-4" />
           Torna ai tuoi ordini
@@ -118,7 +118,7 @@ export default function TrackingPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold mb-1">Traccia spedizione</h1>
-          <p className="text-white/50 text-sm">
+          <p className="text-white/80 text-sm">
             Ordine #{order._id.slice(-8).toUpperCase()} &bull;{" "}
             {new Date(order.createdAt).toLocaleDateString("it-IT", {
               day: "numeric",
@@ -174,7 +174,7 @@ export default function TrackingPage() {
                             ? "text-black"
                             : isActive
                             ? "text-[#c8f000]"
-                            : "text-white/30"
+                            : "text-white/80"
                         }`}
                       />
                     </div>
@@ -187,7 +187,7 @@ export default function TrackingPage() {
                             ? "text-[#c8f000]"
                             : isCompleted
                             ? "text-white"
-                            : "text-white/30"
+                            : "text-white/80"
                         }`}
                       >
                         {step.label}
@@ -199,7 +199,7 @@ export default function TrackingPage() {
                       </p>
                       <p
                         className={`text-sm mt-0.5 ${
-                          isFuture ? "text-white/20" : "text-white/50"
+                          isFuture ? "text-white/20" : "text-white/80"
                         }`}
                       >
                         {step.description}
@@ -232,14 +232,14 @@ export default function TrackingPage() {
 
               <div className="space-y-4">
                 <div>
-                  <p className="text-xs text-white/40 uppercase tracking-wide mb-1">Codice tracking</p>
+                  <p className="text-xs text-white/80 uppercase tracking-wide mb-1">Codice tracking</p>
                   <div className="flex items-center gap-3">
                     <code className="font-mono text-lg font-bold text-white bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
                       {order.trackingCode}
                     </code>
                     <button
                       onClick={handleCopy}
-                      className="p-2 rounded-lg border border-white/10 hover:border-white/30 text-white/50 hover:text-white transition-all"
+                      className="p-2 rounded-lg border border-white/10 hover:border-white/30 text-white/80 hover:text-white transition-all"
                       title="Copia codice"
                     >
                       {copied ? (
@@ -262,7 +262,7 @@ export default function TrackingPage() {
                     Traccia il pacco{courierName ? ` su ${courierName}` : " sul sito del corriere"}
                   </a>
                 ) : (
-                  <p className="text-sm text-white/40">
+                  <p className="text-sm text-white/80">
                     Usa il codice qui sopra per tracciare il pacco sul sito del corriere.
                   </p>
                 )}
@@ -274,7 +274,7 @@ export default function TrackingPage() {
         {!order.trackingCode && order.status !== "cancelled" && (
           <div className="rounded-2xl border border-white/10 bg-white/5 p-6 mb-6 text-center">
             <TruckIcon className="h-8 w-8 text-white/20 mx-auto mb-3" />
-            <p className="text-white/50 text-sm">
+            <p className="text-white/80 text-sm">
               Il codice di tracking sarà disponibile non appena il tuo ordine verrà spedito.
             </p>
           </div>
@@ -286,8 +286,8 @@ export default function TrackingPage() {
           <div className="space-y-2 mb-4">
             {order.items.map((item, i) => (
               <div key={i} className="flex justify-between text-sm">
-                <span className="text-white/70">
-                  {item.name} <span className="text-white/40">×{item.quantity}</span>
+                <span className="text-white/80">
+                  {item.name} <span className="text-white/80">×{item.quantity}</span>
                 </span>
                 <span>€{(item.price * item.quantity).toFixed(2)}</span>
               </div>
@@ -299,8 +299,8 @@ export default function TrackingPage() {
           </div>
           {order.shippingAddress && (
             <div className="mt-4 pt-4 border-t border-white/10">
-              <p className="text-xs text-white/40 uppercase tracking-wide mb-1">Indirizzo di consegna</p>
-              <p className="text-sm text-white/70">
+              <p className="text-xs text-white/80 uppercase tracking-wide mb-1">Indirizzo di consegna</p>
+              <p className="text-sm text-white/80">
                 {order.shippingAddress.fullName && <>{order.shippingAddress.fullName}<br /></>}
                 {order.shippingAddress.street}<br />
                 {order.shippingAddress.postalCode} {order.shippingAddress.city}<br />

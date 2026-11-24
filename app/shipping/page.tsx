@@ -39,18 +39,18 @@ export default function ShippingPage() {
       <div className="mx-auto max-w-3xl px-5 py-14 sm:py-20">
         <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#c8f000]">Assistenza</p>
         <h1 className="mb-4 text-4xl font-black sm:text-5xl">Spedizioni</h1>
-        <p className="mb-10 text-lg text-white/70">
+        <p className="mb-10 text-lg text-white/80">
           Gratuite su tutti gli ordini in Italia. Consegna in 7-10 giorni lavorativi.
         </p>
         <div className="space-y-8">
           {items.map((s) => (
             <section key={s.h} className="border-t border-white/10 pt-6">
               <h2 className="mb-2 text-xl font-bold text-white">{s.h}</h2>
-              <p className="leading-relaxed text-white/70">{s.p}</p>
+              <p className="leading-relaxed text-white/80">{s.p}</p>
             </section>
           ))}
         </div>
-        <p className="mt-12 text-white/60">
+        <p className="mt-12 text-white/80">
           Vuoi restituire una maglia? Leggi <Link href="/resi" className="text-[#c8f000] underline">Resi e Rimborsi</Link>. Altre domande?{" "}
           <Link href="/contact" className="text-[#c8f000] underline">Contattaci</Link>.
         </p>

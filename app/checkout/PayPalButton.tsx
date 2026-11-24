@@ -24,7 +24,7 @@ export default function PayPalButton({ total, items, addressId, coupon, discount
   const Spinner = () => (
     <div className="flex flex-col items-center gap-3 py-6">
       <div className="w-6 h-6 border-2 border-white/10 border-t-[#c8f000] rounded-full animate-spin" />
-      <p className="text-sm text-white/40">Caricamento PayPal...</p>
+      <p className="text-sm text-white/80">Caricamento PayPal...</p>
     </div>
   );
 
@@ -35,7 +35,7 @@ export default function PayPalButton({ total, items, addressId, coupon, discount
         <p className="text-sm text-red-400">{msg}</p>
         <button
           onClick={() => window.location.reload()}
-          className="text-xs text-white/40 hover:text-white/70 mt-1 underline"
+          className="text-xs text-white/80 hover:text-white/80 mt-1 underline"
         >
           Aggiorna la pagina
         </button>
@@ -129,7 +129,7 @@ export default function PayPalButton({ total, items, addressId, coupon, discount
       </div>
 
       {isLoading && (
-        <div className="flex items-center justify-center gap-2 text-sm text-white/40 py-2">
+        <div className="flex items-center justify-center gap-2 text-sm text-white/80 py-2">
           <div className="w-4 h-4 border-2 border-white/10 border-t-[#c8f000] rounded-full animate-spin" />
           Elaborazione pagamento...
         </div>

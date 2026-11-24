@@ -66,7 +66,7 @@ export default function ScalapayButton({
   return (
     <div className="space-y-3">
       {/* Info rate */}
-      <div className="flex items-center justify-center gap-2 text-xs text-white/40">
+      <div className="flex items-center justify-center gap-2 text-xs text-white/80">
         <span>3 rate da</span>
         <span className="text-[#c8f000] font-bold text-sm">€{installment}</span>
         <span>senza interessi</span>
@@ -100,7 +100,7 @@ export default function ScalapayButton({
         </div>
       )}
 
-      <p className="text-center text-[10px] text-white/20">
+      <p className="text-center text-[14px] text-white/20">
         Scalapay è un servizio di acquisto rateale. Soggetto ad approvazione.
       </p>
     </div>

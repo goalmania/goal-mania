@@ -71,7 +71,7 @@ function Field({
 }) {
   return (
     <div className={`space-y-1.5 ${className}`}>
-      <Label className="text-xs font-semibold text-white/70 ">
+      <Label className="text-xs font-semibold text-white/80 ">
         {label}
         {required && <span className="text-[#c8f000] ml-0.5">*</span>}
       </Label>
@@ -81,7 +81,7 @@ function Field({
 }
 
 const inputCls =
-  "h-12 bg-white/5 border border-white/10 text-white placeholder:text-white/60 rounded-xl focus:border-[#c8f000] focus:ring-0 focus:bg-white/8 transition-all duration-150";
+  "h-12 bg-white/5 border border-white/10 text-white placeholder:text-white/80 rounded-xl focus:border-[#c8f000] focus:ring-0 focus:bg-white/8 transition-all duration-150";
 
 // ── Step indicator ───────────────────────────────────────────────────────────
 function StepBar({ step }: { step: "address" | "payment" }) {
@@ -106,14 +106,14 @@ function StepBar({ step }: { step: "address" | "payment" }) {
                     ? "bg-[#c8f000] text-black"
                     : active
                     ? "bg-[#c8f000] text-black ring-4 ring-[#c8f000]/20"
-                    : "bg-white/10 text-white/60"
+                    : "bg-white/10 text-white/80"
                 }`}
               >
                 {done ? <CheckCircleIcon className="w-4 h-4" /> : i + 1}
               </div>
               <span
                 className={`text-sm font-medium hidden sm:block ${
-                  active || done ? "text-white" : "text-white/60"
+                  active || done ? "text-white" : "text-white/80"
                 }`}
               >
                 {s === "address" ? "Spedizione" : "Pagamento"}
@@ -137,7 +137,7 @@ function TrustBar() {
   return (
     <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 py-4 border-y border-white/6 mb-8">
       {items.map(({ icon: Icon, text }) => (
-        <div key={text} className="flex items-center gap-1.5 text-xs text-white/50">
+        <div key={text} className="flex items-center gap-1.5 text-xs text-white/80">
           <Icon className="w-3.5 h-3.5 text-[#c8f000]" />
           <span>{text}</span>
         </div>
@@ -179,7 +179,7 @@ function OrderSummary({
         </div>
         <div className="flex items-center gap-3">
           <span className="text-[#c8f000] font-bold text-lg">€{total.toFixed(2)}</span>
-          {open ? <ChevronUpIcon className="w-4 h-4 text-white/50" /> : <ChevronDownIcon className="w-4 h-4 text-white/50" />}
+          {open ? <ChevronUpIcon className="w-4 h-4 text-white/80" /> : <ChevronDownIcon className="w-4 h-4 text-white/80" />}
         </div>
       </button>
 
@@ -206,9 +206,9 @@ function OrderSummary({
                 <div className="flex-1 min-w-0">
                   <p className="text-white text-sm font-medium truncate">{item.name}</p>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <span className="text-white/60 text-xs">Qtà: {item.quantity}</span>
+                    <span className="text-white/80 text-xs">Qtà: {item.quantity}</span>
                     {item.customization && (
-                      <span className="text-[12px] bg-[#c8f000]/15 text-[#c8f000] px-1.5 py-0.5 rounded-md font-medium">Custom</span>
+                      <span className="text-[14px] bg-[#c8f000]/15 text-[#c8f000] px-1.5 py-0.5 rounded-md font-medium">Personalizzata</span>
                     )}
                   </div>
                 </div>
@@ -231,7 +231,7 @@ function OrderSummary({
 
           <div className="border-t border-white/8 pt-4 space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-white/50">Subtotale</span>
+              <span className="text-white/80">Subtotale</span>
               <span className="text-white">€{subtotal.toFixed(2)}</span>
             </div>
             {couponDiscount > 0 && (
@@ -247,23 +247,23 @@ function OrderSummary({
               </div>
             ))}
             <div className="flex justify-between text-sm">
-              <span className="text-white/50">Spedizione</span>
+              <span className="text-white/80">Spedizione</span>
               <span className="text-emerald-400 font-medium">Gratuita</span>
             </div>
             <div className="flex justify-between items-center pt-3 border-t border-white/8">
               <span className="text-white font-bold text-base">Totale</span>
               <div className="text-right">
                 <span className="text-[#c8f000] font-bold text-2xl">€{total.toFixed(2)}</span>
-                <p className="text-white/60 text-xs">IVA inclusa</p>
+                <p className="text-white/80 text-xs">IVA inclusa</p>
               </div>
             </div>
           </div>
 
           {/* Payment logos */}
           <div className="flex items-center justify-center gap-3 pt-2 opacity-50">
-            <span className="text-[12px] text-white/60 ">Accettiamo</span>
+            <span className="text-[14px] text-white/80 ">Accettiamo</span>
             {["VISA", "MC", "AMEX", "PP"].map((brand) => (
-              <span key={brand} className="text-[12px] font-bold bg-white/8 text-white/60 px-1.5 py-0.5 rounded">{brand}</span>
+              <span key={brand} className="text-[14px] font-bold bg-white/8 text-white/80 px-1.5 py-0.5 rounded">{brand}</span>
             ))}
           </div>
         </div>
@@ -607,7 +607,7 @@ export default function CheckoutPage() {
       <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-2 border-[#c8f000] border-t-transparent rounded-full animate-spin" />
-          <p className="text-white/50 text-sm">Caricamento...</p>
+          <p className="text-white/80 text-sm">Caricamento...</p>
         </div>
       </div>
     );
@@ -623,7 +623,7 @@ export default function CheckoutPage() {
               <LockClosedIcon className="w-7 h-7 text-[#c8f000]" />
             </div>
             <h1 className="text-2xl font-bold text-white mb-1">Checkout Sicuro</h1>
-            <p className="text-white/50 text-sm">Come vuoi procedere?</p>
+            <p className="text-white/80 text-sm">Come vuoi procedere?</p>
           </div>
 
           <div className="space-y-3">
@@ -648,13 +648,13 @@ export default function CheckoutPage() {
               className="w-full flex items-center gap-4 p-4 bg-white/5 border border-white/10 rounded-2xl hover:border-white/20 hover:bg-white/8 active:scale-[0.97] transition-all duration-150 text-left group"
             >
               <div className="w-10 h-10 bg-white/8 rounded-xl flex items-center justify-center flex-shrink-0">
-                <GlobeAltIcon className="h-5 w-5 text-white/60" />
+                <GlobeAltIcon className="h-5 w-5 text-white/80" />
               </div>
               <div className="flex-1">
                 <p className="font-bold text-white text-sm">Continua come ospite</p>
-                <p className="text-white/60 text-xs">Senza registrazione</p>
+                <p className="text-white/80 text-xs">Senza registrazione</p>
               </div>
-              <svg className="w-4 h-4 text-white/60 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-white/80 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
@@ -662,7 +662,7 @@ export default function CheckoutPage() {
 
           <div className="flex items-center justify-center gap-4 mt-6">
             {["SSL", "Stripe"].map((b) => (
-              <span key={b} className="text-[12px] font-bold text-white/60 border border-white/10 px-2 py-1 rounded">{b}</span>
+              <span key={b} className="text-[14px] font-bold text-white/80 border border-white/10 px-2 py-1 rounded">{b}</span>
             ))}
           </div>
 
@@ -671,12 +671,12 @@ export default function CheckoutPage() {
             <div className="mt-6 pt-5 border-t border-white/6 space-y-2">
               {loginScreenReviews.slice(0, 2).map((r, i) => (
                 <div key={i} className="flex items-start gap-2.5">
-                  <div className="w-6 h-6 rounded-full bg-[#c8f000]/15 flex items-center justify-center flex-shrink-0 text-[12px] font-bold text-[#c8f000]">{r.name?.[0]?.toUpperCase() ?? "C"}</div>
+                  <div className="w-6 h-6 rounded-full bg-[#c8f000]/15 flex items-center justify-center flex-shrink-0 text-[14px] font-bold text-[#c8f000]">{r.name?.[0]?.toUpperCase() ?? "C"}</div>
                   <div>
-                    <span className="text-[12px] font-bold text-white/50">{r.name}</span>
-                    {r.verified && <span className="text-[12px] text-[#c8f000] ml-1">✓</span>}
-                    <span className="text-[#c8f000] text-[12px] ml-1">★★★★★</span>
-                    <p className="text-[13px] text-white/60 leading-tight">{r.comment}</p>
+                    <span className="text-[14px] font-bold text-white/80">{r.name}</span>
+                    {r.verified && <span className="text-[14px] text-[#c8f000] ml-1">✓</span>}
+                    <span className="text-[#c8f000] text-[14px] ml-1">★★★★★</span>
+                    <p className="text-[15px] text-white/80 leading-tight">{r.comment}</p>
                   </div>
                 </div>
               ))}
@@ -695,7 +695,7 @@ export default function CheckoutPage() {
         {/* Header */}
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Checkout</h1>
-          <div className="flex items-center gap-2 text-xs text-white/60">
+          <div className="flex items-center gap-2 text-xs text-white/80">
             <LockClosedIcon className="w-3.5 h-3.5 text-[#c8f000]" />
             Pagamento sicuro SSL
           </div>
@@ -718,7 +718,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <h2 className="text-white font-bold text-base">Indirizzo di spedizione</h2>
-                    <p className="text-white/60 text-xs">Dove vuoi ricevere il tuo ordine?</p>
+                    <p className="text-white/80 text-xs">Dove vuoi ricevere il tuo ordine?</p>
                   </div>
                 </div>
 
@@ -815,7 +815,7 @@ export default function CheckoutPage() {
                         <button
                           type="button"
                           onClick={() => setCheckoutMode("choose")}
-                          className="flex items-center gap-1.5 text-sm text-white/60 hover:text-white/70 transition-colors"
+                          className="flex items-center gap-1.5 text-sm text-white/80 hover:text-white/80 transition-colors"
                         >
                           <ArrowLeftIcon className="w-4 h-4" />
                           Indietro
@@ -856,18 +856,18 @@ export default function CheckoutPage() {
                             <div className="flex items-start gap-3 pr-6">
                               <RadioGroupItem value={address._id || ""} id={address._id} className="mt-0.5 sr-only" />
                               <div className="w-8 h-8 bg-white/6 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <UserIcon className="w-4 h-4 text-white/50" />
+                                <UserIcon className="w-4 h-4 text-white/80" />
                               </div>
                               <div>
                                 <div className="flex items-center gap-2 mb-1">
                                   <p className="text-white font-semibold text-sm">{address.fullName}</p>
                                   {address.isDefault && (
-                                    <span className="text-[12px] bg-[#c8f000]/15 text-[#c8f000] px-1.5 py-0.5 rounded font-medium">Predefinito</span>
+                                    <span className="text-[14px] bg-[#c8f000]/15 text-[#c8f000] px-1.5 py-0.5 rounded font-medium">Predefinito</span>
                                   )}
                                 </div>
-                                <p className="text-white/50 text-sm">{address.addressLine1}</p>
-                                <p className="text-white/60 text-xs">{address.city} {address.postalCode} · {address.country}</p>
-                                <p className="text-white/60 text-xs mt-0.5">{address.phone}</p>
+                                <p className="text-white/80 text-sm">{address.addressLine1}</p>
+                                <p className="text-white/80 text-xs">{address.city} {address.postalCode} · {address.country}</p>
+                                <p className="text-white/80 text-xs mt-0.5">{address.phone}</p>
                               </div>
                             </div>
                           </div>
@@ -878,7 +878,7 @@ export default function CheckoutPage() {
                         <button
                           type="button"
                           onClick={() => setIsAddingAddress(true)}
-                          className="flex items-center gap-1.5 text-sm text-white/60 hover:text-white/70 transition-colors"
+                          className="flex items-center gap-1.5 text-sm text-white/80 hover:text-white/80 transition-colors"
                         >
                           <PlusIcon className="w-4 h-4" />
                           Nuovo indirizzo
@@ -952,7 +952,7 @@ export default function CheckoutPage() {
                       </Field>
                       <div className="flex items-center justify-between pt-4">
                         {addresses.length > 0 && (
-                          <button type="button" onClick={() => setIsAddingAddress(false)} className="flex items-center gap-1.5 text-sm text-white/60 hover:text-white/70 transition-colors">
+                          <button type="button" onClick={() => setIsAddingAddress(false)} className="flex items-center gap-1.5 text-sm text-white/80 hover:text-white/80 transition-colors">
                             <ArrowLeftIcon className="w-4 h-4" />
                             Annulla
                           </button>
@@ -993,7 +993,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <h2 className="text-white font-bold text-base">Pagamento</h2>
-                    <p className="text-white/60 text-xs">Transazione crittografata SSL</p>
+                    <p className="text-white/80 text-xs">Transazione crittografata SSL</p>
                   </div>
                 </div>
                 <div className="p-6">
@@ -1012,14 +1012,14 @@ export default function CheckoutPage() {
                   ) : (
                     <div className="flex flex-col items-center gap-3 py-10">
                       <div className="w-6 h-6 border-2 border-white/10 border-t-[#c8f000] rounded-full animate-spin" />
-                      <p className="text-sm text-white/60">Aggiornamento pagamento...</p>
+                      <p className="text-sm text-white/80">Aggiornamento pagamento...</p>
                     </div>
                   )}
                   <button
                     type="button"
                     onClick={() => setStep("address")}
                     disabled={isLoading}
-                    className="mt-5 flex items-center gap-1.5 text-sm text-white/60 hover:text-white/70 transition-colors"
+                    className="mt-5 flex items-center gap-1.5 text-sm text-white/80 hover:text-white/80 transition-colors"
                   >
                     <ArrowLeftIcon className="w-4 h-4" />
                     Modifica spedizione
@@ -1029,7 +1029,7 @@ export default function CheckoutPage() {
             </div>
 
             {/* Bottom trust */}
-            <div className="flex items-center justify-center gap-2 text-white/60 text-xs py-2">
+            <div className="flex items-center justify-center gap-2 text-white/80 text-xs py-2">
               <LockClosedIcon className="w-3 h-3" />
               <span>Pagamento sicuro · I tuoi dati sono protetti</span>
             </div>
@@ -1066,8 +1066,8 @@ export default function CheckoutPage() {
                 ].map(({ icon: Icon, title, sub }) => (
                   <div key={title} className="bg-white/3 border border-white/6 rounded-xl p-3 text-center">
                     <Icon className="w-5 h-5 text-[#c8f000] mx-auto mb-1.5" />
-                    <p className="text-white text-[13px] font-semibold leading-tight">{title}</p>
-                    <p className="text-white/60 text-[12px] mt-0.5">{sub}</p>
+                    <p className="text-white text-[15px] font-semibold leading-tight">{title}</p>
+                    <p className="text-white/80 text-[14px] mt-0.5">{sub}</p>
                   </div>
                 ))}
               </div>
