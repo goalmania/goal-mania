@@ -24,7 +24,7 @@ export default function MobileBottomNav() {
   const items = [
     { href: "/", label: "Home", Icon: Home, active: pathname === "/" },
     { href: "/shop", label: "Maglie", Icon: Shirt, active: pathname.startsWith("/shop") && !pathname.startsWith("/shop/retro") },
-    { href: "/archivio", label: "Archivio", Icon: History, active: pathname.startsWith("/archivio") || pathname.startsWith("/shop/retro") },
+    { href: "/archivio", label: "Retro", Icon: History, active: pathname.startsWith("/archivio") || pathname.startsWith("/shop/retro") },
     { href: "/cart", label: "Carrello", Icon: ShoppingBag, active: false, badge: count },
     { href: "/account/orders", label: "Account", Icon: User, active: pathname.startsWith("/account") || pathname.startsWith("/profile") },
   ];

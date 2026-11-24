@@ -1,37 +1,22 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, A11y, Autoplay } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/free-mode";
-import {
-  realOrdersGallery,
-  type GalleryMediaItem,
-} from "@/lib/data/realOrdersGallery";
+import AutoRail from "@/components/ui/AutoRail";
+import { realOrdersGallery, type GalleryMediaItem } from "@/lib/data/realOrdersGallery";
 
 interface RealOrdersGalleryProps {
-  /** Titolo principale della sezione */
   title?: string;
-  /** Sottotitolo / occhiello sopra il titolo */
   eyebrow?: string;
-  /** Testo descrittivo opzionale sotto il titolo */
   description?: string;
-  /** Sovrascrive l'elenco media di default (di norma non serve) */
   items?: GalleryMediaItem[];
-  /** Colore di sfondo della sezione */
-  background?: string;
+  /** Quanti pezzi mostrare al massimo: la fila resta leggera */
+  limit?: number;
   className?: string;
 }
 
-/**
- * Clip muta in loop. Il poster resta sempre visibile sopra il video finché
- * quest'ultimo non è davvero in riproduzione: così non si vede mai il frame
- * nero mentre il file bufferizza (anche sugli slide clonati da Swiper per il
- * marquee, che non ricevono il JS di lazy-load). Il download parte molto
- * prima che la card entri in viewport.
- */
+// Clip muta in loop. Il poster resta sopra finché il video non parte davvero (mai il frame nero).
+// Il file si scarica solo quando la card sta per entrare in vista, e parte solo se si vede.
 function GalleryVideo({ item }: { item: GalleryMediaItem }) {
   const ref = useRef<HTMLVideoElement | null>(null);
   const [load, setLoad] = useState(false);
@@ -40,24 +25,10 @@ function GalleryVideo({ item }: { item: GalleryMediaItem }) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-
-    const near = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setLoad(true);
-      },
-      { rootMargin: "1400px" }
-    );
+    const near = new IntersectionObserver(([e]) => e.isIntersecting && setLoad(true), { rootMargin: "600px" });
     near.observe(el);
-
-    const visible = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) el.play().catch(() => {});
-        else el.pause();
-      },
-      { threshold: 0.25 }
-    );
+    const visible = new IntersectionObserver(([e]) => (e.isIntersecting ? el.play().catch(() => {}) : el.pause()), { threshold: 0.4 });
     visible.observe(el);
-
     return () => {
       near.disconnect();
       visible.disconnect();
@@ -73,116 +44,51 @@ function GalleryVideo({ item }: { item: GalleryMediaItem }) {
         muted
         loop
         playsInline
-        preload="metadata"
+        preload="none"
         tabIndex={-1}
-        aria-label={item.alt || "Video di un ordine reale"}
+        aria-label={item.alt || "Video di un ordine"}
         onPlaying={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
-        className="h-full w-full object-cover pointer-events-none"
+        className="pointer-events-none h-full w-full object-cover"
       />
       {item.poster && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={item.poster}
-          alt=""
-          aria-hidden="true"
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
-            playing ? "opacity-0" : "opacity-100"
-          }`}
-        />
+        <img src={item.poster} alt="" aria-hidden="true" loading="lazy" decoding="async" className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${playing ? "opacity-0" : "opacity-100"}`} />
       )}
     </>
   );
 }
 
+// Pacchi e ordini veri: niente outfit, niente giocatori. Solo quello che prepariamo e spediamo.
 export default function RealOrdersGallery({
-  title = "Ordini reali",
-  eyebrow = "La galleria dei tifosi",
-  description = "Foto e video veri di maglie e pacchi ricevuti dai nostri clienti.",
+  title = "Cosa ti arriva a casa",
+  eyebrow = "Pacchi veri, preparati da noi",
+  description = "Foto e video degli ordini che spediamo ai clienti, senza ritocchi.",
   items,
-  background = "#0a0a0a",
+  limit = 28,
   className = "",
 }: RealOrdersGalleryProps) {
-  const media = items ?? realOrdersGallery;
-
-  if (!media || media.length === 0) return null;
-
-  const enableLoop = media.length > 4;
+  const media = (items ?? realOrdersGallery).slice(0, limit);
+  if (!media.length) return null;
 
   return (
-    <section
-      className={`py-10 md:py-16 font-munish ${className}`}
-      style={{ background }}
-      aria-label={title}
-    >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-6">
-          {eyebrow && (
-            <p className="mb-1 text-[12px] font-bold text-white/60">
-              {eyebrow}
-            </p>
-          )}
-          <h2 className="text-xl md:text-2xl font-bold italic text-white leading-none">
-            {title}
-          </h2>
-          {description && (
-            <p className="mt-2 max-w-xl text-sm text-white/60">{description}</p>
-          )}
-        </div>
+    <section className={`py-10 md:py-16 ${className}`} aria-label={title}>
+      <div className="mx-auto mb-5 w-full max-w-[1760px] px-5 md:px-10 lg:px-16">
+        {eyebrow && <p className="text-[14px] font-bold text-[var(--lime)]">{eyebrow}</p>}
+        <h2 className="disp mt-2 text-[clamp(2.4rem,6vw,5rem)] text-white">{title}</h2>
+        {description && <p className="mt-3 max-w-[48ch] text-[17px] italic leading-snug text-[var(--text-2)]">{description}</p>}
       </div>
-
-      <Swiper
-        modules={[FreeMode, A11y, Autoplay]}
-        spaceBetween={12}
-        slidesPerView={1.35}
-        // Marquee continuo: scorre da solo in modo fluido (delay 0 + speed
-        // lungo lineare) e resta trascinabile a mano; dopo il drag riparte
-        // da solo (disableOnInteraction:false). Su desktop si mette in pausa
-        // al passaggio del mouse.
-        speed={6000}
-        freeMode={{ enabled: true, momentum: false }}
-        grabCursor
-        loop={enableLoop}
-        a11y={{ enabled: true }}
-        autoplay={
-          enableLoop
-            ? {
-                delay: 0,
-                disableOnInteraction: false,
-                pauseOnMouseEnter: true,
-              }
-            : false
-        }
-        breakpoints={{
-          480: { slidesPerView: 2.2, spaceBetween: 14 },
-          768: { slidesPerView: 3.2, spaceBetween: 16 },
-          1024: { slidesPerView: 4.3, spaceBetween: 18 },
-          1280: { slidesPerView: 5.2, spaceBetween: 20 },
-        }}
-        className="!px-4 sm:!px-6 lg:!px-8"
-      >
+      <AutoRail label={title} speed={34}>
         {media.map((item, i) => (
-          <SwiperSlide key={`${item.src}-${i}`} style={{ height: "auto" }}>
-            <div
-              className="relative aspect-[4/5] w-full overflow-hidden rounded-xl bg-[#111]"
-              style={{ border: "1px solid rgba(255,255,255,0.08)" }}
-            >
-              {item.type === "video" ? (
-                <GalleryVideo item={item} />
-              ) : (
-                <Image
-                  src={item.src}
-                  alt={item.alt || "Foto di un ordine reale"}
-                  fill
-                  sizes="(max-width: 480px) 75vw, (max-width: 768px) 45vw, (max-width: 1024px) 30vw, 20vw"
-                  className="object-cover"
-                  loading="lazy"
-                />
-              )}
-            </div>
-          </SwiperSlide>
+          <div key={`${item.src}-${i}`} className="relative aspect-[4/5] w-[62vw] max-w-[300px] shrink-0 overflow-hidden rounded-[18px] bg-[#111] shadow-[inset_0_0_0_1px_var(--line)] md:w-[260px] 2xl:w-[290px]">
+            {item.type === "video" ? (
+              <GalleryVideo item={item} />
+            ) : (
+              <Image src={item.src} alt={item.alt || "Foto di un ordine"} fill sizes="(max-width: 768px) 62vw, 290px" className="object-cover" loading="lazy" draggable={false} />
+            )}
+          </div>
         ))}
-      </Swiper>
+      </AutoRail>
     </section>
   );
 }

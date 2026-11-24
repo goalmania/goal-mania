@@ -79,15 +79,10 @@ function ProductCard({
     else addToWishlist({ id, name, price, image, team: team || "" });
   };
 
-  // Inclinazione stabile per ogni maglia (da -1.3 a +1.3 gradi): ogni manifesto e incollato a modo suo
-  const h = Array.from(String(id)).reduce((a, c) => (a * 31 + c.charCodeAt(0)) | 0, 7);
-  const rot = (((h % 5) + 5) % 5 - 2) * 0.65;
-  const tag = "px-2 py-1 font-[family-name:var(--font-display)] text-[13px] italic uppercase leading-none tracking-[0.03em]";
-
   return (
-    <article className={`group relative h-full ${className}`} style={{ ["--rot" as string]: `${rot}deg`, ["--tape-rot" as string]: `${-rot * 2 - 2}deg` }}>
-      <div className="poster tape flex h-full flex-col">
-        <Link href={href} className="relative block aspect-[4/5] overflow-hidden" aria-label={name}>
+    <article className={`group relative h-full ${className}`}>
+      <div className="pc">
+        <Link href={href} className="pc-stage" aria-label={name}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={cld(image, 520)}
@@ -99,7 +94,7 @@ function ProductCard({
             loading={priority ? "eager" : "lazy"}
             decoding="async"
             fetchPriority={priority ? "high" : "auto"}
-            className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-500 ease-out group-hover:scale-[1.06]"
+            className="absolute inset-0 z-[1] h-full w-full object-contain p-4 transition-transform duration-500 ease-out group-hover:scale-[1.05]"
             style={{ mixBlendMode: "multiply" }}
           />
           {secondary && (
@@ -111,15 +106,15 @@ function ProductCard({
               height={650}
               loading="lazy"
               decoding="async"
-              className="absolute inset-0 hidden h-full w-full object-contain p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:block"
-              style={{ mixBlendMode: "multiply" }}
+              className="absolute inset-0 z-[2] hidden h-full w-full object-contain p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:block"
+              style={{ mixBlendMode: "multiply", background: "transparent" }}
             />
           )}
-          <div className="absolute bottom-2 left-2 flex flex-col items-start gap-1">
-            {isWorldCup && <span className={`${tag} bg-[#0a0a0a] text-[var(--lime)]`}>Mondiali 26</span>}
-            {isNew && <span className={`${tag} bg-[var(--lime)] text-[#0a0a0a]`}>Novità</span>}
-            {lowStock && <span className={`${tag} flex items-center gap-1 bg-[var(--red)] text-white`}><Zap size={12} /> Ultime {stock}</span>}
-            {hasDiscount && <span className={`${tag} bg-[var(--red)] text-white`}>-{Math.round((1 - price / (originalPrice as number)) * 100)}%</span>}
+          <div className="absolute left-3 top-3 z-[3] flex flex-col items-start gap-1">
+            {isWorldCup && <span className="pc-tag bg-[#0a0a0a] text-[var(--lime)]">Mondiali 26</span>}
+            {isNew && <span className="pc-tag bg-[var(--lime)] text-[#0a0a0a]">Novità</span>}
+            {lowStock && <span className="pc-tag bg-[var(--red)] text-white"><Zap size={12} /> Ultime {stock}</span>}
+            {hasDiscount && <span className="pc-tag bg-[var(--red)] text-white">-{Math.round((1 - price / (originalPrice as number)) * 100)}%</span>}
           </div>
         </Link>
 
@@ -127,27 +122,23 @@ function ProductCard({
           onClick={toggleWish}
           aria-label={liked ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
           aria-pressed={liked}
-          className="absolute right-1.5 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full text-[#0a0a0a] transition-transform duration-200 active:scale-90"
+          className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center rounded-full text-[#0a0a0a] transition-transform duration-200 active:scale-90"
         >
           <Heart className="h-[22px] w-[22px]" fill={liked ? "var(--red)" : "none"} stroke={liked ? "var(--red)" : "currentColor"} strokeWidth={2.2} />
         </button>
 
-        <div className="flex flex-1 flex-col px-3 pb-3 pt-1">
-          <p className="truncate text-[12px] font-semibold uppercase tracking-[0.08em] text-black/60">{team || category || "Maglia"}</p>
-          <h3 className="mt-0.5 line-clamp-2 min-h-[2.1em] text-[22px] leading-[1.02] text-[#0a0a0a]">
+        <div className="pc-body">
+          <p className="pc-team truncate">{team || category || "Maglia"}</p>
+          <h3 className="pc-name line-clamp-2 min-h-[2.24em]">
             <Link href={href}>{shortName}</Link>
           </h3>
           <div className="mt-auto flex items-end justify-between gap-2 pt-3">
-            <p className="flex items-baseline gap-1.5" aria-label={`${fmt(price)} euro`}>
-              <span className="num marker-line text-[34px] text-[#0a0a0a]">{fmt(price)}€</span>
-              {hasDiscount && <span className="text-[14px] text-black/50 line-through">{fmt(originalPrice as number)}€</span>}
+            <p className="flex items-baseline gap-2" aria-label={`${fmt(price)} euro`}>
+              <span className="pc-price">{fmt(price)}€</span>
+              {hasDiscount && <span className="text-[14px] text-[var(--text-3)] line-through">{fmt(originalPrice as number)}€</span>}
             </p>
-            <button
-              onClick={() => setSheet(true)}
-              className="btn btn-ink !h-11 !gap-1.5 !px-4 !text-[17px]"
-              aria-label={`Aggiungi ${shortName} al carrello`}
-            >
-              <Plus className="h-4 w-4" strokeWidth={3} /> Aggiungi
+            <button onClick={() => setSheet(true)} className="pc-add" aria-label={`Aggiungi ${shortName} al carrello`}>
+              <Plus className="h-5 w-5" strokeWidth={3} />
             </button>
           </div>
         </div>

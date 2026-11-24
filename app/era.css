@@ -156,20 +156,20 @@
 .era .poster svg { color: var(--e-ink); }
 
 /* ---------- Pannelli (porta d'ingresso delle ere) ---------- */
-.eras { display: flex; gap: 0; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; height: min(78svh, 640px); }
+.eras { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; height: min(78svh, 640px); }
 .eras::-webkit-scrollbar { display: none; }
-.era-panel { position: relative; display: block; flex: 0 0 78vw; max-width: 340px; scroll-snap-align: start; overflow: hidden; --num: clamp(6.2rem, 30vw, 9.5rem); }
+.eras .era-panel { position: relative; display: block; flex: 0 0 78vw; max-width: 340px; overflow: hidden; --num: clamp(6.2rem, 30vw, 9.5rem); }
 .era-panel .p-jersey { position: absolute; left: 50%; bottom: 22%; width: 82%; max-width: 300px; transform: translateX(-50%) rotate(var(--rot, 0deg)); transition: transform 600ms var(--ease); }
 .era-panel .p-jersey .era-frame { transform: none; }
-.era-panel .p-cue { opacity: 1; }
+.era-panel .p-extra { margin-top: 6px; }
 @media (min-width: 1024px) {
   .eras { overflow: hidden; scroll-snap-type: none; height: min(80svh, 760px); }
-  .era-panel { flex: 1 1 0; max-width: none; min-width: 0; transition: flex-grow 640ms var(--ease); --num: clamp(4.6rem, 7.6vw, 9.5rem); }
+  .eras .era-panel { flex: 1 1 0; max-width: none; min-width: 0; transition: flex-grow 640ms var(--ease); --num: clamp(4.6rem, 7.6vw, 9.5rem); }
   .eras:hover .era-panel { flex-grow: 1; }
   .eras .era-panel:hover, .eras .era-panel:focus-visible { flex-grow: 2.7; }
   .era-panel:hover .p-jersey, .era-panel:focus-visible .p-jersey { transform: translateX(-50%) rotate(0deg) scale(1.06); }
-  .era-panel .p-cue { opacity: 0; transition: opacity 300ms ease; }
-  .era-panel:hover .p-cue, .era-panel:focus-visible .p-cue { opacity: 1; }
+  .era-panel .p-extra { max-height: 0; margin-top: 0; overflow: hidden; opacity: 0; transition: max-height 520ms var(--ease), opacity 300ms ease, margin-top 300ms ease; }
+  .era-panel:hover .p-extra, .era-panel:focus-visible .p-extra { max-height: 120px; margin-top: 6px; opacity: 1; }
 }
 .era-panel::after { content: ""; position: absolute; inset: 0 0 0 auto; width: 1px; background: rgba(0, 0, 0, 0.25); z-index: 5; }
 
@@ -192,3 +192,8 @@
 
 .era-chip span:not(.num) { text-transform: none; font-style: normal; font-family: var(--font-body); font-weight: 600; letter-spacing: 0; }
 .era-90 .era-head-text { background: rgba(21, 55, 214, 0.96); padding: 22px 26px; border-radius: 6px; }
+
+/* Righe del campo dietro ogni mondo: ricordano che si parla di calcio */
+.era-pitch { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--e-fg); opacity: 0.09;
+  -webkit-mask: url(/pitch-lines.svg) center / auto 108% no-repeat; mask: url(/pitch-lines.svg) center / auto 108% no-repeat; }
+.era-chip.era-cup { height: auto; min-height: 48px; padding: 6px 16px; flex-wrap: wrap; row-gap: 0; }

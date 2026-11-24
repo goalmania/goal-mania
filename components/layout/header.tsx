@@ -28,7 +28,7 @@ export interface User {
 const NAV = [
   { href: "/shop", label: "Maglie", match: (p: string) => p === "/shop" || p.startsWith("/shop/serieA") || p.startsWith("/shop/premier") || p.startsWith("/shop/international") },
   { href: "/shop/2026/27", label: "Novità 26/27", match: (p: string) => p.startsWith("/shop/2026") },
-  { href: "/archivio", label: "Archivio retro", match: (p: string) => p.startsWith("/archivio") || p.startsWith("/shop/retro") },
+  { href: "/archivio", label: "Maglie retro", match: (p: string) => p.startsWith("/archivio") || p.startsWith("/shop/retro") },
   { href: "/shop/worldcup", label: "Mondiali", match: (p: string) => p.startsWith("/shop/worldcup") },
   { href: "/news", label: "Notizie", match: (p: string) => p.startsWith("/news") },
 ];
@@ -37,7 +37,7 @@ const QUICK = [
   { href: "/shop/serieA", label: "Serie A" },
   { href: "/shop/premier-league", label: "Premier League" },
   { href: "/shop/2026/27", label: "Stagione 26/27" },
-  { href: "/archivio", label: "Archivio retro" },
+  { href: "/archivio", label: "Maglie retro" },
   { href: "/shop/worldcup", label: "Mondiali 2026" },
 ];
 

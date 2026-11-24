@@ -85,3 +85,18 @@ export const ERA_THEME: Record<string, EraTheme> = {
 };
 
 export const ERA_ORDER = ["anni-70", "anni-80", "anni-90", "anni-2000", "anni-2010", "oggi"];
+
+// Tutti i Mondiali in un solo elenco, per anno
+export const WORLD_CUPS: Record<number, WorldCup> = Object.fromEntries(
+  Object.values(ERA_THEME).flatMap((t) => t.cups).map((c) => [c.year, c]),
+);
+
+// Gli anni coperti da ogni era, scritti come li legge un cliente
+export const ERA_RANGE: Record<string, string> = {
+  "anni-70": "fino al 1979",
+  "anni-80": "1980-1989",
+  "anni-90": "1990-1999",
+  "anni-2000": "2000-2009",
+  "anni-2010": "2010-2019",
+  oggi: "dal 2020",
+};

@@ -7,7 +7,7 @@ const CHIPS = [
   { href: "/shop/premier-league", label: "Premier League" },
   { href: "/shop/worldcup", label: "Mondiali 2026" },
   { href: "/shop/international", label: "Grandi club" },
-  { href: "/archivio", label: "Archivio retro" },
+  { href: "/archivio", label: "Maglie retro" },
 ];
 
 // Una riga da scorrere: un tocco e sei nella categoria

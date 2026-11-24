@@ -4,16 +4,23 @@ import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import Patch from "@/lib/models/Patch";
 import ProductDetailClient from "@/app/_components/ProductDetailClient";
+import ProductRail from "@/components/home/ProductRail";
 import { Suspense } from "react";
 import mongoose from "mongoose";
 
 // Incremental Static Regeneration for product detail
 export const revalidate = 600;
 
-// Senza questo la pagina veniva costruita a ogni visita (cache-control: private, no-store, MISS):
-// con un elenco vuoto Next la genera alla prima visita e poi la serve dalla cache.
+// Tutte le schede attive si costruiscono al build: aprire una maglia e istantaneo, mai l'attesa della prima visita.
+// Le schede nuove, create dopo il build, si generano alla prima visita e restano in cache.
 export async function generateStaticParams() {
-  return [];
+  try {
+    await connectDB();
+    const rows = await Product.find({ isActive: true }).select({ slug: 1 }).lean();
+    return (rows as { slug?: string }[]).filter((r) => r.slug).map((r) => ({ id: r.slug as string }));
+  } catch {
+    return [];
+  }
 }
 
 function buildProductKeywords(p: {
@@ -179,6 +186,28 @@ async function getProduct(id: string) {
   }
 }
 
+// Altre maglie della stessa categoria: tiene il cliente nel negozio se questa non e quella giusta
+async function getRelated(product: { _id: string; category?: string }) {
+  try {
+    await connectDB();
+    const rows = await Product.find({ isActive: true, category: product.category, _id: { $ne: product._id } })
+      .sort({ feature: -1, createdAt: -1 })
+      .limit(12)
+      .select({ title: 1, slug: 1, basePrice: 1, retroPrice: 1, isRetro: 1, category: 1, images: { $slice: 1 } })
+      .lean();
+    return JSON.parse(JSON.stringify(rows)).map((p: any) => ({
+      id: String(p._id),
+      slug: p.slug || "",
+      name: p.title || "Maglia",
+      price: Number(p.isRetro ? p.retroPrice : p.basePrice) || Number(p.basePrice) || 0,
+      image: p.images?.[0] || "/images/image.png",
+      category: p.category || "",
+    }));
+  } catch {
+    return [];
+  }
+}
+
 export default async function ProductPage({
   params,
 }: {
@@ -200,6 +229,7 @@ export default async function ProductPage({
 
   const slug = product.slug || id;
   const productUrl = `https://goal-mania.it/products/${slug}`;
+  const related = await getRelated(product);
 
   // Derive category label for schema
   const categoryLabel = product.isRetro
@@ -331,11 +361,10 @@ export default async function ProductPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      {/* SSR H1 for SEO — the visual H1 is rendered by ProductDetailClient */}
-      <h1 className="sr-only">{product.title}</h1>
       <Suspense fallback={<div>Loading...</div>}>
         <ProductDetailClient product={product} />
       </Suspense>
+      <ProductRail eyebrow="Potrebbero piacerti" title="Altre maglie" href={product.isRetro ? "/archivio" : "/shop"} products={related} />
     </>
   );
 }

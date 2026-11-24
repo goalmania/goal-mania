@@ -22,11 +22,12 @@ const GROUPS = [
     ],
   },
   {
-    title: "Archivio retro",
+    title: "Maglie retro",
     links: [
-      { label: "Tutte le epoche", href: "/archivio" },
+      { label: "Tutti i decenni", href: "/archivio" },
       { label: "Anni 90", href: "/archivio/anni-90" },
       { label: "Anni 2000", href: "/archivio/anni-2000" },
+      { label: "Mondiali, anno per anno", href: "/archivio#mondiali" },
       { label: "Leggende", href: "/archivio/leggende" },
     ],
   },

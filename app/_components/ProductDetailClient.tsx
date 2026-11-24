@@ -258,7 +258,7 @@ export default function ProductDetailClient({
   const [customOpen, setCustomOpen] = useState(false); // personalizzazione chiusa di default: prima taglia e acquisto
   const [sizeChartOpen, setSizeChartOpen] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
-  const deliveryCountdown = "Spedizione gratuita · consegna in 7-10 giorni lavorativi"; // testo fisso, nessun conto alla rovescia inventato
+  const [eta, setEta] = useState(""); // finestra di consegna: 7-10 giorni lavorativi da oggi, calcolata nel browser
   const [errors, setErrors] = useState<{ size?: string }>({});
   const { t } = useI18n();
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
@@ -301,6 +301,15 @@ export default function ProductDetailClient({
 
   useEffect(() => {
     setMounted(true);
+    const addWork = (n: number) => {
+      const d = new Date();
+      while (n > 0) {
+        d.setDate(d.getDate() + 1);
+        if (d.getDay() !== 0 && d.getDay() !== 6) n--;
+      }
+      return d.toLocaleDateString("it-IT", { weekday: "short", day: "numeric", month: "long" });
+    };
+    setEta(`${addWork(7)} e ${addWork(10)}`);
     if (product.reviews) setReviews(product.reviews);
     // Track product view once on mount
     trackEvent("product_view", {
@@ -310,8 +319,6 @@ export default function ProductDetailClient({
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product._id]);
-
-  if (!mounted) return null;
 
   // Average rating
   const avgRating = reviews.length > 0
@@ -433,7 +440,7 @@ export default function ProductDetailClient({
     }));
   };
 
-  const inWishlist = isInWishlist(product._id);
+  const inWishlist = mounted && isInWishlist(product._id);
 
   return (
     <div className="min-h-screen" style={{ background: "#080808" }}>
@@ -488,9 +495,45 @@ export default function ProductDetailClient({
 
           {/* ── LEFT: Image Gallery ────────────────────────────────────── */}
           <div className="lg:sticky lg:top-6 lg:self-start mb-6 lg:mb-0">
-            {/* Main image */}
+            {/* Telefono: le foto si sfogliano con il dito, una dopo l'altra */}
+            <div className="lg:hidden">
+              <div
+                className="flex snap-x snap-mandatory overflow-x-auto rounded-[24px] [scrollbar-width:none]"
+                style={{ background: "#F7F7F7" }}
+                onScroll={(e) => {
+                  const el = e.currentTarget;
+                  const i = Math.round(el.scrollLeft / el.clientWidth);
+                  if (i !== selectedImage) setSelectedImage(i);
+                }}
+              >
+                {product.images.map((img, i) => (
+                  <div key={i} className="relative aspect-square w-full shrink-0 snap-center">
+                    <Image
+                      src={imgErrors[i] ? "/images/placeholder.png" : (cloudinaryOpt(img, 900) || "/images/placeholder.png")}
+                      alt={i === 0 ? product.title : `${product.title}, foto ${i + 1}`}
+                      fill
+                      unoptimized
+                      priority={i === 0}
+                      loading={i === 0 ? "eager" : "lazy"}
+                      className="object-contain p-4"
+                      sizes="100vw"
+                      onError={() => setImgErrors((prev) => ({ ...prev, [i]: true }))}
+                    />
+                  </div>
+                ))}
+              </div>
+              {product.images.length > 1 && (
+                <div className="mt-3 flex justify-center gap-1.5" aria-hidden="true">
+                  {product.images.map((_, i) => (
+                    <span key={i} className="h-2 rounded-full transition-all" style={{ width: i === selectedImage ? 22 : 8, background: i === selectedImage ? "#c8f000" : "rgba(255,255,255,0.3)" }} />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Computer: foto grande e miniature */}
             <div
-              className="relative w-full rounded-[28px] overflow-hidden"
+              className="relative hidden w-full rounded-[28px] overflow-hidden lg:block"
               style={{
                 aspectRatio: "1/1",
                 background: "#F7F7F7",
@@ -520,7 +563,7 @@ export default function ProductDetailClient({
 
             {/* Thumbnails */}
             {product.images.length > 1 && (
-              <div className="flex gap-2 mt-3 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+              <div className="mt-3 hidden gap-2 overflow-x-auto pb-1 lg:flex" style={{ scrollbarWidth: "none" }}>
                 {product.images.map((img, i) => (
                   <button
                     key={i}
@@ -628,7 +671,7 @@ export default function ProductDetailClient({
             </div>
 
             {/* Real stock warning / delivery cutoff only — no fabricated viewer/sales counts */}
-            {(Boolean(product.stockQuantity !== undefined && product.stockQuantity > 0 && product.stockQuantity < 5) || Boolean(deliveryCountdown)) && (
+            {(Boolean(product.stockQuantity !== undefined && product.stockQuantity > 0 && product.stockQuantity < 5) || true) && (
               <div
                 className="grid grid-cols-1 gap-2 p-3 cut cut-sm"
                 style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
@@ -641,12 +684,12 @@ export default function ProductDetailClient({
                     </span>
                   </div>
                 )}
-                {deliveryCountdown && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-[13px]">⚡</span>
-                    <span className="text-[13px] font-bold" style={{ color: "#c8f000" }}>{deliveryCountdown}</span>
-                  </div>
-                )}
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-[#c8f000]" aria-hidden="true" />
+                  <span className="text-[15px] font-semibold text-white">
+                    Spedizione gratuita. {eta ? <>Se ordini oggi lo ricevi tra <b>{eta}</b>.</> : "Consegna in 7-10 giorni lavorativi."}
+                  </span>
+                </div>
               </div>
             )}
 
@@ -940,7 +983,7 @@ export default function ProductDetailClient({
               </ul>
 
               {/* Offerta 3x2 vicino al pulsante: la leva piu forte per aumentare lo scontrino */}
-              <Link href="/shop" className="cut cut-sm block bg-[#1b1b19] px-4 py-3 text-white transition-colors hover:bg-[#c8f000] hover:text-[#0a0a0a]">
+              <Link href="/shop" className="block rounded-2xl bg-[#1b1b19] px-4 py-3.5 text-white shadow-[inset_4px_0_0_#c8f000] transition-colors hover:bg-[#c8f000] hover:text-[#0a0a0a] hover:shadow-none">
                 <span className="display text-[22px]">Prendi 3, ne paghi 2</span>
                 <span className="mt-0.5 block text-[14px] font-semibold opacity-80">La meno cara è gratis. Scegli altre maglie →</span>
               </Link>
@@ -1105,7 +1148,7 @@ export default function ProductDetailClient({
       </div>
 
       {/* Galleria ordini reali — foto/video di maglie e pacchi dei clienti */}
-      <RealOrdersGallery title="Indossata dai tifosi" eyebrow="Ordini reali" />
+      <RealOrdersGallery />
 
       {/* Size Guide Modal */}
       <SizeGuideModal isOpen={sizeChartOpen} onClose={() => setSizeChartOpen(false)} />

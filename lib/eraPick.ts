@@ -1,4 +1,4 @@
-import { ERAS, eraOf, hasPhoto, isLegend, teamOf, type ArchiveItem } from "@/lib/archive";
+import { ERAS, eraOf, hasPhoto, isLegend, isNational, teamOf, worldCupItems, type ArchiveItem } from "@/lib/archive";
 import { ERA_THEME } from "@/lib/eraTheme";
 
 // Le maglie che rappresentano un'era: prima i nomi leggendari, poi gli anni dei Mondiali, una per squadra
@@ -20,4 +20,20 @@ export function pickForEra(items: ArchiveItem[], slug: string, n = 3): ArchiveIt
     if (out.length === n) break;
   }
   return out;
+}
+
+// Cosa c'e dentro un'era: quante maglie, le squadre piu presenti, i Mondiali di cui ci sono davvero le maglie
+export function eraInfo(items: ArchiveItem[], slug: string) {
+  const inEra = items.filter((it) => eraOf(it.year)?.slug === slug);
+  const m = new Map<string, number>();
+  for (const it of inEra) {
+    if (isNational(it.name)) continue;
+    const t = teamOf(it.name);
+    if (t) m.set(t, (m.get(t) || 0) + 1);
+  }
+  const teams = [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4).map(([t]) => t);
+  const cups = (ERA_THEME[slug]?.cups || [])
+    .map((c) => ({ ...c, count: worldCupItems(items, c.year).length }))
+    .filter((c) => c.count > 0);
+  return { count: inEra.length, teams, cups };
 }

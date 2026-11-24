@@ -111,7 +111,7 @@ export default function QuickAddSheet({ open, onClose, product }: Props) {
           <X className="h-[18px] w-[18px]" />
         </button>
         <div className="flex items-center gap-4 pr-10">
-          <div className="poster h-[92px] w-[74px] shrink-0 overflow-hidden">
+          <div className="pc-stage !aspect-auto h-[92px] w-[74px] shrink-0 overflow-hidden rounded-xl">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={cld(product.image, 160)} alt="" className="h-full w-full object-contain p-1" style={{ mixBlendMode: "multiply" }} />
           </div>

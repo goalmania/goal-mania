@@ -7,7 +7,7 @@ import SerieATeamsClient from "@/app/_components/SerieATeamsClient";
 import PremierLeagueClient from "@/app/_components/PremierLeagueClient";
 import FilterChips from "@/components/shop/FilterChips";
 import ProductRail from "@/components/home/ProductRail";
-import OfferTicket from "@/components/home/OfferTicket";
+import ThreeForTwo from "@/components/home/ThreeForTwo";
 import type { Product } from "@/lib/types/product";
 
 // ─────────────────────────────────────────────────────────────
@@ -158,7 +158,7 @@ export default function ShopClient({
 
       <ProductRail title="Novità 26/27" href="/shop/2026/27" products={rail(products2627)} priorityFirst />
       <ProductRail title="Scelte per te" href="/shop" products={rail(picks)} />
-      <OfferTicket />
+      <ThreeForTwo products={rail(products2627.length >= 3 ? products2627 : picks).slice(0, 3)} />
       <ProductRail title="Maglie retro" href="/shop/retro" products={rail(retroProducts)} />
       <ProductRail title="Ultimi arrivi" href="/shop" products={rail(latestProducts)} />
 

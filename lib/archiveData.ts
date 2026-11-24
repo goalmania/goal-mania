@@ -1,21 +1,32 @@
+import { unstable_cache } from "next/cache";
 import connectDB from "@/lib/db";
 import ProductModel from "@/lib/models/Product";
-import { ERAS, toItem, eraOf, teamOf, isLegend, hasPhoto, type ArchiveItem } from "@/lib/archive";
+import { ERAS, toItem, eraOf, teamOf, isLegend, hasPhoto, worldCupItems, type ArchiveItem } from "@/lib/archive";
+import { WORLD_CUPS } from "@/lib/eraTheme";
 
 export const slugify = (s: string) =>
   s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-// Tutte le maglie retro attive, con i soli campi che servono (una foto a testa)
-export async function getArchiveItems(): Promise<ArchiveItem[]> {
-  try {
+// Una sola lettura dal database ogni 5 minuti, condivisa da tutte le pagine retro: niente attese alla prima visita.
+// Se il database non risponde la funzione lancia, così il vuoto non finisce in cache.
+const readAll = unstable_cache(
+  async (): Promise<ArchiveItem[]> => {
     await connectDB();
     const docs = await ProductModel.find({ category: "Retro", isActive: true })
       .select({ title: 1, slug: 1, basePrice: 1, retroPrice: 1, isRetro: 1, category: 1, feature: 1, images: { $slice: 1 } })
       .sort({ feature: -1, createdAt: -1 })
       .lean();
-    // Con la foto vera prima, i segnaposto in fondo (l'ordine resta quello del catalogo)
     const all: ArchiveItem[] = JSON.parse(JSON.stringify(docs)).map(toItem);
+    // Con la foto vera prima, i segnaposto in fondo (l'ordine resta quello del catalogo)
     return [...all.filter((it) => hasPhoto(it.image)), ...all.filter((it) => !hasPhoto(it.image))];
+  },
+  ["archive-items-v2"],
+  { revalidate: 300, tags: ["archive"] },
+);
+
+export async function getArchiveItems(): Promise<ArchiveItem[]> {
+  try {
+    return await readAll();
   } catch {
     return [];
   }
@@ -30,10 +41,22 @@ export function topTeams(items: ArchiveItem[], n = 30) {
   return [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, n).map(([name, count]) => ({ name, count, slug: `squadra-${slugify(name)}` }));
 }
 
+// Anni di Mondiale per cui in archivio ci sono davvero maglie delle nazionali
+export function worldCupYearsWithJerseys(items: ArchiveItem[]) {
+  return Object.keys(WORLD_CUPS).map(Number).sort((a, b) => a - b).filter((y) => worldCupItems(items, y).length > 0);
+}
+
 export function groupItems(items: ArchiveItem[], slug: string): { title: string; text: string; list: ArchiveItem[] } | null {
   const era = ERAS.find((e) => e.slug === slug);
   if (era) return { title: era.label, text: era.blurb, list: items.filter((it) => eraOf(it.year)?.slug === era.slug) };
   if (slug === "leggende") return { title: "Leggende", text: "Le maglie dei giocatori che hanno fatto la storia: nome in evidenza, stagione giusta.", list: items.filter((it) => isLegend(it.name)) };
+  if (slug.startsWith("mondiale-")) {
+    const year = Number(slug.slice(9));
+    const cup = WORLD_CUPS[year];
+    const list = cup ? worldCupItems(items, year) : [];
+    if (!cup || !list.length) return null;
+    return { title: `Mondiale ${year}`, text: `Le maglie delle nazionali del Mondiale ${year} (${cup.host}). Lo ha vinto: ${cup.winner}.`, list };
+  }
   if (slug.startsWith("squadra-")) {
     const list = items.filter((it) => `squadra-${slugify(teamOf(it.name))}` === slug);
     if (!list.length) return null;

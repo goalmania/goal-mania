@@ -2,18 +2,19 @@ import { Metadata } from "next";
 import connectDB from "@/lib/db";
 import Article from "@/lib/models/Article";
 import HomeHero from "@/components/home/HomeHero";
-import TapeMarquee from "@/components/home/TapeMarquee";
-import EditorMosaic from "@/components/home/EditorMosaic";
+import TrustBar from "@/components/home/TrustBar";
+import CategoryTiles, { type Tile } from "@/components/home/CategoryTiles";
 import EraPanels, { type EraPanelData } from "@/components/era/EraPanels";
-import { pickForEra } from "@/lib/eraPick";
-import { ERA_ORDER } from "@/lib/eraTheme";
-import { eraOf } from "@/lib/archive";
+import { eraInfo, pickForEra } from "@/lib/eraPick";
+import { ERA_ORDER, WORLD_CUPS } from "@/lib/eraTheme";
+import { worldCupItems, hasPhoto } from "@/lib/archive";
 import ProductRail from "@/components/home/ProductRail";
-import OfferTicket from "@/components/home/OfferTicket";
-import Manifesto from "@/components/home/Manifesto";
+import ThreeForTwo from "@/components/home/ThreeForTwo";
+import BrandBand from "@/components/home/BrandBand";
+import WorldCupBand, { type CupCard } from "@/components/home/WorldCupBand";
 import HomeNewsStrip from "@/components/home/HomeNewsStrip";
 import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
-import { getArchiveItems } from "@/lib/archiveData";
+import { getArchiveItems, worldCupYearsWithJerseys } from "@/lib/archiveData";
 import ProductModel from "@/lib/models/Product";
 
 export const revalidate = 300;
@@ -131,22 +132,38 @@ async function getFeatured() {
   }
 }
 
-async function getArchiveEras(): Promise<{ eras: EraPanelData[]; total: number }> {
+async function getArchiveEras(): Promise<{ eras: EraPanelData[]; total: number; cups: CupCard[] }> {
   const items = await getArchiveItems();
   const eras = ERA_ORDER.map((slug) => {
-    const count = items.filter((it) => eraOf(it.year)?.slug === slug).length;
+    const info = eraInfo(items, slug);
     const pick = pickForEra(items, slug, 1)[0];
-    return { slug, count, image: pick?.image || "", alt: pick?.name || slug };
+    return { slug, count: info.count, image: pick?.image || "", alt: pick?.name || slug, teams: info.teams, cupYears: info.cups.map((c) => c.year) };
   }).filter((e) => e.count > 0);
-  return { eras, total: items.length || 730 };
+  const cups: CupCard[] = worldCupYearsWithJerseys(items).map((y) => {
+    const list = worldCupItems(items, y).filter((j) => hasPhoto(j.image));
+    return { year: y, host: WORLD_CUPS[y].host, winner: WORLD_CUPS[y].winner, count: worldCupItems(items, y).length, jerseys: list.slice(0, 3).map((j) => ({ id: j.id, image: j.image, name: j.name })) };
+  }).filter((c) => c.jerseys.length > 0);
+  return { eras, total: items.length || 730, cups };
+}
+
+// Quante maglie attive ci sono per categoria, in una sola lettura
+async function getCounts(): Promise<Record<string, number>> {
+  try {
+    await connectDB();
+    const rows = await ProductModel.aggregate([{ $match: { isActive: true } }, { $group: { _id: "$category", n: { $sum: 1 } } }]);
+    return Object.fromEntries(rows.map((r: { _id: string; n: number }) => [r._id, r.n]));
+  } catch {
+    return {};
+  }
 }
 
 export default async function Home() {
-  const [featured, season, worldcup, archive, latestArticles] = await Promise.all([
+  const [featured, season, worldcup, archive, counts, latestArticles] = await Promise.all([
     getFeatured(),
     getByCategory("2026/27"),
     getByCategory("World Cup 2026"),
     getArchiveEras(),
+    getCounts(),
     (async () => {
       try {
         await connectDB();
@@ -161,28 +178,39 @@ export default async function Home() {
       }
     })(),
   ]);
-  const hero = featured.length >= 5 ? featured : season;
-  const mosaic = (featured.length >= 5 ? featured.slice(0, 5) : season.slice(0, 5));
+  const hero = featured.length >= 9 ? featured : [...featured, ...season].slice(0, 12);
+  const retroPick = archive.eras.find((e) => e.slug === "anni-90")?.image || archive.eras[0]?.image || "";
+  const tiles: Tile[] = ([
+    { title: "Nuova stagione 26/27", sub: "Le divise di quest'anno, tutte a 35€.", href: "/shop/2026/27", image: season[0]?.image || "", count: counts["2026/27"] || season.length, from: 35, tone: "lime", big: true },
+    { title: "Mondiali 2026", sub: "Le nazionali che vedrai in campo.", href: "/shop/worldcup", image: worldcup[0]?.image || "", count: counts["World Cup 2026"] || worldcup.length, from: 35, tone: "wall" },
+    { title: "Maglie retro", sub: "Dal 1970 a oggi, scegli il decennio.", href: "/archivio", image: retroPick, count: counts["Retro"] || archive.total, from: 40, tone: "paper" },
+    { title: "Stagione 25/26", sub: "Quelle appena finite, ancora a 35€.", href: "/shop/2025/26", image: season[3]?.image || "", count: counts["2025/26"] || 0, from: 35, tone: "wall2" },
+  ] as Tile[]).filter((t) => t.count > 0 && t.image);
+  const trio = [season[0], season[1], season[2]].filter(Boolean);
 
   return (
     <div className="min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <HomeHero products={hero} />
-      <TapeMarquee />
-      <EditorMosaic products={mosaic} />
-      <section aria-labelledby="eras-h" className="pt-8 md:pt-14">
+      <TrustBar />
+      <CategoryTiles tiles={tiles} />
+      <section id="retro" aria-labelledby="eras-h" className="pt-6 md:pt-10">
         <div className="mx-auto mb-6 flex w-full max-w-[1760px] flex-wrap items-end justify-between gap-4 px-5 md:px-10 lg:px-16">
-          <h2 id="eras-h" className="disp text-[clamp(3rem,10vw,9rem)] leading-[0.85] text-white">
-            In che anni <span className="mark"><span>sei cresciuto?</span></span>
-          </h2>
-          <p className="max-w-[34ch] text-[18px] leading-snug text-[var(--text-2)]">Sei decenni di maglie retro, ognuno con il suo mondo. A 40€, spedizione gratuita.</p>
+          <div>
+            <p className="text-[14px] font-bold text-[var(--lime)]">Maglie retro · 40€ l&apos;una</p>
+            <h2 id="eras-h" className="disp mt-1 text-[clamp(2.8rem,8vw,7.4rem)] leading-[0.86] text-white">
+              In che anni <span className="mark"><span>sei cresciuto?</span></span>
+            </h2>
+          </div>
+          <p className="max-w-[36ch] text-[18px] italic leading-snug text-[var(--text-2)]">Scegli il decennio e trovi le maglie di quegli anni: squadre, nazionali e Mondiali.</p>
         </div>
         <EraPanels panels={archive.eras} />
       </section>
-      <OfferTicket />
-      <ProductRail title="Novità 26/27" href="/shop/2026/27" lead="La nuova stagione, tutta a 35€." products={season} priorityFirst />
-      <Manifesto retroCount={Math.floor(archive.total / 10) * 10} />
-      <ProductRail title="Mondiali 2026" href="/shop/worldcup" products={worldcup} />
+      <ThreeForTwo products={trio} />
+      <ProductRail eyebrow="Appena arrivate" title="Novità 26/27" href="/shop/2026/27" lead="La nuova stagione, tutta a 35€." products={season} priorityFirst />
+      <BrandBand retroCount={Math.floor(archive.total / 10) * 10} />
+      <WorldCupBand cups={archive.cups} />
+      <ProductRail eyebrow="Si gioca quest'estate" title="Mondiali 2026" href="/shop/worldcup" products={worldcup} />
       <RealOrdersGallery />
       <HomeNewsStrip articles={latestArticles} />
     </div>

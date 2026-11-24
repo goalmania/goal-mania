@@ -4,16 +4,23 @@ import Link from "next/link";
 import ArchiveGrid from "@/components/shop/ArchiveGrid";
 import EraHeader from "@/components/era/EraHeader";
 import EraNumeral from "@/components/era/EraNumeral";
-import { getArchiveItems, groupItems } from "@/lib/archiveData";
+import { getArchiveItems, groupItems, topTeams, worldCupYearsWithJerseys } from "@/lib/archiveData";
+import { eraInfo } from "@/lib/eraPick";
 import { ERAS, eraOf } from "@/lib/archive";
 import { ERA_ORDER, ERA_THEME } from "@/lib/eraTheme";
 import { eraFontClasses } from "@/lib/eraFonts";
 
 export const revalidate = 300;
 
-// Epoche e leggende note in anticipo; le squadre si generano alla prima visita e restano in cache
+// Tutto si genera al build: ere, Mondiali, leggende e ogni squadra. Nessuna pagina aspetta il database alla prima visita.
 export async function generateStaticParams() {
-  return [...ERAS.map((e) => ({ slug: e.slug })), { slug: "leggende" }];
+  const items = await getArchiveItems();
+  return [
+    ...ERAS.map((e) => ({ slug: e.slug })),
+    { slug: "leggende" },
+    ...worldCupYearsWithJerseys(items).map((y) => ({ slug: `mondiale-${y}` })),
+    ...topTeams(items, 400).map((t) => ({ slug: t.slug })),
+  ];
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -39,7 +46,7 @@ export default async function ArchiveGroupPage({ params }: { params: Promise<{ s
     return (
       <div>
         <header className="mx-auto w-full max-w-[1760px] px-5 pb-4 pt-8 md:px-10 md:pt-14 lg:px-16">
-          <Link href="/archivio" className="text-[15px] font-semibold text-[var(--lime)]">← Archivio retro</Link>
+          <Link href="/archivio" className="text-[15px] font-semibold text-[var(--lime)]">← Maglie retro</Link>
           <h1 className="disp mt-3 text-[clamp(3.4rem,11vw,9rem)] text-white">{g.title}</h1>
           <p className="mt-3 max-w-[48ch] text-[19px] leading-snug text-[var(--text-2)]">
             {g.text} <b className="text-white">{g.list.length} maglie a 40€.</b>
@@ -55,7 +62,7 @@ export default async function ArchiveGroupPage({ params }: { params: Promise<{ s
   const counts = Object.fromEntries(ERA_ORDER.map((s) => [s, all.filter((it) => eraOf(it.year)?.slug === s).length]));
   return (
     <div className={`era ${th.cls} ${eraFontClasses}`} style={{ background: "var(--e-bg)", color: "var(--e-fg)" }}>
-      <EraHeader slug={slug} count={g.list.length} />
+      <EraHeader slug={slug} count={g.list.length} cups={eraInfo(all, slug).cups} />
       <ArchiveGrid items={g.list} filterTeams themed />
       <nav aria-label="Altre ere" className="border-t-2 px-5 py-10 md:px-10 lg:px-16" style={{ borderColor: "var(--e-line)" }}>
         <p className="era-title mb-5 text-[clamp(1.6rem,3vw,2.4rem)]">Cambia decennio</p>

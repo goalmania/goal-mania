@@ -1,6 +1,10 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import ProductCard from "./ProductCard";
+
+// Le prime 36 maglie sono nella pagina; le altre arrivano mentre scorri (o col pulsante). Pagina leggera anche con 200 maglie.
+const STEP = 36;
 
 interface Product {
   id: string;
@@ -57,9 +61,21 @@ export default function ProductGrid({
     6: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6",
   };
 
+  const [n, setN] = useState(STEP);
+  const more = useRef<HTMLDivElement>(null);
+  const hasMore = n < products.length;
+  useEffect(() => {
+    const el = more.current;
+    if (!el || !hasMore) return;
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && setN((v) => v + STEP), { rootMargin: "900px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [hasMore, n]);
+
   return (
+    <>
     <div className={`grid ${gridColClasses[gridCols]} ${gapClasses[gap]} ${className}`}>
-      {products.map((product) => (
+      {products.slice(0, n).map((product) => (
         <ProductCard
           key={product.id}
           id={product.id}
@@ -84,5 +100,13 @@ export default function ProductGrid({
         />
       ))}
     </div>
+    {hasMore && (
+      <div ref={more} className="mt-10 flex justify-center">
+        <button type="button" onClick={() => setN((v) => v + STEP)} className="btn btn-glass">
+          Mostra altre {Math.min(STEP, products.length - n)} maglie
+        </button>
+      </div>
+    )}
+    </>
   );
 }

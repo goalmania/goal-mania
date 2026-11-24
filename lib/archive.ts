@@ -60,3 +60,19 @@ export function toItem(p: any): ArchiveItem {
     year: yearOf(p.title || ""),
   };
 }
+
+// Nazionali: servono per riconoscere le maglie di un Mondiale (anno + squadra nazionale nel titolo)
+export const NATIONS = [
+  "Italia", "Brasile", "Germania", "Argentina", "Francia", "Spagna", "Olanda", "Inghilterra", "Portogallo", "Giappone", "Messico", "USA",
+  "Stati Uniti", "Belgio", "Croazia", "Uruguay", "Nigeria", "Camerun", "Cile", "Colombia", "Danimarca", "Svezia", "Romania", "Bulgaria",
+  "Russia", "Corea", "Turchia", "Svizzera", "Polonia", "Scozia", "Irlanda", "Ghana", "Marocco", "Senegal", "Costa d'Avorio", "Galles",
+  "Ungheria", "Jugoslavia", "Norvegia", "Grecia", "Australia", "Sudafrica", "Paraguay", "Ecuador", "Egitto", "Algeria", "Tunisia",
+];
+const NATION_RE = new RegExp(`\\b(${NATIONS.join("|")})\\b`, "i");
+
+export const isNational = (title: string) => NATION_RE.test(title);
+
+// Le maglie delle nazionali dell'anno di un Mondiale
+export function worldCupItems(items: ArchiveItem[], year: number) {
+  return items.filter((it) => it.year === year && isNational(it.name));
+}
