@@ -12,17 +12,18 @@ export const metadata: Metadata = {
 };
 
 const POINTS = [
-  { t: "Prezzi chiari", d: "Le maglie della stagione costano 35€, le retro 40€. Il prezzo che vedi è quello che paghi, con la spedizione compresa." },
-  { t: "Tre maglie, ne paghi due", d: "Se metti tre maglie nello stesso ordine, la meno cara è in regalo. Lo vedi nel carrello prima di pagare." },
-  { t: "Un archivio vero", d: "Dalle stagioni di adesso fino agli anni 70: maglie di club e nazionali, ordinate per decennio, Mondiale, squadra e leggenda." },
-  { t: "Versione tifoso", d: "Sono maglie versione tifoso, non quelle ufficiali dei club: Goal Mania non è affiliata ad alcun club o federazione." },
-  { t: "Pacchi che puoi vedere", d: "Preparati e spediti da noi. Sul sito trovi le foto e i video dei pacchi veri che escono ogni giorno." },
+  { t: "Prezzi chiari", d: "Le maglie della stagione costano 35€, le retro 40€. La spedizione in Italia è gratuita su ogni ordine e gli extra facoltativi hanno il prezzo scritto sulla scheda." },
+  { t: "Tre maglie, ne paghi due", d: "Ogni tre maglie nello stesso ordine, la meno cara è in regalo, attuali e retro. Nel carrello vedi subito quanto risparmi." },
+  { t: "Maglie retro", d: "Oltre 700 maglie dal 1970 a oggi, di club e nazionali. Le trovi per decennio, per Mondiale, per squadra e per leggenda." },
+  { t: "Versione tifoso", d: "Non sono le maglie ufficiali dei club. Goal Mania non è affiliata ad alcun club o federazione, e i nomi delle squadre servono solo a dirti quale maglia stai guardando." },
+  { t: "Pacchi che puoi vedere", d: "Sul sito trovi foto e video degli ordini che prepariamo e spediamo. Quando il pacco parte ricevi un'email con il codice per seguirlo, e la consegna richiede 7-10 giorni lavorativi." },
+  { t: "Recensioni da Vinted", d: "Prima di aprire il sito vendevamo su Vinted, dove abbiamo ricevuto 72 recensioni con una media di 4,6. Le trovi in home, con la fonte indicata." },
 ];
 
 export default function AboutPage() {
   return (
     <div>
-      <PageHeader eyebrow="Chi siamo" title={<>Maglie da calcio, <span className="mark"><span>senza giri.</span></span></>} lead="Goal Mania è un negozio online di maglie da calcio. Qui sotto trovi come lavoriamo e a cosa puoi contare." />
+      <PageHeader eyebrow="Chi siamo" title={<>Maglie da calcio, <span className="mark"><span>senza giri.</span></span></>} lead="Goal Mania è un negozio online di maglie da calcio versione tifoso. Qui sotto trovi come lavoriamo e quali regole valgono per chi ordina." />
       <section className="mx-auto grid w-full max-w-[1760px] gap-5 px-5 pb-14 md:grid-cols-2 md:px-10 lg:px-16">
         {POINTS.map((p, i) => (
           <article key={p.t} className="rounded-3xl bg-[var(--wall)] p-6 shadow-[inset_0_0_0_1px_var(--line)] md:p-8">

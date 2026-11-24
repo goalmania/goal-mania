@@ -72,7 +72,7 @@ export default function MysteryWheel({ onExclude, excluded }: { onExclude: (team
             </div>
           </>
         ) : (
-          <p className="mx-auto max-w-[34ch] text-[15px] italic text-[var(--text-3)]">È solo un gioco: la maglia vera la scegliamo noi. Ma se esce una squadra che non vuoi, la escludi con un tocco.</p>
+          <p className="mx-auto max-w-[34ch] text-[15px] italic text-[var(--text-3)]">È solo un gioco: la maglia viene scelta a caso dal catalogo. Se esce una squadra che non vuoi, la escludi con un tocco.</p>
         )}
       </div>
     </div>

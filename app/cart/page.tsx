@@ -82,7 +82,7 @@ export default function CartPage() {
       router.push("/checkout");
     } catch (error) {
       console.error("Checkout failed:", error);
-      toast.error("Failed to proceed to checkout");
+      toast.error("Non riusciamo ad aprire il pagamento. Riprova tra un attimo.");
     } finally {
       setIsCheckingOut(false);
     }
@@ -185,7 +185,7 @@ export default function CartPage() {
               {isCheckingOut ? "Un attimo…" : <>Vai al pagamento <ArrowRight className="h-5 w-5" strokeWidth={3} /></>}
             </button>
             <ul className="mt-5 grid grid-cols-2 gap-2">
-              {[[ShieldCheck, "Pagamento protetto"], [Truck, "Spedizione gratuita"], [RotateCcw, "Reso entro 14 giorni"], [Clock, "Consegna 7-10 giorni"]].map(([Icon, l]) => {
+              {[[ShieldCheck, "Carta, PayPal, Klarna"], [Truck, "Spedizione gratuita"], [RotateCcw, "Reso entro 14 giorni"], [Clock, "Consegna 7-10 giorni"]].map(([Icon, l]) => {
                 const I = Icon as typeof ShieldCheck;
                 return <li key={String(l)} className="flex items-center gap-2 rounded-2xl bg-[var(--wall-2)] px-3 py-2.5 text-[14px] font-semibold text-[var(--text-2)]"><I className="h-4 w-4 shrink-0 text-[var(--lime)]" />{String(l)}</li>;
               })}

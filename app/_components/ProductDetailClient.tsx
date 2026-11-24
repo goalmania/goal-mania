@@ -975,9 +975,9 @@ export default function ProductDetailClient({
               {product.description && <p className="whitespace-pre-line">{product.description}</p>}
               <ul className="grid gap-3 sm:grid-cols-2">
                 {[
-                  ["Versione tifoso", "Non è la maglia ufficiale del club: Goal Mania non è affiliata a club o federazioni."],
+                  ["Versione tifoso", "Non è la maglia ufficiale del club: Goal Mania non è affiliata ad alcun club o federazione."],
                   ["Spedizione gratuita", "In Italia, su ogni ordine. Consegna in 7-10 giorni lavorativi, con codice per seguire il pacco."],
-                  ["Reso entro 14 giorni", "Maglia non indossata, nella confezione. La spedizione del reso è a tuo carico. Le maglie con nome e numero non si restituiscono."],
+                  ["Reso entro 14 giorni", "Maglia non indossata, nella confezione. La spedizione del reso è a tuo carico, salvo maglia difettosa o sbagliata. Le maglie con nome e numero non si possono restituire."],
                   ["Taglie", "Usa la guida taglie con le misure in centimetri. Se sei tra due taglie, prendi la più grande."],
                 ].map(([t, d]) => (
                   <li key={t} className="rounded-2xl bg-[var(--wall)] p-4 shadow-[inset_0_0_0_1px_var(--line)]">

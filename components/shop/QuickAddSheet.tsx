@@ -141,7 +141,7 @@ export default function QuickAddSheet({ open, onClose, product }: Props) {
         </div>
         {error && <p className="mt-2 text-[16px] font-semibold text-[var(--red)]" role="alert">{error}</p>}
 
-        <p className={`mt-4 rounded-2xl px-4 py-2.5 text-[15px] font-semibold ${next.active ? "bg-[var(--lime)] text-[#0a0a0a]" : "bg-[var(--wall-2)] text-[var(--text-2)]"}`}>{next.active ? "Con questa hai il 3x2: la meno cara è gratis" : next.text}</p>
+        <p className={`mt-4 rounded-2xl px-4 py-2.5 text-[15px] font-semibold ${next.active ? "bg-[var(--lime)] text-[#0a0a0a]" : "bg-[var(--wall-2)] text-[var(--text-2)]"}`}>{next.active ? "Con questa scatta il 3x2: la meno cara è in regalo" : next.text}</p>
 
         <button onClick={confirm} className="btn btn-lime mt-4 w-full">Aggiungi al carrello</button>
         <Link href={`/products/${product.slug || product.id}`} className="mt-1 flex min-h-[48px] items-center justify-center text-[16px] font-semibold text-[var(--text-2)] underline decoration-white/30 underline-offset-4 hover:text-white">

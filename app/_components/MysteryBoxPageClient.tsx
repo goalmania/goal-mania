@@ -27,16 +27,16 @@ const MAX_JERSEYS = 12;
 const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(2).replace(".", ","));
 
 const STEPS = [
-  { t: "Scegli la box", d: "Retro oppure attuali. Decidi tu se vuoi un tuffo nel passato o la stagione di adesso." },
-  { t: "Quante maglie dentro", d: "Da 1 a 12. Ogni maglia costa come in negozio e, ogni 3, una è in regalo." },
-  { t: "Escludi le squadre", d: "Indica fino a 5 squadre che non vuoi: quelle non te le mettiamo." },
-  { t: "Apri il pacco", d: "Spedizione gratuita, consegna in 7-10 giorni lavorativi." },
+  { t: "Scegli la box", d: "Retro a 40€ a maglia, oppure attuali a 35€." },
+  { t: "Quante maglie dentro", d: "Da 1 a 12 maglie. Ogni 3, una è in regalo: la meno cara." },
+  { t: "Escludi le squadre", d: "Segna fino a 5 squadre che non vuoi e non te le mettiamo." },
+  { t: "Apri il pacco", d: "Spedizione gratuita in Italia, consegna in 7-10 giorni lavorativi." },
 ];
 
 const FIND = [
-  { t: "Un modello esclusivo", d: "Può uscire un pezzo che non trovi facilmente nel catalogo." },
-  { t: "Una limited edition", d: "Capita anche un'edizione speciale, di quelle che si cercano." },
-  { t: "Un grande classico", d: "Oppure la maglia che tutti riconoscono al primo sguardo." },
+  { t: "Retro o attuali", d: "La box retro pesca dalle maglie dal 1970 a oggi, quella attuale da quelle della stagione." },
+  { t: "Niente squadre che non vuoi", d: "Le squadre che escludi restano fuori dal pacco, fino a 5." },
+  { t: "La taglia giusta", d: "Scegli la taglia di ogni maglia, per adulto o per bambino." },
 ];
 
 // Mystery box: scegli la box, quante maglie, la taglia di ognuna e le squadre che non vuoi.
@@ -63,7 +63,7 @@ export default function MysteryBoxPageClient({ boxes }: { boxes: MysteryBox[] })
   if (!box) {
     return (
       <div>
-        <PageHeader eyebrow="Maglia a sorpresa" title="Mystery box" lead="Al momento le box non sono disponibili. Torna a trovarci tra poco." />
+        <PageHeader eyebrow="Maglia a sorpresa" title="Mystery box" lead="Le box non sono disponibili in questo momento. Le maglie del negozio si possono ordinare come sempre." />
         <TrustBar />
       </div>
     );
@@ -234,13 +234,13 @@ export default function MysteryBoxPageClient({ boxes }: { boxes: MysteryBox[] })
               <button type="button" onClick={() => addToCart()} className="btn btn-glass flex-1"><ShoppingBag className="h-5 w-5" /> Aggiungi al carrello</button>
               <button type="button" onClick={() => addToCart() && router.push("/checkout")} className="btn btn-lime flex-1">Compra subito</button>
             </div>
-            <p className="mt-3 text-[14px] italic text-[var(--text-3)]">Il totale definitivo lo calcola il sistema al pagamento, con le stesse regole del resto del negozio.</p>
+            <p className="mt-3 text-[14px] italic text-[var(--text-3)]">Il totale definitivo si calcola al pagamento, con le stesse regole del resto del negozio.</p>
           </div>
         </div>
       </section>
 
       <section aria-label="Cosa puoi trovare" className="mx-auto w-full max-w-[1760px] px-5 pb-14 md:px-10 lg:px-16">
-        <h2 className="disp text-[clamp(2.2rem,5vw,4rem)] text-white">Cosa puoi trovare</h2>
+        <h2 className="disp text-[clamp(2.2rem,5vw,4rem)] text-white">Cosa trovi nel pacco</h2>
         <div className="mt-5 grid gap-4 md:grid-cols-3">
           {FIND.map((f) => (
             <div key={f.t} className="rounded-3xl bg-[var(--wall)] p-6 shadow-[inset_0_0_0_1px_var(--line)]">
@@ -249,7 +249,7 @@ export default function MysteryBoxPageClient({ boxes }: { boxes: MysteryBox[] })
             </div>
           ))}
         </div>
-        <p className="mt-6 max-w-[60ch] text-[17px] leading-relaxed text-[var(--text-2)]">È una bella idea anche come regalo. La maglia viene scelta a caso dal nostro catalogo, nella categoria che hai scelto, tenendo conto delle squadre che hai escluso.</p>
+        <p className="mt-6 max-w-[60ch] text-[17px] leading-relaxed text-[var(--text-2)]">Ogni maglia viene scelta a caso dal catalogo, nella categoria che hai scelto e senza le squadre che hai escluso.</p>
       </section>
       <TrustBar />
     </div>

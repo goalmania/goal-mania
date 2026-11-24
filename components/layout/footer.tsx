@@ -50,7 +50,7 @@ export function Footer() {
         <div>
           <Image src="/images/recentUpdate/goalmania-wordmark.png" alt="Goal Mania" width={392} height={201} className="h-24 w-auto object-contain" />
           <p className="mt-3 max-w-[28ch] text-[16px] leading-snug text-[var(--text-2)]">
-            Maglie da calcio da tifoso. 35€ le attuali, 40€ le retro, spedizione gratuita in Italia.
+            Maglie da calcio versione tifoso: 35€ quelle della stagione, 40€ le retro. Spedizione gratuita in Italia.
           </p>
           <div className="mt-5 flex gap-2">
             <a href="https://www.instagram.com/goalmania.it/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-[var(--lime)] hover:text-[#0a0a0a]">

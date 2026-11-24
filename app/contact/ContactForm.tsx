@@ -23,7 +23,7 @@ export default function ContactForm() {
       language: "it",
     };
     if (data.firstName.length < 2 || data.lastName.length < 2) return setErr("Scrivi nome e cognome (almeno 2 lettere).");
-    if (!/^\S+@\S+\.\S+$/.test(data.email)) return setErr("L'email non sembra giusta.");
+    if (!/^\S+@\S+\.\S+$/.test(data.email)) return setErr("Controlla l'email: sembra incompleta.");
     if (!data.subject) return setErr("Scegli di cosa vuoi parlare.");
     if (data.message.length < 10) return setErr("Il messaggio è troppo corto: scrivi almeno 10 caratteri.");
     setErr("");
@@ -58,7 +58,7 @@ export default function ContactForm() {
         {SUBJECTS.map((s) => <option key={s} value={s}>{s}</option>)}
       </select>
       <textarea name="message" rows={6} placeholder="Scrivi qui. Se è per un ordine, aggiungi il numero." aria-label="Messaggio" className={`${field} h-auto py-4`} />
-      {(err || state === "error") && <p role="alert" className="text-[16px] font-semibold text-[var(--red)]">{err || "Non siamo riusciti a inviare il messaggio. Riprova, oppure scrivi direttamente alla nostra email."}</p>}
+      {(err || state === "error") && <p role="alert" className="text-[16px] font-semibold text-[var(--red)]">{err || "Il messaggio non è partito. Riprova, oppure scrivi a goalmaniaofficial@gmail.com."}</p>}
       <button type="submit" disabled={state === "sending"} className="btn btn-lime w-full sm:w-auto disabled:opacity-60">
         {state === "sending" ? "Invio…" : <>Invia il messaggio <Send className="h-5 w-5" strokeWidth={2.6} /></>}
       </button>
