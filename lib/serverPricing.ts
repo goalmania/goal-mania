@@ -8,7 +8,7 @@ import Patch from "@/lib/models/Patch";
 import Coupon from "@/lib/models/Coupon";
 import DiscountRule from "@/lib/models/DiscountRule";
 import { calculateRuleDiscount } from "@/lib/discountRules";
-import { EXTRAS, DEFAULT_PATCH_PRICE, round2, patchCategories, unitPriceFor, baseProductId, type Customization } from "@/lib/serverPricing.pure";
+import { EXTRAS, DEFAULT_PATCH_PRICE, round2, patchCategories, unitPriceFor, baseProductId, mysteryUnitPrice, type Customization } from "@/lib/serverPricing.pure";
 
 export { EXTRAS, DEFAULT_PATCH_PRICE, unitPriceFor, baseProductId };
 
@@ -41,7 +41,7 @@ export async function priceOrder<T extends { id: string; name?: string; quantity
   const ids = Array.from(new Set(items.map((i) => baseProductId(i.id))));
   if (ids.some((id) => !mongoose.Types.ObjectId.isValid(id))) throw new PricingError("Articolo non valido");
 
-  const products = await Product.find({ _id: { $in: ids } }).select("title basePrice retroPrice isRetro isActive").lean<any[]>();
+  const products = await Product.find({ _id: { $in: ids } }).select("title basePrice retroPrice isRetro isActive isMysteryBox").lean<any[]>();
   const byId = new Map(products.map((p) => [String(p._id), p]));
 
   const cats = Array.from(new Set(items.flatMap((i) => patchCategories(i.customization))));
@@ -56,7 +56,7 @@ export async function priceOrder<T extends { id: string; name?: string; quantity
     if (!Number.isInteger(qty) || qty < 1 || qty > 20) throw new PricingError("Quantità non valida");
     const p = byId.get(baseProductId(item.id));
     if (!p || p.isActive === false) throw new PricingError(`Articolo non più disponibile: ${item.name || item.id}`);
-    const base = Number(p.isRetro ? p.retroPrice : p.basePrice);
+    const base = p.isMysteryBox ? mysteryUnitPrice(p.title) : Number(p.isRetro ? p.retroPrice : p.basePrice);
     if (!(base > 0)) throw new PricingError(`Prezzo non disponibile: ${item.name || item.id}`);
     return { ...item, quantity: qty, price: unitPriceFor(base, item.customization, patchPrices) };
   });

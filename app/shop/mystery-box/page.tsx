@@ -1,13 +1,14 @@
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { IProduct } from "@/lib/types/product";
+import { isRetroBox, mysteryUnitPrice } from "@/lib/serverPricing.pure";
 import MysteryBoxPageClient from "@/app/_components/MysteryBoxPageClient";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Mystery Box Maglie da Calcio — Sorpresa a Partire da 30€",
+  title: "Mystery Box maglie da calcio: scegli quante, a partire da 35€ a maglia",
   description:
-    "Scopri le Mystery Box Goal Mania: maglie da calcio a sorpresa a partire da 30€, squadre di Serie A, Premier League e nazionali. Spedizione gratuita in Italia.",
+    "La Mystery Box di Goal Mania: scegli retro o attuali, quante maglie vuoi (35€ le attuali, 40€ le retro, ogni 3 una è in regalo) e le squadre da escludere. Spedizione gratuita in Italia.",
   alternates: { canonical: "https://goal-mania.it/shop/mystery-box" },
 };
 
@@ -44,22 +45,16 @@ export default async function MysteryBoxPage() {
     (product: IProduct) => product._id && product.title
   );
 
-  // Map server products to client format
-  const products = validProducts.map((product: IProduct) => ({
-    id: product._id || "",
-    slug: (product as any).slug || "",
-    name: product.title || "Scatola Misteriosa",
-    price: product.basePrice || 0,
-    image: product.images?.[0] || "/images/image.png",
-    category: product.category || "Mystery Box",
-    team: "Mystery Box",
-    isMysteryBox: product.isMysteryBox || false,
-    videos: product.videos || [], // Include videos for showcase
+  const boxes = validProducts.map((p: any) => ({
+    id: String(p._id),
+    slug: p.slug || "",
+    name: p.title || "Mystery box",
+    image: p.images?.[0] || "/images/image.png",
+    kind: (isRetroBox(p.title) ? "retro" : "current") as "retro" | "current",
+    unit: mysteryUnitPrice(p.title),
+    adultSizes: p.adultSizes || [],
+    kidsSizes: p.kidsSizes || [],
   }));
 
-  return (
-    <div className="">
-      <MysteryBoxPageClient products={products} />
-    </div>
-  );
-} 
+  return <MysteryBoxPageClient boxes={boxes} />;
+}

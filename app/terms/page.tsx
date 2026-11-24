@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import PageHeader from "@/components/shared/PageHeader";
 
 export const metadata: Metadata = {
   title: "GoalMania Terms of Service",
@@ -7,36 +8,26 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="bg-[#070707] min-h-screen">
-      <div className="container mx-auto px-6 sm:px-10 lg:px-20 pt-12 pb-12">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex justify-center mb-6">
-            <img src="/favicon-192x192.png" alt="GoalMania" className="w-16 h-16 rounded-xl" />
-          </div>
-          <h1 className="text-5xl font-serif font-bold mb-6 text-white">GoalMania Terms of Service</h1>
-          <p className="text-xl text-white/60 max-w-3xl mx-auto">
-            Please read these terms carefully before using GoalMania website or making a purchase.
-          </p>
-        </div>
-
-        <div className="max-w-4xl mx-auto bg-[#111111] border border-white/10 rounded-2xl shadow-xl p-8">
+    <div>
+      <PageHeader eyebrow="Informazioni legali" title="Termini di servizio" lead="Le condizioni d'uso del sito e degli acquisti su Goal Mania." />
+      <div className="mx-auto w-full max-w-[1760px] px-5 pb-16 md:px-10 lg:px-16">
+        <div className="mx-auto w-full max-w-[920px] rounded-3xl bg-[var(--wall)] p-6 shadow-[inset_0_0_0_1px_var(--line)] md:p-10">
           <div className="prose prose-lg max-w-none">
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">1. Acceptance of Terms</h2>
-              <p className="text-white/70 mb-4">
+              <h2 className="text-[26px] font-bold text-white mb-3">1. Acceptance of Terms</h2>
+              <p className="text-[var(--text-2)] mb-4">
                 By accessing and using Goal Mania's website, you accept and agree to be bound by the terms and provision of this agreement. 
                 If you do not agree to abide by the above, please do not use this service.
               </p>
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">2. Use License</h2>
-              <p className="text-white/70 mb-4">
+              <h2 className="text-[26px] font-bold text-white mb-3">2. Use License</h2>
+              <p className="text-[var(--text-2)] mb-4">
                 Permission is granted to temporarily download one copy of the materials (information or software) on Goal Mania's website for personal, 
                 non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
               </p>
-              <ul className="list-disc pl-6 text-white/70 mb-4">
+              <ul className="list-disc pl-6 text-[var(--text-2)] mb-4">
                 <li>Modify or copy the materials</li>
                 <li>Use the materials for any commercial purpose or for any public display</li>
                 <li>Attempt to reverse engineer any software contained on Goal Mania's website</li>
@@ -45,78 +36,78 @@ export default function TermsPage() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">3. Product Information</h2>
-              <p className="text-white/70 mb-4">
+              <h2 className="text-[26px] font-bold text-white mb-3">3. Product Information</h2>
+              <p className="text-[var(--text-2)] mb-4">
                 We strive to display our products as accurately as possible. However, we do not warrant that product descriptions, colors, 
                 information, or other content available on the site is accurate, complete, reliable, current, or error-free.
               </p>
-              <p className="text-white/70 mb-4">
+              <p className="text-[var(--text-2)] mb-4">
                 All football jerseys are official licensed products unless otherwise stated. Product images are for illustrative purposes only.
               </p>
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">4. Pricing and Payment</h2>
-              <p className="text-white/70 mb-4">
+              <h2 className="text-[26px] font-bold text-white mb-3">4. Pricing and Payment</h2>
+              <p className="text-[var(--text-2)] mb-4">
                 All prices are shown in Euros (€) and include VAT where applicable. We reserve the right to modify prices at any time.
                 Payment must be made in full at the time of ordering.
               </p>
-              <p className="text-white/70 mb-4">
+              <p className="text-[var(--text-2)] mb-4">
                 We accept major credit cards and other payment methods as displayed during checkout.
                 All transactions are secure and encrypted.
               </p>
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">5. Order and Delivery</h2>
-              <p className="text-white/70 mb-4">
+              <h2 className="text-[26px] font-bold text-white mb-3">5. Order and Delivery</h2>
+              <p className="text-[var(--text-2)] mb-4">
                 We offer free delivery on all orders within Italy. For international orders, delivery costs will be calculated at checkout.
                 Delivery times are estimates and may vary based on location and availability.
               </p>
-              <p className="text-white/70 mb-4">
+              <p className="text-[var(--text-2)] mb-4">
                 Risk of loss and title for items purchased pass to you upon delivery of the items to the carrier.
               </p>
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">6. Returns and Refunds</h2>
-              <p className="text-white/70 mb-4">
+              <h2 className="text-[26px] font-bold text-white mb-3">6. Returns and Refunds</h2>
+              <p className="text-[var(--text-2)] mb-4">
                 You may withdraw from your purchase within 14 days of delivery, without giving a reason. Items must be:
               </p>
-              <ul className="list-disc pl-6 text-white/70 mb-4">
+              <ul className="list-disc pl-6 text-[var(--text-2)] mb-4">
                 <li>Unworn and in original condition</li>
                 <li>In original packaging with all tags attached</li>
                 <li>Accompanied by proof of purchase</li>
                 <li>Not personalised (items with a custom name or number cannot be returned)</li>
               </ul>
-              <p className="text-white/70 mb-4">
+              <p className="text-[var(--text-2)] mb-4">
                 Refunds are issued to the original payment method within 14 days of receiving the returned item. 
                 Return delivery costs are the responsibility of the customer unless the item is defective.
               </p>
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">7. Privacy Policy</h2>
-              <p className="text-white/70 mb-4">
+              <h2 className="text-[26px] font-bold text-white mb-3">7. Privacy Policy</h2>
+              <p className="text-[var(--text-2)] mb-4">
                 Your privacy is important to us. Please review our Privacy Policy, which also governs your use of the website, 
                 to understand our practices regarding the collection and use of your personal information.
               </p>
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">8. Intellectual Property</h2>
-              <p className="text-white/70 mb-4">
+              <h2 className="text-[26px] font-bold text-white mb-3">8. Intellectual Property</h2>
+              <p className="text-[var(--text-2)] mb-4">
                 The content on this website, including but not limited to text, graphics, images, logos, and software, 
                 is the property of Goal Mania and is protected by copyright laws.
               </p>
-              <p className="text-white/70 mb-4">
+              <p className="text-[var(--text-2)] mb-4">
                 Football team names, logos, and related trademarks are the property of their respective owners.
               </p>
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">9. Limitation of Liability</h2>
-              <p className="text-white/70 mb-4">
+              <h2 className="text-[26px] font-bold text-white mb-3">9. Limitation of Liability</h2>
+              <p className="text-[var(--text-2)] mb-4">
                 In no event shall Goal Mania or its suppliers be liable for any damages (including, without limitation, 
                 damages for loss of data or profit, or due to business interruption) arising out of the use or inability 
                 to use the materials on Goal Mania's website.
@@ -124,8 +115,8 @@ export default function TermsPage() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">10. Governing Law</h2>
-              <p className="text-white/70 mb-4">
+              <h2 className="text-[26px] font-bold text-white mb-3">10. Governing Law</h2>
+              <p className="text-[var(--text-2)] mb-4">
                 These terms and conditions are governed by and construed in accordance with the laws of Italy. 
                 Any disputes relating to these terms and conditions will be subject to the exclusive jurisdiction 
                 of the courts of Italy.
@@ -133,20 +124,20 @@ export default function TermsPage() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">11. Changes to Terms</h2>
-              <p className="text-white/70 mb-4">
+              <h2 className="text-[26px] font-bold text-white mb-3">11. Changes to Terms</h2>
+              <p className="text-[var(--text-2)] mb-4">
                 We reserve the right to modify these terms and conditions at any time. Changes will be effective 
                 immediately upon posting on the website. Your continued use of the website constitutes acceptance of the modified terms.
               </p>
             </div>
 
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-white mb-4">12. Contact Information</h2>
-              <p className="text-white/70 mb-4">
+              <h2 className="text-[26px] font-bold text-white mb-3">12. Contact Information</h2>
+              <p className="text-[var(--text-2)] mb-4">
                 If you have any questions about these Terms & Conditions, please contact us at:
               </p>
                              <div className="bg-[#0a0a0a] p-4 rounded-lg">
-                 <p className="text-white/70">
+                 <p className="text-[var(--text-2)]">
                    <strong>Email:</strong> legal@goalmania.com<br />
                    <strong>Location:</strong> Italy<br />
                    <strong>Contact:</strong> Please use the contact form above

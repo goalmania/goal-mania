@@ -8,7 +8,8 @@ import { useTranslation } from "@/lib/hooks/useTranslation";
 import { TrashIcon, ShoppingBagIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { ShieldCheck, Truck, RotateCcw, BadgeCheck, Zap, ArrowRight, Package } from "lucide-react";
+import { ShieldCheck, Truck, RotateCcw, Clock, ArrowRight, Trash2, Minus, Plus } from "lucide-react";
+import PageHeader from "@/components/shared/PageHeader";
 import { trackFbq } from "@/lib/utils/fbq";
 import { threeForTwoHint } from "@/lib/utils/threeForTwo";
 
@@ -19,14 +20,14 @@ function ShippingProgressBar({ count }: { count: number }) {
   const hint = threeForTwoHint(count);
   const filled = count % 3 === 0 ? 3 : count % 3;
   return (
-    <div className={`cut mb-6 p-4 ${hint.active ? "bg-[#c8f000] text-[#0a0a0a]" : "bg-[#1b1b19] text-white"}`}>
-      <p className="display text-[26px]">{hint.text}</p>
-      <div className="mt-3 grid grid-cols-3 gap-1.5" aria-hidden="true">
+    <div className={`rounded-3xl p-5 ${hint.active ? "bg-[var(--lime)] text-[#0a0a0a]" : "bg-[var(--wall)] text-white shadow-[inset_0_0_0_1px_var(--line)]"}`}>
+      <p className="disp text-[clamp(1.6rem,3vw,2.2rem)]">{hint.text}</p>
+      <div className="mt-3 grid grid-cols-3 gap-2" aria-hidden="true">
         {[1, 2, 3].map((n) => (
-          <span key={n} className={`h-2 ${n <= filled ? (hint.active ? "bg-[#0a0a0a]" : "bg-[#c8f000]") : hint.active ? "bg-[#0a0a0a]/25" : "bg-white/20"}`} />
+          <span key={n} className={`h-2.5 rounded-full ${n <= filled ? (hint.active ? "bg-[#0a0a0a]" : "bg-[var(--lime)]") : hint.active ? "bg-[#0a0a0a]/25" : "bg-white/20"}`} />
         ))}
       </div>
-      <p className={`mt-2 text-[14px] ${hint.active ? "text-[#0a0a0a]/80" : "text-white/70"}`}>Spedizione gratuita su ogni ordine.</p>
+      <p className={`mt-2 text-[15px] ${hint.active ? "text-[#0a0a0a]/80" : "text-[var(--text-2)]"}`}>Spedizione gratuita su ogni ordine.</p>
     </div>
   );
 }
@@ -87,320 +88,111 @@ export default function CartPage() {
     }
   };
 
+  const qty = items.reduce((n, i) => n + i.quantity, 0);
+  // Stima del 3x2: ogni 3 maglie la meno cara e gratis. Il conto vero lo rifa il server al pagamento.
+  const units = items.flatMap((i) => Array.from({ length: i.quantity }, () => Number(i.price))).sort((a, b) => a - b);
+  const saving = units.slice(0, Math.floor(units.length / 3)).reduce((a, b) => a + b, 0);
+  const eur = (n: number) => `${n.toFixed(2).replace(".", ",")}€`;
+
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] pt-4">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center">
-             <h1 className="display text-[clamp(2.6rem,9vw,4.5rem)] text-white mb-3">{t("cart.empty.title")}</h1>
-            <p className="mx-auto mb-8 max-w-sm text-white/70">
-              {t("cart.empty.description")}
-            </p>
-            <Link
-              href="/shop"
-              className="cut inline-flex h-14 items-center gap-3 bg-[#c8f000] px-8 text-[20px] font-bold tracking-wide text-[#0a0a0a] transition-colors hover:bg-[#d8ff1a]" style={{ fontFamily: "var(--font-display)" }}
-            >
-              {t("cart.empty.cta")} <ArrowRight size={16} />
-            </Link>
-          </div>
-        </div>
+      <div>
+        <PageHeader eyebrow="Carrello" title="Il carrello è vuoto" lead="Non hai ancora aggiunto nessuna maglia.">
+          <Link href="/shop" className="btn btn-lime">{t("cart.empty.cta")} <ArrowRight className="h-5 w-5" strokeWidth={3} /></Link>
+        </PageHeader>
+        <div className="h-24" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] pt-4">
-      {/* Page header */}
-      <div className="border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="display text-[clamp(2.6rem,9vw,4.5rem)] text-white">
-            Il tuo carrello <span className="text-[#c8f000]">{items.reduce((n, i) => n + i.quantity, 0)}</span>
-          </h1>
-        </div>
-      </div>
+    <div>
+      <PageHeader eyebrow="Carrello" title={<>Il tuo carrello <span className="mark"><span>{qty}</span></span></>} />
+      <div className="mx-auto grid w-full max-w-[1760px] gap-8 px-5 pb-16 md:px-10 lg:grid-cols-[1fr_440px] lg:px-16">
+        <div className="space-y-5">
+          <ShippingProgressBar count={qty} />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-          {/* ── Cart Items ── */}
-          <div className="lg:col-span-2 space-y-4">
-            {/* Shipping progress */}
-            <ShippingProgressBar count={items.reduce((n, i) => n + i.quantity, 0)} />
-
-            {/* Items list */}
-            <div
-              className="rounded-2xl overflow-hidden"
-              style={{ border: "1px solid rgba(255,255,255,0.06)", background: "#111" }}
-            >
-              <div className="px-6 py-4 border-b flex items-center justify-between" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-                <div className="flex items-center gap-2">
-                  <Package size={14} className="text-[#c8f000]" />
-                  <span
-                    className="text-xs font-bold text-white"
-                    style={{ fontFamily: "var(--font-display, sans-serif)", }}
-                  >
-                    {items.length} {items.length === 1 ? "Articolo" : "Articoli"}
-                  </span>
-                </div>
-                <Link href="/shop" className="text-[12px] text-white/60 hover:text-[#c8f000] transition-colors" style={{ fontFamily: "var(--font-mono, monospace)" }}>
-                  Continua a comprare →
+          <ul className="divide-y divide-[var(--line)] overflow-hidden rounded-3xl bg-[var(--wall)] shadow-[inset_0_0_0_1px_var(--line)]">
+            {items.map((item) => (
+              <li key={item.id} className="flex gap-4 p-4 md:p-5">
+                <Link href={`/products/${item.slug || item.id}`} className="pc-stage relative block h-[104px] w-[84px] shrink-0 overflow-hidden rounded-2xl md:h-[128px] md:w-[104px]" style={{ aspectRatio: "auto" }}>
+                  <Image src={item.image || "/images/image.png"} alt={item.name || "Maglia"} fill unoptimized sizes="104px" className="z-[1] object-contain p-1.5" style={{ mixBlendMode: "multiply" }} />
                 </Link>
-              </div>
-
-              <div className="divide-y" style={{ borderColor: "rgba(255,255,255,0.04)" }}>
-                {items.map((item) => (
-                  <div key={item.id} className="flex items-start gap-4 p-5 hover:bg-white/[0.02] transition-colors">
-                    {/* Image */}
-                    <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-[#1a1a1a]">
-                      <Image
-                        src={item.image || "/images/image.png"}
-                        alt={item.name || "Product image"}
-                        fill
-                        className="object-cover hover:scale-105 transition-transform duration-200"
-                      />
-                    </div>
-
-                    {/* Details */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1">
-                          <h3
-                            className="font-bold text-white text-sm leading-tight mb-1 hover:text-[#c8f000] transition-colors"
-                            style={{ fontFamily: "var(--font-display, sans-serif)" }}
-                          >
-                            <Link href={`/products/${item.slug || item.id}`}>{item.name}</Link>
-                          </h3>
-                          <div className="flex flex-wrap items-center gap-2 mb-2">
-                            {item.customization?.size && (
-                              <span
-                                className="text-[12px] font-bold px-2 py-0.5 rounded-full"
-                                style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000", fontFamily: "var(--font-mono, monospace)" }}
-                              >
-                                Taglia: {item.customization.size}
-                              </span>
-                            )}
-                            {item.customization?.hasCustomization && (
-                              <span
-                                className="text-[12px] font-bold px-2 py-0.5 rounded-full"
-                                style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.64)", fontFamily: "var(--font-mono, monospace)" }}
-                              >
-                                Personalizzata
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-xs text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>
-                            €{Number(item.price).toFixed(2)} cad.
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold text-white text-base" style={{ fontFamily: "var(--font-display, sans-serif)" }}>
-                            €{(Number(item.price) * item.quantity).toFixed(2)}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Quantity + Remove */}
-                      <div className="flex items-center justify-between mt-3">
-                        <div className="flex items-center bg-[#0a0a0a] rounded-xl p-1 gap-1">
-                          <button
-                            onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                            className="w-7 h-7 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-[#1a1a1a] transition-all text-sm font-bold"
-                          >
-                            −
-                          </button>
-                          <span
-                            className="text-sm font-bold text-white w-8 text-center"
-                            style={{ fontFamily: "var(--font-display, sans-serif)" }}
-                          >
-                            {item.quantity}
-                          </span>
-                          <button
-                            onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                            className="w-7 h-7 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-[#1a1a1a] transition-all text-sm font-bold"
-                          >
-                            +
-                          </button>
-                        </div>
-                        <button
-                          onClick={() => removeItem(item.id)}
-                          className="flex items-center gap-1.5 text-[12px] text-red-400/60 hover:text-red-400 transition-colors"
-                          style={{ fontFamily: "var(--font-mono, monospace)" }}
-                        >
-                          <TrashIcon className="h-3.5 w-3.5" />
-                          Rimuovi
-                        </button>
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <h3 className="line-clamp-2 text-[18px] font-semibold leading-tight text-white"><Link href={`/products/${item.slug || item.id}`} className="hover:text-[var(--lime)]">{item.name}</Link></h3>
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {item.customization?.size && <span className="rounded-full bg-[var(--wall-2)] px-2.5 py-1 text-[13px] font-bold text-[var(--lime)]">Taglia {item.customization.size}</span>}
+                        {item.customization?.hasCustomization && <span className="rounded-full bg-[var(--wall-2)] px-2.5 py-1 text-[13px] font-semibold text-[var(--text-2)]">Personalizzata</span>}
+                        {!!item.customization?.excludedShirts?.length && <span className="rounded-full bg-[var(--wall-2)] px-2.5 py-1 text-[13px] font-semibold text-[var(--text-2)]">Escluse: {item.customization.excludedShirts.join(", ")}</span>}
                       </div>
                     </div>
+                    <p className="pc-price shrink-0 !text-[26px]">{eur(Number(item.price) * item.quantity)}</p>
                   </div>
+                  <div className="mt-auto flex items-center justify-between pt-3">
+                    <div className="flex items-center rounded-full bg-[var(--wall-2)] p-1">
+                      <button type="button" aria-label="Una in meno" onClick={() => handleQuantityChange(item.id, item.quantity - 1)} className="flex h-10 w-10 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10"><Minus className="h-4 w-4" strokeWidth={3} /></button>
+                      <span className="w-9 text-center text-[17px] font-bold text-white" aria-live="polite">{item.quantity}</span>
+                      <button type="button" aria-label="Una in più" onClick={() => handleQuantityChange(item.id, item.quantity + 1)} className="flex h-10 w-10 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10"><Plus className="h-4 w-4" strokeWidth={3} /></button>
+                    </div>
+                    <button type="button" onClick={() => removeItem(item.id)} className="flex h-10 items-center gap-1.5 rounded-full px-3 text-[15px] font-semibold text-[var(--text-3)] transition-colors hover:text-[var(--red)]"><Trash2 className="h-4 w-4" />Rimuovi</button>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <Link href="/shop" className="inline-flex h-11 items-center text-[16px] font-semibold text-[var(--lime)] underline-offset-4 hover:underline">← Continua a comprare</Link>
+
+          {upsellProducts.length > 0 && (
+            <section aria-label="Potrebbero piacerti" className="rounded-3xl bg-[var(--wall)] p-5 shadow-[inset_0_0_0_1px_var(--line)]">
+              <h2 className="disp text-[clamp(1.6rem,3vw,2.2rem)] text-white">Aggiungi un&apos;altra maglia</h2>
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                {upsellProducts.map((item) => (
+                  <li key={item._id}>
+                    <Link href={`/products/${item.slug}`} className="flex items-center gap-3 rounded-2xl bg-[var(--wall-2)] p-3 transition-colors hover:bg-[var(--wall)]">
+                      <span className="pc-stage relative block h-16 w-14 shrink-0 overflow-hidden rounded-xl" style={{ aspectRatio: "auto" }}>
+                        {item.images?.[0] && <Image src={item.images[0].includes("res.cloudinary.com") ? item.images[0].replace("/upload/", "/upload/w_120,q_auto,f_auto/") : item.images[0]} alt="" fill unoptimized className="z-[1] object-contain p-1" style={{ mixBlendMode: "multiply" }} />}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="line-clamp-2 block text-[16px] font-semibold leading-tight text-white">{item.title}</span>
+                        <span className="mt-0.5 block text-[16px] font-bold text-[var(--lime)]">{eur(Number(item.basePrice))}</span>
+                      </span>
+                      <ArrowRight className="h-4 w-4 shrink-0 text-[var(--text-3)]" />
+                    </Link>
+                  </li>
                 ))}
-              </div>
-            </div>
-
-            {/* Upsell suggestions */}
-            <div
-              className="rounded-2xl p-5"
-              style={{ border: "1px solid rgba(200,240,0,0.12)", background: "rgba(200,240,0,0.03)" }}
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <Zap size={12} className="text-[#c8f000]" />
-                <span
-                  className="text-[12px] text-[#c8f000] font-bold"
-                  style={{ fontFamily: "var(--font-mono, monospace)" }}
-                >
-                  // Completa il Look
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                {upsellProducts.length > 0 ? upsellProducts.map((item) => (
-                  <Link
-                    key={item._id}
-                    href={`/products/${item.slug}`}
-                    className="flex items-center gap-3 p-3 rounded-xl transition-all hover:border-[#c8f000]/30"
-                    style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
-                  >
-                    <div className="relative w-10 h-10 rounded-lg flex-shrink-0 bg-[#1a1a1a] overflow-hidden">
-                      {item.images?.[0] ? (
-                        <Image src={item.images[0].includes("res.cloudinary.com") ? item.images[0].replace("/upload/", "/upload/w_80,q_auto,f_auto/") : item.images[0]} alt={item.title} fill unoptimized className="object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-lg">👕</div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold text-white line-clamp-1 leading-tight">{item.title}</p>
-                      <p className="text-xs text-[#c8f000] font-bold mt-0.5">€{item.basePrice?.toFixed(2)}</p>
-                    </div>
-                    <ArrowRight size={12} className="text-white/60 flex-shrink-0" />
-                  </Link>
-                )) : (
-                  // Fallback skeleton mentre carica
-                  [0,1].map(i => (
-                    <div key={i} className="flex items-center gap-3 p-3 rounded-xl animate-pulse"
-                      style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}>
-                      <div className="w-10 h-10 rounded-lg bg-white/5 flex-shrink-0" />
-                      <div className="flex-1 space-y-1.5">
-                        <div className="h-2.5 bg-white/5 rounded w-3/4" />
-                        <div className="h-2 bg-white/5 rounded w-1/2" />
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* ── Order Summary Sidebar ── */}
-          <div className="lg:col-span-1">
-            <div
-              className="rounded-2xl overflow-hidden sticky top-24"
-              style={{ background: "#111", border: "1px solid rgba(255,255,255,0.08)" }}
-            >
-              {/* Header */}
-              <div className="px-6 py-5 border-b" style={{ borderColor: "rgba(255,255,255,0.06)", background: "rgba(200,240,0,0.04)" }}>
-                <span
-                  className="text-[12px] text-[#c8f000]"
-                  style={{ fontFamily: "var(--font-mono, monospace)" }}
-                >
-                  // Riepilogo Ordine
-                </span>
-              </div>
-
-              <div className="p-6 space-y-5">
-                {/* Price breakdown */}
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-white/50">Subtotale</span>
-                    <span className="font-bold text-white">€{total.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-white/50">Spedizione</span>
-                    <span className="font-bold text-[#c8f000]">Gratuita</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-white/50">IVA inclusa</span>
-                    <span className="text-xs text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>✓</span>
-                  </div>
-                </div>
-
-                <div className="h-[1px]" style={{ background: "rgba(255,255,255,0.06)" }} />
-
-                {/* Total */}
-                <div className="flex justify-between items-center">
-                  <span
-                    className="text-sm font-bold text-white"
-                    style={{ fontFamily: "var(--font-display, sans-serif)" }}
-                  >
-                    Totale
-                  </span>
-                  <span
-                    className="text-2xl font-bold text-white"
-                    style={{ fontFamily: "var(--font-display, sans-serif)" }}
-                  >
-                    €{total.toFixed(2)}
-                  </span>
-                </div>
-
-                {/* CTA */}
-                <button
-                  onClick={handleCheckout}
-                  disabled={isCheckingOut}
-                  className="w-full py-4 rounded-2xl font-bold text-black transition-all hover:opacity-90 hover:-translate-y-0.5 disabled:opacity-50 flex items-center justify-center gap-2"
-                  style={{
-                    background: "#c8f000",
-                    fontFamily: "var(--font-display, sans-serif)",
-                    boxShadow: "0 8px 32px rgba(200,240,0,0.25)",
-                    fontSize: "0.85rem",
-                  }}
-                >
-                  {isCheckingOut ? "Caricamento..." : (
-                    <>Procedi al Checkout <ArrowRight size={16} /></>
-                  )}
-                </button>
-
-                {/* Trust badges */}
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { icon: ShieldCheck, label: "Pag. Sicuro" },
-                    { icon: Truck, label: "Sped. Gratuita" },
-                    { icon: RotateCcw, label: "Reso 14gg" },
-                    { icon: BadgeCheck, label: "Originale" },
-                  ].map(({ icon: Icon, label }) => (
-                    <div key={label} className="flex flex-col items-center gap-1.5 py-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                      <Icon size={16} className="text-[#c8f000]" />
-                      <span className="text-[12px] text-white/60 text-center" style={{ fontFamily: "var(--font-mono, monospace)" }}>
-                        {label}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Payment methods */}
-                <div className="pt-2">
-                  <p className="text-[12px] text-white/60 text-center mb-2" style={{ fontFamily: "var(--font-mono, monospace)" }}>
-                    Metodi di Pagamento Accettati
-                  </p>
-                  <div className="flex justify-center gap-2 flex-wrap">
-                    {["VISA", "MC", "Klarna", "Apple Pay"].map((method) => (
-                      <span
-                        key={method}
-                        className="text-[12px] font-bold px-2 py-1 rounded "
-                        style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.64)", fontFamily: "var(--font-mono, monospace)", border: "1px solid rgba(255,255,255,0.06)" }}
-                      >
-                        {method}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Trust line */}
-                <div className="flex items-center justify-center gap-2 py-2">
-                  <span className="text-[12px] text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>
-                    Pagamento sicuro · Spedizione gratuita · Reso entro 14 giorni
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+              </ul>
+            </section>
+          )}
         </div>
+
+        <aside className="lg:sticky lg:top-[calc(var(--bar-h)+var(--head-h)+16px)] lg:self-start" aria-label="Riepilogo ordine">
+          <div className="rounded-3xl bg-[var(--wall)] p-6 shadow-[inset_0_0_0_1px_var(--line)]">
+            <h2 className="disp text-[28px] text-white">Riepilogo</h2>
+            <dl className="mt-4 space-y-3 text-[17px]">
+              <div className="flex justify-between text-[var(--text-2)]"><dt>Subtotale</dt><dd className="font-semibold text-white">{eur(total)}</dd></div>
+              {saving > 0 && <div className="flex justify-between font-semibold text-[var(--lime)]"><dt>3x2: maglia in regalo</dt><dd>−{eur(saving)}</dd></div>}
+              <div className="flex justify-between text-[var(--text-2)]"><dt>Spedizione</dt><dd className="font-semibold text-[var(--lime)]">Gratuita</dd></div>
+            </dl>
+            <div className="mt-4 flex items-end justify-between border-t border-dashed border-[var(--line)] pt-4">
+              <span className="text-[15px] font-semibold text-[var(--text-3)]">Totale{saving > 0 ? " stimato" : ""}</span>
+              <span className="pc-price !text-[48px] text-[var(--lime)]">{eur(Math.max(0, total - saving))}</span>
+            </div>
+            <p className="mt-1 text-[13px] italic text-[var(--text-3)]">IVA inclusa. Il totale definitivo si conferma al pagamento.</p>
+            <button type="button" onClick={handleCheckout} disabled={isCheckingOut} className="btn btn-lime mt-5 w-full disabled:opacity-60">
+              {isCheckingOut ? "Un attimo…" : <>Vai al pagamento <ArrowRight className="h-5 w-5" strokeWidth={3} /></>}
+            </button>
+            <ul className="mt-5 grid grid-cols-2 gap-2">
+              {[[ShieldCheck, "Pagamento protetto"], [Truck, "Spedizione gratuita"], [RotateCcw, "Reso entro 14 giorni"], [Clock, "Consegna 7-10 giorni"]].map(([Icon, l]) => {
+                const I = Icon as typeof ShieldCheck;
+                return <li key={String(l)} className="flex items-center gap-2 rounded-2xl bg-[var(--wall-2)] px-3 py-2.5 text-[14px] font-semibold text-[var(--text-2)]"><I className="h-4 w-4 shrink-0 text-[var(--lime)]" />{String(l)}</li>;
+              })}
+            </ul>
+            <p className="mt-4 text-center text-[13px] text-[var(--text-3)]">Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal, Klarna</p>
+          </div>
+        </aside>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ const CHIPS = [
   { href: "/shop/worldcup", label: "Mondiali 2026" },
   { href: "/shop/international", label: "Grandi club" },
   { href: "/archivio", label: "Maglie retro" },
+  { href: "/shop/mystery-box", label: "Mystery box" },
 ];
 
 // Una riga da scorrere: un tocco e sei nella categoria

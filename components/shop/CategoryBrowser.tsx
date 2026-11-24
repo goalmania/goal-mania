@@ -46,6 +46,7 @@ const SIBLINGS = [
   { href: "/shop/worldcup", label: "Mondiali 2026" },
   { href: "/shop/international", label: "Internazionali" },
   { href: "/archivio", label: "Maglie retro" },
+  { href: "/shop/mystery-box", label: "Mystery box" },
 ];
 
 type Sort = "top" | "low" | "high";
@@ -111,12 +112,12 @@ export default function CategoryBrowser({
       <div className="sticky top-[calc(var(--bar-h)+var(--head-h))] z-20 border-y border-[var(--line)] bg-[rgba(10,10,11,0.94)] backdrop-blur">
         <div className="mx-auto flex w-full max-w-[1760px] flex-col gap-3 px-5 py-3 md:px-10 lg:px-16">
           <div className="flex flex-wrap items-center gap-3">
-            <label className="relative flex h-11 min-w-[200px] flex-1 items-center md:max-w-[340px]">
+            <label className="relative flex h-11 min-w-0 flex-1 items-center md:max-w-[340px]">
               <Search className="pointer-events-none absolute left-4 h-4 w-4 text-[var(--text-3)]" />
               <input value={q} onChange={(e) => setQ(e.target.value)} type="search" placeholder="Cerca una squadra o un anno" aria-label="Cerca in questa pagina" className="h-11 w-full rounded-full bg-[var(--wall-2)] pl-11 pr-4 text-[16px] text-white placeholder:text-[var(--text-3)] shadow-[inset_0_0_0_1px_var(--line)] focus:outline-none focus:shadow-[inset_0_0_0_2px_var(--lime)]" />
             </label>
             {kinds.length > 2 && (
-              <div className="flex gap-2 overflow-x-auto [scrollbar-width:none]" role="group" aria-label="Tipo di maglia">
+              <div className="order-last flex w-full gap-2 overflow-x-auto [scrollbar-width:none] md:order-none md:w-auto" role="group" aria-label="Tipo di maglia">
                 {kinds.map(({ k, n }) => (
                   <button key={k} type="button" aria-pressed={kind === k} onClick={() => setKind(k)} className={chip}>
                     {KIND_LABEL[k]} <span className="text-[13px] opacity-60">{n}</span>
@@ -124,7 +125,7 @@ export default function CategoryBrowser({
                 ))}
               </div>
             )}
-            <select value={sort} onChange={(e) => setSort(e.target.value as Sort)} aria-label="Ordina" className="ml-auto h-11 rounded-full bg-[var(--wall-2)] px-4 text-[15px] font-semibold text-white shadow-[inset_0_0_0_1px_var(--line)]">
+            <select value={sort} onChange={(e) => setSort(e.target.value as Sort)} aria-label="Ordina" className="ml-auto h-11 max-w-[46%] shrink-0 rounded-full bg-[var(--wall-2)] px-3 text-[15px] font-semibold text-white shadow-[inset_0_0_0_1px_var(--line)]">
               <option value="top">In evidenza</option>
               <option value="low">Prezzo: dal più basso</option>
               <option value="high">Prezzo: dal più alto</option>

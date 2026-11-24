@@ -30,6 +30,7 @@ const NAV = [
   { href: "/shop/2026/27", label: "Novità 26/27", match: (p: string) => p.startsWith("/shop/2026") },
   { href: "/archivio", label: "Maglie retro", match: (p: string) => p.startsWith("/archivio") || p.startsWith("/shop/retro") },
   { href: "/shop/worldcup", label: "Mondiali", match: (p: string) => p.startsWith("/shop/worldcup") },
+  { href: "/shop/mystery-box", label: "Mystery box", match: (p: string) => p.startsWith("/shop/mystery-box") },
   { href: "/news", label: "Notizie", match: (p: string) => p.startsWith("/news") },
 ];
 

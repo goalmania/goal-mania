@@ -1,10 +1,12 @@
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound, permanentRedirect, redirect } from "next/navigation";
 import { Metadata } from "next";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import Patch from "@/lib/models/Patch";
 import ProductDetailClient from "@/app/_components/ProductDetailClient";
 import ProductRail from "@/components/home/ProductRail";
+import VintedReviews from "@/components/shared/VintedReviews";
+import { pickHyped, rotationSeed } from "@/lib/hype";
 import { Suspense } from "react";
 import mongoose from "mongoose";
 
@@ -186,23 +188,27 @@ async function getProduct(id: string) {
   }
 }
 
-// Altre maglie della stessa categoria: tiene il cliente nel negozio se questa non e quella giusta
-async function getRelated(product: { _id: string; category?: string }) {
+// Maglie consigliate: le piu hype tra attuali e retro (piu della stessa famiglia della maglia che guardi), a rotazione.
+// Cosi chi guarda una retro vede anche le attuali di moda e viceversa, e l'elenco non e sempre lo stesso.
+async function getRelated(product: { _id: string; category?: string; isRetro?: boolean }) {
   try {
     await connectDB();
-    const rows = await Product.find({ isActive: true, category: product.category, _id: { $ne: product._id } })
-      .sort({ feature: -1, createdAt: -1 })
-      .limit(12)
-      .select({ title: 1, slug: 1, basePrice: 1, retroPrice: 1, isRetro: 1, category: 1, images: { $slice: 1 } })
+    const rows = await Product.find({ isActive: true, _id: { $ne: product._id }, category: { $in: ["Retro", "2026/27", "2025/26", "World Cup 2026"] } })
+      .select({ title: 1, slug: 1, basePrice: 1, retroPrice: 1, isRetro: 1, category: 1, feature: 1, images: { $slice: 1 } })
+      .limit(900)
       .lean();
-    return JSON.parse(JSON.stringify(rows)).map((p: any) => ({
+    const items = JSON.parse(JSON.stringify(rows)).map((p: any) => ({
       id: String(p._id),
       slug: p.slug || "",
       name: p.title || "Maglia",
       price: Number(p.isRetro ? p.retroPrice : p.basePrice) || Number(p.basePrice) || 0,
       image: p.images?.[0] || "/images/image.png",
       category: p.category || "",
+      feature: !!p.feature,
+      isRetro: p.category === "Retro" || !!p.isRetro,
     }));
+    const idSalt = Array.from(String(product._id)).reduce((a, c) => (a * 31 + c.charCodeAt(0)) | 0, 7) % 1000;
+    return pickHyped(items as any[], 12, rotationSeed(15, idSalt), product.isRetro ? 0.6 : 0.4) as any[];
   } catch {
     return [];
   }
@@ -226,6 +232,9 @@ export default async function ProductPage({
   if (product.slug && id !== product.slug) {
     permanentRedirect(`/products/${product.slug}`);
   }
+
+  // Le mystery box si comprano dal configuratore (quante maglie, taglie, squadre escluse), non dalla scheda singola
+  if (product.isMysteryBox) redirect("/shop/mystery-box");
 
   const slug = product.slug || id;
   const productUrl = `https://goal-mania.it/products/${slug}`;
@@ -364,6 +373,7 @@ export default async function ProductPage({
       <Suspense fallback={<div>Loading...</div>}>
         <ProductDetailClient product={product} />
       </Suspense>
+      <VintedReviews compact />
       <ProductRail eyebrow="Potrebbero piacerti" title="Altre maglie" href={product.isRetro ? "/archivio" : "/shop"} products={related} />
     </>
   );

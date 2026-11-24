@@ -5,6 +5,7 @@ import HomeHero from "@/components/home/HomeHero";
 import TrustBar from "@/components/home/TrustBar";
 import CategoryTiles, { type Tile } from "@/components/home/CategoryTiles";
 import TeamLogoRail from "@/components/home/TeamLogoRail";
+import VintedReviews from "@/components/shared/VintedReviews";
 import EraPanels, { type EraPanelData } from "@/components/era/EraPanels";
 import { eraInfo, pickForEra } from "@/lib/eraPick";
 import { ERA_ORDER, WORLD_CUPS } from "@/lib/eraTheme";
@@ -16,6 +17,7 @@ import WorldCupBand, { type CupCard } from "@/components/home/WorldCupBand";
 import HomeNewsStrip from "@/components/home/HomeNewsStrip";
 import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
 import { getArchiveItems, worldCupYearsWithJerseys } from "@/lib/archiveData";
+import { pickHyped, rotationSeed } from "@/lib/hype";
 import ProductModel from "@/lib/models/Product";
 import HomeFaq, { type FaqItem } from "@/components/home/HomeFaq";
 
@@ -116,6 +118,20 @@ async function getByCategory(category: string, limit = 12) {
   }
 }
 
+// Le maglie attuali tra cui scegliere la vetrina: stagione, Mondiali, stagione scorsa
+async function getCurrentPool() {
+  try {
+    await connectDB();
+    const rows = await ProductModel.find({ isActive: true, category: { $in: ["2026/27", "2025/26", "World Cup 2026"] } })
+      .select({ title: 1, slug: 1, basePrice: 1, category: 1, feature: 1, images: { $slice: 1 } })
+      .limit(260)
+      .lean();
+    return JSON.parse(JSON.stringify(rows)).map((p: any) => ({ ...mapCard(p), feature: !!p.feature, isRetro: false }));
+  } catch {
+    return [];
+  }
+}
+
 async function getFeatured() {
   try {
     await connectDB();
@@ -152,12 +168,14 @@ async function getCounts(): Promise<Record<string, number>> {
 }
 
 export default async function Home() {
-  const [featured, season, worldcup, archive, counts, latestArticles] = await Promise.all([
+  const [featured, season, worldcup, archive, counts, currentPool, retroItems, latestArticles] = await Promise.all([
     getFeatured(),
     getByCategory("2026/27"),
     getByCategory("World Cup 2026"),
     getArchiveEras(),
     getCounts(),
+    getCurrentPool(),
+    getArchiveItems(),
     (async () => {
       try {
         await connectDB();
@@ -172,7 +190,10 @@ export default async function Home() {
       }
     })(),
   ]);
-  const hero = featured.length >= 9 ? featured : [...featured, ...season].slice(0, 12);
+  // Vetrina: attuali e retro piu hype, mescolati, e a rotazione ogni 15 minuti (non sono sempre le stesse)
+  const pool = [...currentPool, ...retroItems.map((r) => ({ id: r.id, slug: r.slug, name: r.name, price: r.price, image: r.image, category: "Retro", team: r.year ? String(r.year) : "Retro", feature: false, isRetro: true }))];
+  const hero = pickHyped(pool, 14, rotationSeed(15, 1));
+  const showcase = pickHyped(pool, 12, rotationSeed(15, 2));
   const retroPick = archive.eras.find((e) => e.slug === "anni-90")?.image || archive.eras[0]?.image || "";
   const tiles: Tile[] = ([
     { title: "Nuova stagione 26/27", sub: "Le divise di quest'anno, tutte a 35€.", href: "/shop/2026/27", image: season[0]?.image || "", count: counts["2026/27"] || season.length, from: 35, tone: "lime", big: true },
@@ -202,12 +223,13 @@ export default async function Home() {
         <EraPanels panels={archive.eras} />
       </section>
       <ThreeForTwo products={trio} />
-      <ProductRail eyebrow="Scelte da noi" title="In evidenza" href="/shop" lead="Le maglie che mettiamo in vetrina questa settimana." products={featured} priorityFirst />
+      <ProductRail eyebrow="Scelte da noi" title="In evidenza" href="/shop" lead="Le più cercate, attuali e retro. La vetrina cambia spesso." products={showcase} priorityFirst />
       <WorldCupBand cups={archive.cups} />
       <ProductRail eyebrow="Appena arrivate" title="Novità 26/27" href="/shop/2026/27" products={season} />
       <ProductRail eyebrow="Maglie delle nazionali" title="Mondiali 2026" href="/shop/worldcup" products={worldcup} />
       <BrandBand retroCount={Math.floor(archive.total / 10) * 10} />
       <RealOrdersGallery />
+      <VintedReviews />
       <HomeNewsStrip articles={latestArticles} />
       <HomeFaq items={FAQ} />
     </div>

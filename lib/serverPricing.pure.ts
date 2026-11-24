@@ -3,6 +3,11 @@
 export const EXTRAS = { playerEdition: 5, longSleeve: 10, shorts: 11, socks: 17 };
 export const DEFAULT_PATCH_PRICE = 3;
 
+// Mystery box: il prezzo e per maglia, come in negozio (35€ attuali, 40€ retro). Il numero di maglie e la quantita nel carrello.
+export const MYSTERY_PRICE = { current: 35, retro: 40 };
+export const isRetroBox = (title?: string) => /retro/i.test(String(title || ""));
+export const mysteryUnitPrice = (title?: string) => (isRetroBox(title) ? MYSTERY_PRICE.retro : MYSTERY_PRICE.current);
+
 export const round2 = (n: number) => Math.round(n * 100) / 100;
 
 export type Customization = {
