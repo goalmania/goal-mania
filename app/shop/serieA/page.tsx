@@ -74,6 +74,7 @@ export default async function SerieAShopPage() {
   // Map server products to client format
   const products = validProducts.map((product: IProduct) => ({
     id: product._id || "", // Ensure id is never undefined
+    slug: (product as any).slug || "",
     name: product.title || "Untitled Product", // Ensure name is never undefined
     price: product.basePrice || 0, // Ensure price is never undefined
     image: product.images?.[0] || "/images/image.png", // Ensure image is never undefined with a fallback
@@ -96,16 +97,6 @@ export default async function SerieAShopPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
       />
-      <section className="mx-auto max-w-7xl px-5 pb-4 pt-8 md:px-8 md:pt-12">
-        <h1 className="display mb-3 text-[clamp(2.2rem,6vw,3.75rem)]">
-          Maglie Serie A 2026/27
-        </h1>
-        <p className="max-w-2xl text-[17px] leading-snug text-[var(--text-2)]">
-          Acquista le maglie delle squadre di Serie A 2026/27 a partire da 35€.
-          Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina e altre.
-          Spedizione gratuita in Italia.
-        </p>
-      </section>
       <SerieAClient products={products} />
     </>
   );

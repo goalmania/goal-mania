@@ -35,6 +35,7 @@ export default async function JacketsPage() {
 
   const products = validProducts.map((product: IProduct) => ({
     id: product._id || "",
+    slug: (product as any).slug || "",
     name: product.title || "Untitled Product",
     price: product.basePrice || 0,
     image: product.images?.[0] || "/images/image.png",

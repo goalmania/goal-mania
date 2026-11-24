@@ -11,12 +11,14 @@ export default function AutoRail({
   speed = 38,
   label,
   auto = true,
+  reverse = false,
 }: {
   children: ReactNode;
   className?: string;
   speed?: number;
   label?: string;
   auto?: boolean;
+  reverse?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const hold = useRef<(ms?: number) => void>(() => {});
@@ -28,7 +30,11 @@ export default function AutoRail({
     let raf = 0;
     let last = 0;
     let acc = el.scrollLeft;
-    let dir = 1;
+    let dir = reverse ? -1 : 1;
+    if (reverse) {
+      el.scrollLeft = el.scrollWidth;
+      acc = el.scrollLeft;
+    }
     let visible = false;
     let hovering = false;
     let holdUntil = 0;
@@ -134,7 +140,7 @@ export default function AutoRail({
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseup", onUp);
     };
-  }, [auto, speed]);
+  }, [auto, speed, reverse]);
 
   const go = (d: number) => {
     const el = ref.current;

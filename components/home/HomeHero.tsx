@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cld } from "@/lib/utils/cloudinary";
+import AutoRail from "@/components/ui/AutoRail";
 
 interface HeroProduct {
   id: string;
@@ -42,31 +43,26 @@ function Tile({ p, eager }: { p: HeroProduct; eager: boolean }) {
   );
 }
 
-// Una colonna che sale (o scende): due copie in sequenza, la seconda e solo scenografia
-function Column({ items, dur, reverse, eager, className = "" }: { items: HeroProduct[]; dur: number; reverse?: boolean; eager?: boolean; className?: string }) {
+// Una fila orizzontale: scorre da sola e a mano
+function Row({ items, reverse, speed, eager }: { items: HeroProduct[]; reverse?: boolean; speed: number; eager?: boolean }) {
   return (
-    <div className={`vcol ${className}`}>
-      <div className="vmarq" style={{ ["--dur" as string]: `${dur}s`, animationDirection: reverse ? "reverse" : "normal" }}>
-        {[0, 1].map((k) => (
-          <div key={k} className="flex flex-col gap-4 pb-4" aria-hidden={k === 1 ? true : undefined}>
-            {items.map((p, i) => (
-              <Tile key={`${k}-${p.id}`} p={p} eager={k === 0 && !!eager && i < 2} />
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
+    <AutoRail className="rail-tight" label="Maglie in evidenza" reverse={reverse} speed={speed}>
+      {items.map((p, i) => (
+        <div key={p.id} className="w-[44vw] max-w-[220px] shrink-0 sm:w-[190px] xl:w-[210px]">
+          <Tile p={p} eager={!!eager && i < 3} />
+        </div>
+      ))}
+    </AutoRail>
   );
 }
 
 export default function HomeHero({ products }: { products: HeroProduct[] }) {
-  const a = products.filter((_, i) => i % 3 === 0);
-  const b = products.filter((_, i) => i % 3 === 1);
-  const c = products.filter((_, i) => i % 3 === 2);
-  const ok = products.length >= 9;
+  const a = products.filter((_, i) => i % 2 === 0);
+  const b = products.filter((_, i) => i % 2 === 1);
+  const ok = products.length >= 6;
   return (
     <section className="hero-pitch relative overflow-hidden">
-      <div className="mx-auto grid w-full max-w-[1760px] items-center gap-8 px-5 pb-10 pt-8 md:px-10 md:pt-12 lg:min-h-[min(82svh,760px)] lg:grid-cols-[1.05fr_1fr] lg:gap-14 lg:px-16 lg:pb-14">
+      <div className="mx-auto grid w-full max-w-[1760px] items-center gap-8 px-5 pb-10 pt-8 md:px-10 md:pt-12 lg:min-h-[min(82svh,760px)] lg:grid-cols-[1fr_1.1fr] lg:gap-14 lg:px-16 lg:pb-14">
         <div className="relative z-10">
           <p className="rise inline-flex items-center gap-2 rounded-full bg-[var(--lime)] px-4 py-2 text-[14px] font-bold text-[#0a0a0a]">
             <span className="h-2 w-2 rounded-full bg-[#0a0a0a]" aria-hidden="true" />
@@ -99,10 +95,9 @@ export default function HomeHero({ products }: { products: HeroProduct[] }) {
         </div>
 
         {ok && (
-          <div className="hero-cols relative" aria-label="Maglie in evidenza">
-            <Column items={a} dur={70} eager />
-            <Column items={b} dur={86} reverse className="mt-10" />
-            <Column items={c} dur={78} eager className="hidden md:block" />
+          <div className="relative min-w-0 space-y-4" aria-label="Maglie in evidenza">
+            <Row items={a} speed={34} eager />
+            <Row items={b} speed={30} reverse />
           </div>
         )}
       </div>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import FAQ from "@/app/_components/FAQ";
+import FaqShort from "@/components/shared/FaqShort";
 import SerieATeamsClient from "@/app/_components/SerieATeamsClient";
 import PremierLeagueClient from "@/app/_components/PremierLeagueClient";
 import FilterChips from "@/components/shop/FilterChips";
@@ -175,7 +175,7 @@ export default function ShopClient({
         </TeamGroup>
       </section>
 
-      <FAQ />
+      <FaqShort />
     </div>
   );
 }

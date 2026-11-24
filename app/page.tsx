@@ -13,6 +13,7 @@ import ThreeForTwo from "@/components/home/ThreeForTwo";
 import BrandBand from "@/components/home/BrandBand";
 import WorldCupBand, { type CupCard } from "@/components/home/WorldCupBand";
 import HomeNewsStrip from "@/components/home/HomeNewsStrip";
+import FaqShort from "@/components/shared/FaqShort";
 import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
 import { getArchiveItems, worldCupYearsWithJerseys } from "@/lib/archiveData";
 import ProductModel from "@/lib/models/Product";
@@ -175,8 +176,8 @@ export default async function Home() {
   const retroPick = archive.eras.find((e) => e.slug === "anni-90")?.image || archive.eras[0]?.image || "";
   const tiles: Tile[] = ([
     { title: "Nuova stagione 26/27", sub: "Le divise di quest'anno, tutte a 35€.", href: "/shop/2026/27", image: season[0]?.image || "", count: counts["2026/27"] || season.length, from: 35, tone: "lime", big: true },
-    { title: "Mondiali 2026", sub: "Le nazionali che vedrai in campo.", href: "/shop/worldcup", image: worldcup[0]?.image || "", count: counts["World Cup 2026"] || worldcup.length, from: 35, tone: "wall" },
     { title: "Maglie retro", sub: "Dal 1970 a oggi, scegli il decennio.", href: "/archivio", image: retroPick, count: counts["Retro"] || archive.total, from: 40, tone: "paper" },
+    { title: "Mondiali 2026", sub: "Le maglie delle nazionali, a 35€.", href: "/shop/worldcup", image: worldcup[0]?.image || "", count: counts["World Cup 2026"] || worldcup.length, from: 35, tone: "wall" },
     { title: "Stagione 25/26", sub: "Quelle appena finite, ancora a 35€.", href: "/shop/2025/26", image: season[3]?.image || "", count: counts["2025/26"] || 0, from: 35, tone: "wall2" },
   ] as Tile[]).filter((t) => t.count > 0 && t.image);
   const trio = [season[0], season[1], season[2]].filter(Boolean);
@@ -200,11 +201,13 @@ export default async function Home() {
         <EraPanels panels={archive.eras} />
       </section>
       <ThreeForTwo products={trio} />
-      <ProductRail eyebrow="Appena arrivate" title="Novità 26/27" href="/shop/2026/27" lead="La nuova stagione, tutta a 35€." products={season} priorityFirst />
-      <BrandBand retroCount={Math.floor(archive.total / 10) * 10} />
+      <ProductRail eyebrow="Scelte da noi" title="In evidenza" href="/shop" lead="Le maglie che mettiamo in vetrina questa settimana." products={featured} priorityFirst />
       <WorldCupBand cups={archive.cups} />
-      <ProductRail eyebrow="Si gioca quest'estate" title="Mondiali 2026" href="/shop/worldcup" products={worldcup} />
+      <ProductRail eyebrow="Appena arrivate" title="Novità 26/27" href="/shop/2026/27" products={season} />
+      <ProductRail eyebrow="Maglie delle nazionali" title="Mondiali 2026" href="/shop/worldcup" products={worldcup} />
+      <BrandBand retroCount={Math.floor(archive.total / 10) * 10} />
       <RealOrdersGallery />
+      <FaqShort />
       <HomeNewsStrip articles={latestArticles} />
       <HomeFaq items={FAQ} />
     </div>

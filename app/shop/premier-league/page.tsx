@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import PremierLeagueClient from "@/app/_components/PremierLeagueClient";
+import SerieAClient from "@/app/_components/SerieAClient";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { buildCollectionSchema } from "@/lib/seo/collectionSchema";
@@ -48,6 +48,10 @@ async function getPremierLeagueProducts() {
 export default async function PremierLeagueShopPage() {
   const serverProducts = await getPremierLeagueProducts();
 
+  const products = serverProducts
+    .filter((p: any) => p._id && p.title)
+    .map((p: any) => ({ id: String(p._id), slug: p.slug || "", name: p.title, price: p.basePrice || 0, image: p.images?.[0] || "/images/image.png", category: p.category || "Premier League", team: p.title.split(" ")[1] || "" }));
+
   const collectionSchema = buildCollectionSchema({
     name: "Maglie Premier League 2026/27",
     url: "https://goal-mania.it/shop/premier-league",
@@ -62,17 +66,7 @@ export default async function PremierLeagueShopPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
       />
-      <section className="mx-auto max-w-7xl px-5 pb-4 pt-8 md:px-8 md:pt-12">
-        <h1 className="display mb-3 text-[clamp(2.2rem,6vw,3.75rem)]">
-          Maglie Premier League 2026/27
-        </h1>
-        <p className="max-w-2xl text-[17px] leading-snug text-[var(--text-2)]">
-          Acquista le maglie della Premier League 2026/27 a partire da 35€.
-          Manchester City, Liverpool, Arsenal, Chelsea, Manchester United e tutte le squadre inglesi.
-          Spedizione gratuita in Italia.
-        </p>
-      </section>
-      <PremierLeagueClient />
+      <SerieAClient products={products} leagueName="Premier League" leagueHref="/shop/premier-league" />
     </>
   );
 }

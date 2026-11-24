@@ -39,6 +39,7 @@ export default async function SerieAShopPage() {
   // Map server products to client format
   const products = validProducts.map((product: IProduct) => ({
     id: product._id || "", // Ensure id is never undefined
+    slug: (product as any).slug || "",
     name: product.title || "Untitled Product", // Ensure name is never undefined
     price: product.basePrice || 0, // Ensure price is never undefined
     image: product.images?.[0] || "/images/image.png", // Ensure image is never undefined with a fallback

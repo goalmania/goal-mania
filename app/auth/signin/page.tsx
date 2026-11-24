@@ -1,248 +1,79 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState, useEffect } from "react";
-import { signIn, getSession } from "next-auth/react";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import Image from "next/image";
-import { useI18n } from "@/lib/hooks/useI18n";
+import { Suspense } from "react";
 import { ArrowRight } from "lucide-react";
+
+const field = "h-14 w-full rounded-2xl bg-[var(--wall-2)] px-4 text-[17px] text-white placeholder:text-[var(--text-3)] shadow-[inset_0_0_0_1px_var(--line)] focus:outline-none focus:shadow-[inset_0_0_0_2px_var(--lime)]";
 
 function SignInContent() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { t } = useI18n();
-
-  // Check for auth-required reason
   const showAuthRequired = searchParams.get("reason") === "auth-required";
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoading(true);
     setError("");
-
     const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
     try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-
+      const result = await signIn("credentials", { email: formData.get("email") as string, password: formData.get("password") as string, redirect: false });
       if (result?.error) {
-        setError("Invalid email or password");
-        toast.error("Invalid email or password");
+        setError("Email o password non corrette.");
+        toast.error("Email o password non corrette.");
       } else {
-        toast.success("Signed in successfully!");
+        toast.success("Accesso effettuato");
         router.push("/");
         router.refresh();
       }
-    } catch (error) {
-      setError("Something went wrong");
-      toast.error("Something went wrong");
+    } catch {
+      setError("Qualcosa è andato storto. Riprova.");
     } finally {
       setIsLoading(false);
     }
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] grid grid-cols-1 lg:grid-cols-2 p-10 gap-10 lg:gap-0 font-munish">
-      {/* Image Left */}
-      <div className="relative h-[60vh] lg:h-auto rounded-2xl">
-        <div className="absolute   inset-0">
-          <img
-            src={`/images/recentUpdate/login-bg.png`}
-            alt="Banner Background"
-            className="w-full h-full rounded-2xl  object-cover"
-          />
-        </div>
+    <div className="mx-auto grid w-full max-w-[1760px] gap-10 px-5 py-10 md:px-10 md:py-16 lg:grid-cols-2 lg:items-center lg:gap-20 lg:px-16">
+      <div className="hero-pitch relative overflow-hidden rounded-[28px] bg-[var(--wall)] p-8 shadow-[inset_0_0_0_1px_var(--line)] md:p-12">
+        <Image src="/images/recentUpdate/goalmania-wordmark.png" alt="Goal Mania" width={1906} height={977} className="relative z-10 h-auto w-[min(80%,380px)]" priority />
+        <ul className="relative z-10 mt-8 space-y-3 text-[18px] font-semibold text-white">
+          {["Segui i tuoi ordini", "Salva le maglie che ti piacciono", "Al prossimo acquisto i tuoi dati sono già pronti"].map((t) => (
+            <li key={t} className="flex gap-3"><span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[var(--lime)]" />{t}</li>
+          ))}
+        </ul>
       </div>
 
-      <div className="  flex flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          {/* <div className="sm:mx-auto sm:w-full sm:max-w-md"> */}
-
-          <h2 className=" text-start text-[57px] font-medium tracking-tight text-white">
-            {t("auth.signIn")}
-          </h2>
-          <p className="text-white/50 text-[18px]">
-            Inserisci le tue credenziali per accedere
-          </p>
-        </div>
-
-        <div className=" sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-[#0a0a0a] py-8 px-4  sm:px-10">
-            {/* Show alert if redirected for auth-required */}
-            {showAuthRequired && (
-              <div className="mb-4 rounded-md bg-yellow-50 p-4 border border-yellow-200">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <svg
-                      className="h-5 w-5 text-yellow-400"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-8-3a1 1 0 00-1 1v2a1 1 0 002 0V8a1 1 0 00-1-1zm0 6a1 1 0 100-2 1 1 0 000 2z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-yellow-800">
-                      {t("auth.pleaseSignIn")}
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            )}
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              <div>
-                <div className="mt-2">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    className="bg-[#0a0a0a] border-0 w-full py-2 border-b border-white/20 font-light rounded-none shadow-none pl-0 placeholder:text-white/40 text-white focus:border-[#c8f000] focus:outline-none transition-colors"
-                    placeholder={t("auth.emailPlaceholder")}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div className="mt-2">
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    className="bg-[#0a0a0a] border-0 w-full border-b py-2 border-white/20 placeholder:text-white/40 text-white font-light rounded-none shadow-none pl-0 focus:border-[#c8f000] focus:outline-none transition-colors"
-                    placeholder={t("auth.passwordPlaceholder")}
-                  />
-                </div>
-                <div className="text-sm justify-end flex mt-1.5">
-                  <Link
-                    href="/auth/forgot-password"
-                    className="font-medium text-[#3182CE] transition-colors"
-                  >
-                    {t("auth.forgotPassword")}
-                  </Link>
-                </div>
-              </div>
-
-              {error && (
-                <div className="rounded-md bg-red-50 p-4 border border-red-100">
-                  <div className="flex">
-                    <div className="flex-shrink-0">
-                      <svg
-                        className="h-5 w-5 text-red-400"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <div className="ml-3">
-                      <h3 className="text-sm font-medium text-red-800">
-                        {error}
-                      </h3>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="flex w-full justify-center rounded-full bg-[#c8f000] px-3 gap-1.5 py-2.5 text-sm font-semibold items-center text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c8f000] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isLoading ? t("common.processing") : t("auth.signIn")}
-                  <ArrowRight size={15} />
-                </button>
-              </div>
-            </form>
-
-            <div className="mt-6">
-              <div className="relative flex items-center text-sm">
-                <div className="flex-1 border-t border-white/10" />
-                <span className="bg-[#0a0a0a] px-3 text-white/40 whitespace-nowrap">
-                  {t("auth.orContinueWith")}
-                </span>
-                <div className="flex-1 border-t border-white/10" />
-              </div>
-
-              <div className="mt-6">
-                <button
-                  onClick={() => signIn("google", { callbackUrl: "/" })}
-                  className="flex w-full items-center justify-center gap-3 rounded-md bg-[#1a1a1a] px-3 py-2.5 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-white/20 hover:bg-[#222222] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c8f000] transition-colors"
-                >
-                  <Image
-                    src="/images/contactImages/google.png"
-                    alt="Google"
-                    width={20}
-                    height={20}
-                    className="h-5 w-5"
-                  />
-                  <span>{t("auth.continueWithGoogle")}</span>
-                </button>
-              </div>
-            </div>
-
-            <p className="mt-6 text-center text-sm text-white/60">
-              {t("auth.notAMember")}{" "}
-              <Link
-                href="/auth/signup"
-                className="font-medium text-[#c8f000] hover:text-[#c8f000] transition-colors"
-              >
-                {t("auth.signUpNow")}
-              </Link>
-            </p>
-          </div>
-        </div>
+      <div className="mx-auto w-full max-w-[480px]">
+        <h1 className="disp text-[clamp(2.6rem,6vw,4.4rem)] text-white">Accedi</h1>
+        <p className="mt-2 text-[18px] italic text-[var(--text-2)]">Entra nel tuo account per vedere gli ordini.</p>
+        {showAuthRequired && <p className="mt-4 rounded-2xl bg-[var(--wall-2)] px-4 py-3 text-[16px] font-semibold text-white" role="status">Per vedere questa pagina devi accedere.</p>}
+        <form className="mt-6 space-y-4" onSubmit={handleSubmit} noValidate>
+          <input name="email" type="email" inputMode="email" autoComplete="email" required placeholder="Email" aria-label="Email" className={field} />
+          <input name="password" type="password" autoComplete="current-password" required placeholder="Password" aria-label="Password" className={field} />
+          <div className="text-right"><Link href="/auth/forgot-password" className="text-[15px] font-semibold text-[var(--lime)] underline-offset-4 hover:underline">Password dimenticata?</Link></div>
+          {error && <p role="alert" className="text-[16px] font-semibold text-[var(--red)]">{error}</p>}
+          <button type="submit" disabled={isLoading} className="btn btn-lime w-full disabled:opacity-60">{isLoading ? "Accesso…" : <>Accedi <ArrowRight className="h-5 w-5" strokeWidth={3} /></>}</button>
+        </form>
+        <div className="my-6 flex items-center gap-4 text-[14px] font-semibold text-[var(--text-3)]"><span className="h-px flex-1 bg-[var(--line)]" />oppure<span className="h-px flex-1 bg-[var(--line)]" /></div>
+        <button type="button" onClick={() => signIn("google", { callbackUrl: "/" })} className="btn btn-glass w-full">Continua con Google</button>
+        <p className="mt-6 text-center text-[16px] text-[var(--text-2)]">Non hai un account? <Link href="/auth/signup" className="font-bold text-[var(--lime)]">Registrati</Link></p>
       </div>
     </div>
   );
 }
 
 export default function SignIn() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="text-center">
-            <span className="text-3xl font-bold text-[#c8f000]">
-              Goal Mania
-            </span>
-          </div>
-          <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-white">
-            Sign in to your account
-          </h2>
-        </div>
-      </div>
-    );
-  }
-
-  return <SignInContent />;
+  return (
+    <Suspense fallback={null}>
+      <SignInContent />
+    </Suspense>
+  );
 }

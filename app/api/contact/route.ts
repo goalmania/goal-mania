@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
     // Send email to admin
     const adminEmailResult = await sendEmail({
-      to: "admin@goalmania.com", // Replace with actual admin email
+      to: process.env.CONTACT_TO_EMAIL || "goalmaniaofficial@gmail.com", // l'indirizzo pubblicato nella pagina contatti
       subject: adminEmailTemplate.subject,
       text: adminEmailTemplate.text,
       html: adminEmailTemplate.html

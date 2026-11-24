@@ -1423,3 +1423,7 @@ body {
 @media (hover: hover) and (pointer: fine) { .hero-cols:hover .vmarq { animation-play-state: paused; } }
 .rail.eras { padding: 0; gap: 0; }
 @media (min-width: 1024px) { .rail-wrap:has(.eras) .rail-arrow { display: none !important; } }
+
+/* Fila dentro una colonna: niente margini laterali da pagina intera */
+.rail.rail-tight { padding: 4px 0 8px; scroll-padding-inline: 0; gap: 14px; }
+@media (min-width: 768px) { .rail.rail-tight { padding-inline: 0; gap: 18px; } }

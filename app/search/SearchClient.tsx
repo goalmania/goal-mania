@@ -1,187 +1,104 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Search } from "lucide-react";
+import PageHeader from "@/components/shared/PageHeader";
+import ProductGrid from "@/components/ui/ProductGrid";
 
-interface Product {
-  _id: string;
-  slug?: string;
-  title: string;
-  images: string[];
-  basePrice: number;
-  category: string;
-}
+interface Product { _id: string; slug?: string; title: string; images: string[]; basePrice: number; retroPrice?: number; isRetro?: boolean; category: string }
+interface Article { _id: string; title: string; summary: string; image: string; category: string; createdAt: string; slug: string }
 
-interface Article {
-  _id: string;
-  title: string;
-  summary: string;
-  image: string;
-  category: string;
-  createdAt: string;
-  slug: string;
-}
+const SUGGEST = ["Inter", "Milan", "Juventus", "Napoli", "Brasile", "Italia 1990", "Maradona", "Baggio"];
 
-interface SearchClientProps {
-  initialProducts: Product[];
-  initialArticles: Article[];
-  query: string;
-}
-
-export default function SearchClient({
-  initialProducts,
-  initialArticles,
-  query: initialQuery,
-}: SearchClientProps) {
-  const searchParams = useSearchParams();
-  const queryParam = searchParams?.get("q") || "";
+export default function SearchClient({ initialProducts, initialArticles }: { initialProducts: Product[]; initialArticles: Article[]; query: string }) {
+  const router = useRouter();
+  const params = useSearchParams();
+  const q = params?.get("q") || "";
+  const [text, setText] = useState(q);
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [articles, setArticles] = useState<Article[]>(initialArticles);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Fetch search results when query parameter changes
   useEffect(() => {
-    async function fetchSearchResults() {
-      if (!queryParam) return;
-      setIsLoading(true);
-      try {
-        const response = await fetch(
-          `/api/search?q=${encodeURIComponent(queryParam)}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setProducts(data.products || []);
-          setArticles(data.articles || []);
-        }
-      } catch (error) {
-        console.error("Error fetching search results:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchSearchResults();
-  }, [queryParam]);
+    setText(q);
+    if (!q) return;
+    let off = false;
+    setLoading(true);
+    fetch(`/api/search?q=${encodeURIComponent(q)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (off || !d) return;
+        setProducts(d.products || []);
+        setArticles(d.articles || []);
+      })
+      .catch(() => {})
+      .finally(() => !off && setLoading(false));
+    return () => { off = true; };
+  }, [q]);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("it-IT", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
+  const go = (v: string) => router.push(`/search?q=${encodeURIComponent(v.trim())}`);
+  const cards = products.map((p) => ({ id: p._id, slug: p.slug, name: p.title, price: Number(p.isRetro ? p.retroPrice : p.basePrice) || p.basePrice, image: p.images?.[0] || "/images/image.png", category: p.category }));
+  const none = !!q && !loading && cards.length === 0 && articles.length === 0;
 
   return (
-    <div className="bg-[#0a0a0a] min-h-screen py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Search bar removed, now handled by header for /shop */}
-        {isLoading ? (
-          <div className="animate-pulse">
-            <div className="h-8 bg-[#1a1a1a] rounded w-1/4 mb-4"></div>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="bg-[#0a0a0a] p-4 rounded-lg shadow">
-                  <div className="h-40 bg-[#1a1a1a] rounded mb-4"></div>
-                  <div className="h-4 bg-[#1a1a1a] rounded w-3/4 mb-2"></div>
-                  <div className="h-4 bg-[#1a1a1a] rounded w-1/2"></div>
-                </div>
-              ))}
+    <div>
+      <PageHeader eyebrow="Cerca nel negozio" title={q ? <>Risultati per “{q}”</> : "Cerca una maglia"} lead="Scrivi una squadra, un giocatore o un anno.">
+        <form onSubmit={(e) => { e.preventDefault(); if (text.trim()) go(text); }} role="search" className="flex max-w-[640px] gap-2">
+          <label className="relative flex h-14 flex-1 items-center">
+            <Search className="pointer-events-none absolute left-5 h-5 w-5 text-[var(--text-3)]" />
+            <input value={text} onChange={(e) => setText(e.target.value)} type="search" placeholder="Es. Milan 2006" aria-label="Cerca" className="h-14 w-full rounded-full bg-[var(--wall-2)] pl-14 pr-5 text-[18px] text-white placeholder:text-[var(--text-3)] shadow-[inset_0_0_0_1px_var(--line)] focus:outline-none focus:shadow-[inset_0_0_0_2px_var(--lime)]" />
+          </label>
+          <button type="submit" className="btn btn-lime !h-14">Cerca</button>
+        </form>
+        <ul className="mt-4 flex flex-wrap gap-2">
+          {SUGGEST.map((s) => (
+            <li key={s}>
+              <button type="button" onClick={() => go(s)} className="inline-flex h-10 items-center rounded-full px-4 text-[15px] font-semibold text-white shadow-[inset_0_0_0_1.5px_rgba(244,242,234,0.3)] transition-colors hover:bg-[var(--lime)] hover:text-[#0a0a0a] hover:shadow-none">{s}</button>
+            </li>
+          ))}
+        </ul>
+      </PageHeader>
+
+      <div className="mx-auto w-full max-w-[1760px] px-5 pb-16 pt-4 md:px-10 lg:px-16">
+        {loading && <p className="py-10 text-[18px] italic text-[var(--text-2)]">Cerco…</p>}
+        {none && (
+          <div className="rounded-3xl bg-[var(--wall)] px-6 py-14 text-center shadow-[inset_0_0_0_1px_var(--line)]">
+            <p className="disp text-[clamp(2rem,5vw,3.2rem)] text-white">Nessun risultato</p>
+            <p className="mt-3 text-[17px] italic text-[var(--text-2)]">Prova con un&apos;altra parola, oppure sfoglia le categorie.</p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link href="/shop" className="btn btn-lime">Tutte le maglie</Link>
+              <Link href="/archivio" className="btn btn-ghost">Maglie retro</Link>
             </div>
           </div>
-        ) : (
-          <>
-            {queryParam && products.length === 0 && articles.length === 0 ? (
-              <div className="text-center py-12">
-                <h2 className="text-xl font-medium text-white mb-2">
-                  Nessun risultato trovato per "{queryParam}"
-                </h2>
-                <p className="text-white/60">
-                  Prova con termini di ricerca diversi o sfoglia le nostre
-                  categorie.
-                </p>
-              </div>
-            ) : (
-              <>
-                {products.length > 0 && (
-                  <div className="mb-10">
-                    <h2 className="text-2xl font-semibold text-white mb-6">
-                      Prodotti ({products.length})
-                    </h2>
-                    <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4">
-                      {products.map((product) => (
-                        <Link
-                          key={product._id}
-                          href={`/products/${product.slug || product._id}`}
-                          className="group"
-                        >
-                          <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-[#1a1a1a] xl:aspect-w-7 xl:aspect-h-8">
-                            <Image
-                              src={product.images?.[0] || "/images/image.png"}
-                              alt={product.title}
-                              width={300}
-                              height={300}
-                              className="h-full w-full object-cover object-center group-hover:opacity-75"
-                            />
-                          </div>
-                          <h3 className="mt-4 text-sm text-white/70">
-                            {product.title}
-                          </h3>
-                          <p className="mt-1 text-lg font-medium text-white">
-                            €{product.basePrice}
-                          </p>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {articles.length > 0 && (
-                  <div>
-                    <h2 className="text-2xl font-semibold text-white mb-6">
-                      Articoli ({articles.length})
-                    </h2>
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                      {articles.map((article) => (
-                        <Link
-                          key={article._id}
-                          href={`/news/${article.slug}`}
-                          className="bg-[#0a0a0a] rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow"
-                        >
-                          <div className="aspect-w-16 aspect-h-9">
-                            <Image
-                              src={article.image || "/images/image.png"}
-                              alt={article.title}
-                              width={600}
-                              height={338}
-                              className="h-48 w-full object-cover"
-                            />
-                          </div>
-                          <div className="p-4">
-                            <div className="flex items-center text-xs text-white/50 mb-1">
-                              <span className="capitalize">
-                                {article.category}
-                              </span>
-                              <span className="mx-1">•</span>
-                              <span>{formatDate(article.createdAt)}</span>
-                            </div>
-                            <h3 className="text-lg font-medium text-white mb-2">
-                              {article.title}
-                            </h3>
-                            <p className="text-sm text-white/60 line-clamp-2">
-                              {article.summary}
-                            </p>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
-          </>
+        )}
+        {cards.length > 0 && (
+          <section aria-label="Maglie trovate">
+            <h2 className="mb-5 text-[17px] font-bold text-[var(--text-3)]">{cards.length} {cards.length === 1 ? "maglia" : "maglie"}</h2>
+            <ProductGrid products={cards as any} gridCols={4} />
+          </section>
+        )}
+        {articles.length > 0 && (
+          <section aria-label="Notizie trovate" className="mt-14">
+            <h2 className="disp mb-5 text-[clamp(2rem,4vw,3rem)] text-white">Notizie</h2>
+            <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {articles.map((a) => (
+                <li key={a._id}>
+                  <Link href={`/news/${a.slug}`} className="group block overflow-hidden rounded-[20px] bg-[var(--wall)] shadow-[inset_0_0_0_1px_var(--line)]">
+                    <span className="relative block aspect-[16/10] bg-[var(--wall-2)]">
+                      <Image src={a.image || "/images/image.png"} alt="" fill sizes="(max-width: 1024px) 90vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
+                    </span>
+                    <span className="block p-4">
+                      <span className="line-clamp-2 block text-[19px] font-semibold leading-tight text-white">{a.title}</span>
+                      <span className="mt-2 line-clamp-2 block text-[15px] text-[var(--text-2)]">{a.summary}</span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
       </div>
     </div>

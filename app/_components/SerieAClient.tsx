@@ -1,14 +1,7 @@
 "use client";
 
-import CategoryHeader from "@/components/shop/CategoryHeader";
-import { useState, useEffect, useRef } from "react";
-import { useWishlistStore } from "@/lib/store/wishlist";
-import { useCartStore } from "@/lib/store/cart";
-import ProductGrid from "@/app/_components/ProductGrid";
-import { Suspense } from "react";
+import CategoryBrowser from "@/components/shop/CategoryBrowser";
 import { Product } from "@/lib/types/product";
-import Link from "next/link";
-import Image from "next/image";
 
 // ── Club identity palette ─────────────────────────────────────
 interface ClubIdentity {
@@ -75,60 +68,6 @@ const DEFAULT_IDENTITY: ClubIdentity = {
 };
 
 // ── Category filter logic ────────────────────────────────────
-type Category = "tutte" | "attuali" | "retro" | "tute" | "combo";
-
-const CATEGORY_LABELS: Record<Category, string> = {
-  tutte:   "Tutte",
-  attuali: "Maglie Attuali",
-  retro:   "Retro",
-  tute:    "Tute & Felpe",
-  combo:   "Combo & Kit",
-};
-
-function classifyProduct(p: Product): Category[] {
-  const name = (p.name ?? "").toLowerCase();
-  const cat  = (p.category ?? "").toLowerCase();
-  const cats: Category[] = ["tutte"];
-
-  // Retro
-  if (cat.includes("retro") || /\b(199[0-9]|200[0-9]|201[0-9])\b/.test(name)) {
-    cats.push("retro");
-  }
-  // Tute & Felpe
-  if (/tuta|tute|felpa|giacca|tracksuit|hoodie|sweat/.test(name)) {
-    cats.push("tute");
-  }
-  // Combo & Kit
-  if (/combo|kit|pack|set\b|bundle/.test(name)) {
-    cats.push("combo");
-  }
-  // Attuali: current-season jerseys (not retro, not accessories)
-  if (
-    !cats.includes("retro") &&
-    !cats.includes("tute") &&
-    !cats.includes("combo") &&
-    (cat.includes("2025") || cat.includes("2026") || cat.includes("2027") || cat.includes("world cup"))
-  ) {
-    cats.push("attuali");
-  }
-  // If none of the sub-categories matched (just "tutte"), also show in attuali
-  if (cats.length === 1) cats.push("attuali");
-
-  return cats;
-}
-
-// ── Grain texture SVG ────────────────────────────────────────
-const GrainSVG = () => (
-  <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.045 }}>
-    <filter id="grain-sac">
-      <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch" />
-      <feColorMatrix type="saturate" values="0" />
-    </filter>
-    <rect width="100%" height="100%" filter="url(#grain-sac)" />
-  </svg>
-);
-
-// ── Component ────────────────────────────────────────────────
 interface SerieAClientProps {
   products: Product[];
   teamSlug?: string;
@@ -136,172 +75,18 @@ interface SerieAClientProps {
   leagueHref?: string;   // e.g. "/shop/premier-league"
 }
 
+// Tutte le pagine campionato e squadra passano da qui: cambia solo il titolo, il corpo e' CategoryBrowser
 export default function SerieAClient({ products, teamSlug, leagueName = "Serie A", leagueHref = "/shop/serieA" }: SerieAClientProps) {
-  const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
-  const { addItem: addToCart } = useCartStore();
-  const [mounted, setMounted] = useState(false);
-  const [activeTab, setActiveTab] = useState<Category>("tutte");
-
-  useEffect(() => { setMounted(true); }, []);
-
   const slug = teamSlug?.toLowerCase() ?? "";
   const identity = CLUB_IDENTITY[slug] ?? DEFAULT_IDENTITY;
-
-  const teamDisplayName = identity.label || (
-    slug.length > 0
-      ? slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, " ")
-      : leagueName
-  );
-
-  // Count products per category
-  const categoryCounts = (["tutte", "attuali", "retro", "tute", "combo"] as Category[]).reduce<Record<Category, number>>(
-    (acc, cat) => {
-      acc[cat] = cat === "tutte"
-        ? products.length
-        : products.filter((p) => classifyProduct(p).includes(cat)).length;
-      return acc;
-    },
-    { tutte: 0, attuali: 0, retro: 0, tute: 0, combo: 0 }
-  );
-
-  // Filtered products for current tab
-  const visibleProducts = activeTab === "tutte"
-    ? products
-    : products.filter((p) => classifyProduct(p).includes(activeTab));
-
-  const logoPath = identity.logoSlug ? `/team-logos/${identity.logoSlug}.png` : null;
-  const [logoError, setLogoError] = useState(false);
-
+  const team = identity.label || (slug ? slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, " ") : "");
   return (
-    <div style={{ background: "#0a0a0a", minHeight: "100vh" }}>
-
-      <CategoryHeader title={leagueName} text="Maglie a 35€, spedizione gratuita e reso entro 14 giorni." />
-
-      {/* ── Category Tabs — always visible ───────────────── */}
-      <div
-        className="sticky z-20"
-        style={{ top: "112px", background: "#0d0d0d", borderTop: `1px solid rgba(255,255,255,0.06)`, borderBottom: `1px solid rgba(255,255,255,0.06)` }}
-      >
-        <div
-          className="overflow-x-auto"
-          style={{ scrollbarWidth: "none" }}
-        >
-          <div
-            className="flex items-stretch px-4 sm:px-8 gap-1 py-2"
-            style={{ minWidth: "max-content" }}
-          >
-            {(["tutte", "attuali", "retro", "tute", "combo"] as Category[]).map((cat) => {
-              const count = categoryCounts[cat];
-              const isActive = activeTab === cat;
-              const isEmpty = count === 0 && cat !== "tutte";
-
-              // Colori specifici per categoria
-              const catColor: Record<Category, string> = {
-                tutte:   identity.accent,
-                attuali: identity.accent,
-                retro:   "#f5a623",   // arancio vintage
-                tute:    "#7ed6df",   // azzurro
-                combo:   "#c8f000",   // lime
-              };
-              const color = catColor[cat];
-
-              return (
-                <button
-                  key={cat}
-                  onClick={() => { if (!isEmpty) setActiveTab(cat); }}
-                  className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all duration-200 whitespace-nowrap flex-shrink-0"
-                  style={{
-                    fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)",
-                    cursor: isEmpty ? "not-allowed" : "pointer",
-                    border: "none",
-                    outline: "none",
-                    // Active: filled pill
-                    background: isActive
-                      ? `${color}18`
-                      : isEmpty
-                        ? "rgba(255,255,255,0.03)"
-                        : "rgba(255,255,255,0.05)",
-                    color: isActive
-                      ? color
-                      : isEmpty
-                        ? "rgba(255,255,255,0.2)"
-                        : "rgba(255,255,255,0.5)",
-                    boxShadow: isActive ? `inset 0 0 0 1.5px ${color}55` : `inset 0 0 0 1px rgba(255,255,255,0.08)`,
-                    opacity: isEmpty ? 0.5 : 1,
-                  }}
-                >
-                  {/* Active indicator dot */}
-                  {isActive && (
-                    <span
-                      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                      style={{ background: color }}
-                    />
-                  )}
-                  {CATEGORY_LABELS[cat]}
-                  <span
-                    className="text-[12px] font-bold px-1.5 py-0.5 rounded-md flex-shrink-0"
-                    style={{
-                      background: isActive ? `${color}25` : "rgba(255,255,255,0.07)",
-                      color: isActive ? color : "rgba(255,255,255,0.3)",
-                      fontFamily: "var(--font-mono, monospace)",
-                      }}
-                  >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-        <style jsx>{`div::-webkit-scrollbar { display: none; }`}</style>
-      </div>
-
-      {/* ── Product Grid ──────────────────────────────────── */}
-      <div className="px-4 sm:px-6 lg:px-8 py-10 max-w-[1760px] mx-auto">
-        {visibleProducts.length === 0 ? (
-          <div
-            className="flex flex-col items-center justify-center py-24 gap-4"
-            style={{ color: "rgba(255,255,255,0.64)" }}
-          >
-            <span
-              className="text-5xl font-bold "
-              style={{ fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)", color: identity.accent, opacity: 0.4 }}
-            >
-              —
-            </span>
-            <p className="text-[13px] " style={{ fontFamily: "var(--font-mono, monospace)" }}>
-              Nessun prodotto in questa categoria
-            </p>
-          </div>
-        ) : (
-          <Suspense fallback={
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 animate-pulse">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="rounded-2xl aspect-[3/4]" style={{ background: "rgba(255,255,255,0.04)" }} />
-              ))}
-            </div>
-          }>
-            <ProductGrid
-              products={visibleProducts}
-              onWishlistToggle={(product) => {
-                const pid = product.id.toString();
-                if (isInWishlist(pid)) removeFromWishlist(pid);
-                else addToWishlist({ id: pid, name: product.name, price: product.price, image: product.image, team: product.team ?? "" });
-              }}
-              onAddToCart={(product) => {
-                addToCart({ id: product.id.toString(), name: product.name, price: product.price, image: product.image });
-              }}
-              isInWishlist={isInWishlist}
-            />
-          </Suspense>
-        )}
-      </div>
-
-      {/* ── Footer accent bar ─────────────────────────────── */}
-      <div
-        className="mt-4"
-        style={{ height: "1px", background: `linear-gradient(to right, transparent, ${identity.accent}33, transparent)` }}
-      />
-    </div>
+    <CategoryBrowser
+      products={products as any}
+      title={team ? team : leagueName}
+      eyebrow={team ? `${leagueName} · Maglie da calcio` : "Maglie da calcio"}
+      logo={identity.logoSlug ? `/team-logos/${identity.logoSlug}.png` : null}
+      here={leagueHref}
+    />
   );
 }
