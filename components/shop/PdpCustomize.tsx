@@ -1,6 +1,7 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Check, ChevronDown } from "lucide-react";
 
 export interface PatchLite { _id: string; category: string; price: number }
 export interface Cust {
@@ -52,14 +53,21 @@ export default function PdpCustomize({
   const extras =
     (c.isPlayerEdition ? prices.player_edition : 0) + (c.includeShorts ? prices.shorts : 0) + (c.includeSocks ? prices.socks : 0) + c.selectedPatches.reduce((s: number, p: any) => s + (p.price || 0), 0);
   const printed = !!(c.name || c.number);
+  // Su telefono la personalizzazione e chiusa: la strada verso l'acquisto resta corta. Su computer e aperta.
+  const [open, setOpen] = useState(false);
+  useEffect(() => { if (window.matchMedia("(min-width: 1024px)").matches) setOpen(true); }, []);
+  const chosen = printed || extras > 0;
   return (
     <section aria-labelledby="pz-h" className="rounded-3xl bg-[var(--wall)] p-5 shadow-[inset_0_0_0_1px_var(--line)] md:p-6">
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 id="pz-h" className="disp text-[clamp(1.7rem,3vw,2.3rem)] text-white">Personalizza la maglia</h2>
-        <span className="text-[15px] font-semibold text-[var(--text-3)]">Facoltativo</span>
-      </div>
+      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} className="flex w-full items-center justify-between gap-3 text-left lg:pointer-events-none">
+        <span>
+          <span id="pz-h" className="disp block text-[clamp(1.7rem,3vw,2.3rem)] text-white">Personalizza la maglia</span>
+          <span className="mt-0.5 block text-[15px] font-semibold text-[var(--text-3)]">{chosen ? `Scelto${extras > 0 ? `: +${extras.toFixed(0)}€` : ""}${printed ? " · nome e numero" : ""}` : "Nome, numero e patch (facoltativo)"}</span>
+        </span>
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--wall-2)] text-white lg:hidden"><ChevronDown className={`h-5 w-5 transition-transform ${open ? "rotate-180" : ""}`} /></span>
+      </button>
 
-      <div className="mt-5 grid gap-6 md:grid-cols-[220px_1fr]">
+      <div className={`mt-5 grid gap-6 md:grid-cols-[220px_1fr] ${open ? "" : "hidden"}`}>
         {(canName || canNumber) && (
           <div className="rounded-2xl bg-[var(--wall-2)] p-4 md:self-start">
             <BackPreview name={c.name} number={c.number} />

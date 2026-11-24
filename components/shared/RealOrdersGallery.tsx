@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import AutoRail from "@/components/ui/AutoRail";
+import LazyMount from "@/components/ui/LazyMount";
 import { realOrdersGallery, type GalleryMediaItem } from "@/lib/data/realOrdersGallery";
 
 interface RealOrdersGalleryProps {
@@ -78,6 +79,7 @@ export default function RealOrdersGallery({
         <h2 className="disp mt-2 text-[clamp(2.4rem,6vw,5rem)] text-white">{title}</h2>
         {description && <p className="mt-3 max-w-[48ch] text-[17px] italic leading-snug text-[var(--text-2)]">{description}</p>}
       </div>
+      <LazyMount minHeight={360}>
       <AutoRail label={title} speed={34}>
         {media.map((item, i) => (
           <div key={`${item.src}-${i}`} className="relative aspect-[4/5] w-[62vw] max-w-[300px] shrink-0 overflow-hidden rounded-[18px] bg-[#111] shadow-[inset_0_0_0_1px_var(--line)] md:w-[260px] 2xl:w-[290px]">
@@ -89,6 +91,7 @@ export default function RealOrdersGallery({
           </div>
         ))}
       </AutoRail>
+      </LazyMount>
     </section>
   );
 }

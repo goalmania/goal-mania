@@ -50,7 +50,7 @@ export default function NewsCategoryTabsClient({ articles }: Props) {
             >
               {cat.label}
               <span
-                className="text-[9px] px-1.5 py-0.5 rounded-full font-black"
+                className="text-[14px] px-1.5 py-0.5 rounded-full font-black"
                 style={{
                   background: isActive ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.08)",
                   color: isActive ? "#0a0a0a" : "rgba(255,255,255,0.3)",
@@ -73,7 +73,7 @@ export default function NewsCategoryTabsClient({ articles }: Props) {
         </div>
       ) : (
         <p
-          className="text-center py-8 text-xs uppercase tracking-widest"
+          className="text-center py-8 text-xs tracking-[0.04em]"
           style={{ fontFamily: "var(--font-mono, monospace)", color: "#444" }}
         >
           Nessun articolo in questa categoria

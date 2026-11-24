@@ -254,7 +254,7 @@ export default async function ArticlePage({
       >
         <Link
           href="/"
-          className="text-xs uppercase tracking-widest transition-colors hover:text-[#c8f000]"
+          className="text-xs tracking-[0.04em] transition-colors hover:text-[#c8f000]"
           style={{ fontFamily: "var(--font-mono, monospace)", color: "#555" }}
         >
           Home
@@ -262,14 +262,14 @@ export default async function ArticlePage({
         <span style={{ color: "#c8f000" }} className="text-xs">/</span>
         <Link
           href="/news"
-          className="text-xs uppercase tracking-widest transition-colors hover:text-[#c8f000]"
+          className="text-xs tracking-[0.04em] transition-colors hover:text-[#c8f000]"
           style={{ fontFamily: "var(--font-mono, monospace)", color: "#555" }}
         >
           News
         </Link>
         <span style={{ color: "#c8f000" }} className="text-xs">/</span>
         <span
-          className="text-xs uppercase tracking-widest truncate max-w-[200px]"
+          className="text-xs tracking-[0.04em] truncate max-w-[200px]"
           style={{ fontFamily: "var(--font-mono, monospace)", color: "#333" }}
         >
           {article.title.slice(0, 30)}…
@@ -304,7 +304,7 @@ export default async function ArticlePage({
         <div className="absolute bottom-0 left-0 right-0 px-6 md:px-12 pb-8 max-w-5xl">
           {/* Category tag */}
           <span
-            className="inline-block mb-4 px-3 py-1 rounded-full text-[#0a0a0a] text-[10px] font-black uppercase tracking-[3px]"
+            className="inline-block mb-4 px-3 py-1 rounded-full text-[#0a0a0a] text-[14px] font-black uppercase tracking-[0.04em]"
             style={{ background: "#c8f000", fontFamily: "var(--font-mono, monospace)" }}
           >
             News
@@ -341,7 +341,7 @@ export default async function ArticlePage({
                   {article.author}
                 </div>
                 <div
-                  className="text-[9px] uppercase"
+                  className="text-[14px] uppercase"
                   style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(245,245,245,0.4)" }}
                 >
                   Redazione Goal Mania
@@ -349,7 +349,7 @@ export default async function ArticlePage({
               </div>
             </div>
 
-            <span style={{ color: "rgba(255,255,255,0.15)" }}>|</span>
+            <span style={{ color: "rgba(255,255,255,0.8)" }}>|</span>
 
             <time
               dateTime={article.publishedAt}
@@ -380,10 +380,10 @@ export default async function ArticlePage({
             <div className="sticky top-28 flex flex-col items-center gap-3">
               {/* Share label */}
               <span
-                className="text-[8px] uppercase tracking-[3px] rotate-180 writing-mode-vertical"
+                className="text-[8px] uppercase tracking-[0.04em] rotate-180 writing-mode-vertical"
                 style={{
                   fontFamily: "var(--font-mono, monospace)",
-                  color: "rgba(255,255,255,0.2)",
+                  color: "rgba(255,255,255,0.8)",
                   writingMode: "vertical-rl",
                   marginBottom: "8px",
                 }}
@@ -408,7 +408,7 @@ export default async function ArticlePage({
                   alignItems: "center",
                   justifyContent: "center",
                   transition: "all 0.2s",
-                  color: "rgba(255,255,255,0.4)",
+                  color: "rgba(255,255,255,0.8)",
                   fontSize: "16px",
                   fontWeight: "bold",
                 }}
@@ -432,7 +432,7 @@ export default async function ArticlePage({
                   alignItems: "center",
                   justifyContent: "center",
                   transition: "all 0.2s",
-                  color: "rgba(255,255,255,0.4)",
+                  color: "rgba(255,255,255,0.8)",
                   fontSize: "14px",
                   fontWeight: "bold",
                 }}
@@ -456,7 +456,7 @@ export default async function ArticlePage({
                   alignItems: "center",
                   justifyContent: "center",
                   transition: "all 0.2s",
-                  color: "rgba(255,255,255,0.4)",
+                  color: "rgba(255,255,255,0.8)",
                   fontSize: "13px",
                 }}
               >
@@ -479,7 +479,7 @@ export default async function ArticlePage({
                   alignItems: "center",
                   justifyContent: "center",
                   transition: "all 0.2s",
-                  color: "rgba(255,255,255,0.4)",
+                  color: "rgba(255,255,255,0.8)",
                   fontSize: "13px",
                 }}
               >
@@ -523,7 +523,7 @@ export default async function ArticlePage({
                 }}
               >
                 <div
-                  className="text-xs uppercase tracking-widest mb-2 flex items-center gap-2"
+                  className="text-xs tracking-[0.04em] mb-2 flex items-center gap-2"
                   style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
                 >
                   <BookOpen size={12} />
@@ -582,7 +582,7 @@ export default async function ArticlePage({
             >
               <div className="px-5 py-3 border-b" style={{ borderColor: "rgba(200,240,0,0.1)" }}>
                 <span
-                  className="text-xs uppercase tracking-widest"
+                  className="text-xs tracking-[0.04em]"
                   style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
                 >
                   // Maglia Correlata
@@ -597,8 +597,8 @@ export default async function ArticlePage({
             {relatedArticles[0] && (
               <div className="my-8">
                 <div
-                  className="text-[9px] uppercase tracking-[3px] mb-3 flex items-center gap-2"
-                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.2)" }}
+                  className="text-[14px] uppercase tracking-[0.04em] mb-3 flex items-center gap-2"
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.8)" }}
                 >
                   <span className="w-3 h-[1px]" style={{ background: "rgba(255,255,255,0.2)" }} />
                   Correlati
@@ -620,7 +620,7 @@ export default async function ArticlePage({
                   </div>
                   <div className="flex-1 min-w-0 flex flex-col justify-center">
                     <span
-                      className="text-[9px] uppercase tracking-widest mb-1"
+                      className="text-[14px] tracking-[0.04em] mb-1"
                       style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
                     >
                       Leggi anche
@@ -632,7 +632,7 @@ export default async function ArticlePage({
                       {relatedArticles[0].title}
                     </h4>
                     <span
-                      className="text-[9px] uppercase mt-1"
+                      className="text-[14px] uppercase mt-1"
                       style={{ fontFamily: "var(--font-mono, monospace)", color: "#444" }}
                     >
                       {new Date(relatedArticles[0].publishedAt).toLocaleDateString("it-IT")}
@@ -658,8 +658,8 @@ export default async function ArticlePage({
             {/* Mobile share bar */}
             <div className="lg:hidden mt-8 mb-4">
               <p
-                className="text-[9px] uppercase tracking-[3px] mb-3 flex items-center gap-2"
-                style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.3)" }}
+                className="text-[14px] uppercase tracking-[0.04em] mb-3 flex items-center gap-2"
+                style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.8)" }}
               >
                 <Share2 size={10} />
                 Condividi questo articolo
@@ -682,7 +682,7 @@ export default async function ArticlePage({
                       letterSpacing: "1px",
                       background: "rgba(255,255,255,0.03)",
                       border: "1px solid rgba(255,255,255,0.07)",
-                      color: "rgba(255,255,255,0.5)",
+                      color: "rgba(255,255,255,0.8)",
                     }}
                   >
                     {s.label}
@@ -706,7 +706,7 @@ export default async function ArticlePage({
                 </div>
                 <div className="flex-1">
                   <div
-                    className="text-[9px] uppercase tracking-[3px] mb-1"
+                    className="text-[14px] uppercase tracking-[0.04em] mb-1"
                     style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
                   >
                     // Autore
@@ -717,7 +717,7 @@ export default async function ArticlePage({
                   >
                     {article.author}
                   </div>
-                  <p className="text-sm text-white/40 leading-relaxed" style={{ fontFamily: "var(--font-body, sans-serif)" }}>
+                  <p className="text-sm text-white/80 leading-relaxed" style={{ fontFamily: "var(--font-body, sans-serif)" }}>
                     Giornalista della redazione di Goal Mania. Segue il calcio italiano ed europeo con passione da oltre 10 anni. Specializzato in calciomercato e tattica.
                   </p>
                   <div className="flex items-center gap-3 mt-3">
@@ -725,10 +725,10 @@ export default async function ArticlePage({
                       <a
                         key={sn}
                         href="#"
-                        className="text-[9px] uppercase tracking-widest px-3 py-1.5 rounded-full transition-all hover:text-[#c8f000] hover:border-[#c8f000]/30"
+                        className="text-[14px] tracking-[0.04em] px-3 py-1.5 rounded-full transition-all hover:text-[#c8f000] hover:border-[#c8f000]/30"
                         style={{
                           fontFamily: "var(--font-mono, monospace)",
-                          color: "rgba(255,255,255,0.3)",
+                          color: "rgba(255,255,255,0.8)",
                           border: "1px solid rgba(255,255,255,0.08)",
                         }}
                       >
@@ -748,13 +748,13 @@ export default async function ArticlePage({
                 }}
               >
                 <div
-                  className="text-[10px] uppercase tracking-[3px] mb-2"
-                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.2)" }}
+                  className="text-[14px] uppercase tracking-[0.04em] mb-2"
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.8)" }}
                 >
                   // Commenti
                 </div>
                 <p
-                  className="text-sm font-black uppercase text-white/30 mb-1"
+                  className="text-sm font-black uppercase text-white/80 mb-1"
                   style={{ fontFamily: "var(--font-display, sans-serif)" }}
                 >
                   Sezione Commenti — Prossimamente
@@ -768,7 +768,7 @@ export default async function ArticlePage({
               <div className="flex items-center justify-between gap-4 flex-wrap mt-8">
                 <Link
                   href="/news"
-                  className="flex items-center gap-2 text-xs uppercase tracking-widest transition-colors hover:text-[#c8f000]"
+                  className="flex items-center gap-2 text-xs tracking-[0.04em] transition-colors hover:text-[#c8f000]"
                   style={{ fontFamily: "var(--font-mono, monospace)", color: "#666" }}
                 >
                   <ChevronLeft size={14} /> Tutte le News
@@ -799,7 +799,7 @@ export default async function ArticlePage({
                 style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
               >
                 <div
-                  className="text-xs uppercase tracking-widest mb-4 pb-3 border-b flex items-center gap-2"
+                  className="text-xs tracking-[0.04em] mb-4 pb-3 border-b flex items-center gap-2"
                   style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000", borderColor: "rgba(200,240,0,0.12)" }}
                 >
                   <span className="w-3 h-[2px] rounded-full" style={{ background: "#c8f000" }} />
@@ -810,7 +810,7 @@ export default async function ArticlePage({
                     <div
                       key={i}
                       className="flex items-start gap-2 text-xs"
-                      style={{ color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-body, sans-serif)" }}
+                      style={{ color: "rgba(255,255,255,0.8)", fontFamily: "var(--font-body, sans-serif)" }}
                     >
                       <span style={{ color: "#c8f000", flexShrink: 0, marginTop: "2px", fontFamily: "var(--font-mono, monospace)", fontSize: "10px" }}>
                         {String(i + 1).padStart(2, "0")}
@@ -827,7 +827,7 @@ export default async function ArticlePage({
                 style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
               >
                 <div
-                  className="text-xs uppercase tracking-widest mb-4 pb-3 border-b flex items-center gap-2"
+                  className="text-xs tracking-[0.04em] mb-4 pb-3 border-b flex items-center gap-2"
                   style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000", borderColor: "rgba(200,240,0,0.12)" }}
                 >
                   <span className="w-3 h-[2px] rounded-full" style={{ background: "#c8f000" }} />
@@ -850,7 +850,7 @@ export default async function ArticlePage({
                       letterSpacing: "1px",
                       background: "rgba(255,255,255,0.02)",
                       border: "1px solid rgba(255,255,255,0.05)",
-                      color: "rgba(255,255,255,0.5)",
+                      color: "rgba(255,255,255,0.8)",
                     }}
                   >
                     <span style={{ color: "#c8f000", fontSize: "14px", width: "20px", textAlign: "center" }}>{s.icon}</span>
@@ -866,7 +866,7 @@ export default async function ArticlePage({
                   style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
                 >
                   <div
-                    className="text-xs uppercase tracking-widest mb-4 pb-3 border-b flex items-center gap-2"
+                    className="text-xs tracking-[0.04em] mb-4 pb-3 border-b flex items-center gap-2"
                     style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000", borderColor: "rgba(200,240,0,0.12)" }}
                   >
                     <span className="w-3 h-[2px] rounded-full" style={{ background: "#c8f000" }} />
@@ -891,7 +891,7 @@ export default async function ArticlePage({
                         </div>
                         <div className="flex-1 min-w-0">
                           <div
-                            className="text-[9px] uppercase tracking-widest mb-1"
+                            className="text-[14px] tracking-[0.04em] mb-1"
                             style={{ fontFamily: "var(--font-mono, monospace)", color: "#555" }}
                           >
                             {new Date(rel.publishedAt).toLocaleDateString("it-IT")}
@@ -918,7 +918,7 @@ export default async function ArticlePage({
                 }}
               >
                 <div
-                  className="text-[10px] uppercase tracking-[3px] mb-2 flex items-center justify-center gap-2"
+                  className="text-[14px] uppercase tracking-[0.04em] mb-2 flex items-center justify-center gap-2"
                   style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
                 >
                   Newsletter
@@ -963,7 +963,7 @@ export default async function ArticlePage({
               <div className="flex items-center gap-3">
                 <span className="w-5 h-[2px] rounded-full" style={{ background: "#c8f000" }} />
                 <span
-                  className="text-xs uppercase tracking-[4px]"
+                  className="text-xs uppercase tracking-[0.04em]"
                   style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
                 >
                   // Ti Potrebbe Interessare
@@ -971,7 +971,7 @@ export default async function ArticlePage({
               </div>
               <Link
                 href="/news"
-                className="text-xs uppercase tracking-widest transition-colors hover:text-[#c8f000]"
+                className="text-xs tracking-[0.04em] transition-colors hover:text-[#c8f000]"
                 style={{ fontFamily: "var(--font-mono, monospace)", color: "#555" }}
               >
                 Vedi tutti →

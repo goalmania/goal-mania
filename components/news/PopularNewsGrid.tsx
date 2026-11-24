@@ -114,7 +114,7 @@ const NewsCard = ({
                 {article.title}
               </h3>
 
-              <div className="flex items-center justify-between text-xs text-white/30 uppercase tracking-wide">
+              <div className="flex items-center justify-between text-xs text-white/80 uppercase tracking-wide">
                 <div className="flex items-center gap-4">
                   <span className="flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
@@ -158,7 +158,7 @@ const NewsCard = ({
               {article.title}
             </h3>
 
-            <div className="flex items-center justify-between text-xs text-white/30 uppercase tracking-wide">
+            <div className="flex items-center justify-between text-xs text-white/80 uppercase tracking-wide">
               <span className="flex items-center gap-1">
                 <Calendar className="w-3 h-3" />
                 {formatDate(article.publishedAt)}
@@ -249,7 +249,7 @@ export default async function PopularNewsGrid() {
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="mb-1">
-                        <p className="px-5 py-2 whitespace-nowrap border-[1.33px] h-[29px] flex items-center w-[90px] border-[#B8C1CD] text-[#6D757F] my-2 rounded-[3.99px] uppercase text-[13px]">
+                        <p className="px-5 py-2 whitespace-nowrap border-[1.33px] h-[29px] flex items-center w-[90px] border-[#B8C1CD] text-[#6D757F] my-2 rounded-[3.99px] uppercase text-[15px]">
                           {article.category?.toUpperCase() || "NOTIZIE"}
                         </p>
                       </div>
@@ -260,7 +260,7 @@ export default async function PopularNewsGrid() {
                       </h4>
 
                       {/* Meta */}
-                      <div className="flex items-center gap-2 text-xs text-white/50">
+                      <div className="flex items-center gap-2 text-xs text-white/80">
                         <span>
                           {new Date(article.publishedAt).toLocaleDateString("it-IT")}
                         </span>

@@ -1,5 +1,6 @@
 import { ERAS, eraOf, hasPhoto, isLegend, isNational, teamOf, worldCupItems, type ArchiveItem } from "@/lib/archive";
 import { ERA_THEME } from "@/lib/eraTheme";
+import { RETRO_WEAK_IMAGES } from "@/lib/data/retroWeakImages";
 
 // Le maglie che rappresentano un'era: prima i nomi leggendari, poi gli anni dei Mondiali, una per squadra
 export function pickForEra(items: ArchiveItem[], slug: string, n = 3): ArchiveItem[] {
@@ -7,7 +8,7 @@ export function pickForEra(items: ArchiveItem[], slug: string, n = 3): ArchiveIt
   const cups = ERA_THEME[slug]?.cups.map((c) => c.year) || [];
   const score = (it: ArchiveItem) => (isLegend(it.name) ? 2 : 0) + (it.year && cups.includes(it.year) ? 1 : 0);
   const pool = items
-    .filter((it) => hasPhoto(it.image) && eraOf(it.year)?.slug === slug)
+    .filter((it) => hasPhoto(it.image) && !RETRO_WEAK_IMAGES.has(it.id) && eraOf(it.year)?.slug === slug)
     .map((it, i) => ({ it, s: score(it), i }))
     .sort((a, b) => b.s - a.s || a.i - b.i);
   const seen = new Set<string>();

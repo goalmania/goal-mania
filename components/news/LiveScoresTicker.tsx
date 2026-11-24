@@ -25,10 +25,10 @@ function statusLabel(m: MatchData): { text: string; color: string; pulse: boolea
     return { text: "HT", color: "#c8f000", pulse: false };
   }
   if (FT_STATUSES.has(m.status)) {
-    return { text: "FT", color: "rgba(255,255,255,0.3)", pulse: false };
+    return { text: "FT", color: "rgba(255,255,255,0.8)", pulse: false };
   }
   // NS — not started, show time
-  return { text: m.status, color: "rgba(255,255,255,0.25)", pulse: false };
+  return { text: m.status, color: "rgba(255,255,255,0.8)", pulse: false };
 }
 
 function MatchCard({ match }: { match: MatchData }) {
@@ -48,7 +48,7 @@ function MatchCard({ match }: { match: MatchData }) {
       {/* Status */}
       <div className="flex items-center gap-1.5">
         {pulse && <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: color }} />}
-        <span className="text-[9px] font-black uppercase tracking-[2px]" style={{ fontFamily: "var(--font-mono, monospace)", color }}>
+        <span className="text-[14px] font-black uppercase tracking-[0.04em]" style={{ fontFamily: "var(--font-mono, monospace)", color }}>
           {text}
         </span>
       </div>
@@ -56,7 +56,7 @@ function MatchCard({ match }: { match: MatchData }) {
       {/* Scoreline */}
       <div className="flex items-center gap-2">
         <span
-          className="text-[11px] font-black uppercase truncate max-w-[48px]"
+          className="text-[14px] font-black uppercase truncate max-w-[48px]"
           style={{ fontFamily: "var(--font-display, sans-serif)", color: "#f5f5f5", letterSpacing: "0.5px" }}
         >
           {match.homeTeam.replace(/^(AC |FC |SS |AS |US |CF )/, "")}
@@ -68,7 +68,7 @@ function MatchCard({ match }: { match: MatchData }) {
           {hasScore ? `${match.homeScore}–${match.awayScore}` : "– –"}
         </span>
         <span
-          className="text-[11px] font-black uppercase truncate max-w-[48px]"
+          className="text-[14px] font-black uppercase truncate max-w-[48px]"
           style={{ fontFamily: "var(--font-display, sans-serif)", color: "#f5f5f5", letterSpacing: "0.5px" }}
         >
           {match.awayTeam.replace(/^(AC |FC |SS |AS |US |CF )/, "")}
@@ -119,7 +119,7 @@ export default function LiveScoresTicker() {
     >
       {/* Label */}
       <div className="flex-shrink-0 flex items-center gap-2 pr-3" style={{ borderRight: "1px solid rgba(255,255,255,0.08)" }}>
-        <span className="text-[9px] font-black uppercase tracking-[3px] whitespace-nowrap" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.4)" }}>
+        <span className="text-[14px] font-black uppercase tracking-[0.04em] whitespace-nowrap" style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.8)" }}>
           Risultati
         </span>
       </div>

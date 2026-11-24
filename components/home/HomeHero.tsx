@@ -65,10 +65,11 @@ export default function HomeHero({ products }: { products: HeroProduct[] }) {
     <section className="hero-pitch relative overflow-hidden">
       <div className="mx-auto grid w-full max-w-[1760px] items-center gap-8 px-5 pb-10 pt-8 md:px-10 md:pt-12 lg:min-h-[min(82svh,760px)] lg:grid-cols-[1fr_1.1fr] lg:gap-14 lg:px-16 lg:pb-14">
         <div className="relative z-10">
-          <p className="rise inline-flex items-center gap-2 rounded-full bg-[var(--lime)] px-4 py-2 text-[14px] font-bold text-[#0a0a0a]">
+          <Link href="/black-friday" className="rise inline-flex items-center gap-2 rounded-full bg-[var(--lime)] px-4 py-2 text-[14px] font-bold text-[#0a0a0a] transition-transform hover:-translate-y-0.5">
             <span className="h-2 w-2 rounded-full bg-[#0a0a0a]" aria-hidden="true" />
             Black Friday: prendi 3, paghi 2
-          </p>
+            <ArrowRight className="h-4 w-4" strokeWidth={3} />
+          </Link>
           <BlackFridayCountdown />
           <h1 className="disp rise mt-5 text-[clamp(3.6rem,8.6vw,8.6rem)] leading-[0.84] text-white" style={{ animationDelay: "70ms" }}>
             Il calcio

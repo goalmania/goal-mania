@@ -198,7 +198,7 @@ export default function NewsBanner({ articles = [], className, imageUrl }: NewsB
                 {article.title}
               </h1>
 
-              <div className="flex items-center justify-center gap-6 text-gray-200 text-[12px] lg:text-[14px]">
+              <div className="flex items-center justify-center gap-6 text-gray-200 text-[14px] lg:text-[14px]">
                 <div className="flex items-center gap-2">
                   <UserCircle className="w-4 h-4" />
                   <span>By {article.author}</span>

@@ -61,12 +61,16 @@ export default function AutoRail({
           }
         }
       }
-      raf = requestAnimationFrame(tick);
+      if (raf) raf = requestAnimationFrame(tick);
     };
 
-    const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting), { threshold: 0.15 });
+    const start = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } };
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (visible) start();
+      else if (raf) { cancelAnimationFrame(raf); raf = 0; }
+    }, { threshold: 0.15 });
     io.observe(el);
-    raf = requestAnimationFrame(tick);
 
     const pause = () => hold.current(4500);
     const enter = (e: PointerEvent) => {

@@ -93,7 +93,7 @@ function CategoryPill({ category }: { category: string }) {
   const color = CATEGORY_COLORS[category] || "#c8f000";
   return (
     <span
-      className="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-[2px]"
+      className="inline-block px-2.5 py-0.5 rounded-full text-[14px] font-black uppercase tracking-[0.04em]"
       style={{
         background: color,
         color: color === "#c8f000" ? "#0a0a0a" : "#fff",
@@ -218,7 +218,7 @@ function StandardCard({ article, priority }: { article: NewsArticle; priority?: 
           </p>
         )}
         <div
-          className="flex items-center gap-3 text-[10px] uppercase mt-1"
+          className="flex items-center gap-3 text-[14px] uppercase mt-1"
           style={{ fontFamily: "var(--font-mono, monospace)", color: "#666" }}
         >
           <span className="flex items-center gap-1">
@@ -262,7 +262,7 @@ function CompactCard({ article }: { article: NewsArticle }) {
           {article.title}
         </h4>
         <span
-          className="text-[9px] uppercase"
+          className="text-[14px] uppercase"
           style={{ fontFamily: "var(--font-mono, monospace)", color: "#555" }}
         >
           {formatDate(article.publishedAt)}
@@ -317,7 +317,7 @@ function FeaturedCard({ article, priority }: { article: NewsArticle; priority?: 
           </p>
         )}
         <div
-          className="flex items-center gap-4 text-[10px] uppercase"
+          className="flex items-center gap-4 text-[14px] uppercase"
           style={{ fontFamily: "var(--font-mono, monospace)", color: "#666" }}
         >
           <span>{article.author}</span>

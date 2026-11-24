@@ -75,15 +75,15 @@ export default function StandingsWidget() {
         <div className="flex items-center gap-2">
           <span className="w-3 h-[2px] rounded-full" style={{ background: "#c8f000" }} />
           <span
-            className="text-[10px] font-black uppercase tracking-[3px]"
+            className="text-[14px] font-black uppercase tracking-[0.04em]"
             style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
           >
             Serie A
           </span>
         </div>
         <span
-          className="text-[9px] uppercase tracking-[2px]"
-          style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.2)" }}
+          className="text-[14px] uppercase tracking-[0.04em]"
+          style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.8)" }}
         >
           {season}
         </span>
@@ -97,8 +97,8 @@ export default function StandingsWidget() {
         {["#", "Squadra", "V", "N", "P", "Pts"].map((col) => (
           <span
             key={col}
-            className="text-[9px] uppercase text-center"
-            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.2)" }}
+            className="text-[14px] uppercase text-center"
+            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.8)" }}
           >
             {col}
           </span>
@@ -144,7 +144,7 @@ export default function StandingsWidget() {
                 <span
                   key={i}
                   className="text-xs text-center"
-                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.4)" }}
+                  style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.8)" }}
                 >
                   {val}
                 </span>
@@ -169,16 +169,16 @@ export default function StandingsWidget() {
         <div className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full" style={{ background: "#c8f000" }} />
           <span
-            className="text-[9px] uppercase"
-            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.3)" }}
+            className="text-[14px] uppercase"
+            style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.8)" }}
           >
             Champions League
           </span>
         </div>
         <Link
           href="/serieA"
-          className="text-[9px] uppercase tracking-widest hover:text-[#c8f000] transition-colors"
-          style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.25)" }}
+          className="text-[14px] tracking-[0.04em] hover:text-[#c8f000] transition-colors"
+          style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(255,255,255,0.8)" }}
         >
           Classifica completa →
         </Link>

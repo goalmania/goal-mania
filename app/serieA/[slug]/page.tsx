@@ -279,7 +279,7 @@ export default async function SerieAArticlePage({
                   />
                 </div>
                 <div className="p-4 flex-1 flex flex-col">
-                  <div className="flex items-center text-xs text-white/50 mb-2">
+                  <div className="flex items-center text-xs text-white/80 mb-2">
                     <span>
                       {new Date(related.publishedAt).toLocaleDateString()}
                     </span>
@@ -287,7 +287,7 @@ export default async function SerieAArticlePage({
                   <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#c8f000] transition-colors duration-200">
                     {related.title}
                   </h3>
-                  <p className="text-sm text-white/60 mb-4 line-clamp-2">
+                  <p className="text-sm text-white/80 mb-4 line-clamp-2">
                     {related.summary}
                   </p>
                 </div>

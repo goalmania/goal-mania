@@ -86,7 +86,7 @@ function CategoryPill({ category }: { category: string }) {
   const color = CATEGORY_COLORS[category] || "#c8f000";
   return (
     <span
-      className="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-[2px]"
+      className="inline-block px-2.5 py-0.5 rounded-full text-[14px] font-black uppercase tracking-[0.04em]"
       style={{
         background: color,
         color: color === "#c8f000" ? "#0a0a0a" : "#fff",
@@ -170,7 +170,7 @@ export default function BentoSection({ articles, reverse = false }: BentoSection
                 </p>
               )}
               <div
-                className="mt-3 flex items-center gap-3 text-[10px] uppercase"
+                className="mt-3 flex items-center gap-3 text-[14px] uppercase"
                 style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(245,245,245,0.35)" }}
               >
                 <span>{hero.author}</span>
@@ -222,7 +222,7 @@ export default function BentoSection({ articles, reverse = false }: BentoSection
                   {article.title}
                 </h3>
                 <div
-                  className="flex items-center gap-2 text-[9px] uppercase"
+                  className="flex items-center gap-2 text-[14px] uppercase"
                   style={{ fontFamily: "var(--font-mono, monospace)", color: "#555" }}
                 >
                   <Calendar size={8} className="text-[#c8f000]/50" />
@@ -238,7 +238,7 @@ export default function BentoSection({ articles, reverse = false }: BentoSection
           {sideArticles.length < 3 && (
             <Link
               href="/news"
-              className="flex items-center justify-center gap-2 rounded-xl py-4 text-[10px] uppercase tracking-widest transition-all hover:border-[#c8f000]/30 hover:text-[#c8f000] flex-1"
+              className="flex items-center justify-center gap-2 rounded-xl py-4 text-[14px] tracking-[0.04em] transition-all hover:border-[#c8f000]/30 hover:text-[#c8f000] flex-1"
               style={{
                 fontFamily: "var(--font-mono, monospace)",
                 color: "#555",
@@ -289,7 +289,7 @@ export default function BentoSection({ articles, reverse = false }: BentoSection
                   {article.title}
                 </h3>
                 <div
-                  className="flex items-center gap-3 text-[9px] uppercase mt-auto"
+                  className="flex items-center gap-3 text-[14px] uppercase mt-auto"
                   style={{ fontFamily: "var(--font-mono, monospace)", color: "#555" }}
                 >
                   <span className="flex items-center gap-1">

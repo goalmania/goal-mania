@@ -59,6 +59,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/shop/2025/26`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/shop/2024/25`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.6 },
     { url: `${BASE_URL}/archivio`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.95 },
+    { url: `${BASE_URL}/black-friday`, lastModified: new Date(), changeFrequency: "daily", priority: 0.9 },
     { url: `${BASE_URL}/recensioni`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE_URL}/shop/jackets`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.6 },
     { url: `${BASE_URL}/shop/limited-edition`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.6 },

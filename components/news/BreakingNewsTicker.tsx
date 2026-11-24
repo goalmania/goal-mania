@@ -37,7 +37,7 @@ export default function BreakingNewsTicker() {
         style={{ background: "#111", borderRight: "1px solid rgba(255,255,255,0.08)" }}
       >
         <span className="w-2 h-2 rounded-full inline-block animate-pulse" style={{ background: "#ff3333" }} />
-        <span className="text-[10px] font-black uppercase tracking-[3px] whitespace-nowrap" style={{ fontFamily: "var(--font-mono, monospace)", color: "#ff3333" }}>
+        <span className="text-[14px] font-black uppercase tracking-[0.04em] whitespace-nowrap" style={{ fontFamily: "var(--font-mono, monospace)", color: "#ff3333" }}>
           BREAKING
         </span>
       </div>

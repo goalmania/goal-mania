@@ -18,6 +18,7 @@ import HomeNewsStrip from "@/components/home/HomeNewsStrip";
 import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
 import { getArchiveItems, worldCupYearsWithJerseys } from "@/lib/archiveData";
 import { pickHyped, rotationSeed } from "@/lib/hype";
+import { RETRO_WEAK_IMAGES } from "@/lib/data/retroWeakImages";
 import ProductModel from "@/lib/models/Product";
 import HomeFaq, { type FaqItem } from "@/components/home/HomeFaq";
 
@@ -154,7 +155,7 @@ async function getArchiveEras(): Promise<{ eras: EraPanelData[]; total: number; 
     return { slug, count: info.count, image: pick?.image || "", alt: pick?.name || slug, teams: info.teams, cupYears: info.cups.map((c) => c.year) };
   }).filter((e) => e.count > 0);
   const cups: CupCard[] = worldCupYearsWithJerseys(items).map((y) => {
-    const list = worldCupItems(items, y).filter((j) => hasPhoto(j.image));
+    const list = worldCupItems(items, y).filter((j) => hasPhoto(j.image) && !RETRO_WEAK_IMAGES.has(j.id));
     return { year: y, host: WORLD_CUPS[y].host, winner: WORLD_CUPS[y].winner, count: worldCupItems(items, y).length, jerseys: list.slice(0, 3).map((j) => ({ id: j.id, image: j.image, name: j.name })) };
   }).filter((c) => c.jerseys.length > 0);
   return { eras, total: items.length || 730, cups };

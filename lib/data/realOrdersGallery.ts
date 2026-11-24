@@ -44,7 +44,7 @@ const CLD = "do04e87p5";
  */
 const CLD_VIDEO = `https://res.cloudinary.com/${CLD}/video/upload/q_auto,f_auto,w_900,c_limit`;
 /** Poster: primo secondo del video, largo max 600px */
-const CLD_POSTER = `https://res.cloudinary.com/${CLD}/video/upload/so_1,q_auto,f_auto,w_600`;
+const CLD_POSTER = `https://res.cloudinary.com/${CLD}/video/upload/so_1,q_auto:eco,f_auto,w_420`;
 
 const v = (n: number, alt: string): GalleryMediaItem => {
   const id = `goalmania/gallery/video-${String(n).padStart(2, "0")}`;

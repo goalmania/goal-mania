@@ -1,4 +1,5 @@
 import { isLegend, isNational } from "@/lib/archive";
+import { RETRO_WEAK_IMAGES } from "@/lib/data/retroWeakImages";
 
 // Le maglie che la gente cerca di piu: grandi club, grandi nazionali, i nomi che hanno fatto la storia.
 // Non e un dato di vendita: e una regola editoriale, scritta qui, che si puo cambiare.
@@ -49,7 +50,7 @@ export interface Pickable {
 
 // Le n maglie piu hype tra attuali e retro (meta e meta), scelte a rotazione dal gruppo di testa.
 export function pickHyped<T extends Pickable>(items: T[], n: number, seed: number, retroShare = 0.5): T[] {
-  const withPhoto = items.filter((i) => i.image && !i.image.startsWith("/images/"));
+  const withPhoto = items.filter((i) => i.image && !i.image.startsWith("/images/") && !RETRO_WEAK_IMAGES.has(i.id));
   const top = (list: T[], k: number) =>
     shuffle(
       [...list].sort((a, b) => hypeScore(b.name, b.feature) - hypeScore(a.name, a.feature)).slice(0, Math.max(k * 3, 12)),

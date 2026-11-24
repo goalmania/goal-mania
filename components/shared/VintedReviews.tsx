@@ -1,5 +1,6 @@
 import { Star } from "lucide-react";
 import AutoRail from "@/components/ui/AutoRail";
+import LazyMount from "@/components/ui/LazyMount";
 import { VINTED_REVIEWS, vintedStats } from "@/lib/data/vintedReviews";
 
 // Le recensioni vere ricevute su Vinted, prima di questo sito. Sempre con l'etichetta della fonte.
@@ -30,6 +31,7 @@ export default function VintedReviews({ compact = false }: { compact?: boolean }
         </div>
       </div>
       <div className="mt-6">
+        <LazyMount minHeight={220}>
         <AutoRail label="Recensioni ricevute su Vinted" speed={32}>
           {list.map((r) => (
             <figure key={r.name} className="flex w-[78vw] max-w-[340px] shrink-0 flex-col justify-between gap-4 rounded-[20px] bg-[var(--wall)] p-5 shadow-[inset_0_0_0_1px_var(--line)] md:w-[320px]">
@@ -44,6 +46,7 @@ export default function VintedReviews({ compact = false }: { compact?: boolean }
             </figure>
           ))}
         </AutoRail>
+        </LazyMount>
       </div>
     </section>
   );

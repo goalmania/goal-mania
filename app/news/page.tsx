@@ -78,7 +78,7 @@ function SectionHeader({ label, href }: { label: string; href?: string }) {
       <div className="flex items-center gap-3">
         <span className="w-5 h-[2px] rounded-full" style={{ background: "#c8f000" }} />
         <span
-          className="text-xs uppercase tracking-[4px] font-black"
+          className="text-xs uppercase tracking-[0.04em] font-black"
           style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
         >
           {label}
@@ -87,7 +87,7 @@ function SectionHeader({ label, href }: { label: string; href?: string }) {
       {href && (
         <Link
           href={href}
-          className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest transition-colors hover:text-[#c8f000]"
+          className="flex items-center gap-1.5 text-[14px] tracking-[0.04em] transition-colors hover:text-[#c8f000]"
           style={{ fontFamily: "var(--font-mono, monospace)", color: "#555" }}
         >
           Vedi tutti <ArrowRight size={10} />
@@ -232,7 +232,7 @@ export default async function NewsPage() {
                         <div className="flex items-center gap-2 mb-4 pb-3 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
                           <span className="w-3 h-[2px] rounded-full" style={{ background: "#c8f000" }} />
                           <span
-                            className="text-[10px] font-black uppercase tracking-[3px]"
+                            className="text-[14px] font-black uppercase tracking-[0.04em]"
                             style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
                           >
                             Più Letti
@@ -259,7 +259,7 @@ export default async function NewsPage() {
                                   {art.title}
                                 </h4>
                                 <span
-                                  className="text-[9px] uppercase mt-1 block"
+                                  className="text-[14px] uppercase mt-1 block"
                                   style={{ fontFamily: "var(--font-mono, monospace)", color: "#444" }}
                                 >
                                   {new Date(art.publishedAt).toLocaleDateString("it-IT", { day: "numeric", month: "short" })}
@@ -275,7 +275,7 @@ export default async function NewsPage() {
                     <StandingsWidget />
 
                     {/* Dalle notizie al negozio: la maglia di cui si parla, a 35€ */}
-                    <Link href="/shop" className="poster tape block bg-[var(--lime)] p-6 text-[#0a0a0a]" style={{ ["--rot" as string]: "-1.2deg", background: "var(--lime)" }}>
+                    <Link href="/shop" className="block rounded-3xl bg-[var(--lime)] p-6 text-[#0a0a0a]">
                       <span className="disp block text-[44px]">Vesti la tua squadra</span>
                       <span className="mt-2 block text-[16px] font-semibold leading-snug">Maglie a 35€, retro a 40€. Prendi 3, ne paghi 2. Spedizione gratuita.</span>
                       <span className="btn btn-ink mt-4 !h-11 !text-[18px]">Vai al negozio <MoveRight className="h-4 w-4" /></span>
@@ -289,7 +289,7 @@ export default async function NewsPage() {
                       <div className="flex items-center gap-2 mb-4">
                         <span className="w-3 h-[2px] rounded-full" style={{ background: "#c8f000" }} />
                         <span
-                          className="text-[10px] font-black uppercase tracking-[3px]"
+                          className="text-[14px] font-black uppercase tracking-[0.04em]"
                           style={{ fontFamily: "var(--font-mono, monospace)", color: "#c8f000" }}
                         >
                           Seguici
@@ -305,11 +305,11 @@ export default async function NewsPage() {
                           <a
                             key={s.name}
                             href={s.href}
-                            className="flex items-center gap-2 p-2.5 rounded-xl text-white/50 hover:text-[#c8f000] hover:border-[#c8f000]/20 transition-all text-xs font-bold"
+                            className="flex items-center gap-2 p-2.5 rounded-xl text-white/80 hover:text-[#c8f000] hover:border-[#c8f000]/20 transition-all text-xs font-bold"
                             style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
                           >
                             {s.icon}
-                            <span style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1px", textTransform: "uppercase", fontSize: "0.65rem" }}>
+                            <span style={{ fontFamily: "var(--font-display, sans-serif)", letterSpacing: "1px", textTransform: "uppercase", fontSize: "0.9rem" }}>
                               {s.name}
                             </span>
                           </a>
@@ -340,10 +340,10 @@ export default async function NewsPage() {
                 <div className="flex-1 p-6 flex flex-col md:flex-row justify-between items-center gap-4">
                   <div>
                     <span
-                      className="text-[9px] uppercase tracking-[3px] text-[#c8f000]"
+                      className="text-[14px] uppercase tracking-[0.04em] text-[#c8f000]"
                       style={{ fontFamily: "var(--font-mono, monospace)" }}
                     >
-                      // Offerta Speciale
+                      Dal negozio
                     </span>
                     <h2
                       className="text-xl lg:text-2xl font-black uppercase text-white leading-tight mt-1"
@@ -351,7 +351,7 @@ export default async function NewsPage() {
                     >
                       Compra la Nuova Maglia
                     </h2>
-                    <p className="text-sm text-white/40 mt-1">Spedizione gratuita · Qualità Garantita</p>
+                    <p className="text-sm text-white/80 mt-1">Spedizione gratuita · Reso entro 14 giorni</p>
                   </div>
                   <Link href="/shop">
                     <button

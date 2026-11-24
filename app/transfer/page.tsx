@@ -121,7 +121,7 @@ export default async function TransferPage() {
                   />
                 </div>
                 <div className="p-4 flex-1 flex flex-col">
-                  <div className="flex items-center text-xs text-white/60 mb-2">
+                  <div className="flex items-center text-xs text-white/80 mb-2">
                     <span>
                       {new Date(article.publishedAt).toLocaleDateString()}
                     </span>

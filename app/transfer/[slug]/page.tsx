@@ -231,7 +231,7 @@ export default async function TransferArticlePage({
     <div className="container mx-auto px-4 py-8">
       <article className="max-w-3xl mx-auto">
         <header className="mb-8">
-          <div className="flex items-center text-sm text-white/50 mb-3">
+          <div className="flex items-center text-sm text-white/80 mb-3">
             <time dateTime={article.publishedAt}>
               {new Date(article.publishedAt).toLocaleDateString("it-IT", {
                 year: "numeric",
@@ -245,7 +245,7 @@ export default async function TransferArticlePage({
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
             {article.title}
           </h1>
-          <p className="text-lg text-white/60 mb-6">{article.summary}</p>
+          <p className="text-lg text-white/80 mb-6">{article.summary}</p>
         </header>
 
         <div className="relative h-[50vh] w-full mb-8 rounded-lg overflow-hidden">
@@ -282,7 +282,7 @@ export default async function TransferArticlePage({
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-sm font-medium text-white">Autore</h3>
-              <p className="text-sm text-white/60">{article.author}</p>
+              <p className="text-sm text-white/80">{article.author}</p>
             </div>
             <Link
               href="/transfer"
@@ -315,13 +315,13 @@ export default async function TransferArticlePage({
                   />
                 </div>
                 <div className="p-4 flex-1 flex flex-col">
-                  <div className="flex items-center text-xs text-white/50 mb-2">
+                  <div className="flex items-center text-xs text-white/80 mb-2">
                     <span>{new Date(related.publishedAt).toLocaleDateString("it-IT")}</span>
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#c8f000] transition-colors">
                     {related.title}
                   </h3>
-                  <p className="text-sm text-white/60 mb-4 line-clamp-2">
+                  <p className="text-sm text-white/80 mb-4 line-clamp-2">
                     {related.summary}
                   </p>
                 </div>
