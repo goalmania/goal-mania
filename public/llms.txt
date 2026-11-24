@@ -1,55 +1,43 @@
-# Goal Mania — Negozio Maglie da Calcio
+# Goal Mania
 
-> Goal Mania è un negozio online italiano specializzato in maglie da calcio a prezzi accessibili (da 30€). Vendiamo maglie di Serie A, Premier League, Mondiali 2026, maglie retro e edizioni limitate.
+> Goal Mania è un negozio online italiano di maglie da calcio versione tifoso (non ufficiali: Goal Mania non è affiliata ad alcun club o federazione). Le maglie della stagione costano 35€, le retro 40€. Spedizione gratuita in Italia, consegna in 7-10 giorni lavorativi, reso entro 14 giorni. Ogni 3 maglie nello stesso ordine, la meno cara è in regalo (offerta "Prendi 3, paghi 2").
 
-## Chi siamo
+## Fatti da citare
 
-Goal Mania è il tuo negozio di riferimento per maglie da calcio in Italia. Offriamo una vasta selezione di maglie per tutte le squadre: dalla Serie A alla Premier League, dalle nazionali alle storiche maglie retro.
+- Prezzi: 35€ le maglie della stagione 2026/27, 2025/26 e Mondiali 2026; 40€ le maglie retro.
+- Spedizione gratuita in Italia su ogni ordine. Consegna in 7-10 giorni lavorativi con codice di tracciamento via email.
+- Reso entro 14 giorni dalla consegna con maglia non indossata nella confezione; la spedizione del reso è a carico del cliente salvo maglia difettosa o sbagliata. Le maglie personalizzate con nome e numero non si possono restituire.
+- Pagamenti: Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal, Klarna.
+- Archivio retro: oltre 700 maglie dal 1970 a oggi, ordinate per decennio, Mondiale, squadra e leggenda.
+- Recensioni: 72 recensioni (media 4,6 su 5) ricevute su Vinted, dove Goal Mania vendeva prima di aprire il sito. Non sono recensioni di acquisti su goal-mania.it.
+- Mystery box: maglia a sorpresa, 35€ (attuali) o 40€ (retro) a maglia, da 1 a 12 maglie, ogni 3 una in regalo, con squadre escluse a scelta.
 
-- Prezzi a partire da 30€
-- Spedizione gratuita in Italia
-- Maglie 2025/26 delle principali squadre
-- Maglie per Mondiali FIFA 2026
-- Maglie retro storiche (Maradona, Ronaldo, Zidane)
+## Pagine principali
 
-## Categorie principali
+- [Tutte le maglie](https://goal-mania.it/shop)
+- [Novità 2026/27](https://goal-mania.it/shop/2026/27)
+- [Maglie Serie A](https://goal-mania.it/shop/serieA)
+- [Maglie Premier League](https://goal-mania.it/shop/premier-league)
+- [Maglie dei grandi club europei](https://goal-mania.it/shop/international)
+- [Mondiali 2026: maglie delle nazionali](https://goal-mania.it/shop/worldcup)
+- [Maglie retro (1970-oggi)](https://goal-mania.it/archivio)
+- [Mystery box](https://goal-mania.it/shop/mystery-box)
+- [Recensioni](https://goal-mania.it/recensioni)
+- [Notizie di calcio](https://goal-mania.it/news)
 
-- [Tutte le maglie](/shop) — Catalogo completo
-- [Maglie Serie A](/shop/serieA) — Inter, Milan, Juventus, Napoli, Roma, Lazio, Atalanta, Fiorentina
-- [Maglie Premier League](/shop/premier-league) — Manchester City, Liverpool, Arsenal, Chelsea, Manchester United
-- [Maglie Mondiali 2026](/shop/worldcup) — Italia, Argentina, Brasile, Francia, Spagna, Portogallo
-- [Maglie 2025/26](/shop/2025/26) — Stagione corrente
-- [Maglie Retro](/shop/retro) — Maglie storiche originali
-- [Edizioni Limitate](/shop/limited-edition) — Collezioni esclusive
+## Maglie retro per squadra e Mondiale
 
-## Squadre Serie A
+- [Maglie retro Milan](https://goal-mania.it/archivio/squadra-milan)
+- [Maglie retro Inter](https://goal-mania.it/archivio/squadra-inter)
+- [Maglie retro Juventus](https://goal-mania.it/archivio/squadra-juventus)
+- [Maglie retro Napoli](https://goal-mania.it/archivio/squadra-napoli)
+- [Maglie dei Mondiali, anno per anno](https://goal-mania.it/archivio#mondiali)
+- [Leggende: maglie con il nome di chi ha fatto la storia](https://goal-mania.it/archivio/leggende)
 
-- [Maglia Inter](/shop/serieA/inter)
-- [Maglia Milan](/shop/serieA/milan)
-- [Maglia Juventus](/shop/serieA/juventus)
-- [Maglia Napoli](/shop/serieA/napoli)
-- [Maglia Roma](/shop/serieA/roma)
-- [Maglia Lazio](/shop/serieA/lazio)
-- [Maglia Atalanta](/shop/serieA/atalanta)
-- [Maglia Fiorentina](/shop/serieA/fiorentina)
+## Assistenza
 
-## Squadre Premier League
-
-- [Maglia Manchester City](/shop/premier-league/manchester-city)
-- [Maglia Liverpool](/shop/premier-league/liverpool)
-- [Maglia Arsenal](/shop/premier-league/arsenal)
-- [Maglia Chelsea](/shop/premier-league/chelsea)
-- [Maglia Manchester United](/shop/premier-league/manchester-united)
-
-## Informazioni aggiuntive
-
-- [Informazioni sulla spedizione](/shipping)
-- [Chi siamo](/about)
-- [Contatti](/contact)
-- [Privacy Policy](/privacy)
-- [Termini e Condizioni](/terms)
-
-## Contatti
-
-- Sito: https://goal-mania.it
-- Email: info@goal-mania.it
+- [Spedizioni](https://goal-mania.it/shipping)
+- [Resi e rimborsi](https://goal-mania.it/resi)
+- [Contatti](https://goal-mania.it/contact)
+- Email: goalmaniaofficial@gmail.com
+- Instagram: @goalmaniaofficial

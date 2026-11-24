@@ -2,6 +2,8 @@ import { MetadataRoute } from "next";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import Article from "@/lib/models/Article";
+import { getArchiveItems, topTeams, worldCupYearsWithJerseys } from "@/lib/archiveData";
+import { ERAS } from "@/lib/archive";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://goal-mania.it";
 
@@ -56,16 +58,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/shop/2026/27`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/shop/2025/26`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/shop/2024/25`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.6 },
-    { url: `${BASE_URL}/shop/retro`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.9 },
-    // Retro team pages — high commercial intent ("maglia Milan retro", "maglia Napoli Maradona")
-    ...["milan","inter","juventus","napoli","roma","lazio","fiorentina","parma",
-        "man-united","liverpool","arsenal","barcellona","real-madrid","celtic",
-        "brasile","argentina","italia","inghilterra","francia","psg"].map((team) => ({
-      url: `${BASE_URL}/shop/retro/${team}`,
-      lastModified: EVERGREEN_LASTMOD,
-      changeFrequency: "weekly" as const,
-      priority: 0.85,
-    })),
+    { url: `${BASE_URL}/archivio`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.95 },
+    { url: `${BASE_URL}/recensioni`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE_URL}/shop/jackets`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.6 },
     { url: `${BASE_URL}/shop/limited-edition`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.6 },
     { url: `${BASE_URL}/shop/mystery-box`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly", priority: 0.5 },
@@ -113,6 +107,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const MAX_URL_LENGTH = 200;
 
+    // Maglie retro: decenni, Mondiali, leggende e ogni squadra (le stesse pagine che si generano al build)
+    const archive = await getArchiveItems();
+    const archiveRoutes: MetadataRoute.Sitemap = [
+      ...ERAS.map((e) => e.slug),
+      "leggende",
+      ...worldCupYearsWithJerseys(archive).map((y) => `mondiale-${y}`),
+      ...topTeams(archive, 400).map((t) => t.slug),
+    ].map((slug) => ({ url: `${BASE_URL}/archivio/${slug}`, lastModified: EVERGREEN_LASTMOD, changeFrequency: "weekly" as const, priority: slug.startsWith("squadra-") ? 0.7 : 0.8 }));
+
     const productRoutes: MetadataRoute.Sitemap = (products as any[])
       .filter((p) => {
         const slug = p.slug || p._id.toString();
@@ -155,7 +158,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         };
       });
 
-    return [...staticRoutes, ...productRoutes, ...articleRoutes];
+    return [...staticRoutes, ...archiveRoutes, ...productRoutes, ...articleRoutes];
   } catch {
     return staticRoutes;
   }

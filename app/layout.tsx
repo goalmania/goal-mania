@@ -157,12 +157,13 @@ export default function RootLayout({
                   "@type": "ContactPoint",
                   contactType: "customer service",
                   availableLanguage: "Italian",
-                  email: "info@goal-mania.it",
+                  email: "goalmaniaofficial@gmail.com",
+                  areaServed: "IT",
                 },
                 sameAs: [
-                  "https://www.facebook.com/goalmania",
-                  "https://www.instagram.com/goalmania",
-                  "https://twitter.com/goalmania",
+                  "https://www.instagram.com/goalmaniaofficial/",
+                  "https://x.com/goalmania_",
+                  "https://www.tiktok.com/@goalmania_",
                 ],
               },
               {

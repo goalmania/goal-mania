@@ -47,7 +47,7 @@ export async function generateMetadata({
   const { team } = await params;
   const name = displayNames[team] ?? team;
   return {
-    title: `Maglie ${name} — Acquista Online`,
+    title: `Maglia ${name} nuova e stagioni passate, da 35€`,
     description: `Acquista le maglie ${name} a partire da 35€. Spedizione gratuita in Italia.`,
     alternates: { canonical: `https://goal-mania.it/shop/international/${team}` },
   };

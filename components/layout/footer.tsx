@@ -36,6 +36,7 @@ const GROUPS = [
     links: [
       { label: "Spedizioni", href: "/shipping" },
       { label: "Resi e rimborsi", href: "/resi" },
+      { label: "Recensioni", href: "/recensioni" },
       { label: "Contattaci", href: "/contact" },
       { label: "I miei ordini", href: "/account/orders" },
     ],
