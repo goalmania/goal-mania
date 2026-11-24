@@ -5,9 +5,9 @@ import { ArrowRight } from "lucide-react";
 // Il momento del logo: a metà pagina, quando il cliente ha già visto le maglie e sa dove si trova
 export default function BrandBand({ retroCount }: { retroCount: number }) {
   const facts = [
-    { n: `${retroCount}+`, t: "maglie retro in archivio" },
+    { n: `${retroCount}+`, t: "maglie retro, dal 1970 a oggi" },
     { n: "35€", t: "le maglie della stagione" },
-    { n: "14", t: "giorni per il reso" },
+    { n: "14", t: "giorni per il reso dalla consegna" },
   ];
   return (
     <section className="hero-pitch relative overflow-hidden bg-[var(--wall)] py-14 md:py-20">
@@ -22,7 +22,7 @@ export default function BrandBand({ retroCount }: { retroCount: number }) {
             className="h-auto w-full max-w-[760px]"
           />
           <p className="mt-5 max-w-[40ch] text-[clamp(1.15rem,1.6vw,1.45rem)] italic leading-snug text-[var(--text-2)]">
-            Le maglie che hai visto in tv, a un prezzo da tifoso. Dalle stagioni di adesso fino al 1970.
+            Maglie versione tifoso, dalla stagione in corso fino al 1970. Non sono le ufficiali dei club: Goal Mania non è affiliata a nessuna squadra.
           </p>
           <Link href="/about" className="btn btn-ghost mt-7">
             Chi siamo <ArrowRight className="h-5 w-5" strokeWidth={3} />

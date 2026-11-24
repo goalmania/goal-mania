@@ -63,7 +63,7 @@ function GalleryVideo({ item }: { item: GalleryMediaItem }) {
 export default function RealOrdersGallery({
   title = "Cosa ti arriva a casa",
   eyebrow = "Pacchi veri, preparati da noi",
-  description = "Foto e video degli ordini che spediamo ai clienti, senza ritocchi.",
+  description = "Foto e video degli ordini che prepariamo e spediamo.",
   items,
   limit = 28,
   className = "",

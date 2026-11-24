@@ -25,7 +25,7 @@ export default function WorldCupBand({ cups }: { cups: CupCard[] }) {
             I Mondiali, anno per anno
           </h2>
         </div>
-        <p className="max-w-[36ch] text-[17px] italic leading-snug text-[var(--text-2)]">Scegli l&apos;anno in cui giocava la tua nazionale e trovi le sue maglie di quel torneo.</p>
+        <p className="max-w-[36ch] text-[17px] italic leading-snug text-[var(--text-2)]">Scegli il Mondiale e trovi le maglie delle nazionali di quel torneo.</p>
       </div>
       <AutoRail label="Mondiali" speed={30}>
         {cups.map((c) => (
@@ -41,7 +41,7 @@ export default function WorldCupBand({ cups }: { cups: CupCard[] }) {
               <span className="mt-2 rounded-full bg-white/10 px-3 py-1.5 text-[13px] font-bold">{c.count} maglie</span>
             </span>
             <span className="relative z-[2] mt-1 block text-[15px] font-semibold text-[var(--text-2)]">{c.host}</span>
-            <span className="relative z-[2] block text-[15px] italic text-[var(--text-3)]">Lo vince: {c.winner}</span>
+            <span className="relative z-[2] block text-[15px] italic text-[var(--text-3)]">Campione: {c.winner}</span>
             <span className="relative z-[2] mt-5 flex items-end justify-center">
               {c.jerseys.slice(0, 3).map((j, i) => (
                 <span key={j.id} className="pc-stage -mx-3 block w-[38%] overflow-hidden rounded-xl shadow-[0_12px_22px_-10px_rgba(0,0,0,0.8)] transition-transform duration-300 group-hover:-translate-y-1.5" style={{ aspectRatio: "4 / 5", transform: `rotate(${(i - 1) * 5}deg)`, zIndex: i === 1 ? 2 : 1 }}>

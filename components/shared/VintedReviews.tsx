@@ -17,7 +17,7 @@ export default function VintedReviews({ compact = false }: { compact?: boolean }
       <div className="mx-auto grid w-full max-w-[1760px] gap-6 px-5 md:px-10 lg:grid-cols-[1fr_auto] lg:items-end lg:px-16">
         <div>
           <p className="text-[14px] font-bold text-[var(--lime)]">Prima di questo sito vendevamo su Vinted</p>
-          <h2 id="rev-h" className="disp mt-1 text-[clamp(2.4rem,6vw,5rem)] text-white">{count} recensioni di chi ha comprato</h2>
+          <h2 id="rev-h" className="disp mt-1 text-[clamp(2.4rem,6vw,5rem)] text-white">{count} recensioni su Vinted</h2>
           <p className="mt-3 max-w-[56ch] text-[17px] italic leading-snug text-[var(--text-2)]">Sono le recensioni ricevute sul nostro profilo Vinted, con il nome utente di chi le ha scritte. Non sono acquisti fatti su questo sito.</p>
         </div>
         <div className="flex items-center gap-5 rounded-3xl bg-[var(--wall)] p-5 shadow-[inset_0_0_0_1px_var(--line)]">

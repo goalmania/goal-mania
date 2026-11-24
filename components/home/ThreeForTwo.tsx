@@ -22,7 +22,7 @@ export default function ThreeForTwo({ products }: { products: P[] }) {
       <div className="mx-auto grid w-full max-w-[1760px] gap-10 overflow-hidden rounded-[28px] bg-[var(--wall)] p-6 shadow-[inset_0_0_0_1px_var(--line)] md:p-12 lg:grid-cols-[1fr_1.15fr] lg:items-center">
         <div>
           <p className="inline-flex items-center gap-2 rounded-full bg-[var(--lime)] px-3.5 py-1.5 text-[14px] font-bold text-[#0a0a0a]">
-            <Gift className="h-4 w-4" strokeWidth={2.6} /> Regola attiva al carrello
+            <Gift className="h-4 w-4" strokeWidth={2.6} /> Si applica al checkout
           </p>
           <h2 className="disp mt-5 text-[clamp(2.8rem,7vw,6.2rem)] text-white">
             Tre maglie,
@@ -30,10 +30,10 @@ export default function ThreeForTwo({ products }: { products: P[] }) {
             ne paghi <span className="mark"><span>due.</span></span>
           </h2>
           <p className="mt-5 max-w-[38ch] text-[19px] italic leading-snug text-[var(--text-2)]">
-            Metti tre maglie nello stesso ordine: la meno cara è in regalo. Vale per le attuali e per le retro, nel carrello lo vedi subito.
+            Ogni tre maglie nello stesso ordine, la meno cara è in regalo. Vale per le attuali e per le retro, e nel carrello vedi subito quanto risparmi.
           </p>
           <Link href="/shop" className="btn btn-lime mt-7">
-            Scegli le tue 3 <ArrowRight className="h-5 w-5" strokeWidth={3} />
+            Scegli le tue tre <ArrowRight className="h-5 w-5" strokeWidth={3} />
           </Link>
         </div>
 

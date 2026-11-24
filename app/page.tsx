@@ -27,23 +27,27 @@ export const revalidate = 300;
 const FAQ: FaqItem[] = [
   {
     q: "Quanto costano le maglie da calcio su Goal Mania?",
-    a: "Le maglie della stagione in corso costano 35€, le retro 40€. La spedizione in Italia è gratuita. Le aggiunte facoltative (patch, maniche lunghe, pantaloncini, calzettoni) hanno il loro prezzo indicato sulla scheda prima di aggiungere al carrello.",
+    a: "Le maglie della stagione costano 35€, le retro 40€. La spedizione in Italia è gratuita e ogni tre maglie la meno cara è in regalo. Le aggiunte facoltative (patch, maniche lunghe, pantaloncini, calzettoni) hanno il prezzo scritto sulla scheda, prima di mettere in carrello.",
   },
   {
     q: "Che maglie vendete?",
-    a: "Maglie versione tifoso di Serie A, Premier League, Liga, nazionali per i Mondiali 2026 e un archivio di maglie retro dagli anni 70 a oggi. Non sono le maglie ufficiali vendute dai club: Goal Mania non è affiliata ad alcun club o federazione.",
+    a: "Maglie versione tifoso di Serie A, Premier League, Liga, le nazionali del Mondiale 2026 e oltre 700 maglie retro, dal 1970 a oggi. Non sono le maglie ufficiali dei club: Goal Mania non è affiliata ad alcun club o federazione.",
   },
   {
     q: "Quanto ci mette ad arrivare?",
-    a: "La consegna richiede 7-10 giorni lavorativi. La spedizione è gratuita su ogni ordine in Italia.",
+    a: "La consegna richiede 7-10 giorni lavorativi. Quando il pacco parte ricevi un'email con il codice per seguirlo. La spedizione è gratuita su ogni ordine in Italia.",
   },
   {
     q: "Posso restituire una maglia?",
-    a: "Sì, hai 14 giorni dalla consegna. La maglia deve tornare non indossata e con il cartellino; la spedizione del reso è a carico tuo, salvo maglia difettosa o sbagliata. Rimborsiamo entro 14 giorni da quando la riceviamo. Le maglie personalizzate con nome e numero non si possono restituire.",
+    a: "Sì, hai 14 giorni dalla consegna. La maglia deve tornare non indossata e nella confezione. La spedizione del reso è a carico tuo, salvo maglia difettosa o sbagliata. Le maglie personalizzate con nome e numero non si possono restituire.",
   },
   {
     q: "Goal Mania è un sito affidabile?",
-    a: "Paghi con Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal o Klarna: i dati della carta li gestisce il circuito di pagamento, non noi. Hai 14 giorni per il reso e puoi scriverci dalla pagina Contattaci prima di ordinare. Più su in questa pagina trovi le foto degli ordini veri dei clienti.",
+    a: "Paghi con Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal o Klarna: i dati della carta li gestisce il circuito di pagamento, non noi. Prima di aprire questo sito vendevamo su Vinted, dove abbiamo ricevuto 72 recensioni con una media di 4,6. In questa pagina trovi anche le foto degli ordini che spediamo, e se hai un dubbio puoi scriverci dalla pagina Contattaci prima di ordinare.",
+  },
+  {
+    q: "Come funziona il 3x2?",
+    a: "Ogni tre maglie nello stesso ordine, la meno cara è in regalo. Vale per le attuali e per le retro e si applica al checkout. Nel carrello vedi subito quanto risparmi.",
   },
 ];
 
@@ -196,10 +200,10 @@ export default async function Home() {
   const showcase = pickHyped(pool, 12, rotationSeed(15, 2));
   const retroPick = archive.eras.find((e) => e.slug === "anni-90")?.image || archive.eras[0]?.image || "";
   const tiles: Tile[] = ([
-    { title: "Nuova stagione 26/27", sub: "Le divise di quest'anno, tutte a 35€.", href: "/shop/2026/27", image: season[0]?.image || "", count: counts["2026/27"] || season.length, from: 35, tone: "lime", big: true },
+    { title: "Nuova stagione 26/27", sub: "Le maglie di quest'anno, tutte a 35€.", href: "/shop/2026/27", image: season[0]?.image || "", count: counts["2026/27"] || season.length, from: 35, tone: "lime", big: true },
     { title: "Maglie retro", sub: "Dal 1970 a oggi, scegli il decennio.", href: "/archivio", image: retroPick, count: counts["Retro"] || archive.total, from: 40, tone: "paper" },
     { title: "Mondiali 2026", sub: "Le maglie delle nazionali, a 35€.", href: "/shop/worldcup", image: worldcup[0]?.image || "", count: counts["World Cup 2026"] || worldcup.length, from: 35, tone: "wall" },
-    { title: "Stagione 25/26", sub: "Quelle appena finite, ancora a 35€.", href: "/shop/2025/26", image: season[3]?.image || "", count: counts["2025/26"] || 0, from: 35, tone: "wall2" },
+    { title: "Stagione 25/26", sub: "La stagione appena conclusa, sempre a 35€.", href: "/shop/2025/26", image: season[3]?.image || "", count: counts["2025/26"] || 0, from: 35, tone: "wall2" },
   ] as Tile[]).filter((t) => t.count > 0 && t.image);
   const trio = [season[0], season[1], season[2]].filter(Boolean);
 

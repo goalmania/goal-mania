@@ -3,9 +3,9 @@ import { Truck, Clock, RotateCcw, ShieldCheck } from "lucide-react";
 // Le quattro cose che un cliente vuole sapere prima di comprare. Sono le regole vere del negozio.
 const ITEMS = [
   { Icon: Truck, t: "Spedizione gratuita", d: "In tutta Italia, su ogni ordine" },
-  { Icon: Clock, t: "7-10 giorni lavorativi", d: "Per ricevere il pacco a casa" },
-  { Icon: RotateCcw, t: "Reso entro 14 giorni", d: "Spedizione di reso a tuo carico" },
-  { Icon: ShieldCheck, t: "Pagamento protetto", d: "Carta, Apple Pay, PayPal, Klarna" },
+  { Icon: Clock, t: "7-10 giorni lavorativi", d: "Con email e codice per seguire il pacco" },
+  { Icon: RotateCcw, t: "Reso entro 14 giorni", d: "Maglia non indossata, reso a tuo carico" },
+  { Icon: ShieldCheck, t: "Paghi come preferisci", d: "Carte, Apple Pay, Google Pay, PayPal, Klarna" },
 ];
 
 export default function TrustBar() {

@@ -76,14 +76,14 @@ export default function HomeHero({ products }: { products: HeroProduct[] }) {
             si <span className="mark"><span>indossa.</span></span>
           </h1>
           <p className="rise mt-6 max-w-[40ch] text-[clamp(1.1rem,1.5vw,1.35rem)] italic leading-snug text-[var(--text-2)]" style={{ animationDelay: "150ms" }}>
-            Maglie da tifoso a <b className="not-italic text-white">35€</b>, le retro a <b className="not-italic text-white">40€</b>. Ne prendi tre e ne paghi due.
+            Maglie versione tifoso a <b className="not-italic text-white">35€</b>, le retro a <b className="not-italic text-white">40€</b>. Ogni tre maglie, la meno cara è in regalo.
           </p>
           <div className="rise mt-7 flex flex-wrap gap-3" style={{ animationDelay: "220ms" }}>
             <Link href="/shop" className="btn btn-lime">
               Scegli la tua maglia <ArrowRight className="h-5 w-5" strokeWidth={3} />
             </Link>
             <Link href="/archivio" className="btn btn-ghost">
-              Maglie retro
+              Vedi le maglie retro
             </Link>
           </div>
           <ul className="rise mt-8 flex flex-wrap gap-x-7 gap-y-2 text-[15px] font-semibold text-[var(--text-2)]" style={{ animationDelay: "280ms" }}>
