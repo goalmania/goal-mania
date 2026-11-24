@@ -123,6 +123,7 @@ export default async function NewsPage() {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <div className="min-h-screen flex flex-col" style={{ background: "#0a0a0a", color: "#f5f5f5" }}>
+        <h1 className="sr-only">Notizie di calcio: Serie A, mercato e nazionale</h1>
 
 
 

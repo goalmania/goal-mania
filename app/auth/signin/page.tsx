@@ -58,7 +58,7 @@ function SignInContent() {
         <form className="mt-6 space-y-4" onSubmit={handleSubmit} noValidate>
           <input name="email" type="email" inputMode="email" autoComplete="email" required placeholder="Email" aria-label="Email" className={field} />
           <input name="password" type="password" autoComplete="current-password" required placeholder="Password" aria-label="Password" className={field} />
-          <div className="text-right"><Link href="/auth/forgot-password" className="text-[15px] font-semibold text-[var(--lime)] underline-offset-4 hover:underline">Password dimenticata?</Link></div>
+          <div className="text-right"><Link href="/contact" className="text-[15px] font-semibold text-[var(--lime)] underline-offset-4 hover:underline">Password dimenticata? Scrivici</Link></div>
           {error && <p role="alert" className="text-[16px] font-semibold text-[var(--red)]">{error}</p>}
           <button type="submit" disabled={isLoading} className="btn btn-lime w-full disabled:opacity-60">{isLoading ? "Accesso…" : <>Accedi <ArrowRight className="h-5 w-5" strokeWidth={3} /></>}</button>
         </form>

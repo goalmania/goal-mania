@@ -159,9 +159,9 @@ export default function SignUp() {
       {/* Form Right */}
       <div className="flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <h2 className="mt-6 text-start text-[47px] font-medium font-munish tracking-tight text-white">
+          <h1 className="disp mt-6 text-start text-[clamp(2.6rem,6vw,4.4rem)] text-white">
             Crea account
-          </h2>
+          </h1>
         </div>
 
         <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-md">

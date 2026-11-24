@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import SerieAClient from "@/app/_components/SerieAClient";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
@@ -48,5 +49,6 @@ export default async function SerieAShopPage() {
     videos: product.videos || [], // Include videos for showcase
   }));
 
-  return <SerieAClient products={products} />;
+  if (!products.length) redirect("/shop/international");
+  return <SerieAClient products={products} leagueName="Internazionali" leagueHref="/shop/international" />;
 }

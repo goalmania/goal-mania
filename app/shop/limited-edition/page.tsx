@@ -44,5 +44,5 @@ export default async function LimitedEditionPage() {
     videos: product.videos || [],
   }));
 
-  return <SerieAClient products={products} />;
+  return <SerieAClient products={products} leagueName="Edizioni limitate" leagueHref="/shop/limited-edition" />;
 }

@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { IProduct } from "@/lib/types/product";
@@ -44,5 +45,7 @@ export default async function JacketsPage() {
     videos: product.videos || [],
   }));
 
-  return <SerieAClient products={products} />;
+  // Nessun prodotto: meglio portare al catalogo che mostrare una pagina vuota
+  if (!products.length) redirect("/shop");
+  return <SerieAClient products={products} leagueName="Giacche e tute" leagueHref="/shop/jackets" />;
 }

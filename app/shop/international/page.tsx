@@ -17,8 +17,8 @@ export const revalidate = 300;
 async function getInternationalProducts() {
   await connectDB();
   const products = await Product.find({
-    category: "International",
     isActive: true,
+    title: { $regex: /^Maglia\s+(Real Madrid|Barcellona|Barcelona|PSG|Paris|Atletico|Atlético|Bayern|Dortmund|Ajax|Benfica|Porto|Sporting)/i },
   }).sort({ feature: -1, createdAt: -1 });
   return JSON.parse(JSON.stringify(products)); // Serialize the Mongoose documents
 }

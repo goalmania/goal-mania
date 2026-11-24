@@ -103,8 +103,23 @@ export default function CategoryBrowser({
   const from = products.length ? Math.min(...products.map((p) => p.price || 0).filter(Boolean)) : 35;
   const chip = "inline-flex h-11 shrink-0 items-center gap-2 rounded-full px-4 text-[15px] font-semibold shadow-[inset_0_0_0_1.5px_rgba(244,242,234,0.3)] transition-colors aria-pressed:bg-[var(--lime)] aria-pressed:text-[#0a0a0a] aria-pressed:shadow-none";
 
+  // Elenco strutturato per Google e per i motori di risposta: le prime maglie della pagina, con indirizzo e prezzo
+  const itemList = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: typeof title === "string" ? title : "Maglie da calcio",
+    numberOfItems: products.length,
+    itemListElement: products.slice(0, 12).map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: `https://goal-mania.it/products/${p.slug || p.id}`,
+      name: p.name,
+    })),
+  };
+
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }} />
       <PageHeader
         eyebrow={eyebrow}
         title={

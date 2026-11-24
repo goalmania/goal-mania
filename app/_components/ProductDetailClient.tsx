@@ -20,7 +20,6 @@ import { useWishlistStore } from "@/lib/store/wishlist";
 import { useCartStore } from "@/lib/store/cart";
 import { IProduct, Review, Patch } from "@/lib/types/product";
 import ProductReviews from "@/app/_components/ProductReviews";
-import DiscountRulesDisplay from "@/app/_components/DiscountRulesDisplay";
 import SizeGuideModal from "@/components/shop/SizeGuideModal";
 import PdpCustomize from "@/components/shop/PdpCustomize";
 import PdpLightbox from "@/components/shop/PdpLightbox";
@@ -920,16 +919,6 @@ export default function ProductDetailClient({
                 ))}
               </div>
 
-              {/* Discount rules (hidden, auto-apply) */}
-              <div className="hidden">
-                <DiscountRulesDisplay
-                  productId={product._id}
-                  productCategory={product.category}
-                  onApplyDiscount={() => {}}
-                  showToAllUsers={true}
-                  autoApply={true}
-                />
-              </div>
             </div>
 
             {/* Description */}
