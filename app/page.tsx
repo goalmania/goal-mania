@@ -16,55 +16,48 @@ import HomeNewsStrip from "@/components/home/HomeNewsStrip";
 import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
 import { getArchiveItems, worldCupYearsWithJerseys } from "@/lib/archiveData";
 import ProductModel from "@/lib/models/Product";
+import HomeFaq, { type FaqItem } from "@/components/home/HomeFaq";
 
 export const revalidate = 300;
+
+// Ogni risposta deve restare vera: prezzi, tempi e reso sono quelli di listino, /spedizioni e /resi.
+const FAQ: FaqItem[] = [
+  {
+    q: "Quanto costano le maglie da calcio su Goal Mania?",
+    a: "Le maglie della stagione in corso costano 35€, le retro 40€. La spedizione in Italia è gratuita. Le aggiunte facoltative (patch, maniche lunghe, pantaloncini, calzettoni) hanno il loro prezzo indicato sulla scheda prima di aggiungere al carrello.",
+  },
+  {
+    q: "Che maglie vendete?",
+    a: "Maglie versione tifoso di Serie A, Premier League, Liga, nazionali per i Mondiali 2026 e un archivio di maglie retro dagli anni 70 a oggi. Non sono le maglie ufficiali vendute dai club: Goal Mania non è affiliata ad alcun club o federazione.",
+  },
+  {
+    q: "Quanto ci mette ad arrivare?",
+    a: "La consegna richiede 7-10 giorni lavorativi. La spedizione è gratuita su ogni ordine in Italia.",
+  },
+  {
+    q: "Posso restituire una maglia?",
+    a: "Sì, hai 14 giorni dalla consegna. La maglia deve tornare non indossata e con il cartellino; la spedizione del reso è a carico tuo, salvo maglia difettosa o sbagliata. Rimborsiamo entro 14 giorni da quando la riceviamo. Le maglie personalizzate con nome e numero non si possono restituire.",
+  },
+  {
+    q: "Goal Mania è un sito affidabile?",
+    a: "Paghi con Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal o Klarna: i dati della carta li gestisce il circuito di pagamento, non noi. Hai 14 giorni per il reso e puoi scriverci dalla pagina Contattaci prima di ordinare. Più su in questa pagina trovi le foto degli ordini veri dei clienti.",
+  },
+];
 
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "Quanto costano le maglie da calcio su Goal Mania?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Su Goal Mania le maglie da calcio partono da 35€. Trovi maglie di Serie A (Inter, Milan, Juventus, Napoli), Premier League (Liverpool, Arsenal, Manchester City), Mondiali 2026 e maglie retro storiche. Spedizione gratuita in Italia.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Goal Mania spedisce in Italia gratuitamente?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Sì, Goal Mania offre spedizione gratuita su tutti gli ordini in Italia.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Goal Mania vende maglie di quale squadra?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Goal Mania vende maglie di tutte le principali squadre: Inter, Milan, Juventus, Napoli, Roma, Lazio per la Serie A; Liverpool, Manchester City, Arsenal, Chelsea, Manchester United per la Premier League; più le nazionali per i Mondiali 2026.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Dove posso comprare maglie da calcio a prezzi bassi in Italia?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Goal Mania è il negozio online italiano specializzato in maglie da calcio a prezzi bassi. Con prezzi a partire da 35€ trovi maglie di Serie A, Premier League, Mondiali 2026 e maglie retro vintage.",
-      },
-    },
-  ],
+  mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
 };
 
 export const metadata: Metadata = {
-  title: "Maglie da Calcio a 35€ — Serie A, Premier League, Mondiali 2026",
+  title: "Maglie da Calcio a Poco Prezzo: 35€ le Nuove, 40€ le Retro",
   description:
-    "Acquista maglie da calcio a partire da 35€. Inter, Milan, Juventus, Napoli, Liverpool, Manchester City e le nazionali per i Mondiali 2026. Spedizione gratuita in Italia.",
+    "Maglie da calcio versione tifoso: 35€ le nuove 2026/27 di Serie A e Premier, 40€ le retro, nazionali per i Mondiali 2026. Spedizione gratuita in Italia e reso entro 14 giorni.",
   keywords: [
     "maglie da calcio",
     "maglie calcio a prezzi bassi",
+    "maglie calcio poco prezzo",
     "maglie Serie A",
     "maglie Premier League",
     "maglie Mondiali 2026",
@@ -213,6 +206,7 @@ export default async function Home() {
       <ProductRail eyebrow="Si gioca quest'estate" title="Mondiali 2026" href="/shop/worldcup" products={worldcup} />
       <RealOrdersGallery />
       <HomeNewsStrip articles={latestArticles} />
+      <HomeFaq items={FAQ} />
     </div>
   );
 }

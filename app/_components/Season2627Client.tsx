@@ -6,6 +6,7 @@ import Image from "next/image";
 import ProductCard from "@/components/ui/ProductCard";
 import { Zap, ChevronRight } from "lucide-react";
 import ShopNav from "@/app/_components/ShopNav";
+import { getLeague, extractTeamName } from "@/lib/seasonLeague";
 
 // ─── Types ────────────────────────────────────────────────
 interface SeasonProduct {
@@ -17,56 +18,6 @@ interface SeasonProduct {
   slug: string;
   team: string;
   feature: boolean;
-}
-
-// ─── League detection ──────────────────────────────────────
-const LEAGUE_RULES: { key: string; keywords: string[] }[] = [
-  {
-    key: "serieA",
-    keywords: [
-      "inter", "milan", "juventus", "juve", "napoli", "roma", "lazio",
-      "bologna", "como", "venezia", "atalanta", "fiorentina", "torino", "genoa",
-    ],
-  },
-  {
-    key: "premier",
-    keywords: [
-      "arsenal", "chelsea", "liverpool", "manchester city", "man city",
-      "manchester united", "man united", "tottenham", "newcastle", "aston villa",
-    ],
-  },
-  {
-    key: "laliga",
-    keywords: ["real madrid", "barcellona", "atletico madrid", "villarreal", "sevilla"],
-  },
-  {
-    key: "nationals",
-    keywords: [
-      "italia", "brasile", "portogallo", "giappone", "inghilterra",
-      "argentina", "francia", "spagna", "germany", "germania",
-    ],
-  },
-];
-
-function getLeague(title: string): string {
-  const t = title.toLowerCase();
-  for (const rule of LEAGUE_RULES) {
-    if (rule.keywords.some((k) => t.includes(k))) return rule.key;
-  }
-  return "other";
-}
-
-function extractTeamName(title: string): string {
-  // "Maglia Arsenal 25/26 Home" → "Arsenal"
-  const cleaned = title
-    .replace(/^maglia\s+/i, "")
-    .replace(/^quarta\s+maglia\s+/i, "")
-    .replace(/\s+(home|away|third|quarta|terza|casa|trasferta|pre\s+gara|allenamento|training|halloween|concept|x\s+\S+)\s*.*/i, "")
-    .replace(/\s+\d{2}\/\d{2,4}.*$/i, "")
-    .replace(/\s+\d{4}\/\d{2,4}.*$/i, "")
-    .replace(/\s+\d{4}-\d{2,4}.*$/i, "")
-    .trim();
-  return cleaned || title;
 }
 
 // ─── Section metadata ──────────────────────────────────────
@@ -152,7 +103,7 @@ export default function Season2627Client({ products }: { products: SeasonProduct
     <main className="min-h-screen bg-[#0a0a0a] font-munish">
       <ShopNav />
 
-      <CategoryHeader title={"Stagione 26/27"} text="Le maglie della nuova stagione a 35€. Spedizione gratuita e reso entro 14 giorni." />
+      <CategoryHeader title={"Maglie calcio 2026/27"} text="Le nuove maglie della stagione 2026/27, Serie A in testa, tutte a 35€. Spedizione gratuita e reso entro 14 giorni." />
 
       {/* ── FILTER PILLS ──────────────────────────────── */}
       <div className="max-w-[1760px] mx-auto px-4 sm:px-6 mb-10">
@@ -279,7 +230,7 @@ export default function Season2627Client({ products }: { products: SeasonProduct
                       letterSpacing: "-0.02em",
                     }}
                   >
-                    {section.label}
+                    {section.key === "other" ? section.label : `Maglie ${section.label} 2026/27`}
                   </h2>
                   <p className="text-xs text-white/60">{section.description}</p>
                 </div>
