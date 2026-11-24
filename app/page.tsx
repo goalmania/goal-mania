@@ -13,7 +13,6 @@ import ThreeForTwo from "@/components/home/ThreeForTwo";
 import BrandBand from "@/components/home/BrandBand";
 import WorldCupBand, { type CupCard } from "@/components/home/WorldCupBand";
 import HomeNewsStrip from "@/components/home/HomeNewsStrip";
-import FaqShort from "@/components/shared/FaqShort";
 import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
 import { getArchiveItems, worldCupYearsWithJerseys } from "@/lib/archiveData";
 import ProductModel from "@/lib/models/Product";
@@ -207,7 +206,6 @@ export default async function Home() {
       <ProductRail eyebrow="Maglie delle nazionali" title="Mondiali 2026" href="/shop/worldcup" products={worldcup} />
       <BrandBand retroCount={Math.floor(archive.total / 10) * 10} />
       <RealOrdersGallery />
-      <FaqShort />
       <HomeNewsStrip articles={latestArticles} />
       <HomeFaq items={FAQ} />
     </div>

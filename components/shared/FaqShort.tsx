@@ -3,10 +3,11 @@
 export const FAQ_ITEMS = [
   { q: "Quanto ci mette ad arrivare?", a: "Dai 7 ai 10 giorni lavorativi dalla conferma dell'ordine. Quando il pacco parte ricevi un'email con il codice per seguirlo." },
   { q: "La spedizione è gratuita?", a: "Sì, in tutta Italia e su ogni ordine, senza un minimo di spesa." },
+  { q: "Sono maglie ufficiali dei club?", a: "No. Sono maglie versione tifoso: Goal Mania non è affiliata ad alcun club o federazione, e i nomi delle squadre servono solo a dirti quale maglia stai comprando." },
   { q: "Posso restituire la maglia?", a: "Sì, entro 14 giorni dalla consegna, con la maglia non indossata e nella confezione originale. La spedizione di ritorno è a tuo carico. Le maglie personalizzate con nome e numero non si possono restituire." },
   { q: "Come scelgo la taglia?", a: "Ogni scheda prodotto ha la guida alle taglie con le misure in centimetri. Se sei tra due taglie, prendi quella più grande." },
   { q: "Come funziona il 3x2?", a: "Metti tre maglie nello stesso ordine e la meno cara è in regalo. Vale per le maglie attuali e per le retro, e lo vedi già nel carrello." },
-  { q: "Come pago?", a: "Il pagamento passa da Stripe: al checkout vedi i metodi disponibili. I dati della carta non passano dal nostro sito." },
+  { q: "Come pago?", a: "Con Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal o Klarna. I dati della carta li gestisce il circuito di pagamento, non noi." },
 ];
 
 export default function FaqShort({ title = "Prima di ordinare" }: { title?: string }) {

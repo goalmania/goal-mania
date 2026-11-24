@@ -5,7 +5,7 @@ const ITEMS = [
   { Icon: Truck, t: "Spedizione gratuita", d: "In tutta Italia, su ogni ordine" },
   { Icon: Clock, t: "7-10 giorni lavorativi", d: "Per ricevere il pacco a casa" },
   { Icon: RotateCcw, t: "Reso entro 14 giorni", d: "Spedizione di reso a tuo carico" },
-  { Icon: ShieldCheck, t: "Pagamento protetto", d: "Il pagamento passa da Stripe" },
+  { Icon: ShieldCheck, t: "Pagamento protetto", d: "Carta, Apple Pay, PayPal, Klarna" },
 ];
 
 export default function TrustBar() {

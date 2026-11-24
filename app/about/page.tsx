@@ -15,6 +15,7 @@ const POINTS = [
   { t: "Prezzi chiari", d: "Le maglie della stagione costano 35€, le retro 40€. Il prezzo che vedi è quello che paghi, con la spedizione compresa." },
   { t: "Tre maglie, ne paghi due", d: "Se metti tre maglie nello stesso ordine, la meno cara è in regalo. Lo vedi nel carrello prima di pagare." },
   { t: "Un archivio vero", d: "Dalle stagioni di adesso fino agli anni 70: maglie di club e nazionali, ordinate per decennio, Mondiale, squadra e leggenda." },
+  { t: "Versione tifoso", d: "Sono maglie versione tifoso, non quelle ufficiali dei club: Goal Mania non è affiliata ad alcun club o federazione." },
   { t: "Pacchi che puoi vedere", d: "Preparati e spediti da noi. Sul sito trovi le foto e i video dei pacchi veri che escono ogni giorno." },
 ];
 
