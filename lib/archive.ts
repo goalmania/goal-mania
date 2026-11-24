@@ -10,12 +10,12 @@ export interface ArchiveItem {
 }
 
 export const ERAS = [
-  { slug: "anni-70", label: "Anni 70 e prima", short: "70", from: 1900, to: 1979, blurb: "I pionieri: le maglie dove tutto è cominciato." },
-  { slug: "anni-80", label: "Anni 80", short: "80", from: 1980, to: 1989, blurb: "Colletti, righe larghe e sponsor grandi quanto il petto." },
+  { slug: "anni-70", label: "Anni 70 e prima", short: "70", from: 1900, to: 1979, blurb: "Le maglie di prima del 1980." },
+  { slug: "anni-80", label: "Anni 80", short: "80", from: 1980, to: 1989, blurb: "Righe larghe, colletti e i Mondiali di Spagna e Messico." },
   { slug: "anni-90", label: "Anni 90", short: "90", from: 1990, to: 1999, blurb: "Il decennio dei Mondiali in Italia, USA e Francia." },
-  { slug: "anni-2000", label: "Anni 2000", short: "00", from: 2000, to: 2009, blurb: "Il calcio diventa globale: Giappone-Corea, Germania." },
-  { slug: "anni-2010", label: "Anni 2010", short: "10", from: 2010, to: 2019, blurb: "Messi, Cristiano Ronaldo e le finali che ricordi." },
-  { slug: "oggi", label: "Dal 2020", short: "20", from: 2020, to: 2099, blurb: "Le edizioni speciali e gli anniversari recenti." },
+  { slug: "anni-2000", label: "Anni 2000", short: "00", from: 2000, to: 2009, blurb: "I Mondiali in Corea e Giappone e in Germania." },
+  { slug: "anni-2010", label: "Anni 2010", short: "10", from: 2010, to: 2019, blurb: "Tre Mondiali: Sudafrica, Brasile e Russia." },
+  { slug: "oggi", label: "Dal 2020", short: "20", from: 2020, to: 2099, blurb: "Edizioni speciali, anniversari recenti e il Mondiale 2022." },
 ] as const;
 
 // Giocatori che compaiono nei titoli delle maglie retro

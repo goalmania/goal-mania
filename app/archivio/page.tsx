@@ -44,7 +44,7 @@ export default async function ArchivePage() {
           <br />a oggi: <span className="mark"><span>{total}+ maglie.</span></span>
         </h1>
         <p className="mt-7 max-w-[54ch] text-[clamp(1.1rem,1.6vw,1.4rem)] italic leading-snug text-[var(--text-2)]">
-          Sono le maglie vere di squadre e nazionali del passato. Scegli come cercare la tua: per decennio, per Mondiale, per leggenda o per squadra.
+          Maglie retro di squadre e nazionali, versione tifoso: non sono le ufficiali dei club. Cerca la tua per decennio, per Mondiale, per leggenda o per squadra.
         </p>
         <ul className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
           {HOW.map((h) => (
@@ -73,7 +73,7 @@ export default async function ArchivePage() {
         <ProductRail
           title="Leggende"
           href="/archivio/leggende"
-          lead="Maglie con il nome di chi ha scritto la storia."
+          lead="Maglie con il nome di un campione sulla schiena."
           products={legends.map((l) => ({ id: l.id, slug: l.slug, name: l.name, price: l.price, image: l.image, category: "Retro", team: l.year ? String(l.year) : "Retro" }))}
         />
       </div>

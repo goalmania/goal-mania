@@ -21,7 +21,7 @@ export const ERA_THEME: Record<string, EraTheme> = {
     cls: "era-70",
     numeral: "70",
     title: "Anni 70 e prima",
-    line: "Cotone, colletti a polo e i colori pieni di chi giocava davanti al pubblico in bianco e nero.",
+    line: "Cotone, colletti a polo e colori pieni: le maglie di prima del 1980.",
     cups: [
       { year: 1970, host: "Messico", winner: "Brasile" },
       { year: 1974, host: "Germania Ovest", winner: "Germania Ovest" },
@@ -33,7 +33,7 @@ export const ERA_THEME: Record<string, EraTheme> = {
     cls: "era-80",
     numeral: "80",
     title: "Anni 80",
-    line: "Neon, geometrie e righe larghe: il calcio entra in televisione a colori.",
+    line: "Righe larghe, sponsor grandi sul petto e due Mondiali: Spagna 1982 e Messico 1986.",
     cups: [
       { year: 1982, host: "Spagna", winner: "Italia" },
       { year: 1986, host: "Messico", winner: "Argentina" },
@@ -44,7 +44,7 @@ export const ERA_THEME: Record<string, EraTheme> = {
     cls: "era-90",
     numeral: "90",
     title: "Anni 90",
-    line: "Figurine, colori primari e maglie larghe: il decennio in cui le maglie sono diventate cultura pop.",
+    line: "Maglie larghe, colori forti e tre Mondiali: Italia 1990, Stati Uniti 1994, Francia 1998.",
     cups: [
       { year: 1990, host: "Italia", winner: "Germania Ovest" },
       { year: 1994, host: "Stati Uniti", winner: "Brasile" },
@@ -56,7 +56,7 @@ export const ERA_THEME: Record<string, EraTheme> = {
     cls: "era-00",
     numeral: "00",
     title: "Anni 2000",
-    line: "Cromature, tessuti tecnici e il calcio che diventa globale.",
+    line: "Tessuti tecnici e due Mondiali: Corea e Giappone 2002, Germania 2006.",
     cups: [
       { year: 2002, host: "Corea del Sud e Giappone", winner: "Brasile" },
       { year: 2006, host: "Germania", winner: "Italia" },
@@ -67,7 +67,7 @@ export const ERA_THEME: Record<string, EraTheme> = {
     cls: "era-10",
     numeral: "10",
     title: "Anni 2010",
-    line: "Forme pulite, colori piatti e le maglie dei fenomeni dell'ultima grande generazione.",
+    line: "Linee pulite e tre Mondiali: Sudafrica 2010, Brasile 2014, Russia 2018.",
     cups: [
       { year: 2010, host: "Sudafrica", winner: "Spagna" },
       { year: 2014, host: "Brasile", winner: "Germania" },
@@ -79,7 +79,7 @@ export const ERA_THEME: Record<string, EraTheme> = {
     cls: "era-20",
     numeral: "20",
     title: "Dal 2020",
-    line: "Le edizioni speciali e gli anniversari recenti, con la storia riletta oggi.",
+    line: "Edizioni speciali, anniversari recenti e il Mondiale in Qatar del 2022.",
     cups: [{ year: 2022, host: "Qatar", winner: "Argentina" }],
   },
 };

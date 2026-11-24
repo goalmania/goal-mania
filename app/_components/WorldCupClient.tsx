@@ -35,7 +35,7 @@ export default function WorldCupClient({ products, sortedCountries, groupedProdu
   }));
   return (
     <div>
-      <CategoryBrowser products={mapped} title="Mondiali 2026" eyebrow="Maglie delle nazionali" lead="Le maglie delle nazionali del Mondiale 2026 a 35€. Scegli la tua squadra dalle bandiere o cerca nell'elenco." here="/shop/worldcup" />
+      <CategoryBrowser products={mapped} title="Mondiali 2026" eyebrow="Maglie delle nazionali" lead="Le maglie delle nazionali del Mondiale 2026, a 35€. Scegli la bandiera della tua squadra o cerca nell'elenco." here="/shop/worldcup" />
       {countries.length > 0 && (
         <section aria-label="Scegli la nazionale" className="pb-10">
           <h2 className="disp mx-auto mb-4 w-full max-w-[1760px] px-5 text-[clamp(2rem,5vw,3.6rem)] text-white md:px-10 lg:px-16">Scegli la nazionale</h2>

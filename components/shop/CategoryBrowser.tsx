@@ -184,7 +184,7 @@ export default function CategoryBrowser({
       <section className="mx-auto w-full max-w-[1760px] px-5 pb-10 md:px-10 lg:px-16">
         <Link href="/shop" className="group flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-[var(--lime)] px-6 py-5 text-[#0a0a0a] md:px-8">
           <span className="disp text-[clamp(1.8rem,4vw,3rem)]">Tre maglie, ne paghi due</span>
-          <span className="text-[17px] font-semibold italic">La meno cara è in regalo, lo vedi subito nel carrello →</span>
+          <span className="text-[17px] font-semibold italic">Ogni tre maglie, la meno cara è in regalo →</span>
         </Link>
         <p className="mb-3 mt-10 text-[15px] font-bold text-[var(--text-3)]">Guarda anche</p>
         <ul className="flex flex-wrap gap-2">
