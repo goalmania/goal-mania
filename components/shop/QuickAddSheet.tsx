@@ -19,7 +19,8 @@ interface Props {
 export default function QuickAddSheet({ open, onClose, product }: Props) {
   const router = useRouter();
   const addItem = useCartStore((s) => s.addItem);
-  const [sizes, setSizes] = useState<{ adult: string[]; kids: string[] } | null>(null);
+  const [sizes, setSizes] = useState<{ adult: string[]; kids: string[] }>({ adult: ["S", "M", "L", "XL", "XXL"], kids: [] });
+  const [loaded, setLoaded] = useState(false);
   const [kid, setKid] = useState(false);
   const [size, setSize] = useState("");
   const [error, setError] = useState("");
@@ -32,14 +33,15 @@ export default function QuickAddSheet({ open, onClose, product }: Props) {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
     let alive = true;
-    if (!sizes) {
+    if (!loaded) {
       fetch(`/api/products/${product.id}`)
         .then((r) => r.json())
         .then((p) => {
           if (!alive) return;
           setSizes({ adult: p.adultSizes?.length ? p.adultSizes : ["S", "M", "L", "XL", "XXL"], kids: p.kidsSizes || [] });
+          setLoaded(true);
         })
-        .catch(() => alive && setSizes({ adult: ["S", "M", "L", "XL", "XXL"], kids: [] }));
+        .catch(() => undefined);
     }
     return () => {
       alive = false;
@@ -49,7 +51,9 @@ export default function QuickAddSheet({ open, onClose, product }: Props) {
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!open) return null;
-  const list = sizes ? (kid ? sizes.kids : sizes.adult) : [];
+  const list = kid ? sizes.kids : sizes.adult;
+  const inCart = useCartStore.getState().getItemCount();
+  const next = threeForTwoHint(inCart + 1);
 
   const confirm = () => {
     if (!size) {
@@ -104,69 +108,44 @@ export default function QuickAddSheet({ open, onClose, product }: Props) {
 
   return (
     <div className="fixed inset-0 z-[90] flex items-end justify-center md:items-center" role="dialog" aria-modal="true" aria-label={`Scegli la taglia, ${product.name}`}>
-      <button className="fade-in absolute inset-0 bg-black/70" onClick={onClose} aria-label="Chiudi" />
-      <div className="sheet-up relative w-full max-w-[480px] rounded-t-[24px] border-t-4 border-[var(--lime)] bg-[var(--wall)] p-5 pb-[calc(20px+env(safe-area-inset-bottom))] md:rounded-[24px] md:border-4 md:pb-6">
+      <button className="fade-in absolute inset-0 bg-black/75" onClick={onClose} aria-label="Chiudi" />
+      <div className="sheet-up relative w-full max-w-[500px] rounded-t-[28px] bg-[var(--wall)] p-5 pb-[calc(20px+env(safe-area-inset-bottom))] shadow-[inset_0_0_0_1px_var(--line)] md:rounded-[28px] md:p-6">
         <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-white/25 md:hidden" aria-hidden="true" />
-        <button onClick={onClose} className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/12 text-white" aria-label="Chiudi">
-          <X className="h-[18px] w-[18px]" />
+        <button onClick={onClose} className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20" aria-label="Chiudi">
+          <X className="h-5 w-5" />
         </button>
-        <div className="flex items-center gap-4 pr-10">
-          <div className="pc-stage !aspect-auto h-[92px] w-[74px] shrink-0 overflow-hidden rounded-xl">
+        <div className="flex items-center gap-4 pr-12">
+          <div className="pc-stage !aspect-auto h-[96px] w-[78px] shrink-0 overflow-hidden rounded-2xl">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={cld(product.image, 160)} alt="" className="h-full w-full object-contain p-1" style={{ mixBlendMode: "multiply" }} />
+            <img src={cld(product.image, 200)} alt="" className="relative z-[1] h-full w-full object-contain p-1.5" style={{ mixBlendMode: "multiply" }} />
           </div>
           <div className="min-w-0">
-            <p className="font-[family-name:var(--font-display)] text-[26px] italic uppercase leading-none">{product.name.replace(/^Maglia\s+/i, "")}</p>
-            <p className="num mt-1.5 text-[30px] text-[var(--lime)]">{product.price}€</p>
+            <p className="line-clamp-2 text-[19px] font-semibold leading-tight text-white">{product.name.replace(/^Maglia\s+/i, "")}</p>
+            <p className="pc-price mt-1.5 text-[var(--lime)]">{product.price}€</p>
           </div>
         </div>
 
-        {sizes && sizes.kids.length > 0 && (
-          <div className="mt-5 flex rounded-full bg-white/10 p-1" role="tablist">
-            {[
-              { k: false, l: "Adulto" },
-              { k: true, l: "Bambino" },
-            ].map((t) => (
-              <button
-                key={t.l}
-                role="tab"
-                aria-selected={kid === t.k}
-                onClick={() => {
-                  setKid(t.k);
-                  setSize("");
-                }}
-                className={`h-11 flex-1 rounded-full font-[family-name:var(--font-display)] text-[19px] italic uppercase transition-colors ${kid === t.k ? "bg-white text-[#0a0a0a]" : "text-white/80"}`}
-              >
-                {t.l}
-              </button>
+        {sizes.kids.length > 0 && (
+          <div className="mt-5 flex rounded-full bg-[var(--wall-2)] p-1" role="tablist">
+            {[{ k: false, l: "Adulto" }, { k: true, l: "Bambino" }].map((t) => (
+              <button key={t.l} role="tab" aria-selected={kid === t.k} onClick={() => { setKid(t.k); setSize(""); }} className={`h-11 flex-1 rounded-full text-[16px] font-bold transition-colors ${kid === t.k ? "bg-[var(--lime)] text-[#0a0a0a]" : "text-white"}`}>{t.l}</button>
             ))}
           </div>
         )}
 
-        <p className="mt-5 text-[14px] font-semibold uppercase tracking-[0.08em] text-[var(--text-3)]">Taglia</p>
+        <p className="mt-5 text-[15px] font-bold text-[var(--text-2)]">Scegli la taglia</p>
         <div className="mt-2 flex min-h-[56px] flex-wrap gap-2">
-          {!sizes && <p className="text-[15px] text-[var(--text-3)]">Carico le taglie…</p>}
           {list.map((s) => (
-            <button
-              key={s}
-              onClick={() => {
-                setSize(s);
-                setError("");
-              }}
-              aria-pressed={size === s}
-              className={`h-[54px] min-w-[58px] px-4 font-[family-name:var(--font-display)] text-[24px] italic transition-all duration-200 active:scale-95 ${size === s ? "bg-[var(--lime)] text-[#0a0a0a]" : "border-2 border-white/35 text-white hover:border-white"}`}
-            >
-              {s}
-            </button>
+            <button key={s} onClick={() => { setSize(s); setError(""); }} aria-pressed={size === s} className={`h-[54px] min-w-[58px] rounded-2xl px-4 text-[19px] font-bold transition-all duration-150 active:scale-95 ${size === s ? "bg-[var(--lime)] text-[#0a0a0a]" : "text-white shadow-[inset_0_0_0_1.5px_rgba(244,242,234,0.35)] hover:bg-white/10"}`}>{s}</button>
           ))}
         </div>
-        {error && <p className="mt-2 text-[15px] font-medium text-[#ff6b6b]" role="alert">{error}</p>}
+        {error && <p className="mt-2 text-[16px] font-semibold text-[var(--red)]" role="alert">{error}</p>}
 
-        <button onClick={confirm} className="btn btn-lime mt-5 !h-14 w-full !text-[23px]">
-          Aggiungi al carrello
-        </button>
-        <Link href={`/products/${product.slug || product.id}`} className="mt-2 flex min-h-[44px] items-center justify-center text-[15px] text-[var(--text-2)] underline decoration-white/30 underline-offset-4 hover:text-white">
-          Vuoi nome e numero? Personalizza nella scheda
+        <p className={`mt-4 rounded-2xl px-4 py-2.5 text-[15px] font-semibold ${next.active ? "bg-[var(--lime)] text-[#0a0a0a]" : "bg-[var(--wall-2)] text-[var(--text-2)]"}`}>{next.active ? "Con questa hai il 3x2: la meno cara è gratis" : next.text}</p>
+
+        <button onClick={confirm} className="btn btn-lime mt-4 w-full">Aggiungi al carrello</button>
+        <Link href={`/products/${product.slug || product.id}`} className="mt-1 flex min-h-[48px] items-center justify-center text-[16px] font-semibold text-[var(--text-2)] underline decoration-white/30 underline-offset-4 hover:text-white">
+          Nome, numero e patch: personalizza nella scheda
         </Link>
       </div>
     </div>

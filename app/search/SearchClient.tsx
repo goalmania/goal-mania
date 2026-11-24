@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
+import { useSearchIndex, searchItems } from "@/lib/search";
 import ProductGrid from "@/components/ui/ProductGrid";
 
 interface Product { _id: string; slug?: string; title: string; images: string[]; basePrice: number; retroPrice?: number; isRetro?: boolean; category: string }
@@ -18,29 +19,25 @@ export default function SearchClient({ initialProducts, initialArticles }: { ini
   const params = useSearchParams();
   const q = params?.get("q") || "";
   const [text, setText] = useState(q);
-  const [products, setProducts] = useState<Product[]>(initialProducts);
   const [articles, setArticles] = useState<Article[]>(initialArticles);
-  const [loading, setLoading] = useState(false);
+  const index = useSearchIndex(true);
+  // Le maglie si cercano nel browser, subito. Solo le notizie chiedono al server.
+  const found = q ? searchItems(index, q, 200) : [];
+  const loading = !!q && index.length === 0;
 
   useEffect(() => {
     setText(q);
     if (!q) return;
     let off = false;
-    setLoading(true);
     fetch(`/api/search?q=${encodeURIComponent(q)}`)
       .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (off || !d) return;
-        setProducts(d.products || []);
-        setArticles(d.articles || []);
-      })
-      .catch(() => {})
-      .finally(() => !off && setLoading(false));
+      .then((d) => { if (!off && d) setArticles(d.articles || []); })
+      .catch(() => {});
     return () => { off = true; };
   }, [q]);
 
   const go = (v: string) => router.push(`/search?q=${encodeURIComponent(v.trim())}`);
-  const cards = products.map((p) => ({ id: p._id, slug: p.slug, name: p.title, price: Number(p.isRetro ? p.retroPrice : p.basePrice) || p.basePrice, image: p.images?.[0] || "/images/image.png", category: p.category }));
+  const cards = found.map((p) => ({ id: p.id, slug: p.slug, name: p.title, price: p.price, image: p.image || "/images/image.png", category: p.category }));
   const none = !!q && !loading && cards.length === 0 && articles.length === 0;
 
   return (

@@ -73,20 +73,27 @@ interface SerieAClientProps {
   teamSlug?: string;
   leagueName?: string;   // e.g. "Premier League"
   leagueHref?: string;   // e.g. "/shop/premier-league"
+  title?: string;
+  lead?: string;
+  children?: React.ReactNode;
 }
 
 // Tutte le pagine campionato e squadra passano da qui: cambia solo il titolo, il corpo e' CategoryBrowser
-export default function SerieAClient({ products, teamSlug, leagueName = "Serie A", leagueHref = "/shop/serieA" }: SerieAClientProps) {
+export default function SerieAClient({ products, teamSlug, leagueName = "Serie A", leagueHref = "/shop/serieA", title, lead, children }: SerieAClientProps) {
   const slug = teamSlug?.toLowerCase() ?? "";
   const identity = CLUB_IDENTITY[slug] ?? DEFAULT_IDENTITY;
   const team = identity.label || (slug ? slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, " ") : "");
   return (
     <CategoryBrowser
       products={products as any}
-      title={team ? team : leagueName}
+      title={title ?? (team ? team : leagueName)}
+      lead={lead}
+      accent={identity.accent}
       eyebrow={team ? `${leagueName} · Maglie da calcio` : "Maglie da calcio"}
       logo={identity.logoSlug ? `/team-logos/${identity.logoSlug}.png` : null}
       here={leagueHref}
-    />
+    >
+      {children}
+    </CategoryBrowser>
   );
 }

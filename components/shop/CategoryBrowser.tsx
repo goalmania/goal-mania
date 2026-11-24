@@ -7,6 +7,7 @@ import { Search } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import ProductGrid from "@/components/ui/ProductGrid";
 import TrustBar from "@/components/home/TrustBar";
+import { logoFor } from "@/lib/teamLogos";
 
 export interface CatProduct {
   id: string;
@@ -59,6 +60,8 @@ export default function CategoryBrowser({
   lead = "Maglie a 35€, spedizione gratuita e reso entro 14 giorni.",
   logo,
   here,
+  accent,
+  children,
 }: {
   products: CatProduct[];
   title: string;
@@ -66,6 +69,8 @@ export default function CategoryBrowser({
   lead?: string;
   logo?: string | null;
   here?: string;
+  accent?: string;
+  children?: React.ReactNode;
 }) {
   const [kind, setKind] = useState<Kind>("tutte");
   const [team, setTeam] = useState("");
@@ -100,11 +105,25 @@ export default function CategoryBrowser({
 
   return (
     <div>
-      <PageHeader eyebrow={eyebrow} title={title} lead={lead}>
+      <PageHeader
+        eyebrow={eyebrow}
+        title={
+          logo ? (
+            <span className="flex items-center gap-4 md:gap-6">
+              <span className="flex h-[76px] w-[76px] shrink-0 items-center justify-center rounded-full bg-[var(--paper)] shadow-[0_14px_24px_-12px_rgba(0,0,0,0.8)] md:h-[120px] md:w-[120px]">
+                <Image src={logo} alt="" width={96} height={96} className="h-[52px] w-[52px] object-contain md:h-[84px] md:w-[84px]" priority />
+              </span>
+              <span>{title}</span>
+            </span>
+          ) : (
+            title
+          )
+        }
+        lead={lead}
+      >
         <div className="flex flex-wrap items-center gap-3">
-          {logo && <Image src={logo} alt="" width={56} height={56} className="h-14 w-14 object-contain" />}
           <span className="rounded-full bg-[var(--lime)] px-4 py-2 text-[14px] font-bold text-[#0a0a0a]">{products.length} maglie · da {from}€</span>
-          <span className="text-[15px] font-semibold text-[var(--text-2)]">Spedizione gratuita · Reso entro 14 giorni</span>
+          <span className="text-[15px] font-semibold text-[var(--text-2)]">Spedizione gratuita · Reso entro 14 giorni · 3 maglie, ne paghi 2</span>
         </div>
       </PageHeader>
 
@@ -134,11 +153,15 @@ export default function CategoryBrowser({
           {teams.length > 5 && (
             <div className="flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none]" role="group" aria-label="Squadra">
               <button type="button" aria-pressed={team === ""} onClick={() => setTeam("")} className={chip}>Tutte le squadre</button>
-              {teams.map(([t, n]) => (
-                <button key={t} type="button" aria-pressed={team === t} onClick={() => setTeam(team === t ? "" : t)} className={chip}>
-                  {t} <span className="text-[13px] opacity-60">{n}</span>
-                </button>
-              ))}
+              {teams.map(([t, n]) => {
+                const lg = logoFor(t);
+                return (
+                  <button key={t} type="button" aria-pressed={team === t} onClick={() => setTeam(team === t ? "" : t)} className={`${chip} ${lg ? "!pl-1.5" : ""}`} title={t}>
+                    {lg && <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--paper)]"><Image src={lg} alt="" width={24} height={24} className="h-6 w-6 object-contain" /></span>}
+                    {t} <span className="text-[13px] opacity-60">{n}</span>
+                  </button>
+                );
+              })}
             </div>
           )}
         </div>
@@ -174,6 +197,7 @@ export default function CategoryBrowser({
           ))}
         </ul>
       </section>
+      {children}
       <TrustBar />
     </div>
   );

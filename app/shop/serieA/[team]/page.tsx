@@ -1,4 +1,5 @@
 import SerieAClient from "@/app/_components/SerieAClient";
+import HomeNewsStrip from "@/components/home/HomeNewsStrip";
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import Article from "@/lib/models/Article";
@@ -186,60 +187,14 @@ export default async function TeamShopPage({ params }: TeamPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(teamCollectionSchema) }}
       />
-      <section className="mx-auto max-w-7xl px-5 pb-4 pt-8 md:px-8 md:pt-12">
-        <h1 className="display mb-3 text-[clamp(2.2rem,6vw,3.75rem)]">
-          Maglia {teamDisplayName} 2025/26
-        </h1>
-        <p className="max-w-2xl text-[17px] leading-snug text-[var(--text-2)]">
-          Acquista la maglia {teamDisplayName} 2025/26 a partire da 35€.
-          Home, away e third kit disponibili. Spedizione gratuita in Italia.
-        </p>
-      </section>
-      <SerieAClient products={products} teamSlug={team} />
-
-      {relatedArticles.length > 0 && (
-        <section className="py-16 bg-[#0a0a0a]">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-            <div className="flex items-center gap-3 mb-8">
-              <span className="w-6 h-[1.5px] rounded-full" style={{ background: "#c8f000" }} />
-              <span
-                className="text-[10px] uppercase tracking-[4px] font-bold"
-                style={{ fontFamily: "var(--font-mono, monospace)", color: "rgba(200,240,0,0.7)" }}
-              >
-                // Notizie {teamDisplayName}
-              </span>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedArticles.map((article: any) => {
-                const cat = article.category === "transferMarket" ? "transfer" : article.category;
-                return (
-                  <Link
-                    key={article._id}
-                    href={`/${cat}/${article.slug}`}
-                    className="group gm-card flex flex-col overflow-hidden rounded-2xl"
-                    style={{ background: "#111", border: "1px solid rgba(255,255,255,0.06)" }}
-                  >
-                    <div className="relative w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
-                      <Image src={article.image} alt={article.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 33vw" />
-                    </div>
-                    <div className="p-5 flex flex-col gap-2">
-                      <h3
-                        className="font-black uppercase text-white leading-tight line-clamp-2"
-                        style={{ fontFamily: "var(--font-display, 'Barlow Condensed', sans-serif)", fontSize: "1.1rem" }}
-                      >
-                        {article.title}
-                      </h3>
-                      <div className="flex items-center gap-1.5 mt-1" style={{ color: "#c8f000", fontFamily: "var(--font-mono, monospace)", fontSize: "0.7rem", letterSpacing: "2px", textTransform: "uppercase" }}>
-                        Leggi <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-200" />
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      )}
+      <SerieAClient
+        products={products}
+        teamSlug={team}
+        title={`Maglie ${teamDisplayName}`}
+        lead={`Home, away e third: tutte le maglie ${teamDisplayName} a partire da 35€. Spedizione gratuita in Italia e reso entro 14 giorni.`}
+      >
+        {relatedArticles.length > 0 && <HomeNewsStrip articles={relatedArticles} title={`Notizie ${teamDisplayName}`} />}
+      </SerieAClient>
     </>
   );
 } 

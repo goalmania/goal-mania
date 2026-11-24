@@ -6,6 +6,9 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { Heart, Search, ShoppingBag, User as UserIcon, X, LogOut } from "lucide-react";
+import { useSearchIndex, searchItems } from "@/lib/search";
+import { cld } from "@/lib/utils/cloudinary";
+import { logoFor } from "@/lib/teamLogos";
 import { useCartStore } from "@/lib/store/cart";
 import { useWishlistStore } from "@/lib/store/wishlist";
 import {
@@ -53,6 +56,9 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const index = useSearchIndex(searchOpen);
+  const results = query.trim().length >= 2 ? searchItems(index, query, 8) : [];
+  const totalHits = query.trim().length >= 2 ? searchItems(index, query, 500).length : 0;
 
   // Il contatore vale per tutti: l'acquisto da ospite e il caso comune
   useEffect(() => {
@@ -174,8 +180,8 @@ export function Header() {
       </header>
 
       {searchOpen && (
-        <div className="fade-in fixed inset-0 z-[80] bg-[var(--asphalt)]/97" role="dialog" aria-label="Cerca">
-          <form onSubmit={submit} className="mx-auto mt-[calc(var(--bar-h)+10px)] flex max-w-[720px] items-center gap-2 px-3">
+        <div className="fade-in fixed inset-0 z-[80] overflow-y-auto bg-[var(--asphalt)]/97 pb-24" role="dialog" aria-label="Cerca">
+          <form id="gm-search-form" onSubmit={submit} className="mx-auto mt-[calc(var(--bar-h)+10px)] flex max-w-[720px] items-center gap-2 px-3">
             <div className="flex h-14 flex-1 items-center gap-3 border-b-4 border-[var(--lime)] px-1">
               <Search className="h-5 w-5 shrink-0 text-white/60" />
               <input
@@ -192,15 +198,53 @@ export function Header() {
               <X className="h-5 w-5" />
             </button>
           </form>
-          <div className="mx-auto mt-6 max-w-[720px] px-4">
-            <p className="mb-3 text-[14px] font-medium text-white/60">Vai direttamente a</p>
-            <div className="flex flex-wrap gap-2">
-              {QUICK.map((q) => (
-                <Link key={q.href} href={q.href} className="btn btn-glass !h-11 !px-5 !text-[16px]">
-                  {q.label}
-                </Link>
-              ))}
-            </div>
+          <div className="mx-auto mt-4 max-w-[720px] px-4">
+            {query.trim().length >= 2 ? (
+              <>
+                {results.length > 0 ? (
+                  <ul className="divide-y divide-white/10 overflow-hidden rounded-3xl bg-[var(--wall)] shadow-[inset_0_0_0_1px_var(--line)]">
+                    {results.map((r) => (
+                      <li key={r.id}>
+                        <Link href={`/products/${r.slug}`} onClick={() => setSearchOpen(false)} className="flex items-center gap-3 p-3 transition-colors hover:bg-white/5">
+                          <span className="pc-stage relative block h-14 w-12 shrink-0 overflow-hidden rounded-xl" style={{ aspectRatio: "auto" }}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={cld(r.image, 120)} alt="" width={48} height={56} className="relative z-[1] h-full w-full object-contain p-0.5" style={{ mixBlendMode: "multiply" }} />
+                          </span>
+                          <span className="min-w-0 flex-1 text-[17px] font-semibold leading-tight text-white">{r.title}</span>
+                          <span className="shrink-0 text-[17px] font-bold text-[var(--lime)]">{r.price}€</span>
+                        </Link>
+                      </li>
+                    ))}
+                    <li>
+                      <button type="submit" form="gm-search-form" className="flex h-14 w-full items-center justify-center text-[17px] font-bold text-[var(--lime)] hover:bg-white/5">Vedi tutte le {totalHits} maglie →</button>
+                    </li>
+                  </ul>
+                ) : (
+                  <p className="rounded-3xl bg-[var(--wall)] px-5 py-6 text-[17px] italic text-[var(--text-2)]">{index.length ? "Nessuna maglia trovata. Prova con il nome della squadra o con l'anno." : "Cerco…"}</p>
+                )}
+              </>
+            ) : (
+              <>
+                <p className="mb-3 text-[15px] font-semibold text-[var(--text-2)]">Cerca per squadra</p>
+                <div className="flex flex-wrap gap-2">
+                  {["Inter", "Milan", "Juventus", "Napoli", "Roma", "Real Madrid", "Barcelona", "Brasile", "Italia", "Argentina"].map((t) => {
+                    const lg = logoFor(t);
+                    return (
+                      <button key={t} type="button" onClick={() => setQuery(t)} className="inline-flex h-12 items-center gap-2 rounded-full pl-1.5 pr-4 text-[16px] font-semibold text-white shadow-[inset_0_0_0_1.5px_rgba(244,242,234,0.3)] transition-colors hover:bg-[var(--lime)] hover:text-[#0a0a0a] hover:shadow-none">
+                        {lg ? <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--paper)]"><img src={lg} alt="" width={26} height={26} className="h-[26px] w-[26px] object-contain" /></span> : <span className="w-2" />}
+                        {t}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="mb-3 mt-6 text-[15px] font-semibold text-[var(--text-2)]">Vai direttamente a</p>
+                <div className="flex flex-wrap gap-2">
+                  {QUICK.map((q) => (
+                    <Link key={q.href} href={q.href} className="btn btn-glass !h-11 !px-5 !text-[16px]">{q.label}</Link>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

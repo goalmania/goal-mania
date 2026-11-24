@@ -22,8 +22,11 @@ import { IProduct, Review, Patch } from "@/lib/types/product";
 import ProductReviews from "@/app/_components/ProductReviews";
 import DiscountRulesDisplay from "@/app/_components/DiscountRulesDisplay";
 import SizeGuideModal from "@/components/shop/SizeGuideModal";
+import PdpCustomize from "@/components/shop/PdpCustomize";
+import PdpLightbox from "@/components/shop/PdpLightbox";
+import VintedReviews from "@/components/shared/VintedReviews";
 import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
-import FaqSection from "./FaqSection";
+import FaqShort from "@/components/shared/FaqShort";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
@@ -163,7 +166,7 @@ function PatchCard({ patch, selected, onToggle }: {
         style={{ background: `${cfg.border}18`, border: `1px solid ${cfg.border}30` }}
       >
         <span
-          className="text-[12px] font-bold "
+          className="text-[14px] font-bold "
           style={{ color: cfg.text, fontFamily: "var(--font-mono, monospace)" }}
         >
           {cfg.abbr}
@@ -171,7 +174,7 @@ function PatchCard({ patch, selected, onToggle }: {
       </div>
       {/* Name */}
       <span
-        className="text-[13px] font-bold leading-tight pr-5"
+        className="text-[15px] font-bold leading-tight pr-5"
         style={{
           color: selected ? "#fff" : "rgba(255,255,255,0.55)",
           fontFamily: "var(--font-display, sans-serif)",
@@ -181,7 +184,7 @@ function PatchCard({ patch, selected, onToggle }: {
       </span>
       {/* Price */}
       <span
-        className="text-[12px] font-bold"
+        className="text-[14px] font-bold"
         style={{ color: cfg.border, fontFamily: "var(--font-mono, monospace)" }}
       >
         +€{patch.price.toFixed(2)}
@@ -227,15 +230,15 @@ function StepLabel({ n, label }: { n: number; label: string }) {
         style={{ background: "rgba(200,240,0,0.12)", border: "1px solid rgba(200,240,0,0.25)" }}
       >
         <span
-          className="text-[12px] font-bold"
+          className="text-[14px] font-bold"
           style={{ color: "#c8f000", fontFamily: "var(--font-mono, monospace)" }}
         >
           {n}
         </span>
       </div>
       <span
-        className="text-[12px] font-bold "
-        style={{ color: "rgba(255,255,255,0.64)", fontFamily: "var(--font-display, sans-serif)" }}
+        className="text-[14px] font-bold "
+        style={{ color: "rgba(255,255,255,0.8)", fontFamily: "var(--font-display, sans-serif)" }}
       >
         {label}
       </span>
@@ -253,6 +256,7 @@ export default function ProductDetailClient({
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [lightbox, setLightbox] = useState(false);
   const [imgErrors, setImgErrors] = useState<Record<number, boolean>>({});
   const [quantity, setQuantity] = useState(1);
   const [customOpen, setCustomOpen] = useState(false); // personalizzazione chiusa di default: prima taglia e acquisto
@@ -455,16 +459,16 @@ export default function ProductDetailClient({
             className="flex items-center justify-center gap-2 py-1.5 border-b"
             style={{ borderColor: "rgba(255,255,255,0.04)" }}
           >
-            <span className="text-[12px] " style={{ color: "rgba(255,255,255,0.64)", fontFamily: "var(--font-mono,monospace)" }}>
+            <span className="text-[14px] " style={{ color: "rgba(255,255,255,0.8)" }}>
               Taglia:
             </span>
             <span
-              className="text-[12px] font-bold px-2 py-0.5 rounded-full"
-              style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}
+              className="text-[14px] font-bold px-2 py-0.5 rounded-full"
+              style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000" }}
             >
               {customization.size}
             </span>
-            <span className="text-[12px] font-bold" style={{ color: "rgba(255,255,255,0.64)" }}>
+            <span className="text-[14px] font-bold" style={{ color: "rgba(255,255,255,0.8)" }}>
               · €{totalPrice.toFixed(2)}
             </span>
           </div>
@@ -507,7 +511,7 @@ export default function ProductDetailClient({
                 }}
               >
                 {product.images.map((img, i) => (
-                  <div key={i} className="relative aspect-square w-full shrink-0 snap-center">
+                  <div key={i} className="relative aspect-square w-full shrink-0 snap-center" onClick={() => { setSelectedImage(i); setLightbox(true); }}>
                     <Image
                       src={imgErrors[i] ? "/images/placeholder.png" : (cloudinaryOpt(img, 900) || "/images/placeholder.png")}
                       alt={i === 0 ? product.title : `${product.title}, foto ${i + 1}`}
@@ -533,7 +537,12 @@ export default function ProductDetailClient({
 
             {/* Computer: foto grande e miniature */}
             <div
-              className="relative hidden w-full rounded-[28px] overflow-hidden lg:block"
+              onClick={() => setLightbox(true)}
+              role="button"
+              tabIndex={0}
+              aria-label="Ingrandisci la foto"
+              onKeyDown={(e) => e.key === "Enter" && setLightbox(true)}
+              className="relative hidden w-full cursor-zoom-in rounded-[28px] overflow-hidden lg:block"
               style={{
                 aspectRatio: "1/1",
                 background: "#F7F7F7",
@@ -555,7 +564,7 @@ export default function ProductDetailClient({
                 className="absolute bottom-4 right-4 px-2.5 py-1 rounded-full"
                 style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)" }}
               >
-                <span className="text-[12px] font-bold text-white" style={{ fontFamily: "var(--font-mono,monospace)" }}>
+                <span className="text-[14px] font-bold text-white" style={{ fontFamily: "var(--font-mono,monospace)" }}>
                   {selectedImage + 1}/{product.images.length}
                 </span>
               </div>
@@ -571,14 +580,14 @@ export default function ProductDetailClient({
                     onClick={() => setSelectedImage(i)}
                     className="flex-shrink-0 rounded-xl overflow-hidden transition-all active:scale-[0.96]"
                     style={{
-                      width: 60,
-                      height: 60,
+                      width: 76,
+                      height: 76,
                       border: `2px solid ${i === selectedImage ? "#c8f000" : "rgba(255,255,255,0.08)"}`,
                       background: "#F7F7F7",
                       opacity: i === selectedImage ? 1 : 0.55,
                     }}
                   >
-                    <Image src={imgErrors[i] ? "/images/placeholder.png" : (cloudinaryOpt(img, 120) || "/images/placeholder.png")} alt="" width={60} height={60} unoptimized className="object-contain w-full h-full p-1" onError={() => setImgErrors(prev => ({ ...prev, [i]: true }))} />
+                    <Image src={imgErrors[i] ? "/images/placeholder.png" : (cloudinaryOpt(img, 120) || "/images/placeholder.png")} alt="" width={76} height={76} unoptimized className="object-contain w-full h-full p-1" onError={() => setImgErrors(prev => ({ ...prev, [i]: true }))} />
                   </button>
                 ))}
               </div>
@@ -620,7 +629,7 @@ export default function ProductDetailClient({
                       </svg>
                     ))}
                   </div>
-                  <span className="text-[13px] font-bold" style={{ color: "rgba(255,255,255,0.64)", fontFamily: "var(--font-mono,monospace)" }}>
+                  <span className="text-[15px] font-bold" style={{ color: "rgba(255,255,255,0.8)" }}>
                     {avgRating.toFixed(1)} · {reviews.length} recension{reviews.length === 1 ? "e" : "i"}
                   </span>
                 </div>
@@ -639,29 +648,29 @@ export default function ProductDetailClient({
                 customization.selectedPatches.length > 0) && (
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   {customization.isPlayerEdition && (
-                    <span className="text-[12px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}>
+                    <span className="text-[14px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000" }}>
                       Player +€{EXTRAS_PRICES.player_edition}
                     </span>
                   )}
                   {customization.hasLongSleeve && (
-                    <span className="text-[12px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}>
+                    <span className="text-[14px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000" }}>
                       Manica lunga +€{EXTRAS_PRICES.long_sleeve}
                     </span>
                   )}
                   {customization.includeShorts && (
-                    <span className="text-[12px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}>
+                    <span className="text-[14px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000" }}>
                       Pantaloncini +€{EXTRAS_PRICES.shorts}
                     </span>
                   )}
                   {customization.includeSocks && (
-                    <span className="text-[12px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}>
+                    <span className="text-[14px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000" }}>
                       Calzettoni +€{EXTRAS_PRICES.socks}
                     </span>
                   )}
                   {customization.selectedPatches.map(p => {
                     const cfg = COMP[p.category] || COMP["other"];
                     return (
-                      <span key={p._id} className="text-[12px] font-bold px-2 py-0.5 rounded-full" style={{ background: `${cfg.border}18`, color: cfg.text, fontFamily: "var(--font-mono,monospace)" }}>
+                      <span key={p._id} className="text-[14px] font-bold px-2 py-0.5 rounded-full" style={{ background: `${cfg.border}18`, color: cfg.text }}>
                         {cfg.abbr} +€{p.price}
                       </span>
                     );
@@ -678,8 +687,8 @@ export default function ProductDetailClient({
               >
                 {product.stockQuantity !== undefined && product.stockQuantity > 0 && product.stockQuantity < 5 && (
                   <div className="flex items-center gap-2">
-                    <span className="text-[13px] animate-pulse">⚠️</span>
-                    <span className="text-[13px] font-bold" style={{ color: "#fb923c" }}>
+                    <span className="text-[15px] animate-pulse">⚠️</span>
+                    <span className="text-[15px] font-bold" style={{ color: "#fb923c" }}>
                       Solo {product.stockQuantity} rimast{product.stockQuantity === 1 ? "o" : "i"}!
                     </span>
                   </div>
@@ -719,7 +728,7 @@ export default function ProductDetailClient({
                         key={type}
                         type="button"
                         onClick={() => setCustomization(p => ({ ...p, isKidSize: type === "KIDS", size: "" }))}
-                        className="px-4 py-1.5 rounded-lg text-[12px] font-bold transition-all"
+                        className="px-4 py-1.5 rounded-lg text-[14px] font-bold transition-all"
                         style={{
                           background: (type === "KIDS") === customization.isKidSize ? "rgba(255,255,255,0.08)" : "transparent",
                           color: (type === "KIDS") === customization.isKidSize ? "#fff" : "rgba(255,255,255,0.3)",
@@ -745,7 +754,7 @@ export default function ProductDetailClient({
                 </div>
 
                 {errors.size && (
-                  <p className="text-[12px] font-bold text-red-400 tracking-tight flex items-center gap-1">
+                  <p className="text-[14px] font-bold text-red-400 tracking-tight flex items-center gap-1">
                     <span>⚠️</span> {errors.size}
                   </p>
                 )}
@@ -756,10 +765,10 @@ export default function ProductDetailClient({
                   style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
                 >
                   <div>
-                    <p className="text-[12px] font-bold text-white" style={{ fontFamily: "var(--font-display,sans-serif)" }}>
+                    <p className="text-[14px] font-bold text-white" style={{ fontFamily: "var(--font-display,sans-serif)" }}>
                       Manica lunga
                     </p>
-                    <p className="text-[12px] font-bold" style={{ color: "#c8f000", fontFamily: "var(--font-mono,monospace)" }}>
+                    <p className="text-[14px] font-bold" style={{ color: "#c8f000" }}>
                       +€{EXTRAS_PRICES.long_sleeve}.00
                     </p>
                   </div>
@@ -771,171 +780,19 @@ export default function ProductDetailClient({
               </div>
             </div>
 
-            {/* ── CUSTOMIZATION SECTION ──────────────────────────────── */}
+            {/* ── PERSONALIZZAZIONE ──────────────────────────────────── */}
             {!product.isMysteryBox && (
-              <div
-                className="cut overflow-hidden"
-                style={{ border: "1px solid rgba(200,240,0,0.1)", background: "rgba(200,240,0,0.015)" }}
-              >
-                <button
-                  type="button"
-                  onClick={() => setCustomOpen((o) => !o)}
-                  aria-expanded={customOpen}
-                  className="flex w-full items-center justify-between px-4 py-3 text-left"
-                  style={{ borderBottom: customOpen ? "1px solid rgba(200,240,0,0.08)" : "none", minHeight: 48 }}
-                >
-                  <span className="display text-[20px]" style={{ color: "#c8f000" }}>
-                    Nome, numero e patch <span className="text-white/70" style={{ fontFamily: "var(--font-body)", textTransform: "none", fontWeight: 600, fontSize: "15px" }}>(opzionale)</span>
-                  </span>
-                  <span className="text-lg font-bold" style={{ color: "#c8f000" }}>{customOpen ? "−" : "+"}</span>
-                </button>
-
-                {customOpen && (
-                <div className="p-4 space-y-6">
-
-                  {/* STEP 1: Tipo maglia */}
-                  <div>
-                    <StepLabel n={1} label="Tipo di maglia" />
-                    <div className="grid grid-cols-2 gap-2">
-                      {[
-                        { id: "fan", label: "Edizione tifoso", price: 0, active: !customization.isPlayerEdition },
-                        { id: "player", label: "Edizione giocatore", price: EXTRAS_PRICES.player_edition, active: customization.isPlayerEdition },
-                      ].map(opt => (
-                        <button
-                          key={opt.id}
-                          type="button"
-                          onClick={() => setCustomization(p => ({ ...p, isPlayerEdition: opt.id === "player" }))}
-                          className="flex flex-col items-center justify-center p-3.5 cut cut-sm transition-all active:scale-[0.97]"
-                          style={{
-                            background: opt.active ? "#c8f000" : "rgba(255,255,255,0.03)",
-                            border: `1.5px solid ${opt.active ? "#c8f000" : "rgba(255,255,255,0.08)"}`,
-                            transition: "all 160ms cubic-bezier(0.23,1,0.32,1)",
-                          }}
-                        >
-                          <span
-                            className="text-[12px] font-bold"
-                            style={{
-                              color: opt.active ? "#000" : "rgba(255,255,255,0.6)",
-                              fontFamily: "var(--font-display,sans-serif)",
-                            }}
-                          >
-                            {opt.label}
-                          </span>
-                          {opt.price > 0 && (
-                            <span
-                              className="text-[12px] font-bold mt-0.5"
-                              style={{ color: opt.active ? "#000" : "rgba(200,240,0,0.6)" }}
-                            >
-                              +€{opt.price}
-                            </span>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* STEP 2: Nome e Numero */}
-                  {(product.allowsNameOnShirt || product.allowsNumberOnShirt) && (
-                    <div>
-                      <StepLabel n={2} label="Nome e numero" />
-                      <div className="grid grid-cols-3 gap-2">
-                        {product.allowsNameOnShirt && (
-                          <div className="col-span-2 space-y-1.5">
-                            <span className="text-[12px] font-bold " style={{ color: "rgba(255,255,255,0.64)", fontFamily: "var(--font-mono,monospace)" }}>Nome</span>
-                            <input
-                              type="text"
-                              value={customization.name}
-                              onChange={e => setCustomization(p => ({ ...p, name: e.target.value.toUpperCase() }))}
-                              maxLength={20}
-                              placeholder="MARADONA"
-                              className="w-full rounded-xl px-3.5 py-2.5 text-sm font-bold text-white placeholder:text-white/60 outline-none focus:ring-1 focus:ring-[#c8f000]/30"
-                              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", fontFamily: "var(--font-display,sans-serif)" }}
-                            />
-                          </div>
-                        )}
-                        {product.allowsNumberOnShirt && (
-                          <div className="space-y-1.5">
-                            <span className="text-[12px] font-bold " style={{ color: "rgba(255,255,255,0.64)", fontFamily: "var(--font-mono,monospace)" }}>N°</span>
-                            <input
-                              type="text"
-                              value={customization.number}
-                              onChange={e => setCustomization(p => ({ ...p, number: e.target.value.replace(/[^0-9]/g, "").slice(0, 2) }))}
-                              maxLength={2}
-                              placeholder="10"
-                              className="w-full rounded-xl px-3.5 py-2.5 text-sm font-bold text-white text-center placeholder:text-white/60 outline-none focus:ring-1 focus:ring-[#c8f000]/30"
-                              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", fontFamily: "var(--font-display,sans-serif)" }}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* STEP 3: Patch */}
-                  {relevantPatches.length > 0 && (
-                    <div>
-                      <StepLabel n={3} label={`Patch competizioni (${relevantPatches.length} disponibili)`} />
-                      <div className="grid grid-cols-2 gap-2">
-                        {relevantPatches.map(patch => (
-                          <PatchCard
-                            key={patch._id}
-                            patch={patch}
-                            selected={customization.selectedPatches.some(p => p._id === patch._id)}
-                            onToggle={() => togglePatch(patch)}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* STEP 4: Extras (shorts / socks) */}
-                  {(product.hasShorts || product.hasSocks) && (
-                    <div>
-                      <StepLabel n={relevantPatches.length > 0 ? 4 : 3} label="Completa il kit" />
-                      <div className="flex flex-wrap gap-2">
-                        {product.hasShorts && (
-                          <button
-                            type="button"
-                            onClick={() => setCustomization(p => ({ ...p, includeShorts: !p.includeShorts }))}
-                            className="flex items-center gap-2 px-4 py-2.5 rounded-full transition-all active:scale-[0.96]"
-                            style={{
-                              background: customization.includeShorts ? "rgba(200,240,0,0.12)" : "rgba(255,255,255,0.03)",
-                              border: `1.5px solid ${customization.includeShorts ? "#c8f000" : "rgba(255,255,255,0.08)"}`,
-                            }}
-                          >
-                            <span className="text-[13px] font-bold" style={{ color: customization.includeShorts ? "#c8f000" : "rgba(255,255,255,0.5)" }}>
-                              + Pantaloncini
-                            </span>
-                            <span className="text-[12px] font-bold" style={{ color: "#c8f000" }}>
-                              +€{EXTRAS_PRICES.shorts}
-                            </span>
-                          </button>
-                        )}
-                        {product.hasSocks && (
-                          <button
-                            type="button"
-                            onClick={() => setCustomization(p => ({ ...p, includeSocks: !p.includeSocks }))}
-                            className="flex items-center gap-2 px-4 py-2.5 rounded-full transition-all active:scale-[0.96]"
-                            style={{
-                              background: customization.includeSocks ? "rgba(200,240,0,0.12)" : "rgba(255,255,255,0.03)",
-                              border: `1.5px solid ${customization.includeSocks ? "#c8f000" : "rgba(255,255,255,0.08)"}`,
-                            }}
-                          >
-                            <span className="text-[13px] font-bold" style={{ color: customization.includeSocks ? "#c8f000" : "rgba(255,255,255,0.5)" }}>
-                              + Calzettoni
-                            </span>
-                            <span className="text-[12px] font-bold" style={{ color: "#c8f000" }}>
-                              +€{EXTRAS_PRICES.socks}
-                            </span>
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                </div>
-                )}
-              </div>
+              <PdpCustomize
+                c={customization}
+                set={setCustomization as any}
+                canName={!!product.allowsNameOnShirt}
+                canNumber={!!product.allowsNumberOnShirt}
+                patches={relevantPatches}
+                hasShorts={!!product.hasShorts}
+                hasSocks={!!product.hasSocks}
+                prices={{ player_edition: EXTRAS_PRICES.player_edition, shorts: EXTRAS_PRICES.shorts, socks: EXTRAS_PRICES.socks }}
+                toggle={togglePatch}
+              />
             )}
 
             {/* Mystery Box exclusion list */}
@@ -949,7 +806,7 @@ export default function ProductDetailClient({
                     <span className="text-xl">🎁</span>
                     <span className="text-sm font-bold text-white">Exclusion List</span>
                   </div>
-                  <p className="text-[13px] text-purple-200 leading-relaxed">
+                  <p className="text-[15px] text-purple-200 leading-relaxed">
                     Indica quali squadre o colori vuoi evitare. Selezioneremo la tua box di conseguenza.
                   </p>
                   <textarea
@@ -962,7 +819,7 @@ export default function ProductDetailClient({
                     className="w-full rounded-xl border-none bg-black/20 p-3 text-sm font-medium text-white placeholder:text-purple-300 focus:ring-0 resize-none"
                     placeholder="Es. No AC Milan, No maglie gialle..."
                   />
-                  <div className="flex justify-between text-[12px] font-bold text-purple-200 tracking-tighter">
+                  <div className="flex justify-between text-[14px] font-bold text-purple-200 tracking-tighter">
                     <span>{(customization as any).excludedShirts?.length || 0} / 5 squadre</span>
                     <span>Personalizzazione garantita</span>
                   </div>
@@ -998,7 +855,7 @@ export default function ProductDetailClient({
                   <button
                     type="button"
                     onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                    className="w-11 h-12 flex items-center justify-center text-white/60 hover:text-white transition-colors text-lg font-bold"
+                    className="w-11 h-12 flex items-center justify-center text-white/80 hover:text-white transition-colors text-lg font-bold"
                   >
                     −
                   </button>
@@ -1008,7 +865,7 @@ export default function ProductDetailClient({
                   <button
                     type="button"
                     onClick={() => setQuantity(q => q + 1)}
-                    className="w-11 h-12 flex items-center justify-center text-white/60 hover:text-white transition-colors text-lg font-bold"
+                    className="w-11 h-12 flex items-center justify-center text-white/80 hover:text-white transition-colors text-lg font-bold"
                   >
                     +
                   </button>
@@ -1018,7 +875,7 @@ export default function ProductDetailClient({
                 <button
                   type="button"
                   onClick={handleAddToCart}
-                  className="flex-1 h-12 flex items-center justify-center gap-1.5 cut cut-sm text-[13px] font-bold tracking-tight transition-all active:scale-[0.97]"
+                  className="flex-1 h-12 flex items-center justify-center gap-1.5 cut cut-sm text-[15px] font-bold tracking-tight transition-all active:scale-[0.97]"
                   style={{
                     background: "rgba(255,255,255,0.04)",
                     color: "#fff",
@@ -1041,7 +898,7 @@ export default function ProductDetailClient({
                 >
                   {inWishlist
                     ? <HeartIconSolid className="h-5 w-5 text-red-500" />
-                    : <HeartIcon className="h-5 w-5 text-white/60" />}
+                    : <HeartIcon className="h-5 w-5 text-white/80" />}
                 </button>
               </div>
 
@@ -1055,7 +912,7 @@ export default function ProductDetailClient({
                 {["VISA","Mastercard","Apple Pay","Google Pay","Klarna"].map(m => (
                   <span
                     key={m}
-                    className="rounded-full px-3 py-1 text-[13px] font-medium"
+                    className="rounded-full px-3 py-1 text-[15px] font-medium"
                     style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.8)" }}
                   >
                     {m}
@@ -1078,7 +935,7 @@ export default function ProductDetailClient({
             {/* Description */}
             {product.description && (
               <div>
-                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.64)" }}>
+                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.8)" }}>
                   {product.description}
                 </p>
               </div>
@@ -1089,8 +946,8 @@ export default function ProductDetailClient({
       </div>
 
       {/* ── Tabs: Reviews / Details / FAQ ─────────────────────────────── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-12">
-        <Tabs defaultValue="ratings">
+      <div className="mx-auto w-full max-w-[1760px] px-5 pb-12 md:px-10 lg:px-16">
+        <Tabs defaultValue="details">
           <TabsList
             className="w-full gap-0 px-0 justify-between bg-transparent border-b h-14 rounded-none shadow-none pb-0"
             style={{ borderColor: "rgba(255,255,255,0.06)" }}
@@ -1103,7 +960,7 @@ export default function ProductDetailClient({
               <TabsTrigger
                 key={tab.value}
                 value={tab.value}
-                className="flex-1 shadow-none rounded-none px-0 font-bold text-[13px] text-white/60
+                className="flex-1 shadow-none rounded-none px-0 font-bold text-[15px] text-white/80
                   data-[state=active]:text-white data-[state=active]:shadow-none data-[state=active]:bg-transparent
                   data-[state=active]:border-b-2 data-[state=active]:border-b-[#c8f000]"
                 style={{ fontFamily: "var(--font-display,sans-serif)" }}
@@ -1114,41 +971,41 @@ export default function ProductDetailClient({
           </TabsList>
 
           <TabsContent value="details" className="pt-6">
-            <div className="space-y-3 text-sm" style={{ color: "rgba(255,255,255,0.64)" }}>
-              {product.description && <p className="leading-relaxed">{product.description}</p>}
-              <ul className="space-y-2 mt-4">
+            <div className="space-y-5 text-[17px] leading-relaxed text-[var(--text-2)]">
+              {product.description && <p className="whitespace-pre-line">{product.description}</p>}
+              <ul className="grid gap-3 sm:grid-cols-2">
                 {[
-                  "Materiale premium di alta qualità",
-                  "Cuciture rinforzate per maggiore durabilità",
-                  "Tessuto traspirante e leggero",
-                  "Lavabile in lavatrice (30°C)",
-                ].map(feat => (
-                  <li key={feat} className="flex items-start gap-2">
-                    <span style={{ color: "#c8f000" }}>✓</span>
-                    <span>{feat}</span>
+                  ["Versione tifoso", "Non è la maglia ufficiale del club: Goal Mania non è affiliata a club o federazioni."],
+                  ["Spedizione gratuita", "In Italia, su ogni ordine. Consegna in 7-10 giorni lavorativi, con codice per seguire il pacco."],
+                  ["Reso entro 14 giorni", "Maglia non indossata, nella confezione. La spedizione del reso è a tuo carico. Le maglie con nome e numero non si restituiscono."],
+                  ["Taglie", "Usa la guida taglie con le misure in centimetri. Se sei tra due taglie, prendi la più grande."],
+                ].map(([t, d]) => (
+                  <li key={t} className="rounded-2xl bg-[var(--wall)] p-4 shadow-[inset_0_0_0_1px_var(--line)]">
+                    <span className="block text-[18px] font-bold text-white">{t}</span>
+                    <span className="mt-1 block text-[16px]">{d}</span>
                   </li>
                 ))}
               </ul>
             </div>
           </TabsContent>
 
-          <TabsContent value="ratings" className="pt-4">
-            <ProductReviews
-              product={product}
-              reviews={reviews}
-              onReviewSubmit={handleReviewSubmit}
-              onReviewDelete={handleReviewDelete}
-            />
+          <TabsContent value="ratings" className="pt-2">
+            <VintedReviews compact />
+            {reviews.length > 0 && (
+              <ProductReviews product={product} reviews={reviews} onReviewSubmit={handleReviewSubmit} onReviewDelete={handleReviewDelete} />
+            )}
           </TabsContent>
 
-          <TabsContent value="faq" className="pt-4">
-            <FaqSection />
+          <TabsContent value="faq" className="pt-2">
+            <FaqShort title="Domande frequenti" />
           </TabsContent>
         </Tabs>
       </div>
 
       {/* Galleria ordini reali — foto/video di maglie e pacchi dei clienti */}
-      <RealOrdersGallery />
+      <RealOrdersGallery limit={20} />
+
+      {lightbox && <PdpLightbox images={product.images} index={selectedImage} onIndex={setSelectedImage} onClose={() => setLightbox(false)} title={product.title} />}
 
       {/* Size Guide Modal */}
       <SizeGuideModal isOpen={sizeChartOpen} onClose={() => setSizeChartOpen(false)} />

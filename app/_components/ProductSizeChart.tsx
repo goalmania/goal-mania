@@ -17,7 +17,7 @@ export const ProductSizeChart = () => {
             </CardHeader>
             <CardContent>
               <Table>
-                <TableCaption className="text-xs text-white/50">Tip: For a looser fit, size up!</TableCaption>
+                <TableCaption className="text-xs text-white/80">Tip: For a looser fit, size up!</TableCaption>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Size</TableHead>
@@ -45,7 +45,7 @@ export const ProductSizeChart = () => {
             </CardHeader>
             <CardContent>
               <Table>
-                <TableCaption className="text-xs text-white/50">Age is approximate. Check height for best fit!</TableCaption>
+                <TableCaption className="text-xs text-white/80">Age is approximate. Check height for best fit!</TableCaption>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Size</TableHead>
@@ -67,7 +67,7 @@ export const ProductSizeChart = () => {
           </Card>
         </TabsContent>
       </Tabs>
-      <div className="mt-3 text-center text-xs text-white/50 animate-fade-in-up delay-200">
+      <div className="mt-3 text-center text-xs text-white/80 animate-fade-in-up delay-200">
         <span className="font-semibold text-primary-orange">Pro Tip:</span> Measure your favorite shirt and compare for the best fit!
       </div>
     </div>

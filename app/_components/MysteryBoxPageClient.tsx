@@ -8,6 +8,7 @@ import { Check, Gift, Minus, Plus, ShoppingBag, X } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import TrustBar from "@/components/home/TrustBar";
 import { useCartStore } from "@/lib/store/cart";
+import MysteryWheel from "@/components/shop/MysteryWheel";
 
 export interface MysteryBox {
   id: string;
@@ -98,9 +99,18 @@ export default function MysteryBoxPageClient({ boxes }: { boxes: MysteryBox[] })
 
   return (
     <div>
-      <PageHeader eyebrow="Maglia a sorpresa" title={<>Mystery <span className="mark"><span>box</span></span></>} lead="Non sai quale maglia ti arriva, ma decidi tutto il resto: quante, che taglia e quali squadre non vuoi.">
-        <a href="#box" className="btn btn-lime">Prepara la tua box</a>
-      </PageHeader>
+      <section className="hero-pitch relative overflow-hidden">
+        <div className="relative z-10 mx-auto grid w-full max-w-[1760px] items-center gap-10 px-5 pb-10 pt-9 md:px-10 md:pt-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 lg:px-16 lg:pb-16">
+          <div>
+            <p className="text-[14px] font-bold text-[var(--lime)]">Maglia a sorpresa</p>
+            <h1 className="disp mt-2 text-[clamp(3.4rem,9vw,8rem)] leading-[0.86] text-white">Mystery <span className="mark"><span>box</span></span></h1>
+            <p className="mt-5 max-w-[44ch] text-[clamp(1.1rem,1.5vw,1.35rem)] italic leading-snug text-[var(--text-2)]">Non sai quale maglia ti arriva, ma decidi tutto il resto: quante, che taglia e quali squadre non vuoi.</p>
+            <p className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-[17px] font-semibold text-white"><span>35€ le attuali</span><span>40€ le retro</span><span className="text-[var(--lime)]">Ogni 3, una in regalo</span></p>
+            <a href="#box" className="btn btn-lime mt-7">Prepara la tua box</a>
+          </div>
+          <MysteryWheel excluded={excluded} onExclude={(t) => setExcluded((p) => (p.includes(t) || p.length >= MAX_EXCLUDED ? p : [...p, t]))} />
+        </div>
+      </section>
 
       <section aria-label="Come funziona" className="mx-auto grid w-full max-w-[1760px] gap-4 px-5 pb-12 md:grid-cols-2 md:px-10 lg:grid-cols-4 lg:px-16">
         {STEPS.map((s, i) => (

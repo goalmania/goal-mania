@@ -169,8 +169,10 @@ function ProductDataTable({
   onPageSizeChange,
   isLoading,
   searchTerm,
-  onSearchChange
+  onSearchChange,
+  onBulkDone,
 }: {
+  onBulkDone: () => void;
   products: IProduct[];
   onEdit: (productId: string) => void;
   onDelete: (productId: string) => void;
@@ -558,6 +560,27 @@ function ProductDataTable({
         value="products"
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
+        {Object.keys(rowSelection).length > 0 && (() => {
+          const ids = table.getFilteredSelectedRowModel().rows.map((r) => (r.original as any)._id as string);
+          const run = async (action: string, value?: number) => {
+            const res = await fetch("/api/admin/products/bulk", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ids, action, value }) });
+            const d = await res.json().catch(() => ({}));
+            if (!res.ok) return alert(d.error || "Operazione non riuscita");
+            setRowSelection({});
+            onBulkDone();
+          };
+          return (
+            <div className="sticky top-2 z-20 flex flex-wrap items-center gap-2 rounded-lg border bg-background p-3 shadow-lg">
+              <span className="text-sm font-semibold">{ids.length} selezionati</span>
+              <Button size="sm" variant="outline" onClick={() => run("activate")}>Attiva</Button>
+              <Button size="sm" variant="outline" onClick={() => run("deactivate")}>Disattiva</Button>
+              <Button size="sm" variant="outline" onClick={() => run("feature")}>In evidenza</Button>
+              <Button size="sm" variant="outline" onClick={() => run("unfeature")}>Togli evidenza</Button>
+              <Button size="sm" variant="outline" onClick={() => { const v = window.prompt("Nuovo prezzo in euro (es. 35)"); if (v) run("price", Number(v.replace(",", "."))); }}>Imposta prezzo</Button>
+              <Button size="sm" variant="ghost" onClick={() => setRowSelection({})}>Annulla</Button>
+            </div>
+          );
+        })()}
         <div className="overflow-hidden rounded-lg border">
           <DndContext
             collisionDetection={closestCenter}
@@ -1024,6 +1047,7 @@ const stats = useMemo(() => {
         isLoading={isLoading}
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
+        onBulkDone={() => fetchProducts({ page: pagination.page, limit: pagination.limit, search: searchTerm, includeInactive: showInactive })}
       />
 
       {/* Delete Confirmation Dialog */}

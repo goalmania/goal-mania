@@ -65,14 +65,14 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
               >
                 Guida alle Taglie
               </h2>
-              <p className="text-[12px] text-white/60 mt-0.5" style={{ fontFamily: "var(--font-mono, monospace)" }}>
+              <p className="text-[14px] text-white/80 mt-0.5" style={{ fontFamily: "var(--font-mono, monospace)" }}>
                 Misure in centimetri
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-all"
+            className="w-9 h-9 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-all"
           >
             <X size={18} />
           </button>
@@ -85,7 +85,7 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
             style={{ background: "rgba(200,240,0,0.05)", border: "1px solid rgba(200,240,0,0.12)" }}
           >
             <h3
-              className="text-[12px] font-bold "
+              className="text-[14px] font-bold "
               style={{ color: "#c8f000", fontFamily: "var(--font-mono, monospace)" }}
             >
               Come Misurarti
@@ -97,8 +97,8 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
                 { label: "Altezza", desc: "Stai in piedi senza scarpe, appoggiato a una parete. Misura dall'alto della testa ai piedi." },
               ].map(({ label, desc }) => (
                 <div key={label}>
-                  <p className="text-[13px] font-bold text-white mb-1">{label}</p>
-                  <p className="text-[12px] text-white/60 leading-relaxed">{desc}</p>
+                  <p className="text-[15px] font-bold text-white mb-1">{label}</p>
+                  <p className="text-[14px] text-white/80 leading-relaxed">{desc}</p>
                 </div>
               ))}
             </div>
@@ -107,7 +107,7 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
           {/* Adult sizes table */}
           <div>
             <h3
-              className="text-[12px] font-bold text-white/60 mb-3"
+              className="text-[14px] font-bold text-white/80 mb-3"
               style={{ fontFamily: "var(--font-mono, monospace)" }}
             >
               Taglie Adulto
@@ -119,7 +119,7 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
                     {["Taglia", "Petto (cm)", "Vita (cm)", "Altezza (cm)"].map((h) => (
                       <th
                         key={h}
-                        className="text-left px-4 py-3 text-[12px] font-bold "
+                        className="text-left px-4 py-3 text-[14px] font-bold "
                         style={{ color: "#c8f000", fontFamily: "var(--font-mono, monospace)" }}
                       >
                         {h}
@@ -137,9 +137,9 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
                       }}
                     >
                       <td className="px-4 py-3 font-bold text-white">{row.size}</td>
-                      <td className="px-4 py-3 text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.chest}</td>
-                      <td className="px-4 py-3 text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.waist}</td>
-                      <td className="px-4 py-3 text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.height}</td>
+                      <td className="px-4 py-3 text-white/80" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.chest}</td>
+                      <td className="px-4 py-3 text-white/80" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.waist}</td>
+                      <td className="px-4 py-3 text-white/80" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.height}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -150,7 +150,7 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
           {/* Kids sizes table */}
           <div>
             <h3
-              className="text-[12px] font-bold text-white/60 mb-3"
+              className="text-[14px] font-bold text-white/80 mb-3"
               style={{ fontFamily: "var(--font-mono, monospace)" }}
             >
               Taglie Bambino / Youth
@@ -162,7 +162,7 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
                     {["Taglia", "Petto (cm)", "Vita (cm)", "Altezza (cm)"].map((h) => (
                       <th
                         key={h}
-                        className="text-left px-4 py-3 text-[12px] font-bold text-white/60"
+                        className="text-left px-4 py-3 text-[14px] font-bold text-white/80"
                         style={{ fontFamily: "var(--font-mono, monospace)" }}
                       >
                         {h}
@@ -180,9 +180,9 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
                       }}
                     >
                       <td className="px-4 py-3 font-bold text-white">{row.size}</td>
-                      <td className="px-4 py-3 text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.chest}</td>
-                      <td className="px-4 py-3 text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.waist}</td>
-                      <td className="px-4 py-3 text-white/60" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.height}</td>
+                      <td className="px-4 py-3 text-white/80" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.chest}</td>
+                      <td className="px-4 py-3 text-white/80" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.waist}</td>
+                      <td className="px-4 py-3 text-white/80" style={{ fontFamily: "var(--font-mono, monospace)" }}>{row.height}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -191,7 +191,7 @@ export default function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps)
           </div>
 
           {/* Tip */}
-          <p className="text-[12px] text-white/60 text-center leading-relaxed">
+          <p className="text-[14px] text-white/80 text-center leading-relaxed">
             In caso di dubbio tra due taglie, ti consigliamo di optare per la taglia più grande.{" "}
             <span style={{ color: "#c8f000" }}>Hai domande? Contattaci.</span>
           </p>
