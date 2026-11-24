@@ -18,7 +18,7 @@ async function getInternationalProducts() {
   await connectDB();
   const products = await Product.find({
     isActive: true,
-    title: { $regex: /^Maglia\s+(Real Madrid|Barcellona|Barcelona|PSG|Paris|Atletico|Atlético|Bayern|Dortmund|Ajax|Benfica|Porto|Sporting)/i },
+    title: { $regex: /^Maglia\s+(Real Madrid|Barcellona|Barcelona|PSG|Paris|Atletico|Atlético|Bayern|Dortmund|Ajax|Benfica|Porto\b|Sporting)/i },
   }).sort({ feature: -1, createdAt: -1 });
   return JSON.parse(JSON.stringify(products)); // Serialize the Mongoose documents
 }
