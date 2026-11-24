@@ -4,6 +4,7 @@ import Article from "@/lib/models/Article";
 import HomeHero from "@/components/home/HomeHero";
 import TrustBar from "@/components/home/TrustBar";
 import CategoryTiles, { type Tile } from "@/components/home/CategoryTiles";
+import TeamLogoRail from "@/components/home/TeamLogoRail";
 import EraPanels, { type EraPanelData } from "@/components/era/EraPanels";
 import { eraInfo, pickForEra } from "@/lib/eraPick";
 import { ERA_ORDER, WORLD_CUPS } from "@/lib/eraTheme";
@@ -187,6 +188,7 @@ export default async function Home() {
       <HomeHero products={hero} />
       <TrustBar />
       <CategoryTiles tiles={tiles} />
+      <TeamLogoRail />
       <section id="retro" aria-labelledby="eras-h" className="pt-6 md:pt-10">
         <div className="mx-auto mb-6 flex w-full max-w-[1760px] flex-wrap items-end justify-between gap-4 px-5 md:px-10 lg:px-16">
           <div>

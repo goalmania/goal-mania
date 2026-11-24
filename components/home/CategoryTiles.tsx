@@ -20,8 +20,6 @@ const TONES = {
   wall2: "bg-[#16261c] text-white",
 };
 
-const TEAMS = ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio", "Atalanta", "Fiorentina"];
-
 // Quattro porte d'ingresso, ognuna con una maglia vera, quante ce ne sono e da quanto partono
 export default function CategoryTiles({ tiles }: { tiles: Tile[] }) {
   return (
@@ -64,14 +62,6 @@ export default function CategoryTiles({ tiles }: { tiles: Tile[] }) {
           ))}
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center gap-2.5">
-          <span className="mr-1 text-[15px] font-semibold italic text-[var(--text-3)]">Cerchi la tua squadra?</span>
-          {TEAMS.map((t) => (
-            <Link key={t} href={`/shop/serieA/${t.toLowerCase()}`} className="inline-flex h-11 items-center rounded-full px-4 text-[16px] font-semibold text-white shadow-[inset_0_0_0_1.5px_rgba(244,242,234,0.35)] transition-colors hover:bg-[var(--lime)] hover:text-[#0a0a0a] hover:shadow-none">
-              {t}
-            </Link>
-          ))}
-        </div>
       </div>
     </section>
   );
