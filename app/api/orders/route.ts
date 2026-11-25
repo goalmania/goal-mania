@@ -63,10 +63,11 @@ export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
 
-    // Authentication check
-    if (!session || !session.user?.id) {
+    // Gli ordini veri nascono solo dal webhook Stripe dopo il pagamento (e li parte la notifica).
+    // Questa rotta creava ordini "pending" senza pagamento e con importo scelto dal browser: ora solo l'admin.
+    if (!session || !session.user?.id || session.user.role !== "admin") {
       return NextResponse.json(
-        { error: "You must be logged in to create an order" },
+        { error: "Unauthorized access" },
         { status: 401 }
       );
     }
