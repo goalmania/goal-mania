@@ -2,7 +2,10 @@ import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { patchById } from "@/lib/patches";
 import Order from "@/models/Order";
+import User from "@/lib/models/User";
+import mongoose from "mongoose";
 
+const COUNTRY: Record<string, string> = { IT: "Italy", ITALIA: "Italy", ITALY: "Italy", FR: "France", DE: "Germany", ES: "Spain", CH: "Switzerland", AT: "Austria", BE: "Belgium", NL: "Netherlands", PT: "Portugal", GB: "United Kingdom", SM: "San Marino" };
 const baseId = (id: string) => String(id || "").split("_")[0];
 const yes = (v: unknown) => (v ? "YES" : "no");
 
@@ -14,7 +17,7 @@ export async function buildSupplierPackage(order: any): Promise<{ message: strin
   const byId = new Map(prods.map((p) => [String(p._id), p]));
   const ref = String(order._id).slice(-6).toUpperCase();
 
-  const lines: string[] = ["Hello! New order, please prepare:", ""];
+  const lines: string[] = [`NEW ORDER - ref ${ref}`, "Please prepare and ship the following:", ""];
   const images: { url: string; caption: string }[] = [];
 
   (order.items || []).forEach((it: any, i: number) => {
@@ -22,35 +25,44 @@ export async function buildSupplierPackage(order: any): Promise<{ message: strin
     const p = byId.get(baseId(it.productId));
     const mystery = p?.isMysteryBox || /mystery|mistery/i.test(it.name || "");
     const title = String(it.name || "").replace(/^Maglia\s+/i, "").trim();
-    lines.push(`${i + 1}) ${mystery ? "MYSTERY jersey" : `${title} jersey`}  x${it.quantity}`);
-    if (c.size) lines.push(`   Size: ${c.size}${c.isKidSize ? " (kids)" : ""}`);
-    lines.push(`   ${c.isPlayerEdition ? "Player edition" : "Fan version"}${c.hasLongSleeve ? ", long sleeve" : ""}`);
-    if (c.name || c.number) lines.push(`   Print on back: ${[c.name, c.number].filter(Boolean).join(" ")}`);
     const patches = (c.selectedPatches || []).map((x: any) => patchById(x.id || x.name)?.label || x.name || x.id).filter(Boolean);
-    if (patches.length) lines.push(`   Patches: ${patches.join(", ")}`);
-    const extras = [c.includeShorts ? "shorts" : "", c.includeSocks ? "socks" : ""].filter(Boolean);
-    if (extras.length) lines.push(`   Add: ${extras.join(" + ")}`);
-    if (mystery) {
-      lines.push("   Pick any jersey from your stock.");
-      if (c.excludedShirts?.length) lines.push(`   Do NOT send: ${c.excludedShirts.join(", ")}`);
-    } else {
+    lines.push(`ITEM ${i + 1}`);
+    lines.push(`Jersey: ${mystery ? "MYSTERY jersey (pick any from your stock)" : title}`);
+    lines.push(`Quantity: ${it.quantity}`);
+    lines.push(`Size: ${c.size || "-"}${c.isKidSize ? " (KIDS)" : ""}`);
+    lines.push(`Version: ${c.isPlayerEdition ? "Player edition" : "Fan version"}`);
+    lines.push(`Sleeves: ${c.hasLongSleeve ? "LONG" : "short"}`);
+    lines.push(`Name on back: ${c.name || "none"}`);
+    lines.push(`Number on back: ${c.number || "none"}`);
+    lines.push(`Patches: ${patches.length ? patches.join(", ") : "none"}`);
+    lines.push(`Shorts: ${c.includeShorts ? "YES" : "no"}`);
+    lines.push(`Socks: ${c.includeSocks ? "YES" : "no"}`);
+    if (mystery && c.excludedShirts?.length) lines.push(`Do NOT send: ${c.excludedShirts.join(", ")}`);
+    if (!mystery) {
       const img = (p?.images || []).find((u: string) => /^https?:/.test(u));
-      if (img) images.push({ url: img, caption: `${i + 1}) ${title}` });
+      if (img) images.push({ url: img, caption: `Item ${i + 1}: ${title}` });
     }
     lines.push("");
   });
 
   const a = order.shippingAddress || {};
-  lines.push("Ship to:");
-  if (a.fullName) lines.push(a.fullName);
-  const street = a.street || a.addressLine1;
-  if (street) lines.push(street + (a.addressLine2 ? `, ${a.addressLine2}` : ""));
-  const cityLine = [a.postalCode, a.city].filter(Boolean).join(" ") + (a.state ? ` (${a.state})` : "");
-  if (cityLine.trim()) lines.push(cityLine.trim());
-  if (a.country) lines.push(a.country);
-  if (a.phone) lines.push(`Tel: ${a.phone}`);
+  let email = order.guestEmail || "";
+  if (!email && order.userId && mongoose.Types.ObjectId.isValid(String(order.userId))) {
+    const u = await User.findById(order.userId).select("email").lean<any>().catch(() => null);
+    email = u?.email || "";
+  }
+  const street = a.street || a.addressLine1 || "";
+  lines.push("SHIPPING DETAILS");
+  lines.push(`Name: ${a.fullName || "-"}`);
+  lines.push(`Address: ${street}${a.addressLine2 ? `, ${a.addressLine2}` : ""}` + (street ? "" : "-"));
+  lines.push(`City: ${a.city || "-"}`);
+  lines.push(`Province/State: ${a.state || "-"}`);
+  lines.push(`Postal code: ${a.postalCode || "-"}`);
+  lines.push(`Country: ${COUNTRY[String(a.country || "").toUpperCase()] || a.country || "-"}`);
+  lines.push(`Phone: ${a.phone || "-"}`);
+  if (email) lines.push(`Email: ${email}`);
   lines.push("");
-  lines.push(`Ref: ${ref}. Photos below. Please confirm and send me the tracking number once shipped. Thank you!`);
+  lines.push("Photos of the jerseys follow. Please confirm the order and send me the tracking number as soon as it ships. Thank you!");
   return { message: lines.join("\n").replace(/\n{3,}/g, "\n\n"), images };
 }
 
