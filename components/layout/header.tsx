@@ -29,6 +29,7 @@ export interface User {
 }
 
 const NAV = [
+  { href: "/", label: "Home", match: (p: string) => p === "/" },
   { href: "/shop", label: "Maglie", match: (p: string) => p === "/shop" || p.startsWith("/shop/serieA") || p.startsWith("/shop/premier") || p.startsWith("/shop/international") },
   { href: "/shop/2026/27", label: "Novità 26/27", match: (p: string) => p.startsWith("/shop/2026") },
   { href: "/archivio", label: "Maglie retro", match: (p: string) => p.startsWith("/archivio") || p.startsWith("/shop/retro") },

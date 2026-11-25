@@ -175,7 +175,7 @@ export function JerseyAdBlock({ jerseyId, teamHint }: JerseyAdBlockProps) {
         <div className="flex flex-col justify-between p-5 flex-1 gap-4">
           <div>
             <p className="text-[#c8f000] text-xs font-bold uppercase tracking-widest mb-1">
-              Offerta esclusiva
+              Maglia correlata
             </p>
             <h3 className="text-white text-lg sm:text-xl font-bold leading-snug">
               {jersey.title}
