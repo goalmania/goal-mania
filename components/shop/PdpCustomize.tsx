@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Check, ChevronDown } from "lucide-react";
+import { PATCH_GROUPS, patchById } from "@/lib/patches";
 
 export interface PatchLite { _id: string; category: string; price: number }
 export interface Cust {
@@ -38,13 +39,14 @@ const input = "h-14 w-full rounded-2xl bg-[var(--wall-2)] px-4 text-[18px] font-
 
 // Personalizzazione sempre visibile: anteprima, nome e numero, patch, kit. Ogni extra dice quanto costa.
 export default function PdpCustomize({
-  c, set, canName, canNumber, patches, hasShorts, hasSocks, prices, toggle,
+  c, set, canName, canNumber, patches, suggested = [], hasShorts, hasSocks, prices, toggle,
 }: {
   c: Cust;
   set: (f: (p: any) => any) => void;
   canName: boolean;
   canNumber: boolean;
   patches: any[];
+  suggested?: string[];
   hasShorts: boolean;
   hasSocks: boolean;
   prices: { player_edition: number; shorts: number; socks: number };
@@ -103,18 +105,9 @@ export default function PdpCustomize({
 
           {patches.length > 0 && (
             <div>
-              <p className="mb-2 text-[15px] font-bold text-white">Patch delle competizioni</p>
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {patches.map((pt) => {
-                  const on = c.selectedPatches.some((x: any) => x._id === pt._id);
-                  return (
-                    <button key={pt._id} type="button" aria-pressed={on} onClick={() => toggle(pt)} className={chip(on)}>
-                      <span>{COMP_LABEL[pt.category] || pt.category} <span className="opacity-80">+{Number(pt.price).toFixed(0)}€</span></span>
-                      {on && <Check className="h-5 w-5" strokeWidth={3} />}
-                    </button>
-                  );
-                })}
-              </div>
+              <p className="mb-1 text-[15px] font-bold text-white">Patch</p>
+              <p className="mb-3 text-[14px] italic text-[var(--text-3)]">Scegli quelle che vuoi: tutte le coppe europee, il campionato, le coppe nazionali e le competizioni delle nazionali. {patches[0] ? `${Number(patches[0].price).toFixed(0)}€ l'una.` : ""}</p>
+              <PatchPicker patches={patches} suggested={suggested} selected={c.selectedPatches} toggle={toggle} />
             </div>
           )}
 
@@ -132,5 +125,55 @@ export default function PdpCustomize({
         </div>
       </div>
     </section>
+  );
+}
+
+
+function Badge({ id, size = 56 }: { id: string; size?: number }) {
+  const d = patchById(id);
+  if (!d) return null;
+  const fs = d.abbr.length > 3 ? 15 : d.abbr.length > 2 ? 18 : 22;
+  return (
+    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" className="shrink-0">
+      <circle cx="32" cy="32" r="30" fill={d.bg} />
+      <circle cx="32" cy="32" r="26" fill="none" stroke={d.ring} strokeWidth="2.5" />
+      <text x="32" y={32 + fs * 0.36} textAnchor="middle" fontFamily="var(--font-anton), Impact, sans-serif" fontSize={fs} fill={d.fg}>{d.abbr}</text>
+    </svg>
+  );
+}
+
+// Le patch divise per tipo: in cima "Per te" (quelle della squadra), poi coppe europee, campionati, coppe nazionali, nazionali
+function PatchPicker({ patches, suggested, selected, toggle }: { patches: any[]; suggested: string[]; selected: any[]; toggle: (p: any) => void }) {
+  const groups = [
+    ...(suggested.length ? [{ id: "per-te", label: "Per te" }] : []),
+    ...PATCH_GROUPS.map((g) => ({ id: g.id, label: g.label })),
+  ];
+  const [tab, setTab] = useState(groups[0].id);
+  const list = tab === "per-te" ? suggested.map((id) => patches.find((p) => p._id === id)).filter(Boolean) : patches.filter((p) => patchById(p._id)?.group === tab);
+  const count = (gid: string) => selected.filter((x: any) => (gid === "per-te" ? suggested.includes(x._id) : patchById(x._id)?.group === gid)).length;
+  return (
+    <div>
+      <div className="mb-3 flex flex-wrap gap-2" role="tablist" aria-label="Tipo di patch">
+        {groups.map((g) => (
+          <button key={g.id} type="button" role="tab" aria-selected={tab === g.id} onClick={() => setTab(g.id)} className={`inline-flex h-10 items-center gap-1.5 rounded-full px-4 text-[15px] font-semibold transition-colors ${tab === g.id ? "bg-[var(--lime)] text-[#0a0a0a]" : "bg-[var(--wall-2)] text-white shadow-[inset_0_0_0_1px_var(--line)] hover:bg-white/10"}`}>
+            {g.label}
+            {count(g.id) > 0 && <span className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[12px] font-bold ${tab === g.id ? "bg-[#0a0a0a] text-[var(--lime)]" : "bg-[var(--lime)] text-[#0a0a0a]"}`}>{count(g.id)}</span>}
+          </button>
+        ))}
+      </div>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3" role="tabpanel">
+        {list.map((pt: any) => {
+          const on = selected.some((x: any) => x._id === pt._id);
+          return (
+            <button key={pt._id} type="button" aria-pressed={on} onClick={() => toggle(pt)} className={`relative flex flex-col items-center gap-1.5 rounded-2xl px-2 pb-3 pt-3 text-center transition-all active:scale-[0.98] ${on ? "bg-[var(--lime)] text-[#0a0a0a]" : "bg-[var(--wall-2)] text-white shadow-[inset_0_0_0_1px_var(--line)] hover:bg-white/10"}`}>
+              <Badge id={pt._id} />
+              <span className="text-[14px] font-bold leading-tight">{pt.title}</span>
+              <span className={`text-[13px] font-semibold ${on ? "opacity-80" : "text-[var(--text-3)]"}`}>+{Number(pt.price).toFixed(0)}€</span>
+              {on && <span className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-[#0a0a0a] text-[var(--lime)]"><Check className="h-4 w-4" strokeWidth={3} /></span>}
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }

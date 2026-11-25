@@ -66,7 +66,7 @@ export const flagForItName = (it: string) => {
 export const RETRO_NATIONS: Record<string, string> = {
   Italia: "it", Brasile: "br", Germania: "de", Argentina: "ar", Francia: "fr", Spagna: "es", Olanda: "nl", Inghilterra: "gb-eng",
   Portogallo: "pt", Giappone: "jp", Messico: "mx", USA: "us", Belgio: "be", Croazia: "hr", Uruguay: "uy", Nigeria: "ng", Camerun: "cm",
-  Cile: "cl", Colombia: "co", Danimarca: "dk", Svezia: "se", Romania: "ro", Bulgaria: "bg", Russia: "ru", Corea: "kr", Turchia: "tr",
+  Cile: "cl", Colombia: "co", Danimarca: "dk", Svezia: "se", Romania: "ro", Bulgaria: "bg", Russia: "ru", URSS: "", Corea: "kr", Turchia: "tr",
   Svizzera: "ch", Polonia: "pl", Scozia: "gb-sct", Irlanda: "ie", Ghana: "gh", Marocco: "ma", Senegal: "sn", "Costa d'Avorio": "ci",
   Galles: "gb-wls", Ungheria: "hu", Jugoslavia: "", Norvegia: "no", Grecia: "gr", Australia: "au", Sudafrica: "za", Paraguay: "py",
   Ecuador: "ec", Egitto: "eg", Algeria: "dz", Tunisia: "tn",
@@ -81,4 +81,11 @@ export function retroNationOf(title: string): { name: string; iso: string } | nu
   const raw = m[1].toLowerCase();
   const name = RETRO_ALIAS[raw] || Object.keys(RETRO_NATIONS).find((n) => n.toLowerCase().replace(/'/g, "") === raw.replace(/['’]/g, "")) || m[1];
   return { name, iso: RETRO_NATIONS[name] ?? "" };
+}
+
+// Bandiera della nazionale retro: da flagcdn, oppure file nostro per le nazionali che non esistono piu
+export function retroFlag(name: string, iso: string) {
+  if (iso) return flagSrc(iso, 80);
+  const local: Record<string, string> = { URSS: "/flags/urss.svg", Jugoslavia: "/flags/jugoslavia.svg" };
+  return local[name] || "";
 }

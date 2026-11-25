@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { Search } from "lucide-react";
 import type { TeamSection } from "@/lib/archiveData";
-import { flagSrc } from "@/lib/nations";
 
 const norm = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 
@@ -38,10 +37,10 @@ export default function ArchiveTeams({ sections }: { sections: TeamSection[] }) 
               {sec.teams.map((t) => (
                 <li key={t.key}>
                   <Link href={t.href} className="flex h-14 items-center gap-2.5 rounded-full pl-2 pr-5 text-[17px] font-semibold text-white shadow-[inset_0_0_0_1.5px_rgba(244,242,234,0.35)] transition-colors hover:bg-[var(--lime)] hover:text-[#0a0a0a] hover:shadow-none">
-                    <span className={`flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full ${t.iso ? "" : "bg-[var(--paper)]"}`}>
-                      {t.iso ? (
+                    <span className={`flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full ${t.flag ? "" : "bg-[var(--paper)]"}`}>
+                      {t.flag ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={flagSrc(t.iso, 80)} alt="" width={40} height={40} loading="lazy" className="h-full w-full object-cover" />
+                        <img src={t.flag} alt="" width={40} height={40} loading="lazy" className="h-full w-full object-cover" />
                       ) : t.logo ? (
                         <Image src={t.logo} alt="" width={32} height={32} className="h-[72%] w-[72%] object-contain" />
                       ) : (

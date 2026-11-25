@@ -4,7 +4,7 @@ import Link from "next/link";
 import ArchiveGrid from "@/components/shop/ArchiveGrid";
 import EraHeader from "@/components/era/EraHeader";
 import EraNumeral from "@/components/era/EraNumeral";
-import { archiveTeamSections, getArchiveItems, groupItems, topTeams, worldCupYearsWithJerseys } from "@/lib/archiveData";
+import { archiveTeamSections, getArchiveItems, getArchiveItemsRaw, groupItems, topTeams, worldCupYearsWithJerseys } from "@/lib/archiveData";
 import { eraInfo } from "@/lib/eraPick";
 import { ERAS, eraOf } from "@/lib/archive";
 import { ERA_ORDER, ERA_THEME } from "@/lib/eraTheme";
@@ -26,7 +26,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const g = groupItems(await getArchiveItems(), slug);
+  const g = groupItems(slug === "leggende" ? await getArchiveItemsRaw() : await getArchiveItems(), slug);
   if (!g) return { title: "Archivio | Goal Mania" };
   return {
     title: `Maglie retro ${g.title}: ${g.list.length} maglie a 40€ | Goal Mania`,
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function ArchiveGroupPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const all = await getArchiveItems();
-  const g = groupItems(all, slug);
+  const g = groupItems(slug === "leggende" ? await getArchiveItemsRaw() : all, slug);
   if (!g || g.list.length === 0) notFound();
   const th = ERA_THEME[slug];
 

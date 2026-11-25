@@ -30,6 +30,12 @@ export const WORLD_CUP_YEARS = [1990, 1994, 1998, 2002, 2006, 2010, 2014, 2018, 
 // Alcune schede hanno ancora il segnaposto con il logo al posto della foto: non devono rappresentare un'era
 export const hasPhoto = (image: string) => !!image && !image.startsWith("/images/");
 
+// Titolo senza il nome del giocatore: la maglia e la stessa, il nome sulla schiena si sceglie nella scheda
+const LEGEND_RE = new RegExp(`(?<![\\p{L}\\d])(${[...LEGENDS].sort((a, b) => b.length - a.length).concat(["R9"]).join("|")})(?![\\p{L}\\d])\\s*`, "giu");
+export function plainName(title: string): string {
+  return title.replace(LEGEND_RE, "").replace(/\bInt\b/g, "Inter").replace(/\s{2,}/g, " ").trim();
+}
+
 export function yearOf(title: string): number | null {
   const m = title.match(/(19[0-9]\d|20[0-2]\d)/);
   return m ? Number(m[1]) : null;
@@ -65,7 +71,7 @@ export function toItem(p: any): ArchiveItem {
 export const NATIONS = [
   "Italia", "Brasile", "Germania", "Argentina", "Francia", "Spagna", "Olanda", "Inghilterra", "Portogallo", "Giappone", "Messico", "USA",
   "Stati Uniti", "Belgio", "Croazia", "Uruguay", "Nigeria", "Camerun", "Cile", "Colombia", "Danimarca", "Svezia", "Romania", "Bulgaria",
-  "Russia", "Corea", "Turchia", "Svizzera", "Polonia", "Scozia", "Irlanda", "Ghana", "Marocco", "Senegal", "Costa d'Avorio", "Galles",
+  "Russia", "URSS", "Corea", "Turchia", "Svizzera", "Polonia", "Scozia", "Irlanda", "Ghana", "Marocco", "Senegal", "Costa d'Avorio", "Galles",
   "Ungheria", "Jugoslavia", "Norvegia", "Grecia", "Australia", "Sudafrica", "Paraguay", "Ecuador", "Egitto", "Algeria", "Tunisia",
 ];
 const NATION_RE = new RegExp(`\\b(${NATIONS.join("|")})\\b`, "i");

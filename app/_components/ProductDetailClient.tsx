@@ -25,6 +25,8 @@ import PdpCustomize from "@/components/shop/PdpCustomize";
 import PdpLightbox from "@/components/shop/PdpLightbox";
 import { vintedStats } from "@/lib/data/vintedReviews";
 import { clubOfTitle, clubHref } from "@/lib/clubs";
+import { plainName } from "@/lib/archive";
+import { PATCHES, patchById, suggestedPatches } from "@/lib/patches";
 import { Truck, RotateCcw, ShieldCheck, ChevronDown } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { HeartIcon } from "@heroicons/react/24/outline";
@@ -279,11 +281,12 @@ export default function ProductDetailClient({
     excludedShirts: [] as string[],
   });
 
-  // Smart patch filtering
-  const relevantPatches = useMemo(
-    () => getRelevantPatches(product.title, product.patches ?? []),
-    [product.title, product.patches]
-  );
+  // Tutte le patch per tutti: il prezzo viene dal database se la patch c'e, altrimenti dal listino; consigliate quelle della squadra
+  const patchCatalog = useMemo(() => {
+    const db = new Map((product.patches ?? []).map((p) => [p.category, Number(p.price)]));
+    return PATCHES.map((d) => ({ _id: d.id, category: d.id, title: d.label, price: db.get(d.id) ?? d.price }));
+  }, [product.patches]);
+  const suggestedPatchIds = useMemo(() => suggestedPatches(product.title, !!product.isWorldCup), [product.title, product.isWorldCup]);
 
   // Live price
   const unitPrice = useMemo(() => {
@@ -613,7 +616,7 @@ export default function ProductDetailClient({
                 <span className="rounded-full bg-[var(--lime)] px-3 py-1 text-[13px] font-bold text-[#0a0a0a]">{product.isRetro ? "Maglia retro" : product.isWorldCup ? "Mondiali 2026" : "Nuova stagione"}</span>
                 <span className="rounded-full bg-white/10 px-3 py-1 text-[13px] font-semibold text-white">Versione tifoso</span>
               </div>
-              <h1 className="display text-[clamp(2rem,4.2vw,3rem)] leading-[0.95]">{product.title}</h1>
+              <h1 className="display text-[clamp(2rem,4.2vw,3rem)] leading-[0.95]">{product.isRetro ? plainName(product.title) : product.title}</h1>
 
               {/* Recensioni vere ricevute su Vinted, con la fonte */}
               <a href="#recensioni" className="mt-3 inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] font-semibold text-[var(--text-2)] hover:text-white">
@@ -640,10 +643,9 @@ export default function ProductDetailClient({
                   {customization.hasLongSleeve && <span className="rounded-full bg-[rgba(200,240,0,0.12)] px-2.5 py-0.5 text-[13px] font-bold text-[#c8f000]">Manica lunga +€{EXTRAS_PRICES.long_sleeve}</span>}
                   {customization.includeShorts && <span className="rounded-full bg-[rgba(200,240,0,0.12)] px-2.5 py-0.5 text-[13px] font-bold text-[#c8f000]">Pantaloncini +€{EXTRAS_PRICES.shorts}</span>}
                   {customization.includeSocks && <span className="rounded-full bg-[rgba(200,240,0,0.12)] px-2.5 py-0.5 text-[13px] font-bold text-[#c8f000]">Calzettoni +€{EXTRAS_PRICES.socks}</span>}
-                  {customization.selectedPatches.map((p) => {
-                    const cfg = COMP[p.category] || COMP["other"];
-                    return <span key={p._id} className="rounded-full px-2.5 py-0.5 text-[13px] font-bold" style={{ background: `${cfg.border}22`, color: cfg.text }}>{cfg.abbr} +€{p.price}</span>;
-                  })}
+                  {customization.selectedPatches.map((p) => (
+                    <span key={p._id} className="rounded-full bg-[rgba(200,240,0,0.12)] px-2.5 py-0.5 text-[13px] font-bold text-[#c8f000]">{patchById(p.category)?.label || p.category} +€{p.price}</span>
+                  ))}
                 </div>
               )}
             </div>
@@ -701,7 +703,8 @@ export default function ProductDetailClient({
               set={setCustomization as any}
               canName={!!product.allowsNameOnShirt}
               canNumber={!!product.allowsNumberOnShirt}
-              patches={relevantPatches}
+              patches={patchCatalog}
+              suggested={suggestedPatchIds}
               hasShorts={!!product.hasShorts}
               hasSocks={!!product.hasSocks}
               prices={{ player_edition: EXTRAS_PRICES.player_edition, shorts: EXTRAS_PRICES.shorts, socks: EXTRAS_PRICES.socks }}

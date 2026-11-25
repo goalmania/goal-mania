@@ -3,7 +3,7 @@ import { ERA_THEME } from "@/lib/eraTheme";
 import { RETRO_WEAK_IMAGES } from "@/lib/data/retroWeakImages";
 
 // Copertine scelte a mano guardando le foto: maglie iconiche con scatto pulito, sfondo neutro e maglia intera
-const ERA_COVERS: Record<string, string[]> = {
+export const ERA_COVERS: Record<string, string[]> = {
   "anni-70": ["6a92efcae8f6d971b8e0e5fd", "6a92efbae8f6d971b8e0e552", "6a92efcae8f6d971b8e0e5ff"],
   "anni-80": ["6a92efc7e8f6d971b8e0e5db", "6a92efb6e8f6d971b8e0e52e", "6a92efb5e8f6d971b8e0e51c"],
   "anni-90": ["6a92efe6e8f6d971b8e0e72a", "6a92efe3e8f6d971b8e0e70e", "6a92efd5e8f6d971b8e0e66f"],

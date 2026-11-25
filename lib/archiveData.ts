@@ -1,11 +1,12 @@
 import { unstable_cache } from "next/cache";
 import connectDB from "@/lib/db";
 import ProductModel from "@/lib/models/Product";
-import { ERAS, toItem, eraOf, teamOf, isLegend, hasPhoto, isNational, worldCupItems, type ArchiveItem } from "@/lib/archive";
+import { ERAS, toItem, eraOf, teamOf, isLegend, hasPhoto, isNational, worldCupItems, plainName, type ArchiveItem } from "@/lib/archive";
 import { WORLD_CUPS } from "@/lib/eraTheme";
+import { ERA_COVERS } from "@/lib/eraPick";
 import { isShowable } from "@/lib/photoFix";
 import { CLUBS, LEAGUES, clubOfTitle, type League } from "@/lib/clubs";
-import { retroNationOf } from "@/lib/nations";
+import { retroNationOf, retroFlag } from "@/lib/nations";
 
 export const slugify = (s: string) =>
   s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -27,12 +28,32 @@ const readAll = unstable_cache(
   { revalidate: 300, tags: ["archive"] },
 );
 
-export async function getArchiveItems(): Promise<ArchiveItem[]> {
+// Una maglia sola per squadra, stagione e modello: le varianti con il nome di un giocatore (Messi, Kaka...) si fondono con quella senza nome
+function dedupe(all: ArchiveItem[]): ArchiveItem[] {
+  const key = (n: string) => n.toLowerCase().replace(/\bac milan\b/g, "milan").replace(/\bbarcelona\b/g, "barcellona").replace(/\bf\.?c\.? /g, "").replace(/[^\p{L}\d/]+/gu, " ").trim();
+  const groups = new Map<string, ArchiveItem[]>();
+  for (const it of all) {
+    const k = key(plainName(it.name));
+    groups.set(k, [...(groups.get(k) || []), it]);
+  }
+  return [...groups.values()].map((g) => {
+    const cover = new Set(Object.values(ERA_COVERS).flat());
+    const rep = g.find((it) => cover.has(it.id)) || g.find((it) => plainName(it.name) === it.name.replace(/\s{2,}/g, " ").trim()) || g[0];
+    return { ...rep, name: plainName(rep.name) };
+  });
+}
+
+// Tutte le maglie retro, comprese quelle con il nome di un giocatore (serve alla sezione Leggende)
+export async function getArchiveItemsRaw(): Promise<ArchiveItem[]> {
   try {
     return await readAll();
   } catch {
     return [];
   }
+}
+
+export async function getArchiveItems(): Promise<ArchiveItem[]> {
+  return dedupe(await getArchiveItemsRaw());
 }
 
 export function topTeams(items: ArchiveItem[], n = 30) {
@@ -50,7 +71,7 @@ export interface TeamChip {
   count: number;
   href: string;
   logo?: string; // stemma del club
-  iso?: string; // bandiera della nazionale
+  flag?: string; // bandiera della nazionale
 }
 export interface TeamSection {
   id: string;
@@ -67,7 +88,7 @@ export function archiveTeamSections(items: ArchiveItem[]): TeamSection[] {
     const nat = isNational(it.name) ? retroNationOf(it.name) : null;
     if (nat) {
       const k = slugify(nat.name);
-      const e = nations.get(k) || { key: k, name: nat.name, count: 0, href: `/archivio/nazione-${k}`, iso: nat.iso };
+      const e = nations.get(k) || { key: k, name: nat.name, count: 0, href: `/archivio/nazione-${k}`, flag: retroFlag(nat.name, nat.iso) };
       e.count++;
       nations.set(k, e);
       continue;

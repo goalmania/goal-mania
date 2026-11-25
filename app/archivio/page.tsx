@@ -4,7 +4,7 @@ import EraDock from "@/components/era/EraDock";
 import ArchiveTeams from "@/components/shop/ArchiveTeams";
 import ProductRail from "@/components/home/ProductRail";
 import WorldCupBand, { type CupCard } from "@/components/home/WorldCupBand";
-import { archiveTeamSections, getArchiveItems, worldCupYearsWithJerseys } from "@/lib/archiveData";
+import { archiveTeamSections, getArchiveItems, getArchiveItemsRaw, worldCupYearsWithJerseys } from "@/lib/archiveData";
 import { isLegend, worldCupItems } from "@/lib/archive";
 import { eraInfo, pickForEra } from "@/lib/eraPick";
 import { ERA_ORDER, WORLD_CUPS } from "@/lib/eraTheme";
@@ -26,8 +26,8 @@ const HOW = [
 ];
 
 export default async function ArchivePage() {
-  const items = await getArchiveItems();
-  const legends = items.filter((it) => isLegend(it.name)).slice(0, 14);
+  const [items, raw] = await Promise.all([getArchiveItems(), getArchiveItemsRaw()]);
+  const legends = raw.filter((it) => isLegend(it.name)).slice(0, 14);
   const infos = Object.fromEntries(ERA_ORDER.map((s) => [s, eraInfo(items, s)]));
   const cups: CupCard[] = worldCupYearsWithJerseys(items).map((y) => {
     const list = worldCupItems(items, y);
