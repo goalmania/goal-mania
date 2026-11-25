@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import ShopClientWrapper from "@/app/_components/ShopClientWrapper";
 import FaqShort from "@/components/shared/FaqShort";
+import PromoBand from "@/components/home/PromoBand";
 import TeamsDirectory from "@/components/shop/TeamsDirectory";
 import { getClubCounts, getNationCounts } from "@/lib/clubCounts";
 
@@ -34,6 +35,7 @@ export default async function ShopPage() {
   return (
     <div className="">
       <ShopClientWrapper />
+      <PromoBand />
       <TeamsDirectory clubs={clubs} nations={nations} />
       <FaqShort />
     </div>

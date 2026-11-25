@@ -23,12 +23,10 @@ import ProductReviews from "@/app/_components/ProductReviews";
 import SizeGuideModal from "@/components/shop/SizeGuideModal";
 import PdpCustomize from "@/components/shop/PdpCustomize";
 import PdpLightbox from "@/components/shop/PdpLightbox";
-import VintedReviews from "@/components/shared/VintedReviews";
-import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
-import FaqShort from "@/components/shared/FaqShort";
+import { vintedStats } from "@/lib/data/vintedReviews";
+import { clubOfTitle, clubHref } from "@/lib/clubs";
+import { Truck, RotateCcw, ShieldCheck, ChevronDown } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import { useI18n } from "@/lib/hooks/useI18n";
@@ -301,6 +299,13 @@ export default function ProductDetailClient({
 
   const totalPrice = unitPrice * quantity;
 
+  // Prendi 3, paghi 2: quante maglie ci sono gia nel carrello e quante ne regala la regola con questa selezione
+  const cartItemsList = useCartStore((s) => s.items);
+  const jerseysInCart = cartItemsList.reduce((n, i) => n + (i.quantity || 0), 0);
+  const jerseysTotal = jerseysInCart + quantity;
+  const freeNow = Math.floor(jerseysTotal / 3);
+  const club = useMemo(() => clubOfTitle(product.title), [product.title]);
+
 
   useEffect(() => {
     setMounted(true);
@@ -448,46 +453,29 @@ export default function ProductDetailClient({
   return (
     <div className="min-h-screen" style={{ background: "#080808" }}>
 
-      {/* ── Sticky Mobile CTA ──────────────────────────────────────────── */}
+      {/* ── Barra d'acquisto su telefono: prezzo e un solo pulsante grande ─────────── */}
       <div
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-50"
-        style={{ background: "#0a0a0a", borderTop: "1px solid rgba(255,255,255,0.14)", paddingBottom: "env(safe-area-inset-bottom)" }}
+        className="fixed inset-x-0 bottom-0 z-50 border-t border-white/15 bg-[#0a0a0a] lg:hidden"
+        style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
-        {customization.size && (
-          <div
-            className="flex items-center justify-center gap-2 py-1.5 border-b"
-            style={{ borderColor: "rgba(255,255,255,0.04)" }}
-          >
-            <span className="text-[14px] " style={{ color: "rgba(255,255,255,0.8)" }}>
-              Taglia:
-            </span>
-            <span
-              className="text-[14px] font-bold px-2 py-0.5 rounded-full"
-              style={{ background: "rgba(200,240,0,0.12)", color: "#c8f000" }}
-            >
-              {customization.size}
-            </span>
-            <span className="text-[14px] font-bold" style={{ color: "rgba(255,255,255,0.8)" }}>
-              · €{totalPrice.toFixed(2)}
-            </span>
+        <div className="flex items-center gap-3 px-3 py-2.5">
+          <div className="min-w-0 leading-tight">
+            <span className="num block text-[28px]">€{totalPrice.toFixed(2).replace(".00", "").replace(".", ",")}</span>
+            <span className="block truncate text-[13px] font-semibold text-[var(--text-3)]">{customization.size ? `Taglia ${customization.size}` : "Scegli la taglia"} · spedizione gratis</span>
           </div>
-        )}
-        <div className="flex gap-2.5 p-3">
           <button
             type="button"
-            onClick={handleAddToCart}
-            className="flex-1 h-14 flex items-center justify-center rounded-full text-[17px] font-semibold transition-all active:scale-[0.97]"
-            style={{ background: "#26261f", color: "#fff", fontFamily: "var(--font-display,sans-serif)" }}
+            onClick={() => {
+              if (!customization.size) {
+                setErrors({ size: "Seleziona una taglia" });
+                document.getElementById("taglia")?.scrollIntoView({ behavior: "smooth", block: "center" });
+                return;
+              }
+              handleAddToCart();
+            }}
+            className="btn btn-lime ml-auto !h-14 shrink-0 !px-6 !text-[18px]"
           >
-            + Carrello
-          </button>
-          <button
-            type="button"
-            onClick={handleBuyNow}
-            className="flex-[2] h-14 flex items-center justify-center gap-1.5 rounded-full text-[18px] font-semibold transition-all active:scale-[0.97]"
-            style={{ background: "#c8f000", color: "#0a0a0a", fontFamily: "var(--font-display,sans-serif)" }}
-          >
-            Compra subito →
+            {customization.size ? "Aggiungi al carrello" : "Scegli la taglia"}
           </button>
         </div>
       </div>
@@ -609,391 +597,179 @@ export default function ProductDetailClient({
             )}
           </div>
 
-          {/* ── RIGHT: Product Info + Customization ───────────────────── */}
-          <div className="space-y-6">
+          {/* ── RIGHT: acquisto ───────────────────────────────────────── */}
+          <div className="space-y-5">
 
-            {/* Title + Rating */}
+            {/* Dove sei + etichette */}
+            <div className="flex flex-wrap items-center gap-2 text-[14px] font-semibold text-[var(--text-3)]">
+              <Link href="/" className="hover:text-white">Home</Link>
+              <span aria-hidden="true">/</span>
+              <Link href={product.isRetro ? "/archivio" : product.isWorldCup ? "/shop/worldcup" : "/shop"} className="hover:text-white">{product.isRetro ? "Maglie retro" : product.isWorldCup ? "Mondiali" : "Maglie"}</Link>
+              {club && (<><span aria-hidden="true">/</span><Link href={clubHref(club)} className="text-[var(--lime)] hover:underline">{club.name}</Link></>)}
+            </div>
+
             <div>
-              <h1 className="display mb-3 text-[clamp(1.9rem,4vw,2.7rem)]">
-                {product.title}
-              </h1>
-
-              {/* Stars + reviews count */}
-              {reviews.length > 0 && (
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="flex gap-0.5">
-                    {[1,2,3,4,5].map(star => (
-                      <svg key={star} width="14" height="14" viewBox="0 0 14 14" fill={star <= Math.round(avgRating) ? "#c8f000" : "rgba(255,255,255,0.15)"}>
-                        <path d="M7 1l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.2l-3.2 1.7.6-3.6L1.8 4.8l3.6-.5z"/>
-                      </svg>
-                    ))}
-                  </div>
-                  <span className="text-[15px] font-bold" style={{ color: "rgba(255,255,255,0.8)" }}>
-                    {avgRating.toFixed(1)} · {reviews.length} recension{reviews.length === 1 ? "e" : "i"}
-                  </span>
-                </div>
-              )}
-
-              {/* Prezzo: grande e pulito, le condizioni accanto */}
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span className="num text-[46px]">€{totalPrice.toFixed(2).replace(".00", "")}</span>
-                {quantity > 1 && <span className="text-[15px] text-[var(--text-3)]">({quantity}× €{unitPrice.toFixed(2)})</span>}
-                <span className="text-[15px] text-[var(--text-2)]">IVA inclusa · spedizione gratuita</span>
+              <div className="mb-3 flex flex-wrap gap-2">
+                <span className="rounded-full bg-[var(--lime)] px-3 py-1 text-[13px] font-bold text-[#0a0a0a]">{product.isRetro ? "Maglia retro" : product.isWorldCup ? "Mondiali 2026" : "Nuova stagione"}</span>
+                <span className="rounded-full bg-white/10 px-3 py-1 text-[13px] font-semibold text-white">Versione tifoso</span>
               </div>
+              <h1 className="display text-[clamp(2rem,4.2vw,3rem)] leading-[0.95]">{product.title}</h1>
 
-              {/* Customization summary chips */}
-              {(customization.isPlayerEdition || customization.hasLongSleeve ||
-                customization.includeShorts || customization.includeSocks ||
-                customization.selectedPatches.length > 0) && (
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {customization.isPlayerEdition && (
-                    <span className="text-[14px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000" }}>
-                      Player +€{EXTRAS_PRICES.player_edition}
-                    </span>
-                  )}
-                  {customization.hasLongSleeve && (
-                    <span className="text-[14px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000" }}>
-                      Manica lunga +€{EXTRAS_PRICES.long_sleeve}
-                    </span>
-                  )}
-                  {customization.includeShorts && (
-                    <span className="text-[14px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000" }}>
-                      Pantaloncini +€{EXTRAS_PRICES.shorts}
-                    </span>
-                  )}
-                  {customization.includeSocks && (
-                    <span className="text-[14px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(200,240,0,0.1)", color: "#c8f000" }}>
-                      Calzettoni +€{EXTRAS_PRICES.socks}
-                    </span>
-                  )}
-                  {customization.selectedPatches.map(p => {
+              {/* Recensioni vere ricevute su Vinted, con la fonte */}
+              <a href="#recensioni" className="mt-3 inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] font-semibold text-[var(--text-2)] hover:text-white">
+                <span className="flex gap-0.5" aria-hidden="true">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <svg key={i} width="16" height="16" viewBox="0 0 14 14" fill={i <= Math.round(vintedStats.avg) ? "#c8f000" : "rgba(255,255,255,0.2)"}><path d="M7 1l1.6 3.3 3.6.5-2.6 2.5.6 3.6L7 9.2l-3.2 1.7.6-3.6L1.8 4.8l3.6-.5z" /></svg>
+                  ))}
+                </span>
+                <span>{vintedStats.avg.toFixed(1).replace(".", ",")} · {vintedStats.count} recensioni su Vinted</span>
+              </a>
+              {reviews.length > 0 && <p className="mt-1 text-[14px] text-[var(--text-3)]">{reviews.length} recension{reviews.length === 1 ? "e" : "i"} su questo sito, media {avgRating.toFixed(1).replace(".", ",")}</p>}
+            </div>
+
+            {/* Prezzo */}
+            <div>
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="num text-[clamp(3rem,7vw,4.4rem)] leading-none">€{totalPrice.toFixed(2).replace(".00", "").replace(".", ",")}</span>
+                {quantity > 1 && <span className="text-[15px] text-[var(--text-3)]">({quantity} × €{unitPrice.toFixed(2).replace(".00", "").replace(".", ",")})</span>}
+              </div>
+              <p className="mt-1 text-[15px] font-semibold text-[var(--text-2)]">IVA inclusa · spedizione gratuita in Italia</p>
+              {(customization.isPlayerEdition || customization.hasLongSleeve || customization.includeShorts || customization.includeSocks || customization.selectedPatches.length > 0) && (
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {customization.isPlayerEdition && <span className="rounded-full bg-[rgba(200,240,0,0.12)] px-2.5 py-0.5 text-[13px] font-bold text-[#c8f000]">Player +€{EXTRAS_PRICES.player_edition}</span>}
+                  {customization.hasLongSleeve && <span className="rounded-full bg-[rgba(200,240,0,0.12)] px-2.5 py-0.5 text-[13px] font-bold text-[#c8f000]">Manica lunga +€{EXTRAS_PRICES.long_sleeve}</span>}
+                  {customization.includeShorts && <span className="rounded-full bg-[rgba(200,240,0,0.12)] px-2.5 py-0.5 text-[13px] font-bold text-[#c8f000]">Pantaloncini +€{EXTRAS_PRICES.shorts}</span>}
+                  {customization.includeSocks && <span className="rounded-full bg-[rgba(200,240,0,0.12)] px-2.5 py-0.5 text-[13px] font-bold text-[#c8f000]">Calzettoni +€{EXTRAS_PRICES.socks}</span>}
+                  {customization.selectedPatches.map((p) => {
                     const cfg = COMP[p.category] || COMP["other"];
-                    return (
-                      <span key={p._id} className="text-[14px] font-bold px-2 py-0.5 rounded-full" style={{ background: `${cfg.border}18`, color: cfg.text }}>
-                        {cfg.abbr} +€{p.price}
-                      </span>
-                    );
+                    return <span key={p._id} className="rounded-full px-2.5 py-0.5 text-[13px] font-bold" style={{ background: `${cfg.border}22`, color: cfg.text }}>{cfg.abbr} +€{p.price}</span>;
                   })}
                 </div>
               )}
             </div>
 
-            {/* Real stock warning / delivery cutoff only — no fabricated viewer/sales counts */}
-            {(Boolean(product.stockQuantity !== undefined && product.stockQuantity > 0 && product.stockQuantity < 5) || true) && (
-              <div
-                className="grid grid-cols-1 gap-2 p-3 cut cut-sm"
-                style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
-              >
-                {product.stockQuantity !== undefined && product.stockQuantity > 0 && product.stockQuantity < 5 && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-[15px] animate-pulse">⚠️</span>
-                    <span className="text-[15px] font-bold" style={{ color: "#fb923c" }}>
-                      Solo {product.stockQuantity} rimast{product.stockQuantity === 1 ? "o" : "i"}!
-                    </span>
-                  </div>
-                )}
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 shrink-0 rounded-full bg-[#c8f000]" aria-hidden="true" />
-                  <span className="text-[15px] font-semibold text-white">
-                    Spedizione gratuita. {eta ? <>Se ordini oggi lo ricevi tra <b>{eta}</b>.</> : "Consegna in 7-10 giorni lavorativi."}
-                  </span>
-                </div>
+            {/* Prendi 3, paghi 2: calcolato sul carrello vero */}
+            <Link href="/cart" className="group block rounded-2xl bg-[var(--lime)] p-4 text-[#0a0a0a] transition-transform active:scale-[0.99]">
+              <span className="flex items-center justify-between gap-3">
+                <span className="disp text-[clamp(1.5rem,3vw,2rem)] leading-none">Prendi 3, paghi 2</span>
+                <span className="flex gap-1.5" aria-hidden="true">
+                  {[0, 1, 2].map((i) => (
+                    <span key={i} className={`flex h-8 w-8 items-center justify-center rounded-full text-[14px] font-black ${i < Math.min(3, jerseysTotal % 3 === 0 && jerseysTotal > 0 ? 3 : jerseysTotal % 3) ? "bg-[#0a0a0a] text-[var(--lime)]" : "bg-[#0a0a0a]/15"}`}>{i === 2 ? "🎁" : i + 1}</span>
+                  ))}
+                </span>
+              </span>
+              <span className="mt-1.5 block text-[15px] font-semibold">
+                {freeNow > 0
+                  ? `Con questa maglia hai ${freeNow === 1 ? "1 maglia in regalo" : `${freeNow} maglie in regalo`}: la meno cara è gratis.`
+                  : `Aggiungine ${3 - jerseysTotal} e la meno cara è gratis${jerseysInCart > 0 ? ` (hai già ${jerseysInCart} nel carrello)` : ""}.`}
+              </span>
+            </Link>
+
+            {/* Taglia */}
+            <div id="taglia" className="scroll-mt-40">
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="display text-[24px] text-white">Taglia</h2>
+                <button type="button" onClick={() => setSizeChartOpen(true)} className="min-h-[44px] px-1 text-[15px] font-bold text-[#c8f000] underline underline-offset-4">Guida taglie →</button>
               </div>
-            )}
-
-            {/* ── SIZE + SLEEVE ─────────────────────────────────────── */}
-            <div
-              className="cut overflow-hidden"
-              style={{ border: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.015)" }}
-            >
-              <div className="px-4 py-3 border-b flex items-center justify-between" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-                <span className="display text-[22px] text-white">Taglia</span>
-                <button
-                  type="button"
-                  onClick={() => setSizeChartOpen(true)}
-                  className="min-h-[44px] px-1 text-[15px] font-bold"
-                  style={{ color: "#c8f000", textDecoration: "underline", textUnderlineOffset: "4px" }}
-                >
-                  Guida taglie →
-                </button>
-              </div>
-
-              <div className="p-4 space-y-4">
-                {/* Adult / Kids toggle */}
-                {product.kidsSizes && product.kidsSizes.length > 0 && (
-                  <div className="flex gap-1 p-1 rounded-xl self-start" style={{ background: "rgba(255,255,255,0.04)", width: "fit-content" }}>
-                    {["ADULT", "KIDS"].map(type => (
-                      <button
-                        key={type}
-                        type="button"
-                        onClick={() => setCustomization(p => ({ ...p, isKidSize: type === "KIDS", size: "" }))}
-                        className="px-4 py-1.5 rounded-lg text-[14px] font-bold transition-all"
-                        style={{
-                          background: (type === "KIDS") === customization.isKidSize ? "rgba(255,255,255,0.08)" : "transparent",
-                          color: (type === "KIDS") === customization.isKidSize ? "#fff" : "rgba(255,255,255,0.3)",
-                          fontFamily: "var(--font-mono,monospace)",
-                        }}
-                      >
-                        {type}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Size grid */}
-                <div className="flex flex-wrap gap-2">
-                  {(customization.isKidSize ? product.kidsSizes : product.adultSizes)?.map(size => (
-                    <SizeBtn
-                      key={size}
-                      size={size}
-                      selected={customization.size === size}
-                      onClick={() => setCustomization(p => ({ ...p, size }))}
-                    />
+              {product.kidsSizes && product.kidsSizes.length > 0 && (
+                <div className="mb-3 inline-flex gap-1 rounded-full bg-[var(--wall)] p-1 shadow-[inset_0_0_0_1px_var(--line)]" role="group" aria-label="Adulto o bambino">
+                  {[["Adulto", false], ["Bambino", true]].map(([l, v]) => (
+                    <button key={String(l)} type="button" aria-pressed={customization.isKidSize === v} onClick={() => setCustomization((p) => ({ ...p, isKidSize: v as boolean, size: "" }))} className="h-10 rounded-full px-5 text-[15px] font-semibold text-white aria-pressed:bg-[var(--lime)] aria-pressed:text-[#0a0a0a]">{l as string}</button>
                   ))}
                 </div>
-
-                {errors.size && (
-                  <p className="text-[14px] font-bold text-red-400 tracking-tight flex items-center gap-1">
-                    <span>⚠️</span> {errors.size}
-                  </p>
-                )}
-
-                {/* Long sleeve toggle */}
-                <div
-                  className="flex items-center justify-between p-3.5 cut cut-sm"
-                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
-                >
-                  <div>
-                    <p className="text-[14px] font-bold text-white" style={{ fontFamily: "var(--font-display,sans-serif)" }}>
-                      Manica lunga
-                    </p>
-                    <p className="text-[14px] font-bold" style={{ color: "#c8f000" }}>
-                      +€{EXTRAS_PRICES.long_sleeve}.00
-                    </p>
-                  </div>
-                  <Switch
-                    checked={customization.hasLongSleeve}
-                    onCheckedChange={val => setCustomization(p => ({ ...p, hasLongSleeve: val }))}
-                  />
-                </div>
+              )}
+              <div className="flex flex-wrap gap-2">
+                {(customization.isKidSize ? product.kidsSizes : product.adultSizes)?.map((size) => (
+                  <SizeBtn key={size} size={size} selected={customization.size === size} onClick={() => { setErrors({}); setCustomization((p) => ({ ...p, size })); }} />
+                ))}
               </div>
+              {errors.size && <p role="alert" className="mt-2 text-[15px] font-bold text-red-400">{errors.size}</p>}
+              <p className="mt-2 text-[14px] italic text-[var(--text-3)]">Tra due taglie? Prendi la più grande. Se non va bene, reso entro 14 giorni.</p>
+
+              <label className="mt-4 flex cursor-pointer items-center justify-between gap-3 rounded-2xl bg-[var(--wall)] px-4 py-3 shadow-[inset_0_0_0_1px_var(--line)]">
+                <span>
+                  <span className="block text-[16px] font-bold text-white">Manica lunga</span>
+                  <span className="block text-[14px] font-bold text-[#c8f000]">+€{EXTRAS_PRICES.long_sleeve}</span>
+                </span>
+                <Switch checked={customization.hasLongSleeve} onCheckedChange={(val) => setCustomization((p) => ({ ...p, hasLongSleeve: val }))} />
+              </label>
             </div>
 
-            {/* ── PERSONALIZZAZIONE ──────────────────────────────────── */}
-            {!product.isMysteryBox && (
-              <PdpCustomize
-                c={customization}
-                set={setCustomization as any}
-                canName={!!product.allowsNameOnShirt}
-                canNumber={!!product.allowsNumberOnShirt}
-                patches={relevantPatches}
-                hasShorts={!!product.hasShorts}
-                hasSocks={!!product.hasSocks}
-                prices={{ player_edition: EXTRAS_PRICES.player_edition, shorts: EXTRAS_PRICES.shorts, socks: EXTRAS_PRICES.socks }}
-                toggle={togglePatch}
-              />
-            )}
-
-            {/* Mystery Box exclusion list */}
-            {product.isMysteryBox && (
-              <div
-                className="cut overflow-hidden"
-                style={{ background: "linear-gradient(135deg, rgba(88,28,135,0.6), rgba(49,46,129,0.6))", border: "1px solid rgba(139,92,246,0.3)" }}
-              >
-                <div className="p-5 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xl">🎁</span>
-                    <span className="text-sm font-bold text-white">Exclusion List</span>
-                  </div>
-                  <p className="text-[15px] text-purple-200 leading-relaxed">
-                    Indica quali squadre o colori vuoi evitare. Selezioneremo la tua box di conseguenza.
-                  </p>
-                  <textarea
-                    rows={4}
-                    value={(customization as any).excludedShirts?.join("\n") || ""}
-                    onChange={e => {
-                      const lines = e.target.value.split("\n").slice(0, 5).filter(l => l.trim() !== "");
-                      setCustomization(p => ({ ...p, excludedShirts: lines }));
-                    }}
-                    className="w-full rounded-xl border-none bg-black/20 p-3 text-sm font-medium text-white placeholder:text-purple-300 focus:ring-0 resize-none"
-                    placeholder="Es. No AC Milan, No maglie gialle..."
-                  />
-                  <div className="flex justify-between text-[14px] font-bold text-purple-200 tracking-tighter">
-                    <span>{(customization as any).excludedShirts?.length || 0} / 5 squadre</span>
-                    <span>Personalizzazione garantita</span>
-                  </div>
+            {/* Acquisto */}
+            <div className="space-y-3">
+              <div className="flex items-stretch gap-2">
+                <div className="flex shrink-0 items-center overflow-hidden rounded-full bg-[var(--wall)] shadow-[inset_0_0_0_1px_var(--line)]" role="group" aria-label="Quantità">
+                  <button type="button" aria-label="Una in meno" onClick={() => setQuantity((q) => Math.max(1, q - 1))} className="h-14 w-12 text-[22px] font-bold text-white hover:bg-white/10">−</button>
+                  <span className="w-8 text-center text-[18px] font-bold text-white" aria-live="polite">{quantity}</span>
+                  <button type="button" aria-label="Una in più" onClick={() => setQuantity((q) => Math.min(20, q + 1))} className="h-14 w-12 text-[22px] font-bold text-white hover:bg-white/10">+</button>
                 </div>
+                <button type="button" onClick={handleAddToCart} className="btn btn-lime min-w-0 flex-1 !h-14 !text-[18px]">
+                  Aggiungi al carrello · €{totalPrice.toFixed(2).replace(".00", "").replace(".", ",")}
+                </button>
+                <button type="button" onClick={handleWishlistToggle} aria-label={inWishlist ? "Togli dai preferiti" : "Aggiungi ai preferiti"} aria-pressed={inWishlist} className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full transition-transform active:scale-95 ${inWishlist ? "bg-red-500/15 shadow-[inset_0_0_0_2px_rgba(239,68,68,0.5)]" : "bg-[var(--wall)] shadow-[inset_0_0_0_1px_var(--line)]"}`}>
+                  {inWishlist ? <HeartIconSolid className="h-6 w-6 text-red-500" /> : <HeartIcon className="h-6 w-6 text-white/80" />}
+                </button>
               </div>
-            )}
+              <button type="button" onClick={handleBuyNow} className="btn btn-ghost w-full !h-14 !text-[18px]">Compra subito</button>
+            </div>
 
-            {/* ── CTA BLOCK ──────────────────────────────────────────── */}
-            <div className="space-y-3 pb-4">
-              {/* Condizioni vere, scritte chiare */}
-              <ul className="grid grid-cols-2 gap-x-4 gap-y-2 py-1 text-[15px] font-semibold text-white/90">
-                {["Spedizione gratuita, 7-10 giorni", "Reso entro 14 giorni", "Pagamento sicuro", "Tracking via email"].map((t) => (
-                  <li key={t} className="flex items-start gap-2">
-                    <span className="mt-[7px] h-2 w-2 shrink-0 bg-[#c8f000]" aria-hidden="true" />
+            {/* Consegna e garanzie: le regole vere del negozio */}
+            <ul className="divide-y divide-[var(--line)] overflow-hidden rounded-2xl bg-[var(--wall)] shadow-[inset_0_0_0_1px_var(--line)]">
+              <li className="flex items-start gap-3 p-4">
+                <Truck className="mt-0.5 h-6 w-6 shrink-0 text-[var(--lime)]" strokeWidth={2.2} />
+                <span className="text-[16px] leading-snug text-white"><b>Spedizione gratuita.</b> {eta ? <>Se ordini oggi lo ricevi tra <b>{eta}</b>.</> : "Consegna in 7-10 giorni lavorativi."} <span className="text-[var(--text-3)]">Codice per seguire il pacco via email.</span></span>
+              </li>
+              <li className="flex items-start gap-3 p-4">
+                <RotateCcw className="mt-0.5 h-6 w-6 shrink-0 text-[var(--lime)]" strokeWidth={2.2} />
+                <span className="text-[16px] leading-snug text-white"><b>Reso entro 14 giorni.</b> <span className="text-[var(--text-3)]">Maglia non indossata; spedizione del reso a tuo carico. Le personalizzate non si rendono.</span></span>
+              </li>
+              <li className="flex items-start gap-3 p-4">
+                <ShieldCheck className="mt-0.5 h-6 w-6 shrink-0 text-[var(--lime)]" strokeWidth={2.2} />
+                <span className="text-[16px] leading-snug text-white"><b>Pagamento protetto.</b> <span className="text-[var(--text-3)]">Carte, Apple Pay, Google Pay, PayPal, Klarna.</span></span>
+              </li>
+            </ul>
+
+            {/* Personalizzazione */}
+            <PdpCustomize
+              c={customization}
+              set={setCustomization as any}
+              canName={!!product.allowsNameOnShirt}
+              canNumber={!!product.allowsNumberOnShirt}
+              patches={relevantPatches}
+              hasShorts={!!product.hasShorts}
+              hasSocks={!!product.hasSocks}
+              prices={{ player_edition: EXTRAS_PRICES.player_edition, shorts: EXTRAS_PRICES.shorts, socks: EXTRAS_PRICES.socks }}
+              toggle={togglePatch}
+            />
+
+            {/* Dettagli a scomparsa */}
+            <div className="divide-y divide-[var(--line)] overflow-hidden rounded-2xl bg-[var(--wall)] shadow-[inset_0_0_0_1px_var(--line)]">
+              {[
+                ["Descrizione", product.description || `${product.title}: maglia versione tifoso, spedita gratis in Italia.`],
+                ["Versione tifoso, non ufficiale", "Non è la maglia ufficiale del club: Goal Mania non è affiliata ad alcun club o federazione. Stessa vestibilità e stampe delle maglie da tifoso."],
+                ["Spedizione e reso", "Spedizione gratuita in Italia, consegna in 7-10 giorni lavorativi con codice di tracciamento. Reso entro 14 giorni con maglia non indossata e nella confezione: la spedizione del reso è a tuo carico, salvo maglia difettosa o sbagliata. Nome e numero non si rendono."],
+                ["Come scegliere la taglia", "Apri la guida taglie e confronta le misure in centimetri con una maglia che ti sta bene. Se sei tra due taglie, prendi la più grande."],
+              ].map(([t, d], i) => (
+                <details key={t} className="group" open={i === 0}>
+                  <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-3 px-4 text-[17px] font-bold text-white [&::-webkit-details-marker]:hidden">
                     {t}
-                  </li>
-                ))}
-              </ul>
-
-              {/* Offerta 3x2 vicino al pulsante: la leva piu forte per aumentare lo scontrino */}
-              <Link href="/shop" className="block rounded-2xl bg-[#1b1b19] px-4 py-3.5 text-white shadow-[inset_4px_0_0_#c8f000] transition-colors hover:bg-[#c8f000] hover:text-[#0a0a0a] hover:shadow-none">
-                <span className="display text-[22px]">Prendi 3, ne paghi 2</span>
-                <span className="mt-0.5 block text-[14px] font-semibold opacity-80">La meno cara è gratis. Scegli altre maglie →</span>
-              </Link>
-
-              {/* Quantity + Add to cart + Wishlist */}
-              <div className="flex items-center gap-2">
-                {/* Qty */}
-                <div
-                  className="flex items-center cut cut-sm overflow-hidden flex-shrink-0"
-                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                    className="w-11 h-12 flex items-center justify-center text-white/80 hover:text-white transition-colors text-lg font-bold"
-                  >
-                    −
-                  </button>
-                  <span className="w-10 text-center text-sm font-bold text-white" style={{ fontFamily: "var(--font-display,sans-serif)" }}>
-                    {quantity}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setQuantity(q => q + 1)}
-                    className="w-11 h-12 flex items-center justify-center text-white/80 hover:text-white transition-colors text-lg font-bold"
-                  >
-                    +
-                  </button>
-                </div>
-
-                {/* Add to cart */}
-                <button
-                  type="button"
-                  onClick={handleAddToCart}
-                  className="flex-1 h-12 flex items-center justify-center gap-1.5 cut cut-sm text-[15px] font-bold tracking-tight transition-all active:scale-[0.97]"
-                  style={{
-                    background: "rgba(255,255,255,0.04)",
-                    color: "#fff",
-                    border: "1.5px solid rgba(200,240,0,0.2)",
-                    fontFamily: "var(--font-display,sans-serif)",
-                    }}
-                >
-                  + Carrello
-                </button>
-
-                {/* Wishlist */}
-                <button
-                  type="button"
-                  onClick={handleWishlistToggle}
-                  className="h-12 w-12 flex items-center justify-center cut cut-sm transition-all active:scale-[0.96] flex-shrink-0"
-                  style={{
-                    background: inWishlist ? "rgba(239,68,68,0.1)" : "rgba(255,255,255,0.04)",
-                    border: `1.5px solid ${inWishlist ? "rgba(239,68,68,0.4)" : "rgba(255,255,255,0.08)"}`,
-                  }}
-                >
-                  {inWishlist
-                    ? <HeartIconSolid className="h-5 w-5 text-red-500" />
-                    : <HeartIcon className="h-5 w-5 text-white/80" />}
-                </button>
-              </div>
-
-              {/* Acquisto immediato: il pulsante principale */}
-              <button type="button" onClick={handleBuyNow} className="btn btn-lime w-full !h-14 !text-[18px]">
-                Compra subito
-              </button>
-
-              {/* Payment methods */}
-              <div className="flex items-center justify-center gap-1.5 flex-wrap pt-1">
-                {["VISA","Mastercard","Apple Pay","Google Pay","Klarna"].map(m => (
-                  <span
-                    key={m}
-                    className="rounded-full px-3 py-1 text-[15px] font-medium"
-                    style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.8)" }}
-                  >
-                    {m}
-                  </span>
-                ))}
-              </div>
-
+                    <ChevronDown className="h-5 w-5 shrink-0 text-[var(--text-3)] transition-transform group-open:rotate-180" />
+                  </summary>
+                  <p className="whitespace-pre-line px-4 pb-4 text-[16px] leading-relaxed text-[var(--text-2)]">{d}</p>
+                </details>
+              ))}
             </div>
-
-            {/* Description */}
-            {product.description && (
-              <div>
-                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.8)" }}>
-                  {product.description}
-                </p>
-              </div>
-            )}
-
           </div>
         </div>
       </div>
 
-      {/* ── Tabs: Reviews / Details / FAQ ─────────────────────────────── */}
-      <div className="mx-auto w-full max-w-[1760px] px-5 pb-12 md:px-10 lg:px-16">
-        <Tabs defaultValue="details">
-          <TabsList
-            className="w-full gap-0 px-0 justify-between bg-transparent border-b h-14 rounded-none shadow-none pb-0"
-            style={{ borderColor: "rgba(255,255,255,0.06)" }}
-          >
-            {[
-              { value: "details", label: "Dettagli" },
-              { value: "ratings", label: "Recensioni" },
-              { value: "faq", label: "FAQ" },
-            ].map(tab => (
-              <TabsTrigger
-                key={tab.value}
-                value={tab.value}
-                className="flex-1 shadow-none rounded-none px-0 font-bold text-[15px] text-white/80
-                  data-[state=active]:text-white data-[state=active]:shadow-none data-[state=active]:bg-transparent
-                  data-[state=active]:border-b-2 data-[state=active]:border-b-[#c8f000]"
-                style={{ fontFamily: "var(--font-display,sans-serif)" }}
-              >
-                {tab.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
-          <TabsContent value="details" className="pt-6">
-            <div className="space-y-5 text-[17px] leading-relaxed text-[var(--text-2)]">
-              {product.description && <p className="whitespace-pre-line">{product.description}</p>}
-              <ul className="grid gap-3 sm:grid-cols-2">
-                {[
-                  ["Versione tifoso", "Non è la maglia ufficiale del club: Goal Mania non è affiliata ad alcun club o federazione."],
-                  ["Spedizione gratuita", "In Italia, su ogni ordine. Consegna in 7-10 giorni lavorativi, con codice per seguire il pacco."],
-                  ["Reso entro 14 giorni", "Maglia non indossata, nella confezione. La spedizione del reso è a tuo carico, salvo maglia difettosa o sbagliata. Le maglie con nome e numero non si possono restituire."],
-                  ["Taglie", "Usa la guida taglie con le misure in centimetri. Se sei tra due taglie, prendi la più grande."],
-                ].map(([t, d]) => (
-                  <li key={t} className="rounded-2xl bg-[var(--wall)] p-4 shadow-[inset_0_0_0_1px_var(--line)]">
-                    <span className="block text-[18px] font-bold text-white">{t}</span>
-                    <span className="mt-1 block text-[16px]">{d}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="ratings" className="pt-2">
-            <VintedReviews compact />
-            {reviews.length > 0 && (
-              <ProductReviews product={product} reviews={reviews} onReviewSubmit={handleReviewSubmit} onReviewDelete={handleReviewDelete} />
-            )}
-          </TabsContent>
-
-          <TabsContent value="faq" className="pt-2">
-            <FaqShort title="Domande frequenti" />
-          </TabsContent>
-        </Tabs>
-      </div>
-
-      {/* Galleria ordini reali — foto/video di maglie e pacchi dei clienti */}
-      <RealOrdersGallery limit={20} />
-
+      {/* Recensioni: le Vinted stanno nella pagina sotto (con la fonte); qui quelle lasciate su questo sito, se ci sono */}
+      <div id="recensioni" className="scroll-mt-32" />
+      {reviews.length > 0 && (
+        <div className="mx-auto w-full max-w-[1760px] px-5 pb-8 md:px-10 lg:px-16">
+          <ProductReviews product={product} reviews={reviews} onReviewSubmit={handleReviewSubmit} onReviewDelete={handleReviewDelete} />
+        </div>
+      )}
       {lightbox && <PdpLightbox images={product.images} index={selectedImage} onIndex={setSelectedImage} onClose={() => setLightbox(false)} title={product.title} />}
 
       {/* Size Guide Modal */}

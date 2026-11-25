@@ -6,6 +6,8 @@ import Patch from "@/lib/models/Patch";
 import ProductDetailClient from "@/app/_components/ProductDetailClient";
 import ProductRail from "@/components/home/ProductRail";
 import VintedReviews from "@/components/shared/VintedReviews";
+import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
+import FaqShort from "@/components/shared/FaqShort";
 import { pickHyped, rotationSeed } from "@/lib/hype";
 import { Suspense } from "react";
 import mongoose from "mongoose";
@@ -374,6 +376,8 @@ export default async function ProductPage({
         <ProductDetailClient product={product} />
       </Suspense>
       <VintedReviews compact />
+      <RealOrdersGallery limit={20} />
+      <div className="mx-auto w-full max-w-[1760px] px-5 pb-10 md:px-10 lg:px-16"><FaqShort title="Domande frequenti" /></div>
       <ProductRail eyebrow="Potrebbero piacerti" title="Altre maglie" href={product.isRetro ? "/archivio" : "/shop"} products={related} />
     </>
   );

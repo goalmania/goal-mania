@@ -8,6 +8,7 @@ import TeamLogoRail from "@/components/home/TeamLogoRail";
 import VintedReviews from "@/components/shared/VintedReviews";
 import EraPanels, { type EraPanelData } from "@/components/era/EraPanels";
 import { eraInfo, pickForEra } from "@/lib/eraPick";
+import PromoBand from "@/components/home/PromoBand";
 import { ERA_ORDER, WORLD_CUPS } from "@/lib/eraTheme";
 import { worldCupItems, hasPhoto } from "@/lib/archive";
 import ProductRail from "@/components/home/ProductRail";
@@ -227,6 +228,7 @@ export default async function Home() {
         </div>
         <EraPanels panels={archive.eras} />
       </section>
+      <PromoBand />
       <ThreeForTwo products={trio} />
       <ProductRail eyebrow="Scelte da noi" title="In evidenza" href="/shop" lead="Le più cercate, attuali e retro. La vetrina cambia spesso." products={showcase} priorityFirst />
       <WorldCupBand cups={archive.cups} />
