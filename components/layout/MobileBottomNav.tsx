@@ -33,7 +33,7 @@ export default function MobileBottomNav() {
     <nav
       aria-label="Navigazione mobile"
       className="fixed inset-x-0 bottom-0 z-[60] border-t-2 border-[var(--line)] bg-[var(--asphalt)] md:hidden"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)", transform: "translateZ(0)" }}
     >
       <ul className="grid grid-cols-5">
         {items.map(({ href, label, Icon, active, badge }) => (

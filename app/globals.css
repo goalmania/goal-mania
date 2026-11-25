@@ -1203,7 +1203,7 @@ html {
 }
 @media (min-width: 768px) { :root { --head-h: 68px; } }
 
-html { scroll-behavior: smooth; caret-color: var(--lime); scrollbar-color: #3a3a3f var(--asphalt); }
+html { background-color: var(--asphalt); scroll-behavior: smooth; caret-color: var(--lime); scrollbar-color: #3a3a3f var(--asphalt); }
 body {
   background-color: var(--asphalt);
   /* Grana sottile: il muro non e mai piatto (tile 160px, pochi byte) */

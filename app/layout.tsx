@@ -30,6 +30,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  // Il sito arriva fino al bordo dello schermo: la barra in basso copre anche l'area dell'indicatore home
+  viewportFit: "cover",
+  themeColor: "#0a0a0b",
+  colorScheme: "dark",
 };
 
 export const metadata: Metadata = {
