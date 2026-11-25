@@ -49,7 +49,8 @@ export default async function MysteryBoxPage() {
     id: String(p._id),
     slug: p.slug || "",
     name: p.title || "Mystery box",
-    image: p.images?.[0] || "/images/image.png",
+    // Niente foto di maglie: la sorpresa e il punto, quindi una grafica della box
+    image: isRetroBox(p.title) ? "/mystery/box-retro.png" : "/mystery/box-current.png",
     kind: (isRetroBox(p.title) ? "retro" : "current") as "retro" | "current",
     unit: mysteryUnitPrice(p.title),
     adultSizes: p.adultSizes || [],

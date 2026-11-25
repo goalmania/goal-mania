@@ -4,6 +4,8 @@ import Link from "next/link";
 import CategoryBrowser from "@/components/shop/CategoryBrowser";
 import AutoRail from "@/components/ui/AutoRail";
 import { getFlagUrl } from "@/lib/utils/flags";
+import WorldCupHero from "@/components/shop/WorldCupHero";
+import { flagForItName, flagForKey, nationItName, nationOfTitle } from "@/lib/nations";
 
 interface Product {
   _id: string;
@@ -35,7 +37,16 @@ export default function WorldCupClient({ products, sortedCountries, groupedProdu
   }));
   return (
     <div>
-      <CategoryBrowser products={mapped} title="Mondiali 2026" eyebrow="Maglie delle nazionali" lead="Le maglie delle nazionali del Mondiale 2026, a 35€. Scegli la bandiera della tua squadra o cerca nell'elenco." here="/shop/worldcup" />
+      <CategoryBrowser
+        products={mapped}
+        title="Mondiali 2026"
+        here="/shop/worldcup"
+        hero={<WorldCupHero count={mapped.length} nations={countries.length} from={Math.min(...mapped.map((m) => m.price).filter(Boolean), 35)} />}
+        teamKey={(name) => nationOfTitle(name)?.it || name.replace(/^Maglia\s+/i, "")}
+        teamIcon={(t) => flagForItName(t)}
+        teamsWrap
+        teamLimit={60}
+      />
       {countries.length > 0 && (
         <section aria-label="Scegli la nazionale" className="pb-10">
           <h2 className="disp mx-auto mb-4 w-full max-w-[1760px] px-5 text-[clamp(2rem,5vw,3.6rem)] text-white md:px-10 lg:px-16">Scegli la nazionale</h2>
@@ -43,10 +54,10 @@ export default function WorldCupClient({ products, sortedCountries, groupedProdu
             {countries.map((c) => (
               <Link key={c} href={`/shop/worldcup/${c.toLowerCase().replace(/\s+/g, "-")}`} draggable={false} className="group relative block h-[150px] w-[190px] shrink-0 overflow-hidden rounded-2xl shadow-[inset_0_0_0_1px_var(--line)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={getFlagUrl(c)} alt="" loading="lazy" draggable={false} className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.06]" />
+                <img src={flagForKey(c) || getFlagUrl(c)} alt="" loading="lazy" draggable={false} className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.06]" />
                 <span className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
                 <span className="absolute inset-x-0 bottom-0 p-3">
-                  <span className="disp block text-[26px] text-white">{IT[c] ?? c}</span>
+                  <span className="disp block text-[26px] text-white">{nationItName(c)}</span>
                   <span className="text-[14px] font-semibold text-white/80">{groupedProducts[c]?.length ?? 0} maglie</span>
                 </span>
               </Link>

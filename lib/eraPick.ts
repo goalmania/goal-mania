@@ -2,6 +2,16 @@ import { ERAS, eraOf, hasPhoto, isLegend, isNational, teamOf, worldCupItems, typ
 import { ERA_THEME } from "@/lib/eraTheme";
 import { RETRO_WEAK_IMAGES } from "@/lib/data/retroWeakImages";
 
+// Copertine scelte a mano guardando le foto: maglie iconiche con scatto pulito, sfondo neutro e maglia intera
+const ERA_COVERS: Record<string, string[]> = {
+  "anni-70": ["6a92efcae8f6d971b8e0e5fd", "6a92efbae8f6d971b8e0e552", "6a92efcae8f6d971b8e0e5ff"],
+  "anni-80": ["6a92efc7e8f6d971b8e0e5db", "6a92efb6e8f6d971b8e0e52e", "6a92efb5e8f6d971b8e0e51c"],
+  "anni-90": ["6a92efe6e8f6d971b8e0e72a", "6a92efe3e8f6d971b8e0e70e", "6a92efd5e8f6d971b8e0e66f"],
+  "anni-2000": ["6a92efd1e8f6d971b8e0e645", "6a92efdae8f6d971b8e0e6ac", "6a92efd5e8f6d971b8e0e673"],
+  "anni-2010": ["6a92efd7e8f6d971b8e0e68b", "6a92efc2e8f6d971b8e0e5ab", "6a92efd7e8f6d971b8e0e689"],
+  "oggi": ["6a92efb5e8f6d971b8e0e524", "6a92efd7e8f6d971b8e0e68d", "6a92efcbe8f6d971b8e0e60b"],
+};
+
 // Le maglie che rappresentano un'era: prima i nomi leggendari, poi gli anni dei Mondiali, una per squadra
 export function pickForEra(items: ArchiveItem[], slug: string, n = 3): ArchiveItem[] {
   if (!ERAS.some((e) => e.slug === slug)) return [];
@@ -13,6 +23,13 @@ export function pickForEra(items: ArchiveItem[], slug: string, n = 3): ArchiveIt
     .sort((a, b) => b.s - a.s || a.i - b.i);
   const seen = new Set<string>();
   const out: ArchiveItem[] = [];
+  for (const id of ERA_COVERS[slug] || []) {
+    const it = items.find((x) => x.id === id);
+    if (!it) continue;
+    seen.add(teamOf(it.name));
+    out.push(it);
+  }
+  if (out.length >= n) return out.slice(0, n);
   for (const { it } of pool) {
     const t = teamOf(it.name);
     if (seen.has(t)) continue;

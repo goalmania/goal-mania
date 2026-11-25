@@ -1,5 +1,8 @@
 import { Metadata } from "next";
 import ShopClientWrapper from "@/app/_components/ShopClientWrapper";
+import FaqShort from "@/components/shared/FaqShort";
+import TeamsDirectory from "@/components/shop/TeamsDirectory";
+import { getClubCounts, getNationCounts } from "@/lib/clubCounts";
 
 export const revalidate = 300;
 
@@ -27,9 +30,12 @@ export const metadata: Metadata = {
 };
 
 export default async function ShopPage() {
+  const [clubs, nations] = await Promise.all([getClubCounts(), getNationCounts()]);
   return (
     <div className="">
       <ShopClientWrapper />
+      <TeamsDirectory clubs={clubs} nations={nations} />
+      <FaqShort />
     </div>
   );
 }

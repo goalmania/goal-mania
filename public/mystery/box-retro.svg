@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a1c10"/><stop offset="1" stop-color="#140c06"/></linearGradient>
+<linearGradient id="bd" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e8dcc0"/><stop offset="1" stop-color="#c9b78f"/></linearGradient>
+<pattern id="p" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><path d="M0 20 H40" stroke="#ffffff" stroke-opacity=".05" stroke-width="2"/></pattern>
+</defs>
+<rect width="800" height="800" fill="url(#bg)"/>
+<rect width="800" height="800" fill="url(#p)" opacity="0.5"/>
+<circle cx="400" cy="420" r="300" fill="#e0b44a" opacity="0.10"/>
+<g font-family="Impact, 'Arial Black', sans-serif" font-weight="900" fill="#e0b44a" opacity="0.55">
+<text x="90" y="170" font-size="70" transform="rotate(-18 90 170)">?</text>
+<text x="640" y="150" font-size="90" transform="rotate(14 640 150)">?</text>
+<text x="70" y="640" font-size="84" transform="rotate(12 70 640)">?</text>
+<text x="680" y="660" font-size="64" transform="rotate(-12 680 660)">?</text>
+</g>
+<ellipse cx="400" cy="690" rx="230" ry="26" fill="#000" opacity="0.35"/>
+<rect x="180" y="330" width="440" height="350" rx="14" fill="url(#bd)"/>
+<rect x="180" y="330" width="440" height="350" rx="14" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="3"/>
+<rect x="365" y="330" width="70" height="350" fill="#f3ead2"/>
+<rect x="150" y="262" width="500" height="92" rx="16" fill="#a1241c"/>
+<rect x="365" y="262" width="70" height="92" fill="#f3ead2"/>
+<path d="M400 262 C 330 190, 250 200, 270 245 C 285 275, 360 268, 400 262 Z" fill="#f3ead2"/>
+<path d="M400 262 C 470 190, 550 200, 530 245 C 515 275, 440 268, 400 262 Z" fill="#f3ead2"/>
+<circle cx="400" cy="262" r="26" fill="#f3ead2" stroke="#000" stroke-opacity=".2" stroke-width="3"/>
+<text x="290" y="600" text-anchor="middle" font-family="Impact, 'Arial Black', sans-serif" font-weight="900" font-size="230" fill="#a1241c">?</text>
+<text x="510" y="600" text-anchor="middle" font-family="Impact, 'Arial Black', sans-serif" font-weight="900" font-size="230" fill="#a1241c">?</text>
+</svg>

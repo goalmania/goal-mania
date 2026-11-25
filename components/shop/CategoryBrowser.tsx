@@ -62,6 +62,11 @@ export default function CategoryBrowser({
   here,
   accent,
   children,
+  hero,
+  teamKey,
+  teamIcon,
+  teamsWrap = false,
+  teamLimit = 18,
 }: {
   products: CatProduct[];
   title: string;
@@ -71,7 +76,17 @@ export default function CategoryBrowser({
   here?: string;
   accent?: string;
   children?: React.ReactNode;
+  /** Intestazione propria al posto di quella standard (es. Mondiali) */
+  hero?: React.ReactNode;
+  /** Come si ricava la squadra dal titolo (default: il nome dopo "Maglia") */
+  teamKey?: (name: string) => string;
+  /** Bandiera/stemma da mostrare nel filtro squadra, se diverso dagli stemmi dei club */
+  teamIcon?: (team: string) => string | null;
+  /** Le squadre in una griglia visibile (tutte insieme) invece di una riga che scorre */
+  teamsWrap?: boolean;
+  teamLimit?: number;
 }) {
+  const tn = teamKey ?? teamName;
   const [kind, setKind] = useState<Kind>("tutte");
   const [team, setTeam] = useState("");
   const [q, setQ] = useState("");
@@ -81,16 +96,16 @@ export default function CategoryBrowser({
   const teams = useMemo(() => {
     const m = new Map<string, number>();
     for (const p of products) {
-      const t = teamName(p.name);
+      const t = tn(p.name);
       if (t) m.set(t, (m.get(t) || 0) + 1);
     }
-    return [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, 18);
-  }, [products]);
+    return [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, teamLimit);
+  }, [products, tn, teamLimit]);
 
   const list = useMemo(() => {
     let l = products;
     if (kind !== "tutte") l = l.filter((p) => kindsOf(p).includes(kind));
-    if (team) l = l.filter((p) => teamName(p.name) === team);
+    if (team) l = l.filter((p) => tn(p.name) === team);
     if (q.trim()) {
       const s = q.trim().toLowerCase();
       l = l.filter((p) => p.name.toLowerCase().includes(s));
@@ -98,10 +113,32 @@ export default function CategoryBrowser({
     if (sort === "low") l = [...l].sort((a, b) => a.price - b.price);
     if (sort === "high") l = [...l].sort((a, b) => b.price - a.price);
     return l;
-  }, [products, kind, team, q, sort]);
+  }, [products, kind, team, q, sort, tn]);
 
   const from = products.length ? Math.min(...products.map((p) => p.price || 0).filter(Boolean)) : 35;
   const chip = "inline-flex h-11 shrink-0 items-center gap-2 rounded-full px-4 text-[15px] font-semibold shadow-[inset_0_0_0_1.5px_rgba(244,242,234,0.3)] transition-colors aria-pressed:bg-[var(--lime)] aria-pressed:text-[#0a0a0a] aria-pressed:shadow-none";
+
+  const teamChip = (t: string, n: number) => {
+    const icon = teamIcon ? teamIcon(t) : null;
+    const lg = icon || logoFor(t);
+    return (
+      <button key={t} type="button" aria-pressed={team === t} onClick={() => setTeam(team === t ? "" : t)} className={`${chip} ${lg ? "!pl-1.5" : ""}`} title={t}>
+        {lg && (
+          <span className={`flex h-8 w-8 items-center justify-center overflow-hidden rounded-full ${icon ? "" : "bg-[var(--paper)]"}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            {icon ? <img src={icon} alt="" width={32} height={32} loading="lazy" className="h-full w-full object-cover" /> : <Image src={lg} alt="" width={24} height={24} className="h-6 w-6 object-contain" />}
+          </span>
+        )}
+        {t} <span className="text-[13px] opacity-60">{n}</span>
+      </button>
+    );
+  };
+  const teamRow = (
+    <div className={teamsWrap ? "flex flex-wrap gap-2" : "flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none]"} role="group" aria-label="Squadra">
+      <button type="button" aria-pressed={team === ""} onClick={() => setTeam("")} className={chip}>Tutte le squadre</button>
+      {teams.map(([t, n]) => teamChip(t, n))}
+    </div>
+  );
 
   // Elenco strutturato per Google e per i motori di risposta: le prime maglie della pagina, con indirizzo e prezzo
   const itemList = {
@@ -120,7 +157,7 @@ export default function CategoryBrowser({
   return (
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }} />
-      <PageHeader
+      {hero ?? <PageHeader
         eyebrow={eyebrow}
         title={
           logo ? (
@@ -140,7 +177,11 @@ export default function CategoryBrowser({
           <span className="rounded-full bg-[var(--lime)] px-4 py-2 text-[14px] font-bold text-[#0a0a0a]">{products.length} maglie · da {from}€</span>
           <span className="text-[15px] font-semibold text-[var(--text-2)]">Spedizione gratuita · Reso entro 14 giorni · 3 maglie, ne paghi 2</span>
         </div>
-      </PageHeader>
+      </PageHeader>}
+
+      {teamsWrap && teams.length > 1 && (
+        <section aria-label="Scegli la squadra" className="mx-auto w-full max-w-[1760px] px-5 pb-6 md:px-10 lg:px-16">{teamRow}</section>
+      )}
 
       {/* Filtri: restano sotto l'header mentre scorri */}
       <div className="sticky top-[calc(var(--bar-h)+var(--head-h))] z-20 border-y border-[var(--line)] bg-[rgba(10,10,11,0.94)] backdrop-blur">
@@ -165,20 +206,7 @@ export default function CategoryBrowser({
               <option value="high">Prezzo: dal più alto</option>
             </select>
           </div>
-          {teams.length > 5 && (
-            <div className="flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none]" role="group" aria-label="Squadra">
-              <button type="button" aria-pressed={team === ""} onClick={() => setTeam("")} className={chip}>Tutte le squadre</button>
-              {teams.map(([t, n]) => {
-                const lg = logoFor(t);
-                return (
-                  <button key={t} type="button" aria-pressed={team === t} onClick={() => setTeam(team === t ? "" : t)} className={`${chip} ${lg ? "!pl-1.5" : ""}`} title={t}>
-                    {lg && <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--paper)]"><Image src={lg} alt="" width={24} height={24} className="h-6 w-6 object-contain" /></span>}
-                    {t} <span className="text-[13px] opacity-60">{n}</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          {!teamsWrap && teams.length > 5 && teamRow}
         </div>
       </div>
 
