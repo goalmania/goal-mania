@@ -7,52 +7,50 @@ const baseId = (id: string) => String(id || "").split("_")[0];
 const yes = (v: unknown) => (v ? "YES" : "no");
 
 // Il messaggio per il fornitore: cosa produrre, in che taglia, con quali personalizzazioni, la foto e dove spedire. In inglese, semplice.
-export async function buildSupplierPackage(order: any): Promise<{ message: string; images: string[] }> {
+export async function buildSupplierPackage(order: any): Promise<{ message: string; images: { url: string; caption: string }[] }> {
   await connectDB();
   const ids = Array.from(new Set((order.items || []).map((i: any) => baseId(i.productId)).filter(Boolean)));
   const prods = ids.length ? await Product.find({ _id: { $in: ids } }).select({ title: 1, slug: 1, images: 1, isMysteryBox: 1 }).lean<any[]>() : [];
   const byId = new Map(prods.map((p) => [String(p._id), p]));
+  const ref = String(order._id).slice(-6).toUpperCase();
 
-  const lines: string[] = [];
-  const images: string[] = [];
-  const code = String(order._id).slice(-6).toUpperCase();
-  lines.push(`NEW ORDER #${code}`);
-  lines.push(`Date: ${new Date(order.createdAt || Date.now()).toLocaleString("en-GB", { timeZone: "Europe/Rome" })}`);
-  lines.push("");
+  const lines: string[] = ["Hello! New order, please prepare:", ""];
+  const images: { url: string; caption: string }[] = [];
 
   (order.items || []).forEach((it: any, i: number) => {
     const c = it.customization || {};
     const p = byId.get(baseId(it.productId));
-    lines.push(`--- ITEM ${i + 1} ---`);
-    lines.push(`${it.name}  x${it.quantity}`);
-    if (c.size) lines.push(`Size: ${c.size}${c.isKidSize ? " (KIDS)" : ""}`);
-    lines.push(`Version: ${c.isPlayerEdition ? "PLAYER edition" : "FAN version"}`);
-    if (c.hasLongSleeve) lines.push("Long sleeve: YES");
-    if (c.name || c.number) lines.push(`Back print: name "${c.name || "-"}" number "${c.number || "-"}"`);
+    const mystery = p?.isMysteryBox || /mystery|mistery/i.test(it.name || "");
+    const title = String(it.name || "").replace(/^Maglia\s+/i, "").trim();
+    lines.push(`${i + 1}) ${mystery ? "MYSTERY jersey" : `${title} jersey`}  x${it.quantity}`);
+    if (c.size) lines.push(`   Size: ${c.size}${c.isKidSize ? " (kids)" : ""}`);
+    lines.push(`   ${c.isPlayerEdition ? "Player edition" : "Fan version"}${c.hasLongSleeve ? ", long sleeve" : ""}`);
+    if (c.name || c.number) lines.push(`   Print on back: ${[c.name, c.number].filter(Boolean).join(" ")}`);
     const patches = (c.selectedPatches || []).map((x: any) => patchById(x.id || x.name)?.label || x.name || x.id).filter(Boolean);
-    if (patches.length) lines.push(`Patches: ${patches.join(", ")}`);
-    if (c.includeShorts) lines.push("Add shorts: YES");
-    if (c.includeSocks) lines.push("Add socks: YES");
-    if (p?.isMysteryBox || /mystery|mistery/i.test(it.name || "")) {
-      lines.push("MYSTERY BOX: pick a random jersey from your stock.");
-      if (c.excludedShirts?.length) lines.push(`Do NOT send: ${c.excludedShirts.join(", ")}`);
+    if (patches.length) lines.push(`   Patches: ${patches.join(", ")}`);
+    const extras = [c.includeShorts ? "shorts" : "", c.includeSocks ? "socks" : ""].filter(Boolean);
+    if (extras.length) lines.push(`   Add: ${extras.join(" + ")}`);
+    if (mystery) {
+      lines.push("   Pick any jersey from your stock.");
+      if (c.excludedShirts?.length) lines.push(`   Do NOT send: ${c.excludedShirts.join(", ")}`);
+    } else {
+      const img = (p?.images || []).find((u: string) => /^https?:/.test(u));
+      if (img) images.push({ url: img, caption: `${i + 1}) ${title}` });
     }
-    const img = (p?.images || []).find((u: string) => /^https?:/.test(u));
-    if (img) { lines.push(`Photo: ${img}`); images.push(img); }
-    if (p?.slug) lines.push(`Page: https://goal-mania.it/products/${p.slug}`);
     lines.push("");
   });
 
   const a = order.shippingAddress || {};
-  lines.push("--- SHIP TO ---");
+  lines.push("Ship to:");
   if (a.fullName) lines.push(a.fullName);
   const street = a.street || a.addressLine1;
   if (street) lines.push(street + (a.addressLine2 ? `, ${a.addressLine2}` : ""));
-  lines.push([a.postalCode, a.city, a.state].filter(Boolean).join(" "));
+  const cityLine = [a.postalCode, a.city].filter(Boolean).join(" ") + (a.state ? ` (${a.state})` : "");
+  if (cityLine.trim()) lines.push(cityLine.trim());
   if (a.country) lines.push(a.country);
-  if (a.phone) lines.push(`Phone: ${a.phone}`);
+  if (a.phone) lines.push(`Tel: ${a.phone}`);
   lines.push("");
-  lines.push("Please confirm and send the tracking number when shipped. Thank you!");
+  lines.push(`Ref: ${ref}. Photos below. Please confirm and send me the tracking number once shipped. Thank you!`);
   return { message: lines.join("\n").replace(/\n{3,}/g, "\n\n"), images };
 }
 
@@ -73,11 +71,11 @@ export async function sendSupplierTelegram(order: any): Promise<{ ok: boolean; e
     });
     const j = await r.json();
     if (!j.ok) return { ok: false, error: JSON.stringify(j) };
-    for (const url of images.slice(0, 8)) {
+    for (const img of images.slice(0, 8)) {
       await fetch(`${api}/sendPhoto`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: chatId, photo: url, caption: "Order #" + String(order._id).slice(-6).toUpperCase() }),
+        body: JSON.stringify({ chat_id: chatId, photo: img.url, caption: img.caption }),
       }).catch(() => {});
     }
     return { ok: true };
@@ -94,9 +92,9 @@ export async function sendSupplierTelegramOnce(order: any): Promise<{ ok: boolea
 }
 
 // Ordini pagati dal 24/11 non ancora mandati su Telegram (arrivati prima di questa funzione, o con Telegram in errore)
-export async function sendPendingSupplierOrders(limit = 20) {
+export async function sendPendingSupplierOrders(limit = 20, resend = false) {
   await connectDB();
-  const orders = await Order.find({ createdAt: { $gte: new Date("2026-11-24T00:00:00+01:00") }, paymentIntentId: { $exists: true, $nin: [null, ""] }, supplierSentAt: { $exists: false } })
+  const orders = await Order.find({ createdAt: { $gte: new Date("2026-11-24T00:00:00+01:00") }, paymentIntentId: { $exists: true, $nin: [null, ""] }, ...(resend ? {} : { supplierSentAt: { $exists: false } }) })
     .sort({ createdAt: 1 })
     .limit(limit)
     .lean<any[]>();

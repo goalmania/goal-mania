@@ -12,5 +12,5 @@ export async function GET(req: NextRequest) {
   const isVercelCron = req.headers.get("x-vercel-cron") === "1";
   if (!(isVercelCron || (cronSecret && authHeader === `Bearer ${cronSecret}`))) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  return NextResponse.json(await sendPendingSupplierOrders());
+  return NextResponse.json(await sendPendingSupplierOrders(20, req.nextUrl.searchParams.get("rimanda") === "1"));
 }
