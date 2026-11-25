@@ -7,6 +7,9 @@
   "functions": {
     "app/api/cron/generate-graphics/route.ts": {
       "maxDuration": 60
+    },
+    "app/api/cron/orders-telegram/route.ts": {
+      "maxDuration": 60
     }
   },
   "crons": [
@@ -17,6 +20,10 @@
     {
       "path": "/api/cron/generate-jersey-article",
       "schedule": "0 11 * * *"
+    },
+    {
+      "path": "/api/cron/orders-telegram",
+      "schedule": "0 17 * * *"
     },
     {
       "path": "/api/cart-recovery",

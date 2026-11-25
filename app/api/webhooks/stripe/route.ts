@@ -15,7 +15,7 @@ import mongoose from "mongoose";
 import { sendEmail } from "@/lib/utils/email";
 import { orderConfirmationTemplate, invoiceTemplate } from "@/lib/utils/email-templates";
 import { sendPushToAdmins } from "@/lib/utils/push";
-import { sendSupplierTelegram } from "@/lib/supplier";
+import { sendSupplierTelegramOnce } from "@/lib/supplier";
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
@@ -227,7 +227,7 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
     }).catch((err) => console.error("Push notification error:", err));
 
     // Ordine pronto da girare al fornitore: arriva a Paolo su Telegram (testo e foto), senza toccare niente
-    const tg = await sendSupplierTelegram(newOrder.toObject());
+    const tg = await sendSupplierTelegramOnce(newOrder.toObject());
     if (!tg.ok) console.error("Telegram fornitore:", tg.error);
 
     // Aggiorna lo stock DOPO aver salvato l'ordine: un pagamento riuscito non

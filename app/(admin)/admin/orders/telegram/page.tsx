@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Order from "@/models/Order";
-import { sendSupplierTelegram } from "@/lib/supplier";
+import { sendSupplierTelegramOnce } from "@/lib/supplier";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +23,7 @@ async function sendOrders(formData: FormData) {
   for (const id of ids) {
     const o = await Order.findById(id).lean<any>();
     if (!o || !o.paymentIntentId) { ko++; continue; }
-    const r = await sendSupplierTelegram(o);
+    const r = await sendSupplierTelegramOnce(o);
     r.ok ? ok++ : ko++;
   }
   redirect(`/admin/orders/telegram?dal=${encodeURIComponent(String(formData.get("dal") || ""))}&ok=${ok}&ko=${ko}`);

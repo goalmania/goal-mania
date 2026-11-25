@@ -41,6 +41,7 @@ export interface IOrder extends Document {
     phone?: string;
   };
   paymentIntentId?: string;
+  supplierSentAt?: Date;
   cancelledAt?: Date;
   cancelledBy?: string;
   cancellationReason?: string;
@@ -99,6 +100,8 @@ const OrderSchema = new Schema<IOrder>({
     enum: ["pending", "processing", "shipped", "delivered", "cancelled"],
   },
   createdAt: { type: Date, default: Date.now },
+  // quando il messaggio per il fornitore e stato mandato a Paolo su Telegram
+  supplierSentAt: { type: Date },
   shippingAddress: {
     street: String,
     city: String,

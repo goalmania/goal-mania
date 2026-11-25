@@ -1,6 +1,7 @@
 import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { patchById } from "@/lib/patches";
+import Order from "@/models/Order";
 
 const baseId = (id: string) => String(id || "").split("_")[0];
 const yes = (v: unknown) => (v ? "YES" : "no");
@@ -83,4 +84,11 @@ export async function sendSupplierTelegram(order: any): Promise<{ ok: boolean; e
   } catch (e) {
     return { ok: false, error: String(e) };
   }
+}
+
+// Manda e segna l'ordine come inviato: cosi non parte due volte (webhook, ripasso automatico e pagina admin)
+export async function sendSupplierTelegramOnce(order: any): Promise<{ ok: boolean; error?: string }> {
+  const r = await sendSupplierTelegram(order);
+  if (r.ok) await Order.updateOne({ _id: order._id }, { $set: { supplierSentAt: new Date() } }).catch(() => {});
+  return r;
 }
