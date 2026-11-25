@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cld } from "@/lib/utils/cloudinary";
 import AutoRail from "@/components/ui/AutoRail";
-import BlackFridayCountdown from "@/components/home/BlackFridayCountdown";
 
 interface HeroProduct {
   id: string;
@@ -70,7 +69,6 @@ export default function HomeHero({ products }: { products: HeroProduct[] }) {
             Black Friday: prendi 3, paghi 2
             <ArrowRight className="h-4 w-4" strokeWidth={3} />
           </Link>
-          <BlackFridayCountdown />
           <h1 className="disp rise mt-5 text-[clamp(3.6rem,8.6vw,8.6rem)] leading-[0.84] text-white" style={{ animationDelay: "70ms" }}>
             Il calcio
             <br />

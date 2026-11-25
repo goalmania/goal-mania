@@ -47,7 +47,7 @@ function CreativeRatingField({
 
   return (
     <div className="space-y-3">
-      <Label className="text-sm font-medium">Rating</Label>
+      <Label className="text-sm font-medium">Voto</Label>
       <div className="flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((star) => (
           <button
@@ -88,7 +88,7 @@ function CreativeRatingField({
               {star === 1 && "Poor"}
               {star === 2 && "Fair"}
               {star === 3 && "Good"}
-              {star === 4 && "Very Good"}
+              {star === 4 && "Molto buono"}
               {star === 5 && "Excellent"}
             </div>
           </button>
@@ -97,11 +97,11 @@ function CreativeRatingField({
 
       {/* Rating description */}
       <div className="text-sm text-muted-foreground">
-        {rating === 1 && "Poor - Not satisfied at all"}
-        {rating === 2 && "Fair - Could be better"}
-        {rating === 3 && "Good - Satisfied"}
-        {rating === 4 && "Very Good - Highly satisfied"}
-        {rating === 5 && "Excellent - Outstanding experience"}
+        {rating === 1 && "Scarso, per niente soddisfatto"}
+        {rating === 2 && "Discreto, poteva andare meglio"}
+        {rating === 3 && "Buono, soddisfatto"}
+        {rating === 4 && "Molto buono, molto soddisfatto"}
+        {rating === 5 && "Ottimo, esperienza eccellente"}
       </div>
     </div>
   );
@@ -141,7 +141,7 @@ export default function ProductReviews({
     if (!session) {
       setReviewFeedback({
         type: "error",
-        message: "You must be logged in to submit a review",
+        message: "Accedi per lasciare una recensione",
       });
       setTimeout(() => {
         signIn();
@@ -165,7 +165,7 @@ export default function ProductReviews({
 
       setReviewFeedback({
         type: "success",
-        message: "Review submitted successfully!",
+        message: "Recensione inviata",
       });
 
       // Clear success message after 3 seconds
@@ -177,7 +177,7 @@ export default function ProductReviews({
       setReviewFeedback({
         type: "error",
         message:
-          error instanceof Error ? error.message : "Failed to submit review",
+          error instanceof Error ? error.message : "Invio non riuscito, riprova",
       });
     } finally {
       setIsSubmittingReview(false);
@@ -206,7 +206,7 @@ export default function ProductReviews({
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Failed to delete review");
+        throw new Error(error.error || "Eliminazione non riuscita, riprova");
       }
 
       // Call the parent callback to refresh reviews
@@ -216,7 +216,7 @@ export default function ProductReviews({
 
       setReviewFeedback({
         type: "success",
-        message: "Review deleted successfully!",
+        message: "Recensione eliminata",
       });
 
       // Clear success message after 3 seconds
@@ -228,7 +228,7 @@ export default function ProductReviews({
       setReviewFeedback({
         type: "error",
         message:
-          error instanceof Error ? error.message : "Failed to delete review",
+          error instanceof Error ? error.message : "Eliminazione non riuscita, riprova",
       });
     } finally {
       setIsDeletingReview(null);
@@ -246,7 +246,7 @@ export default function ProductReviews({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="">
           <span className="mt-2 text-sm font-medium text-white">
-            All Reviews
+            Tutte le recensioni
           </span>
         </div>
         <div className="grid grid-cols-1  gap-8">
@@ -292,7 +292,7 @@ export default function ProductReviews({
                   </div>
 
                   <h3 className="text-base sm:text-lg font-semibold text-foreground mb-1">
-                    Customer Rating
+                    Voto medio
                   </h3>
                   <p className="text-sm text-muted-foreground mb-2">
                     Based on {reviews?.length || 0} reviews
@@ -352,7 +352,7 @@ export default function ProductReviews({
                           d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                         />
                       </svg>
-                      Write a Review
+                      Scrivi una recensione
                     </Button>
                   ) : (
                     <Button
@@ -374,7 +374,7 @@ export default function ProductReviews({
                           d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
                         />
                       </svg>
-                      Sign in to Review
+                      Accedi per recensire
                     </Button>
                   )}
 
@@ -391,7 +391,7 @@ export default function ProductReviews({
                         clipRule="evenodd"
                       />
                     </svg>
-                    <span>Verified Reviews Only</span>
+                    <span>Solo recensioni di chi ha acquistato</span>
                   </div>
                 </div>
               </CardContent>
@@ -480,12 +480,12 @@ export default function ProductReviews({
                                 {isDeletingReview === review._id ? (
                                   <div className="flex items-center gap-1">
                                     <div className="w-3 h-3 border border-red-600 border-t-transparent rounded-full animate-spin"></div>
-                                    <span>Deleting...</span>
+                                    <span>Elimino...</span>
                                   </div>
                                 ) : (
                                   <div className="flex items-center gap-1">
                                     <TrashIcon className="w-3 h-3" />
-                                    <span>Delete</span>
+                                    <span>Elimina</span>
                                   </div>
                                 )}
                               </Button>
@@ -547,12 +547,12 @@ export default function ProductReviews({
                               />
                             </svg>
                             <span className="text-xs font-medium text-green-700 dark:text-green-400">
-                              Verified Purchase
+                              Acquisto verificato
                             </span>
                           </div>
                         </div>
 
-                        {/* Helpful button */}
+                        {/* Utile button */}
                         <Button
                           variant="ghost"
                           size="sm"
@@ -571,7 +571,7 @@ export default function ProductReviews({
                               d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
                             />
                           </svg>
-                          Helpful
+                          Utile
                         </Button>
                       </div>
                     </CardContent>
@@ -596,10 +596,10 @@ export default function ProductReviews({
                       </svg>
                     </div>
                     <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2">
-                      No Reviews Yet
+                      Ancora nessuna recensione
                     </h3>
                     <p className="text-muted-foreground mb-4 text-sm sm:text-base">
-                      Be the first to share your experience with this product!
+                      Sii il primo a raccontare com'è andata.
                     </p>
                     <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                       <svg
@@ -615,7 +615,7 @@ export default function ProductReviews({
                           d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
-                      <span>Your review will help other customers</span>
+                      <span>La tua recensione aiuta chi deve scegliere</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -625,7 +625,7 @@ export default function ProductReviews({
               {session && (
                 <Card id="review-form" className="mt-12">
                   <CardHeader>
-                    <CardTitle className="text-lg">Write a Review</CardTitle>
+                    <CardTitle className="text-lg">Scrivi una recensione</CardTitle>
                   </CardHeader>
                   <CardContent>
                     {reviewFeedback && (
@@ -687,7 +687,7 @@ export default function ProductReviews({
                             }))
                           }
                           rows={4}
-                          placeholder="Share your experience with this product..."
+                          placeholder="Com'è andata con questa maglia?"
                           required
                         />
                       </div>
@@ -714,7 +714,7 @@ export default function ProductReviews({
                         disabled={isSubmittingReview}
                         className="w-full"
                       >
-                        {isSubmittingReview ? "Submitting..." : "Submit Review"}
+                        {isSubmittingReview ? "Invio..." : "Invia recensione"}
                       </Button>
                     </form>
                   </CardContent>
@@ -735,10 +735,10 @@ export default function ProductReviews({
               </div>
               <div>
                 <DialogTitle className="text-lg font-semibold">
-                  Delete Review
+                  Elimina recensione
                 </DialogTitle>
                 <DialogDescription className="text-sm text-muted-foreground">
-                  This action cannot be undone.
+                  Non si può annullare.
                 </DialogDescription>
               </div>
             </div>
@@ -746,8 +746,7 @@ export default function ProductReviews({
 
           <div className="py-4">
             <p className="text-sm text-foreground">
-              Are you sure you want to delete your review? This will permanently
-              remove your review and rating from this product.
+              Vuoi eliminare la tua recensione? Verranno rimossi per sempre il testo e il voto.
             </p>
           </div>
 
@@ -757,7 +756,7 @@ export default function ProductReviews({
               onClick={handleDeleteCancel}
               disabled={isDeletingReview === reviewToDelete?._id}
             >
-              Cancel
+              Annulla
             </Button>
             <Button
               variant="destructive"
@@ -767,12 +766,12 @@ export default function ProductReviews({
               {isDeletingReview === reviewToDelete?._id ? (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Deleting...</span>
+                  <span>Elimino...</span>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
                   <TrashIcon className="w-4 h-4" />
-                  <span>Delete Review</span>
+                  <span>Elimina recensione</span>
                 </div>
               )}
             </Button>

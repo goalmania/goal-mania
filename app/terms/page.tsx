@@ -1,159 +1,80 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import PageHeader from "@/components/shared/PageHeader";
+import LegalDoc, { LegalSection as S, CONTACT_EMAIL } from "@/components/shared/LegalDoc";
 
 export const metadata: Metadata = {
-  title: "GoalMania Terms of Service",
-  description: "Terms of service for GoalMania football jersey purchases and services.",
+  title: "Termini e condizioni di vendita | Goal Mania",
+  description: "Condizioni di vendita di Goal Mania: prezzi, spedizione gratuita in Italia, consegna in 7-10 giorni lavorativi, reso entro 14 giorni.",
+  alternates: { canonical: "https://goal-mania.it/terms" },
 };
 
 export default function TermsPage() {
   return (
     <div>
-      <PageHeader eyebrow="Informazioni legali" title="Termini di servizio" lead="Le condizioni d'uso del sito e degli acquisti su Goal Mania." />
-      <div className="mx-auto w-full max-w-[1760px] px-5 pb-16 md:px-10 lg:px-16">
-        <div className="mx-auto w-full max-w-[920px] rounded-3xl bg-[var(--wall)] p-6 shadow-[inset_0_0_0_1px_var(--line)] md:p-10">
-          <div className="prose prose-lg max-w-none">
-            <div className="mb-8">
-              <h2 className="text-[26px] font-bold text-white mb-3">1. Acceptance of Terms</h2>
-              <p className="text-[var(--text-2)] mb-4">
-                By accessing and using Goal Mania's website, you accept and agree to be bound by the terms and provision of this agreement. 
-                If you do not agree to abide by the above, please do not use this service.
-              </p>
-            </div>
-
-            <div className="mb-8">
-              <h2 className="text-[26px] font-bold text-white mb-3">2. Use License</h2>
-              <p className="text-[var(--text-2)] mb-4">
-                Permission is granted to temporarily download one copy of the materials (information or software) on Goal Mania's website for personal, 
-                non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
-              </p>
-              <ul className="list-disc pl-6 text-[var(--text-2)] mb-4">
-                <li>Modify or copy the materials</li>
-                <li>Use the materials for any commercial purpose or for any public display</li>
-                <li>Attempt to reverse engineer any software contained on Goal Mania's website</li>
-                <li>Remove any copyright or other proprietary notations from the materials</li>
-              </ul>
-            </div>
-
-            <div className="mb-8">
-              <h2 className="text-[26px] font-bold text-white mb-3">3. Product Information</h2>
-              <p className="text-[var(--text-2)] mb-4">
-                We strive to display our products as accurately as possible. However, we do not warrant that product descriptions, colors, 
-                information, or other content available on the site is accurate, complete, reliable, current, or error-free.
-              </p>
-              <p className="text-[var(--text-2)] mb-4">
-                All football jerseys are official licensed products unless otherwise stated. Product images are for illustrative purposes only.
-              </p>
-            </div>
-
-            <div className="mb-8">
-              <h2 className="text-[26px] font-bold text-white mb-3">4. Pricing and Payment</h2>
-              <p className="text-[var(--text-2)] mb-4">
-                All prices are shown in Euros (€) and include VAT where applicable. We reserve the right to modify prices at any time.
-                Payment must be made in full at the time of ordering.
-              </p>
-              <p className="text-[var(--text-2)] mb-4">
-                We accept major credit cards and other payment methods as displayed during checkout.
-                All transactions are secure and encrypted.
-              </p>
-            </div>
-
-            <div className="mb-8">
-              <h2 className="text-[26px] font-bold text-white mb-3">5. Order and Delivery</h2>
-              <p className="text-[var(--text-2)] mb-4">
-                We offer free delivery on all orders within Italy. For international orders, delivery costs will be calculated at checkout.
-                Delivery times are estimates and may vary based on location and availability.
-              </p>
-              <p className="text-[var(--text-2)] mb-4">
-                Risk of loss and title for items purchased pass to you upon delivery of the items to the carrier.
-              </p>
-            </div>
-
-            <div className="mb-8">
-              <h2 className="text-[26px] font-bold text-white mb-3">6. Returns and Refunds</h2>
-              <p className="text-[var(--text-2)] mb-4">
-                You may withdraw from your purchase within 14 days of delivery, without giving a reason. Items must be:
-              </p>
-              <ul className="list-disc pl-6 text-[var(--text-2)] mb-4">
-                <li>Unworn and in original condition</li>
-                <li>In original packaging with all tags attached</li>
-                <li>Accompanied by proof of purchase</li>
-                <li>Not personalised (items with a custom name or number cannot be returned)</li>
-              </ul>
-              <p className="text-[var(--text-2)] mb-4">
-                Refunds are issued to the original payment method within 14 days of receiving the returned item. 
-                Return delivery costs are the responsibility of the customer unless the item is defective.
-              </p>
-            </div>
-
-            <div className="mb-8">
-              <h2 className="text-[26px] font-bold text-white mb-3">7. Privacy Policy</h2>
-              <p className="text-[var(--text-2)] mb-4">
-                Your privacy is important to us. Please review our Privacy Policy, which also governs your use of the website, 
-                to understand our practices regarding the collection and use of your personal information.
-              </p>
-            </div>
-
-            <div className="mb-8">
-              <h2 className="text-[26px] font-bold text-white mb-3">8. Intellectual Property</h2>
-              <p className="text-[var(--text-2)] mb-4">
-                The content on this website, including but not limited to text, graphics, images, logos, and software, 
-                is the property of Goal Mania and is protected by copyright laws.
-              </p>
-              <p className="text-[var(--text-2)] mb-4">
-                Football team names, logos, and related trademarks are the property of their respective owners.
-              </p>
-            </div>
-
-            <div className="mb-8">
-              <h2 className="text-[26px] font-bold text-white mb-3">9. Limitation of Liability</h2>
-              <p className="text-[var(--text-2)] mb-4">
-                In no event shall Goal Mania or its suppliers be liable for any damages (including, without limitation, 
-                damages for loss of data or profit, or due to business interruption) arising out of the use or inability 
-                to use the materials on Goal Mania's website.
-              </p>
-            </div>
-
-            <div className="mb-8">
-              <h2 className="text-[26px] font-bold text-white mb-3">10. Governing Law</h2>
-              <p className="text-[var(--text-2)] mb-4">
-                These terms and conditions are governed by and construed in accordance with the laws of Italy. 
-                Any disputes relating to these terms and conditions will be subject to the exclusive jurisdiction 
-                of the courts of Italy.
-              </p>
-            </div>
-
-            <div className="mb-8">
-              <h2 className="text-[26px] font-bold text-white mb-3">11. Changes to Terms</h2>
-              <p className="text-[var(--text-2)] mb-4">
-                We reserve the right to modify these terms and conditions at any time. Changes will be effective 
-                immediately upon posting on the website. Your continued use of the website constitutes acceptance of the modified terms.
-              </p>
-            </div>
-
-            <div className="mb-8">
-              <h2 className="text-[26px] font-bold text-white mb-3">12. Contact Information</h2>
-              <p className="text-[var(--text-2)] mb-4">
-                If you have any questions about these Terms & Conditions, please contact us at:
-              </p>
-                             <div className="bg-[#0a0a0a] p-4 rounded-lg">
-                 <p className="text-[var(--text-2)]">
-                   <strong>Email:</strong> legal@goalmania.com<br />
-                   <strong>Location:</strong> Italy<br />
-                   <strong>Contact:</strong> Please use the contact form above
-                 </p>
-               </div>
-            </div>
-
-            <div className="text-center mt-12 pt-8 border-t border-white/8">
-              <p className="text-sm text-white/50">
-                Last updated: December 2024<br />
-                © 2025 Goal Mania. All rights reserved.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageHeader eyebrow="Informazioni legali" title="Termini e condizioni" lead="Le regole del sito e degli acquisti su Goal Mania, scritte in modo chiaro." />
+      <LegalDoc updated="25 novembre 2026">
+        <S n={1} title="Cosa vendiamo">
+          <p>
+            Goal Mania vende maglie da calcio, attuali e retro, in versione tifoso. <strong>Non sono maglie ufficiali dei club</strong> e Goal Mania non è affiliata, sponsorizzata o autorizzata da nessuna squadra, lega o federazione.
+            Nomi, stemmi e marchi delle squadre appartengono ai rispettivi proprietari e compaiono solo per indicare a quale maglia ci si riferisce.
+          </p>
+          <p>Le foto sono illustrative: colori e dettagli possono variare leggermente dal prodotto che ricevi.</p>
+        </S>
+        <S n={2} title="Prezzi e pagamento">
+          <p>
+            I prezzi sono in euro e comprendono l&apos;IVA. Il pagamento si fa per intero al momento dell&apos;ordine, con i metodi mostrati al checkout (carte, Apple Pay, Google Pay, PayPal, Klarna), tramite Stripe.
+            Non vediamo né conserviamo i dati completi della tua carta.
+          </p>
+          <p>
+            L&apos;offerta <strong>Prendi 3, paghi 2</strong> vale quando nel carrello ci sono almeno tre maglie: la meno cara è gratis. Il prezzo finale viene sempre ricalcolato dal nostro server al momento dell&apos;ordine ed è quello che vedi nel riepilogo prima di pagare.
+          </p>
+        </S>
+        <S n={3} title="Maglie personalizzate">
+          <p>Nome, numero, patch e altre personalizzazioni si aggiungono a un costo mostrato nella scheda prodotto. Controlla bene nome e numero prima di ordinare: li stampiamo come li scrivi.</p>
+        </S>
+        <S n={4} title="Mystery box">
+          <p>
+            Nella Mystery box scegli quante maglie vuoi, la taglia di ciascuna e, se vuoi, fino a cinque squadre da escludere. Le maglie vengono estratte tra quelle disponibili: non puoi sceglierne una in particolare.
+            Prezzo per maglia: 35€ per le attuali, 40€ per le retro.
+          </p>
+        </S>
+        <S n={5} title="Spedizione e consegna">
+          <p>La spedizione in Italia è gratuita su ogni ordine. La consegna richiede in genere da 7 a 10 giorni lavorativi dall&apos;ordine; sono tempi stimati e non una scadenza garantita. Dopo la spedizione ricevi per email il codice per seguire il pacco.</p>
+        </S>
+        <S n={6} title="Reso e rimborso">
+          <p>Puoi recedere dall&apos;acquisto entro 14 giorni dalla consegna, senza spiegare il motivo. La maglia deve essere:</p>
+          <ul>
+            <li>non indossata e in buono stato;</li>
+            <li>con le etichette, se presenti, e nella confezione originale;</li>
+            <li>accompagnata dai dati dell&apos;ordine.</li>
+          </ul>
+          <p>
+            <strong>Le spese di spedizione del reso sono a carico del cliente</strong>, salvo che il prodotto sia difettoso o diverso da quello ordinato. Le maglie personalizzate (nome, numero, patch) non si possono rendere, perché sono prodotte apposta per te.
+          </p>
+          <p>Il rimborso arriva sullo stesso metodo di pagamento usato per l&apos;ordine, entro 14 giorni da quando riceviamo la maglia resa. Per avviare un reso scrivi a <a className="underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> o usa la pagina <Link className="underline" href="/contact">Contatti</Link>.</p>
+        </S>
+        <S n={7} title="Prodotto difettoso o sbagliato">
+          <p>Se la maglia arriva danneggiata, difettosa o diversa da quella ordinata, scrivici entro pochi giorni dalla consegna con una foto: la sostituiamo o rimborsiamo, senza spese per te.</p>
+        </S>
+        <S n={8} title="Contenuti del sito">
+          <p>Testi, grafiche e immagini originali del sito sono di Goal Mania. Non si possono copiare o usare a scopo commerciale senza permesso.</p>
+        </S>
+        <S n={9} title="Responsabilità">
+          <p>Facciamo il possibile perché le informazioni del sito siano corrette e aggiornate, ma non possiamo garantire che siano sempre prive di errori. Restano ferme le tutele di legge per i consumatori.</p>
+        </S>
+        <S n={10} title="Legge applicabile">
+          <p>Questi termini sono regolati dalla legge italiana. Per i consumatori resta competente il foro del luogo di residenza o domicilio.</p>
+        </S>
+        <S n={11} title="Modifiche">
+          <p>Possiamo aggiornare questi termini. La versione in vigore è quella pubblicata qui al momento dell&apos;ordine.</p>
+        </S>
+        <S n={12} title="Contatti">
+          <p>
+            Per qualsiasi domanda: <a className="underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>, oppure la pagina <Link className="underline" href="/contact">Contatti</Link>.
+          </p>
+        </S>
+      </LegalDoc>
     </div>
   );
-} 
+}
