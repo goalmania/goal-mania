@@ -1,9 +1,11 @@
 import { unstable_cache } from "next/cache";
 import connectDB from "@/lib/db";
 import ProductModel from "@/lib/models/Product";
-import { ERAS, toItem, eraOf, teamOf, isLegend, hasPhoto, worldCupItems, type ArchiveItem } from "@/lib/archive";
+import { ERAS, toItem, eraOf, teamOf, isLegend, hasPhoto, isNational, worldCupItems, type ArchiveItem } from "@/lib/archive";
 import { WORLD_CUPS } from "@/lib/eraTheme";
 import { isShowable } from "@/lib/photoFix";
+import { CLUBS, LEAGUES, clubOfTitle, type League } from "@/lib/clubs";
+import { retroNationOf } from "@/lib/nations";
 
 export const slugify = (s: string) =>
   s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -42,6 +44,56 @@ export function topTeams(items: ArchiveItem[], n = 30) {
   return [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, n).map(([name, count]) => ({ name, count, slug: `squadra-${slugify(name)}` }));
 }
 
+export interface TeamChip {
+  key: string;
+  name: string;
+  count: number;
+  href: string;
+  logo?: string; // stemma del club
+  iso?: string; // bandiera della nazionale
+}
+export interface TeamSection {
+  id: string;
+  label: string;
+  teams: TeamChip[];
+}
+
+// Le squadre dell'archivio divise come in negozio: campionati, altri club e nazionali, ognuna col suo stemma o la sua bandiera
+export function archiveTeamSections(items: ArchiveItem[]): TeamSection[] {
+  const clubs = new Map<string, TeamChip & { league: League }>();
+  const others = new Map<string, TeamChip>();
+  const nations = new Map<string, TeamChip>();
+  for (const it of items) {
+    const nat = isNational(it.name) ? retroNationOf(it.name) : null;
+    if (nat) {
+      const k = slugify(nat.name);
+      const e = nations.get(k) || { key: k, name: nat.name, count: 0, href: `/archivio/nazione-${k}`, iso: nat.iso };
+      e.count++;
+      nations.set(k, e);
+      continue;
+    }
+    const c = clubOfTitle(it.name);
+    if (c) {
+      const e = clubs.get(c.slug) || { key: c.slug, name: c.name, count: 0, href: `/archivio/club-${c.slug}`, logo: c.logo, league: c.league };
+      e.count++;
+      clubs.set(c.slug, e);
+      continue;
+    }
+    const t = teamOf(it.name);
+    if (!t) continue;
+    const e = others.get(t) || { key: t, name: t, count: 0, href: `/archivio/squadra-${slugify(t)}` };
+    e.count++;
+    others.set(t, e);
+  }
+  const byCount = (a: TeamChip, b: TeamChip) => b.count - a.count || a.name.localeCompare(b.name, "it");
+  const out: TeamSection[] = LEAGUES.filter((l) => l.id !== "altre").map((l) => ({ id: l.id, label: l.label, teams: [...clubs.values()].filter((c) => c.league === l.id).sort(byCount) }));
+  // Club senza campionato nel nostro elenco (Flamengo, Celtic, Boca...): quelli con almeno 3 maglie
+  const rest = [...clubs.values()].filter((c) => c.league === "altre").concat([...others.values()].filter((o) => o.count >= 3).map((o) => ({ ...o, league: "altre" as League }))).sort(byCount);
+  out.push({ id: "altri", label: "Altri club", teams: rest });
+  out.push({ id: "nazionali", label: "Nazionali", teams: [...nations.values()].sort(byCount) });
+  return out.filter((s) => s.teams.length > 0);
+}
+
 // Anni di Mondiale per cui in archivio ci sono davvero maglie delle nazionali
 export function worldCupYearsWithJerseys(items: ArchiveItem[]) {
   return Object.keys(WORLD_CUPS).map(Number).sort((a, b) => a - b).filter((y) => worldCupItems(items, y).length > 0);
@@ -57,6 +109,17 @@ export function groupItems(items: ArchiveItem[], slug: string): { title: string;
     const list = cup ? worldCupItems(items, year) : [];
     if (!cup || !list.length) return null;
     return { title: `Mondiale ${year}`, text: `Le maglie delle nazionali del Mondiale ${year} (${cup.host}). Lo ha vinto: ${cup.winner}.`, list };
+  }
+  if (slug.startsWith("club-")) {
+    const c = CLUBS.find((x) => x.slug === slug.slice(5));
+    const list = c ? items.filter((it) => !isNational(it.name) && clubOfTitle(it.name)?.slug === c.slug) : [];
+    if (!c || !list.length) return null;
+    return { title: c.name, text: `Tutte le maglie retro ${c.name}: ${list.length} in archivio.`, list };
+  }
+  if (slug.startsWith("nazione-")) {
+    const list = items.filter((it) => isNational(it.name) && retroNationOf(it.name) && slugify(retroNationOf(it.name)!.name) === slug.slice(8));
+    if (!list.length) return null;
+    return { title: retroNationOf(list[0].name)!.name, text: `Tutte le maglie retro della nazionale: ${list.length} in archivio.`, list };
   }
   if (slug.startsWith("squadra-")) {
     const list = items.filter((it) => `squadra-${slugify(teamOf(it.name))}` === slug);

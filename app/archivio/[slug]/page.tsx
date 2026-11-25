@@ -4,7 +4,7 @@ import Link from "next/link";
 import ArchiveGrid from "@/components/shop/ArchiveGrid";
 import EraHeader from "@/components/era/EraHeader";
 import EraNumeral from "@/components/era/EraNumeral";
-import { getArchiveItems, groupItems, topTeams, worldCupYearsWithJerseys } from "@/lib/archiveData";
+import { archiveTeamSections, getArchiveItems, groupItems, topTeams, worldCupYearsWithJerseys } from "@/lib/archiveData";
 import { eraInfo } from "@/lib/eraPick";
 import { ERAS, eraOf } from "@/lib/archive";
 import { ERA_ORDER, ERA_THEME } from "@/lib/eraTheme";
@@ -20,6 +20,7 @@ export async function generateStaticParams() {
     { slug: "leggende" },
     ...worldCupYearsWithJerseys(items).map((y) => ({ slug: `mondiale-${y}` })),
     ...topTeams(items, 400).map((t) => ({ slug: t.slug })),
+    ...archiveTeamSections(items).flatMap((sec) => sec.teams.map((t) => ({ slug: t.href.replace("/archivio/", "") }))),
   ];
 }
 

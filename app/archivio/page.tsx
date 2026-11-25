@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import EraChapter from "@/components/era/EraChapter";
 import EraDock from "@/components/era/EraDock";
+import ArchiveTeams from "@/components/shop/ArchiveTeams";
 import ProductRail from "@/components/home/ProductRail";
 import WorldCupBand, { type CupCard } from "@/components/home/WorldCupBand";
-import { getArchiveItems, topTeams, worldCupYearsWithJerseys } from "@/lib/archiveData";
+import { archiveTeamSections, getArchiveItems, worldCupYearsWithJerseys } from "@/lib/archiveData";
 import { isLegend, worldCupItems } from "@/lib/archive";
 import { eraInfo, pickForEra } from "@/lib/eraPick";
 import { ERA_ORDER, WORLD_CUPS } from "@/lib/eraTheme";
@@ -28,7 +28,6 @@ const HOW = [
 export default async function ArchivePage() {
   const items = await getArchiveItems();
   const legends = items.filter((it) => isLegend(it.name)).slice(0, 14);
-  const teams = topTeams(items, 36);
   const infos = Object.fromEntries(ERA_ORDER.map((s) => [s, eraInfo(items, s)]));
   const cups: CupCard[] = worldCupYearsWithJerseys(items).map((y) => {
     const list = worldCupItems(items, y);
@@ -80,15 +79,7 @@ export default async function ArchivePage() {
 
       <section id="squadre" className="mx-auto w-full max-w-[1760px] scroll-mt-32 px-5 py-12 md:px-10 lg:px-16">
         <h2 className="disp text-[clamp(2.6rem,7vw,5.5rem)] text-white">Per squadra</h2>
-        <ul className="mt-6 flex flex-wrap gap-2">
-          {teams.map((t) => (
-            <li key={t.slug}>
-              <Link href={`/archivio/${t.slug}`} className="flex h-12 items-center gap-2 rounded-full px-5 text-[17px] font-semibold text-white shadow-[inset_0_0_0_1.5px_rgba(244,242,234,0.35)] transition-colors hover:bg-[var(--lime)] hover:text-[#0a0a0a] hover:shadow-none">
-                {t.name} <span className="text-[14px] opacity-60">{t.count}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <ArchiveTeams sections={archiveTeamSections(items)} />
       </section>
     </div>
   );
