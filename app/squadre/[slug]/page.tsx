@@ -29,7 +29,7 @@ export default async function SquadraPage({ params }: { params: Promise<{ slug: 
   await connectDB();
   const rows = await Product.find({ isActive: true, isMysteryBox: { $ne: true }, title: { $regex: c.re.source, $options: "i" } })
     .sort({ feature: -1, createdAt: -1 })
-    .select("title slug basePrice retroPrice isRetro category images")
+    .select({ title: 1, slug: 1, basePrice: 1, retroPrice: 1, isRetro: 1, category: 1, images: { $slice: 1 } })
     .lean<any[]>();
   const items = rows
     .filter((p) => clubOfTitle(p.title)?.slug === c.slug)

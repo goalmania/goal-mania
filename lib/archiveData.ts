@@ -3,6 +3,7 @@ import connectDB from "@/lib/db";
 import ProductModel from "@/lib/models/Product";
 import { ERAS, toItem, eraOf, teamOf, isLegend, hasPhoto, worldCupItems, type ArchiveItem } from "@/lib/archive";
 import { WORLD_CUPS } from "@/lib/eraTheme";
+import { isShowable } from "@/lib/photoFix";
 
 export const slugify = (s: string) =>
   s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -17,10 +18,10 @@ const readAll = unstable_cache(
       .sort({ feature: -1, createdAt: -1 })
       .lean();
     const all: ArchiveItem[] = JSON.parse(JSON.stringify(docs)).map(toItem);
-    // Con la foto vera prima, i segnaposto in fondo (l'ordine resta quello del catalogo)
-    return [...all.filter((it) => hasPhoto(it.image)), ...all.filter((it) => !hasPhoto(it.image))];
+    // Solo maglie con una foto vera: via i segnaposto col vecchio logo e le foto con persone
+    return all.filter((it) => hasPhoto(it.image) && isShowable(it.id, it.image));
   },
-  ["archive-items-v2"],
+  ["archive-items-v3"],
   { revalidate: 300, tags: ["archive"] },
 );
 

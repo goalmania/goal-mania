@@ -8,6 +8,7 @@ import ProductRail from "@/components/home/ProductRail";
 import VintedReviews from "@/components/shared/VintedReviews";
 import RealOrdersGallery from "@/components/shared/RealOrdersGallery";
 import FaqShort from "@/components/shared/FaqShort";
+import { isShowable } from "@/lib/photoFix";
 import { pickHyped, rotationSeed } from "@/lib/hype";
 import { Suspense } from "react";
 import mongoose from "mongoose";
@@ -234,6 +235,9 @@ export default async function ProductPage({
   if (product.slug && id !== product.slug) {
     permanentRedirect(`/products/${product.slug}`);
   }
+
+  // Senza una foto vera della maglia (solo vecchio logo, o solo foto con persone) la scheda non si mostra
+  if (!isShowable(String(product._id), product.images?.[0])) notFound();
 
   // Le mystery box si comprano dal configuratore (quante maglie, taglie, squadre escluse), non dalla scheda singola
   if (product.isMysteryBox) redirect("/shop/mystery-box");

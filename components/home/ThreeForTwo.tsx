@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Gift } from "lucide-react";
 import { cld } from "@/lib/utils/cloudinary";
+import { isShowable } from "@/lib/photoFix";
 
 interface P {
   id: string;
@@ -12,7 +13,7 @@ interface P {
 // Il 3x2 e una regola reale, attiva al checkout: la meno cara delle tre e gratis.
 // Il conto qui sotto si fa con i prezzi veri delle tre maglie che vedi.
 export default function ThreeForTwo({ products }: { products: P[] }) {
-  const three = products.slice(0, 3);
+  const three = products.filter((p) => isShowable(p.id, p.image)).slice(0, 3);
   if (three.length < 3) return null;
   const total = three.reduce((a, p) => a + p.price, 0);
   const free = Math.min(...three.map((p) => p.price));

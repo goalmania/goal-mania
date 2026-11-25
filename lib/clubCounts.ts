@@ -2,6 +2,7 @@ import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { CLUBS, clubOfTitle, type Club } from "@/lib/clubs";
 import { WC_NATIONS } from "@/lib/nations";
+import { isShowable } from "@/lib/photoFix";
 
 export interface ClubCount extends Club {
   current: number;
@@ -12,9 +13,10 @@ export interface ClubCount extends Club {
 export async function getClubCounts(): Promise<ClubCount[]> {
   try {
     await connectDB();
-    const rows = await Product.find({ isActive: true, isMysteryBox: { $ne: true }, isWorldCup: { $ne: true } }).select("title isRetro category").lean<any[]>();
+    const rows = await Product.find({ isActive: true, isMysteryBox: { $ne: true }, isWorldCup: { $ne: true } }).select({ title: 1, isRetro: 1, category: 1, images: { $slice: 1 } }).lean<any[]>();
     const m = new Map<string, { current: number; retro: number }>();
     for (const r of rows) {
+      if (!isShowable(String(r._id), r.images?.[0])) continue;
       const c = clubOfTitle(r.title || "");
       if (!c) continue;
       const e = m.get(c.slug) || { current: 0, retro: 0 };

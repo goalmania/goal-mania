@@ -695,6 +695,19 @@ export default function ProductDetailClient({
               </label>
             </div>
 
+            {/* Personalizzazione */}
+            <PdpCustomize
+              c={customization}
+              set={setCustomization as any}
+              canName={!!product.allowsNameOnShirt}
+              canNumber={!!product.allowsNumberOnShirt}
+              patches={relevantPatches}
+              hasShorts={!!product.hasShorts}
+              hasSocks={!!product.hasSocks}
+              prices={{ player_edition: EXTRAS_PRICES.player_edition, shorts: EXTRAS_PRICES.shorts, socks: EXTRAS_PRICES.socks }}
+              toggle={togglePatch}
+            />
+
             {/* Acquisto */}
             <div className="space-y-3">
               <div className="flex items-stretch gap-2">
@@ -728,19 +741,6 @@ export default function ProductDetailClient({
                 <span className="text-[16px] leading-snug text-white"><b>Pagamento protetto.</b> <span className="text-[var(--text-3)]">Carte, Apple Pay, Google Pay, PayPal, Klarna.</span></span>
               </li>
             </ul>
-
-            {/* Personalizzazione */}
-            <PdpCustomize
-              c={customization}
-              set={setCustomization as any}
-              canName={!!product.allowsNameOnShirt}
-              canNumber={!!product.allowsNumberOnShirt}
-              patches={relevantPatches}
-              hasShorts={!!product.hasShorts}
-              hasSocks={!!product.hasSocks}
-              prices={{ player_edition: EXTRAS_PRICES.player_edition, shorts: EXTRAS_PRICES.shorts, socks: EXTRAS_PRICES.socks }}
-              toggle={togglePatch}
-            />
 
             {/* Dettagli a scomparsa */}
             <div className="divide-y divide-[var(--line)] overflow-hidden rounded-2xl bg-[var(--wall)] shadow-[inset_0_0_0_1px_var(--line)]">

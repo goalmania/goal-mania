@@ -8,6 +8,7 @@ import PageHeader from "@/components/shared/PageHeader";
 import ProductGrid from "@/components/ui/ProductGrid";
 import TrustBar from "@/components/home/TrustBar";
 import { logoFor } from "@/lib/teamLogos";
+import { isShowable } from "@/lib/photoFix";
 
 export interface CatProduct {
   id: string;
@@ -54,7 +55,7 @@ type Sort = "top" | "low" | "high";
 
 // Il corpo di tutte le pagine categoria: titolo, filtri, maglie, e in fondo cosa fare dopo.
 export default function CategoryBrowser({
-  products,
+  products: allProducts,
   title,
   eyebrow = "Maglie da calcio",
   lead = "Maglie a 35€, spedizione gratuita e reso entro 14 giorni.",
@@ -87,6 +88,8 @@ export default function CategoryBrowser({
   teamLimit?: number;
 }) {
   const tn = teamKey ?? teamName;
+  // Niente foto con persone o col vecchio logo al posto della maglia
+  const products = useMemo(() => allProducts.filter((p) => isShowable(p.id, p.image)), [allProducts]);
   const [kind, setKind] = useState<Kind>("tutte");
   const [team, setTeam] = useState("");
   const [q, setQ] = useState("");

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { fixProductImages } from "@/lib/photoFix";
 import {
   VALID_ADULT_SIZES,
   VALID_KID_SIZES,
@@ -206,6 +207,10 @@ productSchema.index({ feature: -1, createdAt: -1 });
 if (mongoose.models.Product) {
   delete mongoose.models.Product;
 }
+
+// Foto: via i segnaposto con il vecchio logo, e per alcuni prodotti prima una foto senza persone (vedi lib/photoFix.ts)
+productSchema.post("find", (docs: any) => { if (Array.isArray(docs)) docs.forEach((d) => fixProductImages(d)); });
+productSchema.post("findOne", (doc: any) => { if (doc) fixProductImages(doc); });
 
 const Product = mongoose.model("Product", productSchema);
 

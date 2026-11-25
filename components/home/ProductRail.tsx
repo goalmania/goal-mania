@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import ProductCard from "@/components/ui/ProductCard";
 import AutoRail from "@/components/ui/AutoRail";
+import { isShowable } from "@/lib/photoFix";
 
 interface RailProduct {
   id: string;
@@ -16,7 +17,7 @@ interface RailProduct {
 export default function ProductRail({
   title,
   href,
-  products,
+  products: allProducts,
   priorityFirst = false,
   lead,
   eyebrow,
@@ -28,6 +29,7 @@ export default function ProductRail({
   lead?: string;
   eyebrow?: string;
 }) {
+  const products = allProducts.filter((p) => isShowable(p.id, p.image));
   if (!products.length) return null;
   return (
     <section className="py-8 md:py-12">

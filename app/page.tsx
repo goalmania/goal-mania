@@ -8,6 +8,7 @@ import TeamLogoRail from "@/components/home/TeamLogoRail";
 import VintedReviews from "@/components/shared/VintedReviews";
 import EraPanels, { type EraPanelData } from "@/components/era/EraPanels";
 import { eraInfo, pickForEra } from "@/lib/eraPick";
+import { isShowable } from "@/lib/photoFix";
 import PromoBand from "@/components/home/PromoBand";
 import { ERA_ORDER, WORLD_CUPS } from "@/lib/eraTheme";
 import { worldCupItems, hasPhoto } from "@/lib/archive";
@@ -174,7 +175,7 @@ async function getCounts(): Promise<Record<string, number>> {
 }
 
 export default async function Home() {
-  const [featured, season, worldcup, archive, counts, currentPool, retroItems, latestArticles] = await Promise.all([
+  const [featuredRaw, seasonRaw, worldcupRaw, archive, counts, currentPoolRaw, retroItems, latestArticles] = await Promise.all([
     getFeatured(),
     getByCategory("2026/27"),
     getByCategory("World Cup 2026"),
@@ -196,6 +197,9 @@ export default async function Home() {
       }
     })(),
   ]);
+  // Niente foto con persone o col vecchio logo in vetrina
+  const ok = <T extends { id: string; image: string }>(l: T[]) => l.filter((p) => isShowable(p.id, p.image));
+  const featured = ok(featuredRaw as any[]), season = ok(seasonRaw as any[]), worldcup = ok(worldcupRaw as any[]), currentPool = ok(currentPoolRaw as any[]);
   // Vetrina: attuali e retro piu hype, mescolati, e a rotazione ogni 15 minuti (non sono sempre le stesse)
   const pool = [...currentPool, ...retroItems.map((r) => ({ id: r.id, slug: r.slug, name: r.name, price: r.price, image: r.image, category: "Retro", team: r.year ? String(r.year) : "Retro", feature: false, isRetro: true }))];
   const hero = pickHyped(pool, 14, rotationSeed(15, 1));

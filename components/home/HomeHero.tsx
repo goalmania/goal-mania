@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cld } from "@/lib/utils/cloudinary";
 import AutoRail from "@/components/ui/AutoRail";
+import { isShowable } from "@/lib/photoFix";
 
 interface HeroProduct {
   id: string;
@@ -56,7 +57,8 @@ function Row({ items, reverse, speed, eager }: { items: HeroProduct[]; reverse?:
   );
 }
 
-export default function HomeHero({ products }: { products: HeroProduct[] }) {
+export default function HomeHero({ products: all }: { products: HeroProduct[] }) {
+  const products = all.filter((p) => isShowable(p.id, p.image));
   const a = products.filter((_, i) => i % 2 === 0);
   const b = products.filter((_, i) => i % 2 === 1);
   const ok = products.length >= 6;
