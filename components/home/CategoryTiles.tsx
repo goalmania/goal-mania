@@ -33,17 +33,17 @@ export default function CategoryTiles({ tiles }: { tiles: Tile[] }) {
             <Link
               key={t.href}
               href={t.href}
-              className={`tile group relative isolate flex min-h-[250px] flex-col justify-between overflow-hidden rounded-[22px] p-4 md:p-6 ${TONES[t.tone]} ${t.big ? "col-span-2 lg:row-span-2 lg:min-h-[560px]" : i === 1 ? "col-span-2" : ""}`}
+              className={`tile group relative isolate flex min-h-[250px] flex-col justify-between overflow-hidden rounded-[22px] p-4 md:p-6 ${TONES[t.tone]} ${t.big ? "col-span-2 lg:row-span-2 lg:min-h-[560px]" : i === 1 ? "col-span-2" : "max-md:min-h-[330px]"}`}
               aria-label={`${t.title}: ${t.count} maglie, da ${t.from}€`}
             >
               <span className="tile-lines" aria-hidden="true" />
-              <span className={`relative z-[2] block ${t.big ? "max-w-[58%] md:max-w-[70%]" : i === 1 ? "max-w-[56%]" : "max-w-[58%]"}`}>
+              <span className={`relative z-[2] block ${t.big ? "max-w-[58%] md:max-w-[70%]" : i === 1 ? "max-w-[56%]" : "max-w-full md:max-w-[58%]"}`}>
                 <span className={`disp block ${t.big ? "text-[clamp(2.4rem,4.6vw,4.6rem)]" : "text-[clamp(1.7rem,2.6vw,2.5rem)]"}`}>{t.title}</span>
                 <span className="mt-2 block max-w-[20ch] md:max-w-[24ch] text-[15px] font-semibold italic leading-snug opacity-80">{t.sub}</span>
               </span>
               {t.image && (
                 <span
-                  className={`pc-stage z-[1] block overflow-hidden rounded-2xl shadow-[0_18px_30px_-14px_rgba(0,0,0,0.65)] transition-transform duration-500 group-hover:rotate-0 group-hover:scale-[1.03] ${t.big ? "bottom-[4.75rem] right-4 w-[44%] max-w-[500px] rotate-3 md:bottom-6 md:right-6 md:w-[54%]" : i === 1 ? "right-5 top-1/2 w-[28%] max-w-[210px] -translate-y-1/2 rotate-3" : "right-4 top-1/2 w-[42%] -translate-y-[46%] rotate-3"}`}
+                  className={`pc-stage z-[1] block overflow-hidden rounded-2xl shadow-[0_18px_30px_-14px_rgba(0,0,0,0.65)] transition-transform duration-500 group-hover:rotate-0 group-hover:scale-[1.03] ${t.big ? "bottom-[4.75rem] right-4 w-[44%] max-w-[500px] rotate-3 md:bottom-6 md:right-6 md:w-[54%]" : i === 1 ? "right-5 top-1/2 w-[28%] max-w-[210px] -translate-y-1/2 rotate-3" : "right-3 bottom-[4.5rem] w-[40%] rotate-3 md:right-4 md:top-1/2 md:bottom-auto md:w-[42%] md:-translate-y-[46%]"}`}
                   style={{ aspectRatio: "4 / 5", position: "absolute" }}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
