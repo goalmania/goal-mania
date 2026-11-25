@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import { FunnelEvent, ProductView } from "@/lib/models/Analytics";
 
@@ -11,6 +13,10 @@ export async function POST(req: NextRequest) {
     if (!event || !sessionId) {
       return NextResponse.json({ error: "event and sessionId required" }, { status: 400 });
     }
+
+    // Le visite dell'admin non entrano nelle statistiche dei clienti
+    const auth = await getServerSession(authOptions);
+    if (auth?.user?.role === "admin") return NextResponse.json({ ok: true, skipped: true });
 
     await connectDB();
 

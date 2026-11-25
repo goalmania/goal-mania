@@ -767,6 +767,91 @@ function CreateCouponDialog({ onCouponCreated }: { onCouponCreated: () => void }
   );
 }
 
+// Modifica di un coupon esistente: codice, percentuale, scadenza, usi massimi, descrizione
+function EditCouponDialog({ coupon, onClose, onSaved }: { coupon: Coupon | null; onClose: () => void; onSaved: () => void }) {
+  const [saving, setSaving] = useState(false);
+  const [f, setF] = useState({ code: "", discountPercentage: 10, expiresAt: "", maxUses: "", description: "" });
+
+  useEffect(() => {
+    if (!coupon) return;
+    setF({
+      code: coupon.code,
+      discountPercentage: coupon.discountPercentage,
+      expiresAt: coupon.expiresAt ? String(coupon.expiresAt).slice(0, 10) : "",
+      maxUses: coupon.maxUses ? String(coupon.maxUses) : "",
+      description: coupon.description || "",
+    });
+  }, [coupon]);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!coupon) return;
+    try {
+      setSaving(true);
+      const res = await fetch(`/api/admin/coupons/${coupon._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: f.code,
+          discountPercentage: Number(f.discountPercentage),
+          expiresAt: f.expiresAt || undefined,
+          maxUses: f.maxUses === "" || Number(f.maxUses) <= 0 ? null : Number(f.maxUses),
+          description: f.description,
+        }),
+      });
+      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || "Salvataggio non riuscito");
+      toast.success("Coupon aggiornato");
+      onSaved();
+      onClose();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Salvataggio non riuscito");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Dialog open={!!coupon} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Modifica coupon</DialogTitle>
+          <DialogDescription>Cambia i dati del coupon. Gli usi già fatti restano.</DialogDescription>
+        </DialogHeader>
+        <form onSubmit={submit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="e-code">Codice</Label>
+              <Input id="e-code" value={f.code} onChange={(e) => setF({ ...f, code: e.target.value })} required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="e-pct">Sconto %</Label>
+              <Input id="e-pct" type="number" min="1" max="100" value={f.discountPercentage} onChange={(e) => setF({ ...f, discountPercentage: Number(e.target.value) })} required />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="e-exp">Scadenza</Label>
+              <Input id="e-exp" type="date" value={f.expiresAt} onChange={(e) => setF({ ...f, expiresAt: e.target.value })} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="e-max">Usi massimi</Label>
+              <Input id="e-max" type="number" min="0" placeholder="Illimitati" value={f.maxUses} onChange={(e) => setF({ ...f, maxUses: e.target.value })} />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="e-desc">Descrizione</Label>
+            <Textarea id="e-desc" rows={2} value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} />
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>Annulla</Button>
+            <Button type="submit" disabled={saving}>{saving ? "Salvo..." : "Salva"}</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export default function AdminCouponsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -775,6 +860,7 @@ export default function AdminCouponsPage() {
   const [showInactive, setShowInactive] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [editing, setEditing] = useState<Coupon | null>(null);
 
   // Fetch coupons when component mounts
   useEffect(() => {
@@ -861,8 +947,7 @@ export default function AdminCouponsPage() {
   };
 
   const handleEditCoupon = (id: string) => {
-    // For now, just show a toast - you can implement edit functionality later
-    toast("Edit functionality coming soon");
+    setEditing(coupons.find((c) => c._id === id) || null);
   };
 
   const handleShowInactiveChange = useCallback((show: boolean) => {
@@ -992,6 +1077,7 @@ export default function AdminCouponsPage() {
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
       />
+      <EditCouponDialog coupon={editing} onClose={() => setEditing(null)} onSaved={fetchCoupons} />
     </>
   );
 }
