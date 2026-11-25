@@ -979,7 +979,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
               View Details
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <a href={`/admin/orders/fornitore/${row.original._id}`}>Invia al fornitore</a>
+              <a href={`/admin/orders/telegram?id=${row.original._id}`}>Manda su Telegram</a>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handlePrintInvoice(row.original)}>
               <PrinterIcon className="mr-2 h-4 w-4" />
@@ -1582,7 +1582,7 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
               {/* Action Buttons */}
               <div className="flex gap-2 justify-end">
                 <Button asChild variant="outline">
-                  <a href={`/admin/orders/fornitore/${selectedOrder._id}`}>Invia al fornitore</a>
+                  <a href={`/admin/orders/telegram?id=${selectedOrder._id}`}>Manda su Telegram</a>
                 </Button>
                 <Button variant="outline" onClick={() => handlePrintInvoice()}>
                   <PrinterIcon className="mr-2 h-4 w-4" />

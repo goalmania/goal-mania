@@ -2,20 +2,18 @@ import connectDB from "@/lib/db";
 import Product from "@/lib/models/Product";
 import { patchById } from "@/lib/patches";
 
-// Numero WhatsApp del fornitore (formato internazionale senza +). Si puo cambiare con la variabile SUPPLIER_WHATSAPP.
-export const SUPPLIER_WHATSAPP = (process.env.SUPPLIER_WHATSAPP || "8615976845537").replace(/\D/g, "");
-
 const baseId = (id: string) => String(id || "").split("_")[0];
 const yes = (v: unknown) => (v ? "YES" : "no");
 
 // Il messaggio per il fornitore: cosa produrre, in che taglia, con quali personalizzazioni, la foto e dove spedire. In inglese, semplice.
-export async function buildSupplierMessage(order: any): Promise<string> {
+export async function buildSupplierPackage(order: any): Promise<{ message: string; images: string[] }> {
   await connectDB();
   const ids = Array.from(new Set((order.items || []).map((i: any) => baseId(i.productId)).filter(Boolean)));
   const prods = ids.length ? await Product.find({ _id: { $in: ids } }).select({ title: 1, slug: 1, images: 1, isMysteryBox: 1 }).lean<any[]>() : [];
   const byId = new Map(prods.map((p) => [String(p._id), p]));
 
   const lines: string[] = [];
+  const images: string[] = [];
   const code = String(order._id).slice(-6).toUpperCase();
   lines.push(`NEW ORDER #${code}`);
   lines.push(`Date: ${new Date(order.createdAt || Date.now()).toLocaleString("en-GB", { timeZone: "Europe/Rome" })}`);
@@ -39,7 +37,7 @@ export async function buildSupplierMessage(order: any): Promise<string> {
       if (c.excludedShirts?.length) lines.push(`Do NOT send: ${c.excludedShirts.join(", ")}`);
     }
     const img = (p?.images || []).find((u: string) => /^https?:/.test(u));
-    if (img) lines.push(`Photo: ${img}`);
+    if (img) { lines.push(`Photo: ${img}`); images.push(img); }
     if (p?.slug) lines.push(`Page: https://goal-mania.it/products/${p.slug}`);
     lines.push("");
   });
@@ -54,26 +52,35 @@ export async function buildSupplierMessage(order: any): Promise<string> {
   if (a.phone) lines.push(`Phone: ${a.phone}`);
   lines.push("");
   lines.push("Please confirm and send the tracking number when shipped. Thank you!");
-  return lines.join("\n").replace(/\n{3,}/g, "\n\n");
+  return { message: lines.join("\n").replace(/\n{3,}/g, "\n\n"), images };
 }
 
-export const whatsappLink = (message: string) => `https://wa.me/${SUPPLIER_WHATSAPP}?text=${encodeURIComponent(message)}`;
+export const buildSupplierMessage = async (order: any) => (await buildSupplierPackage(order)).message;
 
-// Invio automatico, solo se hai collegato WhatsApp Business (WHATSAPP_TOKEN e WHATSAPP_PHONE_ID su Vercel). Altrimenti non fa nulla.
-export async function sendSupplierWhatsApp(message: string): Promise<boolean> {
-  const token = process.env.WHATSAPP_TOKEN;
-  const phoneId = process.env.WHATSAPP_PHONE_ID;
-  if (!token || !phoneId) return false;
+// Il messaggio arriva a te su Telegram (stesso bot e stessa chat delle grafiche): testo completo e poi la foto di ogni maglia
+export async function sendSupplierTelegram(order: any): Promise<{ ok: boolean; error?: string }> {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID || "8649572632";
+  if (!token) return { ok: false, error: "TELEGRAM_BOT_TOKEN non impostato" };
   try {
-    const r = await fetch(`https://graph.facebook.com/v20.0/${phoneId}/messages`, {
+    const { message, images } = await buildSupplierPackage(order);
+    const api = `https://api.telegram.org/bot${token}`;
+    const r = await fetch(`${api}/sendMessage`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ messaging_product: "whatsapp", to: SUPPLIER_WHATSAPP, type: "text", text: { preview_url: true, body: message.slice(0, 4000) } }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, text: message.slice(0, 4000), disable_web_page_preview: true }),
     });
-    if (!r.ok) console.error("WhatsApp fornitore: invio non riuscito", r.status, await r.text().catch(() => ""));
-    return r.ok;
+    const j = await r.json();
+    if (!j.ok) return { ok: false, error: JSON.stringify(j) };
+    for (const url of images.slice(0, 8)) {
+      await fetch(`${api}/sendPhoto`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, photo: url, caption: "Order #" + String(order._id).slice(-6).toUpperCase() }),
+      }).catch(() => {});
+    }
+    return { ok: true };
   } catch (e) {
-    console.error("WhatsApp fornitore: errore", e);
-    return false;
+    return { ok: false, error: String(e) };
   }
 }

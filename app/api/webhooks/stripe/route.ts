@@ -15,7 +15,7 @@ import mongoose from "mongoose";
 import { sendEmail } from "@/lib/utils/email";
 import { orderConfirmationTemplate, invoiceTemplate } from "@/lib/utils/email-templates";
 import { sendPushToAdmins } from "@/lib/utils/push";
-import { buildSupplierMessage, sendSupplierWhatsApp } from "@/lib/supplier";
+import { sendSupplierTelegram } from "@/lib/supplier";
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
@@ -222,16 +222,13 @@ async function handleSuccessfulPayment(paymentIntent: Stripe.PaymentIntent) {
     const extraItems = processedItems.length - 1;
     sendPushToAdmins({
       title: `Nuovo ordine! €${(paymentIntent.amount / 100).toFixed(2)}`,
-      body: (extraItems > 0 ? `${firstItemName} +${extraItems} altro/i` : firstItemName) + " · tocca per inviarlo al fornitore",
-      url: `/admin/orders/fornitore/${newOrder._id}`,
+      body: (extraItems > 0 ? `${firstItemName} +${extraItems} altro/i` : firstItemName) + "",
+      url: "/admin/orders",
     }).catch((err) => console.error("Push notification error:", err));
 
-    // Messaggio al fornitore: parte da solo se WhatsApp Business e collegato, altrimenti basta un tocco dalla notifica
-    try {
-      await sendSupplierWhatsApp(await buildSupplierMessage(newOrder.toObject()));
-    } catch (err) {
-      console.error("Messaggio fornitore:", err);
-    }
+    // Ordine pronto da girare al fornitore: arriva a Paolo su Telegram (testo e foto), senza toccare niente
+    const tg = await sendSupplierTelegram(newOrder.toObject());
+    if (!tg.ok) console.error("Telegram fornitore:", tg.error);
 
     // Aggiorna lo stock DOPO aver salvato l'ordine: un pagamento riuscito non
     // deve mai andare perso per un errore di decremento scorte. item.productId
