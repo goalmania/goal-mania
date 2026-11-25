@@ -92,3 +92,18 @@ export async function sendSupplierTelegramOnce(order: any): Promise<{ ok: boolea
   if (r.ok) await Order.updateOne({ _id: order._id }, { $set: { supplierSentAt: new Date() } }).catch(() => {});
   return r;
 }
+
+// Ordini pagati dal 24/11 non ancora mandati su Telegram (arrivati prima di questa funzione, o con Telegram in errore)
+export async function sendPendingSupplierOrders(limit = 20) {
+  await connectDB();
+  const orders = await Order.find({ createdAt: { $gte: new Date("2026-11-24T00:00:00+01:00") }, paymentIntentId: { $exists: true, $nin: [null, ""] }, supplierSentAt: { $exists: false } })
+    .sort({ createdAt: 1 })
+    .limit(limit)
+    .lean<any[]>();
+  const results: { id: string; ok: boolean; error?: string }[] = [];
+  for (const o of orders) {
+    const r = await sendSupplierTelegramOnce(o);
+    results.push({ id: String(o._id).slice(-6), ok: r.ok, error: r.error?.slice(0, 120) });
+  }
+  return { found: orders.length, sent: results.filter((r) => r.ok).length, results };
+}

@@ -4,6 +4,7 @@ import { AbandonedCart } from "@/lib/models/AbandonedCart";
 import Coupon from "@/lib/models/Coupon";
 import { sendEmail } from "@/lib/utils/email";
 import crypto from "crypto";
+import { sendPendingSupplierOrders } from "@/lib/supplier";
 
 // POST — salva carrello abbandonato e schedula email
 export async function POST(req: NextRequest) {
@@ -46,6 +47,9 @@ export async function GET(req: NextRequest) {
   }
 
   await connectDB();
+
+  // Ripasso giornaliero: gli ordini pagati non ancora mandati su Telegram al fornitore
+  await sendPendingSupplierOrders().catch((e) => console.error("Ripasso ordini Telegram:", e));
 
   const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
   const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
