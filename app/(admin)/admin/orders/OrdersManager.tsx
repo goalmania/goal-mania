@@ -978,6 +978,9 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
               <EyeIcon className="mr-2 h-4 w-4" />
               View Details
             </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <a href={`/admin/orders/fornitore/${row.original._id}`}>Invia al fornitore</a>
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handlePrintInvoice(row.original)}>
               <PrinterIcon className="mr-2 h-4 w-4" />
               Print Invoice
@@ -1578,6 +1581,9 @@ export default function OrdersManager({ initialOrders }: OrdersManagerProps) {
 
               {/* Action Buttons */}
               <div className="flex gap-2 justify-end">
+                <Button asChild variant="outline">
+                  <a href={`/admin/orders/fornitore/${selectedOrder._id}`}>Invia al fornitore</a>
+                </Button>
                 <Button variant="outline" onClick={() => handlePrintInvoice()}>
                   <PrinterIcon className="mr-2 h-4 w-4" />
                   Print Invoice

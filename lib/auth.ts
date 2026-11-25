@@ -77,7 +77,7 @@ export const authOptions: NextAuthOptions = {
     ],
     session: {
       strategy: "jwt",
-      maxAge: 30 * 24 * 60 * 60, // 30 days
+      maxAge: 365 * 24 * 60 * 60, // 1 anno: il token si rinnova ogni giorno d'uso, quindi resti dentro finche non esci
       // Explicitly set cookie path to '/'
       updateAge: 24 * 60 * 60, // 24 hours
     },
