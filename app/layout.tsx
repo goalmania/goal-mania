@@ -224,7 +224,8 @@ export default function RootLayout({
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-          !function(f,b,e,v,n,t,s)
+          try{if(localStorage.getItem('gm_admin')==='1')window.__gmSkip=1}catch(e){}
+          if(!window.__gmSkip)!function(f,b,e,v,n,t,s)
           {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
           n.callMethod.apply(n,arguments):n.queue.push(arguments)};
           if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
@@ -232,8 +233,8 @@ export default function RootLayout({
           t.src=v;s=b.getElementsByTagName(e)[0];
           s.parentNode.insertBefore(t,s)}(window, document,'script',
           'https://connect.facebook.net/en_US/fbevents.js');
-          fbq('init', '${PIXEL_ID}');
-          fbq('track', 'PageView');
+          if(!window.__gmSkip){fbq('init', '${PIXEL_ID}');
+          fbq('track', 'PageView');}
         `,
           }}
         />
@@ -258,6 +259,7 @@ export default function RootLayout({
               strategy="lazyOnload"
               dangerouslySetInnerHTML={{
                 __html: `
+      try{if(localStorage.getItem('gm_admin')==='1')window['ga-disable-${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}']=true}catch(e){}
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -274,7 +276,7 @@ export default function RootLayout({
             id="microsoft-clarity"
             strategy="lazyOnload"
             dangerouslySetInnerHTML={{
-              __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}");`,
+              __html: `var gmSkip=false;try{gmSkip=localStorage.getItem('gm_admin')==='1'}catch(e){}if(!gmSkip)(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}");`,
             }}
           />
         )}

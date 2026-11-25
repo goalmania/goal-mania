@@ -59,7 +59,7 @@ ProductViewSchema.index({ productId: 1, date: 1 }, { unique: true });
 // ─── FunnelEvent ──────────────────────────────────────────────────────────────
 
 export interface IFunnelEvent extends Document {
-  event: "page_view" | "product_view" | "add_to_cart" | "checkout_start" | "purchase";
+  event: "page_view" | "product_view" | "add_to_cart" | "cart_view" | "checkout_start" | "purchase";
   sessionId: string;
   page: string;
   productId?: string;
@@ -71,7 +71,7 @@ export interface IFunnelEvent extends Document {
 const FunnelEventSchema = new Schema<IFunnelEvent>({
   event: {
     type: String,
-    enum: ["page_view", "product_view", "add_to_cart", "checkout_start", "purchase"],
+    enum: ["page_view", "product_view", "add_to_cart", "cart_view", "checkout_start", "purchase"],
     required: true,
   },
   sessionId: { type: String, required: true },

@@ -14,6 +14,9 @@ export const metadata: Metadata = {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
+    <>
+    {/* Segna questo browser come admin: Pixel, GA e Clarity (layout principale) non tracciano le sue visite */}
+    <script dangerouslySetInnerHTML={{ __html: "try{localStorage.setItem('gm_admin','1')}catch(e){}" }} />
     <SidebarProvider
       style={
         {
@@ -34,5 +37,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </SidebarInset>
     </SidebarProvider>
+    </>
   )
 }

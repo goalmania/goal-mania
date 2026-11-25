@@ -8,6 +8,7 @@ import { Check, Gift, Minus, Plus, ShoppingBag, X } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import TrustBar from "@/components/home/TrustBar";
 import { useCartStore } from "@/lib/store/cart";
+import { useTrackEvent } from "@/components/analytics/AnalyticsTracker";
 import MysteryWheel from "@/components/shop/MysteryWheel";
 
 export interface MysteryBox {
@@ -44,6 +45,7 @@ const FIND = [
 export default function MysteryBoxPageClient({ boxes }: { boxes: MysteryBox[] }) {
   const router = useRouter();
   const addItem = useCartStore((s) => s.addItem);
+  const trackEvent = useTrackEvent();
   const [boxId, setBoxId] = useState(boxes[0]?.id ?? "");
   const [count, setCount] = useState(3);
   const [kids, setKids] = useState(false);
@@ -93,6 +95,7 @@ export default function MysteryBoxPageClient({ boxes }: { boxes: MysteryBox[] })
       const hash = JSON.stringify(custom).split("").reduce((a, c) => ((a << 5) - a + c.charCodeAt(0)) | 0, 0);
       addItem({ id: `${box.id}_${hash}`, slug: box.slug, name: box.name, price: box.unit, image: box.image, category: "Mystery Box", customization: custom, quantity: qty });
     });
+    trackEvent("add_to_cart", { productId: box.id, productSlug: box.slug, value: box.unit * count });
     toast.success(count === 1 ? "Box aggiunta al carrello" : `${count} maglie a sorpresa nel carrello`);
     return true;
   }

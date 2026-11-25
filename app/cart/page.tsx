@@ -11,6 +11,7 @@ import { toast } from "react-hot-toast";
 import { ShieldCheck, Truck, RotateCcw, Clock, ArrowRight, Trash2, Minus, Plus } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import { trackFbq } from "@/lib/utils/fbq";
+import { useTrackEvent } from "@/components/analytics/AnalyticsTracker";
 import { threeForTwoHint } from "@/lib/utils/threeForTwo";
 
 const FREE_SHIPPING_THRESHOLD = 0; // spedizione sempre gratuita
@@ -46,6 +47,13 @@ export default function CartPage() {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [upsellProducts, setUpsellProducts] = useState<UpsellProduct[]>([]);
   const router = useRouter();
+  const trackEvent = useTrackEvent();
+
+  // Una sola volta per visita: chi apre il carrello e poi non arriva al checkout si vede nel funnel
+  useEffect(() => {
+    if (items.length) trackEvent("cart_view", { value: getTotal() });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Carica prodotti correlati (escludi quelli già nel carrello)
   useEffect(() => {
