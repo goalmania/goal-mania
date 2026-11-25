@@ -485,7 +485,7 @@ export default function ProductDetailClient({
         <div className="lg:grid lg:grid-cols-[1fr_1fr] lg:gap-14 xl:gap-20">
 
           {/* ── LEFT: Image Gallery ────────────────────────────────────── */}
-          <div className="lg:sticky lg:top-6 lg:self-start mb-6 lg:mb-0">
+          <div className="lg:sticky lg:top-[calc(var(--bar-h)+var(--head-h)+16px)] lg:self-start mb-6 lg:mb-0">
             {/* Telefono: le foto si sfogliano con il dito, una dopo l'altra */}
             <div className="lg:hidden">
               <div

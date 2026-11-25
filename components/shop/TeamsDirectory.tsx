@@ -19,7 +19,7 @@ function Tile({ href, name, sub, children }: { href: string; name: string; sub: 
       className="group flex flex-col items-center rounded-2xl bg-[var(--wall-2)] px-2 pb-3 pt-4 text-center shadow-[inset_0_0_0_1px_var(--line)] transition-all hover:-translate-y-1 hover:bg-[var(--wall-3,#202024)] hover:shadow-[inset_0_0_0_2px_var(--lime)] active:scale-[0.98]"
     >
       <span className="flex h-[68px] w-[68px] items-center justify-center overflow-hidden rounded-full bg-[var(--paper)] shadow-[0_10px_18px_-10px_rgba(0,0,0,0.9)] md:h-[76px] md:w-[76px]">{children}</span>
-      <span className="mt-3 line-clamp-1 w-full text-[16px] font-bold leading-tight text-white md:text-[17px]">{name}</span>
+      <span className="mt-3 line-clamp-2 min-h-[2.4em] w-full text-[15px] font-bold leading-tight text-white md:text-[16px]">{name}</span>
       <span className="mt-0.5 text-[13px] font-semibold text-[var(--text-3)]">{sub}</span>
     </Link>
   );

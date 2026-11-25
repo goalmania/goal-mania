@@ -1,6 +1,6 @@
 // Stemmi disponibili in /public/team-logos, per nome della squadra come compare nei titoli delle maglie
 const FILES: Record<string, string> = {
-  inter: "inter", milan: "milan", "ac milan": "milan", juventus: "juventus", juve: "juventus", napoli: "napoli", roma: "roma", lazio: "lazio",
+  inter: "inter", milan: "milan", "ac milan": "milan", juventus: "juventus-dark", juve: "juventus-dark", napoli: "napoli", roma: "roma", lazio: "lazio",
   atalanta: "atalanta", fiorentina: "fiorentina", bologna: "bologna", torino: "torino", udinese: "udinese", monza: "monza", genoa: "genoa",
   lecce: "lecce", cagliari: "cagliari", verona: "verona", "hellas verona": "verona", sassuolo: "sassuolo", empoli: "empoli", parma: "parma", como: "como",
   arsenal: "arsenal", "aston villa": "aston-villa", chelsea: "chelsea", liverpool: "liverpool", "man city": "man-city", "manchester city": "man-city",

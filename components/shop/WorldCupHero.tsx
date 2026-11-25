@@ -19,7 +19,7 @@ export default function WorldCupHero({ count, nations, from }: { count: number; 
             <Trophy className="h-4 w-4" strokeWidth={2.6} /> Maglie delle nazionali
           </p>
           <h1 className="disp mt-3 text-white">
-            <span className="block text-[clamp(1.6rem,4vw,3rem)] leading-none">Mondiali</span>
+            <span className="block pb-3 text-[clamp(1.6rem,4vw,3rem)] leading-none">Mondiali</span>
             <span className="block text-[clamp(6rem,24vw,17rem)] leading-[0.8] text-[var(--lime)] [text-shadow:0_6px_0_rgba(0,0,0,0.55)]">2026</span>
           </h1>
           <p className="mt-5 max-w-[48ch] text-[clamp(1.05rem,1.5vw,1.3rem)] italic leading-snug text-[var(--text-2)]">

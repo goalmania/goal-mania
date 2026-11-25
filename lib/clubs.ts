@@ -24,7 +24,7 @@ export const CLUBS: Club[] = [
   // Serie A
   { slug: "inter", name: "Inter", league: "serie-a", logo: L("inter"), re: /\bInter\b(?!national)/i, href: "/shop/serieA/inter" },
   { slug: "milan", name: "Milan", league: "serie-a", logo: L("milan"), re: /\bMilan\b/i, href: "/shop/serieA/milan" },
-  { slug: "juventus", name: "Juventus", league: "serie-a", logo: L("juventus"), re: /\bJuventus\b/i, href: "/shop/serieA/juventus" },
+  { slug: "juventus", name: "Juventus", league: "serie-a", logo: L("juventus-dark"), re: /\bJuventus\b/i, href: "/shop/serieA/juventus" },
   { slug: "napoli", name: "Napoli", league: "serie-a", logo: L("napoli"), re: /\bNapoli\b/i, href: "/shop/serieA/napoli" },
   { slug: "roma", name: "Roma", league: "serie-a", logo: L("roma"), re: /\bRoma\b/i, href: "/shop/serieA/roma" },
   { slug: "lazio", name: "Lazio", league: "serie-a", logo: L("lazio"), re: /\bLazio\b/i, href: "/shop/serieA/lazio" },
