@@ -9,6 +9,7 @@ import ProductGrid from "@/components/ui/ProductGrid";
 import TrustBar from "@/components/home/TrustBar";
 import { logoFor } from "@/lib/teamLogos";
 import { isShowable } from "@/lib/photoFix";
+import { useRememberedState } from "@/lib/hooks/useListMemory";
 
 export interface CatProduct {
   id: string;
@@ -90,10 +91,10 @@ export default function CategoryBrowser({
   const tn = teamKey ?? teamName;
   // Niente foto con persone o col vecchio logo al posto della maglia
   const products = useMemo(() => allProducts.filter((p) => isShowable(p.id, p.image)), [allProducts]);
-  const [kind, setKind] = useState<Kind>("tutte");
-  const [team, setTeam] = useState("");
-  const [q, setQ] = useState("");
-  const [sort, setSort] = useState<Sort>("top");
+  const [kind, setKind] = useRememberedState<Kind>("kind", "tutte");
+  const [team, setTeam] = useRememberedState("team", "");
+  const [q, setQ] = useRememberedState("q", "");
+  const [sort, setSort] = useRememberedState<Sort>("sort", "top");
 
   const kinds = useMemo(() => (["tutte", "attuali", "retro", "tute", "combo"] as Kind[]).map((k) => ({ k, n: k === "tutte" ? products.length : products.filter((p) => kindsOf(p).includes(k)).length })).filter((x) => x.n > 0), [products]);
   const teams = useMemo(() => {

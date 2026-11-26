@@ -2,15 +2,17 @@
 
 import { useMemo, useState } from "react";
 import ProductCard from "@/components/ui/ProductCard";
+import { useBackMemory, useRememberedState } from "@/lib/hooks/useListMemory";
 import { teamOf, type ArchiveItem } from "@/lib/archive";
 
 const STEP = 24;
 
 // Maglie 24 alla volta + filtro per squadra: la pagina resta leggera anche con 270 maglie
 export default function ArchiveGrid({ items, filterTeams = false, themed = false }: { items: ArchiveItem[]; filterTeams?: boolean; themed?: boolean }) {
-  const [n, setN] = useState(STEP);
-  const [team, setTeam] = useState("");
-  const [q, setQ] = useState("");
+  const [n, setN] = useRememberedState("n", STEP);
+  const [team, setTeam] = useRememberedState("team", "");
+  const [q, setQ] = useRememberedState("q", "");
+  useBackMemory();
   const teams = useMemo(() => {
     if (!filterTeams) return [];
     const m = new Map<string, number>();

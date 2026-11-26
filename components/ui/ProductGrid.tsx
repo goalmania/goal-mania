@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import ProductCard from "./ProductCard";
+import { useBackMemory, useRememberedState } from "@/lib/hooks/useListMemory";
 
 // Le prime 36 maglie sono nella pagina; le altre arrivano mentre scorri (o col pulsante). Pagina leggera anche con 200 maglie.
 const STEP = 36;
@@ -61,7 +62,8 @@ export default function ProductGrid({
     6: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6",
   };
 
-  const [n, setN] = useState(STEP);
+  const [n, setN] = useRememberedState("n", STEP);
+  useBackMemory();
   const more = useRef<HTMLDivElement>(null);
   const hasMore = n < products.length;
   useEffect(() => {
